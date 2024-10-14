@@ -5,16 +5,16 @@
  * Displays config
  * 
  */
-const template = () => ` <div id='menu_6_content_widget1' class='widget'>
-                            <div id='list_config_nav' class='list_nav'>
-                                <div id='list_config_nav_config_server'        class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
-                                <div id='list_config_nav_config_iam_blockip'   class='list_nav_list list_button common_icon'></div>
-                                <div id='list_config_nav_config_iam_useragent' class='list_nav_list list_button common_icon'></div>
-                                <div id='list_config_nav_config_iam_policy'    class='list_nav_list list_button common_icon'></div>
+const template = () => ` <div id='menu_config_content_widget1' class='widget'>
+                            <div id='menu_config' class='list_nav'>
+                                <div id='menu_config_config_server'        class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
+                                <div id='menu_config_config_iam_blockip'   class='list_nav_list list_button common_icon'></div>
+                                <div id='menu_config_config_iam_useragent' class='list_nav_list list_button common_icon'></div>
+                                <div id='menu_config_config_iam_policy'    class='list_nav_list list_button common_icon'></div>
                             </div>
-                            <div id='list_config_container'></div>
-                            <div id='config_buttons' class="save_buttons">
-                                <div id='config_save' class='common_dialogue_button button_save common_icon' ></div>
+                            <div id='menu_config_detail_container'></div>
+                            <div id='menu_config_buttons' class="save_buttons">
+                                <div id='menu_config_save' class='common_dialogue_button button_save common_icon' ></div>
                             </div>
                         </div>`;
 /**
@@ -29,7 +29,7 @@ const template = () => ` <div id='menu_6_content_widget1' class='widget'>
 */
 const component = async props => {
     const onMounted = () =>{
-        props.methods.COMMON_DOCUMENT.querySelector('#list_config_nav_config_server').click();
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_config_config_server').click();
     };
  
     return {

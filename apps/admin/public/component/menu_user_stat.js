@@ -6,30 +6,30 @@
  * @param {{records_user_stat:[{identity_provider_id:string, provider_name:string, count_users:number, count_connected:number}]|[],
  *          count_not_connected:number}} props
  */
-const template = props => `<div id='menu_2_content_widget1' class='widget'>
-                                <div id='list_user_stat_row_title' class='list_user_stat_row'>
-                                    <div id='list_user_stat_col_title1' class='list_user_stat_col common_icon'></div>
-                                    <div id='list_user_stat_col_title2' class='list_user_stat_col common_icon'></div>
-                                    <div id='list_user_stat_col_title3' class='list_user_stat_col common_icon'></div>
-                                    <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
+const template = props => `<div id='menu_user_stat_content_widget1' class='widget'>
+                                <div id='menu_user_stat_row_title' class='menu_user_stat_row'>
+                                    <div id='menu_user_stat_col_title1' class='menu_user_stat_col common_icon'></div>
+                                    <div id='menu_user_stat_col_title2' class='menu_user_stat_col common_icon'></div>
+                                    <div id='menu_user_stat_col_title3' class='menu_user_stat_col common_icon'></div>
+                                    <div id='menu_user_stat_col_title4' class='menu_user_stat_col common_icon'></div>
                                 </div>
-                                <div id='list_user_stat' class='common_list_scrollbar'>
+                                <div id='menu_user_stat' class='common_list_scrollbar'>
                                     ${props.records_user_stat.map(record=>
-                                    `<div class='list_user_stat_row'>
-                                        <div class='list_user_stat_col'>${record.identity_provider_id ?? ''}</div>
-                                        <div class='list_user_stat_col'>
-                                            <div class='${record.provider_name==null?'list_user_start_common_logo':''}'>${record.provider_name==null?'':record.provider_name}</div>
+                                    `<div class='menu_user_stat_row'>
+                                        <div class='menu_user_stat_col'>${record.identity_provider_id ?? ''}</div>
+                                        <div class='menu_user_stat_col'>
+                                            <div class='${record.provider_name==null?'menu_user_stat_common_logo':''}'>${record.provider_name==null?'':record.provider_name}</div>
                                         </div>
-                                        <div class='list_user_stat_col'>${record.count_users}</div>
-                                        <div class='list_user_stat_col'>${record.count_connected}</div>
+                                        <div class='menu_user_stat_col'>${record.count_users}</div>
+                                        <div class='menu_user_stat_col'>${record.count_connected}</div>
                                     </div>`).join('')}
-                                    <div id='list_user_stat_row_not_connected' class='list_user_stat_row'>
-                                        <div class='list_user_stat_col'></div>
-                                        <div class='list_user_stat_col'>
-                                            <div id='list_user_stat_not_connected_icon' class='common_icon'></div>
+                                    <div id='menu_user_stat_row_not_connected' class='menu_user_stat_row'>
+                                        <div class='menu_user_stat_col'></div>
+                                        <div class='menu_user_stat_col'>
+                                            <div id='menu_user_stat_not_connected_icon' class='common_icon'></div>
                                         </div>
-                                        <div class='list_user_stat_col'></div>
-                                        <div class='list_user_stat_col'>${props.count_not_connected}</div>
+                                        <div class='menu_user_stat_col'></div>
+                                        <div class='menu_user_stat_col'>${props.count_not_connected}</div>
                                     </div>
                                 </div>
                             </div>` ;

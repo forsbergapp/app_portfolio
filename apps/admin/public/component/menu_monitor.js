@@ -6,33 +6,33 @@
  * 
  */
 
-const template = () => `<div id='menu_5_content_widget1' class='widget'>
-                                <div id='list_monitor_nav' class='list_nav'>
-                                    <div id='list_monitor_nav_connected' class='list_nav_list list_button common_icon'></div>
-                                    <div id='list_monitor_nav_app_log' class='list_nav_list list_button common_icon'></div>
-                                    <div id='list_monitor_nav_server_log' class='list_nav_list list_button common_icon'></div>
+const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
+                                <div id='menu_monitor' class='list_nav'>
+                                    <div id='menu_monitor_connected' class='list_nav_list list_button common_icon'></div>
+                                    <div id='menu_monitor_app_log' class='list_nav_list list_button common_icon'></div>
+                                    <div id='menu_monitor_server_log' class='list_nav_list list_button common_icon'></div>
                                 </div>
-                                <div id='list_row_sample'>
-                                    <div id='select_app_menu5'></div>
-                                    <div id='select_year_menu5'></div>
-                                    <div id='select_month_menu5'></div>
-                                    <div id='select_day_menu5'></div>
+                                <div id='menu_monitor_sample'>
+                                    <div id='menu_monitor_select_app'></div>
+                                    <div id='menu_monitor_select_year'></div>
+                                    <div id='menu_monitor_select_month'></div>
+                                    <div id='menu_monitor_select_day'></div>
                                 </div>
-                                <div id='list_monitor'></div>
-                                <div id='list_monitor_pagination'>
+                                <div id='menu_monitor_detail'></div>
+                                <div id='menu_monitor_pagination'>
                                     <div></div>
                                     <div></div>
-                                    <div id='list_monitor_first' class='common_icon'></div>
-                                    <div id='list_monitor_previous' class='common_icon'></div>
-                                    <div id='list_monitor_next' class='common_icon'></div>
-                                    <div id='list_monitor_last' class='common_icon'></div>
-                                    <div id='list_monitor_page'></div>
-                                    <div id='list_monitor_page_last'>
+                                    <div id='menu_monitor_pagination_first' class='common_icon'></div>
+                                    <div id='menu_monitor_pagination_previous' class='common_icon'></div>
+                                    <div id='menu_monitor_pagination_next' class='common_icon'></div>
+                                    <div id='menu_monitor_pagination_last' class='common_icon'></div>
+                                    <div id='menu_monitor_pagination_page'></div>
+                                    <div id='menu_monitor_pagination_page_last'>
                                 </div>
                             </div>
                             </div>
-                            <div id='menu_5_content_widget2' class='widget'>
-                                <div id='mapid'></div>
+                            <div id='menu_monitor_content_widget2' class='widget'>
+                                <div id='menu_monitor_mapid'></div>
                             </div>`;
 /**
  * 
@@ -176,7 +176,7 @@ const component = async props => {
     const monitorShow = async (list_detail, offset, sort, order_by) => {
         
         props.methods.commonComponentRender({
-            mountDiv:   'list_monitor',
+            mountDiv:   'menu_monitor_detail',
             data:       {
                         app_id:props.data.app_id,
                         admin_only:props.data.admin_only,
@@ -253,7 +253,7 @@ const component = async props => {
 
     const onMounted = async () =>{
         //mount select
-        await props.methods.commonComponentRender({mountDiv:'select_year_menu5',
+        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_year',
             data:{
                 default_value:new Date().getFullYear(),
                 default_data_value:new Date().getFullYear(),
@@ -272,7 +272,7 @@ const component = async props => {
               },
             methods:{commonFFB:props.methods.commonFFB},
             path:'/common/component/common_select.js'});
-        await props.methods.commonComponentRender({mountDiv:'select_month_menu5',
+        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_month',
                 data:{
                     default_value:new Date().getMonth()+1,
                     default_data_value:new Date().getMonth()+1,
@@ -287,7 +287,7 @@ const component = async props => {
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'select_day_menu5',
+        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_day',
                 data:{
                     default_value:new Date().getDate(),
                     default_data_value:new Date().getDate(),
@@ -302,7 +302,7 @@ const component = async props => {
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'select_app_menu5',
+        await props.methods.commonComponentRender({mountDiv:'menu_monitor_select_app',
                 data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
@@ -319,7 +319,7 @@ const component = async props => {
         //mount the map
         //show map only for this condition
         if (props.data.admin_only != 1)
-            props.methods.commonModuleLeafletInit({mount_div:'mapid',
+            props.methods.commonModuleLeafletInit({mount_div:'menu_monitor_mapid',
                             longitude:props.data.client_longitude,
                             latitude:props.data.client_latitude,
                             place:props.data.client_place,

@@ -5,13 +5,13 @@
  * Displays monitor
  * 
  * Connected
- *      list_connected          contains records
+ *      menu_monitor_detail_connected          contains records
  * App log
- *      list_app_log            contains records
+ *      menu_monitor_detail_app_log            contains records
  *      list_app_pagination     contains page navigation buttons
  * Server log 
- *      list_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
- *      list_server_log         contains records
+ *      menu_monitor_detail_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
+ *      menu_monitor_detail_server_log         contains records
  * 
  */
 /**
@@ -37,43 +37,43 @@
  *                                      FILE_INTERVAL:string}}} props
  */
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
-                                `<div id='list_connected_form'>    
-                                    <div id='list_connected' class='common_list_scrollbar'>
-                                        <div class='list_connected_row'>
-                                            <div data-column='id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('id')}'>
+                                `<div id='menu_monitor_detail_connected_form'>    
+                                    <div id='menu_monitor_detail_connected' class='common_list_scrollbar'>
+                                        <div class='menu_monitor_detail_connected_row'>
+                                            <div data-column='id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('id')}'>
                                                 ID
                                             </div>
-                                            <div data-column='connection_date' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('connection_date')}'>
+                                            <div data-column='connection_date' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('connection_date')}'>
                                                 CONNECTION DATE
                                             </div>
-                                            <div data-column='app_id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                            <div data-column='app_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             </div>
-                                            <div data-column='user_account_id' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
+                                            <div data-column='user_account_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
                                                 USER ID
                                             </div>
-                                            <div data-column='admin' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('admin')}'>
+                                            <div data-column='admin' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('admin')}'>
                                                 ADMIN
                                             </div>
-                                            <div data-column='ip' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
+                                            <div data-column='ip' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
                                                 IP
                                             </div>
-                                            <div data-column='gps_latitude' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('gps_latitude')}'>
+                                            <div data-column='gps_latitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('gps_latitude')}'>
                                                 GPS LAT
                                             </div>
-                                            <div data-column='gps_longitude' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('gps_longitude')}'>
+                                            <div data-column='gps_longitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('gps_longitude')}'>
                                                 GPS LONG
                                             </div>
-                                            <div data-column='place' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('place')}'>
+                                            <div data-column='place' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('place')}'>
                                                 PLACE
                                             </div>
-                                            <div data-column='timezone' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('timezone')}'>
+                                            <div data-column='timezone' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('timezone')}'>
                                                 TIMEZONE
                                             </div>
-                                            <div data-column='user_agent' class='list_connected_col list_sort_click list_title ${props.function_get_order_by('user_agent')}'>
+                                            <div data-column='user_agent' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_agent')}'>
                                                 USER AGENT
                                             </div>
-                                            <div data-column='broadcast' class='list_connected_col list_title ${props.function_get_order_by('broadcast')}'>
+                                            <div data-column='broadcast' class='menu_monitor_detail_connected_col list_title ${props.function_get_order_by('broadcast')}'>
                                                 BROADCAST
                                             </div>
                                         </div>
@@ -89,45 +89,45 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                                     timezone:string,
                                                                     user_agent:string
                                                                     }}*/log)=>
-                                            `<div class='list_connected_row ${log.id==props.service_socket_client_ID?'list_current_user_row':''}'>
-                                                <div class='list_connected_col'>
+                                            `<div class='menu_monitor_detail_connected_row ${log.id==props.service_socket_client_ID?'list_current_user_row':''}'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.id}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.connection_date}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.app_id}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.user_account_id ?? ''}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.admin}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.ip.replace('::ffff:','')}
                                                 </div>
-                                                <div class='list_connected_col gps_click' 
+                                                <div class='menu_monitor_detail_connected_col gps_click' 
                                                     data-latitude='${log.gps_latitude ?? ''}'
                                                     data-longitude='${log.gps_longitude ?? ''}'>
                                                     ${log.gps_latitude ?? ''}
                                                 </div>
-                                                <div class='list_connected_col gps_click'
+                                                <div class='menu_monitor_detail_connected_col gps_click'
                                                     data-latitude='${log.gps_latitude ?? ''}'
                                                     data-longitude='${log.gps_longitude ?? ''}'>
                                                     ${log.gps_longitude ?? ''}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.place}
                                                 </div>
-                                                <div class='list_connected_col'>
+                                                <div class='menu_monitor_detail_connected_col'>
                                                     ${log.timezone}
                                                 </div>
-                                                <div class='list_connected_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_connected_col common_wide_list_column'>
                                                     ${props.function_commonWindowUserAgentPlatform(log.user_agent) ?? ''}
                                                 </div>
-                                                <div class='list_connected_col chat_click common_icon' data-id='${log.id}'></div>
+                                                <div class='menu_monitor_detail_connected_col chat_click common_icon' data-id='${log.id}'></div>
                                             </div>`
                                             ).join('')
                                         }
@@ -136,58 +136,58 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 ''
                             }
                             ${props.monitor_detail=='APP_LOG'?`
-                                <div id='list_app_log_form'>
-                                    <div id='list_app_log' class='common_list_scrollbar'>
-                                        <div class='list_app_log_row'>
-                                            <div data-column='date_created' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
+                                <div id='menu_monitor_detail_app_log_form'>
+                                    <div id='menu_monitor_detail_app_log' class='common_list_scrollbar'>
+                                        <div class='menu_monitor_detail_app_log_row'>
+                                            <div data-column='date_created' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
                                                 DATE
                                             </div>
-                                            <div data-column='server_http_host' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('server_http_host')}'>
+                                            <div data-column='server_http_host' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_http_host')}'>
                                                 HOST
                                             </div>
-                                            <div  data-column='app_id' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                            <div  data-column='app_id' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             </div>
-                                            <div data-column='app_module' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module')}'>
+                                            <div data-column='app_module' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module')}'>
                                                 MODULE
                                             </div>
-                                            <div data-column='app_module_type' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_type')}'>
+                                            <div data-column='app_module_type' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_type')}'>
                                                 MODULE TYPE
                                             </div>
-                                            <div data-column='app_module_request' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_request')}'>
+                                            <div data-column='app_module_request' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_request')}'>
                                                 MODULE REQUEST
                                             </div>
-                                            <div data-column='app_module_result' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_result')}'>
+                                            <div data-column='app_module_result' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_result')}'>
                                                 MODULE RESULT
                                             </div>
-                                            <div data-column='app_user_id' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('app_user_id')}'>
+                                            <div data-column='app_user_id' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_user_id')}'>
                                                 USER ID
                                             </div>
-                                            <div data-column='server_remote_addr' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('server_remote_addr')}'>
+                                            <div data-column='server_remote_addr' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_remote_addr')}'>
                                                 IP
                                             </div>
-                                            <div data-column='client_latitude' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('client_latitude')}'>
+                                            <div data-column='client_latitude' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('client_latitude')}'>
                                                 GPS LAT
                                             </div>
-                                            <div data-column='client_longitude' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('client_longitude')}'>
+                                            <div data-column='client_longitude' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('client_longitude')}'>
                                                 GPS LONG
                                             </div>
-                                            <div data-column='user_language' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_language')}'>
+                                            <div data-column='user_language' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_language')}'>
                                                 USER LANGUAGE
                                             </div>
-                                            <div data-column='user_timezone' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_timezone')}'>
+                                            <div data-column='user_timezone' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_timezone')}'>
                                                 USER TIMEZONE
                                             </div>
-                                            <div data-column='user_number_system' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_number_system')}'>
+                                            <div data-column='user_number_system' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_number_system')}'>
                                                 USER NUMBER_SYSTEM
                                             </div>
-                                            <div data-column='user_platform' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('user_platform')}'>
+                                            <div data-column='user_platform' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_platform')}'>
                                                 USER PLATFORM
                                             </div>
-                                            <div data-column='server_user_agent' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('server_user_agent')}'>
+                                            <div data-column='server_user_agent' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_user_agent')}'>
                                                 USER AGENT
                                             </div>
-                                            <div data-column='http_accept_language' class='list_app_log_col list_sort_click list_title ${props.function_get_order_by('http_accept_language')}'>
+                                            <div data-column='http_accept_language' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('http_accept_language')}'>
                                                 ACCEPT LANGUAGE
                                             </div>
                                         </div>
@@ -209,60 +209,60 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                                     server_user_agent:string,
                                                                     server_http_accept_language:string
                                                                     }}*/log)=>
-                                            `<div class='list_app_log_row'>
-                                                <div class='list_app_log_col'>
+                                            `<div class='menu_monitor_detail_app_log_row'>
+                                                <div class='menu_monitor_detail_app_log_col'>
                                                     ${log.date_created}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.server_http_host}
                                                 </div>
-                                                <div class='list_app_log_col'>
+                                                <div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_id}
                                                 </div>
-                                                <div class='list_app_log_col'>
+                                                <div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_module}
                                                 </div>
-                                                <div class='list_app_log_col'>
+                                                <div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_module_type}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.app_module_request}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.app_module_result}
                                                 </div>
-                                                <div class='list_app_log_col'>
+                                                <div class='menu_monitor_detail_app_log_col'>
                                                     ${log.app_user_id}
                                                 </div>
-                                                <div class='list_app_log_col'>
+                                                <div class='menu_monitor_detail_app_log_col'>
                                                     ${log.server_remote_addr.replace('::ffff:','')}
                                                 </div>
-                                                <div class='list_app_log_col gps_click'
+                                                <div class='menu_monitor_detail_app_log_col gps_click'
                                                     data-latitude='${log.client_latitude ?? ''}'
                                                     data-longitude='${log.client_longitude ?? ''}'>
                                                     ${log.client_latitude ?? ''}
                                                 </div>
-                                                <div class='list_app_log_col gps_click'
+                                                <div class='menu_monitor_detail_app_log_col gps_click'
                                                     data-latitude='${log.client_latitude ?? ''}'
                                                     data-longitude='${log.client_longitude ?? ''}'>
                                                     ${log.client_longitude ?? ''}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_language}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_timezone}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_number_system}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.user_platform}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.server_user_agent}
                                                 </div>
-                                                <div class='list_app_log_col common_wide_list_column'>
+                                                <div class='menu_monitor_detail_app_log_col common_wide_list_column'>
                                                     ${log.server_http_accept_language}
                                                 </div>
                                             </div>`
@@ -273,38 +273,38 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 ''
                             }
                             ${props.monitor_detail=='SERVER_LOG'?
-                                `<div id='list_server_log_form'>
-                                    <div id='select_logscope5'></div>
-                                    <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>
-                                    <div id='menu5_row_parameters'>
-                                        <div class='menu5_row_parameters_col'>
-                                            <div id='menu5_row_parameters_col1' class='common_icon'></div>
+                                `<div id='menu_monitor_detail_server_log_form'>
+                                    <div id='menu_monitor_detail_select_logscope'></div>
+                                    <div id='menu_monitor_detail_filesearch' class='common_dialogue_button common_icon'></div>
+                                    <div id='menu_monitor_detail_parameters_row'>
+                                        <div class='menu_monitor_detail_parameters_row_col'>
+                                            <div id='menu_monitor_detail_parameters_row_col1' class='common_icon'></div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.REQUEST_LEVEL==1 ||props.SERVICE_LOG_DATA_PARAMETERS.REQUEST_LEVEL==2)?
-                                                '<div id=\'menu5_row_parameters_col1_1\' class=\'common_icon\'></div>':
-                                                '<div id=\'menu5_row_parameters_col1_0\' class=\'common_icon\'></div>'
+                                                '<div id=\'menu_monitor_detail_parameters_row_col1_1\' class=\'common_icon\'></div>':
+                                                '<div id=\'menu_monitor_detail_parameters_row_col1_0\' class=\'common_icon\'></div>'
                                             }
                                         </div>
-                                        <div class='menu5_row_parameters_col'>
-                                            <div id='menu5_row_parameters_col2' class='common_icon'></div>
+                                        <div class='menu_monitor_detail_parameters_row_col'>
+                                            <div id='menu_monitor_detail_parameters_row_col2' class='common_icon'></div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.SERVICE_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.SERVICE_LEVEL==2)?
-                                                '<div id=\'menu5_row_parameters_col2_1\' class=\'common_icon\'></div>':
-                                                '<div id=\'menu5_row_parameters_col2_0\' class=\'common_icon\'></div>'
+                                                '<div id=\'menu_monitor_detail_parameters_row_col2_1\' class=\'common_icon\'></div>':
+                                                '<div id=\'menu_monitor_detail_parameters_row_col2_0\' class=\'common_icon\'></div>'
                                             }
                                         </div>
-                                        <div class='menu5_row_parameters_col'>
-                                            <div id='menu5_row_parameters_col3' class='common_icon'></div>
+                                        <div class='menu_monitor_detail_parameters_row_col'>
+                                            <div id='menu_monitor_detail_parameters_row_col3' class='common_icon'></div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.DB_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.DB_LEVEL==2)?
-                                                '<div id=\'menu5_row_parameters_col3_1\' class=\'common_icon\'></div>':
-                                                '<div id=\'menu5_row_parameters_col3_0\' class=\'common_icon\'></div>'
+                                                '<div id=\'menu_monitor_detail_parameters_row_col3_1\' class=\'common_icon\'></div>':
+                                                '<div id=\'menu_monitor_detail_parameters_row_col3_0\' class=\'common_icon\'></div>'
                                             }
                                         </div>
                                     </div>
                                     <div class='list_search'>
-                                        <div id='list_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
-                                        <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
+                                        <div id='menu_monitor_detail_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
+                                        <div id='menu_monitor_detail_server_log_search_icon' class='list_search_icon common_icon'></div>
                                     </div>
                                 </div>
-                                <div id='list_server_log' class='common_list_scrollbar'></div>`:
+                                <div id='menu_monitor_detail_server_log' class='common_list_scrollbar'></div>`:
                                 ''
                             }`;
 /**
@@ -373,31 +373,31 @@ const component = async props => {
      * @returns {string}
      */
     const get_query = (list_detail, offset, sort, order_by) =>{
-        const app_id = props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5 .common_select_dropdown_value').getAttribute('data-value'); 
-        const year = props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const month = props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').getAttribute('data-value');
-        const day  = props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').getAttribute('data-value');
+        const app_id = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app .common_select_dropdown_value').getAttribute('data-value'); 
+        const year = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').getAttribute('data-value');
+        const month = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').getAttribute('data-value');
+        const day  = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').getAttribute('data-value');
         
         switch (list_detail){
             case 'CONNECTED':
             case 'APP_LOG':{
-                props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
+                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
                 return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${props.data.LIMIT}`;
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
-                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
-                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
+                const logscope = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
+                const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
                 if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
                     //show app filter and use it
-                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'inline-block';
+                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                     app_id_filter = `select_app_id=${app_id}&`;
                 }
                 else{
                     //no app filter for request
-                    props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu5').style.display = 'none';
+                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'none';
                     app_id_filter = 'select_app_id=&';
                 }
                 let url_parameters;
@@ -433,8 +433,8 @@ const component = async props => {
     const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     if (props.data.monitor_detail=='APP_LOG'){
         page_last = logs.length>0?(Math.floor(logs[0].total_rows/props.data.LIMIT) * props.data.LIMIT):0;
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
     }
         
 
@@ -452,7 +452,7 @@ const component = async props => {
         const get_sort = (order_by=0) => {
             const sort = '';
             if (props.data.monitor_detail=='APP_LOG')
-                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_app_log .list_title')){
+                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_app_log .list_title')){
                     if (col_title.classList.contains('asc'))
                         if (order_by==0)
                             return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -466,7 +466,7 @@ const component = async props => {
                 }
             else
                 if (props.data.monitor_detail=='SERVER_LOG')
-                    for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#list_server_log .list_title')){
+                    for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_server_log .list_title')){
                         if (col_title.classList.contains('asc'))
                             if (order_by==0)
                                     return col_title.getAttribute('data-column');
@@ -486,7 +486,7 @@ const component = async props => {
         if (sort =='')
             sort = 'date_created';
         switch (item){
-            case 'list_monitor_first':{
+            case 'menu_monitor_pagination_first':{
                 page = 0;
                 if (props.data.monitor_detail=='APP_LOG')
                     props.methods.monitorShow('APP_LOG', 0, sort, order_by);
@@ -494,7 +494,7 @@ const component = async props => {
                     monitorDetailShowServerLog(0,props.data.sort, props.data.order_by);
                 break;
             }
-            case 'list_monitor_previous':{
+            case 'menu_monitor_pagination_previous':{
                 page = page - props.data.LIMIT;
                 if (page - props.data.LIMIT < 0)
                     page = 0;
@@ -506,7 +506,7 @@ const component = async props => {
                     monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
-            case 'list_monitor_next':{
+            case 'menu_monitor_pagination_next':{
                 if (page + props.data.LIMIT > page_last)
                     page = page_last;
                 else
@@ -517,7 +517,7 @@ const component = async props => {
                     monitorDetailShowServerLog(page,props.data.sort, props.data.order_by);
                 break;
             }
-            case 'list_monitor_last':{
+            case 'menu_monitor_pagination_last':{
                 page = page_last;
                 if (props.data.monitor_detail=='APP_LOG')
                     props.methods.monitorShow('APP_LOG', page, sort, order_by);
@@ -526,8 +526,8 @@ const component = async props => {
                 break;
             }
         }
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
-        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
     };
     /**
      * List sort click
@@ -538,18 +538,18 @@ const component = async props => {
      */
     const monitorDetailClickSort = (list, sortcolumn, order_by) => {
         switch (list){
-            case 'list_app_log':{
+            case 'menu_monitor_detail_app_log':{
                 props.methods.monitorShow('APP_LOG', 0,  sortcolumn, order_by);
                 break;
             }
-            case 'list_connected':{
+            case 'menu_monitor_detail_connected':{
                 props.methods.monitorShow('CONNECTED', 
                     '', 
                     sortcolumn,
                     order_by);
                 break;
             }
-            case 'list_server_log':{
+            case 'menu_monitor_detail_server_log':{
                 monitorDetailShowServerLog( 0, sortcolumn, order_by);
                 break;
             }
@@ -630,19 +630,19 @@ const component = async props => {
                                 const day      = parseInt(filename.substring(6, 8));
 
                                 //logscope and loglevel
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_logscope5 .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').textContent = `${logscope} - ${loglevel}`;
                                 //year
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').setAttribute('data-value', year);
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu5 .common_select_dropdown_value').textContent = year;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').setAttribute('data-value', year);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_year .common_select_dropdown_value').textContent = year;
 
                                 //month
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').setAttribute('data-value', month);
-                                props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu5 .common_select_dropdown_value').textContent = month;
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').setAttribute('data-value', month);
+                                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_month .common_select_dropdown_value').textContent = month;
                                 //day if applicable
                                 if (props.data.SERVICE_LOG_FILE_INTERVAL=='1D'){
-                                    props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').setAttribute('data-value', day);
-                                    props.methods.COMMON_DOCUMENT.querySelector('#select_day_menu5 .common_select_dropdown_value').textContent = day;
+                                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').setAttribute('data-value', day);
+                                    props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').textContent = day;
                                 }
                                 monitorDetailShowServerLog( 0, 'logdate', 'desc');
                                 props.methods.commonLovClose();
@@ -656,14 +656,14 @@ const component = async props => {
      * @param {string} order_by
      */
     const monitorDetailShowServerLog = (offset, sort, order_by) =>{
-        let search = props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input').textContent;
+        let search = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input').textContent;
         if (search != null){
-            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#list_server_log_search_input'),100]]})==false)
+            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input'),100]]})==false)
                 return;
         }
         search=search?encodeURI(search):search;
         props.methods.commonComponentRender(
-                {   mountDiv:'list_server_log',
+                {   mountDiv:'menu_monitor_detail_server_log',
                     data:{  
                                 path:'/server-log/log',
                                 query:`${get_query('SERVER_LOG', offset, sort, order_by)}&search=${search ?? ''}`,
@@ -677,8 +677,8 @@ const component = async props => {
                     path:'/component/menu_monitor_detail_server_log.js'})
                     .then(result=>{
                         page_last=result.data.page_last;
-                        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page').textContent = page; 
-                        props.methods.COMMON_DOCUMENT.querySelector('#list_monitor_page_last').textContent = page_last;
+                        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
+                        props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
                     });
     };
    
@@ -697,7 +697,7 @@ const component = async props => {
                                 return {VALUE:`${row.log_scope}-${row.log_level}`, TEXT:`${row.log_scope} - ${row.log_level}`};});
 
             await props.methods.commonComponentRender({
-                mountDiv:'select_logscope5', 
+                mountDiv:'menu_monitor_detail_select_logscope', 
                 data:{ 
                             default_value:'REQUEST - INFO',
                             default_data_value:'REQUEST-INFO',

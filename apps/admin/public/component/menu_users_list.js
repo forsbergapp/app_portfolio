@@ -28,100 +28,100 @@
  *                  }]|[],
  *          function_get_order_by:function}} props
 */
-const template = props => ` <div class='list_user_account_row'>
-                                <div data-column='avatar' class='list_user_account_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
-                                <div data-column='id' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
-                                <div data-column='active' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('active')}'></div>
-                                <div data-column='user_level' class='list_user_account_col list_sort_click list_title ${props.function_get_order_by('user_level')}'></div>
-                                <div data-column='private' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('private')}'></div>
-                                <div data-column='username' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('username')}'></div>
-                                <div data-column='bio' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('bio')}'></div>
-                                <div data-column='email' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('email')}'></div>
-                                <div data-column='emal_unverified' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('email_unverified')}'></div>
-                                <div data-column='password' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('password')}'></div>
-                                <div data-column='password_reminder' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('password_reminder')}'></div>
-                                <div data-column='verification_code' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('verification_code')}'></div>
-                                <div data-column='identity_provider_id' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_id')}'></div>
-                                <div data-column='provider_name' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_name')}'></div>
-                                <div data-column='provider_id' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_id')}'></div>
-                                <div data-column='provider_first_name' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_name')}'></div>
-                                <div data-column='provider_last_name' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_last_name')}'></div>
-                                <div data-column='provider_image' class='list_user_account_col list_title common_icon ${props.function_get_order_by('provider_image')}'></div>
-                                <div data-column='provider_image_url' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_image_url')}'></div>
-                                <div data-column='provider_email' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_email')}'></div>
-                                <div data-column='date_created' class='list_user_account_col list_sort_click list_title common_icon ${props.function_get_order_by('date_created')}'></div>
-                                <div data-column='date_modified' class='list_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('date_modified')}'></div>
+const template = props => ` <div class='menu_users_list_row'>
+                                <div data-column='avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
+                                <div data-column='id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
+                                <div data-column='active' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('active')}'></div>
+                                <div data-column='user_level' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('user_level')}'></div>
+                                <div data-column='private' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('private')}'></div>
+                                <div data-column='username' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('username')}'></div>
+                                <div data-column='bio' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('bio')}'></div>
+                                <div data-column='email' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('email')}'></div>
+                                <div data-column='emal_unverified' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('email_unverified')}'></div>
+                                <div data-column='password' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password')}'></div>
+                                <div data-column='password_reminder' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('password_reminder')}'></div>
+                                <div data-column='verification_code' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('verification_code')}'></div>
+                                <div data-column='identity_provider_id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_id')}'></div>
+                                <div data-column='provider_name' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_name')}'></div>
+                                <div data-column='provider_id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_id')}'></div>
+                                <div data-column='provider_first_name' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_name')}'></div>
+                                <div data-column='provider_last_name' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_last_name')}'></div>
+                                <div data-column='provider_image' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('provider_image')}'></div>
+                                <div data-column='provider_image_url' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_image_url')}'></div>
+                                <div data-column='provider_email' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('provider_email')}'></div>
+                                <div data-column='date_created' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('date_created')}'></div>
+                                <div data-column='date_modified' class='menu_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('date_modified')}'></div>
                             </div>
                             ${props.users.map(user=>
-                                `<div data-changed-record='0' data-user_account_id='${user.id}' class='list_user_account_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
-                                    <div class='list_user_account_col'>
+                                `<div data-changed-record='0' data-user_account_id='${user.id}' class='menu_users_list_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>
                                             <div class='common_image common_image_avatar_list' style='background-image:url("${user.avatar}");'></div>
                                         </div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.id}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.active ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.level ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.private ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.username ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.bio ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.email ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.email_unverified ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit common_input_password' placeholder='******'></div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.password_reminder ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div contentEditable='true' class='common_input list_edit'>${user.verification_code ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.identity_provider ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.provider_name ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.provider_id ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.provider_first_name ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.provider_last_name ?? ''}</div>                        
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>
                                             <div class='common_image common_image_avatar_list' style='background-image:url("${user.provider_image}");'></div>
                                         </div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.provider_image_url ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.provider_email ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.date_created ?? ''}</div>
                                     </div>
-                                    <div class='list_user_account_col'>
+                                    <div class='menu_users_list_col'>
                                         <div class='list_readonly'>${user.date_modified ?? ''}</div>
                                     </div>
                                 </div>`
@@ -152,24 +152,24 @@ const component = async props => {
 
     let search_user='*';
     //show all records if no search criteria
-    if (props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').textContent.replaceAll('\n','')!='')
-        search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').textContent.replaceAll('\n',''));
+    if (props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent.replaceAll('\n','')!='')
+        search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent.replaceAll('\n',''));
     const users = await props.methods.commonFFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
-        if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0])
+        if (props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0])
             //set focus first column in first row
             //this will trigger to show detail records
-            if (props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].getAttribute('readonly')==true){
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', false);
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].setAttribute('readonly', true);
+            if (props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].getAttribute('readonly')==true){
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].setAttribute('readonly', false);
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].focus();
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].setAttribute('readonly', true);
             }
             else
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#list_user_account .list_edit')[0].focus();
+                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].focus();
             //set focus back again to search field
-            props.methods.COMMON_DOCUMENT.querySelector('#list_user_account_search_input').focus();    
+            props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').focus();    
   };
   return {
       lifecycle:    {onMounted:onMounted},

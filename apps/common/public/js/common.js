@@ -945,7 +945,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                                 common_app_id:COMMON_GLOBAL.common_app_id
                                 },
                     methods:    {
-                               commonFFB:commonFFB,
+                                commonFFB:commonFFB,
                                 commonMessageShow:commonMessageShow,
                                 commonFormatJsonDate:commonFormatJsonDate
                                 },
@@ -970,11 +970,10 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                 break;
             }
         case 'LOGIN_ADMIN':{
-            //show admin login as default
             await commonComponentRender({
                 mountDiv:       'common_dialogue_user_start',
                 data:           {
-                                user_click:         'common_user_start_login_admin',
+                                type:               null,
                                 app_id:             COMMON_GLOBAL.app_id,
                                 common_app_id:      COMMON_GLOBAL.common_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
@@ -990,7 +989,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
             await commonComponentRender({
                 mountDiv:       'common_dialogue_user_start',
                 data:           {
-                                user_click:         `common_user_start_${dialogue.toLowerCase()}`,
+                                type:               dialogue,
                                 app_id:             COMMON_GLOBAL.app_id,
                                 common_app_id:      COMMON_GLOBAL.common_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
@@ -2670,15 +2669,9 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         // dialogue login/signup/forgot
                         case 'common_user_start_login':
-                        case 'common_user_start_login_admin':
                         case 'common_user_start_signup':
                         case 'common_user_start_forgot':{
-                            COMMON_DOCUMENT.querySelectorAll('#common_user_start_nav > div').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('common_user_start_selected'));
-                            COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
-                            
-                            COMMON_DOCUMENT.querySelectorAll('#common_dialogue_user_start .common_user_start_form').forEach((/**@type{HTMLElement}*/form)=>form.style.display='none');
-                            COMMON_DOCUMENT.querySelector(`#${event_target_id}_form`).style.display='inline-block';
-    
+                            commonDialogueShow(event_target_id.substring('common_user_start_'.length).toUpperCase());
                             break;
                         }
                         case 'common_user_start_close':{

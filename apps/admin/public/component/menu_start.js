@@ -8,25 +8,25 @@
 /**
  * @param {{maintenance:0|1|null}} props
  */
-const template = props => ` <div id='menu_1_content_widget1' class='widget'>
-                                <div id='menu_1_row_sample'>
-                                    <div id='select_admin_stat'></div>':    
-                                    <div id='select_app_menu1'></div>
-                                    <div id='select_year_menu1'></div>
-                                    <div id='select_month_menu1'></div>
+const template = props => ` <div id='menu_start_content_widget1' class='widget'>
+                                <div id='menu_start_row_sample'>
+                                    <div id='menu_start_select_stat'></div>':    
+                                    <div id='menu_start_select_app'></div>
+                                    <div id='menu_start_select_year'></div>
+                                    <div id='menu_start_select_month'></div>
                                 </div>
-                                <div id='graphBox'></div>
+                                <div id='menu_start_graphBox'></div>
                             </div>
-                            <div id='menu_1_content_widget2' class='widget'>
-                                <div id='menu_1_maintenance'>
-                                    <div id='menu_1_maintenance_title' class='common_icon'></div>
-                                    <div id='menu_1_maintenance_checkbox'>
-                                        <div id='menu_1_checkbox_maintenance' class='common_switch ${props.maintenance==1?'checked':''}'></div>
+                            <div id='menu_start_content_widget2' class='widget'>
+                                <div id='menu_start_maintenance'>
+                                    <div id='menu_start_maintenance_title' class='common_icon'></div>
+                                    <div id='menu_start_maintenance_checkbox'>
+                                        <div id='menu_start_checkbox_maintenance' class='common_switch ${props.maintenance==1?'checked':''}'></div>
                                     </div>
                                 </div>
-                                <div id='menu_1_broadcast'>
-                                    <div id='menu_1_broadcast_title' class='common_icon'></div>
-                                    <div id='menu_1_broadcast_button' class='chat_click common_icon'></div>
+                                <div id='menu_start_broadcast'>
+                                    <div id='menu_start_broadcast_title' class='common_icon'></div>
+                                    <div id='menu_start_broadcast_button' class='chat_click common_icon'></div>
                                 </div>
                             </div>`;
 /**
@@ -71,7 +71,7 @@ const component = async props => {
 
    const onMounted = async () =>{
         //mount select
-        await props.methods.commonComponentRender({mountDiv:'select_admin_stat',
+        await props.methods.commonComponentRender({mountDiv:'menu_start_select_stat',
             data:{
                 default_value:'REQUEST - IP TOTAL',
                 default_data_value:'request#ip_total#0#ip',
@@ -86,7 +86,7 @@ const component = async props => {
             methods:{commonFFB:props.methods.commonFFB},
             path:'/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'select_year_menu1',
+        await props.methods.commonComponentRender({mountDiv:'menu_start_select_year',
                 data:{
                     default_value:new Date().getFullYear(),
                     default_data_value:new Date().getFullYear(),
@@ -106,7 +106,7 @@ const component = async props => {
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
 
-        await props.methods.commonComponentRender({mountDiv:'select_month_menu1',
+        await props.methods.commonComponentRender({mountDiv:'menu_start_select_month',
                 data:{
                     default_value:new Date().getMonth()+1,
                     default_data_value:new Date().getMonth()+1,
@@ -120,7 +120,7 @@ const component = async props => {
                  },
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
-        await props.methods.commonComponentRender({mountDiv:'select_app_menu1',
+        await props.methods.commonComponentRender({mountDiv:'menu_start_select_app',
                 data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],

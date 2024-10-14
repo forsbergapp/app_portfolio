@@ -8,14 +8,9 @@ const COMMON_DOCUMENT = document;
 const path_common ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
 const common = await import(path_common);
-const path_app_secure ='app_secure';
-/**
- * @type {{ delete_globals:function, 
- *          show_menu:function, 
- *          app_events:function, 
- *          init:function}} 
- */
-const app_secure = await import(path_app_secure);
+
+/**@type {import('./secure.js')} */
+const app_secure = await import('./secure.js');
 
 /**
  * Admin logout
@@ -23,7 +18,7 @@ const app_secure = await import(path_app_secure);
  */
 const admin_logout_app = () => {
     common.commonUserLogout().then(() => {
-        common.commonComponentRemove('admin_secure');
+        common.commonComponentRemove('secure');
         common.commonDialogueShow('LOGIN_ADMIN');
     });
 };
@@ -35,13 +30,13 @@ const admin_login = async () => {
     await common.commonUserLogin(true)
     .then(()=>{
         common.commonComponentRender({
-            mountDiv:   'admin_secure',
+            mountDiv:   'secure',
             data:       null,
             methods:    null,
-            path:       '/component/admin_secure.js'})
+            path:       '/component/secure.js'})
         .then(()=>{
             common.commonComponentRender({
-                mountDiv:   'app_user_account',
+                mountDiv:   'secure_app_user_account',
                 data:       null,
                 methods:    null,
                 path:       '/common/component/common_user_account.js'})
@@ -53,7 +48,7 @@ const admin_login = async () => {
             });
         });
     })
-    .catch(()=>common.commonComponentRemove('admin_secure'));
+    .catch(()=>common.commonComponentRemove('secure'));
 };
 /**
  * Event click
@@ -72,29 +67,33 @@ const app_event_click = event => {
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
-                case 'menu_open':{
+                case 'secure_menu_open':{
                     COMMON_DOCUMENT.querySelector('#menu').style.display = 'block';
                     break;
                 }
-                case 'menu_close': {
+                case 'secure_menu_close': {
                     COMMON_DOCUMENT.querySelector('#menu').style.display = 'none';
                     break;
                 }
-                case 'menu_1':
-                case 'menu_2':
-                case 'menu_3':
-                case 'menu_4':
-                case 'menu_5':
-                case 'menu_6':
-                case 'menu_7':
-                case 'menu_8':
-                case 'menu_9':
-                case 'menu_10':{
-                    app_secure.show_menu(parseInt(event_target_id.substring(5)));
+                case 'secure_menu_1':
+                case 'secure_menu_2':
+                case 'secure_menu_3':
+                case 'secure_menu_4':
+                case 'secure_menu_5':
+                case 'secure_menu_6':
+                case 'secure_menu_7':
+                case 'secure_menu_8':
+                case 'secure_menu_9':
+                case 'secure_menu_10':{
+                    app_secure.show_menu(parseInt(event_target_id.substring('secure_menu_'.length)));
                     break;
                 }
-                case 'menu_11': {
+                case 'secure_menu_11': {
                     admin_logout_app();
+                    break;
+                }
+                case 'common_user_start_login_admin_button':{
+                    admin_login();
                     break;
                 }
                 //common
@@ -155,62 +154,6 @@ const app_event_click = event => {
                                         path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
                 }
-                /**Dialogue user start */
-                case 'common_user_start_identity_provider_login':{
-                    const target_row = common.commonElementRow(event.target);
-                    const provider_element = target_row.querySelector('.common_login_provider_id');
-                    if (provider_element && provider_element.textContent)
-                        common.commonUserLogin(null, null, null, parseInt(provider_element.textContent));
-                    break;
-                }
-                case 'common_user_start_login_button':
-                case 'common_user_start_login_admin_button':{
-                    admin_login();
-                    break;
-                }
-                /**Dialogue profile */
-                case 'common_dialogue_profile_home':{
-                    common.commonProfileStat(1);
-                    break;
-                }
-                case 'common_profile_stat_row1_1':{
-                    common.commonProfileStat(1);
-                    break;
-                }
-                case 'common_profile_stat_row1_2':{
-                    common.commonProfileStat(2);
-                    break;
-                }
-                case 'common_profile_stat_row1_3':{
-                    common.commonProfileStat(3);
-                    break;
-                }
-                case 'common_profile_follow':{
-                    common.commonProfileFollowLike('FOLLOW');
-                    break;
-                }
-                case 'common_profile_like':{
-                    common.commonProfileFollowLike('LIKE');
-                    break;
-                }
-                case 'common_profile_main_btn_following':{
-                    common.commonProfileDetail(1);
-                    break;
-                }
-                case 'common_profile_main_btn_followed':{
-                    common.commonProfileDetail(2);
-                    break;
-                }
-                case 'common_profile_main_btn_likes':{
-                    common.commonProfileDetail(3);
-                    break;
-                }
-                case 'common_profile_main_btn_liked':
-                case 'common_profile_main_btn_liked_heart':
-                case 'common_profile_main_btn_liked_users':{
-                    common.commonProfileDetail(4);
-                    break;
-                }
                 default:{
                     app_secure.app_events('click', event, event_target_id, list_title);
                     break;
@@ -252,8 +195,6 @@ const app_event_keyup = event => {
         common.commonEvent('keyup',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_user_start_login_username':
-                case 'common_user_start_login_password':
                 case 'common_user_start_login_admin_username':
                 case 'common_user_start_login_admin_password':
                 case 'common_user_start_login_admin_password_confirm':{

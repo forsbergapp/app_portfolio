@@ -24,16 +24,16 @@
  *          chart2_legend_text:string,
  *          chart2_legend_text_apps:string}} props
  */
-const template = props => ` <div id='box1'>
-                                <div id='box1_title' class='box_title common_icon'></div>
-                                <div id='box1_chart' class='box_chart'>
-                                    <div id='box1_pie' style='background-image:conic-gradient(${props.function_chart1_pie_colors(props.chart1_stat)}'></div>
+const template = props => ` <div id='menu_start_chart_box1'>
+                                <div id='menu_start_chart_box1_title' class='menu_start_chart_box_title common_icon'></div>
+                                <div id='menu_start_chart_box1_chart' class='menu_start_chart_box_chart'>
+                                    <div id='menu_start_chart_box1_pie' style='background-image:conic-gradient(${props.function_chart1_pie_colors(props.chart1_stat)}'></div>
                                 </div>
-                                <div id='box1_legend' class='box_legend'>
+                                <div id='menu_start_chart_box1_legend' class='menu_start_chart_box_legend'>
                                     ${props.chart1_stat.map((stat,index)=>
-                                        `<div class='box_legend_row'>
-                                            <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${index/props.chart1_stat.length*200},${index/props.chart1_stat.length*200},255)'></div>
-                                            <div id='box1_legend_col2' class='box_legend_col'>
+                                        `<div class='menu_start_chart_box_legend_row'>
+                                            <div id='menu_start_chart_box1_legend_col1' class='menu_start_chart_box_legend_col' style='background-color:rgb(${index/props.chart1_stat.length*200},${index/props.chart1_stat.length*200},255)'></div>
+                                            <div id='menu_start_chart_box1_legend_col2' class='menu_start_chart_box_legend_col'>
                                                 ${props.function_chart1_legend(stat.app_id, stat.statValue)}
                                             </div>
                                         </div>`
@@ -41,32 +41,32 @@ const template = props => ` <div id='box1'>
                                     }    
                                 </div>
                             </div>
-                            <div id='box2'>
-                                <div id='box2_title' class='box_title common_icon'></div>
-                                <div id='box2_chart' class='box_chart'>
-                                    <div id='box2_bar_legendY'>
-                                        <div id='box2_bar_legend_max'>${Math.max(...props.chart2_stat.map(stat=>stat.amount))}</div>
-                                        <div id='box2_bar_legend_medium'>${Math.max(...props.chart2_stat.map(stat=>stat.amount))/2}</div>
-                                        <div id='box2_bar_legend_min'>0</div>
+                            <div id='menu_start_chart_box2'>
+                                <div id='menu_start_chart_box2_title' class='menu_start_chart_box_title common_icon'></div>
+                                <div id='menu_start_chart_box2_chart' class='menu_start_chart_box_chart'>
+                                    <div id='menu_start_chart_box2_bar_legendY'>
+                                        <div id='menu_start_chart_box2_bar_legend_max'>${Math.max(...props.chart2_stat.map(stat=>stat.amount))}</div>
+                                        <div id='menu_start_chart_box2_bar_legend_medium'>${Math.max(...props.chart2_stat.map(stat=>stat.amount))/2}</div>
+                                        <div id='menu_start_chart_box2_bar_legend_min'>0</div>
                                     </div>
-                                    <div id='box2_bar_data'>
+                                    <div id='menu_start_chart_box2_bar_data'>
                                         ${props.chart2_stat.map(stat=>
-                                            `<div class='box2_barcol box2_barcol_display' style='width:${100/props.chart2_stat.length}%'>
-                                                <div class='box2_barcol_color' 
+                                            `<div class='menu_start_chart_box2_barcol menu_start_chart_box2_barcol_display' style='width:${100/props.chart2_stat.length}%'>
+                                                <div class='menu_start_chart_box2_barcol_color' 
                                                     style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all};height:${+stat.amount/Math.max(...props.chart2_stat.map(stat=>stat.amount))*100}%'>
                                                 </div>
-                                                <div class='box2_barcol_legendX'>${stat.day}</div>
+                                                <div class='menu_start_chart_box2_barcol_legendX'>${stat.day}</div>
                                             </div>`
                                         ).join('')
                                         }
                                     </div>
                                 </div>
-                                <div id='box2_legend' class='box_legend'>
-                                    <div id='box2_legend_row' class='box_legend_row'>
-                                        <div id='box2_legend_col1' class='box_legend_col' style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all}'></div>
-                                        <div id='box2_legend_col2' class='box_legend_col'>${props.chart2_legend_text}</div>
-                                        <div id='box2_legend_col3' class='box_legend_col' style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all}'></div>
-                                        <div id='box2_legend_col4' class='box_legend_col'>${props.chart2_legend_text_apps}</div>
+                                <div id='menu_start_chart_box2_legend' class='menu_start_chart_box_legend'>
+                                    <div id='menu_start_chart_box2_legend_row' class='menu_start_chart_box_legend_row'>
+                                        <div id='menu_start_chart_box2_legend_col1' class='menu_start_chart_box_legend_col' style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all}'></div>
+                                        <div id='menu_start_chart_box2_legend_col2' class='menu_start_chart_box_legend_col'>${props.chart2_legend_text}</div>
+                                        <div id='menu_start_chart_box2_legend_col3' class='menu_start_chart_box_legend_col' style='background-color:${props.app_id?props.chart2_color_app:props.chart2_color_app_all}'></div>
+                                        <div id='menu_start_chart_box2_legend_col4' class='menu_start_chart_box_legend_col'>${props.chart2_legend_text_apps}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -84,17 +84,17 @@ const template = props => ` <div id='box1'>
 *                      template:string}>}
 */
 const component = async props => {
-    const app_id = props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
-    const year = props.methods.COMMON_DOCUMENT.querySelector('#select_year_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
-    const month = props.methods.COMMON_DOCUMENT.querySelector('#select_month_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
+    const app_id = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').getAttribute('data-value'); 
+    const year = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_year .common_select_dropdown_value').getAttribute('data-value'); 
+    const month = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_month .common_select_dropdown_value').getAttribute('data-value'); 
 
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]',                 TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']},
     const admin_statGroup = 
-        props.methods.COMMON_DOCUMENT.querySelector('#select_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[0].toUpperCase();
+        props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[0].toUpperCase();
     const admin_statValues = 
-        { value: props.methods.COMMON_DOCUMENT.querySelector('#select_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[1],
-            unique:props.methods.COMMON_DOCUMENT.querySelector('#select_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[2],
-            statGroup:props.methods.COMMON_DOCUMENT.querySelector('#select_admin_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[3]
+        { value: props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[1],
+            unique:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[2],
+            statGroup:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').getAttribute('data-value').split('#')[3]
         };
     /**
      * Chart 2 pie colors
@@ -133,7 +133,7 @@ const component = async props => {
         if (admin_statGroup=='REQUEST')
             return stat_value;
         else
-            return Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('#select_admin_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].textContent;
+            return Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_start_select_stat .common_select_option')).filter(value=>value.getAttribute('data-value').split('#')[1]==stat_value)[0].textContent;
 
     };
     let query;
@@ -162,8 +162,8 @@ const component = async props => {
                                 chart2_color_app_all:'rgb(81, 171, 255)',
                                 chart2_color_app:'rgb(197 227 255)',
                                 chart2_stat:charts.filter(row=> row.chart==2),
-                                chart2_legend_text:props.methods.COMMON_DOCUMENT.querySelector('#select_admin_stat .common_select_dropdown_value').textContent,
-                                chart2_legend_text_apps:props.methods.COMMON_DOCUMENT.querySelector('#select_app_menu1 .common_select_dropdown_value').textContent})
+                                chart2_legend_text:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').textContent,
+                                chart2_legend_text_apps:props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').textContent})
         };
 };
 export default component;

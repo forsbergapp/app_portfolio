@@ -8,24 +8,24 @@
  * @param {{app_id:number,
  *          app_parameters:[{COMMENT:string}]|[]}} props
  */
-const template = props => ` <div id='list_app_parameter_row_title' class='list_app_parameter_row'>
-                                    <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
-                                    <div id='list_app_parameter_col_title2' class='list_app_parameter_col list_title'>NAME</div>
-                                    <div id='list_app_parameter_col_title3' class='list_app_parameter_col list_title'>VALUE</div>
-                                    <div id='list_app_parameter_col_title4' class='list_app_parameter_col list_title'>COMMENT</div>
+const template = props => ` <div id='menu_apps_parameters_row_title' class='menu_apps_parameters_row'>
+                                    <div id='menu_apps_parameters_col_title1' class='menu_apps_parameters_col list_title'>APP ID</div>
+                                    <div id='menu_apps_parameters_col_title2' class='menu_apps_parameters_col list_title'>NAME</div>
+                                    <div id='menu_apps_parameters_col_title3' class='menu_apps_parameters_col list_title'>VALUE</div>
+                                    <div id='menu_apps_parameters_col_title4' class='menu_apps_parameters_col list_title'>COMMENT</div>
                             </div>
                             ${props.app_parameters.map(app_parameter=>
-                                `<div data-changed-record='0' class='list_app_parameter_row common_row'>
-                                    <div class='list_app_parameter_col'>
+                                `<div data-changed-record='0' class='menu_apps_parameters_row common_row'>
+                                    <div class='menu_apps_parameters_col'>
                                         <div class='list_readonly'>${props.app_id}</div>
                                     </div>
-                                    <div class='list_app_parameter_col'>
+                                    <div class='menu_apps_parameters_col'>
                                         <div class='list_readonly'>${Object.keys(app_parameter).filter(key=>key != 'app_id' && key != 'COMMENT')[0]}</div>
                                     </div>
-                                    <div class='list_app_parameter_col'>
+                                    <div class='menu_apps_parameters_col'>
                                         <div contentEditable='true' class='common_input list_edit'/>${app_parameter[Object.keys(app_parameter).filter(key=>key != 'app_id' && key != 'COMMENT')[0]] ?? ''}</div>
                                     </div>
-                                    <div class='list_app_parameter_col'>
+                                    <div class='menu_apps_parameters_col'>
                                         <div contentEditable='true' class='common_input list_edit'/>${app_parameter.COMMENT ?? ''}</div>
                                     </div>
                                 </div>`

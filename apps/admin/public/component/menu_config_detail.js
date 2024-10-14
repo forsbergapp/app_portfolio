@@ -11,30 +11,30 @@
  *          config:[]}} props
  */
 const template = props => ` ${props.file=='CONFIG_SERVER'?
-                                `<div id='list_config' class='common_list_scrollbar'>
-                                    <div id='list_config_row_title' class='list_config_row'>
-                                        <div id='list_config_col_title1' class='list_config_col list_title'>PARAMETER NAME</div>
-                                        <div id='list_config_col_title2' class='list_config_col list_title'>PARAMETER VALUE</div>
-                                        <div id='list_config_col_title3' class='list_config_col list_title'>COMMENT</div>
+                                `<div id='menu_config_detail' class='common_list_scrollbar'>
+                                    <div id='menu_config_detail_row_title' class='menu_config_detail_row'>
+                                        <div id='menu_config_detail_col_title1' class='menu_config_detail_col list_title'>PARAMETER NAME</div>
+                                        <div id='menu_config_detail_col_title2' class='menu_config_detail_col list_title'>PARAMETER VALUE</div>
+                                        <div id='menu_config_detail_col_title3' class='menu_config_detail_col list_title'>COMMENT</div>
                                     </div>
                                     ${  //create div groups with parameters, each group with a title
                                         //first 5 attributes in config json contains array of parameter records
                                         //metadata is saved last in config
                                         props.server_group.map(i_group=>
-                                        `<div id='list_config_row_${i_group}' class='list_config_row list_config_group' >
-                                            <div class='list_config_col list_config_group_title'>
+                                        `<div id='menu_config_detail_row_${i_group}' class='menu_config_detail_row menu_config_detail_group' >
+                                            <div class='menu_config_detail_col menu_config_detail_group_title'>
                                                 <div class='list_readonly'>${Object.keys(props.config)[i_group]}</div>
                                             </div>
                                             ${  /**@ts-ignore*/
                                                 props.config[Object.keys(props.config)[i_group]].map(row=>
-                                                `<div id='list_config_row_${i_group}' class='list_config_row' >
-                                                    <div class='list_config_col'>
+                                                `<div id='menu_config_detail_row_${i_group}' class='menu_config_detail_row' >
+                                                    <div class='menu_config_detail_col'>
                                                         <div class='list_readonly'>${Object.keys(row)[0]}</div>
                                                     </div>
-                                                    <div class='list_config_col'>
+                                                    <div class='menu_config_detail_col'>
                                                         <div contentEditable='true' class='common_input'/>${Object.values(row)[0]}</div>
                                                     </div>
-                                                    <div class='list_config_col'>
+                                                    <div class='menu_config_detail_col'>
                                                         <div class='list_readonly'>${Object.values(row)[1]}</div>
                                                     </div>
                                                 </div>`).join('')
@@ -42,7 +42,7 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
                                         </div>`
                                     ).join('')}
                                 </div>`:
-                                `<div id='list_config_edit' contentEditable = 'true'>${JSON.stringify(props.config, undefined, 2)}</div>`
+                                `<div id='menu_config_detail_edit' contentEditable = 'true'>${JSON.stringify(props.config, undefined, 2)}</div>`
                             }`;
 /**
 * 
@@ -64,7 +64,7 @@ const component = async props => {
    const onMounted = async () =>{        
         if (props.data.file=='CONFIG_SERVER'){
             //set focus first column in first row
-            props.methods.COMMON_DOCUMENT.querySelectorAll('#list_config .common_input')[0].focus();
+            props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_config_detail .common_input')[0].focus();
         }
  };
  

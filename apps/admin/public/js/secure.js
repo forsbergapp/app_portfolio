@@ -55,13 +55,13 @@ const delete_globals = () => {
  * @returns {void}
  */
 const show_menu = menu => {
-    COMMON_DOCUMENT.querySelectorAll('.menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('menuitem_selected'));
-    COMMON_DOCUMENT.querySelector(`#menu_${menu}`).classList.add('menuitem_selected');
+    COMMON_DOCUMENT.querySelectorAll('.secure_menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('secure_menuitem_selected'));
+    COMMON_DOCUMENT.querySelector(`#secure_menu_${menu}`).classList.add('secure_menuitem_selected');
 
     switch(menu){
         //START
         case 1:{
-            common.commonComponentRender({mountDiv:   'menu_content',
+            common.commonComponentRender({mountDiv:   'secure_menu_content',
                                     data:       null,
                                     methods:    {
                                                 commonComponentRender:common.commonComponentRender, 
@@ -75,7 +75,7 @@ const show_menu = menu => {
         //USER STAT
         case 2:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {commonFFB:common.commonFFB},
                 path:       '/component/menu_user_stat.js'});
@@ -84,7 +84,7 @@ const show_menu = menu => {
         //USERS
         case 3:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    null,
                 path:       '/component/menu_users.js'})
@@ -94,7 +94,7 @@ const show_menu = menu => {
         //APP ADMIN
         case 4:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {commonFFB:common.commonFFB},
                 path:       '/component/menu_apps.js'});
@@ -107,7 +107,7 @@ const show_menu = menu => {
              */
             const map_update = (...parameters) =>common.COMMON_GLOBAL.moduleLeaflet.methods.map_update(...parameters);
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
                             admin_only:common.COMMON_GLOBAL.admin_only,
@@ -132,14 +132,14 @@ const show_menu = menu => {
                 path:       '/component/menu_monitor.js'})
             .then(result=>{
                 APP_GLOBAL.component.MENU_MONITOR  = result.methods;
-                COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
+                COMMON_DOCUMENT.querySelector('#menu_monitor_connected').click();
             });
             break;
         }
         //SERVER CONFIG
         case 6:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    null,
                 path:       '/component/menu_config.js'});
@@ -148,7 +148,7 @@ const show_menu = menu => {
         //INSTALLATION
         case 7:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {commonFFB:common.commonFFB},
                 path:       '/component/menu_installation.js'});
@@ -157,7 +157,7 @@ const show_menu = menu => {
         //DATABASE
         case 8:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {
                             commonRoundOff:common.commonRoundOff,
@@ -173,7 +173,7 @@ const show_menu = menu => {
         //SERVER
         case 10:{
             common.commonComponentRender({
-                mountDiv:   'menu_content',
+                mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {commonFFB:common.commonFFB},
                 path:       '/component/menu_server.js'});
@@ -187,7 +187,7 @@ const show_menu = menu => {
  */
 const show_charts = async () => {
     common.commonComponentRender({
-        mountDiv:   'graphBox',
+        mountDiv:   'menu_start_graphBox',
         data:       null,
         methods:    {
                     commonComponentRender:common.commonComponentRender,
@@ -203,19 +203,19 @@ const sendBroadcast = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
-    const broadcast_message = COMMON_DOCUMENT.querySelector('#send_broadcast_message').textContent;
+    const broadcast_message = COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_message').textContent;
 
     if (broadcast_message==''){
         common.commonMessageShow('INFO', null, null, 'message_text', '!', common.COMMON_GLOBAL.app_id);
     }
     else{
-        if (COMMON_DOCUMENT.querySelector('#client_id').textContent==''){
-            app_id = COMMON_DOCUMENT.querySelector('#select_app_broadcast .common_select_dropdown_value').getAttribute('data-value');
+        if (COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent==''){
+            app_id = COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_app_broadcast .common_select_dropdown_value').getAttribute('data-value');
             client_id = '';
-            broadcast_type = COMMON_DOCUMENT.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
+            broadcast_type = COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
         }
         else{
-            client_id = COMMON_DOCUMENT.querySelector('#client_id').textContent;
+            client_id = COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent;
             app_id = '';
             broadcast_type = 'CHAT';
         }
@@ -268,35 +268,35 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
         switch (dialogue_type){
             case 'CHAT':{
                 //hide and set INFO, should not be able to send MAINTENANCE message here
-                COMMON_DOCUMENT.querySelector('#select_broadcast_type').style.display='none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_broadcast_type').style.display='none';
                 //hide app selection
-                COMMON_DOCUMENT.querySelector('#select_app_broadcast').style.display='none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_app_broadcast').style.display='none';
                 //show client id
-                COMMON_DOCUMENT.querySelector('#client_id_label').style.display = 'inline-block';
-                COMMON_DOCUMENT.querySelector('#client_id').style.display = 'inline-block';
-                COMMON_DOCUMENT.querySelector('#client_id').textContent = client_id;
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id_label').style.display = 'inline-block';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').style.display = 'inline-block';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent = client_id;
                 break;
             }
             case 'APP':{
                 //hide and set INFO, should not be able to send MAINTENANCE message here
-                COMMON_DOCUMENT.querySelector('#select_broadcast_type').style.display='none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_broadcast_type').style.display='none';
                 //show app selection
-                COMMON_DOCUMENT.querySelector('#select_app_broadcast').style.display='block';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_app_broadcast').style.display='block';
                 //hide client id
-                COMMON_DOCUMENT.querySelector('#client_id_label').style.display = 'none';
-                COMMON_DOCUMENT.querySelector('#client_id').style.display = 'none';
-                COMMON_DOCUMENT.querySelector('#client_id').textContent = '';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id_label').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent = '';
                 break;
             }
             case 'ALL':{
                 //show broadcast type and INFO
-                COMMON_DOCUMENT.querySelector('#select_broadcast_type').style.display='inline-block';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_broadcast_type').style.display='inline-block';
                 //show app selection
-                COMMON_DOCUMENT.querySelector('#select_app_broadcast').style.display='block';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_app_broadcast').style.display='block';
                 //hide client id
-                COMMON_DOCUMENT.querySelector('#client_id_label').style.display = 'none';
-                COMMON_DOCUMENT.querySelector('#client_id').style.display = 'none';
-                COMMON_DOCUMENT.querySelector('#client_id').textContent = '';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id_label').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent = '';
                 break;
             }
         }
@@ -307,23 +307,23 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
  * @returns{void}
  */
 const set_broadcast_type = () => {
-    switch (COMMON_DOCUMENT.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value')){
+    switch (COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value').getAttribute('data-value')){
         case 'ALERT':{
             //show app selection
-            COMMON_DOCUMENT.querySelector('#select_app_broadcast').style.display='block';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_app_broadcast').style.display='block';
             //hide client id
-            COMMON_DOCUMENT.querySelector('#client_id_label').style.display = 'none';
-            COMMON_DOCUMENT.querySelector('#client_id').style.display = 'none';
-            COMMON_DOCUMENT.querySelector('#client_id').textContent = '';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id_label').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent = '';
             break;
         }
         case 'MAINTENANCE':{
             //hide app selection
-            COMMON_DOCUMENT.querySelector('#select_app_broadcast').style.display='none';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_app_broadcast').style.display='none';
             //hide client id
-            COMMON_DOCUMENT.querySelector('#client_id_label').style.display = 'none';
-            COMMON_DOCUMENT.querySelector('#client_id').style.display = 'none';
-            COMMON_DOCUMENT.querySelector('#client_id').textContent = '';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id_label').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_client_id').textContent = '';
             break;
         }
     }
@@ -334,7 +334,7 @@ const set_broadcast_type = () => {
  */
 const set_maintenance = () => {
     let check_value;
-    if (COMMON_DOCUMENT.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
+    if (COMMON_DOCUMENT.querySelector('#menu_start_checkbox_maintenance').classList.contains('checked'))
         check_value = 1;
     else
         check_value = 0;
@@ -349,7 +349,7 @@ const set_maintenance = () => {
  */
 const search_users = (sort='username', order_by='asc') => {
     common.commonComponentRender({
-        mountDiv:   'list_user_account',
+        mountDiv:   'menu_users_list',
         data:       {
                     user_account_id:common.COMMON_GLOBAL.user_account_id,
                     sort:sort,
@@ -366,9 +366,9 @@ const search_users = (sort='username', order_by='asc') => {
  */
 const button_save = async (item) => {
     switch (item){
-        case 'apps_save':{
-            //save changes in list_apps
-            let x = COMMON_DOCUMENT.querySelectorAll('.list_apps_row');
+        case 'menu_apps_save':{
+            //save changes in menu_apps
+            let x = COMMON_DOCUMENT.querySelectorAll('.menu_apps_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('app',
@@ -393,8 +393,8 @@ const button_save = async (item) => {
                                                             parameter_comment:''}});
                 }
             }
-            //save changes in list_app_parameter
-            x = COMMON_DOCUMENT.querySelectorAll('.list_app_parameter_row');
+            //save changes in menu_apps_parameters
+            x = COMMON_DOCUMENT.querySelectorAll('.menu_apps_parameters_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('app_parameter',
@@ -421,9 +421,9 @@ const button_save = async (item) => {
             }
             break;
         }
-        case 'users_save':{
-            //save changes in list_user_account
-            const x = COMMON_DOCUMENT.querySelectorAll('.list_user_account_row');
+        case 'menu_users_save':{
+            //save changes in menu_users_list
+            const x = COMMON_DOCUMENT.querySelectorAll('.menu_users_list_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('user_account',
@@ -450,20 +450,20 @@ const button_save = async (item) => {
             }
             break;
         }
-        case 'config_save':{
+        case 'menu_config_save':{
             const config_server = () => {
                 /**@type{object} */
                 let config_server = {};
-                COMMON_DOCUMENT.querySelectorAll('#list_config .list_config_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
+                COMMON_DOCUMENT.querySelectorAll('#menu_config_detail .menu_config_detail_group').forEach((/**@type{HTMLElement}*/config_group_element) => 
                     {
                         const config_group  = {
-                                                [config_group_element.querySelector('.list_config_group_title div')?.textContent ?? '']:
-                                                        Array.from(config_group_element.querySelectorAll('.list_config_row')).map(config_group_row => 
+                                                [config_group_element.querySelector('.menu_config_detail_group_title div')?.textContent ?? '']:
+                                                        Array.from(config_group_element.querySelectorAll('.menu_config_detail_row')).map(config_group_row => 
                                                             {
                                                                 return {
-                                                                    [config_group_row.querySelectorAll('.list_config_col div')[0].textContent ?? '']:
-                                                                                config_group_row.querySelectorAll('.list_config_col div')[1].textContent,
-                                                                    COMMENT:    config_group_row.querySelectorAll('.list_config_col div')[2].textContent ?? ''
+                                                                    [config_group_row.querySelectorAll('.menu_config_detail_col div')[0].textContent ?? '']:
+                                                                                config_group_row.querySelectorAll('.menu_config_detail_col div')[1].textContent,
+                                                                    COMMENT:    config_group_row.querySelectorAll('.menu_config_detail_col div')[2].textContent ?? ''
                                                                 };
                                                             }
                                                         )
@@ -473,11 +473,11 @@ const button_save = async (item) => {
                 );
                 return config_server;
             };
-            const file = COMMON_DOCUMENT.querySelectorAll('#menu_content .list_nav .list_nav_selected_tab')[0].id.substring('list_config_nav_'.length).toUpperCase();
+            const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].id.substring('menu_config_'.length).toUpperCase();
             //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
-                                                    JSON.parse(COMMON_DOCUMENT.querySelector('#list_config_edit').textContent)};
+                                                    JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};
 
             common.commonFFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'ADMIN', body:json_data, spinner_id:item});
             break;
@@ -568,9 +568,9 @@ const installation_function = (id, db_icon, path, query, method, data) => {
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
             if (db_icon)
-                COMMON_DOCUMENT.querySelector('#install_db_icon').classList.add('installed');
+                COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.add('installed');
             else
-                COMMON_DOCUMENT.querySelector('#install_db_icon').classList.remove('installed');
+                COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.remove('installed');
         common.commonMessageShow('LOG', null, null, null, JSON.parse(result).info, common.COMMON_GLOBAL.common_app_id);
     });
 };
@@ -580,7 +580,7 @@ const installation_function = (id, db_icon, path, query, method, data) => {
  */
 const db_install = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    installation_function(  'install_db_button_install', true, 
+    installation_function(  'menu_installation_db_button_install', true, 
                             '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 
                             'POST', null);
@@ -591,7 +591,7 @@ const db_install = () =>{
  */
 const db_uninstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    installation_function(  'install_db_button_uninstall', false, 
+    installation_function(  'menu_installation_db_button_uninstall', false, 
                             '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', null);
 };
@@ -602,10 +602,10 @@ const db_uninstall = () =>{
 const demo_install = () =>{
     if (common.commonInputControl(null,
                         {
-                            check_valid_list_elements:[[COMMON_DOCUMENT.querySelector('#install_demo_password'),null]]
+                            check_valid_list_elements:[[COMMON_DOCUMENT.querySelector('#menu_installation_demo_password'),null]]
                         })==true){
-        const json_data = {demo_password: COMMON_DOCUMENT.querySelector('#install_demo_password').textContent};
-        installation_function(  'install_demo_button_install', null, 
+        const json_data = {demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
+        installation_function(  'menu_installation_demo_button_install', null, 
                                 '/server-db_admin/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                                 'POST', json_data);
@@ -616,7 +616,7 @@ const demo_install = () =>{
  * @returns {void}
  */
 const demo_uninstall = () =>{
-    installation_function(  'install_demo_button_uninstall', null, 
+    installation_function(  'menu_installation_demo_button_uninstall', null, 
                             '/server-db_admin/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                             'DELETE', null);
@@ -637,32 +637,32 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 case event.target?.classList.contains('common_select_option')?event_target_id:'':
                 case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
                     //menu start
-                    if( event_target_id == 'select_app_menu1' ||
-                        event_target_id == 'select_year_menu1'||
-                        event_target_id == 'select_month_menu1' ||
-                        event_target_id == 'select_admin_stat'){
+                    if( event_target_id == 'menu_start_select_app' ||
+                        event_target_id == 'menu_start_select_year'||
+                        event_target_id == 'menu_start_select_month' ||
+                        event_target_id == 'menu_start_select_stat'){
                         show_charts();    
                     }
-                    if( event_target_id == 'select_broadcast_type')
+                    if( event_target_id == 'dialogue_send_broadcast_select_broadcast_type')
                         set_broadcast_type();
                     //menu monitor
-                    if( event_target_id == 'select_app_menu5'||
-                        event_target_id == 'select_year_menu5'||
-                        event_target_id == 'select_month_menu5'||
-                        event_target_id == 'select_day_menu5'){
-                            switch (COMMON_DOCUMENT.querySelector('#list_monitor_nav .list_nav_selected_tab').id){
-                                case 'list_monitor_nav_server_log':{
+                    if( event_target_id == 'menu_monitor_select_app'||
+                        event_target_id == 'menu_monitor_select_year'||
+                        event_target_id == 'menu_monitor_select_month'||
+                        event_target_id == 'menu_monitor_select_day'){
+                            switch (COMMON_DOCUMENT.querySelector('#menu_monitor .list_nav_selected_tab').id){
+                                case 'menu_monitor_server_log':{
                                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
-                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+                                    COMMON_DOCUMENT.querySelector('#menu_monitor_server_log').classList.add('list_nav_selected_tab');
                                     APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                                     break;
                                 }
-                                case 'list_monitor_nav_connected':{
-                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').click();
+                                case 'menu_monitor_connected':{
+                                    COMMON_DOCUMENT.querySelector('#menu_monitor_connected').click();
                                     break;
                                 }
-                                case 'list_monitor_nav_app_log':{
-                                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').click();
+                                case 'menu_monitor_app_log':{
+                                    COMMON_DOCUMENT.querySelector('#menu_monitor_app_log').click();
                                     break;
                                 }
                                 default:{
@@ -670,100 +670,100 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                 }
                             }
                         }
-                    if( event_target_id == 'select_logscope5')
+                    if( event_target_id == 'menu_monitor_detail_select_logscope')
                         APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                     break;
                 }
-                case 'menu_1_broadcast_button':{
+                case 'menu_start_broadcast_button':{
                     show_broadcast_dialogue('ALL');
                     break;
                 }
-                case 'menu_1_checkbox_maintenance':{
+                case 'menu_start_checkbox_maintenance':{
                     set_maintenance();
                     break;
                 }
-                case 'list_user_search_icon':{
-                    COMMON_DOCUMENT.querySelector('#list_user_account_search_input').focus();
+                case 'menu_users_search_icon':{
+                    COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').focus();
                     search_users('username', 'asc');
                     break;
                 }
-                case 'users_save':{
-                    button_save('users_save');
+                case 'menu_users_save':{
+                    button_save('menu_users_save');
                     break;
                 }
-                case 'apps_save':{
-                    button_save('apps_save');
+                case 'menu_apps_save':{
+                    button_save('menu_apps_save');
                     break;
                 }
-                case 'filesearch_menu5':{
+                case 'menu_monitor_detail_filesearch':{
                     APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowLogDir();
                     break;
                 }
-                case 'list_server_log_search_icon':{
-                    COMMON_DOCUMENT.querySelector('#list_server_log_search_input').focus();
+                case 'menu_monitor_detail_server_log_search_icon':{
+                    COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input').focus();
                     APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate','desc');
                     break;
                 }
-                case 'list_monitor_nav_connected':{
+                case 'menu_monitor_connected':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
-                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#menu_monitor_connected').classList.add('list_nav_selected_tab');
                     APP_GLOBAL.component.MENU_MONITOR.monitorShow('CONNECTED', '', 'connection_date', 'desc');
                     break;
                 }
-                case 'list_monitor_nav_app_log':{
+                case 'menu_monitor_app_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
-                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#menu_monitor_app_log').classList.add('list_nav_selected_tab');
                     APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 0, 'date_created', 'desc');
                     break;
                 }
-                case 'list_monitor_nav_server_log':{
+                case 'menu_monitor_server_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
-                    COMMON_DOCUMENT.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector('#menu_monitor_server_log').classList.add('list_nav_selected_tab');
                     APP_GLOBAL.component.MENU_MONITOR.monitorShow('SERVER_LOG', '', 'logdate', 'desc');
                     break;
                 }
-                case 'list_monitor_first':
-                case 'list_monitor_previous':
-                case 'list_monitor_next':
-                case 'list_monitor_last':{
+                case 'menu_monitor_pagination_first':
+                case 'menu_monitor_pagination_previous':
+                case 'menu_monitor_pagination_next':
+                case 'menu_monitor_pagination_last':{
                     APP_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
                     break;
                 }
-                case 'config_save':{
-                    button_save('config_save');
+                case 'menu_config_save':{
+                    button_save('menu_config_save');
                     break;
                 }
-                case 'list_config_nav_config_server' :
-                case 'list_config_nav_config_iam_blockip':
-                case 'list_config_nav_config_iam_useragent':
-                case 'list_config_nav_config_iam_policy':{
+                case 'menu_config_config_server' :
+                case 'menu_config_config_iam_blockip':
+                case 'menu_config_config_iam_useragent':
+                case 'menu_config_config_iam_policy':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
                     common.commonComponentRender({
-                        mountDiv:       'list_config_container',
-                        data:           {file:`${event_target_id.substring('list_config_nav_'.length).toUpperCase()}`},
+                        mountDiv:       'menu_config_detail_container',
+                        data:           {file:`${event_target_id.substring('menu_config_'.length).toUpperCase()}`},
                         methods:        {commonFFB:common.commonFFB},
                         path:           '/component/menu_config_detail.js'});
                     break;
                 }
-                case 'install_db_button_install':{
+                case 'menu_installation_db_button_install':{
                     common.commonMessageShow('CONFIRM',null,db_install, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
-                case 'install_db_button_uninstall':{
+                case 'menu_installation_db_button_uninstall':{
                     common.commonMessageShow('CONFIRM',null,db_uninstall, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
-                case 'install_demo_button_install':{
+                case 'menu_installation_demo_button_install':{
                     demo_install();
                     break;
                 }
-                case 'install_demo_button_uninstall':{
+                case 'menu_installation_demo_button_uninstall':{
                     demo_uninstall();
                     break;
                 }
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
-                    if (event_target_id == 'list_user_account')
+                    if (event_target_id == 'menu_users_list')
                         search_users(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
                     else
                         event_list_title!=null?APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(event_target_id, 
@@ -792,16 +792,16 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                     });
                     break;
                 }
-                case 'list_apps':{
+                case 'menu_apps':{
                     if (event.target.classList.contains('common_list_lov_click'))
                         common.commonLovEvent(event, 'APP_CATEGORY');
                     break;
                 }
-                case 'send_broadcast_send':{
+                case 'dialogue_send_broadcast_send':{
                     sendBroadcast();
                     break;
                 }
-                case 'send_broadcast_close':{
+                case 'dialogue_send_broadcast_close':{
                     closeBroadcast();
                     break;
                 }
@@ -810,27 +810,27 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
         }
         case 'focus':{
             switch (event_target_id){
-                case 'list_apps':{
+                case 'menu_apps':{
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.commonElementRow(event.target)){
                         APP_GLOBAL.previous_row = common.commonElementRow(event.target);
                         common.commonComponentRender({
-                            mountDiv:   'list_app_parameter',
+                            mountDiv:   'menu_apps_parameters',
                             data:       {app_id_data:parseInt(common.commonElementRow(event.target).getAttribute('data-app_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
                             path:       '/component/menu_apps_parameters.js'});
                     }
                     break;
                 }
-                case 'list_user_account':{
+                case 'menu_users_list':{
                     //event on master to automatically show detail records
                     if (APP_GLOBAL.previous_row != common.commonElementRow(event.target)){
                         APP_GLOBAL.previous_row = common.commonElementRow(event.target);
                         common.commonComponentRender({
-                            mountDiv:   'list_iam_user_login',
+                            mountDiv:   'menu_users_iam_user_login',
                             data:       {user_account_id:parseInt(common.commonElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
-                            path:       '/component/menu_users_logon.js'});
+                            path:       '/component/menu_users_iam_user_login.js'});
                     }
                     break;
                 }   
@@ -841,7 +841,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
             if (event.target.classList.contains('list_edit')){
                 common.commonElementRow(event.target).setAttribute('data-changed-record','1');
                 //app category LOV
-                if (common.commonElementRow(event.target).classList.contains('list_apps_row') && event.target.classList.contains('common_input_lov'))
+                if (common.commonElementRow(event.target).classList.contains('menu_apps_row') && event.target.classList.contains('common_input_lov'))
                     if (event.target.textContent=='')
                         event.target.parentNode.nextElementSibling.querySelector('.common_lov_value').textContent = '';
                     else
@@ -851,7 +851,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
         }
         case 'keyup':{
             switch (event_target_id){
-                case 'list_user_account_search_input':{
+                case 'menu_users_list_search_input':{
                     if (!event.code.startsWith('Arrow') && 
                         event.code != 'Home' && 
                         event.code != 'End' &&
@@ -860,7 +860,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         common.commonTypewatch(search_users, 'username', 'asc');
                     break;
                 }
-                case 'list_server_log_search_input':{
+                case 'menu_monitor_detail_server_log_search_input':{
                     if (!event.code.startsWith('Arrow') && 
                         event.code != 'Home' && 
                         event.code != 'End' &&
