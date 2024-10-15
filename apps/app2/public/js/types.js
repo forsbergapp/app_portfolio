@@ -14,7 +14,7 @@
  */
 /**
  * Type CommonModuleLibTimetable
- * @typedef {{  REPORT_GLOBAL:APP_REPORT_GLOBAL,
+ * @typedef {{  APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
  *              component:{(arg0:CommonModuleLibTimetableParam) : 
  *                                  {   
  *                                      lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 

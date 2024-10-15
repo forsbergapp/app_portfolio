@@ -43,7 +43,7 @@ const template = () =>` <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {
  *                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                       component_setting_update:import('../js/app.js')['component_setting_update']
+ *                       appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate']
  *                       }}} props
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -64,7 +64,7 @@ const method = async props => {
             //remove active class if it is active
             props.methods.COMMON_DOCUMENT.querySelector(  '#setting_icon_text_header_a' + 
                                         props.data.user_settings.text_header_align).classList.remove('setting_button_active');
-            props.methods.component_setting_update('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + props.data.user_settings.text_header_align);
+            props.methods.appComponentSettingUpdate('TEXT', 'HEADER_ALIGN', 'setting_icon_text_header_a' + props.data.user_settings.text_header_align);
         }
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent = props.data.user_settings.text_footer_1_text;
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_reportfooter2').textContent = props.data.user_settings.text_footer_2_text;
@@ -77,7 +77,7 @@ const method = async props => {
             //remove active class if it is active
             props.methods.COMMON_DOCUMENT.querySelector('#setting_icon_text_footer_a' +
                 props.data.user_settings.text_footer_align).classList.remove('setting_button_active');
-            props.methods.component_setting_update('TEXT', 'FOOTER_ALIGN', 'setting_icon_text_footer_a' + props.data.user_settings.text_footer_align);
+            props.methods.appComponentSettingUpdate('TEXT', 'FOOTER_ALIGN', 'setting_icon_text_footer_a' + props.data.user_settings.text_footer_align);
         }
         props.methods.COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
     };

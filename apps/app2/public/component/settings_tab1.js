@@ -120,7 +120,7 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      user_timezone:string
  *                      },
  *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      component_setting_update:import('../js/app.js')['component_setting_update'],
+ *                      appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate'],
  *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
  *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
  *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
@@ -284,7 +284,7 @@ const method = async props => {
         props.methods.commonSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.regional_calendar_hijri_type);
 
         //display live timezone time
-        props.methods.component_setting_update('REGIONAL', 'TIMEZONE');
+        props.methods.appComponentSettingUpdate('REGIONAL', 'TIMEZONE');
 
     };
     return {

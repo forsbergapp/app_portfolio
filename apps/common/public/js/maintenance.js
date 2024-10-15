@@ -5,14 +5,14 @@
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const path_common ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const common = await import(path_common);
+const common = await import(commonPath);
 /**
  * App exception function
  * @returns {void}
  */
-const app_exception = () => {
+const appException = () => {
     null;
 };
 /**
@@ -20,7 +20,7 @@ const app_exception = () => {
  * @param {string} parameters 
  * @returns {void}
  */
-const init = parameters => {
+const appCommonInit= parameters => {
     COMMON_DOCUMENT.title = '⚒';
     COMMON_DOCUMENT.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
         const event_target_id = common.commonElementId(event.target);
@@ -30,7 +30,7 @@ const init = parameters => {
     const decoded_parameters = JSON.parse(common.commonWindowFromBase64(parameters));
     common.COMMON_GLOBAL.common_app_id= decoded_parameters.common_app_id;
     common.COMMON_GLOBAL.app_id = decoded_parameters.app_id;
-    common.COMMON_GLOBAL.app_function_exception = app_exception; 
+    common.COMMON_GLOBAL.app_function_exception = appException; 
     common.COMMON_GLOBAL.rest_resource_bff = decoded_parameters.rest_resource_bff;
     common.COMMON_GLOBAL.user_account_id = null;
     common.COMMON_GLOBAL.user_identity_provider_id = null;
@@ -39,4 +39,4 @@ const init = parameters => {
     common.commonSocketConnectOnline();    
     common.commonSocketMaintenanceShow(null,1);
 };
-export{app_exception, init};
+export{appException, init};

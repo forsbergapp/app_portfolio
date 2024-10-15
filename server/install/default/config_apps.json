@@ -73,10 +73,8 @@
                     {"MODULE_EASY.QRCODE_WIDTH": "128"}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
-                    "JS":"/js/admin.js",
-                    "JS_SECURE":"/js/secure.js",
-                    "JS_REPORT":"",
+                    "MANIFEST": "/common/manifest.json",
+                    "JS":"/js/app.js",
                     "CSS": "/css/admin.css",
                     "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",
@@ -123,12 +121,10 @@
                     {"MODULE_EASY.QRCODE_WIDTH": "128"}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
-                    "JS":"/js/app.js",     
-                    "JS_SECURE":"",                     
-                    "JS_REPORT":"",                         
+                    "MANIFEST": "/common/manifest.json",
+                    "JS":"/js/app.js",
                     "CSS": "/css/app.css",   
-                    "CSS_REPORT": "",                         
+                    "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png"
         },
@@ -232,10 +228,8 @@
                     {"MODULE_EASY.QRCODE_WIDTH": "128"}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"/manifest.json",
-                    "JS":"/js/app.js",     
-                    "JS_SECURE":"",                     
-                    "JS_REPORT":"",
+                    "MANIFEST":"/common/manifest.json",
+                    "JS":"/js/app.js",
                     "CSS": "/css/app.css",   
                     "CSS_REPORT": "/css/app_report.css", 
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
@@ -279,12 +273,10 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
+                    "MANIFEST": "/common/manifest.json",
                     "JS":"/js/app.js",     
-                    "JS_SECURE":"",                     
-                    "JS_REPORT":"",                         
                     "CSS": "/css/app.css",   
-                    "CSS_REPORT": "",                         
+                    "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png"
         },
@@ -322,12 +314,10 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
-                    "JS":"/js/app.js",     
-                    "JS_SECURE":"",                     
-                    "JS_REPORT":"",                         
+                    "MANIFEST": "/common/manifest.json",
+                    "JS":"/js/app.js",
                     "CSS": "/css/app.css",   
-                    "CSS_REPORT": "",                         
+                    "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png"
         },
@@ -367,12 +357,10 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
-                    "JS":"/js/app.js",     
-                    "JS_SECURE":"",                     
-                    "JS_REPORT":"",                         
+                    "MANIFEST": "/common/manifest.json",
+                    "JS":"/js/app.js",
                     "CSS": "/css/app.css",   
-                    "CSS_REPORT": "",                         
+                    "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png"
         },
@@ -433,12 +421,10 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
-                    "JS":"/js/app.js",     
-                    "JS_SECURE":"",                     
-                    "JS_REPORT":"",                         
+                    "MANIFEST": "/common/manifest.json",
+                    "JS":"/js/app.js",
                     "CSS": "/css/app.css",   
-                    "CSS_REPORT": "",                         
+                    "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",   
                     "FAVICON_192x192":"/images/favicon-192x192.png"
         },
@@ -485,10 +471,8 @@
                     {"LINK_URL": ""}
         ],
         "RENDER_CONFIG":{   
-                    "MANIFEST":"",
+                    "MANIFEST": "/common/manifest.json",
                     "JS":"/js/app.js",
-                    "JS_SECURE":"",
-                    "JS_REPORT":"",
                     "CSS": "/css/app.css",
                     "CSS_REPORT": "",
                     "FAVICON_32x32":"/images/favicon-32x32.png",

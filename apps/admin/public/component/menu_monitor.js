@@ -44,7 +44,7 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      client_longitude:string,
  *                      client_place:string},
  *          methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      show_broadcast_dialogue:import('../js/secure.js')['show_broadcast_dialogue'], 
+ *                      appSecureDialogueSendBroadcastShow:import('../js/secure.js')['appSecureDialogueSendBroadcastShow'], 
  *                      map_update:import('../../../common_types.js').CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
  *                      commonModuleLeafletInit:import('../../../common_types.js').CommonModuleCommon['commonModuleLeafletInit'],
  *                      commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
@@ -195,7 +195,7 @@ const component = async props => {
             methods:    {
                         monitorShow:monitorShow,
                         map_update:props.methods.map_update,
-                        show_broadcast_dialogue:props.methods.show_broadcast_dialogue,
+                        appSecureDialogueSendBroadcastShow:props.methods.appSecureDialogueSendBroadcastShow,
                         commonElementRow:props.methods.commonElementRow,
                         commonLovClose:props.methods.commonLovClose,
                         commonLovShow:props.methods.commonLovShow,

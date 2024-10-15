@@ -162,7 +162,7 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      component_setting_update:import('../js/app.js')['component_setting_update'],
+ *                      appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate'],
  *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
  *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
  *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet']
@@ -349,7 +349,7 @@ const method = async props => {
             path:       '/common/component/common_select.js'});
 
         props.methods.commonSelectCurrentValueSet('setting_select_method', props.data.user_settings.prayer_method);
-        props.methods.component_setting_update('PRAYER', 'METHOD');
+        props.methods.appComponentSettingUpdate('PRAYER', 'METHOD');
         props.methods.commonSelectCurrentValueSet('setting_select_asr', props.data.user_settings.prayer_asr_method);
         props.methods.commonSelectCurrentValueSet('setting_select_highlatitude', props.data.user_settings.prayer_high_latitude_adjustment);
         props.methods.commonSelectCurrentValueSet('setting_select_timeformat', props.data.user_settings.prayer_time_format);

@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
 
-const {REPORT_GLOBAL, component} = await import('./lib_timetable.js');
+const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
 /**
  * Timetable get user settings
@@ -146,19 +146,19 @@ const timetable = async (timetable_parameters) => {
 	return await new Promise((resolve) => {
 		for (const parameter of result_parameters) {
 			if (parameter['COPYRIGHT'])
-				REPORT_GLOBAL.app_copyright = parameter['COPYRIGHT'];
+				APP_REPORT_GLOBAL.app_copyright = parameter['COPYRIGHT'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_LANG'])
-				REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
+				APP_REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
 			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'])
-				REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
+				APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
 			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'])
-				REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
+				APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
 			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'])
-				REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
+				APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'])
-				REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
+				APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
 			if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
-				REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
+				APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
 		}
 		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
@@ -173,18 +173,18 @@ const timetable = async (timetable_parameters) => {
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
 				//set current date for report month
-				REPORT_GLOBAL.session_currentDate = new Date();
-				REPORT_GLOBAL.session_currentHijriDate = [0,0];
+				APP_REPORT_GLOBAL.session_currentDate = new Date();
+				APP_REPORT_GLOBAL.session_currentHijriDate = [0,0];
 				//get Hijri date from initial Gregorian date
-				REPORT_GLOBAL.session_currentHijriDate[0] = 
-					parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-										REPORT_GLOBAL.session_currentDate.getMonth(),
-										REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-				REPORT_GLOBAL.session_currentHijriDate[1] = 
+				APP_REPORT_GLOBAL.session_currentHijriDate[0] = 
+					parseInt(new Date(	APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
+										APP_REPORT_GLOBAL.session_currentDate.getMonth(),
+										APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+				APP_REPORT_GLOBAL.session_currentHijriDate[1] = 
 					//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-					parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-										REPORT_GLOBAL.session_currentDate.getMonth(),
-										REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+					parseInt(new Date(	APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
+										APP_REPORT_GLOBAL.session_currentDate.getMonth(),
+										APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 					if (reporttype==0){
 						timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
 						.then(user_account_app_data_posts_parameters=>{

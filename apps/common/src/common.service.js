@@ -586,6 +586,7 @@ const commonAppHost = host =>{
 const commonApp = async parameters =>{
     const host_no_port = parameters.host.substring(0,parameters.host.indexOf(':')==-1?parameters.host.length:parameters.host.indexOf(':'));
     const app_id = commonAppHost(host_no_port);
+    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=> 'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
     if (app_id==null || parameters.res==null ){
         //function not called from client or host not found
         if (parameters.res)
@@ -598,19 +599,20 @@ const commonApp = async parameters =>{
                 return await commonAssetfile({app_id:app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public', res:parameters.res})
                         .catch(()=>null);
             }
-            case (app_id != getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=> 'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID) && await commonAppStart(app_id) ==false):{
+            case (app_id != common_app_id && await commonAppStart(app_id) ==false):{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
             }
             case (parameters.url.toLowerCase().startsWith('/common')):{
                 return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public', res:parameters.res}).catch(()=>null);
             }
+            case (parameters.url == '/sw.js'):{
+                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:'/apps/common/public', res:parameters.res}).catch(()=>null);
+            }
             case (parameters.url.toLowerCase().startsWith('/css')):
             case (parameters.url.toLowerCase().startsWith('/component')):
             case (parameters.url.toLowerCase().startsWith('/images')):
             case (parameters.url.toLowerCase().startsWith('/js')):
-            case (parameters.url == '/apps/common_types.js'): //
-            case (parameters.url == '/manifest.json'):
-            case (parameters.url == '/sw.js'):{
+            case (parameters.url == '/apps/common_types.js'): {
                 return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:fileCache('CONFIG_APPS').APPS[app_id].PATH, res:parameters.res}).catch(()=>null);
             }
             case (parameters.url == '/info/jsdoc'):{
