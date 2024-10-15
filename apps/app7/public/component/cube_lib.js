@@ -3,9 +3,9 @@
  * @module apps/app7/component/cube_lib
  */
 
-const path_common ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const {commonWindowSetTimeout} = await import(path_common);
+const {commonWindowSetTimeout} = await import(commonPath);
 
 
 /**

@@ -28,7 +28,7 @@ const template = () =>` <div id="app_themes">
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      app_theme_update:import('../js/app.js')['app_theme_update']
+ *                      appPreferencesPostMount:import('../js/app.js')['appPreferencesPostMount']
  *                      }}} props 
  * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
  *                      data:null, 
@@ -39,7 +39,7 @@ const component = async props => {
     
     const onMounted = async () =>{
         //set app theme
-        props.methods.app_theme_update();
+        props.methods.appPreferencesPostMount();
     };
     return {
         lifecycle:  {onMounted:onMounted},

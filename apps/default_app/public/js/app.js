@@ -1,30 +1,31 @@
 /**
- * @module apps/default_NONPWA/app
+ * @module apps/default_PWA/app
  */
 
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const path_common ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const common = await import(path_common);
+const common = await import(commonPath);
 /**
  * App exception function
  * @param {Error} error 
  * @returns {void}
  */
-const app_exception = (error) => {
+ const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
+
 /**
  * App event click
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_click = event => {
+const appEventClick = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_click(event);
+            appEventClick(event);
         });
     }
     else{
@@ -33,15 +34,15 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
-                   framework_set(1);
+                   appFrameworkSet(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                   framework_set(2);
+                   appFrameworkSet(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                   framework_set(3);
+                   appFrameworkSet(3);
                     break;
                 }
             }
@@ -53,9 +54,9 @@ const app_event_click = event => {
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
- const framework_set = async (framework=null) => {
+ const appFrameworkSet = async (framework=null) => {
     await common.commonFrameworkSet(framework,
-        {   Click: app_event_click,
+        {   Click: appEventClick,
             Change: null,
             KeyDown: null,
             KeyUp: null,
@@ -66,7 +67,7 @@ const app_event_click = event => {
  * Init app
  * @returns {Promise.<void>}
  */
-const init_app = async () => {
+const appInit = async () => {
     await common.commonComponentRender({mountDiv:common.COMMON_GLOBAL.app_div,
         data:null,
         methods:null,
@@ -75,19 +76,19 @@ const init_app = async () => {
                                         data:null,
                                         methods:null,
                                         path:'/common/component/common_construction.js'}));
-   framework_set();
+   appFrameworkSet();
 };
 /**
  * Init common
  * @param {string} parameters 
  * @returns {void}
  */
-const init = (parameters) => {
-    COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.COMMON_GLOBAL.app_function_exception = app_exception;
+const appCommonInit= (parameters) => {
+    COMMON_DOCUMENT.body.className = 'app_theme1';    
+    common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
     common.commonInit(parameters).then(()=>{
-        init_app();
+        appInit();
     });
 };
-export{init};
+export{appCommonInit};

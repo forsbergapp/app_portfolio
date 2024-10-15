@@ -6,15 +6,15 @@
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const path_common ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const common = await import(path_common);
+const common = await import(commonPath);
 /**
  * App exception function
  * @param {Error} error 
  * @returns {void}
  */
-const app_exception = (error) => {
+const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
@@ -22,10 +22,10 @@ const app_exception = (error) => {
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_click = event => {
+const appEventClick = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_click(event);
+            appEventClick(event);
         });
     }
     else{
@@ -162,15 +162,15 @@ const app_event_click = event => {
                 }
                 /* COMMON */
                 case 'common_toolbar_framework_js':{
-                   framework_set(1);
+                   appFrameworkSet(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                   framework_set(2);
+                   appFrameworkSet(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                   framework_set(3);
+                   appFrameworkSet(3);
                     break;
                 }
                 //dialogue user menu
@@ -218,12 +218,12 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
-                    user_logout_app();
+                    appUserLogout();
                     break;
                 }
                 /*Dialogue user start */
                 case 'common_user_start_login_button':{
-                    user_login_app();
+                    appUserLogin();
                     break;
                 }
                 case 'common_user_start_identity_provider_login':{
@@ -232,7 +232,7 @@ const app_event_click = event => {
                     if (provider_element && provider_element.textContent)
                         common.commonUserLogin(null, null, null, parseInt(provider_element.textContent))
                             .then(()=>common.commonComponentRemove('app_main_page'))
-                            .then(()=>init_secure())
+                            .then(()=>appSecureInit())
                             .catch(()=>null);             
                     break;
                 }
@@ -245,10 +245,10 @@ const app_event_click = event => {
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_change = event =>{
+const appEventChange = event =>{
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_change(event);
+            appEventChange(event);
         });
     }
     else
@@ -259,10 +259,10 @@ const app_event_change = event =>{
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_keyup = event => {
+const appEventKeyUp = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_keyup(event);
+            appEventKeyUp(event);
         }, true);
     }
     else{
@@ -274,7 +274,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        user_login_app();
+                        appUserLogin();
                     }
                     break;
                 }
@@ -284,13 +284,13 @@ const app_event_keyup = event => {
     }
 };
 
-const user_login_app = () =>{
+const appUserLogin = () =>{
     common.commonUserLogin()
     .then(()=>common.commonComponentRemove('app_main_page'))
-    .then(()=>init_secure())
+    .then(()=>appSecureInit())
     .catch(()=>null);
 };
-const user_logout_app = () =>{
+const appUserLogout = () =>{
     common.commonUserLogout()
     .then(()=>common.commonComponentRemove('app_main_page'))
     .then(()=>
@@ -305,17 +305,17 @@ const user_logout_app = () =>{
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const framework_set = async (framework=null) => {
+const appFrameworkSet = async (framework=null) => {
     await common.commonFrameworkSet(framework,
-        {   Click: app_event_click,
-            Change: app_event_change,
+        {   Click: appEventClick,
+            Change: appEventChange,
             KeyDown: null,
-            KeyUp: app_event_keyup,
+            KeyUp: appEventKeyUp,
             Focus: null,
             Input:null});
 };
 
-const customer_create = async () => {
+const appCustomerCreate = async () => {
     await common.commonFFB({  path:'/app-function/CUSTOMER_CREATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
@@ -330,13 +330,13 @@ const customer_create = async () => {
                         },
                         spinner_id:COMMON_DOCUMENT.querySelector('.common_app_data_display_button_post').id
                     });
-    init_secure();
+    appSecureInit();
 };
 /**
  * 
  * @param {1|0} status 
  */
-const payment_request_update = async status => {
+const appPaymentRequestUpdate = async status => {
     await common.commonFFB({  path:'/app-function/PAYMENT_REQUEST_UPDATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
@@ -349,17 +349,17 @@ const payment_request_update = async status => {
     .then((result)=>status==1?common.commonMessageShow('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
     .finally(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
 };
-const payment_request_accept = async () => {
-    payment_request_update(1);
+const appPaymentRequestAccept = async () => {
+    appPaymentRequestUpdate(1);
 };
-const payment_request_cancel = async () => {
-    payment_request_update(0);
+const appPaymentRequestCancel = async () => {
+    appPaymentRequestUpdate(0);
 };
 /**
  * 
  * @param {string} message 
  */
-const show_payment_request = async message =>{
+const appPaymentRequestShow = async message =>{
     if (COMMON_DOCUMENT.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
         null;
     else
@@ -399,8 +399,8 @@ const show_payment_request = async message =>{
                            commonFFB:common.commonFFB,
                             button_print:null,
                             button_update:null,
-                            button_post:payment_request_accept,
-                            button_delete:payment_request_cancel
+                            button_post:appPaymentRequestAccept,
+                            button_delete:appPaymentRequestCancel
                             },
                 path:       '/common/component/common_app_data_display.js'})
             .then(()=>{
@@ -418,7 +418,7 @@ const show_payment_request = async message =>{
  * Init secure
  * @returns {void}
  */
-const init_secure = () => {
+const appSecureInit = () => {
     common.commonComponentRender({
         mountDiv:   'app_main_page', 
         data:       {
@@ -428,7 +428,7 @@ const init_secure = () => {
                     locale:common.COMMON_GLOBAL.user_locale
                     },
         methods:    {
-                    button_post:customer_create,
+                    button_post:appCustomerCreate,
                     commonComponentRender:common.commonComponentRender,
                    commonFFB:common.commonFFB},
         path:       '/component/page_secure.js'});
@@ -437,7 +437,7 @@ const init_secure = () => {
  * Init app
  * @returns {Promise.<void>}
  */
-const init_app = async () => {
+const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
@@ -456,19 +456,19 @@ const init_app = async () => {
             data:       null,
             methods:    null,
             path:       '/component/page_start.js'}));
-   framework_set();
+   appFrameworkSet();
 };
 /**
  * Init common
  * @param {string} parameters 
  * @returns {void}
  */
-const init = parameters => {
-    common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
-    common.COMMON_GLOBAL.app_function_sse = show_payment_request;
+const appCommonInit= parameters => {
+    common.COMMON_GLOBAL.app_function_exception = appException;
+    common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
+    common.COMMON_GLOBAL.app_function_sse = appPaymentRequestShow;
     common.commonInit(parameters).then(()=>{
-        init_app();
+        appInit();
     });
 };
-export{init};
+export{appCommonInit};

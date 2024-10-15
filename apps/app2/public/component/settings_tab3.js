@@ -108,7 +108,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      update_all_theme_thumbnails:function
+ *                      appSettingThemeThumbnailsUpdate:import('../js/app.js')['appSettingThemeThumbnailsUpdate'],
  *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
  *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
  *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet']}}} props
@@ -199,7 +199,7 @@ const method = async props => {
         else
             props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
-        props.methods.update_all_theme_thumbnails();
+        props.methods.appSettingThemeThumbnailsUpdate();
     };
     return {
         lifecycle:  {onMounted:onMounted},

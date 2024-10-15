@@ -22,7 +22,7 @@ const template = props =>`  <!DOCTYPE html>
 /**
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      html:string
+ *                      appHtml:string
  *                      },
  *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
  * 
@@ -39,7 +39,7 @@ const method = async props => {
         methods:    null,
         template:   template({  app_link_app_report_css:props.methods.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].nodeValue,
                                 common_link_common_css:props.methods.COMMON_DOCUMENT.querySelector('#common_link_common_css').attributes['href'].nodeValue,
-                                html: props.data.html})
+                                html: props.data.appHtml})
     };
 };
 export default method;
