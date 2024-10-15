@@ -2545,13 +2545,13 @@ const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
 };
 /**
  * Exception function
- * @param {function|null} app_exception_function 
+ * @param {function|null} appException_function 
  * @param {Error|string} error 
  * @returns {void}
  */
-const commonException = (app_exception_function, error) => {
-    if (app_exception_function)
-        app_exception_function(error);
+const commonException = (appException_function, error) => {
+    if (appException_function)
+        appException_function(error);
 };
 /**
  * Set app service parameters
@@ -3582,6 +3582,7 @@ const commonInit = async (parameters) => {
         COMMON_DOCUMENT.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
     }
     await commonSocketConnectOnline();
+    commonWindowServiceWorker();
     return decoded_parameters;
 };
 export{/* GLOBALS*/

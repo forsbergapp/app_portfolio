@@ -6,15 +6,15 @@
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const path_common ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const common = await import(path_common);
+const common = await import(commonPath);
 /**
  * App exception function
  * @param {Error} error 
  * @returns {void}
  */
-const app_exception = (error) => {
+const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
@@ -22,10 +22,10 @@ const app_exception = (error) => {
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_click = event => {
+const appEventClick = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_click(event);
+            appEventClick(event);
         });
     }
     else{
@@ -34,7 +34,7 @@ const app_event_click = event => {
         .then(()=>{
             switch (event_target_id){
                 case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
-                    product_update();
+                    appProductUpdate();
                     break;
                 }
                 case 'tshirt':{
@@ -56,15 +56,15 @@ const app_event_click = event => {
                     break;
                 }
                 case 'common_toolbar_framework_js':{
-                   framework_set(1);
+                   appFrameworkSet(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                   framework_set(2);
+                   appFrameworkSet(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                   framework_set(3);
+                   appFrameworkSet(3);
                     break;
                 }
             }
@@ -76,10 +76,10 @@ const app_event_click = event => {
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_keyup = event => {
+const appEventKeyUp = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_keyup(event);
+            appEventKeyUp(event);
         }, true);
     }
     else{
@@ -88,7 +88,7 @@ const app_event_keyup = event => {
         .then(()=>{
             switch(event_target_id){
                 case event.target.getAttribute('data-value')=='payment_id'?event_target_id:'':{
-                    isValidVPA(event.target, event.target.textContent);
+                    appVPAIsValid(event.target, event.target.textContent);
                     break;
                 }
             }
@@ -101,7 +101,7 @@ const app_event_keyup = event => {
  * @param {string} str
  * @returns {boolean}
  */
-const isValidVPA = (element, str) => {
+const appVPAIsValid = (element, str) => {
     element.classList.remove('common_input_error');
     const regex = /^[a-z,0-9]{8}-[a-z,0-9]{4}-4[a-z,0-9]{3}-[89ab][a-z,0-9]{3}-[a-z,0-9]{12}$/;
     if (regex.test(str))
@@ -114,7 +114,7 @@ const isValidVPA = (element, str) => {
 /**
  * Product update attributes
  */
-const product_update = async () =>{
+const appProductUpdate = async () =>{
     COMMON_DOCUMENT.querySelector('#tshirt').style.fill = COMMON_DOCUMENT.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
 
     const product_variant_id = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row[id] .common_select_dropdown_value .common_app_data_display_master_col_list[data-id]')[0].getAttribute('data-id');
@@ -158,7 +158,7 @@ const product_update = async () =>{
  * Get payment request status
  * @returns {void}
  */
-const payment_request_status = ()=>{
+const appPaymentRequestStatus = ()=>{
     if ( new Date().getSeconds() % 2){
         const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
     
@@ -176,10 +176,10 @@ const payment_request_status = ()=>{
 /**
  * Payment request
  */
-const payment_request = async () =>{
+const appPaymentRequest = async () =>{
     const sku = COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
     const payerid_element = COMMON_DOCUMENT.querySelectorAll('.common_app_data_display_master_row .common_app_data_display_master_col2[data-value=payment_id]')[0];
-    if (isValidVPA(payerid_element, payerid_element.textContent)){
+    if (appVPAIsValid(payerid_element, payerid_element.textContent)){
         const data = {
             reference:      `SHOP SKU ${sku}`,
             data_app_id:    common.COMMON_GLOBAL.app_id,
@@ -220,7 +220,7 @@ const payment_request = async () =>{
                         button_print:null,
                         button_update:null,
                         button_post:null,
-                        button_delete:pay_cancel
+                        button_delete:appPayCancel
                         },
             path:'/common/component/common_app_data_display.js'})
             .then(()=>{
@@ -230,7 +230,7 @@ const payment_request = async () =>{
     
                 common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
                                                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_exp').getAttribute('data-value'),
-                                                payment_request_status);
+                                                appPaymentRequestStatus);
             })
             .catch(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
     }
@@ -240,14 +240,14 @@ const payment_request = async () =>{
 /**
  * Pay cancel
  */
-const pay_cancel = async () =>{
+const appPayCancel = async () =>{
     common.commonMessageShow('INFO',null,null,null, 'Payment cancel');
     common.commonComponentRemove('common_dialogue_app_data_display', true);
 };
 /**
  * Pay product
  */
-const pay = async () =>{
+const appPay = async () =>{
     await common.commonComponentRender({
         mountDiv:   'common_dialogue_app_data_display', 
         data:       {
@@ -281,8 +281,8 @@ const pay = async () =>{
                    commonFFB:common.commonFFB,
                     button_print:null,
                     button_update:null,
-                    button_post:payment_request,
-                    button_delete:pay_cancel},
+                    button_post:appPaymentRequest,
+                    button_delete:appPayCancel},
         path:       '/common/component/common_app_data_display.js'});
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=payment_id]').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').style.visibility='hidden';
@@ -293,12 +293,12 @@ const pay = async () =>{
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
- const framework_set = async (framework=null) => {
+ const appFrameworkSet = async (framework=null) => {
     await common.commonFrameworkSet(framework,
-        {   Click: app_event_click,
+        {   Click: appEventClick,
             Change: null,
             KeyDown: null,
-            KeyUp: app_event_keyup,
+            KeyUp: appEventKeyUp,
             Focus: null,
             Input:null});
 };
@@ -306,7 +306,7 @@ const pay = async () =>{
  * Init app
  * @returns {Promise.<void>}
  */
-const init_app = async () => {
+const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
@@ -321,25 +321,25 @@ const init_app = async () => {
                     locale:common.COMMON_GLOBAL.user_locale
                     },
         methods:    {
-                    pay:pay,
+                    pay:appPay,
                    commonFFB:common.commonFFB,
                     commonComponentRender:common.commonComponentRender,
                     commonMessageShow:common.commonMessageShow
                     },
         path:'/component/page_start.js'});
-    product_update();
-    framework_set();
+    appProductUpdate();
+    appFrameworkSet();
 };
 /**
  * Init common
  * @param {string} parameters 
  * @returns {void}
  */
-const init = (parameters) => {
-    common.COMMON_GLOBAL.app_function_exception = app_exception;
+const appCommonInit= (parameters) => {
+    common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
     common.commonInit(parameters).then(()=>{
-        init_app();
+        appInit();
     });
 };
-export{init};
+export{appCommonInit};

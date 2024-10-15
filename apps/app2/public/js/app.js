@@ -6,21 +6,21 @@
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const path_common ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const common = await import(path_common);
+const common = await import(commonPath);
 
 const path_regional ='regional';
 /**@type {import('../../../common_types.js').CommonModuleRegional} */
 const {getTimezone} = await import(path_regional);
 
-const path_lib_timetable = '/app-module/MODULE_LIB_TIMETABLE';
+const appLibTimetable = '/app-module/MODULE_LIB_TIMETABLE';
 /**@type {import('./types.js').CommonModuleLibTimetable} */
-const {REPORT_GLOBAL, component} = await import(path_lib_timetable);
+const {APP_REPORT_GLOBAL, component} = await import(appLibTimetable);
 
 
 /**@type{import('./types.js').APP_user_setting} */
-const user_settings_empty = {current_id:0,
+const APP_USER_SETTINGS_EMPTY = {current_id:0,
                              data:[{id:0,
                                     json_data: {description: '',
                                                 regional_language_locale: '',
@@ -143,7 +143,7 @@ const APP_GLOBAL = {
     //session variables
     timetable_type:0,
     places:null,
-    user_settings:user_settings_empty,
+    user_settings:APP_USER_SETTINGS_EMPTY,
     themes: {data:[{type:'', value:'', text:''}]},
     //profile_info functions
     function_profile_user_setting_update: ()=>null,
@@ -155,14 +155,14 @@ Object.seal(APP_GLOBAL);
  * Print timetable
  * @returns {Promise.<void>}
  */
-const printTimetable = async () => {
+const appReportTimetablePrint = async () => {
     //use app component to get HTML
     const component_print = '/component/print.js';
     const {default:component} = await import(component_print);
     /**@type{import('../../../common_types.js').CommonComponentResult}*/
     const {template} = await component({ data:  {   
                                                 commonMountdiv:null, 
-                                                html:COMMON_DOCUMENT.querySelector('#paper').outerHTML
+                                                appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
                                                 },
                                         methods:{COMMON_DOCUMENT:COMMON_DOCUMENT}});
     await common.commonComponentRender({  mountDiv:   'common_window_info',
@@ -181,7 +181,7 @@ const printTimetable = async () => {
  * Get report settings
  * @returns {import('./types.js').APP_REPORT_settings}
  */
-const getReportSettings = () => {
+const appReportTimetableSettings = () => {
     const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data;
     const place = APP_GLOBAL.places?APP_GLOBAL.places.filter(place=>place.id==setting_global.gps_popular_place_id)[0]:null;
     return {    locale              	: setting_global.regional_language_locale,
@@ -251,7 +251,7 @@ const getReportSettings = () => {
  * @param {import('./types.js').APP_REPORT_settings} settings 
  * @returns {Promise.<void>}
  */
-const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
+const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, settings) => {
     APP_GLOBAL.timetable_type = timetable_type;
     switch (timetable_type){
         //create timetable month or day or year if they are visible instead
@@ -333,7 +333,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
  * @param {boolean} profile_display 
  * @returns {string}
  */
-const get_report_url = (id, sid, papersize, item, format, profile_display=true) => {
+const appReportUrl = (id, sid, papersize, item, format, profile_display=true) => {
     const report_module = `module=${APP_GLOBAL.app_report_timetable}`;
     let module_parameters = `&id=${id}&sid=${sid}`;
     if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
@@ -363,7 +363,7 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
  *          theme_id:string}|null} theme
  * @returns {Promise.<void>}
  */
-const update_all_theme_thumbnails = async (theme=null) => {
+const appSettingThemeThumbnailsUpdate = async (theme=null) => {
     if (theme?.type =='day' || theme==null){
         const current_user_settings = APP_GLOBAL.user_settings.data.map(setting=>{
             return {
@@ -386,7 +386,7 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                 commonMountdiv:null,
                                                 button_id:null,
                                                 timetable:'DAY',
-                                                user_account_app_data_post:getReportSettings(),
+                                                user_account_app_data_post:appReportTimetableSettings(),
                                                 user_account_app_data_posts_parameters:current_user_settings
                                                 },
                                     methods:	{
@@ -410,7 +410,7 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                         commonMountdiv:null,
                                                         button_id:null,
                                                         timetable:'MONTH',
-                                                        user_account_app_data_post:getReportSettings(),
+                                                        user_account_app_data_post:appReportTimetableSettings(),
                                                         user_account_app_data_posts_parameters:null
                                                         },
                                             methods:	{
@@ -421,7 +421,7 @@ const update_all_theme_thumbnails = async (theme=null) => {
                                                     commonMountdiv:null,
                                                     button_id:null,
                                                     timetable:'YEAR',
-                                                    user_account_app_data_post:getReportSettings(),
+                                                    user_account_app_data_post:appReportTimetableSettings(),
                                                     user_account_app_data_posts_parameters:null
                                                     },
                                         methods:	{
@@ -454,7 +454,7 @@ const update_all_theme_thumbnails = async (theme=null) => {
  * @param {string} type 
  * @returns {string}
  */
-const get_theme_id = type => {
+const appSettingThemeId = type => {
     if (COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`))
         return COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`).getAttribute('data-theme_id');
     else{
@@ -470,7 +470,7 @@ const get_theme_id = type => {
  * @param {'day'|'month'|'year'} type 
  * @returns {Promise.<void>}
  */
-const theme_nav = async (nav, type) => {
+const appSettingThemeNav = async (nav, type) => {
     
 
     let theme_index_APP_GLOBAL = 0;
@@ -501,7 +501,7 @@ const theme_nav = async (nav, type) => {
         APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
     COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`).setAttribute('data-theme_id', APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value);
     COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}_id`).textContent = APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value;
-    await update_all_theme_thumbnails({   type: type,
+    await appSettingThemeThumbnailsUpdate({   type: type,
                                     theme_id :APP_GLOBAL.themes.data.filter(theme=>theme.type.toLowerCase().endsWith(type))[theme_index_APP_GLOBAL].value});
 };
 
@@ -512,7 +512,7 @@ const theme_nav = async (nav, type) => {
  * @param {boolean} ar 
  * @returns {string|null }
  */
-const get_align = (al,ac,ar) => {
+const appSettingAlignGet = (al,ac,ar) => {
 	if (al==true)
 		return 'left';
 	if (ac==true)
@@ -560,7 +560,7 @@ const settingsTimesShow = async () => {
  * @param {number} choice 
  * @returns {Promise.<void>}
  */
-const toolbar_button = async (choice) => {
+const appToolbarButton = async (choice) => {
     const paper = COMMON_DOCUMENT.querySelector('#paper');
     const settings = COMMON_DOCUMENT.querySelector('#settings');
 
@@ -571,7 +571,7 @@ const toolbar_button = async (choice) => {
                 if (common.commonMobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                printTimetable();
+                appReportTimetablePrint();
                 break;
             }
         case 2:
@@ -587,7 +587,7 @@ const toolbar_button = async (choice) => {
                 COMMON_DOCUMENT.querySelector(`#toolbar_btn_${choice==2?'day':choice==3?'month':'year'}`).classList.add('toolbar_bottom_selected');
 
                 //choice day=0, month=1, year=2
-                await update_timetable_report(choice==2?0:choice==3?1:2, null, getReportSettings());
+                await appReportTimetableUpdate(choice==2?0:choice==3?1:2, null, appReportTimetableSettings());
                 break;
             }
         //settings
@@ -645,7 +645,7 @@ const SettingShow = async (tab_selected) => {
                             user_locale:common.COMMON_GLOBAL.user_locale,
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
                 methods:    {
-                            component_setting_update:component_setting_update,
+                            appComponentSettingUpdate:appComponentSettingUpdate,
                             commonDbAppSettingsGet:common.commonDbAppSettingsGet,
                             commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
@@ -662,8 +662,8 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    {
-                            lib_timetable_REPORT_GLOBAL:REPORT_GLOBAL,
-                            component_setting_update:component_setting_update,
+                            lib_timetable_APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
+                            appComponentSettingUpdate:appComponentSettingUpdate,
                             getTimezone:getTimezone,
                             commonTimezoneDate:common.commonTimezoneDate,
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
@@ -682,7 +682,7 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             themes:APP_GLOBAL.themes},
                 methods:    {
-                            update_all_theme_thumbnails:update_all_theme_thumbnails,
+                            appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
                             commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
                             commonDbAppSettingsGet:common.commonDbAppSettingsGet
@@ -708,7 +708,7 @@ const SettingShow = async (tab_selected) => {
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
-                methods:    {component_setting_update:component_setting_update},
+                methods:    {appComponentSettingUpdate:appComponentSettingUpdate},
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
         }
@@ -718,10 +718,10 @@ const SettingShow = async (tab_selected) => {
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                            methods:REPORT_GLOBAL.CommonModulePrayTimes_methods
+                            methods:APP_REPORT_GLOBAL.CommonModulePrayTimes_methods
                             },
                 methods:    {
-                            component_setting_update:component_setting_update,
+                            appComponentSettingUpdate:appComponentSettingUpdate,
                             commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
                             commonDbAppSettingsGet:common.commonDbAppSettingsGet
@@ -745,7 +745,7 @@ const SettingShow = async (tab_selected) => {
  * @param {string} report_align_where 
  * @returns {string}
  */
-const align_button_value = (report_align_where) => {
+const appSettingButtonAlignValue = (report_align_where) => {
 
     if (COMMON_DOCUMENT.querySelector('#setting_icon_text_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
         return 'left';
@@ -760,7 +760,7 @@ const align_button_value = (report_align_where) => {
  * @param {number|null} zoomvalue 
  * @returns {void}
  */
-const zoom_paper = (zoomvalue = null) => {
+const appPaperZoom = (zoomvalue = null) => {
     let old;
     let old_scale;
     const div = COMMON_DOCUMENT.querySelector('#paper');
@@ -783,7 +783,7 @@ const zoom_paper = (zoomvalue = null) => {
  * @param {*} dialogue 
  * @returns {void}
  */
-const show_dialogue = (dialogue) => {
+const appDialogueShow = (dialogue) => {
     if (dialogue == 'SCAN' && common.commonMobile()==false){
         common.commonComponentRender({mountDiv:   'dialogue_scan_open_mobile',
                                 data:       null,
@@ -801,7 +801,7 @@ const show_dialogue = (dialogue) => {
  * @param {string|null} item_id 
  * @returns {Promise.<void>}
  */
-const component_setting_update = async (setting_tab, setting_type, item_id=null) => {
+const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null) => {
     switch (setting_tab + '_' + setting_type) {
         case 'REGIONAL_TIMEZONE':
             {
@@ -812,7 +812,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
             {
                 const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
                 const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
-                map_update_app({longitude:gps_long_input.textContent,
+                appModuleLeafletMapUpdate({longitude:gps_long_input.textContent,
                                 latitude:gps_lat_input.textContent,
                                 text_place:COMMON_DOCUMENT.querySelector('#setting_input_place').textContent,
                                 country:'',
@@ -851,10 +851,10 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 }
                 //display empty popular place select
                 common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-                map_show_qibbla();
+                appModuleLeafletMapQibblaShow();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone;
-                REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(timezone);
-                settings_update('GPS');    
+                APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(timezone);
+                appUserSettingUpdate('GPS');    
                 break;
             }
         case 'GPS_POPULAR_PLACES':
@@ -873,7 +873,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 gps_lat_input.textContent = latitude_selected;
 
                     //Update map
-                    map_update_app({longitude:      longitude_selected,
+                    appModuleLeafletMapUpdate({longitude:      longitude_selected,
                                     latitude:       latitude_selected,
                                     text_place:     COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent,
                                     country:        '',
@@ -885,7 +885,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_selected;
                 const title = COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').textContent;
                 COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = title;
-                settings_update('GPS');
+                appUserSettingUpdate('GPS');
                 break;
             }
         case 'GPS_POSITION':
@@ -899,7 +899,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                 common.commonMicroserviceGeolocationPlace(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
                     //Update map
                     COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = gps_place;
-                    map_update_app({longitude:gps_long_input.textContent,
+                    appModuleLeafletMapUpdate({longitude:gps_long_input.textContent,
                                     latitude:gps_lat_input.textContent,
                                     text_place:gps_place,
                                     country:'',
@@ -909,7 +909,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone_text ?? '';
                     });
                     common.COMMON_GLOBAL.moduleLeaflet.methods.map_toolbar_reset();
-                    settings_update('GPS');
+                    appUserSettingUpdate('GPS');
                 });
                 break;
             }
@@ -968,7 +968,7 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
                     
                     COMMON_DOCUMENT.querySelector('#' + item_id).classList.add(button_active_class);
                 }
-                const align = get_align(COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.contains('setting_button_active'),
+                const align = appSettingAlignGet(COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aleft`).classList.contains('setting_button_active'),
                                         COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_acenter`).classList.contains('setting_button_active'),
                                         COMMON_DOCUMENT.querySelector(`#setting_icon_text_${header_footer}_aright`).classList.contains('setting_button_active'));
                 COMMON_DOCUMENT.querySelector(`#setting_input_report${header_footer}1`).style.textAlign= align;
@@ -983,16 +983,16 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
 
                 COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = '';
                 COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = '';
-                if (typeof REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
+                if (typeof APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
-                if (typeof REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
+                COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
+                if (typeof APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = 'Isha:' + REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
+                COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = 'Isha:' + APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
                 break;
             }
         case 'USER_SETTING':{
@@ -1008,11 +1008,11 @@ const component_setting_update = async (setting_tab, setting_type, item_id=null)
  * @param {string|null} password_verify
  * @returns {Promise.<void>}
  */
-const user_login_app = async (admin=false, username_verify=null, password_verify=null) => {
+const appUserLogin = async (admin=false, username_verify=null, password_verify=null) => {
     await common.commonUserLogin(admin, username_verify, password_verify)
     .then(result=>{
         //create intitial user setting if not exist, send initial=true
-        login_common(result.avatar);
+        appUserLoginCommon(result.avatar);
     })
     .catch(()=>null);
 };
@@ -1022,9 +1022,9 @@ const user_login_app = async (admin=false, username_verify=null, password_verify
  * @param {'FOLLOW'|'LIKE'} function_name 
  * @returns {Promise.<void>}
  */
-const user_function_app = async (function_name) => {
+const appUserFunction = async (function_name) => {
     await common.commonUserFunction(function_name)
-    .then(()=>commonProfileUpdateStat_app())
+    .then(()=>appUserProfileStatUpdate())
     .catch(()=>null);
 };
 
@@ -1032,15 +1032,15 @@ const user_function_app = async (function_name) => {
  * User logout
  * @returns {void}
  */
-const user_logout_app = () => {
+const appUserLogout = () => {
     
     common.commonUserLogout().then(() => {
         common.commonComponentRemove('settings_tab_nav_7');
         common.commonComponentRemove('common_dialogue_profile', true);
         //set default settings
-        set_default_settings().then(() => {
+        appUserSettingDefaultSet().then(() => {
             //show default startup
-            toolbar_button(APP_GLOBAL.app_default_startup_page);
+            appToolbarButton(APP_GLOBAL.app_default_startup_page);
         });
     });    
 };
@@ -1048,9 +1048,9 @@ const user_logout_app = () => {
  * Login common
  * @param {string|null} avatar 
  */
-const login_common = (avatar) => {
+const appUserLoginCommon = (avatar) => {
     //create intitial user setting if not exist, send initial=true
-    user_settings_function('ADD_LOGIN', true)
+    appUserSettingFunction('ADD_LOGIN', true)
     .then(()=>{
         common.commonComponentRender({
             mountDiv:   'settings_tab_nav_7',
@@ -1063,39 +1063,39 @@ const login_common = (avatar) => {
         common.commonComponentRemove('common_dialogue_profile');
         
         COMMON_DOCUMENT.querySelector('#paper').textContent='';
-        user_settings_get().then(() => {
+        appUserSettingsGet().then(() => {
             //show default startup
-            toolbar_button(APP_GLOBAL.app_default_startup_page);
+            appToolbarButton(APP_GLOBAL.app_default_startup_page);
         });
     });
 };
 /**
- * Provider signin
+ * Provider login
  * @param {*} provider_id 
  * @returns {Promise.<void>}
  */
-const ProviderSignIn_app = async (provider_id) => {
+const appUserLoginProvider = async (provider_id) => {
     common.commonUserLogin(null, null, null, provider_id)
     .then(result=>{
-        login_common(result.avatar);
+        appUserLoginCommon(result.avatar);
     })
     .catch(()=>null);
 };
 /**
- * Profile update stat
+ * Profile stat update
  * @returns {Promise.<void>}
  */
-const commonProfileUpdateStat_app = async () => {
+const appUserProfileStatUpdate = async () => {
     const result = await common.commonProfileUpdateStat();
     APP_GLOBAL.function_profile_user_setting_stat(result.id);
 };
 /**
- * Profile top
+ * Profile stat
  * @param {number} statchoice 
  * @param {string|null} app_rest_url
  * @returns {Promise.<void>}
  */
- const profile_stat_app = async (statchoice, app_rest_url) => {
+ const appUserProfileStat = async (statchoice, app_rest_url) => {
     await common.commonProfileStat(statchoice, app_rest_url)
     .then(()=>{
         common.commonComponentRender({
@@ -1110,7 +1110,7 @@ const commonProfileUpdateStat_app = async () => {
  * @param {number} detailchoice 
  * @returns {void}
  */
-const profile_detail_app = (detailchoice) => {
+const appUserProfileDetail = (detailchoice) => {
     if (common.COMMON_GLOBAL.user_account_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
@@ -1132,7 +1132,7 @@ const profile_detail_app = (detailchoice) => {
  * User settings get
  * @returns {Promise.<null>}
  */
-const user_settings_get = async () => {
+const appUserSettingsGet = async () => {
     return new Promise(resolve=>{
         common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
@@ -1147,8 +1147,8 @@ const user_settings_get = async () => {
                     regional_calendar_type:setting.regional_calendar_type,
                     regional_calendar_hijri_type:setting.regional_calendar_hijri_type,
                     gps_popular_place_id: setting.gps_popular_place_id,
-                    gps_lat_text:typeof setting.gps_lat_text== 'string'?fixFloat(setting.gps_lat_text):setting.gps_lat_text,
-                    gps_long_text:typeof setting.gps_long_text=='string'?fixFloat(setting.gps_long_text):setting.gps_long_text,
+                    gps_lat_text:typeof setting.gps_lat_text== 'string'?appCommonFixFloat(setting.gps_lat_text):setting.gps_lat_text,
+                    gps_long_text:typeof setting.gps_long_text=='string'?appCommonFixFloat(setting.gps_long_text):setting.gps_long_text,
                     design_theme_day_id:setting.design_theme_day_id,
                     design_theme_month_id:setting.design_theme_month_id,
                     design_theme_year_id:setting.design_theme_year_id,
@@ -1199,14 +1199,14 @@ const user_settings_get = async () => {
  * @param {HTMLElement} item 
  * @returns {void}
  */
-const user_setting_link = (item) => {
+const appUserSettingLink = (item) => {
     const user_account_id = common.COMMON_GLOBAL.user_account_id;    
     const sid = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].id;
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            const url = get_report_url( user_account_id, 
+            const url = appReportUrl( user_account_id, 
                                         sid ?? 0, 
                                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
                                         item.id,
@@ -1233,7 +1233,7 @@ const user_setting_link = (item) => {
  * @param {boolean} add_settings
  * @returns {Promise.<void>}
  */
-const user_settings_function = async (function_name, initial_user_setting, add_settings=true) => {
+const appUserSettingFunction = async (function_name, initial_user_setting, add_settings=true) => {
    
     if (common.commonInputControl(null,{
                                     check_valid_list_values:[
@@ -1323,9 +1323,9 @@ const user_settings_function = async (function_name, initial_user_setting, add_s
  * @param {number|null} choice 
  * @returns {void}
  */
-const user_settings_delete = (choice=null) => {
+const appUserSettingDelete = (choice=null) => {
     const user_setting_id = APP_GLOBAL.user_settings.data[COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value')].id;
-    const function_delete_user_setting = () => { user_settings_delete(1); };
+    const function_delete_user_setting = () => { appUserSettingDelete(1); };
     
     switch (choice){
         case null:{
@@ -1338,7 +1338,7 @@ const user_settings_delete = (choice=null) => {
                 common.commonComponentRemove('common_dialogue_message', true);
                 //check if last setting
                 if (APP_GLOBAL.user_settings.data.length == 1)
-                    user_settings_function('ADD', false, false);
+                    appUserSettingFunction('ADD', false, false);
                 else{
                     //remove current element from array
                     APP_GLOBAL.user_settings.data.splice(COMMON_DOCUMENT.querySelector('#setting_select_user_setting .common_select_dropdown_value').getAttribute('data-value'),1);
@@ -1374,7 +1374,7 @@ const user_settings_delete = (choice=null) => {
  * Set default settings
  * @returns {Promise.<void>}
  */
-const set_default_settings = async () => {
+const appUserSettingDefaultSet = async () => {
     //update APP_GLOBAL
     const json_data = {
         description:                        common.COMMON_GLOBAL.client_place,
@@ -1391,10 +1391,10 @@ const set_default_settings = async () => {
         regional_calendar_hijri_type:       APP_GLOBAL.regional_default_calendar_hijri_type,
         gps_popular_place_id:               (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?null:
                                                 APP_GLOBAL.gps_default_place_id,
-        gps_lat_text:                       (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?fixFloat(common.COMMON_GLOBAL.client_latitude):
-                                                (APP_GLOBAL.places?fixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data2):0),
-        gps_long_text:                      (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?fixFloat(common.COMMON_GLOBAL.client_longitude):
-                                                (APP_GLOBAL.places?fixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data3):0),
+        gps_lat_text:                       (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?appCommonFixFloat(common.COMMON_GLOBAL.client_latitude):
+                                                (APP_GLOBAL.places?appCommonFixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data2):0),
+        gps_long_text:                      (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude)?appCommonFixFloat(common.COMMON_GLOBAL.client_longitude):
+                                                (APP_GLOBAL.places?appCommonFixFloat(APP_GLOBAL.places.filter((/**@type{*}*/place)=>place.value==APP_GLOBAL.gps_default_place_id)[0].data3):0),
         design_theme_day_id:                APP_GLOBAL.design_default_theme_day,
         design_theme_month_id:              APP_GLOBAL.design_default_theme_month,
         design_theme_year_id:               APP_GLOBAL.design_default_theme_year,
@@ -1442,13 +1442,13 @@ const set_default_settings = async () => {
   * @param {string} value 
   * @returns {number|null}
   */
-const fixFloat = value =>  (value==''||value==null)?null:parseFloat(value);
+const appCommonFixFloat = value =>  (value==''||value==null)?null:parseFloat(value);
 /**
  * Settings update
  * @param {'REGIONAL'|'GPS'|'DESIGN'|'IMAGE'|'TEXT'|'PRAYER'|'USER'} setting_tab
  * @returns {void}
  */
-const settings_update = setting_tab => {
+const appUserSettingUpdate = setting_tab => {
 
     const json_data = { description:                        setting_tab=='GPS'?COMMON_DOCUMENT.querySelector('#setting_input_place').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
@@ -1470,13 +1470,13 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_calendar_hijri_type,
                         gps_popular_place_id:               setting_tab=='GPS'?JSON.parse(COMMON_DOCUMENT.querySelector('#setting_select_popular_place .common_select_dropdown_value').getAttribute('data-value')).id:
                                                                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_popular_place_id,
-                        gps_lat_text:                       setting_tab=='GPS'?fixFloat(COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent):
+                        gps_lat_text:                       setting_tab=='GPS'?appCommonFixFloat(COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text,
-                        gps_long_text:                      setting_tab=='GPS'?fixFloat(COMMON_DOCUMENT.querySelector('#setting_input_long').textContent):
+                        gps_long_text:                      setting_tab=='GPS'?appCommonFixFloat(COMMON_DOCUMENT.querySelector('#setting_input_long').textContent):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_long_text,
-                        design_theme_day_id:                setting_tab=='DESIGN'?get_theme_id('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
-                        design_theme_month_id:              setting_tab=='DESIGN'?get_theme_id('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
-                        design_theme_year_id:               setting_tab=='DESIGN'?get_theme_id('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id,
+                        design_theme_day_id:                setting_tab=='DESIGN'?appSettingThemeId('day'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_day_id,
+                        design_theme_month_id:              setting_tab=='DESIGN'?appSettingThemeId('month'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_month_id,
+                        design_theme_year_id:               setting_tab=='DESIGN'?appSettingThemeId('year'):APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_theme_year_id,
                         design_paper_size:                  setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_papersize .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.design_paper_size,
                         design_row_highlight:               setting_tab=='DESIGN'?COMMON_DOCUMENT.querySelector('#setting_select_report_highlight_row .common_select_dropdown_value').getAttribute('data-value'):
@@ -1501,7 +1501,7 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_2_text,
                         text_header_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportheader3').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_3_text,
-                        text_header_align:                  setting_tab=='TEXT'? (align_button_value('header')==''?null:align_button_value('header')):
+                        text_header_align:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('header')==''?null:appSettingButtonAlignValue('header')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_header_align,
                         text_footer_1_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter1').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_1_text,
@@ -1509,7 +1509,7 @@ const settings_update = setting_tab => {
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_2_text,
                         text_footer_3_text:                 setting_tab=='TEXT'?COMMON_DOCUMENT.querySelector('#setting_input_reportfooter3').textContent:
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,
-                        text_footer_align:                  setting_tab=='TEXT'? (align_button_value('footer')==''?null:align_button_value('footer')):
+                        text_footer_align:                  setting_tab=='TEXT'? (appSettingButtonAlignValue('footer')==''?null:appSettingButtonAlignValue('footer')):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_align,
                         prayer_method:                      setting_tab=='PRAYER'?COMMON_DOCUMENT.querySelector('#setting_select_method .common_select_dropdown_value').getAttribute('data-value'):
                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.prayer_method,
@@ -1548,7 +1548,7 @@ const settings_update = setting_tab => {
  * @param {HTMLElement} item 
  * @returns {void}
  */
-const profile_user_setting_link = item => {
+const appUserSettingProfileLink = item => {
     const select_user_setting = COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
     const user_account_id = JSON.parse(select_user_setting).user_account_id;
     const sid = JSON.parse(select_user_setting).sid;
@@ -1557,7 +1557,7 @@ const profile_user_setting_link = item => {
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':{
-            const url = get_report_url(user_account_id, 
+            const url = appReportUrl(user_account_id, 
                                      sid, 
                                      paper_size,
                                      item.id,
@@ -1577,7 +1577,7 @@ const profile_user_setting_link = item => {
             break;
         }
         case 'profile_user_settings_like':{
-            user_settings_like(sid);
+            appUserSettingsLike(sid);
             break;
         }
     }
@@ -1588,7 +1588,7 @@ const profile_user_setting_link = item => {
  * @param {number} user_account_app_data_post_id 
  * @returns {void}
  */
-const user_settings_like = user_account_app_data_post_id => {
+const appUserSettingsLike = user_account_app_data_post_id => {
     /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
     let method;
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
@@ -1610,10 +1610,10 @@ const user_settings_like = user_account_app_data_post_id => {
  * App event click
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  */
-const app_event_click = event => {
+const appEventClick = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_click(event);
+            appEventClick(event);
         }, true);
     }
     else{
@@ -1625,49 +1625,49 @@ const app_event_click = event => {
                 case event.target.parentNode?.classList.contains('common_select_option')?event_target_id:'':{
                     //settings regional
                     if(event_target_id == 'setting_select_locale'){
-                        settings_update('REGIONAL');
+                        appUserSettingUpdate('REGIONAL');
                     }
                     if(event_target_id == 'setting_select_report_timezone'){
-                        settings_update('REGIONAL');
+                        appUserSettingUpdate('REGIONAL');
                     }
                     if(event_target_id == 'setting_select_report_numbersystem' ||
                        event_target_id == 'setting_select_report_direction'){
-                        settings_update('REGIONAL');
+                        appUserSettingUpdate('REGIONAL');
                     }
                     if(event_target_id == 'setting_select_report_locale_second'){
-                        settings_update('REGIONAL');
+                        appUserSettingUpdate('REGIONAL');
                     }
                     if( event_target_id == 'setting_select_report_arabic_script' ||
                         event_target_id == 'setting_select_calendartype' ||
                         event_target_id == 'setting_select_calendar_hijri_type'){
-                        settings_update('REGIONAL');
+                        appUserSettingUpdate('REGIONAL');
                     }
                     //settings gps
                     if(event_target_id=='setting_select_popular_place'){
-                        settings_update('GPS');
-                        component_setting_update('GPS', 'POPULAR_PLACES');
+                        appUserSettingUpdate('GPS');
+                        appComponentSettingUpdate('GPS', 'POPULAR_PLACES');
                     }
                     //settings design
                     if(event_target_id == 'setting_select_report_papersize'){
-                        settings_update('DESIGN');
-                        component_setting_update('DESIGN', 'PAPER');
+                        appUserSettingUpdate('DESIGN');
+                        appComponentSettingUpdate('DESIGN', 'PAPER');
                     }
                     if(event_target_id== 'setting_select_report_highlight_row')
-                        settings_update('DESIGN');
+                        appUserSettingUpdate('DESIGN');
                     //module leaflet
                     if (event_target_id == 'common_module_leaflet_select_country')
-                        settings_update('GPS');
+                        appUserSettingUpdate('GPS');
                     if(event_target_id == 'common_module_leaflet_select_city'){
                         //popular place not on map is read when saving
-                        component_setting_update('GPS', 'CITY');
+                        appComponentSettingUpdate('GPS', 'CITY');
                     }
                     if (event_target_id == 'common_module_leaflet_select_mapstyle')
-                        component_setting_update('GPS', 'MAP');
+                        appComponentSettingUpdate('GPS', 'MAP');
 
                     //settings prayer
                     if (event_target_id == 'setting_select_method'){
-                        component_setting_update('PRAYER', 'METHOD');
-                        settings_update('PRAYER');
+                        appComponentSettingUpdate('PRAYER', 'METHOD');
+                        appUserSettingUpdate('PRAYER');
                     }
                     if (event_target_id == 'setting_select_asr' ||
                         event_target_id == 'setting_select_highlatitude' ||
@@ -1679,11 +1679,11 @@ const app_event_click = event => {
                         event_target_id == 'setting_select_report_iqamat_title_maghrib' ||
                         event_target_id == 'setting_select_report_iqamat_title_isha' ||
                         event_target_id == 'setting_select_report_show_fast_start_end'){
-                        settings_update('PRAYER');
+                        appUserSettingUpdate('PRAYER');
                     }
                     //settings user
                     if (event_target_id == 'setting_select_user_setting'){
-                        component_setting_update('USER', 'SETTING');
+                        appComponentSettingUpdate('USER', 'SETTING');
                     }
                     //profile
                     if (event_target_id== 'profile_select_user_settings'){
@@ -1755,19 +1755,19 @@ const app_event_click = event => {
                 }
                 //toolbar top
                 case 'toolbar_btn_zoomout':{
-                    zoom_paper(-1);
+                    appPaperZoom(-1);
                     break;
                 }
                 case 'toolbar_btn_zoomin':{
-                    zoom_paper(1);
+                    appPaperZoom(1);
                     break;
                 }
                 case 'toolbar_btn_left':{
-                    update_timetable_report(APP_GLOBAL.timetable_type, event_target_id, getReportSettings());
+                    appReportTimetableUpdate(APP_GLOBAL.timetable_type, event_target_id, appReportTimetableSettings());
                     break;
                 }
                 case 'toolbar_btn_right':{
-                    update_timetable_report(APP_GLOBAL.timetable_type, event_target_id, getReportSettings());
+                    appReportTimetableUpdate(APP_GLOBAL.timetable_type, event_target_id, appReportTimetableSettings());
                     break;
                 }
                 case 'toolbar_btn_search':{
@@ -1807,23 +1807,23 @@ const app_event_click = event => {
                     break;
                 }
                 case 'toolbar_btn_print':{
-                    toolbar_button(1);
+                    appToolbarButton(1);
                     break;
                 }
                 case 'toolbar_btn_day':{
-                    toolbar_button(2);
+                    appToolbarButton(2);
                     break;
                 }
                 case 'toolbar_btn_month':{
-                    toolbar_button(3);
+                    appToolbarButton(3);
                     break;
                 }
                 case 'toolbar_btn_year':{
-                    toolbar_button(4);
+                    appToolbarButton(4);
                     break;
                 }
                 case 'toolbar_btn_settings':{
-                    toolbar_button(5);
+                    appToolbarButton(5);
                     break;
                 }
                 //tab navigation
@@ -1854,7 +1854,7 @@ const app_event_click = event => {
                     const timetable_type = COMMON_DOCUMENT.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
                                                 .toLowerCase()
                                                 .substring('toolbar_btn_'.length);
-                    update_timetable_report(timetable_type=='day'?0:timetable_type=='month'?1:2, null, getReportSettings());
+                    appReportTimetableUpdate(timetable_type=='day'?0:timetable_type=='month'?1:2, null, appReportTimetableSettings());
                     break;
                 }
                 
@@ -1866,8 +1866,8 @@ const app_event_click = event => {
                 case 'setting_design_prev_year':
                 case 'setting_design_next_year':{
                     /**@ts-ignore */
-                    theme_nav(event_target_id.split('_')[2]=='prev'?-1:1, event_target_id.split('_')[3])
-                    .then(()=>settings_update('DESIGN'));
+                    appSettingThemeNav(event_target_id.split('_')[2]=='prev'?-1:1, event_target_id.split('_')[3])
+                    .then(()=>appUserSettingUpdate('DESIGN'));
                     
                     break;
                 }
@@ -1876,7 +1876,7 @@ const app_event_click = event => {
                 case 'setting_checkbox_report_show_notes':
                 case 'setting_checkbox_report_show_gps':
                 case 'setting_checkbox_report_show_timezone':{
-                    settings_update('DESIGN');
+                    appUserSettingUpdate('DESIGN');
                     break;
                 }    
                 //settings image
@@ -1885,8 +1885,8 @@ const app_event_click = event => {
                     break;
                 }
                 case 'setting_icon_image_header_clear':{
-                    component_setting_update('IMAGE', 'HEADER_CLEAR');
-                    settings_update('IMAGE');
+                    appComponentSettingUpdate('IMAGE', 'HEADER_CLEAR');
+                    appUserSettingUpdate('IMAGE');
                     break;
                 }
                 case 'setting_icon_image_footer_img':{
@@ -1894,8 +1894,8 @@ const app_event_click = event => {
                     break;
                 }
                 case 'setting_icon_image_footer_clear':{
-                    component_setting_update('IMAGE', 'FOOTER_CLEAR');
-                    settings_update('IMAGE');
+                    appComponentSettingUpdate('IMAGE', 'FOOTER_CLEAR');
+                    appUserSettingUpdate('IMAGE');
                     break;
                 }
                 //settings text
@@ -1909,97 +1909,97 @@ const app_event_click = event => {
                     //mark active icon
                     COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
                     COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
-                                                                                        `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
+                                                                                        `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
                                                                                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_arabic_script;
                     break;
                 }
                 case 'setting_icon_text_header_aleft':
                 case 'setting_icon_text_header_acenter':
                 case 'setting_icon_text_header_aright':{
-                    component_setting_update('TEXT', 'HEADER_ALIGN', event_target_id);
-                    settings_update('TEXT');
+                    appComponentSettingUpdate('TEXT', 'HEADER_ALIGN', event_target_id);
+                    appUserSettingUpdate('TEXT');
                     break;
                 }
                 case 'setting_icon_text_footer_aleft':
                 case 'setting_icon_text_footer_acenter':
                 case 'setting_icon_text_footer_aright':{
-                    component_setting_update('TEXT', 'FOOTER_ALIGN', event_target_id);
-                    settings_update('TEXT');
+                    appComponentSettingUpdate('TEXT', 'FOOTER_ALIGN', event_target_id);
+                    appUserSettingUpdate('TEXT');
                     break;
                 }
                 //settings prayer
                 case 'setting_checkbox_report_show_imsak':
                 case 'setting_checkbox_report_show_sunset':
                 case 'setting_checkbox_report_show_midnight':{
-                    settings_update('PRAYER');
+                    appUserSettingUpdate('PRAYER');
                     break;
                 }
                 //settings user
                 case 'setting_btn_user_save':{
-                    user_settings_function('SAVE', false);
+                    appUserSettingFunction('SAVE', false);
                     break;
                 }
                 case 'setting_btn_user_add':{
-                    user_settings_function('ADD', false);
+                    appUserSettingFunction('ADD', false);
                     break;
                 }
                 case 'setting_btn_user_delete':{
-                    user_settings_delete();
+                    appUserSettingDelete();
                     break;
                 }
                 case 'user_day_html':        
                 case 'user_month_html':
                 case 'user_year_html':{
-                    user_setting_link(COMMON_DOCUMENT.querySelector('#' + event_target_id));
+                    appUserSettingLink(COMMON_DOCUMENT.querySelector('#' + event_target_id));
                     break;
                 }
                 //app profile
                 case 'profile_main_btn_user_settings':{
                     COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(0);
+                    appUserProfileDetail(0);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
                 case 'profile_main_btn_user_setting_likes_user_setting':{
                     COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(6);
+                    appUserProfileDetail(6);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
                 case 'profile_main_btn_user_setting_liked_user_setting':{
                     COMMON_DOCUMENT.querySelectorAll('.common_profile_btn_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_profile_btn_selected'));
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                    profile_detail_app(7);
+                    appUserProfileDetail(7);
                     break;
                 }
                 case 'profile_stat_row2_1':{
-                    profile_stat_app(4, '/server-db/user_account_app_data_post-profile-stat');
+                    appUserProfileStat(4, '/server-db/user_account_app_data_post-profile-stat');
                     break;
                 }
                 case 'profile_stat_row2_2':{
-                    profile_stat_app(5, '/server-db/user_account_app_data_post-profile-stat');
+                    appUserProfileStat(5, '/server-db/user_account_app_data_post-profile-stat');
                     break;
                 }
                 case 'profile_user_settings_day':
                 case 'profile_user_settings_month':
                 case 'profile_user_settings_year':
                 case 'profile_user_settings_like':{
-                    profile_user_setting_link(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
+                    appUserSettingProfileLink(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
                     break;
                 }
                 //common
                 case 'common_toolbar_framework_js':{
-                   framework_set(1);
+                   appFrameworkSet(1);
                     break;
                 }
                 case 'common_toolbar_framework_vue':{
-                   framework_set(2);
+                   appFrameworkSet(2);
                     break;
                 }
                 case 'common_toolbar_framework_react':{
-                   framework_set(3);
+                   appFrameworkSet(3);
                     break;
                 }
                 //dialogue user menu
@@ -2047,41 +2047,41 @@ const app_event_click = event => {
                         break;
                     }
                 case 'common_dialogue_user_menu_log_out':{
-                    user_logout_app();
+                    appUserLogout();
                     break;
                 }
                 case 'common_dialogue_user_menu_username':{
-                    toolbar_button(6);
+                    appToolbarButton(6);
                     break;
                 }
                 //profile button
                 case 'common_profile_btn_top':{
-                    toolbar_button(7);
+                    appToolbarButton(7);
                     break;
                 }
                 //dialogue user start
                 case 'common_user_start_login_button':{
-                    user_login_app();
+                    appUserLogin();
                     break;
                 }
                 case 'common_user_start_identity_provider_login':{
                     const target_row = common.commonElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
-                        ProviderSignIn_app(parseInt(provider_element.textContent));
+                        appUserLoginProvider(parseInt(provider_element.textContent));
                     break;
                 }
                 //dialogue profile 
                 case 'common_dialogue_profile_home':{
-                    toolbar_button(7);
+                    appToolbarButton(7);
                     break;
                 }
                 case 'common_profile_follow':{
-                    user_function_app('FOLLOW');
+                    appUserFunction('FOLLOW');
                     break;
                 }
                 case 'common_profile_like':{
-                    user_function_app('LIKE');
+                    appUserFunction('LIKE');
                     break;
                 }
                 //dialogue profile stat and info list
@@ -2113,7 +2113,7 @@ const app_event_click = event => {
 
                 //module leaflet
                 case 'common_module_leaflet_search_list':{
-                    component_setting_update('GPS', 'CITY');
+                    appComponentSettingUpdate('GPS', 'CITY');
                     break;
                 }
                 case 'common_module_leaflet_control_my_location_id':{
@@ -2124,9 +2124,9 @@ const app_event_click = event => {
                     //update timezone
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
-                    map_show_qibbla();
-                    REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
-                    settings_update('GPS');
+                    appModuleLeafletMapQibblaShow();
+                    APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
+                    appUserSettingUpdate('GPS');
                     break;
                 }       
             }
@@ -2138,10 +2138,10 @@ const app_event_click = event => {
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_change = event => {
+const appEventChange = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_change(event);
+            appEventChange(event);
         }, true);
     }
     else{
@@ -2151,13 +2151,13 @@ const app_event_change = event => {
             switch (event_target_id){
                 //settings image
                 case 'setting_input_reportheader_img':{
-                    component_setting_update('IMAGE', 'HEADER_LOAD',  event_target_id)
-                    .then(()=> settings_update('IMAGE'));
+                    appComponentSettingUpdate('IMAGE', 'HEADER_LOAD',  event_target_id)
+                    .then(()=> appUserSettingUpdate('IMAGE'));
                     break;
                 }
                 case 'setting_input_reportfooter_img':{
-                    component_setting_update('IMAGE', 'FOOTER_LOAD', event_target_id)
-                    .then(()=> settings_update('IMAGE'));
+                    appComponentSettingUpdate('IMAGE', 'FOOTER_LOAD', event_target_id)
+                    .then(()=> appUserSettingUpdate('IMAGE'));
                     break;
                 }
             }
@@ -2169,10 +2169,10 @@ const app_event_change = event => {
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @returns {void}
  */
-const app_event_keyup = event => {
+const appEventKeyUp = event => {
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-            app_event_keyup(event);
+            appEventKeyUp(event);
         }, true);
     }
     else{
@@ -2183,13 +2183,13 @@ const app_event_keyup = event => {
                 //settings gps
                 case 'setting_input_place':{
                     common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
-                    settings_update('GPS');
+                    appUserSettingUpdate('GPS');
                     break;
                 }
                 case 'setting_input_long':
                 case 'setting_input_lat':{
-                    settings_update('GPS');
-                    common.commonTypewatch(component_setting_update, 'GPS', 'POSITION');
+                    appUserSettingUpdate('GPS');
+                    common.commonTypewatch(appComponentSettingUpdate, 'GPS', 'POSITION');
                     break;
                 }
                 //settings text
@@ -2199,7 +2199,7 @@ const app_event_keyup = event => {
                 case 'setting_input_reportfooter1':
                 case 'setting_input_reportfooter2':
                 case 'setting_input_reportfooter3':{
-                    settings_update('TEXT');
+                    appUserSettingUpdate('TEXT');
                     break;
                 }
                 //common
@@ -2207,7 +2207,7 @@ const app_event_keyup = event => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        user_login_app().catch(()=>null);
+                        appUserLogin().catch(()=>null);
                     }
                     break;
                 }
@@ -2218,11 +2218,11 @@ const app_event_keyup = event => {
                 case 'common_user_verify_verification_char4':
                 case 'common_user_verify_verification_char5':{
                     common.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event_target_id}`), 
-                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), user_login_app);
+                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), appUserLogin);
                     break;
                 }
                 case 'common_user_verify_verification_char6':{
-                    common.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event_target_id}`), '', user_login_app);
+                    common.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event_target_id}`), '', appUserLogin);
                     break;
                 }
             }
@@ -2234,7 +2234,7 @@ const app_event_keyup = event => {
  * Map show qibbla
  * @returns {void}
  */
-const map_show_qibbla = () => {
+const appModuleLeafletMapQibblaShow = () => {
     common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_removeall();
     common.COMMON_GLOBAL.moduleLeaflet.methods.map_line_create('qibbla', 
                     APP_GLOBAL.gps_module_leaflet_qibbla_title,
@@ -2268,9 +2268,9 @@ const map_show_qibbla = () => {
  *          }} parameters
  * @returns {Promise.<string|null>}
  */
-const map_update_app = async (parameters) => {
+const appModuleLeafletMapUpdate = async (parameters) => {
     return new Promise((resolve) => {
-        map_show_qibbla();
+        appModuleLeafletMapQibblaShow();
         common.COMMON_GLOBAL.moduleLeaflet.methods.map_update({ longitude:parameters.longitude,
                                                                 latitude:parameters.latitude,
                                                                 text_place:parameters.text_place,
@@ -2289,7 +2289,7 @@ const map_update_app = async (parameters) => {
  * @param {Error} error
  * @returns {void}
  */
-const app_exception = (error) => {
+const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
@@ -2297,12 +2297,12 @@ const app_exception = (error) => {
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
-const framework_set = async (framework=null) => {
+const appFrameworkSet = async (framework=null) => {
     await common.commonFrameworkSet(framework,
-        {   Click: app_event_click,
-            Change: app_event_change,
+        {   Click: appEventClick,
+            Change: appEventChange,
             KeyDown: null,
-            KeyUp: app_event_keyup,
+            KeyUp: appEventKeyUp,
             Focus: null,
             Input:null});
 };
@@ -2313,7 +2313,7 @@ const framework_set = async (framework=null) => {
  *          app_service:{admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
-const init_app = async parameters => {
+const appInit = async parameters => {
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -2338,26 +2338,26 @@ const init_app = async parameters => {
             methods:    null,
             path:       '/common/component/common_user_account.js'}));
     //set papersize
-    zoom_paper();
+    appPaperZoom();
     //set app and report globals
-    REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
+    APP_REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
     for (const parameter of parameters.app) {
         if (parameter['APP_DEFAULT_STARTUP_PAGE'])
             APP_GLOBAL.app_default_startup_page = parseInt(parameter['APP_DEFAULT_STARTUP_PAGE']);
         if (parameter['APP_REPORT_TIMETABLE'])
             APP_GLOBAL.app_report_timetable = parameter['APP_REPORT_TIMETABLE']; 
         if (parameter['REGIONAL_DEFAULT_CALENDAR_LANG'])
-            REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
+            APP_REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'])
-            REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
+            APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'])
-            REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
+            APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'])
-            REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
+            APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
         if (parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'])
-            REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
+            APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
         if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
-            REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
+            APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
         if (parameter['REGIONAL_DEFAULT_DIRECTION'])
             APP_GLOBAL.regional_default_direction = parameter['REGIONAL_DEFAULT_DIRECTION'];
         if (parameter['REGIONAL_DEFAULT_LOCALE_SECOND'])
@@ -2475,24 +2475,24 @@ const init_app = async parameters => {
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
     if (common.COMMON_GLOBAL.client_timezone)
-        REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+        APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(common.COMMON_GLOBAL.client_timezone);
     else
-        REPORT_GLOBAL.session_currentDate = new Date();
-    REPORT_GLOBAL.session_currentHijriDate = [0,0];
+        APP_REPORT_GLOBAL.session_currentDate = new Date();
+    APP_REPORT_GLOBAL.session_currentHijriDate = [0,0];
     //get Hijri date from initial Gregorian date
-    REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(REPORT_GLOBAL.session_currentDate.getFullYear(),
-        REPORT_GLOBAL.session_currentDate.getMonth(),
-        REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-    REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(REPORT_GLOBAL.session_currentDate.getFullYear(),
-        REPORT_GLOBAL.session_currentDate.getMonth(),
-        REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+    APP_REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
+        APP_REPORT_GLOBAL.session_currentDate.getMonth(),
+        APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+    APP_REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
+        APP_REPORT_GLOBAL.session_currentDate.getMonth(),
+        APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 
     //show dialogue about using mobile and scan QR code after 5 seconds
-    common.commonWindowSetTimeout(() => {show_dialogue('SCAN');}, 5000);
-    set_default_settings().then(() => {
+    common.commonWindowSetTimeout(() => {appDialogueShow('SCAN');}, 5000);
+    appUserSettingDefaultSet().then(() => {
         const show_start = async () => {
             //show default startup
-            await toolbar_button(APP_GLOBAL.app_default_startup_page);
+            await appToolbarButton(APP_GLOBAL.app_default_startup_page);
             const user = common.commonWndowLocationPathname(1);
             if (user !='') {
                 //show profile for user entered in url
@@ -2500,8 +2500,7 @@ const init_app = async parameters => {
             }
         };
         show_start().then(() => {
-            common.commonWindowServiceWorker();
-            framework_set();
+            appFrameworkSet();
         });
     });
 };
@@ -2510,12 +2509,12 @@ const init_app = async parameters => {
  * @param {string} parameters 
  * @returns {void}
  */
-const init = parameters => {
+const appCommonInit= parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.COMMON_GLOBAL.app_function_exception = app_exception;
-    common.COMMON_GLOBAL.app_function_session_expired = user_logout_app;
+    common.COMMON_GLOBAL.app_function_exception = appException;
+    common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
     common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
-        init_app(decodedparameters);
+        appInit(decodedparameters);
     });
 };
-export{ init, component_setting_update};
+export{ appCommonInit, appComponentSettingUpdate, appSettingThemeThumbnailsUpdate};

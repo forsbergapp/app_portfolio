@@ -1,13 +1,13 @@
 /**
- * @module apps/admin/secure
+ * Admin app
+ * @module apps/admin/app
  */
-
 /**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
- const COMMON_DOCUMENT = document;
+const COMMON_DOCUMENT = document;
 
-const common_path ='common';
+const commonPath ='common';
 /**@type {import('../../../common_types.js').CommonModuleCommon} */
-const common = await import(common_path);
+const common = await import(commonPath);
 
 /**
  * App globals
@@ -21,7 +21,7 @@ const common = await import(common_path);
  *                      },
  *          previous_row:{}}}
  */
-const APP_GLOBAL = {
+const APP_SECURE_GLOBAL = {
     component: {MENU_MONITOR : {monitorShow:                ()=>null,
                                 monitorDetailShowLogDir:    ()=>null,
                                 monitorDetailShowServerLog: ()=>null,
@@ -32,21 +32,22 @@ const APP_GLOBAL = {
                 },
     previous_row:{}
 };
-Object.seal(APP_GLOBAL);
+Object.seal(APP_SECURE_GLOBAL);
+
 /**
  * Set globals to null
  * @returns {void}
  */
-const delete_globals = () => {
-    APP_GLOBAL.component = {MENU_MONITOR : {monitorShow:                ()=>null,
-                                            monitorDetailShowLogDir:    ()=>null,
-                                            monitorDetailShowServerLog: ()=>null,
-                                            monitorDetailPage:          ()=>null,
-                                            monitorDetailClickSort:     ()=>null,
-                                            monitorDetailClickItem:     ()=>null
-                                        }
+const appSecureGlobalDelete = () => {
+    APP_SECURE_GLOBAL.component = {MENU_MONITOR : { monitorShow:                ()=>null,
+                                                    monitorDetailShowLogDir:    ()=>null,
+                                                    monitorDetailShowServerLog: ()=>null,
+                                                    monitorDetailPage:          ()=>null,
+                                                    monitorDetailClickSort:     ()=>null,
+                                                    monitorDetailClickItem:     ()=>null
+                                                }
                             };
-    APP_GLOBAL.previous_row = {};
+    APP_SECURE_GLOBAL.previous_row = {};
 };
 
 /**
@@ -54,7 +55,7 @@ const delete_globals = () => {
  * @param {number} menu 
  * @returns {void}
  */
-const show_menu = menu => {
+const appSecureMenuShow = menu => {
     COMMON_DOCUMENT.querySelectorAll('.secure_menuitem').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('secure_menuitem_selected'));
     COMMON_DOCUMENT.querySelector(`#secure_menu_${menu}`).classList.add('secure_menuitem_selected');
 
@@ -68,7 +69,7 @@ const show_menu = menu => {
                                                 commonFFB:common.commonFFB
                                                 },
                                     path:       '/component/menu_start.js'})
-            .then(()=>show_charts());
+            .then(()=>appSecureMenuStartChartShow());
             
             break;
         }
@@ -88,7 +89,7 @@ const show_menu = menu => {
                 data:       null,
                 methods:    null,
                 path:       '/component/menu_users.js'})
-            .then(()=>search_users());
+            .then(()=>appSecureMenuUsers());
             break;
         }
         //APP ADMIN
@@ -116,7 +117,7 @@ const show_menu = menu => {
                             client_place:common.COMMON_GLOBAL.client_place
                             },
                 methods:    {
-                            show_broadcast_dialogue:show_broadcast_dialogue,
+                            appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
                             map_update:map_update,
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
                             commonElementRow:common.commonElementRow,
@@ -130,7 +131,7 @@ const show_menu = menu => {
                             },
                 path:       '/component/menu_monitor.js'})
             .then(result=>{
-                APP_GLOBAL.component.MENU_MONITOR  = result.methods;
+                APP_SECURE_GLOBAL.component.MENU_MONITOR  = result.methods;
                 COMMON_DOCUMENT.querySelector('#menu_monitor_connected').click();
             });
             break;
@@ -184,7 +185,7 @@ const show_menu = menu => {
  * Show charts
  * @returns{Promise.<void>}
  */
-const show_charts = async () => {
+const appSecureMenuStartChartShow = async () => {
     common.commonComponentRender({
         mountDiv:   'menu_start_graphBox',
         data:       null,
@@ -198,7 +199,7 @@ const show_charts = async () => {
  * Broadcast send
  * @returns{void}
  */
-const sendBroadcast = () => {
+const appSecureDialogueSendBroadcastSend = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
@@ -245,7 +246,7 @@ const sendBroadcast = () => {
  * Broadcast close
  * @returns{void}
  */
-const closeBroadcast = () => {
+const appSecureDialogueSendBroadcastClose = () => {
     common.commonComponentRemove('dialogue_send_broadcast', true);
 };
 /**
@@ -254,7 +255,7 @@ const closeBroadcast = () => {
  * @param {number|null} client_id 
  * @returns{Promise.<void>}
  */
-const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
+const appSecureDialogueSendBroadcastShow = async (dialogue_type, client_id=null) => {
     common.commonComponentRender({
         mountDiv:       'dialogue_send_broadcast',
         data:           null,
@@ -305,7 +306,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
  * Broadcast set type
  * @returns{void}
  */
-const set_broadcast_type = () => {
+const appSecureDialogueSendBroadcastBroadcastTypeSet = () => {
     switch (COMMON_DOCUMENT.querySelector('#dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value').getAttribute('data-value')){
         case 'ALERT':{
             //show app selection
@@ -331,7 +332,7 @@ const set_broadcast_type = () => {
  * Maintenance set
  * @returns{void}
  */
-const set_maintenance = () => {
+const appSecureDialogueSendBroadcastMaintenanceSet = () => {
     let check_value;
     if (COMMON_DOCUMENT.querySelector('#menu_start_checkbox_maintenance').classList.contains('checked'))
         check_value = 1;
@@ -346,7 +347,7 @@ const set_maintenance = () => {
  * @param {string} order_by 
  * @returns 
  */
-const search_users = (sort='username', order_by='asc') => {
+const appSecureMenuUsers = (sort='username', order_by='asc') => {
     common.commonComponentRender({
         mountDiv:   'menu_users_list',
         data:       {
@@ -363,14 +364,14 @@ const search_users = (sort='username', order_by='asc') => {
  * Button save
  * @param {string} item 
  */
-const button_save = async (item) => {
+const appSecureCommonButtonSave = async (item) => {
     switch (item){
         case 'menu_apps_save':{
             //save changes in menu_apps
             let x = COMMON_DOCUMENT.querySelectorAll('.menu_apps_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
-                    await update_record('app',
+                    await appSecureCommonRecordUpdate('app',
                                         record,
                                         item,
                                         {   user_account:{  id:0,
@@ -395,7 +396,7 @@ const button_save = async (item) => {
             x = COMMON_DOCUMENT.querySelectorAll('.menu_apps_parameters_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
-                    await update_record('app_parameter',
+                    await appSecureCommonRecordUpdate('app_parameter',
                                         record,
                                         item,
                                         {   user_account:{  id:0,
@@ -423,7 +424,7 @@ const button_save = async (item) => {
             const x = COMMON_DOCUMENT.querySelectorAll('.menu_users_list_row');
             for (const record of x){
                 if (record.getAttribute('data-changed-record')=='1'){
-                    await update_record('user_account',
+                    await appSecureCommonRecordUpdate('user_account',
                                         record,
                                         item,
                                         {   user_account:{  id:record.children[1].children[0].textContent,
@@ -502,7 +503,7 @@ const button_save = async (item) => {
  *                          parameter_value:string,
  *                          parameter_comment:string}}} parameters
  */
-const update_record = async (table, 
+const appSecureCommonRecordUpdate = async (table, 
                              row_element,
                              button,
                              parameters) => {
@@ -556,7 +557,7 @@ const update_record = async (table,
  * @param {{demo_password:string}|null} data 
  * @returns {void}
  */
-const installation_function = (id, db_icon, path, query, method, data) => {
+const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, query, method, data) => {
     common.commonFFB({path:path, query:query, method:method, authorization_type:'ADMIN', body:data, spinner_id:id})
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
@@ -576,9 +577,9 @@ const installation_function = (id, db_icon, path, query, method, data) => {
  * Installs DB
  * @returns {void}
  */
-const db_install = () =>{
+const appSecureMenuInstallationDbInstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    installation_function(  'menu_installation_db_button_install', true, 
+    appSecureMenuInstallationDbInstallationFunction(  'menu_installation_db_button_install', true, 
                             '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 
                             'POST', null);
@@ -587,9 +588,9 @@ const db_install = () =>{
  * Uninstalls DB
  * @returns {void}
  */
-const db_uninstall = () =>{
+const appSecureMenuInstallationDbUninstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    installation_function(  'menu_installation_db_button_uninstall', false, 
+    appSecureMenuInstallationDbInstallationFunction(  'menu_installation_db_button_uninstall', false, 
                             '/server-db_admin/database', 
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', null);
 };
@@ -597,13 +598,13 @@ const db_uninstall = () =>{
  * Installs Demo data
  * @returns {void}
  */
-const demo_install = () =>{
+const appSecureMenuInstallationDemoInstall = () =>{
     if (common.commonInputControl(null,
                         {
                             check_valid_list_elements:[[COMMON_DOCUMENT.querySelector('#menu_installation_demo_password'),null]]
                         })==true){
         const json_data = {demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
-        installation_function(  'menu_installation_demo_button_install', null, 
+        appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_install', null, 
                                 '/server-db_admin/database-demo', 
                                 `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                                 'POST', json_data);
@@ -613,8 +614,8 @@ const demo_install = () =>{
  * Uninstalls Demo data
  * @returns {void}
  */
-const demo_uninstall = () =>{
-    installation_function(  'menu_installation_demo_button_uninstall', null, 
+const appSecureMenuInstallationDemoUninstall = () =>{
+    appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_uninstall', null, 
                             '/server-db_admin/database-demo', 
                             `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
                             'DELETE', null);
@@ -628,7 +629,7 @@ const demo_uninstall = () =>{
  * @param {HTMLElement|null} event_list_title 
  * @returns {void}
  */
-const app_events = (event_type, event, event_target_id, event_list_title=null)=> {
+const appSecureEvents = (event_type, event, event_target_id, event_list_title=null)=> {
     switch (event_type){
         case 'click':{
             switch (event_target_id){
@@ -639,10 +640,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event_target_id == 'menu_start_select_year'||
                         event_target_id == 'menu_start_select_month' ||
                         event_target_id == 'menu_start_select_stat'){
-                        show_charts();    
+                        appSecureMenuStartChartShow();    
                     }
                     if( event_target_id == 'dialogue_send_broadcast_select_broadcast_type')
-                        set_broadcast_type();
+                        appSecureDialogueSendBroadcastBroadcastTypeSet();
                     //menu monitor
                     if( event_target_id == 'menu_monitor_select_app'||
                         event_target_id == 'menu_monitor_select_year'||
@@ -652,7 +653,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                                 case 'menu_monitor_server_log':{
                                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                                     COMMON_DOCUMENT.querySelector('#menu_monitor_server_log').classList.add('list_nav_selected_tab');
-                                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
+                                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                                     break;
                                 }
                                 case 'menu_monitor_connected':{
@@ -669,66 +670,66 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                             }
                         }
                     if( event_target_id == 'menu_monitor_detail_select_logscope')
-                        APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
+                        APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
                     break;
                 }
                 case 'menu_start_broadcast_button':{
-                    show_broadcast_dialogue('ALL');
+                    appSecureDialogueSendBroadcastShow('ALL');
                     break;
                 }
                 case 'menu_start_checkbox_maintenance':{
-                    set_maintenance();
+                    appSecureDialogueSendBroadcastMaintenanceSet();
                     break;
                 }
                 case 'menu_users_search_icon':{
                     COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').focus();
-                    search_users('username', 'asc');
+                    appSecureMenuUsers('username', 'asc');
                     break;
                 }
                 case 'menu_users_save':{
-                    button_save('menu_users_save');
+                    appSecureCommonButtonSave('menu_users_save');
                     break;
                 }
                 case 'menu_apps_save':{
-                    button_save('menu_apps_save');
+                    appSecureCommonButtonSave('menu_apps_save');
                     break;
                 }
                 case 'menu_monitor_detail_filesearch':{
-                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowLogDir();
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowLogDir();
                     break;
                 }
                 case 'menu_monitor_detail_server_log_search_icon':{
                     COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input').focus();
-                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate','desc');
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate','desc');
                     break;
                 }
                 case 'menu_monitor_connected':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#menu_monitor_connected').classList.add('list_nav_selected_tab');
-                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('CONNECTED', '', 'connection_date', 'desc');
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorShow('CONNECTED', '', 'connection_date', 'desc');
                     break;
                 }
                 case 'menu_monitor_app_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#menu_monitor_app_log').classList.add('list_nav_selected_tab');
-                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 0, 'date_created', 'desc');
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 0, 'date_created', 'desc');
                     break;
                 }
                 case 'menu_monitor_server_log':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector('#menu_monitor_server_log').classList.add('list_nav_selected_tab');
-                    APP_GLOBAL.component.MENU_MONITOR.monitorShow('SERVER_LOG', '', 'logdate', 'desc');
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorShow('SERVER_LOG', '', 'logdate', 'desc');
                     break;
                 }
                 case 'menu_monitor_pagination_first':
                 case 'menu_monitor_pagination_previous':
                 case 'menu_monitor_pagination_next':
                 case 'menu_monitor_pagination_last':{
-                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailPage(event_target_id);
                     break;
                 }
                 case 'menu_config_save':{
-                    button_save('menu_config_save');
+                    appSecureCommonButtonSave('menu_config_save');
                     break;
                 }
                 case 'menu_config_config_server' :
@@ -745,33 +746,33 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'menu_installation_db_button_install':{
-                    common.commonMessageShow('CONFIRM',null,db_install, null, null, common.COMMON_GLOBAL.app_id);
+                    common.commonMessageShow('CONFIRM',null,appSecureMenuInstallationDbInstall, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
                 case 'menu_installation_db_button_uninstall':{
-                    common.commonMessageShow('CONFIRM',null,db_uninstall, null, null, common.COMMON_GLOBAL.app_id);
+                    common.commonMessageShow('CONFIRM',null,appSecureMenuInstallationDbUninstall, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
                 case 'menu_installation_demo_button_install':{
-                    demo_install();
+                    appSecureMenuInstallationDemoInstall();
                     break;
                 }
                 case 'menu_installation_demo_button_uninstall':{
-                    demo_uninstall();
+                    appSecureMenuInstallationDemoUninstall();
                     break;
                 }
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
                     if (event_target_id == 'menu_users_list')
-                        search_users(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
+                        appSecureMenuUsers(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
                     else
-                        event_list_title!=null?APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(event_target_id, 
+                        event_list_title!=null?APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(event_target_id, 
                                         event_list_title.getAttribute('data-column') ?? '',
                                         event_list_title.classList.contains('desc')?'asc':'desc'
                                         ):null;
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
-                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('GPS',
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('GPS',
                                     {
                                         latitude:   event.target.getAttribute('data-latitude') ?? '',
                                         longitude:  event.target.getAttribute('data-longitude') ?? '',
@@ -781,7 +782,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case event.target.classList.contains('chat_click')?event_target_id:'':{
-                    APP_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('CHAT', 
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickItem('CHAT', 
                                     {   
                                         latitude:'',
                                         longitude:'',
@@ -791,11 +792,11 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'dialogue_send_broadcast_send':{
-                    sendBroadcast();
+                    appSecureDialogueSendBroadcastSend();
                     break;
                 }
                 case 'dialogue_send_broadcast_close':{
-                    closeBroadcast();
+                    appSecureDialogueSendBroadcastClose();
                     break;
                 }
             }
@@ -805,8 +806,8 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
             switch (event_target_id){
                 case 'menu_apps':{
                     //event on master to automatically show detail records
-                    if (APP_GLOBAL.previous_row != common.commonElementRow(event.target)){
-                        APP_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    if (APP_SECURE_GLOBAL.previous_row != common.commonElementRow(event.target)){
+                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
                         common.commonComponentRender({
                             mountDiv:   'menu_apps_parameters',
                             data:       {app_id_data:parseInt(common.commonElementRow(event.target).getAttribute('data-app_id') ?? '')},
@@ -817,8 +818,8 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 }
                 case 'menu_users_list':{
                     //event on master to automatically show detail records
-                    if (APP_GLOBAL.previous_row != common.commonElementRow(event.target)){
-                        APP_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    if (APP_SECURE_GLOBAL.previous_row != common.commonElementRow(event.target)){
+                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
                         common.commonComponentRender({
                             mountDiv:   'menu_users_iam_user_login',
                             data:       {user_account_id:parseInt(common.commonElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
@@ -844,7 +845,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(search_users, 'username', 'asc');
+                        common.commonTypewatch(appSecureMenuUsers, 'username', 'asc');
                     break;
                 }
                 case 'menu_monitor_detail_server_log_search_input':{
@@ -853,7 +854,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(APP_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 'logdate', 'desc');
+                        common.commonTypewatch(APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 'logdate', 'desc');
                     break;
                 }
             }
@@ -865,7 +866,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
             else
                 if (event.target.classList.contains('list_edit')){
                     if (event.code=='ArrowUp') {
-                        APP_GLOBAL.previous_row = common.commonElementRow(event.target);
+                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
                         event.preventDefault();
                         //focus on first list_edit item in the row
                         const element_previous = common.commonElementRow(event.target).previousSibling;
@@ -876,7 +877,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         }
                     }
                     if (event.code=='ArrowDown') {
-                        APP_GLOBAL.previous_row = common.commonElementRow(event.target);
+                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
                         event.preventDefault();
                         //focus on first list_edit item in the row
                         const element_next = common.commonElementRow(event.target).nextSibling;
@@ -894,10 +895,323 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
  * Init
  * @returns {void}
  */
-const init = () => {
+const appSecureInit = () => {
     //SET GLOBALS
-    APP_GLOBAL.previous_row= {};
+    APP_SECURE_GLOBAL.previous_row= {};
 
-    show_menu(1);
+    appSecureMenuShow(1);
 };
-export {delete_globals, show_menu, app_events, init,show_broadcast_dialogue};
+
+/**
+ * Admin logout
+ * @returns {void}
+ */
+const appLogout = () => {
+    common.commonUserLogout().then(() => {
+        appSecureGlobalDelete();
+        common.commonComponentRemove('secure');
+        common.commonDialogueShow('LOGIN_ADMIN');
+    });
+};
+/**
+ * Admin login
+ * @returns {Promise.<void>}
+ */
+const appLogin = async () => {
+    await common.commonUserLogin(true)
+    .then(()=>{
+        common.commonComponentRender({
+            mountDiv:   'secure',
+            data:       null,
+            methods:    null,
+            path:       '/component/secure.js'})
+        .then(()=>{
+            common.commonComponentRender({
+                mountDiv:   'secure_app_user_account',
+                data:       null,
+                methods:    null,
+                path:       '/common/component/common_user_account.js'})
+            .then(()=>{
+                COMMON_DOCUMENT.querySelector('#common_user_menu_default_avatar').classList.add('app_role_admin');
+                COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+                appSecureInit();
+            });
+        });
+    })
+    .catch(()=>common.commonComponentRemove('secure'));
+};
+/**
+ * Event click
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
+ */
+const appEventClick = event => {
+    if (event==null){
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            appEventClick(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.commonElementId(event.target);
+        const list_title = common.commonElementListTitle(event.target);
+        common.commonEvent('click',event)
+        .then(()=>{
+            switch (event_target_id){
+                case 'secure_menu_open':{
+                    COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'block';
+                    break;
+                }
+                case 'secure_menu_close': {
+                    COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'none';
+                    break;
+                }
+                case 'secure_menu_1':
+                case 'secure_menu_2':
+                case 'secure_menu_3':
+                case 'secure_menu_4':
+                case 'secure_menu_5':
+                case 'secure_menu_6':
+                case 'secure_menu_7':
+                case 'secure_menu_8':
+                case 'secure_menu_9':
+                case 'secure_menu_10':{
+                    appSecureMenuShow(parseInt(event_target_id.substring('secure_menu_'.length)));
+                    break;
+                }
+                case 'secure_menu_11': {
+                    appLogout();
+                    break;
+                }
+                case 'common_user_start_login_admin_button':{
+                    appLogin();
+                    break;
+                }
+                //common
+                case 'common_toolbar_framework_js':{
+                   appFrameworkSet(1);
+                    break;
+                }
+                case 'common_toolbar_framework_vue':{
+                   appFrameworkSet(2);
+                    break;
+                }
+                case 'common_toolbar_framework_react':{
+                   appFrameworkSet(3);
+                    break;
+                }
+                /**user account */
+                case 'common_user_menu':
+                case 'common_user_menu_logged_in':
+                case 'common_user_menu_avatar':
+                case 'common_user_menu_avatar_img':
+                case 'common_user_menu_logged_out':
+                case 'common_user_menu_default_avatar':{
+                    common.commonComponentRender({
+                                        mountDiv:   'common_dialogue_user_menu',
+                                        data:       {
+                                                    app_id:common.COMMON_GLOBAL.app_id,
+                                                    user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                                    common_app_id:common.COMMON_GLOBAL.common_app_id,
+                                                    data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                                    username:common.COMMON_GLOBAL.user_account_username,
+                                                    token_exp:common.COMMON_GLOBAL.token_exp,
+                                                    token_iat:common.COMMON_GLOBAL.token_iat,
+                                                    token_timestamp: common.COMMON_GLOBAL.token_timestamp,
+                                                    admin:common.COMMON_GLOBAL.admin,
+                                                    admin_only:common.COMMON_GLOBAL.admin_only,
+                                                    user_locale:common.COMMON_GLOBAL.user_locale,
+                                                    user_timezone:common.COMMON_GLOBAL.user_timezone,
+                                                    user_direction:common.COMMON_GLOBAL.user_direction,
+                                                    user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
+                                                    },
+                                        methods:    {
+                                                    commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                                   commonFFB:common.commonFFB,
+                                                    commonComponentRender:common.commonComponentRender,
+                                                    commonUserSessionCountdown:common.commonUserSessionCountdown,
+                                                    commonMessageShow:common.commonMessageShow
+                                                    },
+                                        path:       '/common/component/common_dialogue_user_menu.js'})
+
+                        .then(()=>common.commonComponentRender(
+                                        {mountDiv:  'common_dialogue_user_menu_app_theme',
+                                        data:       null,
+                                        methods:    {
+                                                    commonThemeDefaultList:common.commonThemeDefaultList, 
+                                                    commonComponentRender:common.commonComponentRender, 
+                                                    app_theme_update:common.commonPreferencesPostMount
+                                                    },
+                                        path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
+                    break;
+                }
+                default:{
+                    appSecureEvents('click', event, event_target_id, list_title);
+                    break;
+                }
+            }
+        });
+    }
+};
+/**
+ * Event change
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
+ */
+const appEventChange = event => {
+    if (event==null){
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            appEventChange(event);
+        });
+    }
+    else{
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('change',event)
+        .then(()=>appSecureEvents('change', event, event_target_id));
+    }
+};
+/**
+ * Event keyup
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
+ */
+const appEventKeyUp = event => {
+    if (event==null){
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            appEventKeyUp(event);
+        });
+    }
+    else{
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('keyup',event)
+        .then(()=>{
+            switch (event_target_id){
+                case 'common_user_start_login_admin_username':
+                case 'common_user_start_login_admin_password':
+                case 'common_user_start_login_admin_password_confirm':{
+                    if (event.code === 'Enter') {
+                        event.preventDefault();
+                        appLogin().catch(()=>null);
+                    }
+                    break;
+                }
+                default:
+                    appSecureEvents('keyup', event, event_target_id);
+                    break;
+            }
+        });
+    }
+};
+/**
+ * Event keydown
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
+ */
+const appEventKeyDown = event => {
+    if (event==null){
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            appEventKeyDown(event);
+        });
+    }
+    else{
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('keydown',event)
+        .then(()=>{
+            appSecureEvents('keydown', event, event_target_id);
+        });
+    }
+};
+/**
+ * Event input
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
+ */
+const appEventInput = event => {
+    if (event==null){
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            appEventInput(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('input',event)
+        .then(()=>{
+            appSecureEvents('input', event, event_target_id);
+        });
+    }
+};
+/**
+ * Event focus
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
+ */
+const appEventFocus = event => {
+    if (event==null){
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+            appEventFocus(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.commonElementId(event.target);
+        common.commonEvent('focus',event)
+        .then(()=>{
+            appSecureEvents('focus', event, event_target_id);
+        });
+    }
+};
+
+/**
+ * Exception function
+ * @param {Error} error
+ * @returns {void}
+ */
+const appException = (error) => {
+    common.commonMessageShow('EXCEPTION', null, null, null, error);
+};
+/**
+ * Sets framework
+ * @param {number|null} framework 
+ * @returns {Promise.<void>}
+ */
+const appFrameworkSet = async (framework=null) => {
+    common.commonFrameworkSet(framework,
+                    {   Click: appEventClick,
+                        Change: appEventChange,
+                        KeyDown: appEventKeyDown,
+                        KeyUp: appEventKeyUp,
+                        Focus: appEventFocus,
+                        Input:appEventInput})
+    .then(()=>{
+        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.admin==null)
+            common.commonDialogueShow('LOGIN_ADMIN');
+    });                        
+};
+/**
+ * App init
+ * @param {{app:*[],
+ *          app_service:{admin_only:number, first_time:number}}} parameters 
+ * @returns {Promise.<void>}
+ */
+const appInit = async (parameters) => {
+    parameters;
+    await common.commonComponentRender({  mountDiv:   common.COMMON_GLOBAL.app_div,
+                                    data:       null,
+                                    methods:    null,
+                                    path:       '/component/app.js'});
+   appFrameworkSet();
+};
+/**
+ * Init common
+ * @param {string} parameters 
+ * @returns {Promise.<void>}
+ */
+const appCommonInit= async parameters => {        
+    COMMON_DOCUMENT.body.className = 'app_theme1';
+    common.COMMON_GLOBAL.app_function_exception = appException;
+    common.COMMON_GLOBAL.app_function_session_expired = appLogout;
+    
+    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
+        appInit(decodedparameters);
+    });
+};
+export { appCommonInit };

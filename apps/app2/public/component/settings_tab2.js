@@ -48,7 +48,7 @@ const template = () => `<div id='mapid'></div>
  *                      user_timezone:string
  *                      },
  *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      component_setting_update:import('../js/app.js')['component_setting_update'],
+ *                      appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate'],
  *                      REPORT_GLOBAL:import('../js/types.js').APP_REPORT_GLOBAL,
  *                      getTimezone:import('../../../common_types.js').CommonModuleRegional['getTimezone'],
  *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
@@ -106,7 +106,7 @@ const method = async props => {
                 props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = event.latlng.lat;
                 props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = event.latlng.lng;
                 //Update GPS position
-                props.methods.component_setting_update('GPS', 'POSITION');
+                props.methods.appComponentSettingUpdate('GPS', 'POSITION');
                 const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
                 props.methods.REPORT_GLOBAL.session_currentDate = props.methods.commonTimezoneDate(timezone);
             }   
@@ -118,7 +118,7 @@ const method = async props => {
                                                     place:'',
                                                     doubleclick_event:dbl_click_event,
                                                     update_map:false}).then(() => {
-            props.methods.component_setting_update('GPS', 'MAP');
+            props.methods.appComponentSettingUpdate('GPS', 'MAP');
         });
     };
     return {

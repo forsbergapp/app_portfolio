@@ -14,8 +14,6 @@ const template = props =>`  <!DOCTYPE html>
                                     {
                                         "imports": {
                                             ${props.CONFIG_APP.RENDER_CONFIG?.JS !=''?          `"app" 			: "${props.CONFIG_APP.RENDER_CONFIG?.JS}",`:''}
-                                            ${props.CONFIG_APP.RENDER_CONFIG?.JS_SECURE !=''?   `"app_secure"   : "${props.CONFIG_APP.RENDER_CONFIG?.JS_SECURE}",`:''}
-                                            ${props.CONFIG_APP.RENDER_CONFIG?.JS_REPORT !=''?   `"app_report" 	: "${props.CONFIG_APP.RENDER_CONFIG?.JS_REPORT}",`:''}
                                             "common"	    : "/common/js/common.js",
                                             "easy.qrcode"   : "/common/modules/easy.qrcode/easy.qrcode.js",
                                             "leaflet"	    : "/common/modules/leaflet/leaflet-src.esm.js",
@@ -28,7 +26,7 @@ const template = props =>`  <!DOCTYPE html>
                                 </script>
 
                                 <script type='module'>
-                                    import('app').then((app) => app.init('${props.ITEM_COMMON_PARAMETERS}'));
+                                    import('app').then((app) => app.appCommonInit('${props.ITEM_COMMON_PARAMETERS}'));
                                 </script>
                                 <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS}'/>
                                 <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS_REPORT}'/>
