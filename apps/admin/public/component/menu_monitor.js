@@ -44,7 +44,7 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      client_longitude:string,
  *                      client_place:string},
  *          methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      appSecureDialogueSendBroadcastShow:import('../js/secure.js')['appSecureDialogueSendBroadcastShow'], 
+ *                      appSecureDialogueSendBroadcastShow:import('../js/app.js')['appSecureDialogueSendBroadcastShow'], 
  *                      map_update:import('../../../common_types.js').CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
  *                      commonModuleLeafletInit:import('../../../common_types.js').CommonModuleCommon['commonModuleLeafletInit'],
  *                      commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
@@ -128,19 +128,19 @@ const component = async props => {
            props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
            .then((/**@type{string}*/result)=>{
                const log_parameters = {
-                   SCOPE_REQUEST : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
-                   SCOPE_SERVER :  JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVER' in row)[0]['SCOPE_SERVER'],
-                   SCOPE_SERVICE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_SERVICE' in row)[0]['SCOPE_SERVICE'],
-                   SCOPE_APP :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_APP' in row)[0]['SCOPE_APP'],
-                   SCOPE_DB :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'SCOPE_DB' in row)[0]['SCOPE_DB'],
-                   REQUEST_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
-                   SERVICE_LEVEL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
-                   DB_LEVEL :      JSON.parse(result).data.filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
-                   APP_LEVEL :     JSON.parse(result).data.filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
-                   LEVEL_INFO :    JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_INFO' in row)[0]['LEVEL_INFO'],
-                   LEVEL_ERROR :   JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_ERROR' in row)[0]['LEVEL_ERROR'],
-                   LEVEL_VERBOSE : JSON.parse(result).data.filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
-                   FILE_INTERVAL : JSON.parse(result).data.filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
+                   SCOPE_REQUEST : JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],
+                   SCOPE_SERVER :  JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_SERVER' in row)[0]['SCOPE_SERVER'],
+                   SCOPE_SERVICE : JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_SERVICE' in row)[0]['SCOPE_SERVICE'],
+                   SCOPE_APP :     JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_APP' in row)[0]['SCOPE_APP'],
+                   SCOPE_DB :      JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_DB' in row)[0]['SCOPE_DB'],
+                   REQUEST_LEVEL : JSON.parse(result).filter((/**@type{*}*/row)=>'REQUEST_LEVEL' in row)[0]['REQUEST_LEVEL'],
+                   SERVICE_LEVEL : JSON.parse(result).filter((/**@type{*}*/row)=>'SERVICE_LEVEL' in row)[0]['SERVICE_LEVEL'],
+                   DB_LEVEL :      JSON.parse(result).filter((/**@type{*}*/row)=>'DB_LEVEL' in row)[0]['DB_LEVEL'],
+                   APP_LEVEL :     JSON.parse(result).filter((/**@type{*}*/row)=>'APP_LEVEL' in row)[0]['APP_LEVEL'],
+                   LEVEL_INFO :    JSON.parse(result).filter((/**@type{*}*/row)=>'LEVEL_INFO' in row)[0]['LEVEL_INFO'],
+                   LEVEL_ERROR :   JSON.parse(result).filter((/**@type{*}*/row)=>'LEVEL_ERROR' in row)[0]['LEVEL_ERROR'],
+                   LEVEL_VERBOSE : JSON.parse(result).filter((/**@type{*}*/row)=>'LEVEL_VERBOSE' in row)[0]['LEVEL_VERBOSE'],
+                   FILE_INTERVAL : JSON.parse(result).filter((/**@type{*}*/row)=>'FILE_INTERVAL' in row)[0]['FILE_INTERVAL']
                   };
                const logscope_level_options = [
                    {log_scope:log_parameters.SCOPE_REQUEST,    log_level: log_parameters.LEVEL_INFO},

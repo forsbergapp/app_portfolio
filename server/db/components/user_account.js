@@ -3,8 +3,8 @@
 /**@type{import('../sql/user_account.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
 
-/**@type{import('../../config.service.js')} */
-const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../config.js')} */
+const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('../file.service.js')} */
 const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
@@ -44,12 +44,12 @@ const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.s
  * @param {string} email 
  */
  const sendUserEmail = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
-    /**@type{import('../../../apps/apps.service.js')} */
-    const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    /**@type{import('../../../apps/common/src/common.js')} */
+    const { commonMailCreate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     /**@type{import('../../bff.service.js')} */
     const {BFF_server} = await import(`file://${process.cwd()}/server/bff.service.js`);
     
-    const email_rendered = await createMail( app_id, 
+    const email_rendered = await commonMailCreate( app_id, 
                                     {
                                         emailtype:        emailtype,
                                         host:             ConfigGet('SERVER', 'HOST'),

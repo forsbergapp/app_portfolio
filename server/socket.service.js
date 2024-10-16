@@ -2,8 +2,8 @@
 
 /**@type{import('./server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./config.js')} */
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./db/file.service.js')} */
 const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 /**@type{import('./iam.service.js')} */

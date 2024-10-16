@@ -16,8 +16,8 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
      
     const {default:jwt} = await import('jsonwebtoken');
 
-    /**@type{import('../../../../server/config.service.js')} */
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../../../server/config.js')} */
+    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);

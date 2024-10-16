@@ -14,11 +14,11 @@
 */
 const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
 
-   /**@type{import('../../../../server/config.service.js')} */
-   const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+   /**@type{import('../../../../server/config.js')} */
+   const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
 
-   /**@type{import('../../../../apps/common/src/common.service.js')} */
-   const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+   /**@type{import('../../../../apps/common/src/common.js')} */
+   const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
    /**@type{import('../../../../server/security.service')} */
    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 

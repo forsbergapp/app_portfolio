@@ -4,8 +4,8 @@
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{import('../log.service.js')} */
 const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.service.js`);
-/**@type{import('../config.service.js')} */
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../config.js')} */
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**@type{import('./db.service.js')} */
 const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);

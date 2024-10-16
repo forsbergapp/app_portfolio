@@ -162,7 +162,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * @param {import('../types.js').server_db_file_db_name} file
  * @returns {*}
  */
- const fileCache = file => fileRecord(file).CACHE_CONTENT ?? null;
+ const fileCache = file => JSON.parse(JSON.stringify(fileRecord(file).CACHE_CONTENT));
  /**
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics

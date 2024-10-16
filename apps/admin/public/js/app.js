@@ -1214,4 +1214,4 @@ const appCommonInit= async parameters => {
         appInit(decodedparameters);
     });
 };
-export { appCommonInit };
+export { appCommonInit, appSecureDialogueSendBroadcastShow };

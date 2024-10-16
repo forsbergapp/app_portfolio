@@ -29,14 +29,14 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-    /**@type{import('../../../../server/config.service.js')} */
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../../../server/config.js')} */
+    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
 
-    /**@type{import('../../../../apps/common/src/common.service.js')} */
-    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+    /**@type{import('../../../../apps/common/src/common.js')} */
+    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('../../../../server/security.service')} */
     const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 

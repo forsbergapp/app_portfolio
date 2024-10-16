@@ -64,7 +64,7 @@ const createSecret = (extra=false, max_length=null) =>{
  * @returns {Promise.<string>}
  */
 const PasswordCreate = async (password) => {
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
     const AppPasswordEncryptionKey = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
     const AppPasswordInitializationVector = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
     const cipher = createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
@@ -80,7 +80,7 @@ const PasswordCreate = async (password) => {
  * @returns {Promise.<boolean>}
  */
 const PasswordCompare = async (password, compare_password) =>{
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
     //system admin uses different parameters than apps
     const AppPasswordEncryptionKey = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
     const AppPasswordInitializationVector = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');

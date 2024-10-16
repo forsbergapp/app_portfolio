@@ -2,8 +2,8 @@
 
 /**@type{import('./server.service.js')} */
 const {responsetime, response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('./config.service.js')} */
-const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./config.js')} */
+const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**@type{import('./log.service.js')} */
 const {LogRequestI, LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
@@ -12,8 +12,8 @@ const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.s
 /**@type{import('./security.service.js')} */
 const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.service.js`);
 
-/**@type{import('../apps/common/src/common.service.js')} */
-const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+/**@type{import('../apps/common/src/common.js')} */
+const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 
 const fs = await import('node:fs');
@@ -237,9 +237,29 @@ const BFF_start = async (req, res) =>{
                                         bff_parameters.res.redirect(`http://${ConfigGet('SERVER', 'HOST')}`);
                                 }
                                 else{
+                                    /**
+                                     * @param {number} status
+                                     * @param {*} result
+                                     */
+                                    const return_result =(status, result) =>{
+                                        bff_parameters.res.statusCode = status;
+                                        if (bff_parameters.endpoint=='APP')
+                                            bff_parameters.res.send(result);
+                                        else{
+                                            if (result==null)
+                                                bff_parameters.res.write('');
+                                            else{
+                                                bff_parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
+                                                bff_parameters.res.write(JSON.stringify(result), 'utf8');
+                                            }                                                
+                                            bff_parameters.res.end();
+                                        }
+                                        
+                                    };
                                     if (bff_parameters.method.toUpperCase() == 'POST' && !bff_parameters.route_path.toLowerCase().startsWith('/app-function'))
-                                        bff_parameters.res.status(201).send(result_service);
+                                        return_result(201,result_service);
                                     else{
+                                        bff_parameters.res.statusCode = 200;
                                         if (decodedquery && new URLSearchParams(decodedquery).get('fields')){
                                             if (result_service.rows){
                                                 //limit fields/keys in rows
@@ -253,7 +273,8 @@ const BFF_start = async (req, res) =>{
                                                     return row_new;
                                                 });
                                                 result_service.rows = limit_fields;
-                                                bff_parameters.res.status(200).send(result_service);
+                                                return_result(200, result_service);
+                                                
                                             }
                                             else{
                                                 //limit fields/keys in object
@@ -263,11 +284,12 @@ const BFF_start = async (req, res) =>{
                                                     /**@ts-ignore */
                                                     result_service_fields[field] = result_service[field];
                                                 }
-                                                bff_parameters.res.status(200).send(result_service_fields);
+                                                return_result(200, result_service_fields);
                                             }
                                         }
-                                        else
-                                            bff_parameters.res.status(200).send(result_service);
+                                        else{
+                                            return_result(200, result_service);
+                                        }
                                     }
                                         
                                 }

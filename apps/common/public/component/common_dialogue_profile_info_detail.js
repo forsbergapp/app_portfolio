@@ -14,6 +14,7 @@
  *                  PORT:string,
  *                  LOGO:string,
  *                  NAME:string,
+ *                  APP_NAME_TRANSLATION:string,
  *                  date_created:string,
  *                  avatar:string,
  *                  provider_image:string,
@@ -30,7 +31,7 @@ const template = props => `     ${props.list.map(row=>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                                    ${row.NAME}
+                                                    ${row.APP_NAME_TRANSLATION}
                                                 </div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>

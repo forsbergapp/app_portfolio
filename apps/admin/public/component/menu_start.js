@@ -44,11 +44,9 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
 *                      template:string}>}
 */
 const component = async props => {
-    //system admin
     /**@type{{status_codes:[number, string][]}} */
     const result_obj = await props.methods.commonFFB({path:'/server/info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
 
-    //system admin
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
     // response has empty statgroup
     const stat_options = [
@@ -67,7 +65,7 @@ const component = async props => {
     ];
     /**@type{0|1|null} */
     const maintenance = await props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'ADMIN'})
-                                .then((/**@type{string}*/result)=>JSON.parse(result).data);
+                                .then((/**@type{string}*/result)=>JSON.parse(result));
 
    const onMounted = async () =>{
         //mount select

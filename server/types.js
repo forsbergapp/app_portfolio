@@ -623,13 +623,9 @@
  * @typedef  {object} server_config_apps_with_db_columns
  * @property {number} APP_ID
  * @property {string} NAME
- * @property {string} SUBDOMAIN
- * @property {string} PATH
- * @property {string} LOGO
- * @property {string} SHOWPARAM
- * @property {string} CLIENT_ID
- * @property {server_config_apps_status} STATUS
  * @property {string} APP_NAME_TRANSLATION
+ * @property {string} SUBDOMAIN
+ * @property {string} LOGO
  * @property {string} PROTOCOL
  * @property {string|null} HOST
  * @property {number|null} PORT
