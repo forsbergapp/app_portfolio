@@ -5,7 +5,7 @@
  * Info about operating system and process
  * @returns {Promise.<import('./types.js').server_info_result_Info>}
  */
- const Info = async () => {
+ const info = async () => {
     const os = await import('node:os');
     const os_json = {
                     hostname: os.hostname(),
@@ -36,4 +36,4 @@
                         };
     return {os: os_json,process: process_json};
 };
-export{Info};
+export{info};

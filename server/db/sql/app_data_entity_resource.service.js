@@ -2,7 +2,7 @@
 
 
 /**@type{import('../common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -36,6 +36,6 @@ const get = async (app_id, resource_id, data_app_id, resource_name, entity_id, l
 							entity_id: entity_id,
 							resource_name: resource_name
 							};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 export{get};

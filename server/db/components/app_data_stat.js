@@ -4,7 +4,7 @@
 const service = await import(`file://${process.cwd()}/server/db/sql/app_data_stat.service.js`);
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 
@@ -12,8 +12,8 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`
  * @param {*} query
  */
 const get = (app_id, query) => service.get( app_id, 
-                                            getNumberValue(query.get('id')),
-                                            getNumberValue(query.get('data_app_id')), 
+                                            serverUtilNumberValue(query.get('id')),
+                                            serverUtilNumberValue(query.get('data_app_id')), 
                                             query.get('resource_name_entity'))
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
@@ -22,8 +22,8 @@ const get = (app_id, query) => service.get( app_id,
  * @param {number} app_id 
  * @param {*} query
  */
-const getLogs = (app_id, query) => service.getLogs( app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), getNumberValue(query.get('day')),
-                                                    query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+const logGet = (app_id, query) => service.logGet( app_id, serverUtilNumberValue(query.get('select_app_id')), serverUtilNumberValue(query.get('year')), serverUtilNumberValue(query.get('month')), serverUtilNumberValue(query.get('day')),
+                                                    query.get('sort'), query.get('order_by'), serverUtilNumberValue(query.get('offset')), serverUtilNumberValue(query.get('limit')))
                                                 .then(result =>{
                                                         if (query.get('sort')!='date_created' && query.get('sort')!='app_id'){
                                                             //sort json_data columns
@@ -78,7 +78,7 @@ const getStatUniqueVisitor = (app_id, query) =>{
         return log_array_with_object;
     };
     return new Promise((resolve, reject)=>{
-        service.getStatUniqueVisitor(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
+        service.getStatUniqueVisitor(app_id, serverUtilNumberValue(query.get('select_app_id')), serverUtilNumberValue(query.get('year')), serverUtilNumberValue(query.get('month')))
         .then(result_logs =>{
             if (result_logs.length>0){
                 //use SQL group by and count() in javascript
@@ -110,4 +110,4 @@ const getStatUniqueVisitor = (app_id, query) =>{
         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
     });
 };  
-export{get, getLogs, getStatUniqueVisitor};
+export{get, logGet, getStatUniqueVisitor};

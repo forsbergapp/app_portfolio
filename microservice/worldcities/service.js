@@ -1,7 +1,7 @@
 /** @module microservice/worldcities/service */
 
-/**@type{import('../../microservice/registry.service.js')} */
-const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('../../microservice/registry.js')} */
+const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
  * Get file with cities 

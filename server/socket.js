@@ -1,16 +1,16 @@
 /** @module server/socket */
 
 /**@type{import('./server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet, configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./db/file.service.js')} */
 const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 /**@type{import('./iam.service.js')} */
-const {expired_token} = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**@type{import('./types.js').server_socket_connected_list[]} */
-let CONNECTED_CLIENTS = [];
+let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
      * 
@@ -25,9 +25,9 @@ let CONNECTED_CLIENTS = [];
  *               timezone:string,
  *               identity_provider_id:number|null}>}
  */
-const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
+const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
     /**@type{import('./bff.service.js')} */
-    const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
     /**@type{import('./types.js').server_bff_parameters}*/
     const parameters = {endpoint:'SERVER_SOCKET',
@@ -44,7 +44,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
                         /**@ts-ignore */
                         res:null};
     
-    const result_geodata = await BFF_server(app_id, parameters)
+    const result_geodata = await bffServer(app_id, parameters)
                                     .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
                                     .catch(()=>null);
     const place = result_geodata?
@@ -70,7 +70,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * @param {import('./types.js').server_socket_broadcast_type_all} message_type
  * @returns {void}
  */
- const ClientSend = (res, message, message_type) => {
+ const socketClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
                                "broadcast_message": "${ message }"}`)}\n\n`);
     res.flush();
@@ -81,7 +81,7 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * @param {import('./types.js').server_server_res} res
  * @returns {void}
  */
- const ClientConnect = (res) => {
+ const socketClientConnect = (res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Connection', 'keep-alive');
 };
@@ -92,9 +92,9 @@ const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_ag
  * @param {number} client_id
  * @returns {void}
  */
-const ClientOnClose = (res, client_id) => {
+const socketClientOnClose = (res, client_id) => {
     res.on('close', ()=>{
-        CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
+        SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.id !== client_id);
         res.end();
     });
 };
@@ -103,8 +103,8 @@ const ClientOnClose = (res, client_id) => {
  * @param {import('./types.js').server_socket_connected_list} newClient
  * @returns {void}
  */
-const ClientAdd = (newClient) => {
-    CONNECTED_CLIENTS.push(newClient);
+const socketClientAdd = (newClient) => {
+    SOCKET_CONNECTED_CLIENTS.push(newClient);
 };
 
 /**
@@ -121,21 +121,21 @@ const ClientAdd = (newClient) => {
  *          res: import('./types.js').server_server_res}} parameters
  * @returns {Promise.<void>}
  */
- const ConnectedUpdate = async (app_id, parameters) => {
+ const socketConnectedUpdate = async (app_id, parameters) => {
     /**@type{import('./iam.service.js')} */
-    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    const client_id = getNumberValue(iam_decode(parameters.iam).get('client_id'));
-    const authorization_bearer = iam_decode(parameters.iam).get('authorization_bearer');
-    if (CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
+    const client_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id'));
+    const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
         /**@type{import('./iam.service.js')} */
-        const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
-        throw not_authorized(parameters.res, 401, 'ConnectedUpdate, authorization', true);
+        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw iamUtilResponseNotAuthorized(parameters.res, 401, 'socketConnectedUpdate, authorization', true);
     }
     else
-        for (const connected of CONNECTED_CLIENTS){
+        for (const connected of SOCKET_CONNECTED_CLIENTS){
             if (connected.id==client_id && connected.authorization_bearer == authorization_bearer){
-                const connectUserData =  await getConnectedUserData(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                 connected.connection_date = new Date().toISOString();
                 connected.user_account_id = parameters.user_account_id;
                 connected.token_access = parameters.token_access;
@@ -147,7 +147,7 @@ const ClientAdd = (newClient) => {
                 connected.place = connectUserData.place;
                 connected.timezone = connectUserData.timezone;
                 //send message to client with updated data
-                ClientSend( connected.response, 
+                socketClientSend( connected.response, 
                             btoa(JSON.stringify({   client_id: client_id, 
                                                     latitude: connectUserData.latitude,
                                                     longitude: connectUserData.longitude,
@@ -161,8 +161,8 @@ const ClientAdd = (newClient) => {
  * @param {number} user_account_id
  * @returns {import('./types.js').server_socket_connected_list[]}
  */
- const ConnectedGet = user_account_id => {
-    return CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
+ const socketConnectedGet = user_account_id => {
+    return SOCKET_CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
 };
 
 /**
@@ -174,21 +174,21 @@ const ClientAdd = (newClient) => {
  *          broadcast_message:string}} data
  * @returns {{sent:number}}
  */
- const SocketSendAdmin = (app_id, data) => {
-    data.client_id = getNumberValue(data.client_id);
-    data.client_id_current = getNumberValue(data.client_id_current);
+ const socketAdminSend = (app_id, data) => {
+    data.client_id = serverUtilNumberValue(data.client_id);
+    data.client_id_current = serverUtilNumberValue(data.client_id_current);
 
     if (data.broadcast_type=='ALERT' || data.broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
         //except MAINTENANCE to admin and current user
         let sent = 0;
-        for (const client of CONNECTED_CLIENTS){
+        for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.id != data.client_id_current)
-                if (data.broadcast_type=='MAINTENANCE' && client.app_id ==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+                if (data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')))
                     null;
                 else
                     if (client.app_id == app_id || app_id == null){
-                        ClientSend(client.response, data.broadcast_message, data.broadcast_type);
+                        socketClientSend(client.response, data.broadcast_message, data.broadcast_type);
                         sent++;
                     }
         }
@@ -197,9 +197,9 @@ const ClientAdd = (newClient) => {
     else
         if (data.broadcast_type=='CHAT' || data.broadcast_type=='PROGRESS'){
             //broadcast CHAT to specific client
-            for (const client of CONNECTED_CLIENTS){
+            for (const client of SOCKET_CONNECTED_CLIENTS){
                 if (client.id == data.client_id){
-                    ClientSend(client.response, data.broadcast_message, data.broadcast_type);
+                    socketClientSend(client.response, data.broadcast_message, data.broadcast_type);
                     return {sent:1};
                 }
             }
@@ -212,25 +212,25 @@ const ClientAdd = (newClient) => {
  * @param {*} query
  * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:import('./types.js').server_socket_connected_list_no_res[]}>}
  */
- const ConnectedList = async (app_id, query) => {
-    const app_id_select = getNumberValue(query.get('select_app_id'));
+ const socketConnectedList = async (app_id, query) => {
+    const app_id_select = serverUtilNumberValue(query.get('select_app_id'));
     /**@type{number} */
-    const limit = getNumberValue(query.get('limit')) ?? 0;
+    const limit = serverUtilNumberValue(query.get('limit')) ?? 0;
     /**@type{number} */
-    const offset = getNumberValue(query.get('offset')) ?? 0;
+    const offset = serverUtilNumberValue(query.get('offset')) ?? 0;
     /**@type{number|null} */
-    const year = getNumberValue(query.get('year'));
+    const year = serverUtilNumberValue(query.get('year'));
     /**@type{number|null} */
-    const month = getNumberValue(query.get('month'));
+    const month = serverUtilNumberValue(query.get('month'));
     /**@type{number|null} */
-    const day= getNumberValue(query.get('day'));
+    const day= serverUtilNumberValue(query.get('day'));
     /**@type{string} */
     const order_by = query.get('order_by');
     /**@type{import('./types.js').server_socket_connected_list_sort} */
     const sort = query.get('sort');
 
     const order_by_num = order_by =='asc'?1:-1;
-    const result =  CONNECTED_CLIENTS
+    const result =  SOCKET_CONNECTED_CLIENTS
         .filter(client =>
             //filter rows
             (client.app_id == app_id_select || app_id_select==null) &&
@@ -306,13 +306,13 @@ const ClientAdd = (newClient) => {
  * @param {string} message
  * @returns {Promise.<{sent:number}>}
  */
-const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =>{
+const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =>{
     /**@type{import('./iam.service.js')} */
-    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    const client = CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iam_decode(iam).get('authorization_bearer'));
+    const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iamUtilDecode(iam).get('authorization_bearer'));
     if (client.length == 1){
-        ClientSend(client[0].response, message, message_type);
+        socketClientSend(client[0].response, message, message_type);
         return {sent:1};
     }
     else
@@ -323,18 +323,18 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
  * @param {*} query
  * @returns {{count_connected:number}}
  */
- const ConnectedCount = query => {
-    const identity_provider_id = getNumberValue(query.get('identity_provider_id'));
-    const logged_in = getNumberValue(query.get('logged_in'));
+ const socketConnectedCount = query => {
+    const identity_provider_id = serverUtilNumberValue(query.get('identity_provider_id'));
+    const logged_in = serverUtilNumberValue(query.get('logged_in'));
     if (logged_in == 1)
-        return {count_connected:CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
+        return {count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
                                                         identity_provider_id !=null &&
                                                         connected.user_account_id != null)||
                                                         (identity_provider_id ==null &&
                                                         connected.identity_provider_id ==null &&
                                                         (connected.user_account_id != null ||connected.admin != ''))).length};
     else
-        return {count_connected:CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
+        return {count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
                                                     connected.identity_provider_id ==null &&
                                                     connected.user_account_id ==null &&
                                                     connected.admin == '').length};
@@ -351,24 +351,24 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
  *          response:import('./types.js').server_server_res}} parameters
  * @returns {Promise.<void>}
  */
- const SocketConnect = async (  app_id, parameters) =>{
+ const socketConnect = async (  app_id, parameters) =>{
     /**@type{import('./iam.service.js')} */
-    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const user_account_id = getNumberValue(iam_decode(parameters.iam).get('user_id'));
-    const admin = iam_decode(parameters.iam).get('admin');
-    const authorization_bearer = iam_decode(parameters.iam).get('authorization_bearer');
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
+    const admin = iamUtilDecode(parameters.iam).get('admin');
+    const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
-    if (CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
         /**@type{import('./iam.service.js')} */
-        const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
-        throw not_authorized(parameters.response, 401, 'SocketConnect, authorization', true);
+        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
         const client_id = Date.now();
-        ClientConnect(parameters.response);
-        ClientOnClose(parameters.response, client_id);
+        socketClientConnect(parameters.response);
+        socketClientOnClose(parameters.response, client_id);
     
-        const connectUserData =  await getConnectedUserData(app_id, user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+        const connectUserData =  await socketConnectedUserDataGet(app_id, user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
         /**@type{import('./types.js').server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
@@ -389,10 +389,10 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
                             response:               parameters.response
                         };
     
-        ClientAdd(newClient);
+        socketClientAdd(newClient);
         //send message to client with data
         
-        ClientSend(parameters.response, btoa(JSON.stringify({   client_id: client_id, 
+        socketClientSend(parameters.response, btoa(JSON.stringify({   client_id: client_id, 
                                                                 latitude: connectUserData.latitude,
                                                                 longitude: connectUserData.longitude,
                                                                 place: connectUserData.place,
@@ -404,37 +404,37 @@ const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =
  * Socket check interval
  * @returns {void}
  */
- const SocketCheckInterval = () => {
+ const socketIntervalCheck = () => {
     //start interval if apps are started
-    const app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
-    if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
+    const app_id = serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'));
+    if (configAppGet(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
         setInterval(() => {
-            if (getNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
-                SocketSendAdmin(null, { client_id:null,
+            if (serverUtilNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
+                socketAdminSend(null, { client_id:null,
                                         client_id_current:null,
                                         broadcast_type:'MAINTENANCE',
                                         broadcast_message:''});
             }
-            SocketUpdateExpiredTokens();
+            socketExpiredTokensUpdate();
         //set default interval to 5 seconds if no parameter is set
-        }, getNumberValue(ConfigGet('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
+        }, serverUtilNumberValue(configGet('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
     }
 };
 /**
  * Sends SESSION_EXPIRED message to clients with expired token
  * @returns {void}
  */
-const SocketUpdateExpiredTokens = () =>{
-    for (const client of CONNECTED_CLIENTS){
-        if (client.token_access && expired_token(client.app_id, 'APP_ACCESS', client.token_access)||
-            client.token_admin && expired_token(null, 'ADMIN', client.token_admin))
-            ClientSend(client.response, '', 'SESSION_EXPIRED');
+const socketExpiredTokensUpdate = () =>{
+    for (const client of SOCKET_CONNECTED_CLIENTS){
+        if (client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)||
+            client.token_admin && iamUtilTokenExpired(null, 'ADMIN', client.token_admin))
+            socketClientSend(client.response, '', 'SESSION_EXPIRED');
     }
 };
 /**
  * 
  * @param {number} resource_id 
  */
-const CheckOnline = resource_id =>ConnectedGet(resource_id).length>0?{online:1}:{online:0};
+const CheckOnline = resource_id =>socketConnectedGet(resource_id).length>0?{online:1}:{online:0};
 
-export {ClientSend, ConnectedUpdate, ConnectedGet, ConnectedList, SocketSendAdmin, SocketSendAppServerFunction, ConnectedCount, SocketConnect, SocketCheckInterval, CheckOnline};
+export {socketClientSend, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline};

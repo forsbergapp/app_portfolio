@@ -2,15 +2,15 @@
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
-/**@type{import('../../microservice/microservice.service.js')} */
-const { route, getNumberValue, return_result, AuthenticateApp } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-/**@type{import('../../microservice/registry.service.js')} */
-const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('../../microservice/microservice.js')} */
+const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAppAuthenticate } = await import(`file://${process.cwd()}/microservice/microservice.js`);
+/**@type{import('../../microservice/registry.js')} */
+const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
  * Starts the server
  */
-const startserver = async () =>{
+const serverStart = async () =>{
 	const request = await MicroServiceServer('MAIL');
 	request.server.createServer(request.options, (/**@type{import('../types.js').microservice_req}*/req, /**@type{import('../types.js').microservice_res}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'POST');
@@ -19,15 +19,15 @@ const startserver = async () =>{
 		const URI_path = req.url.substring(0, req.url.indexOf('?'));
 		const app_query = new URLSearchParams(URI_query);
 		
-		req.query = {	app_id:	getNumberValue(app_query.get('app_id')),
+		req.query = {	app_id:	microserviceUtilNumberValue(app_query.get('app_id')),
 						data: 	null};
-		AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
+		iamAppAuthenticate(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
-					case route('/mail/v1/mail/sendemail' , 'POST', URI_path, req.method):{
+					case microserviceRouteMatch('/mail/v1/mail/sendemail' , 'POST', URI_path, req.method):{
 						if (app_query.get('email_host') && 
-							getNumberValue(app_query.get('email_port')) && 
-							getNumberValue(app_query.get('email_secure')) &&
+							microserviceUtilNumberValue(app_query.get('email_port')) && 
+							microserviceUtilNumberValue(app_query.get('email_secure')) &&
 							app_query.get('email_auth_user') && 
 							app_query.get('email_auth_pass') &&
 							app_query.get('email_from') &&
@@ -39,9 +39,9 @@ const startserver = async () =>{
 								/**@ts-ignore */
 								email_host:         app_query.get('email_host'),
 								/**@ts-ignore */
-								email_port:         getNumberValue(app_query.get('email_port')),
+								email_port:         microserviceUtilNumberValue(app_query.get('email_port')),
 								/**@ts-ignore */
-								email_secure:       getNumberValue(app_query.get('email_secure')),
+								email_secure:       microserviceUtilNumberValue(app_query.get('email_secure')),
 								/**@ts-ignore */
 								email_auth_user:    app_query.get('email_auth_user'),
 								/**@ts-ignore */
@@ -55,20 +55,20 @@ const startserver = async () =>{
 								/**@ts-ignore */
 								html:               app_query.get('email_html')};
 							service.sendEmail(data)
-							.then((result)=>return_result(200, null, result, res))
-							.catch((error) =>return_result(500, error, null, res));
+							.then((result)=>microserviceResultReturn(200, null, result, res))
+							.catch((error) =>microserviceResultReturn(500, error, null, res));
 						}
 						else
-							return_result(400, '⛔', null, res);
+							microserviceResultReturn(400, '⛔', null, res);
 						break;
 					}
 					default:{
-						return_result(401, '⛔', null, res);
+						microserviceResultReturn(401, '⛔', null, res);
 					}
 				}
 			}
 			else
-				return_result(401, '⛔', null, res);
+				microserviceResultReturn(401, '⛔', null, res);
 		});
 		
 	}).listen(request.port, ()=>{
@@ -79,5 +79,5 @@ const startserver = async () =>{
 		console.log(err);
 	});
 };
-startserver();
-export {startserver};
+serverStart();
+export {serverStart};

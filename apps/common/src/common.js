@@ -1,10 +1,10 @@
 /** @module apps/common/src/common/service */
 
-/**@type{import('../../../server/log.service.js')} */
-const { LogAppE } = await import(`file://${process.cwd()}/server/log.service.js`);
+/**@type{import('../../../server/log.js')} */
+const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 
 /**@type{import('../../../server/server.js')} */
-const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('../../../server/db/sql/database.service.js')} */
 const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
@@ -24,7 +24,7 @@ const fs = await import('node:fs');
 const commonMailCreate = async (app_id, data) =>{
     const {default:ComponentCreate} = await import('./component/common_mail.js');
     const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
-    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{import('../../../server/types.js').server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{import('../../../server/types.js').server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
     const secrets       = fileCache('CONFIG_APPS').APPS.filter((/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>app.APP_ID== common_app_id)[0].SECRETS;
     //email type 1-4 implemented are emails with verification code
     if (parseInt(data.emailtype)==1 || 
@@ -73,8 +73,8 @@ const commonMailCreate = async (app_id, data) =>{
  * @returns {Promise.<boolean>}
  */
 const commonAppStart = async (app_id=null) =>{
-    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
-    const db_use = getNumberValue(fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'USE' in key)[0].USE);
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+    const db_use = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'USE' in key)[0].USE);
     if (fileCache('CONFIG_SERVER').METADATA.MAINTENANCE==0 && fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'START' in key  )[0].START=='1' && 
         fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS.filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
         ((db_use==5 && await InstalledCheck(app_id, 1)
@@ -129,7 +129,7 @@ const commonClientLocale = accept_language =>{
  */
 const commonGeodata = async parameters =>{
     /**@type{import('../../../server/bff.service.js')} */
-    const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
     /**@type{import('../../../server/types.js').server_bff_parameters}*/
     const parametersBFF = { endpoint:parameters.endpoint,
@@ -145,8 +145,8 @@ const commonGeodata = async parameters =>{
                             accept_language:parameters.accept_language,
                             /**@ts-ignore */
                             res:null};
-    //ignore error in this case and fetch randcom geolocation using WORLDCITIES service instead if GEOLOCATION is not available
-    const result_gps = await BFF_server(parameters.app_id, parametersBFF)
+    //ignore error in this case and fetch random geolocation using WORLDCITIES service instead if GEOLOCATION is not available
+    const result_gps = await bffServer(parameters.app_id, parametersBFF)
     .catch(()=>null);
     const result_geodata = {};
     if (result_gps){
@@ -172,7 +172,7 @@ const commonGeodata = async parameters =>{
                                 accept_language:parameters.accept_language,
                                 /**@ts-ignore */
                                 res:null};
-        const result_city = await BFF_server(parameters.app_id, parametersBFF).catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
+        const result_city = await bffServer(parameters.app_id, parametersBFF).catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -270,7 +270,7 @@ const commonBFE = async parameters =>{
  */
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
-        const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+        const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
         const app_cache_control = fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
                                     .filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
         const app_cache_control_font = fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
@@ -398,7 +398,7 @@ const commonAssetfile = parameters =>{
                 break;
             }
             default:{
-                LogAppE(parameters.app_id, COMMON.app_filename(import.meta.url), 'commonAssetfile()', COMMON.app_line(), `Invalid file type ${parameters.url}`)
+                logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
                 .then(()=>{
                     parameters.res.statusCode = 403;
                     parameters.res.statusMessage = null;
@@ -427,7 +427,7 @@ const commonFunctionRun = async parameters => {
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
     }
     else{
-        LogAppE(parameters.app_id, COMMON.app_filename(import.meta.url), 'commonFunctionRun()', COMMON.app_line(), `Function ${parameters.resource_id} not found`)
+        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonFunctionRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -452,7 +452,7 @@ const commonModuleGet = async parameters => {
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
     }
     else{
-        LogAppE(parameters.app_id, COMMON.app_filename(import.meta.url), 'commonModuleGet()', COMMON.app_line(), `Module ${parameters.resource_id} not found`)
+        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -483,12 +483,12 @@ const commonModuleGet = async parameters => {
  */
 const commonComponentCreate = async parameters =>{
     /**@type{import('../../../server/iam.service.js')} */
-    const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const { iamIdTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     //id token for APP, REPORT and MAINTENANCE
     const idtoken = (parameters.type=='APP' || parameters.type=='REPORT' || parameters.type=='MAINTENANCE')?
-                        await AuthorizeTokenApp(parameters.app_id, parameters.componentParameters.ip):
+                        await iamIdTokenAuthorize(parameters.app_id, parameters.componentParameters.ip):
                             null;
     //geodata for APP and REPORT
     const result_geodata = (parameters.type=='APP' || parameters.type=='REPORT')?
@@ -503,7 +503,7 @@ const commonComponentCreate = async parameters =>{
     switch (parameters.type){
         case 'APP':{
             /**@type{import('../../../server/config.js')} */
-            const {CheckFirstTime} = await import(`file://${process.cwd()}/server/config.js`);
+            const {configCheckFirstTime} = await import(`file://${process.cwd()}/server/config.js`);
 
             /**@type{import('../../../server/types.js').server_apps_app_service_parameters} */
             const app_service_parameters = {   
@@ -518,7 +518,7 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
-                first_time:             admin_only==1?(CheckFirstTime()==true?1:0):0
+                first_time:             admin_only==1?(configCheckFirstTime()==true?1:0):0
             };
             const ITEM_COMMON_PARAMETERS  = {app:   fileCache('CONFIG_APPS').APPS[parameters.app_id].PARAMETERS
                                                                         .map((/**@type{*}*/parameter)=>{
@@ -640,7 +640,7 @@ const commonApp = async parameters =>{
     const reportid = parameters.query?parameters.query.get('reportid'):null;
     const host_no_port = parameters.host.substring(0,parameters.host.indexOf(':')==-1?parameters.host.length:parameters.host.indexOf(':'));
     const app_id = commonAppHost(host_no_port);
-    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=> 'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=> 'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
     if (app_id==null || parameters.res==null ){
         //function not called from client or host not found
         if (parameters.res)
@@ -717,7 +717,7 @@ const commonApp = async parameters =>{
                                     return app;
                                 })
                                 .catch((/**@type{import('../../../server/types.js').server_server_error}*/err)=>{
-                                    LogAppE(app_id, COMMON.app_filename(import.meta.url), 'commonApp()', COMMON.app_line(), err)
+                                    logAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
                                     .then(()=>{
                                         if (parameters.res){
                                             parameters.res.statusCode = 500;
@@ -762,7 +762,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
                     SUBDOMAIN:app.SUBDOMAIN,
                     PROTOCOL : HTTPS_ENABLE =='1'?'https://':'http://',
                     HOST : fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST,
-                    PORT : getNumberValue(HTTPS_ENABLE=='1'?
+                    PORT : serverUtilNumberValue(HTTPS_ENABLE=='1'?
                                         fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
                                             fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT),
                     APP_NAME_TRANSLATION : JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation.toString()).name,
@@ -791,7 +791,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
                     PROTOCOL : HTTPS_ENABLE =='1'?'https://':'http://',
                     PATH:app.PATH,
                     HOST : fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST,
-                    PORT : getNumberValue(HTTPS_ENABLE=='1'?
+                    PORT : serverUtilNumberValue(HTTPS_ENABLE=='1'?
                                         fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
                                             fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT)
                 };

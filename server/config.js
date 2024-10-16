@@ -3,10 +3,9 @@
 /**@type{import('./db/file.service.js')} */
 const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 /**@type{import('./server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-const app_portfolio_title = 'App Portfolio';
-
+const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
 /**
  * Config get apps
@@ -14,7 +13,7 @@ const app_portfolio_title = 'App Portfolio';
  * @param {*} query
  * @returns {import('./types.js').server_config_apps_record[]|*}
  */
- const ConfigGetApps = (app_id, query) => {
+ const configAppsGet = (app_id, query) => {
     const key = query.get('key');
     const result = fileCache('CONFIG_APPS').APPS.filter((/**@type{*}*/app)=>app.APP_ID == (app_id ?? app.APP_ID))
                         .reduce((   /**@type{import('./types.js').server_config_apps_record} */app, 
@@ -30,7 +29,7 @@ const app_portfolio_title = 'App Portfolio';
  * @param {import('./types.js').server_config_apps_keys} parameter
  * @returns {*|null}
  */
- const ConfigGetApp = (app_id, data_app_id, parameter) => {
+ const configAppGet = (app_id, data_app_id, parameter) => {
     if (parameter == 'PARAMETERS')
         return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
                 (/**@type{import('./types.js').server_config_apps_record}*/app)=>{return app.APP_ID == data_app_id;})[0][parameter]
@@ -53,13 +52,13 @@ const app_portfolio_title = 'App Portfolio';
  * Config app secret reset db username and passwords for database in use
  * @returns {Promise.<void>}
  */
-  const ConfigAppSecretDBReset = async () => {
+  const configAppSecretDBReset = async () => {
     /**@type{import('./server.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const file = await fileFsRead('CONFIG_APPS', true);
     /**@type{import('./types.js').server_config_apps_record[]}*/
     const APPS = file.file_content.APPS;
-    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
     for (const app of APPS){
         /**@ts-ignore */
         if (app.SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`]){
@@ -84,7 +83,7 @@ const app_portfolio_title = 'App Portfolio';
  *          parameter_value:    string}} data
  * @returns {Promise.<void>}
  */
-const ConfigAppSecretUpdate = async (app_id, data) => {
+const configAppSecretUpdate = async (app_id, data) => {
     const file = await fileFsRead('CONFIG_APPS', true);
     file.file_content.APPS.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0].SECRETS[data.parameter_name] = data.parameter_value;
     await fileFsWrite('CONFIG_APPS', file.transaction_id, file.file_content);
@@ -99,7 +98,7 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  *          parameter_comment:  string|null}} data
  * @returns {Promise.<void>}
  */
-  const ConfigAppParameterUpdate = async (app_id, resource_id, data) => {
+  const configAppParameterUpdate = async (app_id, resource_id, data) => {
     const file = await fileFsRead('CONFIG_APPS', true);
     
     for (const app of file.file_content.APPS){
@@ -122,7 +121,7 @@ const ConfigAppSecretUpdate = async (app_id, data) => {
  * @param {string} parameter
  * @returns {string|null}
  */
-const ConfigGet = (config_group, parameter) => {
+const configGet = (config_group, parameter) => {
     if (config_group=='METADATA')
         return parameter?fileCache('CONFIG_SERVER')[config_group][parameter]:fileCache('CONFIG_SERVER')[config_group];
     else{
@@ -141,7 +140,7 @@ const ConfigGet = (config_group, parameter) => {
  * Checks if all config files exist
  * @returns {Promise<boolean>}
  */
-const ConfigExists = async () => {
+const configExists = async () => {
     try {
         await fileFsRead('CONFIG_APPS');
         await fileFsRead('CONFIG_SERVER');
@@ -161,10 +160,10 @@ const ConfigExists = async () => {
  * @throws {object}
  * @returns {Promise<null>}
  */
-const DefaultConfig = async () => {
+const configDefault = async () => {
     const fs = await import('node:fs');
     /**@type{import('./security.js')} */
-    const {createSecret}= await import(`file://${process.cwd()}/server/security.js`);
+    const {securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
     await fileFsAccessMkdir()
     .catch((/**@type{import('./types.js').server_server_error}*/err) => {
         throw err;
@@ -205,27 +204,27 @@ const DefaultConfig = async () => {
     config_obj[0][1].SERVICE_IAM.map((/**@type{import('./types.js').server_config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row)){
             if (key== 'ADMIN_TOKEN_SECRET'){
-                row.ADMIN_TOKEN_SECRET = createSecret();
+                row.ADMIN_TOKEN_SECRET = securitySecretCreate();
             }
             if (key== 'ADMIN_PASSWORD_ENCRYPTION_KEY'){
-                row.ADMIN_PASSWORD_ENCRYPTION_KEY = createSecret(false, 32);
+                row.ADMIN_PASSWORD_ENCRYPTION_KEY = securitySecretCreate(false, 32);
             }
             if (key== 'ADMIN_PASSWORD_INIT_VECTOR'){
-                row.ADMIN_PASSWORD_INIT_VECTOR = createSecret(false, 16);
+                row.ADMIN_PASSWORD_INIT_VECTOR = securitySecretCreate(false, 16);
             }
         }
     });
     //set server metadata
-    config_obj[0][1].METADATA.CONFIGURATION = app_portfolio_title;
+    config_obj[0][1].METADATA.CONFIGURATION = APP_PORTFOLIO_TITLE;
     config_obj[0][1].METADATA.CREATED       = `${new Date().toISOString()}`;
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for apps
     config_obj[1][1].APPS.map((/**@type{import('./types.js').server_config_apps_record}*/row)=>{
-        row.SECRETS.CLIENT_ID = createSecret();
-        row.SECRETS.CLIENT_SECRET = createSecret();
-        row.SECRETS.APP_ID_SECRET = createSecret();
-        row.SECRETS.APP_ACCESS_SECRET = createSecret();
+        row.SECRETS.CLIENT_ID = securitySecretCreate();
+        row.SECRETS.CLIENT_SECRET = securitySecretCreate();
+        row.SECRETS.APP_ID_SECRET = securitySecretCreate();
+        row.SECRETS.APP_ACCESS_SECRET = securitySecretCreate();
     });
     //set created for user
     config_obj[7][1].USER[0].created = new Date().toISOString();
@@ -250,9 +249,9 @@ const DefaultConfig = async () => {
  * @throws {object}
  * @returns {Promise<null>}
  */
-const InitConfig = async () => {
+const configInit = async () => {
     return await new Promise((resolve, reject) => {
-        ConfigExists().then((result) => {
+        configExists().then((result) => {
             if (result==true)
                 fileFsCacheSet().then(() => {
                     resolve(null);
@@ -261,7 +260,7 @@ const InitConfig = async () => {
                     reject (error);
                 });
             else{
-                DefaultConfig().then(() => {
+                configDefault().then(() => {
                     fileFsCacheSet().then(() => {
                         resolve(null);
                     })
@@ -279,8 +278,8 @@ const InitConfig = async () => {
  * @param {*} query
  * @returns {Promise.<*>}
  */
-const ConfigFileGet = async (file, query=null) => {
-    const saved = query?getNumberValue(query.get('saved'))==1:false;
+const configFileGet = async (file, query=null) => {
+    const saved = query?serverUtilNumberValue(query.get('saved'))==1:false;
     const config_group = query?query.get('config_group'):null;
     const parameter = query?query.get('parameter'):null;
     const config = saved?await fileFsRead(file).then((/**@type{*}*/config)=>config.file_content):fileCache(file);
@@ -301,7 +300,7 @@ const ConfigFileGet = async (file, query=null) => {
  * @param {import('./types.js').server_db_file_db_name} resource_id
  * @param { *} data
  */
-const ConfigFileSave = async (resource_id, data) => {
+const configFileSave = async (resource_id, data) => {
     /**@type{import('./types.js').server_config_server|
              import('./types.js').server_config_apps|
              import('./types.js').server_config_iam_blockip|
@@ -310,7 +309,7 @@ const ConfigFileSave = async (resource_id, data) => {
              import('../microservice/types.js').microservice_config|
              import('../microservice/types.js').microservice_config_service|null} */
     const config = data.config;
-    const maintenance = getNumberValue(data.maintenance);
+    const maintenance = serverUtilNumberValue(data.maintenance);
     const comment = data.comment;
     const configuration = data.configuration;
 
@@ -338,7 +337,7 @@ const ConfigFileSave = async (resource_id, data) => {
  * Check first time
  * @returns {boolean}
  */
-const CheckFirstTime = () => {
+const configCheckFirstTime = () => {
     if (fileCache('IAM_USER').USER[0].username=='')
         return true;
     else
@@ -351,22 +350,22 @@ const CheckFirstTime = () => {
  * @param {string} admin_password
  * @returns {Promise.<void>}
  */
-const CreateAdmin = async (admin_name, admin_password) => {
+const configAdminCreate = async (admin_name, admin_password) => {
     /**@type{import('./security.js')} */
-    const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
     
     /**@type{import('./types.js').server_db_file_result_fileFsRead} */
     const file = await fileFsRead('IAM_USER', true);
     /**@type{import('./types.js').server_iam_user['USER']} */
     const user = file.file_content.USER;
     user[0].username = admin_name;
-    user[0].password = await PasswordCreate(admin_password);
+    user[0].password = await securityPasswordCreate(admin_password);
     user[0].modified = new Date().toISOString();
     file.file_content.USER = user;
     await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
     .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
 };
 
-export{ ConfigFileGet, ConfigFileSave, CheckFirstTime,
-        CreateAdmin, 
-        ConfigGet, ConfigGetApps, ConfigGetApp, ConfigAppSecretDBReset, ConfigAppSecretUpdate, ConfigAppParameterUpdate, InitConfig};
+export{ configFileGet, configFileSave, configCheckFirstTime,
+        configAdminCreate, 
+        configGet, configAppsGet, configAppGet, configAppSecretDBReset, configAppSecretUpdate, configAppParameterUpdate, configInit};

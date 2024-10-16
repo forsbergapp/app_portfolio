@@ -15,10 +15,10 @@
 const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
    
     /**@type{import('../../../../server/server.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
     /**@type{import('../../../../server/config.js')} */
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_entity.service.js')} */
     const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
@@ -33,10 +33,10 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {get:DetailGet } = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
     /**@type{import('../../../../server/iam.service.js')} */
-    const {AuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const {iamTokenAuthorize} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     /**@type{import('../../../../server/security.service')} */
-    const {createUUID, PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
+    const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
 
     const currency = await MasterGet(app_id, null, null, app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
 
@@ -53,7 +53,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         *          message:         string,
         *          origin:          string}}
         */
-        const  body_decrypted = JSON.parse(PrivateDecrypt(merchant.merchant_private_key, data.message));
+        const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, data.message));
     
         const merchant_bankaccount = await DetailGet(app_id, null, merchant.id, merchant.user_account_app_user_acccount_id, app_id, 'ACCOUNT', null, locale, false)
                                                 .then(result=>result.map(account=>JSON.parse(account.json_data)).filter(account=>account.bank_account_vpa==merchant.merchant_vpa)[0]);
@@ -69,12 +69,12 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             if (body_decrypted.currency_code==currency.currency_code){
                 // payment request uses ID Token and SECRET.APP_ID_SECRET  parameter since no user is logged in
                 // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
-                const jwt_data = AuthorizeToken(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
+                const jwt_data = iamTokenAuthorize(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
                                                                         name:           '',
                                                                         ip:             ip,
-                                                                        scope:          'APP_CUSTOM'}, ConfigGetApp(app_id, app_id, 'SECRETS').PAYMENT_REQUEST_EXPIRE);
+                                                                        scope:          'APP_CUSTOM'}, configAppGet(app_id, app_id, 'SECRETS').PAYMENT_REQUEST_EXPIRE);
     
-                const payment_request_id = createUUID();
+                const payment_request_id = securityUUIDCreate();
                 const data_payment_request = {
                                                 merchant_id:    data.id,
                                                 payment_request_id:payment_request_id,
@@ -82,7 +82,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                 payeeid:        body_decrypted.payeeid,
                                                 payerid:        body_decrypted.payerid,
                                                 currency_code:  body_decrypted.currency_code,
-                                                amount:         getNumberValue(body_decrypted.amount),
+                                                amount:         serverUtilNumberValue(body_decrypted.amount),
                                                 message:        body_decrypted.message,
                                                 timestamp:      jwt_data.tokentimestamp,
                                                 exp:            jwt_data.exp,
@@ -126,7 +126,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                         amount:			        body_decrypted.amount,
                                         currency_symbol:        currency.currency_symbol
                                     };
-                const data_encrypted = PublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
+                const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
                 return [{message:data_encrypted}];
             }
             else{

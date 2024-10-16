@@ -1077,7 +1077,7 @@
 
 /** 
  * Server - Log data parameter 
- * @typedef{object}         server_log_data_parameter_getLogs
+ * @typedef{object}         server_log_data_parameter_logGet
  * @property {number}       app_id
  * @property {number|null}  select_app_id
  * @property {string}       logscope
@@ -1145,7 +1145,7 @@
 
 /** 
  * Server - Log stats data
- * @typedef {object}                server_log_result_getLogsStats
+ * @typedef {object}                server_log_result_logStatGet
  * @property {number|null}          chart
  * @property {string|number|null}   statValue
  * @property {number}               year
@@ -1156,7 +1156,7 @@
 
 /** 
  * Server - Log files
- * @typedef {{id:number, filename:string}} server_log_result_getFiles
+ * @typedef {{id:number, filename:string}} server_log_result_logFilesGet
  */
 
 /**
@@ -1449,7 +1449,7 @@
  *              app_id:number,
  *              json_data:string,
  *              date_created:string,
- *              total_rows:number}} server_db_sql_result_app_data_stat_getLogs
+ *              total_rows:number}} server_db_sql_result_app_data_stat_logGet
  */
 
 /**

@@ -2,15 +2,15 @@
  * Backend for frontend (BFF)
  * 
  * Contains BFF controller functions for routes
- * All requests must pass BFF controllers and first controller is BFF_init
- * IAM middleware are called before except for BFF_init, BFF_start and BFF_app
+ * All requests must pass BFF controllers and first controller is bffInit
+ * IAM middleware are called before except for bffInit, bffStart and bffApp
  * See server routes for more info
  * 
  * @module server/bff 
  */
 
 /**@type{import('./bff.service.js')} */
-const service = await import('./bff.service.js');
+const bffService = await import('./bff.service.js');
 
 /**
  * Backend for frontend (BFF) init for all methods
@@ -19,8 +19,8 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_res} res
  * @param {function} next
  */
- const BFF_init = async (req, res, next) =>{
-    const result = await service.BFF_init(req, res);
+ const bffInit = async (req, res, next) =>{
+    const result = await bffService.bffInit(req, res);
     if (result.reason == null)
         next();
     else
@@ -33,8 +33,8 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_res} res
  * @param {function} next
  */
- const BFF_start = async (req, res, next) =>{
-    const result = await service.BFF_start(req, res);
+ const bffStart = async (req, res, next) =>{
+    const result = await bffService.bffStart(req, res);
     switch (result.reason){
         case 'REDIRECT':{
             res.redirect(result.redirect);
@@ -56,7 +56,7 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_res} res
  * returns {{}}
  */
- const BFF_common = (req, res) =>{
+ const bffCommon = (req, res) =>{
 
     return {
         //request
@@ -81,12 +81,12 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_req} req
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_app = (req, res) =>{
+ const bffApp = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'APP', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP_DATA
@@ -94,12 +94,12 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_app_data = (req, res) =>{
+ const bffAppData = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'APP_DATA', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP_SIGNUP
@@ -107,12 +107,12 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_app_signup = (req, res) =>{
+ const bffAppSignup = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'APP_SIGNUP', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP_ACCESS
@@ -120,12 +120,12 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_app_access = (req, res) =>{
+ const bffAppAccess = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'APP_ACCESS', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP_EXTERNAL
@@ -133,12 +133,12 @@ const service = await import('./bff.service.js');
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
-const BFF_app_external = (req, res) =>{
+const bffAppExternal = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'APP_EXTERNAL', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) ADMIN
@@ -146,12 +146,12 @@ const BFF_app_external = (req, res) =>{
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_admin = (req, res) =>{
+ const bffAdmin = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'ADMIN', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 
 /**
@@ -160,12 +160,12 @@ const BFF_app_external = (req, res) =>{
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
-const BFF_socket = (req, res) =>{
+const bffSocket = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'SOCKET', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) IAM_ADMIN
@@ -173,12 +173,12 @@ const BFF_socket = (req, res) =>{
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
-const BFF_iam_admin = (req, res) =>{
+const bffIAMAdmin = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'IAM_ADMIN', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) IAM_USER
@@ -186,12 +186,12 @@ const BFF_iam_admin = (req, res) =>{
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_iam_user = (req, res) =>{
+ const bffIAMUser = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'IAM_USER', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) IAM_PROVIDER
@@ -199,13 +199,13 @@ const BFF_iam_admin = (req, res) =>{
  * @param {import('./types.js').server_server_req} req - Request
  * @param {import('./types.js').server_server_res} res
  */
- const BFF_iam_provider = (req, res) =>{
+ const bffIAMProvider = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
     const bff_parameters = {endpoint:'IAM_PROVIDER', 
-                            ...BFF_common(req, res)
+                            ...bffCommon(req, res)
                             };
-    service.BFF(bff_parameters);
+    bffService.bff(bff_parameters);
 };
 
-export{ BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_socket, 
-        BFF_iam_admin, BFF_iam_user, BFF_iam_provider};
+export{ bffInit, bffStart, bffApp, bffAppData, bffAppSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+        bffIAMAdmin, bffIAMUser, bffIAMProvider};

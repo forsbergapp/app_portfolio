@@ -8,7 +8,7 @@ const app_data_entity_resource = await import(`file://${process.cwd()}/server/db
 
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 
@@ -18,7 +18,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`
  */
 const getEntity = (app_id, resource_id, query) => service.get(  app_id, 
                                                                 resource_id, 
-                                                                getNumberValue(query.get('data_app_id')), 
+                                                                serverUtilNumberValue(query.get('data_app_id')), 
                                                                 query.get('lang_code'))
                                                     .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
@@ -30,9 +30,9 @@ const getEntity = (app_id, resource_id, query) => service.get(  app_id,
  */
 const getEntityResource = (app_id, resource_id, query) => app_data_entity_resource.get( app_id, 
                                                                                         resource_id, 
-                                                                                        getNumberValue(query.get('data_app_id')), 
+                                                                                        serverUtilNumberValue(query.get('data_app_id')), 
                                                                                         query.get('resource_name'), 
-                                                                                        getNumberValue(query.get('entity_id')), 
+                                                                                        serverUtilNumberValue(query.get('entity_id')), 
                                                                                         query.get('lang_code'))
                                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 

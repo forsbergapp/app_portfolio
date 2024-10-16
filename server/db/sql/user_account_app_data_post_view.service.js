@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_app_data_post_view */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -36,6 +36,6 @@ const insertUserPostView = async (app_id, data) => {
 						user_account_app_data_post_id: data.user_account_app_data_post_id,
 						app_id: app_id
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 export{insertUserPostView};

@@ -3,28 +3,28 @@
 const http = await import('node:http');
 const https = await import('node:https');
 
-/**@type{import('./registry.service.js')} */
-const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('./registry.js')} */
+const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**@type{import('../server/iam.service.js')} */
-const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const { iamAppAuthenticate } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-const timeout_message = '🗺⛔?';
-const resource_id_string = ':RESOURCE_ID';
+const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
+const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
 /**
  * Returns resource id number from URI path
  * if resource id not requested for a route using resource id and last part of path is string then return null
  * @param {string} uri_path
  * @returns {number|null}
  */
- const resource_id_get_number = uri_path => getNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
+ const microserviceUtilResourceIdNumberGet = uri_path => microserviceUtilNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
 /**
  * Returns resource id string from URI path
  * if resource id not requested for a route using resource id and last part of path is string then return null
  * @param {string} uri_path
  * @returns {string|null}
  */
- const resource_id_get_string = uri_path => uri_path.substring(uri_path.lastIndexOf('/') + 1);
+ const microserviceUtilResourceIdStringGet = uri_path => uri_path.substring(uri_path.lastIndexOf('/') + 1);
 /**
  * Route match
  * @param {string} route_path
@@ -33,7 +33,7 @@ const resource_id_string = ':RESOURCE_ID';
  * @param {string} request_method 
  * @returns {boolean}
  */
-const route = (route_path, route_method, request_path , request_method) => 
+const microserviceRouteMatch = (route_path, route_method, request_path , request_method) => 
  (route_path.indexOf('/:RESOURCE_ID')>-1?route_path. replace('/:RESOURCE_ID', request_path.substring(request_path.lastIndexOf('/'))):route_path) == request_path && 
   route_method == request_method;
 
@@ -51,10 +51,10 @@ const route = (route_path, route_method, request_path , request_method) =>
  * @param {boolean} server_app_timeout
  */
 const microserviceRequest = async (admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data, server_app_timeout) =>{
-    /**@type{import('./circuitbreaker.service.js')} */
-    const {microservice_circuitbreak} = await import(`file://${process.cwd()}/microservice/circuitbreaker.service.js`);
+    /**@type{import('./circuitbreaker.js')} */
+    const {circuitBreaker} = await import(`file://${process.cwd()}/microservice/circuitbreaker.js`);
 
-    return microservice_circuitbreak.MicroServiceCall(httpRequest, admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data, server_app_timeout);
+    return circuitBreaker.MicroServiceCall(microserviceHttpRequest, admin, path, query, method,client_ip,authorization, headers_user_agent, headers_accept_language, data, server_app_timeout);
 }; 
 
 /**
@@ -64,7 +64,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * @param {import('../server/types.js').server_server_req_id_number} param
  * @returns {number|null}
  */
- const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
+ const microserviceUtilNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
 
 /**
  * Return result
@@ -73,7 +73,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * @param {*} result 
  * @param {import('./types.js').microservice_res} res
  */
- const return_result = (code, error, result, res)=>{
+ const microserviceResultReturn = (code, error, result, res)=>{
     res.statusCode = code;
     if (error){
         console.log(error);
@@ -108,7 +108,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * @param {object} body 
  * @returns {Promise.<string>}
  */                    
-const httpRequest = async (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
+const microserviceHttpRequest = async (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
 
     const request_protocol = ConfigServices(service).HTTPS_ENABLE ==1?https:http;
     const port = ConfigServices(service).HTTPS_ENABLE ==1?ConfigServices(service).HTTPS_PORT:ConfigServices(service).PORT;
@@ -181,11 +181,11 @@ const httpRequest = async (service, path, query, method, timeout, client_ip, aut
             reject('MICROSERVICE ERROR: ' + error);
         });
         request.on('timeout', () => {
-            reject(timeout_message);
+            reject(MICROSERVICE_MESSAGE_TIMEOUT);
         });
         request.end();
     });
 };
 
 
-export {resource_id_string, resource_id_get_number, resource_id_get_string, route, getNumberValue, return_result, ConfigServices, microserviceRequest, AuthenticateApp};
+export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, ConfigServices, microserviceRequest, iamAppAuthenticate};

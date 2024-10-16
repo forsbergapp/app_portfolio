@@ -1,9 +1,9 @@
 /** @module server/db/sql/app_setting */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 
@@ -59,13 +59,13 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          s.app_setting_type_app_id = :common_app_id)
                      AND s.display_data IS NOT NULL
                 ORDER BY 1, 2, 3`;
-	const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+	const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
      const parameters = {
                          app_id : app_id,
-                         common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                         common_app_id: serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                          app_setting_type_name: app_setting_type_name
                          };
-     return await db_execute(app_id, sql, parameters, null, lang_code);
+     return await dbCommonExecute(app_id, sql, parameters, null, lang_code);
 };
 /**
  * Get setting display data
@@ -96,6 +96,6 @@ const getSettingDisplayData = async (app_id, data_app_id, app_setting_type_name,
                          app_id : data_app_id,
                          value:value ==''?null:value
                          };
-     return await db_execute(app_id, sql, parameters, null, null);
+     return await dbCommonExecute(app_id, sql, parameters, null, null);
 };
 export{getSettings, getSettingDisplayData};

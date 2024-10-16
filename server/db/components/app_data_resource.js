@@ -8,7 +8,7 @@ const app_data_resource_detail = await import(`file://${process.cwd()}/server/db
 const app_data_resource_detail_data = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 
@@ -19,10 +19,10 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`
  */
 const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_resource_master.get(app_id, 
                                                                   resource_id, 
-                                                                  getNumberValue(query.get('user_account_id')),
-                                                                  getNumberValue(query.get('data_app_id')), 
+                                                                  serverUtilNumberValue(query.get('user_account_id')),
+                                                                  serverUtilNumberValue(query.get('data_app_id')), 
                                                                   query.get('resource_name'),
-                                                                  getNumberValue(query.get('entity_id')),
+                                                                  serverUtilNumberValue(query.get('entity_id')),
                                                                   query.get('lang_code'),
                                                                   user_null)
                                                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
@@ -58,11 +58,11 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
  */
  const DetailGet = (app_id, resource_id, query, user_null=false) => app_data_resource_detail.get( app_id, 
                                                                                                   resource_id, 
-                                                                                                  getNumberValue(query.get('master_id')), 
-                                                                                                  getNumberValue(query.get('user_account_id')),
-                                                                                                  getNumberValue(query.get('data_app_id')), 
+                                                                                                  serverUtilNumberValue(query.get('master_id')), 
+                                                                                                  serverUtilNumberValue(query.get('user_account_id')),
+                                                                                                  serverUtilNumberValue(query.get('data_app_id')), 
                                                                                                   query.get('resource_name'),
-                                                                                                  getNumberValue(query.get('entity_id')),
+                                                                                                  serverUtilNumberValue(query.get('entity_id')),
                                                                                                   query.get('lang_code'),
                                                                                                   user_null)
                                                                       .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
@@ -99,16 +99,16 @@ const MasterGet = (app_id, resource_id, query, user_null=false) => app_data_reso
  */
 const DataGet = (app_id, resource_id, query, user_null=false) => app_data_resource_detail_data.get( app_id, 
                                                                                                     resource_id, 
-                                                                                                    getNumberValue(query.get('app_data_detail_id')),
-                                                                                                    getNumberValue(query.get('user_account_id')),
-                                                                                                    getNumberValue(query.get('data_app_id')), 
+                                                                                                    serverUtilNumberValue(query.get('app_data_detail_id')),
+                                                                                                    serverUtilNumberValue(query.get('user_account_id')),
+                                                                                                    serverUtilNumberValue(query.get('data_app_id')), 
                                                                                                     query.get('resource_name_type'),
                                                                                                     query.get('resource_name'),
                                                                                                     query.get('resource_name_master_attribute_type'),
                                                                                                     query.get('resource_name_master_attribute'),
                                                                                                     query.get('resource_name_data_master_attribute_type'),
                                                                                                     query.get('resource_name_data_master_attribute'),
-                                                                                                    getNumberValue(query.get('entity_id')),
+                                                                                                    serverUtilNumberValue(query.get('entity_id')),
                                                                                                     query.get('lang_code'),
                                                                                                     user_null)
                                                                   .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});

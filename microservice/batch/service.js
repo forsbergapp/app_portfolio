@@ -1,7 +1,7 @@
 /** @module microservice/batch/service */
 
-/**@type{import('../../microservice/registry.service.js')} */
-const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('../../microservice/registry.js')} */
+const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 
