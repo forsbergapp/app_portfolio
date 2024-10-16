@@ -384,7 +384,7 @@ const COMMON = {
                 switch (true){
                     //server routes
                     //app data open routes to apps that got id token at start
-                    case route({url:`/bff/app_data/v1/app/apps/${resource_id_string}`, method:'GET'}):{
+                    case route({url:`/bff/app_data/v1/app-common/${resource_id_string}`, method:'GET'}):{
                         resolve(app_common.commonAppsGet(routesparameters.app_id, resource_id_get_number(), app_query?.get('lang_code') ??'')
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
@@ -763,7 +763,7 @@ const COMMON = {
                         resolve(db_database.DemoUninstall(routesparameters.app_id, app_query));
                         break;
                     }
-                    case route({url:'/bff/admin/v1/app_admin/apps', method:'GET'}):{
+                    case route({url:'/bff/admin/v1/app-common', method:'GET'}):{
                         resolve(app_common.commonAppsAdminGet()
                                     .then(result=>iso_return_message(result, false)));
                         break;
