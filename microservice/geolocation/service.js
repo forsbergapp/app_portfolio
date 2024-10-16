@@ -1,7 +1,7 @@
 /** @module microservice/geolocation/service */
 
-/**@type{import('../../microservice/registry.service.js')} */
-const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('../../microservice/registry.js')} */
+const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 const fs = await import('node:fs');
 const http = await import('node:http');

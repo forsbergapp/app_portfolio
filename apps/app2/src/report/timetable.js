@@ -1,7 +1,7 @@
 /** @module apps/app2/src/report/timetable */
 
 /**@type{import('../../../../server/server.service')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
 
@@ -37,11 +37,11 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 					theme_year          	: 'theme_year_' + user_account_app_data_post.design_theme_year_id,
 					papersize				: user_account_app_data_post.design_paper_size,
 					highlight           	: user_account_app_data_post.design_row_highlight,
-					show_weekday        	: getNumberValue(user_account_app_data_post.design_column_weekday_checked),
-					show_calendartype   	: getNumberValue(user_account_app_data_post.design_column_calendartype_checked),
-					show_notes          	: getNumberValue(user_account_app_data_post.design_column_notes_checked),
-					show_gps   	       		: getNumberValue(user_account_app_data_post.design_column_gps_checked),
-					show_timezone       	: getNumberValue(user_account_app_data_post.design_column_timezone_checked),
+					show_weekday        	: serverUtilNumberValue(user_account_app_data_post.design_column_weekday_checked),
+					show_calendartype   	: serverUtilNumberValue(user_account_app_data_post.design_column_calendartype_checked),
+					show_notes          	: serverUtilNumberValue(user_account_app_data_post.design_column_notes_checked),
+					show_gps   	       		: serverUtilNumberValue(user_account_app_data_post.design_column_gps_checked),
+					show_timezone       	: serverUtilNumberValue(user_account_app_data_post.design_column_timezone_checked),
 								
 					header_img_src      	: (user_account_app_data_post.image_header_image_img == '' || user_account_app_data_post.image_header_image_img == null)?null:user_account_app_data_post.image_header_image_img,
 					footer_img_src      	: (user_account_app_data_post.image_footer_image_img == '' || user_account_app_data_post.image_footer_image_img == null)?null:user_account_app_data_post.image_footer_image_img,
@@ -59,16 +59,16 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 					asr                 	: user_account_app_data_post.prayer_asr_method,
 					highlat             	: user_account_app_data_post.prayer_high_latitude_adjustment,
 					format              	: user_account_app_data_post.prayer_time_format,
-					hijri_adj           	: getNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
+					hijri_adj           	: serverUtilNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
 					iqamat_fajr         	: user_account_app_data_post.prayer_fajr_iqamat,
 					iqamat_dhuhr        	: user_account_app_data_post.prayer_dhuhr_iqamat,
 					iqamat_asr          	: user_account_app_data_post.prayer_asr_iqamat,
 					iqamat_maghrib      	: user_account_app_data_post.prayer_maghrib_iqamat,
 					iqamat_isha         	: user_account_app_data_post.prayer_isha_iqamat,
-					show_imsak          	: getNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
-					show_sunset         	: getNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
-					show_midnight       	: getNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
-					show_fast_start_end 	: getNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
+					show_imsak          	: serverUtilNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
+					show_sunset         	: serverUtilNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
+					show_midnight       	: serverUtilNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
+					show_fast_start_end 	: serverUtilNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
 					
 					timetable_class			: 'timetable_class',
 					timetable_month         : 'timetable_month_class',
@@ -128,7 +128,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
+	const {configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodedReportparameters);
@@ -142,7 +142,7 @@ const timetable = async (timetable_parameters) => {
 	 * @returns 
 	 */
 	
-	const result_parameters = ConfigGetApp(timetable_parameters.app_id, timetable_parameters.app_id, 'PARAMETERS');
+	const result_parameters = configAppGet(timetable_parameters.app_id, timetable_parameters.app_id, 'PARAMETERS');
 	return await new Promise((resolve) => {
 		for (const parameter of result_parameters) {
 			if (parameter['COPYRIGHT'])
@@ -166,7 +166,7 @@ const timetable = async (timetable_parameters) => {
 								client_longitude:  				timetable_parameters.longitude,
 								client_latitude:    			timetable_parameters.latitude,
 								user_account_id:    			uid_view,
-								user_account_app_data_post_id:  getNumberValue(user_account_app_data_post_id)};
+								user_account_app_data_post_id:  serverUtilNumberValue(user_account_app_data_post_id)};
 		
 		insertUserPostView(timetable_parameters.app_id, data_ViewStat)
 		.then(()=>{

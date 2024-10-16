@@ -3,11 +3,11 @@
  */
 
 /**@type{import('../../../../server/security.service')} */
-const {createSecret, createUUID} = await import(`file://${process.cwd()}/server/security.js`);
+const {securitySecretCreate, securityUUIDCreate} = await import(`file://${process.cwd()}/server/security.js`);
 
-const createBankAccountSecret = ()=>createSecret();
+const createBankAccountSecret = ()=>securitySecretCreate();
 const createBankAccountNumber = ()=>Date.now().toString().padStart(16,'0');
-const createBankAccountVPA = ()=>createUUID();
+const createBankAccountVPA = ()=>securityUUIDCreate();
 
 /**
  * 

@@ -12,7 +12,7 @@ const {default:ServerError} = await import('../apps/common/src/component/common_
  * @param {string|null} more_info 
  * @returns {void}
  */
- const response_send_error = (res, http, code, text, developer_text, more_info) => {
+ const serverResponseErrorSend = (res, http, code, text, developer_text, more_info) => {
     //ISO20022 error format
     const message = {error:{
                         http:http, 
@@ -34,7 +34,7 @@ const {default:ServerError} = await import('../apps/common/src/component/common_
  * @param {import('./types.js').server_server_req_id_number} param
  * @returns {number|null}
  */
- const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
+ const serverUtilNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
 
 
 /**
@@ -42,44 +42,50 @@ const {default:ServerError} = await import('../apps/common/src/component/common_
  * @param {import('./types.js').server_server_res} res
  * @returns {number}
  */
-const responsetime = (res) => {
+const serverUtilResponseTime = (res) => {
     const diff = process.hrtime(res.getHeader('X-Response-Time'));
     return diff[0] * 1e3 + diff[1] * 1e-6;
 };    
 
 /**
- * ES6 object with properties using concise method syntax
+ * @param {string} module
+ * @returns {string}
  */
-const COMMON = {
-    app_filename(/**@type{string}*/module){
-        const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
-        return module.substring(from_app_root);
-    },
-    app_function(/**@type{import('./types.js').server_server_error_stack}*/stack){
-        const e = stack.split('at ');
-        let functionName;
-        //loop from last to first
-        //ES6 rest parameter to avoid mutating array
-        for (const line of [...e].reverse()) {
-            //ES6 startsWith and includes
-            if ((line.startsWith('file')==false && 
-                line.includes('node_modules')==false &&
-                line.includes('node:internal')==false &&
-                line.startsWith('Query')==false)||
-                line.startsWith('router')){
-                    functionName = line.split(' ')[0];
-                    break;
-            }
+const serverUtilAppFilename = module =>{
+    const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
+    return module.substring(from_app_root);
+};
+/**
+ * @param{import('./types.js').server_server_error_stack} stack
+ * @returns {string}
+ */
+const serverUtilAppFunction = stack => {
+    const e = stack.split('at ');
+    let functionName;
+    //loop from last to first
+    //ES6 rest parameter to avoid mutating array
+    for (const line of [...e].reverse()) {
+        //ES6 startsWith and includes
+        if ((line.startsWith('file')==false && 
+            line.includes('node_modules')==false &&
+            line.includes('node:internal')==false &&
+            line.startsWith('Query')==false)||
+            line.startsWith('router')){
+                functionName = line.split(' ')[0];
+                break;
         }
-        return functionName;
-    },
-    app_line(){
-        /**@type {import('./types.js').server_server_error} */
-        const e = new Error() || '';
-        const frame = e.stack.split('\n')[2];
-        const lineNumber = frame.split(':').reverse()[1];
-        return lineNumber;
     }
+    return functionName ?? '';
+};
+/**
+ * @returns {number}
+ */
+const serverUtilAppLine = () =>{
+    /**@type {import('./types.js').server_server_error} */
+    const e = new Error() || '';
+    const frame = e.stack.split('\n')[2];
+    const lineNumber = frame.split(':').reverse()[1];
+    return lineNumber;
 };
 
 /**
@@ -90,23 +96,23 @@ const COMMON = {
  *	
  *  2.Routes	
  *	path	                            method	middleware                                  controller          comment
- *	*	                                all	                                                BFF_init	        logs EventSource and response when closed, 
+ *	*	                                all	                                                bffInit	        logs EventSource and response when closed, 
  *                                                                                                              authenticates request and will end request if not passing controls,
  *                                                                                                              sets headers, 
  *                                                                                                              returns disallow for robots.txt and empty favicon.ico
- *	*	                                get	                                                BFF_start	        redirects naked domain, http to https if enabled 
+ *	*	                                get	                                                bffStart	        redirects naked domain, http to https if enabled 
  *							                                                                                    and to admin subdomain if first time, 
  *							                                                                                    responds to SSL verification if enabled
- *  /bff/app_data/v1*                   all     iam.AuthenticateIdToken                     BFF_app_data
- *  /bff/app_signup/v1*                 post    iam.AuthenticateIdTokenRegistration         BFF_app_signup
- *  /bff/app_access/v1*                 all     iam.AuthenticateAccessToken                 BFF_app_access
- *  /bff/app_external/v1/app-function*  post    iam.AuthenticateExternal                    BFF_app_external
- *  /bff/admin/v1*                      all     iam.AuthenticateAccessTokenAdmin            BFF_admin
- *  /bff/socket/v1*                     get     iam.AuthenticateSocket                      BFF_socket
- *  /bff/iam_admin/v1*                  post    iam.AuthenticateIAMAdmin                    BFF_iam_admin
- *  /bff/iam_user/v1*                   post    iam.AuthenticateIAMUser                     BFF_iam_user
- *  /bff/iam_provider/v1*               post    iam.AuthenticateIAMProvider                 BFF_iam_provider
- *	*	                                get	                                                BFF_app		        app asset
+ *  /bff/app_data/v1*                   all     iam.iamIdTokenAuthenticate                     bffAppData
+ *  /bff/app_signup/v1*                 post    iam.iamIdTokenAuthenticateRegistration         bffAppSignup
+ *  /bff/app_access/v1*                 all     iam.iamAccessTokenAuthenticate                 bffAppAccess
+ *  /bff/app_external/v1/app-function*  post    iam.iamExternalAuthenticate                    bffAppExternal
+ *  /bff/admin/v1*                      all     iam.iamAccessTokenAuthenticateAdmin            bffAdmin
+ *  /bff/socket/v1*                     get     iam.iamSocketAuthenticate                      bffSocket
+ *  /bff/iam_admin/v1*                  post    iam.iamAdminAuthenticate                    bffIAMAdmin
+ *  /bff/iam_user/v1*                   post    iam.iamUserAuthenticate                     bffIAMUser
+ *  /bff/iam_provider/v1*               post    iam.iamProviderAuthenticate                 bffIAMProvider
+ *	*	                                get	                                                bffApp		        app asset
  *							                                                                                    common asset
  *							                                                                                    info page
  *							                                                                                    report and app
@@ -118,9 +124,9 @@ const COMMON = {
  */
  const serverExpress = async () => {
     /**@type{import('./config.js')} */
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
-    /**@type{import('./log.service.js')} */
-    const {LogRequestE} = await import(`file://${process.cwd()}/server/log.service.js`);
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('./log.js')} */
+    const {logRequestE} = await import(`file://${process.cwd()}/server/log.js`);
 
     const {default:express} = await import('express');
     const {default:compression} = await import('compression');
@@ -142,13 +148,13 @@ const COMMON = {
     /**@ts-ignore */
     app.use(compression({ filter: shouldCompress }));
     // set JSON maximum size
-    app.use(express.json({ limit: ConfigGet('SERVER', 'JSON_LIMIT') ?? ''}));
+    app.use(express.json({ limit: configGet('SERVER', 'JSON_LIMIT') ?? ''}));
     
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bff.js')} */
-    const { BFF_init, BFF_start, BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_app_external, BFF_admin, BFF_socket, 
-            BFF_iam_admin, BFF_iam_user, BFF_iam_provider} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { bffInit, bffStart, bffApp, bffAppData, bffAppSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+            bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
@@ -156,31 +162,31 @@ const COMMON = {
     //ROUTES 
     //logs EventSource and response when closed, authenticates request and will end request if not passing controls, 
     //sets headers, returns disallow for robots.txt and empty favicon.ico
-    app.route('*').all                          (BFF_init);
+    app.route('*').all                          (bffInit);
     
     //redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
-    app.route('*').get                          (BFF_start);
+    app.route('*').get                          (bffStart);
     
     //REST API 
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all                  (iam.AuthenticateIdToken,                   BFF_app_data);
-    app.route('/bff/app_signup/v1*').post               (iam.AuthenticateIdTokenRegistration,       BFF_app_signup);
-    app.route('/bff/app_access/v1*').all                (iam.AuthenticateAccessToken,               BFF_app_access);
-    app.route('/bff/app_external/v1/app-function*').post (iam.AuthenticateExternal,                 BFF_app_external);
-    app.route('/bff/admin/v1*').all                     (iam.AuthenticateAccessTokenAdmin,          BFF_admin);
-    app.route('/bff/socket/v1*').get                    (iam.AuthenticateSocket,                    BFF_socket);
-    app.route('/bff/iam_admin/v1*').post                (iam.AuthenticateIAMAdmin,                  BFF_iam_admin);
-    app.route('/bff/iam_user/v1*').post                 (iam.AuthenticateIAMUser,                   BFF_iam_user);
-    app.route('/bff/iam_provider/v1*').post             (iam.AuthenticateIAMProvider,               BFF_iam_provider);
+    app.route('/bff/app_data/v1*').all                  (iam.iamIdTokenAuthenticate,                   bffAppData);
+    app.route('/bff/app_signup/v1*').post               (iam.iamIdTokenAuthenticateRegistration,       bffAppSignup);
+    app.route('/bff/app_access/v1*').all                (iam.iamAccessTokenAuthenticate,               bffAppAccess);
+    app.route('/bff/app_external/v1/app-function*').post (iam.iamExternalAuthenticate,                 bffAppExternal);
+    app.route('/bff/admin/v1*').all                     (iam.iamAccessTokenAuthenticateAdmin,          bffAdmin);
+    app.route('/bff/socket/v1*').get                    (iam.iamSocketAuthenticate,                    bffSocket);
+    app.route('/bff/iam_admin/v1*').post                (iam.iamAdminAuthenticate,                  bffIAMAdmin);
+    app.route('/bff/iam_user/v1*').post                 (iam.iamUserAuthenticate,                   bffIAMUser);
+    app.route('/bff/iam_provider/v1*').post             (iam.iamProviderAuthenticate,               bffIAMProvider);
     
     //app asset, common asset, info page, report and app
-    app.route('*').get                          (BFF_app);
+    app.route('*').get                          (bffApp);
     
     //ERROR LOGGING
     app.use((/**@type{import('./types.js').server_server_error}*/err,/**@type{import('./types.js').server_server_req}*/req,/**@type{import('./types.js').server_server_res}*/res, /**@type{function}*/next) => {
-        LogRequestE(req, res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
+        logRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
             next();
         });
     });
@@ -192,10 +198,10 @@ const COMMON = {
  * @async
  */
  const serverRoutes = async (routesparameters) =>{
-    /**@type{import('../microservice/microservice.service.js')} */
-    const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-    /**@type{import('../microservice/registry.service.js')} */
-    const {microservice_api_version}= await import(`file://${process.cwd()}/microservice/registry.service.js`);
+    /**@type{import('../microservice/microservice.js')} */
+    const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.js`);
+    /**@type{import('../microservice/registry.js')} */
+    const {microservice_api_version}= await import(`file://${process.cwd()}/microservice/registry.js`);
 
     //server app common
     /**@type{import('../apps/common/src/common.js')} */
@@ -270,13 +276,13 @@ const COMMON = {
                 const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
 
-                const COMMON_APP_ID = getNumberValue(config.ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
-                let resource_id_not_authorized = false;
+                const COMMON_APP_ID = serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID'));
+                let resource_id_iamUtilResponseNotAuthorized = false;
                 /**
                  * Returns resource id number from URI path
                  * @returns {number|null}
                  */
-                const resource_id_get_number = () => getNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
+                const resource_id_get_number = () => serverUtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1));
                 /**
                  * Returns resource id string from URI path
                  * @returns {string|null}
@@ -293,8 +299,8 @@ const COMMON = {
                         return result;
                     else{
 						const list_header = {	total_count:	result.length,
-                                                offset: 		getNumberValue(app_query?.get('offset'))?getNumberValue(app_query?.get('offset')):0,
-                                                count:			getNumberValue(app_query?.get('limit')) ?? result.length
+                                                offset: 		serverUtilNumberValue(app_query?.get('offset'))?serverUtilNumberValue(app_query?.get('offset')):0,
+                                                count:			serverUtilNumberValue(app_query?.get('limit')) ?? result.length
                                             };
                         return {list_header:list_header, rows:result};
                     }
@@ -331,14 +337,14 @@ const COMMON = {
                         //match app data app id
                         ((params.resource_validate_app_data_app_id !=null && params.resource_validate_app_data_app_id == APP_ID_VALIDATE) ||params.resource_validate_app_data_app_id==null) &&
                         //match block app data search
-                        ((params.block_user_app_data_search && getNumberValue(app_query?.get('user_account_id'))==null && getNumberValue(app_query?.get('app_id'))==null) ||params.block_user_app_data_search==false) && 
+                        ((params.block_user_app_data_search && serverUtilNumberValue(app_query?.get('user_account_id'))==null && serverUtilNumberValue(app_query?.get('app_id'))==null) ||params.block_user_app_data_search==false) && 
                         //match app function and app function role
-                        ((params.validate_app_function && config.ConfigGetApp(routesparameters.app_id, APP_ID_VALIDATE, 'MODULES')
+                        ((params.validate_app_function && config.configAppGet(routesparameters.app_id, APP_ID_VALIDATE, 'MODULES')
                             .filter((/**@type{*}*/module)=> module[0]=='FUNCTION' && 
                                                             module[1].toUpperCase() == params.validate_app_function?.toUpperCase() && 
                                                             module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase()).length>0) || params.validate_app_function == null)){
                         if (params.resource_validate_type){
-                            if (iam_service.AuthenticateResource({  app_id:routesparameters.app_id, 
+                            if (iam_service.iamResourceAuthenticate({  app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
                                                                     authorization:routesparameters.authorization, 
                                                                     resource_id:params.resource_validate_value ?? null, 
@@ -346,7 +352,7 @@ const COMMON = {
                                                                     claim_key:params.resource_validate_type}))
                                 return true;
                             else{
-                                resource_id_not_authorized = true;
+                                resource_id_iamUtilResponseNotAuthorized = true;
                                 return false;
                             }
                         }
@@ -364,9 +370,9 @@ const COMMON = {
                  */
                 const call_microservice = async (app_id, microservice_path, microservice_query) => {
                     //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                    const authorization = `Basic ${Buffer.from(     config.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + 
-                                                                    config.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
-                    return microserviceRequest(app_id == getNumberValue(config.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
+                    const authorization = `Basic ${Buffer.from(     config.configAppGet(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + 
+                                                                    config.configAppGet(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
+                    return microserviceRequest(app_id == serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
                                                 microservice_path, 
                                                 Buffer.from(microservice_query + `&app_id=${app_id}`).toString('base64'), 
                                                 routesparameters.method,
@@ -733,7 +739,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-db_admin/app_data_stat-log', method:'GET'}):{
-                        resolve(db_app_data_stat.getLogs(routesparameters.app_id, app_query)
+                        resolve(db_app_data_stat.logGet(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -743,15 +749,15 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-socket/message', method:'POST'}):{
-                        resolve(socket.SocketSendAdmin(routesparameters.app_id, routesparameters.body));
+                        resolve(socket.socketAdminSend(routesparameters.app_id, routesparameters.body));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-socket/socket-stat', method:'GET'}):{
-                        resolve(iso_return_message(socket.ConnectedCount(app_query), true));
+                        resolve(iso_return_message(socket.socketConnectedCount(app_query), true));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-socket/socket', method:'GET'}):{
-                        resolve(socket.ConnectedList(routesparameters.app_id, app_query)
+                        resolve(socket.socketConnectedList(routesparameters.app_id, app_query)
                                 .then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -786,14 +792,14 @@ const COMMON = {
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config-apps-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
-                        resolve(config.ConfigAppParameterUpdate(routesparameters.app_id, 
+                        resolve(config.configAppParameterUpdate(routesparameters.app_id, 
                                                                 /**@ts-ignore */
                                                                 resource_id_get_number(), 
                                                                 routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config-apps/${resource_id_string}`, method:'GET'}):{
-                        resolve(iso_return_message(config.ConfigGetApps(
+                        resolve(iso_return_message(config.configAppsGet(
                                                         /**@ts-ignore */
                                                         resource_id_get_number(), 
                                                         app_query), 
@@ -801,7 +807,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(config.ConfigFileGet(
+                        resolve(config.configFileGet(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
                                                         app_query)
@@ -809,14 +815,14 @@ const COMMON = {
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'PUT', required:true}):{
-                        resolve(config.ConfigFileSave(
+                        resolve(config.configFileSave(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
                                                         routesparameters.body));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server/info', method:'GET'}):{
-                        resolve(info.Info()
+                        resolve(info.info()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
@@ -849,29 +855,29 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log', method:'GET'}):{
-                        resolve(log.getLogs(routesparameters.app_id, app_query)
+                        resolve(log.logGet(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server/info-statuscode', method:'GET'}):{
-                        resolve(log.getStatusCodes()
+                        resolve(log.logStatusCodesGet()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log-stat', method:'GET'}):{
-                        resolve(log.getLogStats(app_query)
+                        resolve(log.logStatGet(app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log-files', method:'GET'}):{
-                        resolve(log.getFiles()
+                        resolve(log.logFilesGet()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     //socket using EventSource route
                     case route({url:'/bff/socket/v1/server-socket/socket', method:'GET'}):{
                         //EventSource uses GET method, should otherwise be POST
-                        resolve(socket.SocketConnect(routesparameters.app_id, 
+                        resolve(socket.socketConnect(routesparameters.app_id, 
                                 {
                                 iam:routesparameters.res.req.query.iam,
                                 headers_user_agent:routesparameters.user_agent,
@@ -888,7 +894,7 @@ const COMMON = {
                     }
                     //iam routes
                     case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):{
-                        resolve(iam_service.AuthenticateAdmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                        resolve(iam_service.iamAdminAuthenticate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route({url:'/bff/iam_user/v1/server-iam/login', method:'POST'}):{
@@ -903,7 +909,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/app_data/v1/server-iam/user/logout', method:'POST'}):{
-                        resolve(socket.ConnectedUpdate(routesparameters.app_id, 
+                        resolve(socket.socketConnectedUpdate(routesparameters.app_id, 
                                 {   iam:routesparameters.res.req.query.iam,
                                     user_account_id:null,
                                     admin:null,
@@ -916,7 +922,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
-                        resolve(iam_service.userLogin(routesparameters.app_id, app_query)
+                        resolve(iam_service.iamUserLogin(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
@@ -925,7 +931,7 @@ const COMMON = {
                     //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
                     case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
-                        if (getNumberValue(config.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
+                        if (serverUtilNumberValue(config.configGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
                             const params = URI_query.split('&');
                             //set ip from client in case ip query parameter is missing
                             //if ip parameter does not exist
@@ -951,8 +957,8 @@ const COMMON = {
                     case route({url:'/bff/app_data/v1/worldcities/city', method:'GET'}):{
                         resolve(call_microservice(  routesparameters.app_id,
                                                     `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
-                                                    URI_query + `&limit=${getNumberValue(config.ConfigGetApp(routesparameters.app_id, 
-                                                    getNumberValue(config.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
+                                                    URI_query + `&limit=${serverUtilNumberValue(config.configAppGet(routesparameters.app_id, 
+                                                    serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/worldcities/city-random', method:'GET'})||
@@ -971,7 +977,7 @@ const COMMON = {
                     }
                     default:{
                         
-                        if (resource_id_not_authorized){
+                        if (resource_id_iamUtilResponseNotAuthorized){
                             routesparameters.res.statusMessage = 'resource id not authorized';
                             routesparameters.res.statusCode =401;
                         }
@@ -998,11 +1004,11 @@ const serverStart = async () =>{
     /**@type{import('./db/components/database.js')} */
     const database = await import(`file://${process.cwd()}/server/db/components/database.js`);
     /**@type{import('./config.js')} */
-    const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configInit, configGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('./socket.js')} */
-    const {SocketCheckInterval} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('./log.service.js')} */
-    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
+    const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
+    /**@type{import('./log.js')} */
+    const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
 
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -1011,46 +1017,48 @@ const serverStart = async () =>{
     process.env.TZ = 'UTC';
     process.on('uncaughtException', (err) =>{
         console.log(err);
-        LogServerE('Process uncaughtException: ' + err.stack);
+        logServerE('Process uncaughtException: ' + err.stack);
     });
     process.on('unhandledRejection', (reason) =>{
         console.log(reason);
-        LogServerE('Process unhandledRejection: ' + reason);
+        logServerE('Process unhandledRejection: ' + reason);
     });
     try {
-        await InitConfig();
+        await configInit();
         await database.Start();
         //Get express app with all configurations
         /**@type{import('./types.js').server_server_express}*/
         const app = await serverExpress();
-        SocketCheckInterval();
+        socketIntervalCheck();
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(app).listen(ConfigGet('SERVER', 'HTTP_PORT'), () => {
-            LogServerI('HTTP Server up and running on PORT: ' + ConfigGet('SERVER', 'HTTP_PORT')).then(() => {
+        http.createServer(app).listen(configGet('SERVER', 'HTTP_PORT'), () => {
+            logServerI('HTTP Server up and running on PORT: ' + configGet('SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
         });
-        if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
+        if (configGet('SERVER', 'HTTPS_ENABLE')=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + ConfigGet('SERVER', 'HTTPS_KEY'), 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + ConfigGet('SERVER', 'HTTPS_CERT'), 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + configGet('SERVER', 'HTTPS_KEY'), 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + configGet('SERVER', 'HTTPS_CERT'), 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
             /**@ts-ignore*/
-            https.createServer(options,  app).listen(ConfigGet('SERVER', 'HTTPS_PORT'), () => {
-                LogServerI('HTTPS Server up and running on PORT: ' + ConfigGet('SERVER', 'HTTPS_PORT')).then(() => {
+            https.createServer(options,  app).listen(configGet('SERVER', 'HTTPS_PORT'), () => {
+                logServerI('HTTPS Server up and running on PORT: ' + configGet('SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
             });            
         }
     } catch (/**@type{import('./types.js').server_server_error}*/error) {
-        LogServerE('serverStart: ' + error.stack);
+        logServerE('serverStart: ' + error.stack);
     }
     
 };
 serverStart();
-export {COMMON, response_send_error, getNumberValue, responsetime, serverRoutes, serverStart };
+export {serverResponseErrorSend, 
+        serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppFunction,serverUtilAppLine , 
+        serverRoutes, serverStart };

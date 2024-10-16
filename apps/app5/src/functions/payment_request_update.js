@@ -17,7 +17,7 @@
 const payment_request_update = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/server.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet, update:MasterUpdate} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
@@ -35,9 +35,9 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
                                             /**@ts-ignore */
                                             .filter(payment_request=>payment_request.payment_request_id==data.payment_request_id)[0]);
 
-    if (customer && payment_request && (getNumberValue(data.status)==1 || getNumberValue(data.status)==0)){
+    if (customer && payment_request && (serverUtilNumberValue(data.status)==1 || serverUtilNumberValue(data.status)==0)){
         let status ='PENDING';
-        if (getNumberValue(data.status)==1)
+        if (serverUtilNumberValue(data.status)==1)
             /**@ts-ignore */
             if ((((payment_request.exp ?? 0) * 1000) - Date.now())<0)
                 status = 'EXPIRED';

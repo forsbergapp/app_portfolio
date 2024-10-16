@@ -2,7 +2,7 @@
 
 
 /**@type{import('../common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -50,7 +50,7 @@ const get = async (app_id, resource_id, data_app_id, resource_name_entity) => {
 		const parameters = {resource_id         : resource_id,
 							data_app_id         : data_app_id,
                             resource_name_entity: resource_name_entity};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -90,7 +90,7 @@ const post = async (app_id, data) => {
                         app_data_entity_resource_app_data_entity_app_id:    data.app_data_entity_resource_app_data_entity_app_id,
                         app_data_entity_resource_app_data_entity_id:        data.app_data_entity_resource_app_data_entity_id
                         };
-    return await db_execute(app_id, sql, parameters);
+    return await dbCommonExecute(app_id, sql, parameters);
 };
 /**
  * 
@@ -103,13 +103,13 @@ const post = async (app_id, data) => {
  * @param {string} order_by 
  * @param {number|null} offset 
  * @param {number|null} limit 
- * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_stat_getLogs[]>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_app_data_stat_logGet[]>}
  */
-const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, offset, limit) => {
+const logGet = async (app_id, data_app_id, year, month, day, sort, order_by, offset, limit) => {
     /**@type{import('../../../server/server.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../server/config.js')} */
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
     const sql = `SELECT app_id "app_id",
                         json_data "json_data",
                         date_created "date_created",
@@ -131,9 +131,9 @@ const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, of
                         offset:offset,
                         limit:limit,
                         app_data_entity_resource_id: 0,
-                        app_data_entity_resource_app_data_entity_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                        app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                         app_data_entity_resource_app_data_entity_id : 0};
-    return await db_execute(app_id, sql, parameters, null,null);
+    return await dbCommonExecute(app_id, sql, parameters, null,null);
 };
 /**
 * 
@@ -145,9 +145,9 @@ const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, of
 */
 const getStatUniqueVisitor = async (app_id, data_app_id, year, month) => {
     /**@type{import('../../../server/server.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../server/config.js')} */
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
     const sql = `SELECT t.chart "chart",
                   t.app_id 		"app_id",
                   :year_log 	"year",
@@ -181,8 +181,8 @@ const getStatUniqueVisitor = async (app_id, data_app_id, year, month) => {
                         year_log: year,
                         month_log: month,
                         app_data_entity_resource_id: 0,
-                        app_data_entity_resource_app_data_entity_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                        app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                         app_data_entity_resource_app_data_entity_id : 0};
-    return await db_execute(app_id, sql, parameters, null, null);
+    return await dbCommonExecute(app_id, sql, parameters, null, null);
 };
-export{get, post, getLogs, getStatUniqueVisitor};
+export{get, post, logGet, getStatUniqueVisitor};

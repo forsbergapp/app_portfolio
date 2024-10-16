@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_event */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -40,7 +40,7 @@ const insertUserEvent = async (app_id, data) => {
 						event : data.event,
 						event_status : data.event_status
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -75,6 +75,6 @@ const getLastUserEvent = async (app_id, user_account_id, event) => {
 						user_account_id: user_account_id,
 						event : event
 					};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 export{insertUserEvent, getLastUserEvent};

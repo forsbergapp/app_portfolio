@@ -10,7 +10,7 @@ const { randomUUID,
  * Create random string
  * @returns {string}
  */
- const CreateRandomString =()=>{
+ const securityCreateRandomString =()=>{
     let randomstring = '';
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     for (let i = 0; i < 256; i++) {
@@ -23,18 +23,18 @@ const { randomUUID,
  * 
  * @returns {string}
  */
-const createUUID = () =>randomUUID();
+const securityUUIDCreate = () =>randomUUID();
 /**
  * Creates request id using UUID
  * @returns {string}
  */
-const createRequestId = () =>randomUUID().replaceAll('-','');
+const securityRequestIdCreate = () =>randomUUID().replaceAll('-','');
 /**
  * Creates correlation id using MD5
  * @param {string} text 
  * @returns {string}
  */
-const createCorrelationId = text =>createHash('md5').update(text).digest('hex');
+const securityCorrelationIdCreate = text =>createHash('md5').update(text).digest('hex');
 
 /**
  * Creates secret using SHA256
@@ -42,31 +42,31 @@ const createCorrelationId = text =>createHash('md5').update(text).digest('hex');
  * @param {number|null} max_length  some databases requires maximum length
  * @returns {string}
  */
-const createSecret = (extra=false, max_length=null) =>{
+const securitySecretCreate = (extra=false, max_length=null) =>{
     if (extra){
         if (max_length)
-            return createHash('sha256').update(CreateRandomString()).digest('hex').substring(0,max_length - 2) + 
+            return createHash('sha256').update(securityCreateRandomString()).digest('hex').substring(0,max_length - 2) + 
                 '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
         else{
-            const secret = createHash('sha256').update(CreateRandomString()).digest('hex');
+            const secret = createHash('sha256').update(securityCreateRandomString()).digest('hex');
             return secret.substring(0,secret.length - 2) + '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
         }
     }
     else
         if (max_length)
-            return createHash('sha256').update(CreateRandomString()).digest('hex').substring(0,max_length);
+            return createHash('sha256').update(securityCreateRandomString()).digest('hex').substring(0,max_length);
         else
-            return createHash('sha256').update(CreateRandomString()).digest('hex');
+            return createHash('sha256').update(securityCreateRandomString()).digest('hex');
 };
 /**
  * Creates password using aes-256-cbc 
  * @param {string} password 
  * @returns {Promise.<string>}
  */
-const PasswordCreate = async (password) => {
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
-    const AppPasswordEncryptionKey = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
-    const AppPasswordInitializationVector = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
+const securityPasswordCreate = async (password) => {
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    const AppPasswordEncryptionKey = configGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
+    const AppPasswordInitializationVector = configGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
     const cipher = createCipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
     let encrypted = cipher.update(password, 'utf8', 'base64');
     encrypted += cipher.final('base64');
@@ -79,11 +79,11 @@ const PasswordCreate = async (password) => {
  * @param {string} compare_password 
  * @returns {Promise.<boolean>}
  */
-const PasswordCompare = async (password, compare_password) =>{
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+const securityPasswordCompare = async (password, compare_password) =>{
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
     //system admin uses different parameters than apps
-    const AppPasswordEncryptionKey = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
-    const AppPasswordInitializationVector = ConfigGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
+    const AppPasswordEncryptionKey = configGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
+    const AppPasswordInitializationVector = configGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
     const decipher = createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);
     const  decrypted = decipher.update(compare_password, 'base64', 'utf8'); //ERR_OSSL_WRONG_FINAL_BLOCK_LENGTH, Provider routines::wrong final block length
     try {
@@ -95,7 +95,7 @@ const PasswordCompare = async (password, compare_password) =>{
 /**
  * @returns {Promise.<{ publicKey:string, privateKey:string }>}
  */
-const CreateKeyPair = async () => {
+const securityKeyPairCreate = async () => {
     return new Promise((resolve, reject)=>{
         generateKeyPair('rsa', {
             modulusLength: 8192,
@@ -122,15 +122,15 @@ const CreateKeyPair = async () => {
  * @param {string} text 
  * @returns {string}
  */
-const PublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
+const securityPublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
 /**
  * 
  * @param {string} privateKey 
  * @param {string} text 
  * @returns {string}
  */
-const PrivateDecrypt = (privateKey, text) => privateDecrypt(privateKey,
+const securityPrivateDecrypt = (privateKey, text) => privateDecrypt(privateKey,
                                                             /**@ts-ignore */
                                                             Buffer.from(text, 'base64')).toString('utf-8');
 
-export {createUUID, createRequestId, createCorrelationId, createSecret, PasswordCreate, PasswordCompare, CreateKeyPair, PublicEncrypt, PrivateDecrypt };
+export {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate, securitySecretCreate, securityPasswordCreate, securityPasswordCompare, securityKeyPairCreate, securityPublicEncrypt, securityPrivateDecrypt };

@@ -2,21 +2,21 @@
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
-/**@type{import('../../microservice/microservice.service.js')} */
-const { return_result } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-/**@type{import('../../microservice/registry.service.js')} */
-const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('../../microservice/microservice.js')} */
+const { microserviceResultReturn } = await import(`file://${process.cwd()}/microservice/microservice.js`);
+/**@type{import('../../microservice/registry.js')} */
+const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 
 /**
  * Starts the server
  */
-const startserver = async () =>{
+const serverStart = async () =>{
 	
 	const request = await MicroServiceServer('BATCH');
 		
 	request.server.createServer(request.options, (/**@type{import('../types').microservice_req}*/req, /**@type{import('../types').microservice_res}*/res) => {
-		return_result(401, '⛔', null, res);
+		microserviceResultReturn(401, '⛔', null, res);
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE BATCH PORT ${request.port} `);
 	});
@@ -25,5 +25,5 @@ const startserver = async () =>{
 		console.log(err);
 	});
 };
-startserver();
-export {startserver};
+serverStart();
+export {serverStart};

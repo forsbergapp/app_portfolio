@@ -4,9 +4,9 @@
 const service = await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../config.js')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 const DBA                       = 1;
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -76,18 +76,18 @@ const install_db_get_files = async (install_type) =>{
  */
  const Install = async (app_id, query)=> {
     /**@type{import('../../config.js')} */
-    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('../../db/db.service.js')} */
-    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../socket.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../db/common.service.js')} */
-    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
     /**@type{import('../../security.js')} */
-	const {PasswordCreate, createSecret}= await import(`file://${process.cwd()}/server/security.js`);
+	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -95,7 +95,7 @@ const install_db_get_files = async (install_type) =>{
     const install_result = [];
     const password_tag = '<APP_PASSWORD/>';
     let change_DBA_pool=true;
-    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
     /**
      * @param {string} username 
@@ -109,17 +109,17 @@ const install_db_get_files = async (install_type) =>{
           // max 30 characters for passwords and without double quotes
           // also fix ORA-28219: password verification failed for mandatory profile
           // ! + random A-Z character
-          password = createSecret(true, 30);
+          password = securitySecretCreate(true, 30);
           //use singlequote for INSERT, else doublequote for CREATE USER
           if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${await PasswordCreate(password)}'`);
+             sql = sql.replace(password_tag, `'${await securityPasswordCreate(password)}'`);
           else
              sql = sql.replace(password_tag, `"${password}"`);
        }   
        else{
-            password = createSecret();
+            password = securitySecretCreate();
             if (sql.toUpperCase().includes('INSERT INTO'))
-                sql = sql.replace(password_tag, `'${await PasswordCreate(password)}'`);
+                sql = sql.replace(password_tag, `'${await securityPasswordCreate(password)}'`);
             else
                 sql = sql.replace(password_tag, `'${password}'`);
        }
@@ -129,10 +129,10 @@ const install_db_get_files = async (install_type) =>{
        return [sql, password];
     };
     const files = await install_db_get_files('install');
-    const DB_SCHEMA = ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '';
+    const DB_SCHEMA = configGet('SERVICE_DB', `DB${configGet('SERVICE_DB', 'USE')}_NAME`) ?? '';
     let install_count = 0;
     for (const file of files){
-        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
@@ -186,65 +186,65 @@ const install_db_get_files = async (install_type) =>{
                     if (db_use != 4 && db_use != 5)
                         if (sql.toUpperCase().includes('CREATE DATABASE')){
                             //remove database name in dba pool
-                            await pool_close(null, db_use, DBA);
+                            await dbPoolClose(null, db_use, DBA);
                             /**@type{import('../../types.js').server_db_db_pool_parameters} */
                             const json_data = {
                                     use:                       db_use,
                                     pool_id:                   null,
-                                    port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                                    host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                                    port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                                    host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
                                     dba:                       DBA,
-                                    user:                      ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                    password:                  ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                    user:                      configGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                    password:                  configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
                                     database:                  null,
                                     //db 1 + 2 parameters
-                                    charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                    connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                    charset:                   configGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                    connectionLimit:           serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                     // db 3 parameters
-                                    connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                    idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                    max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                                    connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                    idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                    max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
                                     // db 4 parameters not used here
                                     connectString:             null,
                                     poolMin:                   null,
                                     poolMax:                   null,
                                     poolIncrement:             null
                                 };
-                            await pool_start(json_data);
+                            await dbPoolStart(json_data);
                         }
                         else{
                             if (change_DBA_pool == true){
                             //add database name in dba pool
-                            await pool_close(null, db_use, DBA);
+                            await dbPoolClose(null, db_use, DBA);
                             /**@type{import('../../types.js').server_db_db_pool_parameters} */
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
-                                port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                                port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
                                 dba:                       DBA,
-                                user:                      ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+                                user:                      configGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                database:                  configGet('SERVICE_DB', `DB${db_use}_NAME`),
                                 //db 1 + 2 parameters
-                                charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                charset:                   configGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 // db 3 parameters
-                                connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                                connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
                                 // db 4 parameters not used here
                                 connectString:             null,
                                 poolMin:                   null,
                                 poolMax:                   null,
                                 poolIncrement:             null
                             };
-                            await pool_start(json_data);
+                            await dbPoolStart(json_data);
                             //change to database value for the rest of the function
                             change_DBA_pool = false;
                             }
                         }
-                    await db_execute(app_id, sql, {}, DBA);
+                    await dbCommonExecute(app_id, sql, {}, DBA);
                     count_statements += 1;
                 }
             }
@@ -258,12 +258,12 @@ const install_db_get_files = async (install_type) =>{
                         if (users_row.sql.includes(password_tag)){
                             sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                            await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
                                                                 parameter_value:    app_admin_username});
-                            await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                            await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
                                                                 parameter_value:    sql_and_pw[1]});
                         }
@@ -276,10 +276,10 @@ const install_db_get_files = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
+                            await configAppSecretUpdate(file[2], {app_id:             file[2],
                                                             parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
                                                             parameter_value:    app_username});
-                            await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
+                            await configAppSecretUpdate(file[2], {app_id:             file[2],
                                                             parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
                                                             parameter_value:    sql_and_pw[1]});
                         }
@@ -288,14 +288,14 @@ const install_db_get_files = async (install_type) =>{
                         break;
                     }
                 }
-                await db_execute(app_id, users_row.sql, {}, DBA);
+                await dbCommonExecute(app_id, users_row.sql, {}, DBA);
                 count_statements += 1;
             }
         }   
     }
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
-    LogServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    logServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
  };
  /**
@@ -318,19 +318,19 @@ const install_db_get_files = async (install_type) =>{
   */
  const Uninstall = async (app_id, query)=> {
     /**@type{import('../../config.js')} */
-    const {ConfigAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.js`);
     
     /**@type{import('../../db/file.service.js')} */
     const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
     /**@type{import('../../db/db.service.js')} */
-    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../socket.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../db/common.service.js')} */
-    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
     
 
     const fs = await import('node:fs');
@@ -339,65 +339,65 @@ const install_db_get_files = async (install_type) =>{
     let count_statements_fail = 0;
     
     
-    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
     if (db_use==5){
-        await pool_close(null, db_use, 0);
+        await dbPoolClose(null, db_use, 0);
         await fileFsWriteAdmin('DB_FILE', null);
-        await pool_db(db_use, 0, null, null, null);
+        await DB_POOL(db_use, 0, null, null, null);
         count_statements++;
     }
     else{
         let install_count=0;
         const files = await install_db_get_files('uninstall');
         for (const file of  files){
-            SocketSendAdmin(app_id, { client_id:getNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
+            socketAdminSend(app_id, { client_id:serverUtilNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
             install_count++;
             const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
             const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../types.js').server_db_database_uninstall_database_script|import('../../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
             for (const sql_row of uninstall_sql){
                 if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                     //add database name in dba pool
-                    await pool_close(null, db_use, DBA);
+                    await dbPoolClose(null, db_use, DBA);
                     /**@type{import('../../types.js').server_db_db_pool_parameters} */
                     const json_data = {
                         use:                       db_use,
                         pool_id:                   null,
-                        port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                        host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                        port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                        host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
                         dba:                       DBA,
-                        user:                      ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
-                        password:                  ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                        user:                      configGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
+                        password:                  configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
                         database:                  null,
                         //db 1 + 2 not used here
                         charset:                   null,
                         connectionLimit:           null,
                         //db 3
-                        connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                        idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                        max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                        connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                        idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                        max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
                         //db 4 not used here
                         connectString:             null,
                         poolMin:                   null,
                         poolMax:                   null,
                         poolIncrement:             null
                     };
-                    await pool_start(json_data);
+                    await dbPoolStart(json_data);
                 }
                 if (file[2]==null)
                     sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app_admin');
                 else
                     sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
                 sql_row.sql = sql_row.sql.replaceAll('<APP_ID/>', file[2]?file[2]:'0');
-                await db_execute(app_id, sql_row.sql, {}, DBA)
+                await dbCommonExecute(app_id, sql_row.sql, {}, DBA)
                 .then(()=>{count_statements += 1;})
                 .catch(()=>{count_statements_fail += 1;});
                 
             }      
         }
         //remove db users and password
-        ConfigAppSecretDBReset();
+        configAppSecretDBReset();
     }
-    LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
+    logServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
                     {count_fail: count_statements_fail}
                 ]};
@@ -415,9 +415,9 @@ const install_db_get_files = async (install_type) =>{
  */
  const DemoInstall = async (app_id, query, data)=> {
     /**@type{import('../../socket.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../sql/app.service.js')} */
     const {getAppsAdminId} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
     /**@type{import('../sql/user_account.service.js')} */
@@ -443,9 +443,9 @@ const install_db_get_files = async (install_type) =>{
     /**@type{import('../sql/app_data_resource_detail_data.service.js')} */
     const {post:DetailDataResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
     /**@type{import('../../security.js')} */
-    const {CreateKeyPair, createUUID, createSecret} = await import(`file://${process.cwd()}/server/security.js`);
+    const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
     /**@type{import('../../config.js')} */
-    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
 
     const fs = await import('node:fs');
     /**@type{import('../../types.js').server_db_database_install_result} */
@@ -614,23 +614,23 @@ const install_db_get_files = async (install_type) =>{
     
     //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
-    SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+    socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
                                 client_id_current:null,
                                 broadcast_type:'PROGRESS',
                                 broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))});
-    const {publicKey, privateKey} = await CreateKeyPair();
+    const {publicKey, privateKey} = await securityKeyPairCreate();
     const demo_public_key = publicKey;
     const demo_private_key = privateKey;
     //create user posts
     for (const demo_user of demo_users){
-        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))});
         install_count++;
 
         //generate vpa for each user that can be saved both in resource and apps configuration
-        const demo_vpa = createUUID();
+        const demo_vpa = securityUUIDCreate();
         //create user_account_app record for all apps
         for (const app of apps){
             await create_user_account_app(app.id, demo_user.id);
@@ -686,7 +686,7 @@ const install_db_get_files = async (install_type) =>{
                         case 'UUID':
                             return demo_vpa;
                         case 'SECRET':
-                            return createSecret();
+                            return securitySecretCreate();
                         case 'PUBLIC_KEY':
                             return demo_public_key;
                         case 'PRIVATE_KEY':
@@ -695,8 +695,8 @@ const install_db_get_files = async (install_type) =>{
                             return demo_user.id.toString();
                         default:{
                             //if value is array then replace string in the array
-                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('<HOST/>', ConfigGet('SERVER','HOST') ?? '')):
-                                    key_name[1].replaceAll('<HOST/>', ConfigGet('SERVER','HOST') ?? '');
+                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('<HOST/>', configGet('SERVER','HOST') ?? '')):
+                                    key_name[1].replaceAll('<HOST/>', configGet('SERVER','HOST') ?? '');
                         }
                             
                     }
@@ -707,7 +707,7 @@ const install_db_get_files = async (install_type) =>{
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
-                    await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                         {   app_id:             resource.app_registry_update_app_id,
                             parameter_name:     key[0].toUpperCase(),
                             parameter_value:    value
@@ -718,7 +718,7 @@ const install_db_get_files = async (install_type) =>{
             if (resource.app_update_secret)
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                    await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                             {   app_id:             resource.app_registry_update_app_id,
                                 parameter_name:     Object.keys(key)[0].toUpperCase(),
                                 parameter_value:    value
@@ -894,7 +894,7 @@ const install_db_get_files = async (install_type) =>{
         });
     };
     for (const social_type of social_types){
-        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))});
@@ -990,7 +990,7 @@ const install_db_get_files = async (install_type) =>{
     install_result.push({'user_account_app_data_post_like': records_user_account_app_data_post_like});
     install_result.push({'user_account_app_data_post_view': records_user_account_app_data_post_view});
     install_result.push({'finished': new Date().toISOString()});
-    LogServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    logServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
 };
 /**
@@ -1001,9 +1001,9 @@ const install_db_get_files = async (install_type) =>{
  */
 const DemoUninstall = async (app_id, query)=> {
     /**@type{import('../../socket.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../sql/user_account.service.js')} */
 	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
     return new Promise((resolve, reject)=>{
@@ -1013,7 +1013,7 @@ const DemoUninstall = async (app_id, query)=> {
             if (result_demo_users.length>0){
                 const delete_users = async () => {
                     for (const user of result_demo_users){
-                        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+                        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
                                                     client_id_current:null,
                                                     broadcast_type:'PROGRESS',
                                                     broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))});
@@ -1030,7 +1030,7 @@ const DemoUninstall = async (app_id, query)=> {
                 };
                 delete_users()
                 .then(()=>{
-                    LogServerI(`Demo uninstall count: ${deleted_user}`);
+                    logServerI(`Demo uninstall count: ${deleted_user}`);
                     resolve({info: [{'count': deleted_user}]});
                 })
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
@@ -1038,7 +1038,7 @@ const DemoUninstall = async (app_id, query)=> {
                 });
             }
             else{
-                LogServerI(`Demo uninstall count: ${result_demo_users.length}`);
+                logServerI(`Demo uninstall count: ${result_demo_users.length}`);
                 resolve({info: [{'count': result_demo_users.length}]});
             }
         })
@@ -1058,43 +1058,43 @@ const DemoUninstall = async (app_id, query)=> {
  * @param {number|null} pool_id 
  * @returns {Promise.<null>}
  */
- const pool_db = async (db_use, dba, user, password, pool_id) =>{
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
+ const DB_POOL = async (db_use, dba, user, password, pool_id) =>{
+    /**@type{import('../../log.js')} */
+    const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../db/db.service.js')} */
-    const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     
     return new Promise ((resolve, reject)=>{
        /**@type{import('../../types.js').server_db_db_pool_parameters} */
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
-          host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-          port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+          host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
+          port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
           dba:                       dba,
           user:                      user,
           password:                  password,
-          database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+          database:                  configGet('SERVICE_DB', `DB${db_use}_NAME`),
           //db 1 + 2 parameters
-          charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-          connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+          charset:                   configGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+          connectionLimit:           serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
           // db 3 parameters
-          connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-          idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-          max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+          connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+          idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+          max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
           // db 4 parameters
-          connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-          poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
-          poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-          poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+          connectString:             configGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+          poolMin:                   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+          poolMax:                   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+          poolIncrement:             serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
        };
-       pool_start(dbparameters)
+       dbPoolStart(dbparameters)
        .then((/**@type{null}*/result)=>{
-          LogServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
+          logServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
           resolve(result);
        })
        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-          LogServerE('Starting pool error: ' + error);
+          logServerE('Starting pool error: ' + error);
           reject(error);
        });
     });
@@ -1105,26 +1105,26 @@ const DemoUninstall = async (app_id, query)=> {
 const Start = async () => {
     /**@type{import('../file.service.js')} */
     const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
-    if (ConfigGet('SERVICE_DB', 'START')=='1'){    
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+    if (configGet('SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
         let dba = 0;
-        const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+        const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
        
         if (db_use == 5)
-            await pool_db(db_use, dba, null, null, null);
+            await DB_POOL(db_use, dba, null, null, null);
         else{
-            if (ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`)){
-                user = `${ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
-                password = `${ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
+            if (configGet('SERVICE_DB', `DB${db_use}_DBA_USER`)){
+                user = `${configGet('SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
+                password = `${configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
                 dba = 1;
-                await pool_db(db_use, dba, user, password, null);
+                await DB_POOL(db_use, dba, user, password, null);
                 }
                 dba = 0;
                 for (const app  of fileCache('CONFIG_APPS').APPS){
                     if (fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`])
-                        await pool_db(   db_use, 
+                        await DB_POOL(   db_use, 
                                         dba, 
                                         fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`],
                                         fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`],

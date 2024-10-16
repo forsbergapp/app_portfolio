@@ -8,14 +8,14 @@
  */
  const Info = async (app_id, DBA) => {
    /**@type{import('../../server.js')} */
-   const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+   const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
    /**@type{import('../../config.js')} */
-   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+   const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
    /**@type{import('../../db/common.service.js')} */
-   const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
    
    let sql = '';
-   const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+   const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
    switch (db_use){
       case 1:
       case 2:{
@@ -122,7 +122,7 @@
                        'SQLite (' || file || ')' "database_name", 
                        sqlite_version() "version", 
                        :database_schema "database_schema",
-                       '${ConfigGet('SERVER', 'HOST')}' "hostname", 
+                       '${configGet('SERVER', 'HOST')}' "hostname", 
                        '-' "connections",
                        '-' "started"
                   FROM pragma_database_list
@@ -132,9 +132,9 @@
     }
     const parameters = {	
                    database: db_use,
-                   database_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)
+                   database_schema: configGet('SERVICE_DB', `DB${configGet('SERVICE_DB', 'USE')}_NAME`)
                    };
-    return await db_execute(app_id, sql, parameters, DBA, null);
+    return await dbCommonExecute(app_id, sql, parameters, DBA, null);
  };
  /**
  * 
@@ -144,14 +144,14 @@
  */
 const InfoSpace = async (app_id, DBA) => {
    /**@type{import('../../server.js')} */
-   const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+   const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
    /**@type{import('../../config.js')} */
-   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+   const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
    /**@type{import('../../db/common.service.js')} */
-   const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
    let sql = '';
-   switch (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))){
+   switch (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))){
       case 1:
       case 2:{
          sql = `SELECT t.table_name table_name,
@@ -210,8 +210,8 @@ const InfoSpace = async (app_id, DBA) => {
       break;
       }
     }
-    const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
-    return await db_execute(app_id, sql, parameters, DBA, null);
+    const parameters = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: configGet('SERVICE_DB', `DB${configGet('SERVICE_DB', 'USE')}_NAME`)};
+    return await dbCommonExecute(app_id, sql, parameters, DBA, null);
  };
  /**
  * 
@@ -221,14 +221,14 @@ const InfoSpace = async (app_id, DBA) => {
  */
 const InfoSpaceSum = async (app_id, DBA) => {
    /**@type{import('../../server.js')} */
-   const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+   const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
    /**@type{import('../../config.js')} */
-   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+   const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
    /**@type{import('../../db/common.service.js')} */
-   const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
     
    let sql = '';
-   switch (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))){
+   switch (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))){
       case 1:
       case 2:{
          sql = `SELECT IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
@@ -275,8 +275,8 @@ const InfoSpaceSum = async (app_id, DBA) => {
          break;
       }
    }
-   const parameters = getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`)};
-   return await db_execute(app_id, sql, parameters, DBA, null);
+   const parameters = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==5?{}:{db_schema: configGet('SERVICE_DB', `DB${configGet('SERVICE_DB', 'USE')}_NAME`)};
+   return await dbCommonExecute(app_id, sql, parameters, DBA, null);
  };
  
  /**
@@ -287,11 +287,11 @@ const InfoSpaceSum = async (app_id, DBA) => {
   */
  const InstalledCheck = async (app_id, DBA) =>{
    /**@type{import('../../db/common.service.js')} */
-   const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
    const sql = `SELECT 1 "installed"
                   FROM <DB_SCHEMA/>.app
                   WHERE id = :app_id`;
    const parameters = {app_id: app_id};
-   return await db_execute(app_id, sql, parameters, DBA, null);
+   return await dbCommonExecute(app_id, sql, parameters, DBA, null);
  }; 
  export {Info, InfoSpace, InfoSpaceSum, InstalledCheck};

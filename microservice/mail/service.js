@@ -1,9 +1,9 @@
 /** @module microservice/mail/service */
 
-/**@type{import('../../microservice/microservice.service.js')} */
-const { getNumberValue} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-/**@type{import('../../microservice/registry.service.js')} */
-const { ConfigServices } = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('../../microservice/microservice.js')} */
+const { microserviceUtilNumberValue} = await import(`file://${process.cwd()}/microservice/microservice.js`);
+/**@type{import('../../microservice/registry.js')} */
+const { ConfigServices } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 const nodemailer = await import('nodemailer');
 /**
@@ -24,7 +24,7 @@ const nodemailer = await import('nodemailer');
 const sendEmail = async (data) => {
     /**@type{import('../types.js').microservice_config_service_record}*/
 
-    if (getNumberValue(ConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
+    if (microserviceUtilNumberValue(ConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
         return {test: 'ok'};
     else
         return new Promise((resolve, reject)=>{

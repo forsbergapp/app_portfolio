@@ -2,7 +2,7 @@
 
 
 /**@type{import('../common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -80,7 +80,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         entity_id           : entity_id ?? null,
                         user_null           : user_null?1:0
                         };
-    return await db_execute(app_id, sql, parameters, null, null);
+    return await dbCommonExecute(app_id, sql, parameters, null, null);
 };
 /**
  * 
@@ -115,7 +115,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         app_data_entity_resource_app_data_entity_id     : data.app_data_entity_resource_app_data_entity_id,
                         app_data_resource_master_attribute_id           : data.app_data_resource_master_attribute_id ?? null,
                         };
-    return await db_execute(app_id, sql, parameters);
+    return await dbCommonExecute(app_id, sql, parameters);
 };
 
 /**
@@ -151,7 +151,7 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         app_data_entity_resource_app_data_entity_id :data.app_data_entity_resource_app_data_entity_id,
                         app_data_resource_master_attribute_id       :data.app_data_resource_master_attribute_id
                         };
-    return await db_execute(app_id, sql, parameters);
+    return await dbCommonExecute(app_id, sql, parameters);
 };
 
 /**
@@ -175,6 +175,6 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
                         user_account_id     :data.user_account_id,
                         user_account_app_id :data.user_account_id?data.data_app_id:null,
                         data_app_id         :data.data_app_id};
-    return await db_execute(app_id, sql, parameters);
+    return await dbCommonExecute(app_id, sql, parameters);
 };
 export{get, post, update, deleteRecord};

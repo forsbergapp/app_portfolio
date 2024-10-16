@@ -4,20 +4,20 @@
 const service = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
 
 /**@type{import('../../config.js')} */
-const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server/config.js`);
+const { configGet, configAppGet } = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('../file.service.js')} */
 const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../iam.service.js')} */
-const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const { iamTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('../../socket.js')} */
-const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
 
 /**@type{import('../../db/common.service.js')} */
-const { checked_error } = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**@type{import('../sql/app_setting.service.js')} */
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
@@ -30,7 +30,7 @@ const user_account_follow_service = await import(`file://${process.cwd()}/server
 /**@type{import('../sql/user_account_like.service.js')} */
 const user_account_like_service = await import(`file://${process.cwd()}/server/db/sql/user_account_like.service.js`);
 /**@type{import('../../security.js')} */
-const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
+const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
 
 /**
  * 
@@ -47,12 +47,12 @@ const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.j
     /**@type{import('../../../apps/common/src/common.js')} */
     const { commonMailCreate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     /**@type{import('../../bff.service.js')} */
-    const {BFF_server} = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
     
     const email_rendered = await commonMailCreate( app_id, 
                                     {
                                         emailtype:        emailtype,
-                                        host:             ConfigGet('SERVER', 'HOST'),
+                                        host:             configGet('SERVER', 'HOST'),
                                         app_user_id:      userid,
                                         verificationCode: verification_code,
                                         to:               email,
@@ -73,7 +73,7 @@ const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.j
                         accept_language:accept_language,
                         /**@ts-ignore */
                         res:null};
-    return await BFF_server(app_id, parameters);
+    return await bffServer(app_id, parameters);
 };
 /**
  * 
@@ -81,7 +81,7 @@ const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.j
  */
 const login_error = async (app_id) =>{
     return getSettingDisplayData(   app_id,
-                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                    serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                                     'MESSAGE',
                                     '20300')
     .then(result_message=>result_message[0].display_data)
@@ -110,7 +110,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
         const data_login =    {   username: data.username};
         service.userLogin(app_id, data_login)
         .then(result_login=>{
-            const user_account_id = result_login[0]?getNumberValue(result_login[0].id):null;
+            const user_account_id = result_login[0]?serverUtilNumberValue(result_login[0].id):null;
             /**@type{import('../../types.js').server_iam_user_login_record} */
             const data_body = { id:     user_account_id,
                                 app_id: app_id,
@@ -125,10 +125,10 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                 created: new Date().toISOString()
                             };
             if (result_login[0]) {
-                PasswordCompare(data.password, result_login[0].password).then((result_password)=>{
+                securityPasswordCompare(data.password, result_login[0].password).then((result_password)=>{
                     data_body.res = result_password?1:0;
                     if (result_password) {
-                        const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
+                        const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
                         data_body.token = jwt_data.token;
                         fileFsAppend('IAM_USER_LOGIN', data_body, '')
                         .then(()=>{
@@ -141,7 +141,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                     .then(()=>{
                                         //send email UNVERIFIED
                                         sendUserEmail(  app_id, 
-                                                        ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                        configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
                                                         ip, 
                                                         user_agent,
                                                         accept_language,
@@ -149,7 +149,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                         new_code, 
                                                         result_login[0].email)
                                         .then(()=>{
-                                            ConnectedUpdate(app_id, 
+                                            socketConnectedUpdate(app_id, 
                                                 {   iam:iam,
                                                     user_account_id:result_login[0].id,
                                                     admin:null,
@@ -174,7 +174,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                     });
                                 }
                                 else{
-                                    ConnectedUpdate(app_id, 
+                                    socketConnectedUpdate(app_id, 
                                         {   iam:iam,
                                             user_account_id:result_login[0].id,
                                             admin:null,
@@ -245,7 +245,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
  */
 const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
-        service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
+        service.providerSignIn(app_id, serverUtilNumberValue(data.identity_provider_id), resource_id)
         .then(result_signin=>{
             /** @type{import('../../types.js').server_db_sql_parameter_user_account_create} */
             const data_user = { bio:                    null,
@@ -260,7 +260,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 avatar:                 null,
                                 verification_code:      null,
                                 active:                 1,
-                                identity_provider_id:   getNumberValue(data.identity_provider_id),
+                                identity_provider_id:   serverUtilNumberValue(data.identity_provider_id),
                                 provider_id:            data.provider_id,
                                 provider_first_name:    data.provider_first_name,
                                 provider_last_name:     data.provider_last_name,
@@ -283,7 +283,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                                 created: new Date().toISOString()
                             };
             if (result_signin.length > 0) {        
-                const jwt_data_exists = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
+                const jwt_data_exists = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
                 data_login.token = jwt_data_exists.token;
                 data_login.res = 1;
                 data_login.id = result_signin[0].id;
@@ -293,7 +293,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                     .then(()=>{
                         createUserAccountApp(app_id, result_signin[0].id)
                         .then(()=>{
-                            ConnectedUpdate(app_id, 
+                            socketConnectedUpdate(app_id, 
                                 {   iam:iam,
                                     user_account_id:result_signin[0].id,
                                     admin:null,
@@ -318,7 +318,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
                     })
                     .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-                        checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                     });    
                 })
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
@@ -333,7 +333,7 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                 
                 service.create(app_id, data_user)
                 .then(result_create=>{
-                    const jwt_data_new = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
+                    const jwt_data_new = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
                     data_login.token = jwt_data_new.token;
                     data_login.res = 1;
                     data_login.id = result_create.insertId;
@@ -341,9 +341,9 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                     .then(()=>{
                         createUserAccountApp(app_id, result_create.insertId)
                         .then(()=>{
-                            service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
+                            service.providerSignIn(app_id, serverUtilNumberValue(data.identity_provider_id), resource_id)
                             .then(result_signin2=>{
-                                ConnectedUpdate(app_id, 
+                                socketConnectedUpdate(app_id, 
                                     {   iam:iam,
                                         user_account_id:result_create.insertId,
                                         admin:null,
@@ -408,8 +408,8 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                             email_unverified:       null,
                             avatar:                 data.avatar,
                             verification_code:      data.provider_id?null:service.verification_code(),
-                            active:                 getNumberValue(data.active) ?? 0,
-                            identity_provider_id:   getNumberValue(data.identity_provider_id),
+                            active:                 serverUtilNumberValue(data.active) ?? 0,
+                            identity_provider_id:   serverUtilNumberValue(data.identity_provider_id),
                             provider_id:            data.provider_id ?? null,
                             provider_first_name:    data.provider_first_name,
                             provider_last_name:     data.provider_last_name,
@@ -424,7 +424,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 //send email for local users only
                 //send email SIGNUP
                 sendUserEmail(  app_id, 
-                                ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_SIGNUP,
+                                configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_SIGNUP,
                                 ip, 
                                 user_agent,
                                 accept_language,
@@ -432,7 +432,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                                 data_body.verification_code, 
                                 data_body.email ?? '')
                 .then(()=>{
-                    const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
+                    const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
                     resolve({
                         accessToken: jwt_data.token,
                         exp:jwt_data.exp,
@@ -445,7 +445,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
             }
             else{
-                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
+                const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
                 resolve({
                     accessToken: jwt_data.token,
                     exp:jwt_data.exp,
@@ -458,7 +458,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 
         })
         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -486,14 +486,14 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
     return new Promise((resolve, reject)=>{
         /**@type{string|null} */
         let auth_password_new = null;
-        if (getNumberValue(data.verification_type) == 3){
+        if (serverUtilNumberValue(data.verification_type) == 3){
             //reset password
             auth_password_new = service.verification_code();
         }
-        service.activateUser(app_id, resource_id, getNumberValue(data.verification_type), data.verification_code, auth_password_new)
+        service.activateUser(app_id, resource_id, serverUtilNumberValue(data.verification_type), data.verification_code, auth_password_new)
         .then(result_activate=>{
             if (auth_password_new == null){
-                if (result_activate.affectedRows==1 && getNumberValue(data.verification_type)==4){
+                if (result_activate.affectedRows==1 && serverUtilNumberValue(data.verification_type)==4){
                     //new email verified
                     /**@type{import('../../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
                     const eventData = {
@@ -537,7 +537,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
                     });
             }
             else{
-                const jwt_data = AuthorizeToken(app_id, 'APP_ACCESS', {id:resource_id, name:'', ip:ip, scope:'USER'});
+                const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:resource_id, name:'', ip:ip, scope:'USER'});
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with id token, but now the password will be updated
                 //using accessToken and authentication code
@@ -570,7 +570,7 @@ const activate = (app_id, resource_id, ip, user_agent, accept_language, host, qu
             }
         })
         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -591,7 +591,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
             service.getEmailUser(app_id, email)
             .then(result_emailuser=>{
                 if (result_emailuser[0]){
-                    getLastUserEvent(app_id, getNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
+                    getLastUserEvent(app_id, serverUtilNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
                     .then(result_user_event=>{
                         if (result_user_event[0] &&
                             result_user_event[0].status_name == 'INPROGRESS' &&
@@ -621,7 +621,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                 .then(()=>{
                                     //send email PASSWORD_RESET
                                     sendUserEmail(  app_id, 
-                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_PASSWORD_RESET,
+                                                    configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_PASSWORD_RESET,
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -694,7 +694,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 return row;
             });
         //resource id can be number, string or empty if searching
-        service.getProfileUser(app_id, resource_id_number, resource_id_name, query.get('search'), getNumberValue(query.get('id')))
+        service.getProfileUser(app_id, resource_id_number, resource_id_name, query.get('search'), serverUtilNumberValue(query.get('id')))
         .then(result_getProfileUser=>{
             if (query.get('search')){
                 //searching, return result
@@ -707,14 +707,14 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                                                                                                 client_longitude:   query.get('client_longitude'),
                                                                                                 client_latitude:    query.get('client_latitude')},
                                         //if user logged not logged in then save resource on app
-                                        app_id:                                             getNumberValue(query.get('id'))?null:app_id,
+                                        app_id:                                             serverUtilNumberValue(query.get('id'))?null:app_id,
                                         user_account_id:                                    null,
                                         //save user account if logged in else set null in both user account app columns
-                                        user_account_app_user_account_id:                   getNumberValue(query.get('id')) ?? null,
-                                        user_account_app_app_id:                            getNumberValue(query.get('id'))?app_id:null,
+                                        user_account_app_user_account_id:                   serverUtilNumberValue(query.get('id')) ?? null,
+                                        user_account_app_app_id:                            serverUtilNumberValue(query.get('id'))?app_id:null,
                                         app_data_resource_master_id:                        null,
                                         app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
-                                        app_data_entity_resource_app_data_entity_app_id:    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) ?? 0,
+                                        app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')) ?? 0,
                                         app_data_entity_resource_app_data_entity_id:        0   //COMMON
                                         };
                     post(app_id, data_insert)
@@ -729,8 +729,8 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                     //always save stat who is viewing, same user, none or someone else
                     import(`file://${process.cwd()}/server/db/sql/user_account_view.service.js`)
                     .then((/**@type{import('../sql/user_account_view.service.js')} */{ insertUserAccountView }) => {
-                        const data_body = { user_account_id:        getNumberValue(query.get('id')),    //who views
-                                            user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
+                        const data_body = { user_account_id:        serverUtilNumberValue(query.get('id')),    //who views
+                                            user_account_id_view:   serverUtilNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
                                             client_ip:              ip,
                                             client_user_agent:      user_agent,
                                             client_longitude:       query.get('client_longitude'),
@@ -744,8 +744,8 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 }
                 else{
                     import(`file://${process.cwd()}/server/db/common.service.js`)
-                    .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                        record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                        dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                     });
                 }
         })
@@ -757,7 +757,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
  * @param {number} app_id 
  * @param {*} query
  */
-const getProfileStat = (app_id, query) => service.getProfileStat(app_id, getNumberValue(query.get('statchoice')))
+const getProfileStat = (app_id, query) => service.getProfileStat(app_id, serverUtilNumberValue(query.get('statchoice')))
                                                     .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
@@ -776,9 +776,9 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
         .then(result_user=>{
             if (result_user[0]) {
                 /**@type{import('../../types.js').server_db_sql_parameter_user_account_updateAdmin} */
-                const body = {  active:             getNumberValue(data.active),
-                                user_level:         getNumberValue(data.user_level),
-                                private:            getNumberValue(data.private),
+                const body = {  active:             serverUtilNumberValue(data.active),
+                                user_level:         serverUtilNumberValue(data.user_level),
+                                private:            serverUtilNumberValue(data.private),
                                 username:           data.username,
                                 bio:                data.bio,
                                 email:              data.email,
@@ -795,13 +795,13 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                     resolve(result_update);
                 })
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
             else{
                 import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         })
@@ -813,7 +813,7 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
  * @param {number} app_id 
  * @param {*} query 
  */
-const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), query.get('sort'), query.get('order_by'), serverUtilNumberValue(query.get('offset')), serverUtilNumberValue(query.get('limit')))
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
@@ -869,13 +869,13 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
             }
             else{
                 import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         })
         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -899,7 +899,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
     const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
     return new Promise((resolve, reject)=>{
         if (result_user[0]) {
-            PasswordCompare(data.password, result_user[0].password ?? '').then((result_compare)=>{
+            securityPasswordCompare(data.password, result_user[0].password ?? '').then((result_compare)=>{
                 if (result_compare){
                     let send_email=false;
                     if (data.new_email && data.new_email!=''){
@@ -947,7 +947,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     sendUserEmail(  app_id, 
-                                                    ConfigGetApp(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_CHANGE_EMAIL,
+                                                    configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_CHANGE_EMAIL,
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -966,13 +966,13 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                         }
                         else{
                             import(`file://${process.cwd()}/server/db/common.service.js`)
-                            .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                            .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                                dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
                     })
                     .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-                        checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                     });
                 } 
                 else {
@@ -980,7 +980,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                     //invalid password
                     getSettingDisplayData(  app_id,
-                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                            serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                                             'MESSAGE',
                                             '20401')
                     .then(result_message=>{
@@ -994,7 +994,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
             //user not found
             res.statusCode=404;
             getSettingDisplayData(  app_id,
-                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                    serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                                     'MESSAGE',
                                     '20305')
             .then(result_message=>{
@@ -1025,13 +1025,13 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                 resolve(result_update);
             else{
                 import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         })
         .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -1061,8 +1061,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                 
             else{
                 import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         })
@@ -1090,8 +1090,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                             resolve(result_delete);
                         else{
                             import(`file://${process.cwd()}/server/db/common.service.js`)
-                            .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                            .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                                dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
                     })
@@ -1101,7 +1101,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                     service.checkPassword(app_id, resource_id)
                     .then(result_password=>{
                         if (result_password[0]) {
-                            PasswordCompare(data.password, result_password[0].password).then((result_password)=>{
+                            securityPasswordCompare(data.password, result_password[0].password).then((result_password)=>{
                                 if (result_password){
                                     service.deleteUser(app_id, resource_id)
                                     .then(result_delete=>{
@@ -1109,8 +1109,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                                             resolve(result_delete);
                                         else{
                                             import(`file://${process.cwd()}/server/db/common.service.js`)
-                                            .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                                            .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                                                dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                                             });
                                         }
                                     })
@@ -1121,7 +1121,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                                     res.statusCode = 400;
                                     //invalid password
                                     getSettingDisplayData(  app_id,
-                                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                                                             'MESSAGE',
                                                             '20401')
                                     .then(result_message=>{
@@ -1136,7 +1136,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                             //user not found
                             res.statusCode = 404;
                             getSettingDisplayData(  app_id,
-                                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                    serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                                                     'MESSAGE',
                                                     '20305')
                             .then(result_message=>{
@@ -1152,7 +1152,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                 //user not found
                 res.statusCode = 404;
                 getSettingDisplayData(  app_id,
-                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                                         'MESSAGE',
                                         '20305')
                 .then(result_message=>{
@@ -1172,14 +1172,14 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
  */
  const getProfileDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getProfileDetail(app_id, resource_id, getNumberValue(query.get('detailchoice')))
+        service.getProfileDetail(app_id, resource_id, serverUtilNumberValue(query.get('detailchoice')))
         .then(result=>{
             if (result)
                 resolve(result);
             else {
                 import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{record_not_found}) => {
-                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         })
@@ -1192,14 +1192,14 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
  * @param {number} resource_id
  * @param {*} data
  */
-const follow = (app_id, resource_id, data) => user_account_follow_service.follow(app_id, resource_id, getNumberValue(data.user_account_id))
+const follow = (app_id, resource_id, data) => user_account_follow_service.follow(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
  */
-const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfollow(app_id, resource_id, getNumberValue(data.user_account_id))
+const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfollow(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
@@ -1208,7 +1208,7 @@ const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfo
  * @param {number} resource_id
  * @param {*} data
  */
-const like = (app_id, resource_id, data) => user_account_like_service.like(app_id, resource_id, getNumberValue(data.user_account_id))
+const like = (app_id, resource_id, data) => user_account_like_service.like(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 /**
@@ -1217,7 +1217,7 @@ const like = (app_id, resource_id, data) => user_account_like_service.like(app_i
  * @param {number} resource_id
  * @param {*} data
  */
-const unlike = (app_id, resource_id, data) => user_account_like_service.unlike(app_id, resource_id, getNumberValue(data.user_account_id))
+const unlike = (app_id, resource_id, data) => user_account_like_service.unlike(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
                                             .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 export {/*DATA_LOGIN*/

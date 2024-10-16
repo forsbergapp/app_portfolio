@@ -56,7 +56,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
 				/**@type{import('../../../../server/socket.service')} */
-				const {SocketSendAppServerFunction} = await import(`file://${process.cwd()}/server/socket.js`);
+				const {socketAppServerFunctionSend} = await import(`file://${process.cwd()}/server/socket.js`);
 
 				const timer1 = Date.now();
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	
@@ -66,7 +66,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 				if (solver2_moves_from_solved=='')
 						return [];
 				else{
-					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
+					await socketAppServerFunctionSend(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
 					/**
 					 * @param {string} moves
@@ -82,7 +82,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 						});
 					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
-					await SocketSendAppServerFunction(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
+					await socketAppServerFunctionSend(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
 					const timer2 = Date.now();
 					const solution2 = solver2.solve(data.cube_currentstate, data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();

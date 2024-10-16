@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_app_data_post */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -27,7 +27,7 @@ const createUserPost = async (app_id, data) => {
 							DB_RETURN_ID:'id',
 							DB_CLOB: ['json_data']
 						};
-			return await db_execute(app_id, sql, parameters, null);
+			return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -46,7 +46,7 @@ const getUserPost = async (app_id, id) => {
 					   FROM <DB_SCHEMA/>.user_account_app_data_post 
 					  WHERE id = :id `;
 		const parameters = {id: id};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -69,7 +69,7 @@ const getUserPostsByUserId = async (app_id, id) => {
 						user_account_id: id,
 						app_id: app_id
 					};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -104,7 +104,7 @@ const getProfileUserPosts = async (app_id, id, id_current_user) => {
 						user_account_id: id,
 						app_id: app_id
 						};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -170,7 +170,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
     };
 /**
  * 
@@ -199,7 +199,7 @@ const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 					id: id,
 					app_id: app_id
 				}; 
-	return await db_execute(app_id, sql, parameters, null, null);
+	return await dbCommonExecute(app_id, sql, parameters, null, null);
 };
 
 /**
@@ -267,7 +267,7 @@ const getProfileStatPost = async (app_id, statchoice) => {
 						app_id: app_id,
 						statchoice: statchoice
 					};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
     };
 /**
  * 
@@ -292,7 +292,7 @@ const updateUserPost = async (app_id, data, id) => {
 						id: id,
 						DB_CLOB: ['json_data']
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -309,7 +309,7 @@ const deleteUserPost = async (app_id, id, user_account_id) => {
 		const parameters = {id: id,
 							user_account_id: user_account_id,
 							app_id:app_id};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 export{	createUserPost, getUserPost, getUserPostsByUserId, getProfileUserPosts, 
 		getProfileUserPostDetail, getProfileStatLike, getProfileStatPost, updateUserPost, deleteUserPost};

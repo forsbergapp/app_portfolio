@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_app */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -23,7 +23,7 @@ const createUserAccountApp = async (app_id, user_account_id) => {
 						app_id: app_id,
 						user_account_id: user_account_id
 					};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -41,7 +41,7 @@ const getUserAccountApps = async (app_id, user_account_id) => {
 		const parameters = {
 						user_account_id: user_account_id
 						};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -71,7 +71,7 @@ const getUserAccountApp = async (app_id, user_account_id) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		return await db_execute(app_id, sql, parameters, null, null);
+		return await dbCommonExecute(app_id, sql, parameters, null, null);
 	};
 /**
  * 
@@ -97,7 +97,7 @@ const updateUserAccountApp = async (app_id, user_account_id, data) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -114,6 +114,6 @@ const deleteUserAccountApp = async (app_id, user_account_id, data_app_id) => {
 						user_account_id: user_account_id,
 						app_id: data_app_id
 						};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApp};

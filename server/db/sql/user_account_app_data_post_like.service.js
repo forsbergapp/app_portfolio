@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_app_data_post_like */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -19,7 +19,7 @@ const like = async (app_id, id, id_like) => {
 					user_account_app_data_post_id: id_like,
 					app_id: app_id
 				};
-	return await db_execute(app_id, sql, parameters, null);
+	return await dbCommonExecute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -38,6 +38,6 @@ const unlike = async (app_id, id, id_unlike) => {
 					user_account_app_data_post_id: id_unlike,
 					app_id: app_id
 					};
-	return await db_execute(app_id, sql, parameters, null);
+	return await dbCommonExecute(app_id, sql, parameters, null);
 };
 export{like, unlike};
