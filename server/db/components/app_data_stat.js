@@ -3,8 +3,8 @@
 /**@type{import('../sql/app_data_stat.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/app_data_stat.service.js`);
 
-/**@type{import('../../server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../server.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 

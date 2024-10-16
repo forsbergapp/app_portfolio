@@ -3,7 +3,7 @@
 /**@type{import('../../db/common.service.js')} */
 const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 

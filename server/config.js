@@ -2,8 +2,8 @@
 
 /**@type{import('./db/file.service.js')} */
 const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-/**@type{import('./server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./server.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 const app_portfolio_title = 'App Portfolio';
 
@@ -54,8 +54,8 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {Promise.<void>}
  */
   const ConfigAppSecretDBReset = async () => {
-    /**@type{import('./server.service.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+    /**@type{import('./server.js')} */
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const file = await fileFsRead('CONFIG_APPS', true);
     /**@type{import('./types.js').server_config_apps_record[]}*/
     const APPS = file.file_content.APPS;
@@ -163,8 +163,8 @@ const ConfigExists = async () => {
  */
 const DefaultConfig = async () => {
     const fs = await import('node:fs');
-    /**@type{import('./security.service.js')} */
-    const {createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
+    /**@type{import('./security.js')} */
+    const {createSecret}= await import(`file://${process.cwd()}/server/security.js`);
     await fileFsAccessMkdir()
     .catch((/**@type{import('./types.js').server_server_error}*/err) => {
         throw err;
@@ -352,8 +352,8 @@ const CheckFirstTime = () => {
  * @returns {Promise.<void>}
  */
 const CreateAdmin = async (admin_name, admin_password) => {
-    /**@type{import('./security.service.js')} */
-    const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
+    /**@type{import('./security.js')} */
+    const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
     
     /**@type{import('./types.js').server_db_file_result_fileFsRead} */
     const file = await fileFsRead('IAM_USER', true);

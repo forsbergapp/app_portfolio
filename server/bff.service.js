@@ -1,7 +1,7 @@
 /** @module server/bff/service */
 
-/**@type{import('./server.service.js')} */
-const {responsetime, response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./server.js')} */
+const {responsetime, response_send_error, getNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
 const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${process.cwd()}/server/config.js`);
 
@@ -9,8 +9,8 @@ const {CheckFirstTime, ConfigGet, ConfigFileGet} = await import(`file://${proces
 const {LogRequestI, LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/log.service.js`);
 /**@type{import('./iam.service.js')} */
 const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
-/**@type{import('./security.service.js')} */
-const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.service.js`);
+/**@type{import('./security.js')} */
+const {createUUID, createRequestId, createCorrelationId}= await import(`file://${process.cwd()}/server/security.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
 const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);

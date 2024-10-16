@@ -1,4 +1,4 @@
-/** @module server/security/service */
+/** @module server/security */
 
 const { randomUUID, 
         createHash, 

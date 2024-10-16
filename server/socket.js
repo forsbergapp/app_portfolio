@@ -1,89 +1,440 @@
 /** @module server/socket */
 
-/**@type{import('./server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('./socket.service.js')} */
-const service = await import(`file://${process.cwd()}/server/socket.service.js`);
+/**@type{import('./server.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+/**@type{import('./config.js')} */
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
+/**@type{import('./db/file.service.js')} */
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 /**@type{import('./iam.service.js')} */
-const {iam_decode} = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {expired_token} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+/**@type{import('./types.js').server_socket_connected_list[]} */
+let CONNECTED_CLIENTS = [];
 
 /**
- * Updates socket connection info removing user_id, admin, token_access and token_admin
+     * 
+     * @param {number} app_id 
+     * @param {number|null} user_account_id 
+     * @param {string} ip
+     * @param {string} headers_user_agent 
+     * @param {string} headers_accept_language 
+     * @returns {Promise.<{  latitude:string,
+ *              longitude:string,
+ *               place:string,
+ *               timezone:string,
+ *               identity_provider_id:number|null}>}
+ */
+const getConnectedUserData = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
+    /**@type{import('./bff.service.js')} */
+    const { BFF_server } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    //get GPS from IP
+    /**@type{import('./types.js').server_bff_parameters}*/
+    const parameters = {endpoint:'SERVER_SOCKET',
+                        host:null,
+                        url:'/geolocation/ip',
+                        route_path:'/geolocation/ip',
+                        method:'GET', 
+                        query:`ip=${ip}`,
+                        body:{},
+                        authorization:null,
+                        ip:ip, 
+                        user_agent:headers_user_agent, 
+                        accept_language:headers_accept_language,
+                        /**@ts-ignore */
+                        res:null};
+    
+    const result_geodata = await BFF_server(app_id, parameters)
+                                    .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
+                                    .catch(()=>null);
+    const place = result_geodata?
+                    (result_geodata.geoplugin_city + ', ' +
+                    result_geodata.geoplugin_regionName + ', ' +
+                    result_geodata.geoplugin_countryName):'';
+    /**@type{import('./db/sql/user_account.service.js')} */
+    const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
+    const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
+                                                    .then(result=>result[0].identity_provider_id)
+                                                    .catch(()=>null):null;
+    return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
+            longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
+            place:place,
+            timezone:result_geodata?result_geodata.geoplugin_timezone ?? '':'',
+            identity_provider_id:identity_provider_id};
+};
+/**
+ * Socket client send
+ * Used by EventSource and closes connection
+ * @param {import('./types.js').server_server_res} res
+ * @param {string} message
+ * @param {import('./types.js').server_socket_broadcast_type_all} message_type
+ * @returns {void}
+ */
+ const ClientSend = (res, message, message_type) => {
+    res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
+                               "broadcast_message": "${ message }"}`)}\n\n`);
+    res.flush();
+};
+/**
+ * Socket client connect
+ * Used by EventSource and leaves connection open
+ * @param {import('./types.js').server_server_res} res
+ * @returns {void}
+ */
+ const ClientConnect = (res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Connection', 'keep-alive');
+};
+/**
+ * Socket client close
+ * Used by EventSource and closes connection
+ * @param {import('./types.js').server_server_res} res
+ * @param {number} client_id
+ * @returns {void}
+ */
+const ClientOnClose = (res, client_id) => {
+    res.on('close', ()=>{
+        CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
+        res.end();
+    });
+};
+/**
+ * Socket client add
+ * @param {import('./types.js').server_socket_connected_list} newClient
+ * @returns {void}
+ */
+const ClientAdd = (newClient) => {
+    CONNECTED_CLIENTS.push(newClient);
+};
+
+/**
+ * Socket connected update
+ * @param {number} app_id,
+ * @param {{iam:string,
+ *          user_account_id:number|null,
+ *          admin:string|null,
+ *          token_access:string|null,
+ *          token_admin:string|null,
+ *          ip:string,
+ *          headers_user_agent:string,
+ *          headers_accept_language:string,
+ *          res: import('./types.js').server_server_res}} parameters
+ * @returns {Promise.<void>}
+ */
+ const ConnectedUpdate = async (app_id, parameters) => {
+    /**@type{import('./iam.service.js')} */
+    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+    const client_id = getNumberValue(iam_decode(parameters.iam).get('client_id'));
+    const authorization_bearer = iam_decode(parameters.iam).get('authorization_bearer');
+    if (CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
+        /**@type{import('./iam.service.js')} */
+        const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw not_authorized(parameters.res, 401, 'ConnectedUpdate, authorization', true);
+    }
+    else
+        for (const connected of CONNECTED_CLIENTS){
+            if (connected.id==client_id && connected.authorization_bearer == authorization_bearer){
+                const connectUserData =  await getConnectedUserData(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                connected.connection_date = new Date().toISOString();
+                connected.user_account_id = parameters.user_account_id;
+                connected.token_access = parameters.token_access;
+                connected.identity_provider_id = connectUserData.identity_provider_id;
+                connected.admin = parameters.admin ?? '';
+                connected.token_admin = parameters.token_admin;
+                connected.gps_latitude = connectUserData.latitude;
+                connected.gps_longitude = connectUserData.longitude;
+                connected.place = connectUserData.place;
+                connected.timezone = connectUserData.timezone;
+                //send message to client with updated data
+                ClientSend( connected.response, 
+                            btoa(JSON.stringify({   client_id: client_id, 
+                                                    latitude: connectUserData.latitude,
+                                                    longitude: connectUserData.longitude,
+                                                    place: connectUserData.place,
+                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
+            }
+        }
+};
+/**
+ * Socket check connected
+ * @param {number} user_account_id
+ * @returns {import('./types.js').server_socket_connected_list[]}
+ */
+ const ConnectedGet = user_account_id => {
+    return CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
+};
+
+/**
+ * Socket client send as system admin
+ * @param {number|null} app_id
+ * @param {{client_id:number|null,
+ *          client_id_current:number|null,
+ *          broadcast_type:import('./types.js').server_socket_broadcast_type_all,
+ *          broadcast_message:string}} data
+ * @returns {{sent:number}}
+ */
+ const SocketSendAdmin = (app_id, data) => {
+    data.client_id = getNumberValue(data.client_id);
+    data.client_id_current = getNumberValue(data.client_id_current);
+
+    if (data.broadcast_type=='ALERT' || data.broadcast_type=='MAINTENANCE'){
+        //broadcast INFO or MAINTENANCE to all connected to given app_id 
+        //except MAINTENANCE to admin and current user
+        let sent = 0;
+        for (const client of CONNECTED_CLIENTS){
+            if (client.id != data.client_id_current)
+                if (data.broadcast_type=='MAINTENANCE' && client.app_id ==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+                    null;
+                else
+                    if (client.app_id == app_id || app_id == null){
+                        ClientSend(client.response, data.broadcast_message, data.broadcast_type);
+                        sent++;
+                    }
+        }
+        return {sent:sent};
+    }
+    else
+        if (data.broadcast_type=='CHAT' || data.broadcast_type=='PROGRESS'){
+            //broadcast CHAT to specific client
+            for (const client of CONNECTED_CLIENTS){
+                if (client.id == data.client_id){
+                    ClientSend(client.response, data.broadcast_message, data.broadcast_type);
+                    return {sent:1};
+                }
+            }
+        }
+    return {sent:0};
+};
+/**
+ * Socket connected list
+ * @param {number} app_id
+ * @param {*} query
+ * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:import('./types.js').server_socket_connected_list_no_res[]}>}
+ */
+ const ConnectedList = async (app_id, query) => {
+    const app_id_select = getNumberValue(query.get('select_app_id'));
+    /**@type{number} */
+    const limit = getNumberValue(query.get('limit')) ?? 0;
+    /**@type{number} */
+    const offset = getNumberValue(query.get('offset')) ?? 0;
+    /**@type{number|null} */
+    const year = getNumberValue(query.get('year'));
+    /**@type{number|null} */
+    const month = getNumberValue(query.get('month'));
+    /**@type{number|null} */
+    const day= getNumberValue(query.get('day'));
+    /**@type{string} */
+    const order_by = query.get('order_by');
+    /**@type{import('./types.js').server_socket_connected_list_sort} */
+    const sort = query.get('sort');
+
+    const order_by_num = order_by =='asc'?1:-1;
+    const result =  CONNECTED_CLIENTS
+        .filter(client =>
+            //filter rows
+            (client.app_id == app_id_select || app_id_select==null) &&
+            parseInt(client.connection_date.substring(0,4)) == year && 
+            parseInt(client.connection_date.substring(5,7)) == month &&
+            parseInt(client.connection_date.substring(8,10)) == day
+            )
+        .map(client=>{
+            return {id:                     client.id,
+                    app_id:                 client.app_id, 
+                    authorization_bearer:   client.authorization_bearer,
+                    user_account_id:        client.user_account_id,
+                    identity_provider_id:   client.identity_provider_id,
+                    admin:                  client.admin,
+                    connection_date:        client.connection_date,
+                    gps_latitude:           client.gps_latitude ?? '',
+                    gps_longitude:          client.gps_longitude ?? '',
+                    place:                  client.place ?? '',
+                    timezone:               client.timezone ?? '',
+                    ip:                     client.ip,
+                    user_agent:             client.user_agent};
+        })
+        //sort result
+        .sort((first, second)=>{
+            //sort default is connection_date if sort missing as argument
+            if (typeof first[sort==null?'connection_date':sort] == 'number'){
+                //number sort
+                const first_sort_num = first[sort==null?'connection_date':sort];
+                const second_sort_num = second[sort==null?'connection_date':sort];
+                if ((first_sort_num??0) < (second_sort_num??0) )
+                    return -1 * order_by_num;
+                else if ((first_sort_num??0) > (second_sort_num??0))
+                    return 1 * order_by_num;
+                else
+                    return 0;
+            }
+            else{
+                //string sort with lowercase and localcompare
+                const first_sort = (first[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
+                const second_sort = (second[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
+                //using localeCompare as collation method
+                if (first_sort.localeCompare(second_sort)<0 )
+                    return -1 * order_by_num;
+                else if (first_sort.localeCompare(second_sort)>0 )
+                    return 1 * order_by_num;
+                else
+                    return 0;
+            }
+        });
+        return { page_header:  {
+                                    total_count:	result.length,
+                                    offset: 		offset,
+                                    count:			result
+                                                    //set offset
+                                                    .filter((client, index)=>offset>0?index+1>=offset:true)
+                                                    //set limit
+                                                    .filter((client, index)=>limit>0?index+1<=limit:true).length
+                                    },
+                    rows:           result
+                                    //set offset
+                                    .filter((client, index)=>offset>0?index+1>=offset:true)
+                                    //set limit
+                                    .filter((client, index)=>limit>0?index+1<=limit:true)
+                };
+};
+/**
+ * 
+ * Sends message to given app having the correct authorization_header
+ * Used for sending server side event from an app server function
  * @param {number} app_id
  * @param {string} iam
- * @param {string} ip
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {import('./types.js').server_server_res} res
- * @returns 
+ * @param {import('./types.js').server_socket_broadcast_type_app_function} message_type
+ * @param {string} message
+ * @returns {Promise.<{sent:number}>}
  */
- const ConnectedUpdate = (app_id, iam, ip, user_agent, accept_language, res) => service.ConnectedUpdate(app_id, 
-                                                                                                        getNumberValue(iam_decode(iam).get('client_id')), 
-                                                                                                        null, 
-                                                                                                        null,
-                                                                                                        iam_decode(iam).get('authorization_bearer'),
-                                                                                                        null,
-                                                                                                        null,
-                                                                                                        ip,
-                                                                                                        user_agent,
-                                                                                                        accept_language,
-                                                                                                        res);
+const SocketSendAppServerFunction = async (app_id, iam, message_type, message) =>{
+    /**@type{import('./iam.service.js')} */
+    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+    const client = CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iam_decode(iam).get('authorization_bearer'));
+    if (client.length == 1){
+        ClientSend(client[0].response, message, message_type);
+        return {sent:1};
+    }
+    else
+        return {sent:0};
+};
+/**
+ * Socket connected count
+ * @param {*} query
+ * @returns {{count_connected:number}}
+ */
+ const ConnectedCount = query => {
+    const identity_provider_id = getNumberValue(query.get('identity_provider_id'));
+    const logged_in = getNumberValue(query.get('logged_in'));
+    if (logged_in == 1)
+        return {count_connected:CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
+                                                        identity_provider_id !=null &&
+                                                        connected.user_account_id != null)||
+                                                        (identity_provider_id ==null &&
+                                                        connected.identity_provider_id ==null &&
+                                                        (connected.user_account_id != null ||connected.admin != ''))).length};
+    else
+        return {count_connected:CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
+                                                    connected.identity_provider_id ==null &&
+                                                    connected.user_account_id ==null &&
+                                                    connected.admin == '').length};
+};
+
+/**
+ * Socket connect
+ * Used by EventSource and leaves connection open
+ * @param {number} app_id
+ * @param {{iam:string,
+ *          headers_user_agent:string,
+ *          headers_accept_language:string,
+ *          ip:string,
+ *          response:import('./types.js').server_server_res}} parameters
+ * @returns {Promise.<void>}
+ */
+ const SocketConnect = async (  app_id, parameters) =>{
+    /**@type{import('./iam.service.js')} */
+    const { iam_decode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const user_account_id = getNumberValue(iam_decode(parameters.iam).get('user_id'));
+    const admin = iam_decode(parameters.iam).get('admin');
+    const authorization_bearer = iam_decode(parameters.iam).get('authorization_bearer');
+    //no authorization for repeated request using same id token or requesting from browser
+    if (CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
+        /**@type{import('./iam.service.js')} */
+        const {not_authorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw not_authorized(parameters.response, 401, 'SocketConnect, authorization', true);
+    }
+    else{
+        const client_id = Date.now();
+        ClientConnect(parameters.response);
+        ClientOnClose(parameters.response, client_id);
+    
+        const connectUserData =  await getConnectedUserData(app_id, user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+        /**@type{import('./types.js').server_socket_connected_list} */
+        const newClient = {
+                            id:                     client_id,
+                            app_id:                 app_id,
+                            authorization_bearer:   authorization_bearer,
+                            user_account_id:        user_account_id,
+                            token_access:           null,
+                            identity_provider_id:   connectUserData.identity_provider_id,
+                            admin:                  admin,
+                            token_admin:            null,
+                            connection_date:        new Date().toISOString(),
+                            gps_latitude:           connectUserData.latitude,
+                            gps_longitude:          connectUserData.longitude,
+                            place:                  connectUserData.place,
+                            timezone:               connectUserData.timezone,
+                            ip:                     parameters.ip,
+                            user_agent:             parameters.headers_user_agent,
+                            response:               parameters.response
+                        };
+    
+        ClientAdd(newClient);
+        //send message to client with data
+        
+        ClientSend(parameters.response, btoa(JSON.stringify({   client_id: client_id, 
+                                                                latitude: connectUserData.latitude,
+                                                                longitude: connectUserData.longitude,
+                                                                place: connectUserData.place,
+                                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
+    }
+};
+
+/**
+ * Socket check interval
+ * @returns {void}
+ */
+ const SocketCheckInterval = () => {
+    //start interval if apps are started
+    const app_id = getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
+    if (ConfigGetApp(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
+        setInterval(() => {
+            if (getNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
+                SocketSendAdmin(null, { client_id:null,
+                                        client_id_current:null,
+                                        broadcast_type:'MAINTENANCE',
+                                        broadcast_message:''});
+            }
+            SocketUpdateExpiredTokens();
+        //set default interval to 5 seconds if no parameter is set
+        }, getNumberValue(ConfigGet('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
+    }
+};
+/**
+ * Sends SESSION_EXPIRED message to clients with expired token
+ * @returns {void}
+ */
+const SocketUpdateExpiredTokens = () =>{
+    for (const client of CONNECTED_CLIENTS){
+        if (client.token_access && expired_token(client.app_id, 'APP_ACCESS', client.token_access)||
+            client.token_admin && expired_token(null, 'ADMIN', client.token_admin))
+            ClientSend(client.response, '', 'SESSION_EXPIRED');
+    }
+};
 /**
  * 
  * @param {number} resource_id 
  */
-const CheckOnline = resource_id =>service.ConnectedGet(resource_id).length>0?{online:1}:{online:0};
+const CheckOnline = resource_id =>ConnectedGet(resource_id).length>0?{online:1}:{online:0};
 
-/**
- * 
- * @param {*} data 
- */
-const SocketSendAdmin = (data) =>service.SocketSendAdmin(   getNumberValue(data.app_id), 
-                                                            getNumberValue(data.client_id), 
-                                                            getNumberValue(data.client_id_current),
-                                                            data.broadcast_type, 
-                                                            data.broadcast_message);
-
-/**
- * 
- * @param {number} app_id 
- * @param {*} query 
- * @returns 
- */
-const ConnectedListAdmin = (app_id, query) =>service.ConnectedList( app_id, 
-                                                                    getNumberValue(query.get('select_app_id')), 
-                                                                    getNumberValue(query.get('limit')) ?? 0, 
-                                                                    getNumberValue(query.get('offset')) ?? 0,
-                                                                    getNumberValue(query.get('year')), 
-                                                                    getNumberValue(query.get('month')), 
-                                                                    getNumberValue(query.get('day')), 
-                                                                    query.get('order_by'), 
-                                                                    query.get('sort'));
-
-/**
- * 
- * @param {*} query 
- * @returns 
- */
-const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query.get('identity_provider_id')), 
-                                                            getNumberValue(query.get('logged_in')));
-                                                            
-/**
- * 
- * @param {number} app_id 
- * @param {string} iam
- * @param {string} ip  
- * @param {string} user_agent 
- * @param {string} accept_language 
- * @param {import('./types.js').server_server_res} res
- */
-const SocketConnect = (app_id, iam, ip, user_agent, accept_language, res) => service.SocketConnect( app_id, 
-                                                                                                    getNumberValue(iam_decode(iam).get('user_id')),
-                                                                                                    iam_decode(iam).get('admin'),
-                                                                                                    iam_decode(iam).get('authorization_bearer'),
-                                                                                                    user_agent,
-                                                                                                    accept_language,
-                                                                                                    ip,
-                                                                                                    res); 
-
-export{ConnectedUpdate, CheckOnline, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};
+export {ClientSend, ConnectedUpdate, ConnectedGet, ConnectedList, SocketSendAdmin, SocketSendAppServerFunction, ConnectedCount, SocketConnect, SocketCheckInterval, CheckOnline};

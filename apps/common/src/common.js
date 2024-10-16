@@ -3,8 +3,8 @@
 /**@type{import('../../../server/log.service.js')} */
 const { LogAppE } = await import(`file://${process.cwd()}/server/log.service.js`);
 
-/**@type{import('../../../server/server.service.js')} */
-const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../../server/server.js')} */
+const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('../../../server/db/sql/database.service.js')} */
 const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);

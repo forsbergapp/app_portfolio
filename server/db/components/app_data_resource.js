@@ -7,8 +7,8 @@ const app_data_resource_detail = await import(`file://${process.cwd()}/server/db
 /**@type{import('../sql/app_data_resource_detail_data.service.js')} */
 const app_data_resource_detail_data = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
 
-/**@type{import('../../server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../server.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 

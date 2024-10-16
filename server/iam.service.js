@@ -1,7 +1,7 @@
 /** @module server/iam/service */
 
-/**@type{import('./server.service.js')} */
-const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('./server.js')} */
+const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
 const {ConfigGet, ConfigFileGet, ConfigGetApp, CheckFirstTime, CreateAdmin} = await import(`file://${process.cwd()}/server/config.js`);
 
@@ -86,12 +86,12 @@ const expired_token = (app_id, token_type, token) =>{
  *                  tokentimestamp:number}>}
  */
 const AuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
-    /**@type{import('./socket.service.js')} */
-    const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    /**@type{import('./socket.js')} */
+    const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
     return new Promise((resolve, reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
-            /**@type{import('./security.service.js')} */
-            const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
+            /**@type{import('./security.js')} */
+            const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
             /**@type{import('./types.js').server_iam_user_record}*/
             const user =  fileCache('IAM_USER').USER.filter((/**@type{import('./types.js').server_iam_user_record}*/user)=>user.username == username)[0];
             /**@type{0|1} */
@@ -114,7 +114,16 @@ const AuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, acc
             await fileFsAppend('IAM_ADMIN_LOGIN', file_content, '')
             .then(()=>{
                 if (result == 1){
-                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), null, username, iam_decode(iam).get('authorization_bearer'), null, jwt_data.token, ip, user_agent, accept_language, res)
+                    ConnectedUpdate(app_id, 
+                        {   iam:iam,
+                            user_account_id:null,
+                            admin:username,
+                            token_access:null,
+                            token_admin:jwt_data.token,
+                            ip:ip,
+                            headers_user_agent:user_agent,
+                            headers_accept_language:accept_language,
+                            res: res})
                     .then(()=>{
                         resolve({   username:username,
                                     token_at: jwt_data.token,

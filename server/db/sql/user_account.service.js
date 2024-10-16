@@ -8,8 +8,8 @@ const {db_execute} = await import(`file://${process.cwd()}/server/db/common.serv
  * @returns {Promise.<string|null>}
  */
 const set_password = async (password) =>{
-	/**@type{import('../../security.service.js')} */
-	const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.service.js`);
+	/**@type{import('../../security.js')} */
+	const {PasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
 	return password==null?null:await PasswordCreate(password);
 };
 /**
