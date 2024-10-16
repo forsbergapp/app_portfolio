@@ -3,8 +3,8 @@
 /**@type{import('../sql/database.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
 
-/**@type{import('../../server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../server.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../config.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
 
@@ -81,13 +81,13 @@ const install_db_get_files = async (install_type) =>{
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     /**@type{import('../../log.service.js')} */
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    /**@type{import('../../socket.js')} */
+    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../db/common.service.js')} */
     const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
-    /**@type{import('../../security.service.js')} */
-	const {PasswordCreate, createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
+    /**@type{import('../../security.js')} */
+	const {PasswordCreate, createSecret}= await import(`file://${process.cwd()}/server/security.js`);
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -132,7 +132,10 @@ const install_db_get_files = async (install_type) =>{
     const DB_SCHEMA = ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '';
     let install_count = 0;
     for (const file of files){
-        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
+        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+                                    client_id_current:null,
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
         install_count++;
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
@@ -324,8 +327,8 @@ const install_db_get_files = async (install_type) =>{
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     /**@type{import('../../log.service.js')} */
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    /**@type{import('../../socket.js')} */
+    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../db/common.service.js')} */
     const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
     
@@ -347,7 +350,7 @@ const install_db_get_files = async (install_type) =>{
         let install_count=0;
         const files = await install_db_get_files('uninstall');
         for (const file of  files){
-            SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
+            SocketSendAdmin(app_id, { client_id:getNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
             install_count++;
             const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
             const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../types.js').server_db_database_uninstall_database_script|import('../../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
@@ -411,8 +414,8 @@ const install_db_get_files = async (install_type) =>{
  * @returns {Promise.<{info: {}[]}>}
  */
  const DemoInstall = async (app_id, query, data)=> {
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    /**@type{import('../../socket.js')} */
+    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../log.service.js')} */
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     /**@type{import('../sql/app.service.js')} */
@@ -439,8 +442,8 @@ const install_db_get_files = async (install_type) =>{
     const {post:DetailResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
     /**@type{import('../sql/app_data_resource_detail_data.service.js')} */
     const {post:DetailDataResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
-    /**@type{import('../../security.service.js')} */
-    const {CreateKeyPair, createUUID, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`);
+    /**@type{import('../../security.js')} */
+    const {CreateKeyPair, createUUID, createSecret} = await import(`file://${process.cwd()}/server/security.js`);
     /**@type{import('../../config.js')} */
     const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
 
@@ -611,13 +614,19 @@ const install_db_get_files = async (install_type) =>{
     
     //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
-    SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})));
+    SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+                                client_id_current:null,
+                                broadcast_type:'PROGRESS',
+                                broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))});
     const {publicKey, privateKey} = await CreateKeyPair();
     const demo_public_key = publicKey;
     const demo_private_key = privateKey;
     //create user posts
     for (const demo_user of demo_users){
-        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
+        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+                                    client_id_current:null,
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))});
         install_count++;
 
         //generate vpa for each user that can be saved both in resource and apps configuration
@@ -885,7 +894,10 @@ const install_db_get_files = async (install_type) =>{
         });
     };
     for (const social_type of social_types){
-        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type})));
+        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+                                    client_id_current:null,
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))});
         install_count++;
         //select new random sample for each social type
         /**@type{[number]|[]} */
@@ -988,8 +1000,8 @@ const install_db_get_files = async (install_type) =>{
  * @returns {Promise.<{info: {}[]}>}
  */
 const DemoUninstall = async (app_id, query)=> {
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    /**@type{import('../../socket.js')} */
+    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../log.service.js')} */
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     /**@type{import('../sql/user_account.service.js')} */
@@ -1001,7 +1013,10 @@ const DemoUninstall = async (app_id, query)=> {
             if (result_demo_users.length>0){
                 const delete_users = async () => {
                     for (const user of result_demo_users){
-                        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})));
+                        SocketSendAdmin(app_id, {   client_id:getNumberValue(query.get('client_id')),
+                                                    client_id_current:null,
+                                                    broadcast_type:'PROGRESS',
+                                                    broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))});
                         await deleteUser(app_id, user.id)
                         .then(()=>{
                             deleted_user++;

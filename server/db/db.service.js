@@ -1,7 +1,7 @@
 /** @module server/db/db */
 
 /**@type{import('../server.service')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../config.js')} */
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./file.service')} */

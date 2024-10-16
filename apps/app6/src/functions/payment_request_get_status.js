@@ -21,7 +21,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
    /**@type{import('../../../../server/security.service')} */
-   const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 
+   const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
    
    const url = ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_URL.filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_GET_STATUS')[0].value;
    

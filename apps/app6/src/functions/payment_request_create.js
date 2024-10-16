@@ -26,8 +26,8 @@
  *                      countdown:string}[]>}
  */
 const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/server.service.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+    /**@type{import('../../../../server/server.js')} */
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{import('../../../../server/config.js')} */
     const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
@@ -39,7 +39,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('../../../../server/security.service')} */
-    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`); 
+    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     
     const url = ConfigGetApp(app_id, app_id, 'SECRETS').MERCHANT_API_URL.filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_CREATE')[0].value;
     const currency = await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));

@@ -26,10 +26,10 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
     /**@type{import('../../../../server/security.service')} */
-    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`);
+    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
     
     /**@type{import('../../../../server/socket.service')} */
-    const {ClientSend, ConnectedGet} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    const {ClientSend, ConnectedGet} = await import(`file://${process.cwd()}/server/socket.js`);
 
     const merchant = await MasterGet(app_id, null, null, app_id, 'MERCHANT', null, locale, false)
                            .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==data.id)[0]);

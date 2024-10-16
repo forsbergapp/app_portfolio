@@ -14,8 +14,8 @@
  */
 const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
    
-    /**@type{import('../../../../server/server.service.js')} */
-    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+    /**@type{import('../../../../server/server.js')} */
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
     /**@type{import('../../../../server/config.js')} */
     const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
@@ -36,7 +36,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {AuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     /**@type{import('../../../../server/security.service')} */
-    const {createUUID, PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.service.js`);
+    const {createUUID, PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
 
     const currency = await MasterGet(app_id, null, null, app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
 
