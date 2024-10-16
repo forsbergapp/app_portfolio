@@ -39,10 +39,10 @@
 /**@type{import('../sql/database.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
 
-/**@type{import('../../server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('../../config.service.js')} */
-const {ConfigGet, ConfigGetApp, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../server.js')} */
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+/**@type{import('../../config.js')} */
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 const DBA                       = 1;
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -111,19 +111,19 @@ const install_db_get_files = async (install_type) =>{
  * @returns {Promise.&lt;{info: {}[]}>}
  */
  const Install = async (app_id, query)=> {
-    /**@type{import('../../config.service.js')} */
-    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../config.js')} */
+    const {configAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('../../db/db.service.js')} */
-    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('../../socket.js')} */
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../db/common.service.js')} */
-    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
-    /**@type{import('../../security.service.js')} */
-	const {PasswordCreate, createSecret}= await import(`file://${process.cwd()}/server/security.service.js`);
+    /**@type{import('../../security.js')} */
+	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -131,7 +131,7 @@ const install_db_get_files = async (install_type) =>{
     const install_result = [];
     const password_tag = '&lt;APP_PASSWORD/>';
     let change_DBA_pool=true;
-    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
     /**
      * @param {string} username 
@@ -145,17 +145,17 @@ const install_db_get_files = async (install_type) =>{
           // max 30 characters for passwords and without double quotes
           // also fix ORA-28219: password verification failed for mandatory profile
           // ! + random A-Z character
-          password = createSecret(true, 30);
+          password = securitySecretCreate(true, 30);
           //use singlequote for INSERT, else doublequote for CREATE USER
           if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${await PasswordCreate(password)}'`);
+             sql = sql.replace(password_tag, `'${await securityPasswordCreate(password)}'`);
           else
              sql = sql.replace(password_tag, `"${password}"`);
        }   
        else{
-            password = createSecret();
+            password = securitySecretCreate();
             if (sql.toUpperCase().includes('INSERT INTO'))
-                sql = sql.replace(password_tag, `'${await PasswordCreate(password)}'`);
+                sql = sql.replace(password_tag, `'${await securityPasswordCreate(password)}'`);
             else
                 sql = sql.replace(password_tag, `'${password}'`);
        }
@@ -165,10 +165,13 @@ const install_db_get_files = async (install_type) =>{
        return [sql, password];
     };
     const files = await install_db_get_files('install');
-    const DB_SCHEMA = ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '';
+    const DB_SCHEMA = configGet('SERVICE_DB', `DB${configGet('SERVICE_DB', 'USE')}_NAME`) ?? '';
     let install_count = 0;
     for (const file of files){
-        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
+        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+                                    client_id_current:null,
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
         install_count++;
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
@@ -219,65 +222,65 @@ const install_db_get_files = async (install_type) =>{
                     if (db_use != 4 &amp;&amp; db_use != 5)
                         if (sql.toUpperCase().includes('CREATE DATABASE')){
                             //remove database name in dba pool
-                            await pool_close(null, db_use, DBA);
+                            await dbPoolClose(null, db_use, DBA);
                             /**@type{import('../../types.js').server_db_db_pool_parameters} */
                             const json_data = {
                                     use:                       db_use,
                                     pool_id:                   null,
-                                    port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                                    host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                                    port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                                    host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
                                     dba:                       DBA,
-                                    user:                      ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                    password:                  ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                    user:                      configGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                    password:                  configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
                                     database:                  null,
                                     //db 1 + 2 parameters
-                                    charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                    connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                    charset:                   configGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                    connectionLimit:           serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                     // db 3 parameters
-                                    connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                    idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                    max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                                    connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                    idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                    max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
                                     // db 4 parameters not used here
                                     connectString:             null,
                                     poolMin:                   null,
                                     poolMax:                   null,
                                     poolIncrement:             null
                                 };
-                            await pool_start(json_data);
+                            await dbPoolStart(json_data);
                         }
                         else{
                             if (change_DBA_pool == true){
                             //add database name in dba pool
-                            await pool_close(null, db_use, DBA);
+                            await dbPoolClose(null, db_use, DBA);
                             /**@type{import('../../types.js').server_db_db_pool_parameters} */
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
-                                port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                                port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
                                 dba:                       DBA,
-                                user:                      ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+                                user:                      configGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                database:                  configGet('SERVICE_DB', `DB${db_use}_NAME`),
                                 //db 1 + 2 parameters
-                                charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                charset:                   configGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 // db 3 parameters
-                                connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                                connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
                                 // db 4 parameters not used here
                                 connectString:             null,
                                 poolMin:                   null,
                                 poolMax:                   null,
                                 poolIncrement:             null
                             };
-                            await pool_start(json_data);
+                            await dbPoolStart(json_data);
                             //change to database value for the rest of the function
                             change_DBA_pool = false;
                             }
                         }
-                    await db_execute(app_id, sql, {}, DBA);
+                    await dbCommonExecute(app_id, sql, {}, DBA);
                     count_statements += 1;
                 }
             }
@@ -291,12 +294,12 @@ const install_db_get_files = async (install_type) =>{
                         if (users_row.sql.includes(password_tag)){
                             sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                            await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
                                                                 parameter_value:    app_admin_username});
-                            await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                            await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
                                                                 parameter_value:    sql_and_pw[1]});
                         }
@@ -309,10 +312,10 @@ const install_db_get_files = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
+                            await configAppSecretUpdate(file[2], {app_id:             file[2],
                                                             parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
                                                             parameter_value:    app_username});
-                            await ConfigAppSecretUpdate(file[2], {app_id:             file[2],
+                            await configAppSecretUpdate(file[2], {app_id:             file[2],
                                                             parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
                                                             parameter_value:    sql_and_pw[1]});
                         }
@@ -321,14 +324,14 @@ const install_db_get_files = async (install_type) =>{
                         break;
                     }
                 }
-                await db_execute(app_id, users_row.sql, {}, DBA);
+                await dbCommonExecute(app_id, users_row.sql, {}, DBA);
                 count_statements += 1;
             }
         }   
     }
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
-    LogServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    logServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
  };
  /**
@@ -350,20 +353,20 @@ const install_db_get_files = async (install_type) =>{
   * @returns {Promise.&lt;import('../../types.js').server_db_database_install_uninstall_result>} 
   */
  const Uninstall = async (app_id, query)=> {
-    /**@type{import('../../config.service.js')} */
-    const {ConfigAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../config.js')} */
+    const {configAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.js`);
     
     /**@type{import('../../db/file.service.js')} */
     const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
     /**@type{import('../../db/db.service.js')} */
-    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('../../socket.js')} */
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../../db/common.service.js')} */
-    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
     
 
     const fs = await import('node:fs');
@@ -372,65 +375,65 @@ const install_db_get_files = async (install_type) =>{
     let count_statements_fail = 0;
     
     
-    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
     if (db_use==5){
-        await pool_close(null, db_use, 0);
+        await dbPoolClose(null, db_use, 0);
         await fileFsWriteAdmin('DB_FILE', null);
-        await pool_db(db_use, 0, null, null, null);
+        await DB_POOL(db_use, 0, null, null, null);
         count_statements++;
     }
     else{
         let install_count=0;
         const files = await install_db_get_files('uninstall');
         for (const file of  files){
-            SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]})));
+            socketAdminSend(app_id, { client_id:serverUtilNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
             install_count++;
             const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
             const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../../types.js').server_db_database_uninstall_database_script|import('../../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
             for (const sql_row of uninstall_sql){
                 if (db_use==3 &amp;&amp; sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                     //add database name in dba pool
-                    await pool_close(null, db_use, DBA);
+                    await dbPoolClose(null, db_use, DBA);
                     /**@type{import('../../types.js').server_db_db_pool_parameters} */
                     const json_data = {
                         use:                       db_use,
                         pool_id:                   null,
-                        port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                        host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                        port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                        host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
                         dba:                       DBA,
-                        user:                      ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
-                        password:                  ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                        user:                      configGet('SERVICE_DB', `DB${db_use}_DBA_USER`),
+                        password:                  configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`),
                         database:                  null,
                         //db 1 + 2 not used here
                         charset:                   null,
                         connectionLimit:           null,
                         //db 3
-                        connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                        idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                        max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                        connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                        idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                        max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
                         //db 4 not used here
                         connectString:             null,
                         poolMin:                   null,
                         poolMax:                   null,
                         poolIncrement:             null
                     };
-                    await pool_start(json_data);
+                    await dbPoolStart(json_data);
                 }
                 if (file[2]==null)
                     sql_row.sql = sql_row.sql.replace('&lt;APP_USERNAME/>', 'app_portfolio_app_admin');
                 else
                     sql_row.sql = sql_row.sql.replace('&lt;APP_USERNAME/>', 'app_portfolio_app' + file[2]);
                 sql_row.sql = sql_row.sql.replaceAll('&lt;APP_ID/>', file[2]?file[2]:'0');
-                await db_execute(app_id, sql_row.sql, {}, DBA)
+                await dbCommonExecute(app_id, sql_row.sql, {}, DBA)
                 .then(()=>{count_statements += 1;})
                 .catch(()=>{count_statements_fail += 1;});
                 
             }      
         }
         //remove db users and password
-        ConfigAppSecretDBReset();
+        configAppSecretDBReset();
     }
-    LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
+    logServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
                     {count_fail: count_statements_fail}
                 ]};
@@ -447,10 +450,10 @@ const install_db_get_files = async (install_type) =>{
  * @returns {Promise.&lt;{info: {}[]}>}
  */
  const DemoInstall = async (app_id, query, data)=> {
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+    /**@type{import('../../socket.js')} */
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../sql/app.service.js')} */
     const {getAppsAdminId} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
     /**@type{import('../sql/user_account.service.js')} */
@@ -475,10 +478,10 @@ const install_db_get_files = async (install_type) =>{
     const {post:DetailResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
     /**@type{import('../sql/app_data_resource_detail_data.service.js')} */
     const {post:DetailDataResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
-    /**@type{import('../../security.service.js')} */
-    const {CreateKeyPair, createUUID, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`);
-    /**@type{import('../../config.service.js')} */
-    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../security.js')} */
+    const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
+    /**@type{import('../../config.js')} */
+    const {configAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
 
     const fs = await import('node:fs');
     /**@type{import('../../types.js').server_db_database_install_result} */
@@ -647,17 +650,23 @@ const install_db_get_files = async (install_type) =>{
     
     //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
-    SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})));
-    const {publicKey, privateKey} = await CreateKeyPair();
+    socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+                                client_id_current:null,
+                                broadcast_type:'PROGRESS',
+                                broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))});
+    const {publicKey, privateKey} = await securityKeyPairCreate();
     const demo_public_key = publicKey;
     const demo_private_key = privateKey;
     //create user posts
     for (const demo_user of demo_users){
-        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
+        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+                                    client_id_current:null,
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))});
         install_count++;
 
         //generate vpa for each user that can be saved both in resource and apps configuration
-        const demo_vpa = createUUID();
+        const demo_vpa = securityUUIDCreate();
         //create user_account_app record for all apps
         for (const app of apps){
             await create_user_account_app(app.id, demo_user.id);
@@ -713,7 +722,7 @@ const install_db_get_files = async (install_type) =>{
                         case 'UUID':
                             return demo_vpa;
                         case 'SECRET':
-                            return createSecret();
+                            return securitySecretCreate();
                         case 'PUBLIC_KEY':
                             return demo_public_key;
                         case 'PRIVATE_KEY':
@@ -722,8 +731,8 @@ const install_db_get_files = async (install_type) =>{
                             return demo_user.id.toString();
                         default:{
                             //if value is array then replace string in the array
-                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('&lt;HOST/>', ConfigGet('SERVER','HOST') ?? '')):
-                                    key_name[1].replaceAll('&lt;HOST/>', ConfigGet('SERVER','HOST') ?? '');
+                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('&lt;HOST/>', configGet('SERVER','HOST') ?? '')):
+                                    key_name[1].replaceAll('&lt;HOST/>', configGet('SERVER','HOST') ?? '');
                         }
                             
                     }
@@ -734,7 +743,7 @@ const install_db_get_files = async (install_type) =>{
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id &amp;&amp; resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
-                    await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                         {   app_id:             resource.app_registry_update_app_id,
                             parameter_name:     key[0].toUpperCase(),
                             parameter_value:    value
@@ -745,7 +754,7 @@ const install_db_get_files = async (install_type) =>{
             if (resource.app_update_secret)
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                    await ConfigAppSecretUpdate(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    await configAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
                             {   app_id:             resource.app_registry_update_app_id,
                                 parameter_name:     Object.keys(key)[0].toUpperCase(),
                                 parameter_value:    value
@@ -921,7 +930,10 @@ const install_db_get_files = async (install_type) =>{
         });
     };
     for (const social_type of social_types){
-        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type})));
+        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+                                    client_id_current:null,
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))});
         install_count++;
         //select new random sample for each social type
         /**@type{[number]|[]} */
@@ -1014,7 +1026,7 @@ const install_db_get_files = async (install_type) =>{
     install_result.push({'user_account_app_data_post_like': records_user_account_app_data_post_like});
     install_result.push({'user_account_app_data_post_view': records_user_account_app_data_post_view});
     install_result.push({'finished': new Date().toISOString()});
-    LogServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    logServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
 };
 /**
@@ -1024,10 +1036,10 @@ const install_db_get_files = async (install_type) =>{
  * @returns {Promise.&lt;{info: {}[]}>}
  */
 const DemoUninstall = async (app_id, query)=> {
-    /**@type{import('../../socket.service.js')} */
-    const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+    /**@type{import('../../socket.js')} */
+    const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
+    /**@type{import('../../log.js')} */
+    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../sql/user_account.service.js')} */
 	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
     return new Promise((resolve, reject)=>{
@@ -1037,7 +1049,10 @@ const DemoUninstall = async (app_id, query)=> {
             if (result_demo_users.length>0){
                 const delete_users = async () => {
                     for (const user of result_demo_users){
-                        SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})));
+                        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+                                                    client_id_current:null,
+                                                    broadcast_type:'PROGRESS',
+                                                    broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))});
                         await deleteUser(app_id, user.id)
                         .then(()=>{
                             deleted_user++;
@@ -1051,7 +1066,7 @@ const DemoUninstall = async (app_id, query)=> {
                 };
                 delete_users()
                 .then(()=>{
-                    LogServerI(`Demo uninstall count: ${deleted_user}`);
+                    logServerI(`Demo uninstall count: ${deleted_user}`);
                     resolve({info: [{'count': deleted_user}]});
                 })
                 .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
@@ -1059,7 +1074,7 @@ const DemoUninstall = async (app_id, query)=> {
                 });
             }
             else{
-                LogServerI(`Demo uninstall count: ${result_demo_users.length}`);
+                logServerI(`Demo uninstall count: ${result_demo_users.length}`);
                 resolve({info: [{'count': result_demo_users.length}]});
             }
         })
@@ -1079,43 +1094,43 @@ const DemoUninstall = async (app_id, query)=> {
  * @param {number|null} pool_id 
  * @returns {Promise.&lt;null>}
  */
- const pool_db = async (db_use, dba, user, password, pool_id) =>{
-    /**@type{import('../../log.service.js')} */
-    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
+ const DB_POOL = async (db_use, dba, user, password, pool_id) =>{
+    /**@type{import('../../log.js')} */
+    const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../db/db.service.js')} */
-    const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     
     return new Promise ((resolve, reject)=>{
        /**@type{import('../../types.js').server_db_db_pool_parameters} */
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
-          host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-          port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+          host:                      configGet('SERVICE_DB', `DB${db_use}_HOST`),
+          port:                      serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_PORT`)),
           dba:                       dba,
           user:                      user,
           password:                  password,
-          database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+          database:                  configGet('SERVICE_DB', `DB${db_use}_NAME`),
           //db 1 + 2 parameters
-          charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-          connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+          charset:                   configGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+          connectionLimit:           serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
           // db 3 parameters
-          connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-          idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-          max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+          connectionTimeoutMillis:   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+          idleTimeoutMillis:         serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+          max:                       serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_MAX`)),
           // db 4 parameters
-          connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-          poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
-          poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-          poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+          connectString:             configGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+          poolMin:                   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+          poolMax:                   serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+          poolIncrement:             serverUtilNumberValue(configGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
        };
-       pool_start(dbparameters)
+       dbPoolStart(dbparameters)
        .then((/**@type{null}*/result)=>{
-          LogServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
+          logServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
           resolve(result);
        })
        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{
-          LogServerE('Starting pool error: ' + error);
+          logServerE('Starting pool error: ' + error);
           reject(error);
        });
     });
@@ -1124,31 +1139,31 @@ const DemoUninstall = async (app_id, query)=> {
   * Start pools for database used
   */
 const Start = async () => {
-    if (ConfigGet('SERVICE_DB', 'START')=='1'){    
+    /**@type{import('../file.service.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+    if (configGet('SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
         let dba = 0;
-        const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+        const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
        
         if (db_use == 5)
-            await pool_db(db_use, dba, null, null, null);
+            await DB_POOL(db_use, dba, null, null, null);
         else{
-            if (ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`)){
-                user = `${ConfigGet('SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
-                password = `${ConfigGet('SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
+            if (configGet('SERVICE_DB', `DB${db_use}_DBA_USER`)){
+                user = `${configGet('SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
+                password = `${configGet('SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
                 dba = 1;
-                await pool_db(db_use, dba, user, password, null);
+                await DB_POOL(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of ConfigGetApps()){
-                    if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
-                        await pool_db(   db_use, 
+                for (const app  of fileCache('CONFIG_APPS').APPS){
+                    if (fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`])
+                        await DB_POOL(   db_use, 
                                         dba, 
-                                        ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`], 
-                                        ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_PASSWORD`], 
+                                        fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`],
+                                        fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`],
                                         app.APP_ID);
             }  
         }
@@ -1164,7 +1179,7 @@ export{Info, InfoSpace, InfoSpaceSum, Install, InstalledCheck, Uninstall, DemoIn
 </div>
 
 <nav>
-    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_app.html">apps/admin/app</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_security.html">server/security</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-circuitBreakerClass.html">circuitBreakerClass</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
