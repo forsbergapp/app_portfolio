@@ -34,11 +34,634 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/** @module apps/common/src/common */
+            <pre class="prettyprint source linenums"><code>/** @module apps/common/src/common/service */
 
-/**@type{import('./common.service')} */
-const service = await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+/**@type{import('../../../server/log.js')} */
+const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 
+/**@type{import('../../../server/server.js')} */
+const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+
+/**@type{import('../../../server/db/sql/database.service.js')} */
+const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
+
+/**@type{import('../../../server/db/file.service.js')} */
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
+const fs = await import('node:fs');
+
+/**
+ * Creates email
+ * @async
+ * @param {number} app_id                       - Application id
+ * @param {import('../../../server/types.js').server_apps_email_param_data} data         - Email param data
+ * @returns {Promise&lt;import('../../../server/types.js').server_apps_email_return_createMail>}  - Email return data
+ */
+const commonMailCreate = async (app_id, data) =>{
+    const {default:ComponentCreate} = await import('./component/common_mail.js');
+    const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{import('../../../server/types.js').server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
+    const secrets       = fileCache('CONFIG_APPS').APPS.filter((/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>app.APP_ID== common_app_id)[0].SECRETS;
+    //email type 1-4 implemented are emails with verification code
+    if (parseInt(data.emailtype)==1 || 
+        parseInt(data.emailtype)==2 || 
+        parseInt(data.emailtype)==3 ||
+        parseInt(data.emailtype)==4){
+
+        /** @type {string} */
+        let email_from = '';
+        switch (parseInt(data.emailtype)){
+            case 1:{
+                email_from = secrets.SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                break;
+            }
+            case 2:{
+                email_from = secrets.SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+                break;
+            }
+            case 3:{
+                email_from = secrets.SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+                break;
+            }
+            case 4:{
+                email_from = secrets.SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+                break;
+            }
+        }
+        return {
+            'email_host':         secrets.SERVICE_MAIL_HOST,
+            'email_port':         secrets.SERVICE_MAIL_PORT,
+            'email_secure':       secrets.SERVICE_MAIL_SECURE,
+            'email_auth_user':    secrets.SERVICE_MAIL_USERNAME,
+            'email_auth_pass':    secrets.SERVICE_MAIL_PASSWORD,
+            'from':               email_from,
+            'to':                 data.to,
+            'subject':            '❂❂❂❂❂❂',
+            'html':               email_html
+        };
+    }
+    else
+        throw '';
+};
+/**
+ * Checks if ok to start app
+ * @param {number|null} app_id
+ * @returns {Promise.&lt;boolean>}
+ */
+const commonAppStart = async (app_id=null) =>{
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+    const db_use = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'USE' in key)[0].USE);
+    if (fileCache('CONFIG_SERVER').METADATA.MAINTENANCE==0 &amp;&amp; fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'START' in key  )[0].START=='1' &amp;&amp; 
+        fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS.filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &amp;&amp;
+        ((db_use==5 &amp;&amp; await InstalledCheck(app_id, 1)
+                                .then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true)
+                                .catch(()=>false)) || 
+         fileCache('CONFIG_APPS').APPS[app_id ?? 0].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`] ))
+        if (app_id == null)
+            return true;
+        else{
+            if (fileCache('CONFIG_APPS').APPS[app_id ?? 0].STATUS =='ONLINE')
+                return true;
+            else
+                return false;
+        }
+    else
+        return false;
+};
+
+/**
+ * Get client locale from accept language from request
+ * 
+ * @param {string} accept_language  - Accept language from request
+ * @returns {string}                - lowercase locale, can be default 'en' or with syntax 'en-us' or 'zh-hant-cn'
+ */
+const commonClientLocale = accept_language =>{
+    let locale;
+    if (accept_language.startsWith('text') || accept_language=='*')
+        locale = 'en';
+    else{
+        //check first lang ex syntax 'en-US,en;'
+        locale = accept_language.split(',')[0].toLowerCase();
+        if (locale.length==0){
+            //check first lang ex syntax 'en;'
+            locale = accept_language.split(';')[0].toLowerCase();
+            if (locale.length==0 &amp;&amp; accept_language.length>0)
+                //check first lang ex syntax 'en' or 'zh-cn'
+                locale = accept_language.toLowerCase();
+            else{
+                locale = 'en';
+            }
+        }
+    }
+    return locale;
+};
+/**
+ * @param {{app_id:number,
+ *          endpoint:import('../../../server/types.js').server_bff_endpoint_type,
+ *          ip:string,
+ *          user_agent:string,
+ *          accept_language:string}} parameters
+ * @returns 
+ */
+const commonGeodata = async parameters =>{
+    /**@type{import('../../../server/bff.service.js')} */
+    const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    //get GPS from IP
+    /**@type{import('../../../server/types.js').server_bff_parameters}*/
+    const parametersBFF = { endpoint:parameters.endpoint,
+                            host:null,
+                            url:'/geolocation/ip',
+                            route_path:'/geolocation/ip',
+                            method:'GET', 
+                            query:`ip=${parameters.ip}`,
+                            body:{},
+                            authorization:null,
+                            ip:parameters.ip, 
+                            user_agent:parameters.user_agent, 
+                            accept_language:parameters.accept_language,
+                            /**@ts-ignore */
+                            res:null};
+    //ignore error in this case and fetch random geolocation using WORLDCITIES service instead if GEOLOCATION is not available
+    const result_gps = await bffServer(parameters.app_id, parametersBFF)
+    .catch(()=>null);
+    const result_geodata = {};
+    if (result_gps){
+        result_geodata.latitude =   JSON.parse(result_gps).geoplugin_latitude;
+        result_geodata.longitude=   JSON.parse(result_gps).geoplugin_longitude;
+        result_geodata.place    =   JSON.parse(result_gps).geoplugin_city + ', ' +
+                                    JSON.parse(result_gps).geoplugin_regionName + ', ' +
+                                    JSON.parse(result_gps).geoplugin_countryName;
+        result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
+    }
+    else{
+        /**@type{import('../../../server/types.js').server_bff_parameters}*/
+        const parametersBFF = { endpoint:parameters.endpoint,
+                                host:null,
+                                url:'/worldcities/city-random',
+                                route_path:'/worldcities/city-random',
+                                method:'GET', 
+                                query:'',
+                                body:{},
+                                authorization:null,
+                                ip:parameters.ip, 
+                                user_agent:parameters.user_agent, 
+                                accept_language:parameters.accept_language,
+                                /**@ts-ignore */
+                                res:null};
+        const result_city = await bffServer(parameters.app_id, parametersBFF).catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
+        result_geodata.latitude =   JSON.parse(result_city).lat;
+        result_geodata.longitude=   JSON.parse(result_city).lng;
+        result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
+        result_geodata.timezone =   null;
+    }
+    return result_geodata;
+};
+
+/**
+ * External request
+ * @param {{host:string,
+ *          method:string,
+ *          body:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          authorization:string|null,
+ *          locale:string}} parameters
+ * @returns {Promise.&lt;*>}
+ */
+const commonBFE = async parameters =>{
+    const https = await import('node:https');
+    const timeout_message = '🗺⛔?';
+    const timeout = 5000;
+    return new Promise((resolve, reject)=>{
+        const host_request = parameters.host.indexOf(':')>-1?parameters.host.substring(0,parameters.host.indexOf(':')):parameters.host.substring(0,parameters.host.indexOf('/'));
+        const port = parameters.host.indexOf(':')>-1?parameters.host.substring(parameters.host.indexOf(':'),parameters.host.indexOf('/')):443;
+        const path = parameters.host.substring(parameters.host.indexOf('/'));
+        const options = {
+            method: parameters.method,
+            timeout: timeout,
+            headers : {
+                'User-Agent': parameters.user_agent,
+                'Accept-Language': parameters.locale,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
+                'Authorization': parameters.authorization ?? '',
+                'X-Forwarded-For': parameters.ip
+            },
+            host: host_request,
+            port: port,
+            path: path,
+            rejectUnauthorized: false
+        };
+        
+        const request = https.request(options, res =>{
+            let responseBody = '';
+            res.setEncoding('utf8');
+            res.on('data', (chunk) =>{
+                responseBody += chunk;
+            });
+            res.on('end', ()=>{
+                resolve (responseBody);
+            });
+        });
+        if (parameters.method !='GET')
+            request.write(JSON.stringify(parameters.body));
+        request.on('error', error => {
+            reject('EXTERNAL URL ERROR: ' + error);
+        });
+        request.on('timeout', () => {
+            reject(timeout_message);
+        });
+        request.end();
+    });
+};
+
+/**
+ * Router function - get asset file
+ *  Supported
+ *  .css files
+ *  .js files       
+ *                  modifies at request:
+ *                  /modules/react/react-dom.development.js
+ *                      makes ECMAScript module adding export
+ *                  /modules/react/react.development.js
+ *                      makes ECMAScript module adding export
+ *                  /modules/leaflet/leaflet-src.esm.js
+ *                      removes sourceMappingURL
+ *                  /modules/easy.qrcode/easy.qrcode.js
+ *                      makes ECMAScript module adding variables, canvas2svg, minimal modifications and export
+ *                  /modules/easy.qrcode/canvas2svg.js
+ *                      makes ECMAScript module adding minimal modifications and export
+ *                  /apps/common_types.js
+ *                      used to display common_types.js since developer path is different
+ *  .html files
+ *  .webp files
+ *  .png files
+ *  .woff2 files
+ *  .ttf files
+ *  .json
+ * @param {{app_id:Number,
+ *          url:String,
+ *          basepath:string,
+ *          res:import('../../../server/types.js').server_server_res}} parameters
+ */
+const commonAssetfile = parameters =>{
+    return new Promise((resolve, reject)=>{
+        const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+        const app_cache_control = fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
+                                    .filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
+        const app_cache_control_font = fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
+                                        .filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL_FONT' in parameter)[0].APP_CACHE_CONTROL_FONT;
+        switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
+            case '.css':{
+                parameters.res.type('text/css');
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            case '.js':{
+                parameters.res.type('text/javascript');
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                switch (parameters.url){
+                    case '/modules/react/react-dom.development.js':
+                    case '/modules/react/react.development.js':{
+                        fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            if (parameters.url == '/modules/react/react-dom.development.js'){
+                                modulefile = 'let ReactDOM;\r\n' + modulefile;                                
+                                modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                                'exports.version = ReactVersion;\r\n  ReactDOM=exports;');
+                                modulefile = modulefile + 'export {ReactDOM}';
+                            }
+                            else{
+                                modulefile = 'let React;\r\n' + modulefile;
+                                modulefile = modulefile.replace(  'exports.version = ReactVersion;',
+                                                                'exports.version = ReactVersion;\r\n  React=exports;');
+                                modulefile = modulefile + 'export {React}';
+                            }
+                            
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                        });
+                        break;
+                    }
+                    case '/modules/leaflet/leaflet-src.esm.js':{
+                        fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                        });
+                        break;
+                    }
+                    case '/modules/easy.qrcode/easy.qrcode.js':{
+                        fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            modulefile = modulefile.replace(  'var QRCode;','');
+
+                            modulefile =    'let {ctx} = await import("./canvas2svg.js");\r\n' +
+                                            'let C2S = ctx;\r\n' + 
+                                            'var QRCode;\r\n' +
+                                            modulefile;
+                            modulefile = modulefile.replace(  'if (typeof define == \'function\' &amp;&amp; (define.amd || define.cmd))','if (1==2)');
+                            modulefile = modulefile.replace(  'else if (freeModule)','else if (1==2)');
+                            modulefile = modulefile.replace(  'root.QRCode = QRCode;','null;');
+                            
+
+                            modulefile = modulefile + 'export{QRCode}';
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                        });
+                        break;
+                    }
+                    case '/modules/easy.qrcode/canvas2svg.js':{
+                        fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
+                            modulefile =  'let ctx;\r\n' + modulefile;
+                            modulefile = modulefile.replace('var STYLES, ctx, CanvasGradient, CanvasPattern, namedEntities;',
+                                                            'var STYLES, CanvasGradient, CanvasPattern, namedEntities;');
+                            modulefile = modulefile.replace(  'if (typeof window === "object")','if (1==2)');
+                            modulefile = modulefile.replace(  'if (typeof module === "object" &amp;&amp; typeof module.exports === "object")','if (1==2)');
+                            modulefile = modulefile + 'export{ctx}';
+                            resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                        });
+                        break;
+                    }
+                    case '/apps/common_types.js':{
+                        //in development another path is used, return correct path in app
+                        resolve({STATIC:true, SENDFILE:`${process.cwd()}/apps/common_types.js`});
+                        break;
+                    }
+                    default:
+                        resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                }
+                break;
+            }
+            case '.html':{
+                parameters.res.type('text/html');
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            case '.webp':{
+                parameters.res.type('image/webp');
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            case '.png':{
+                parameters.res.type('image/png');
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            case '.woff2':{
+                parameters.res.type('font/woff');
+                if (app_cache_control_font !='')
+                    parameters.res.set('Cache-Control', app_cache_control_font);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            case '.ttf':{
+                parameters.res.type('font/ttf');
+                if (app_cache_control_font !='')
+                    parameters.res.set('Cache-Control', app_cache_control_font);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            case '.json':{
+                parameters.res.type('application/json');
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                break;
+            }
+            default:{
+                logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
+                .then(()=>{
+                    parameters.res.statusCode = 403;
+                    parameters.res.statusMessage = null;
+                    reject(null);
+                });
+            }
+        }
+    });
+};
+
+/**
+ * Router function - run fcuntion
+ * @param {{app_id:number,
+ *          resource_id:string,
+ *          data: *,
+ *          user_agent:string,
+ *          ip:string,
+ *          locale:string,
+ *          res:import('../../../server/types.js').server_server_res|null}} parameters
+ * @returns {Promise.&lt;void>}
+ */
+const commonFunctionRun = async parameters => {
+    const module_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' &amp;&amp; file[1]==parameters.resource_id);
+    if (module_path[0]){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path[0][4]}`);
+        return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
+    }
+    else{
+        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonFunctionRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
+        .then(()=>{
+            if (parameters.res)
+                parameters.res.statusCode = 404;
+        });
+    }    
+};
+/**
+ * Router function - get module
+ * @param {{app_id:Number,
+ *          resource_id:string,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          locale:string,
+ *          res:import('../../../server/types.js').server_server_res|null}} parameters
+ * @returns {Promise.&lt;*>}
+ */
+const commonModuleGet = async parameters => {
+    const module_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='MODULE' &amp;&amp; file[1]==parameters.resource_id);
+    if (module_path[0]){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path[0][4]}`);
+        return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+    }
+    else{
+        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
+        .then(()=>{
+            if (parameters.res)
+                parameters.res.statusCode = 404;
+            return {STATIC:true, SENDFILE:null, SENDCONTENT:''};
+        });
+    }
+};
+
+/**
+ * Creates server component and returns to client
+ * app
+ * reports
+ * maintenance
+ * mail
+ * info disclaimer
+ * info privacy policy
+ * info terms
+ * server error
+ * 
+ * @param {{app_id:number, 
+ *          componentParameters:{   param?:             string|null,
+ *                                  ip:                 string, 
+ *                                  user_agent?:        string,
+ *                                  locale?:            string,
+ *                                  reportid?:          string,
+ *                                  host?:              string},
+ *          type:'APP'|'REPORT'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
+ */
+const commonComponentCreate = async parameters =>{
+    /**@type{import('../../../server/iam.service.js')} */
+    const { iamIdTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
+    //id token for APP, REPORT and MAINTENANCE
+    const idtoken = (parameters.type=='APP' || parameters.type=='REPORT' || parameters.type=='MAINTENANCE')?
+                        await iamIdTokenAuthorize(parameters.app_id, parameters.componentParameters.ip):
+                            null;
+    //geodata for APP and REPORT
+    const result_geodata = (parameters.type=='APP' || parameters.type=='REPORT')?
+                                await commonGeodata({   app_id:parameters.app_id, 
+                                                        endpoint:'SERVER_APP', 
+                                                        ip:parameters.componentParameters.ip, 
+                                                        user_agent:parameters.componentParameters.user_agent ??'', 
+                                                        accept_language:parameters.componentParameters.locale??''}):
+                                    null;
+    const admin_only = await commonAppStart()==true?0:1;
+    
+    switch (parameters.type){
+        case 'APP':{
+            /**@type{import('../../../server/config.js')} */
+            const {configCheckFirstTime} = await import(`file://${process.cwd()}/server/config.js`);
+
+            /**@type{import('../../../server/types.js').server_apps_app_service_parameters} */
+            const app_service_parameters = {   
+                app_id:                 parameters.app_id,
+                app_logo:               fileCache('CONFIG_APPS').APPS[parameters.app_id].LOGO,
+                app_idtoken:            idtoken ?? '',
+                locale:                 parameters.componentParameters.locale ?? '',
+                admin_only:      admin_only,
+                client_latitude:        result_geodata?.latitude,
+                client_longitude:       result_geodata?.longitude,
+                client_place:           result_geodata?.place ?? '',
+                client_timezone:        result_geodata?.timezone,
+                common_app_id:          common_app_id,
+                rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
+                first_time:             admin_only==1?(configCheckFirstTime()==true?1:0):0
+            };
+            const ITEM_COMMON_PARAMETERS  = {app:   fileCache('CONFIG_APPS').APPS[parameters.app_id].PARAMETERS
+                                                                        .map((/**@type{*}*/parameter)=>{
+                                                                                                        //add current app id for each parameter
+                                                                                                        return {app_id: parameters.app_id, ...parameter};
+                                                                                                        }).concat(fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
+                                                                                                        .map((/**@type{*}*/parameter)=>{
+                                                                                                                                        //add common app id for each parameter
+                                                                                                                                        return {app_id: common_app_id, ...parameter};
+                                                                                                                                        })),
+                                            app_service:app_service_parameters};
+            const componentParameter = {data:   {
+                                                    CONFIG_APP:             {...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
+                                                    ITEM_COMMON_PARAMETERS: Buffer.from(JSON.stringify(ITEM_COMMON_PARAMETERS)).toString('base64')
+                                                },
+                                        methods:null};
+
+            const {default:ComponentCreate} = await import('./component/common_app.js');
+            return ComponentCreate(componentParameter);
+        }
+        case 'REPORT':{
+            const {default:ComponentCreate} = await import('./component/common_report.js');
+            
+            const decodedReportparameters = Buffer.from(parameters.componentParameters.reportid ?? '', 'base64').toString('utf-8');
+            const module = new URLSearchParams(decodedReportparameters).get('module');
+            const papersize = new URLSearchParams(decodedReportparameters).get('ps');
+            const report_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='REPORT' &amp;&amp; file[1]==module)[0][3];
+            const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
+
+            /**@type{import('../../../server/types.js').server_apps_report_create_parameters} */
+            const data = {  app_id:         parameters.app_id,
+                            reportid:       parameters.componentParameters.reportid ?? '',
+                            ip:             parameters.componentParameters.ip,
+                            user_agent:     parameters.componentParameters.user_agent ?? '',
+                            accept_language:parameters.componentParameters.locale ?? '',
+                            latitude:       result_geodata?.latitude,
+                            longitude:      result_geodata?.longitude
+                            };
+            return ComponentCreate({data:   {
+                                            CONFIG_APP:{...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
+                                            data:data,
+                                            /**@ts-ignore */
+                                            papersize:papersize
+                                            },
+                                    methods:{function_report:RunReport}});
+        }
+        case 'MAINTENANCE':{
+            //maintenance can be used from all app_id
+            const data = JSON.stringify({   
+                app_id: parameters.app_id,
+                common_app_id: common_app_id,
+                app_idtoken: idtoken,
+                rest_resource_bff: fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff'
+            });
+
+            const {default:ComponentCreate} = await import('./component/common_maintenance.js');
+            return ComponentCreate({data:   {
+                                            CONFIG_APP:             {...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
+                                            ITEM_COMMON_PARAMETERS: Buffer.from(data).toString('base64')},
+                                    methods:null
+                                    });
+        }
+        case 'INFO_DISCLAIMER':{
+            const {default:ComponentCreate} = await import('./component/common_info_disclaimer.js');
+            return ComponentCreate({data: {app_name:fileCache('CONFIG_APPS').APPS[parameters.app_id].NAME},
+                                    methods:null});
+        }
+        case 'INFO_PRIVACY_POLICY':{
+            const {default:ComponentCreate} = await import('./component/common_info_privacy_policy.js');
+            return ComponentCreate({data: {app_name:fileCache('CONFIG_APPS').APPS[parameters.app_id].NAME},
+                                    methods:null});
+        }
+        case 'INFO_TERMS':{
+            const {default:ComponentCreate} = await import('./component/common_info_terms.js');
+            return ComponentCreate({data: {app_name:fileCache('CONFIG_APPS').APPS[parameters.app_id].NAME},
+                                    methods:null});
+        }
+        default:{
+            return '';
+        }
+    }
+};
+
+/**
+  * Returns app id for given host
+  * @param {string} host 
+  * @returns 
+  */
+const commonAppHost = host =>{
+    switch (host.toString().split('.')[0]){
+        case 'localhost':
+        case 'www':{
+            //localhost
+            return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
+                (/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
+        }
+        default:{
+            try {
+                return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
+                    (/**@type{import('../../../server//types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+            } catch (error) {
+                //request can be called from unkown hosts
+                return null;
+            }
+        }
+    }
+ };
 /**
  * Router function - App: get app asset, common asset, app info page, app report, app module or app
  * @param {{ip:string,
@@ -49,33 +672,168 @@ const service = await import(`file://${process.cwd()}/apps/common/src/common.ser
  *          query:*,
  *          res:import('../../../server/types.js').server_server_res|null}} parameters
  */
-const commonApp = async parameters =>   service.commonApp({ ip:parameters.ip, 
-                                                            host:parameters.host, 
-                                                            user_agent:parameters.user_agent, 
-                                                            accept_language:parameters.accept_language,
-                                                            url:parameters.url,
-                                                            reportid:parameters.query?parameters.query.get('reportid'):null,
-                                                            res:parameters.res
-                                                        });
+const commonApp = async parameters =>{
+    const reportid = parameters.query?parameters.query.get('reportid'):null;
+    const host_no_port = parameters.host.substring(0,parameters.host.indexOf(':')==-1?parameters.host.length:parameters.host.indexOf(':'));
+    const app_id = commonAppHost(host_no_port);
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=> 'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
+    if (app_id==null || parameters.res==null ){
+        //function not called from client or host not found
+        if (parameters.res)
+            parameters.res.statusCode = 404;
+        return null;
+    }
+    else
+        switch (true){
+            case (parameters.url.toLowerCase().startsWith('/maintenance')):{
+                return await commonAssetfile({app_id:app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public', res:parameters.res})
+                        .catch(()=>null);
+            }
+            case (app_id != common_app_id &amp;&amp; await commonAppStart(app_id) ==false):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
+            }
+            case (parameters.url.toLowerCase().startsWith('/common')):{
+                return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public', res:parameters.res}).catch(()=>null);
+            }
+            case (parameters.url == '/sw.js'):{
+                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:'/apps/common/public', res:parameters.res}).catch(()=>null);
+            }
+            case (parameters.url.toLowerCase().startsWith('/css')):
+            case (parameters.url.toLowerCase().startsWith('/component')):
+            case (parameters.url.toLowerCase().startsWith('/images')):
+            case (parameters.url.toLowerCase().startsWith('/js')):
+            case (parameters.url == '/apps/common_types.js'): {
+                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:fileCache('CONFIG_APPS').APPS[app_id].PATH, res:parameters.res}).catch(()=>null);
+            }
+            case (parameters.url == '/info/jsdoc'):{
+                return await commonAssetfile({app_id:app_id, url:'/info/jsdoc/index.html'.substring('/info/jsdoc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
+            }
+            case (parameters.url.toLowerCase().startsWith('/info/jsdoc')):{
+                return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/info/jsdoc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
+            }
+            case (parameters.url.toLowerCase().startsWith('/info/about')):{
+                //Use JSDoc for about app
+                return '';
+            }
+            case (parameters.url.toLowerCase().startsWith('/info/disclaimer')):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'});
+            }
+            case (parameters.url.toLowerCase().startsWith('/info/privacy_policy')):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'});
+            }
+            case (parameters.url.toLowerCase().startsWith('/info/terms')):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
+            }
+            case (parameters.url.toLowerCase().startsWith('/app-reports')):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:         parameters.ip,
+                                                                                        user_agent: parameters.user_agent,
+                                                                                        locale:     commonClientLocale(parameters.accept_language),
+                                                                                        reportid:   reportid},type:'REPORT'});
+            }
+            case (parameters.url.toLowerCase().startsWith('/app-module/')):{
+                return await commonModuleGet({  app_id: app_id, 
+                                                resource_id:parameters.url.substring(parameters.url.lastIndexOf('/') + 1), 
+                                                data:null, 
+                                                user_agent:parameters.user_agent, 
+                                                ip:parameters.ip, 
+                                                locale:parameters.accept_language, 
+                                                res:parameters.res});
+            }
+            case (parameters.url == '/'):
+            case ((fileCache('CONFIG_APPS').APPS[app_id].SHOWPARAM == 1 &amp;&amp; parameters.url.substring(1) !== '')):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.substring(1)==''?null:parameters.url.substring(1),
+                                                                                        ip:             parameters.ip, 
+                                                                                        user_agent:     parameters.user_agent,
+                                                                                        locale:         commonClientLocale(parameters.accept_language),
+                                                                                        host:           parameters.host},type:'APP'})
+                                .then((app)=>{
+                                    if (app == null)
+                                        if (parameters.res)
+                                            parameters.res.statusCode = 301;
+                                    return app;
+                                })
+                                .catch((/**@type{import('../../../server/types.js').server_server_error}*/err)=>{
+                                    logAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
+                                    .then(()=>{
+                                        if (parameters.res){
+                                            parameters.res.statusCode = 500;
+                                            parameters.res.statusMessage = 'SERVER ERROR';
+                                        }
+                                        return 'SERVER ERROR';
+                                    });
+                                });
+            }
+            default:{
+                parameters.res.statusCode = 301;
+                return null;
+            }
+        }
+};
 /**
- * Router function - run fcuntion
- * @param {{app_id:number,
- *          resource_id:string,
- *          data: *,
- *          user_agent:string,
- *          ip:string,
- *          locale:string,
- *          res:import('../../../server/types.js').server_server_res|null}} parameters
+ * Get all aps from app registry and translated names
+ * @param {number} app_id 
+ * @param {number|null} resource_id 
+ * @param {string} locale
+ * @returns {Promise.&lt;import('../../../server/types.js').server_config_apps_with_db_columns[]>}
  */
- const commonFunctionRun = async parameters => service.commonFunctionRun({  app_id:parameters.app_id, 
-                                                                            resource_id:parameters.resource_id, 
-                                                                            data:parameters.data, 
-                                                                            user_agent:parameters.user_agent, 
-                                                                            ip:parameters.ip, 
-                                                                            locale:parameters.locale, 
-                                                                            res:parameters.res});
+const commonAppsGet = async (app_id, resource_id, locale) =>{
+    /**@type{import('../../../server/db/sql/app.service.js')} */
+    const {getApp} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
+    const apps_db =  await getApp(app_id, resource_id, locale);
+    
+    /**@type{import('../../../server/types.js').server_config_apps['APPS']}*/
+    const apps = fileCache('CONFIG_APPS').APPS;
+    for (const app of apps){
+        const image = await fs.promises.readFile(`${process.cwd()}${app.PATH + app.LOGO}`);
+        /**@ts-ignore */
+        app.LOGO        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+    }
+    const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
+    return apps
+    .filter(app=>apps_db.filter(app_db=>app_db.id == app.APP_ID)[0])
+    .map(app=>{
+        return {
+                    APP_ID:app.APP_ID,
+                    NAME:app.NAME,
+                    SUBDOMAIN:app.SUBDOMAIN,
+                    PROTOCOL : HTTPS_ENABLE =='1'?'https://':'http://',
+                    HOST : fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST,
+                    PORT : serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                                        fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
+                                            fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT),
+                    APP_NAME_TRANSLATION : JSON.parse(apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_translation.toString()).name,
+                    LOGO:app.LOGO
+                };
+    });
+};
 
-export {commonApp, commonFunctionRun};</code></pre>
+/**
+ * Get all apps from app registry
+ * @returns {Promise.&lt;import('../../../server/types.js').server_apps_result_getAppsAdmin[]>}
+ */
+ const commonAppsAdminGet = async () =>{
+    /**@type{import('../../../server/db/file.service.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
+    const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
+
+    return fileCache('CONFIG_APPS').APPS.map((/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>{
+        return {
+                    ID:app.APP_ID,
+                    NAME:app.NAME,
+                    SUBDOMAIN:app.SUBDOMAIN,
+                    LOGO:app.LOGO,
+                    STATUS:app.STATUS,
+                    PROTOCOL : HTTPS_ENABLE =='1'?'https://':'http://',
+                    PATH:app.PATH,
+                    HOST : fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST,
+                    PORT : serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                                        fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
+                                            fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT)
+                };
+    });
+};
+export {commonMailCreate, commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, commonAppsAdminGet};</code></pre>
         </article>
     </section>
 
@@ -85,7 +843,7 @@ export {commonApp, commonFunctionRun};</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_admin.html">apps/admin/admin</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_admin_secure.html">apps/admin/secure</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common.html">apps/common/src/common</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_NONPWA_app.html">apps/default_NONPWA/app</a></li><li><a href="module-apps_default_NONPWA_component_app.html">apps/default_NONPWA/component/app</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_apps.html">server/apps</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_config_service.html">server/config/service</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_info_service.html">server/info/service</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_log_service.html">server/log/service</a></li><li><a href="module-server_security_service.html">server/security/service</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_server_service.html">server/server/service</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_socket_service.html">server/socket/service</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-CircuitBreaker.html">CircuitBreaker</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_app.html">apps/admin/app</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_security.html">server/security</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-circuitBreakerClass.html">circuitBreakerClass</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
