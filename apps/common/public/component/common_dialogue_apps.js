@@ -77,7 +77,7 @@ const template = props => `
 const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
 
-    const apps = await props.methods.commonFFB({path:'/app/apps/', method:'GET', authorization_type:'APP_DATA'})
+    const apps = await props.methods.commonFFB({path:'/app-common/', method:'GET', authorization_type:'APP_DATA'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id));
 
 
