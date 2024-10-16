@@ -1,14 +1,14 @@
 /** @module server/db/common */
 
 /**@type{import('../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../log.service.js')} */
-const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.service.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+/**@type{import('../log.js')} */
+const {logDBI, logDBE} = await import(`file://${process.cwd()}/server/log.js`);
 /**@type{import('../config.js')} */
-const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet, configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**@type{import('./db.service.js')} */
-const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.service.js`);
 
 /**
  * Get app code derived from database error
@@ -27,8 +27,8 @@ const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js
  * @returns (string|null)
  * 
  */
-const get_app_code = error => {
-	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+const dbCommonAppCodeGet = error => {
+	const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
 	if (
 		((db_use ==1 ||db_use ==2)&& error.code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
 		(db_use ==3 && error.code=='23505')|| //PostgreSQL
@@ -61,16 +61,16 @@ const get_app_code = error => {
  * @param {import('../types.js').server_server_error} err 
  * @param {import('../types.js').server_server_res} res
  */
- const checked_error = async (app_id, lang_code, err, res) =>{
+ const dbCommonCheckedError = async (app_id, lang_code, err, res) =>{
 	/**@type{import('./sql/app_setting.service.js')} */
 	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
 
 	
     return new Promise((resolve)=>{
-		const app_code = get_app_code(err);
+		const app_code = dbCommonAppCodeGet(err);
 		if (app_code != null){
 			getSettingDisplayData( 	app_id,
-									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+									serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
 									'MESSAGE',
 									app_code)
 			.then(result_message=>{
@@ -93,11 +93,11 @@ const get_app_code = error => {
  * @param {string} lang_code
  * @param {import('../types.js').server_server_res} res
  */
-const record_not_found = async (app_id, lang_code, res) => {
+const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`).then(({ getSettingDisplayData }) => {
 			getSettingDisplayData( 	app_id,
-									getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+									serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
 									'MESSAGE',
 									'20400')
 			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
@@ -118,7 +118,7 @@ const record_not_found = async (app_id, lang_code, res) => {
  * @param {number} part 
  * @returns {string|null}
  */
-const get_locale = (lang_code, part) => {
+const dbCommonLocaleGet = (lang_code, part) => {
 	if (lang_code==null)
 		return null;
 	else
@@ -149,8 +149,8 @@ const get_locale = (lang_code, part) => {
  * @param {boolean} pagination
  * @returns {string}
  */
-const db_limit_rows = (pagination = true) => {
-	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+const dbCommonRowsLimit = (pagination = true) => {
+	const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
 	if (db_use == 4)
 		if (pagination)
 			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
@@ -177,7 +177,7 @@ const db_limit_rows = (pagination = true) => {
  * 
  * @param {'YEAR'|'MONTH'|'DAY'} period
  */
-const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5?
+const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==5?
 								` CAST(STRFTIME('%${period=='YEAR'?'Y':period=='MONTH'?'m':period=='DAY'?'d':''}', date_created) AS INT) `:
 								` EXTRACT(${period} from date_created)`;
 														
@@ -190,47 +190,47 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
  * @param {string|null} locale 
  * @returns {Promise.<*>}
  */
- const db_execute = async (app_id, sql, parameters, dba = null, locale=null) =>{
+ const dbCommonExecute = async (app_id, sql, parameters, dba = null, locale=null) =>{
 	return new Promise ((resolve, reject)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
-		sql = sql.replaceAll('<DB_SCHEMA/>', ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`) ?? '');
+		sql = sql.replaceAll('<DB_SCHEMA/>', configGet('SERVICE_DB', `DB${configGet('SERVICE_DB', 'USE')}_NAME`) ?? '');
 		//manage different syntax
 		//syntax in SQL: WHERE '<DATE_PERIOD_YEAR/>' = [bind variable] etc
-		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', db_date_period('YEAR'));
-		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', db_date_period('MONTH'));
-		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', db_date_period('DAY'));
+		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod('YEAR'));
+		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod('MONTH'));
+		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod('DAY'));
 		//manage locale search
 		//syntax in SQL: WHERE [column ] IN ('<LOCALE/>')
 		if (locale && sql.indexOf('<LOCALE/>')>0){
 			sql = sql.replaceAll('<LOCALE/>', ':locale1, :locale2, :locale3');
-			parameters = {...parameters, ...{	locale1: get_locale(locale, 1),
-												locale2: get_locale(locale, 2),
-												locale3: get_locale(locale, 3)}};
+			parameters = {...parameters, ...{	locale1: dbCommonLocaleGet(locale, 1),
+												locale2: dbCommonLocaleGet(locale, 2),
+												locale3: dbCommonLocaleGet(locale, 3)}};
 		}
 		//manage pagination
 		let pagination = false;
 		if (sql.indexOf('<APP_PAGINATION_LIMIT_OFFSET/>')>0){
 			//parameters must contain limit and offset keys
 			pagination = true;
-			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	db_limit_rows(true));
+			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
 			if (!parameters.limit)
-				parameters.limit = 	getNumberValue(	ConfigGetApp(app_id, 
-																getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
+				parameters.limit = 	serverUtilNumberValue(	configAppGet(app_id, 
+																serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
 													.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0;
 		}
 		//manage limit records
 		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
-			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		db_limit_rows(false));
-			parameters = {...parameters, ...{limit:getNumberValue(	ConfigGetApp(	app_id, 
-																				getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
+			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(	configAppGet(	app_id, 
+																				serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
 																.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0}};
 		}
 
-		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
+		dbSQL(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{import('../types.js').server_db_common_result}*/result)=> {
-			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
+			logDBI(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				try {
@@ -263,14 +263,14 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 			//add db_message key since message is not saved for SQLite
 			if (error.message)
 				error.db_message = error.message;
-			LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
+			logDBE(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
-				const app_code = get_app_code(error);
+				const app_code = dbCommonAppCodeGet(error);
 				if (app_code != null)
 					return reject(error);
 				else{
 					//return full error to admin
-					if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
+					if (app_id==serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))){
 						//SQLite does not display sql in error
 						if (!error.sql)
 							error.sql = sql;
@@ -285,5 +285,5 @@ const db_date_period = period=>getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==5
 };
 
 export{
-		checked_error, get_app_code, record_not_found, db_limit_rows, db_execute
+		dbCommonCheckedError, dbCommonAppCodeGet, dbCommonRecordNotFound, dbCommonRowsLimit, dbCommonExecute
 };

@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_view */
 
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -21,6 +21,6 @@ const insertUserAccountView = async (app_id, data) => {
 							client_longitude: data.client_longitude,
 							client_latitude: data.client_latitude
 						};
-		return await db_execute(app_id, sql, parameters, null);
+		return await dbCommonExecute(app_id, sql, parameters, null);
 	};
 export{insertUserAccountView};

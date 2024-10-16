@@ -11,7 +11,7 @@ const {fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/serv
  * @param {string} message_id 
  * @returns 
  */
-const MessageQueue = async (service, message_type, message, message_id) => {
+const messageQueue = async (service, message_type, message, message_id) => {
     /**@type{import('../microservice/mail/service.js')} */
     const {sendEmail} = await import(`file://${process.cwd()}/microservice/mail/service.js`);
     return new Promise((resolve, reject) =>{
@@ -36,7 +36,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     const message_queue = {message_id: new_message_id, service: service, message:   message};
                     write_file(1, message_queue, null)
                     .then(()=>{
-                        resolve (MessageQueue(service, 'CONSUME', null, new_message_id));
+                        resolve (messageQueue(service, 'CONSUME', null, new_message_id));
                     })
                     .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
                         reject(error);
@@ -122,4 +122,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {MessageQueue};
+export {messageQueue};

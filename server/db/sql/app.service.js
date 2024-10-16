@@ -1,11 +1,11 @@
 /** @module server/db/sql/app */
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../config.js')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('../../db/common.service.js')} */
-const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
 /**
  * 
@@ -35,9 +35,9 @@ const getApp = async (app_id, id,lang_code) => {
 					OR 
 					:id = :common_app_id)
 				ORDER BY 1`;
-		const parameters = {common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+		const parameters = {common_app_id: serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
 							id: id};
-		return await db_execute(app_id, sql, parameters, null, lang_code);
+		return await dbCommonExecute(app_id, sql, parameters, null, lang_code);
 	};
 
 /**
@@ -50,7 +50,7 @@ const getAppsAdminId = async (app_id) => {
 				   FROM <DB_SCHEMA/>.app a
 				  ORDER BY 1`;
 	const parameters = {};
-	return await db_execute(app_id, sql, parameters, null,null);
+	return await dbCommonExecute(app_id, sql, parameters, null,null);
 };
 
 export{getApp, getAppsAdminId};

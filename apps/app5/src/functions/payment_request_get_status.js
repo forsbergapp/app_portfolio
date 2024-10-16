@@ -17,7 +17,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     const {default:jwt} = await import('jsonwebtoken');
 
     /**@type{import('../../../../server/config.js')} */
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
+    const {configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
@@ -26,10 +26,10 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
     /**@type{import('../../../../server/security.service')} */
-    const {PrivateDecrypt, PublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
+    const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
     
     /**@type{import('../../../../server/socket.service')} */
-    const {ClientSend, ConnectedGet} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketClientSend, socketConnectedGet} = await import(`file://${process.cwd()}/server/socket.js`);
 
     const merchant = await MasterGet(app_id, null, null, app_id, 'MERCHANT', null, locale, false)
                            .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==data.id)[0]);
@@ -39,13 +39,13 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
         *           payment_request_id:     string,
         *           origin:                 string}}
         */
-        const  body_decrypted = JSON.parse(PrivateDecrypt(merchant.merchant_private_key, data.message));
+        const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, data.message));
         if (merchant.merchant_api_secret==body_decrypted.api_secret && merchant.merchant_url == body_decrypted.origin){
             const payment_request = await MasterGet(app_id, null, null, app_id, 'PAYMENT_REQUEST', null, locale, true)
                                             .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)).filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
             
             /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const token_decoded = jwt.verify(payment_request.token, ConfigGetApp(app_id, app_id, 'SECRETS').APP_ID_SECRET);
+            const token_decoded = jwt.verify(payment_request.token, configAppGet(app_id, app_id, 'SECRETS').APP_ID_SECRET);
             
             if (token_decoded.id == payment_request.payerid && 
                 token_decoded.scope == 'APP_CUSTOM' && 
@@ -56,7 +56,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                      */
                     const data_return = {   status:                 payment_request.status
                     };
-                    const data_encrypted = PublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
+                    const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
 
                     const account_payer =  await DetailGet(app_id, null, null, null, app_id, 'ACCOUNT', null, locale, false)
                                                     /**@ts-ignore */
@@ -66,13 +66,13 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                         if (payment_request.status=='PENDING'){
                             const customer = await MasterGet(app_id, account_payer.app_data_resource_master_id, null, app_id, 'CUSTOMER', null, locale, false).then(result=>result[0]);
                             //check SOCKET connected list
-                            for (const user_connected of ConnectedGet(customer.user_account_app_user_account_id ?? 0)){
+                            for (const user_connected of socketConnectedGet(customer.user_account_app_user_account_id ?? 0)){
                                 const message = {
                                     type: 'PAYMENT_REQUEST', 
                                     payment_request_id:payment_request.payment_request_id, 
                                     exp:payment_request.exp
                                 };
-                                ClientSend(user_connected.response, btoa(JSON.stringify(message)), 'APP_FUNCTION');    
+                                socketClientSend(user_connected.response, btoa(JSON.stringify(message)), 'APP_FUNCTION');    
                             }
                         }
                         return [{message:data_encrypted}];

@@ -1,9 +1,9 @@
 /** @module server/db/db */
 
-/**@type{import('../server.service')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+/**@type{import('../server.js')} */
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../config.js')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./file.service')} */
 const {filePath} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
@@ -14,12 +14,12 @@ const {default: ORACLEDB} = await import('oracledb');
 const {default:sqlite3}   = await import('sqlite3');
 const sqlite              = await import('sqlite');
 /**
- * POOL_DB
+ * DB_POOL
  * All database pool connections are saved here
  * Oracle uses number to 
  * @type{import('../types.js').server_db_db_pool[]}
  */
-const POOL_DB =[ 
+const DB_POOL =[ 
                   [1, null, null], //MySQL pools      [db number, dba pool object, apps pool object]
                   [2, null, null], //MariaDB pools    [db number, dba pool object, apps pool object]
                   [3, null, null], //PostgreSQL pools [db number, dba pool object, apps pool object]
@@ -27,7 +27,7 @@ const POOL_DB =[
                   [5, null, null]  //SQLite           [db number, db object, null]
                ];                     
 
-if (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==4){
+if (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==4){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
@@ -41,9 +41,9 @@ if (getNumberValue(ConfigGet('SERVICE_DB', 'USE'))==4){
  * have changed parameters and without having to restart server
  * @param {number} db
  */
-const pool_delete_all = (db)=>{
+const dbPoolDeleteAll = (db)=>{
       //relase db pools from memory
-      POOL_DB.map(pool=>{if (pool[0]==db){
+      DB_POOL.map(pool=>{if (pool[0]==db){
                            pool[1]=null;
                            pool[2]=null;
                         }
@@ -81,7 +81,7 @@ const pool_delete_all = (db)=>{
  * @param {import('../types.js').server_db_db_pool_parameters} dbparameters 
  * @returns {Promise.<null>}
  */
-const pool_start = async (dbparameters) =>{
+const dbPoolStart = async (dbparameters) =>{
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case 1:
@@ -96,7 +96,7 @@ const pool_start = async (dbparameters) =>{
                                  charset: dbparameters.charset==null?'':dbparameters.charset,
                                  connectionLimit: dbparameters.connectionLimit==null?0:dbparameters.connectionLimit
                               });
-            POOL_DB.map(db=>
+            DB_POOL.map(db=>
                {if (db[0]==dbparameters.use)
                   if (dbparameters.dba==1)
                      db[1]= mysql_pool;
@@ -127,7 +127,7 @@ const pool_start = async (dbparameters) =>{
             if (dbparameters.dba==1)
                createpoolPostgreSQL()
                .then(pool=>{
-                  POOL_DB.map(db=>{ if (db[0]==dbparameters.use)
+                  DB_POOL.map(db=>{ if (db[0]==dbparameters.use)
                      db[1]=pool;
                   });
                   resolve(null);
@@ -135,7 +135,7 @@ const pool_start = async (dbparameters) =>{
             else
                createpoolPostgreSQL()
                .then(pool=>{
-                  POOL_DB.map(db=>{ if (db[0]==dbparameters.use)
+                  DB_POOL.map(db=>{ if (db[0]==dbparameters.use)
                      if (db[2])
                         db[2].push(pool);
                      else
@@ -168,13 +168,13 @@ const pool_start = async (dbparameters) =>{
             };
             if (dbparameters.dba==1){
                const pool_id_dba = 'DBA';
-               POOL_DB.map(db=>{ if (db[0]==dbparameters.use) 
+               DB_POOL.map(db=>{ if (db[0]==dbparameters.use) 
                                     db[1]={pool_id_dba};
                               });
                createpoolOracle(pool_id_dba);
             }
             else{
-               POOL_DB.map(db=>{if (db[0]==dbparameters.use) 
+               DB_POOL.map(db=>{if (db[0]==dbparameters.use) 
                                  if (db[2])
                                     db[2].push({pool_id_app:dbparameters.pool_id?.toString()});
                                  else
@@ -186,7 +186,7 @@ const pool_start = async (dbparameters) =>{
             break;
          }
          case 5:{
-            POOL_DB.map(db=>{
+            DB_POOL.map(db=>{
                if (db[0]==dbparameters.use)
                   sqlite.open({
                      filename: process.cwd() + filePath('DB_FILE'),
@@ -211,23 +211,23 @@ const pool_start = async (dbparameters) =>{
  * @param {number} dba 
  * @returns {Promise.<void>}
  */
-const pool_close = async (pool_id, db_use, dba) =>{
+const dbPoolClose = async (pool_id, db_use, dba) =>{
 
       if (dba==1)
-         POOL_DB.map(db=>{
+         DB_POOL.map(db=>{
                            if (db[0]==db_use)
                               db[1] = null;
          });
       else
          if (db_use==5){
-            POOL_DB.map(db=>{
+            DB_POOL.map(db=>{
                if (db[0]==db_use)
                   db[1] = null;
             });           
          }
          else
             if (pool_id)
-               POOL_DB.map(db=>{
+               DB_POOL.map(db=>{
                   if (db[0]==db_use)
                      if (db[2])
                         db[2][pool_id] = null;
@@ -242,22 +242,22 @@ const pool_close = async (pool_id, db_use, dba) =>{
  * @param {number|null} dba 
  * @returns {object|string|null}
  */
-const pool_get = (pool_id, db_use, dba) => {
+const dbPoolGet = (pool_id, db_use, dba) => {
    let pool;
    try {
       if (db_use==5)
-         return POOL_DB.filter(db=>db[0]==db_use)[0][1];
+         return DB_POOL.filter(db=>db[0]==db_use)[0][1];
       else
          if (pool_id!=null)
             if (dba==1)
                if (db_use==4){
                   /**@ts-ignore */
-                  return POOL_DB.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
+                  return DB_POOL.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
                }
                else
-                  return POOL_DB.filter(db=>db[0]==db_use)[0][1];
+                  return DB_POOL.filter(db=>db[0]==db_use)[0][1];
             else{
-               pool = POOL_DB.filter(db=>db[0]==db_use)[0];
+               pool = DB_POOL.filter(db=>db[0]==db_use)[0];
                if (pool[2])
                   if (db_use==4){
                      /**@ts-ignore */
@@ -288,7 +288,7 @@ const pool_get = (pool_id, db_use, dba) => {
  * @param {number|null} dba 
  * @returns {Promise.<*>}
  */
-const db_query = async (pool_id, db_use, sql, parameters, dba) => {
+const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
    return new Promise((resolve,reject)=>{
       switch (db_use){
          case 1:
@@ -301,7 +301,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                if ('DB_CLOB' in parameters)
                   delete parameters.DB_CLOB;
                /**@ts-ignore */
-               pool_get(pool_id, db_use, dba).getConnection((/**@type{import('../types.js').server_server_error}*/err, /**@type{import('../types.js').pool_connection_1_2}*/conn) => {
+               dbPoolGet(pool_id, db_use, dba).getConnection((/**@type{import('../types.js').server_server_error}*/err, /**@type{import('../types.js').pool_connection_1_2}*/conn) => {
                   if (err)
                      return reject (err);
                   else{
@@ -382,7 +382,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             const parsed_result = queryConvert(sql, parameters);
             try {
                /**@ts-ignore */
-               pool_get(pool_id, db_use, dba).connect().then((/**@type{import('../types.js').server_db_db_pool_connection_3}*/pool3)=>{
+               dbPoolGet(pool_id, db_use, dba).connect().then((/**@type{import('../types.js').server_db_db_pool_connection_3}*/pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
                   .then((/**@type{import('../types.js').server_db_db_pool_connection_3_result}*/result) => {
                      pool3.release();
@@ -420,7 +420,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          }
          case 4:{
             try{
-               const db_pool_id = pool_get(pool_id, db_use, dba);
+               const db_pool_id = dbPoolGet(pool_id, db_use, dba);
                /**@ts-ignore */
                const pool4 = ORACLEDB.getPool(db_pool_id);
                pool4.getConnection().then((pool)=>{
@@ -503,7 +503,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                parameters_convert[parameter[0]] = parameter[1];
             });
             const sql_convert = queryConvert(sql, parameters);
-            const db = pool_get(pool_id, db_use, dba);
+            const db = dbPoolGet(pool_id, db_use, dba);
             try {
                /**@ts-ignore */
                (sql.trimStart().toUpperCase().startsWith('SELECT')?db.all(sql_convert, parameters_convert):db.run(sql_convert, parameters_convert))
@@ -527,6 +527,6 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    });
 };
 
-export{pool_delete_all, 
-       pool_start, pool_close, pool_get,
-       db_query};
+export{dbPoolDeleteAll, 
+       dbPoolStart, dbPoolClose, dbPoolGet,
+       dbSQL};

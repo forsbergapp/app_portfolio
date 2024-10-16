@@ -1,7 +1,7 @@
 /** @module microservice/cirtcuitbreaker */
 
-/**@type{import('./registry.service.js')} */
-const {CONFIG} = await import(`file://${process.cwd()}/microservice/registry.service.js`);
+/**@type{import('./registry.js')} */
+const {CONFIG} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
  * Circuit breaker
@@ -14,7 +14,7 @@ const {CONFIG} = await import(`file://${process.cwd()}/microservice/registry.ser
  * Failure threshold    CONFIG.CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS or default 5 seconds
  * Cooldown period      CONFIG.CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS or default 10 seconds
  */
-class CircuitBreaker {
+class circuitBreakerClass {
     constructor() {
         /**@type{[index:any][*]} */
         this.states = {};
@@ -108,6 +108,6 @@ class CircuitBreaker {
         };
     }
 }
-const microservice_circuitbreak = new CircuitBreaker();
+const circuitBreaker = new circuitBreakerClass();
 
-export {microservice_circuitbreak};
+export {circuitBreaker};

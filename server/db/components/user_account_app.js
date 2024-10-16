@@ -4,7 +4,7 @@
 const service = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);
 
 /**@type{import('../../server.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 
@@ -16,9 +16,9 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`
 const update = (app_id, resource_id, query, data) => {
     return new Promise((resolve, reject)=> {
         /**@type{import('../../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} */
-        const data_update = {	app_setting_preference_direction_id: 	getNumberValue(data.app_setting_preference_direction_id),
-                                app_setting_preference_arabic_script_id:getNumberValue(data.app_setting_preference_arabic_script_id),
-                                app_setting_preference_timezone_id: 	getNumberValue(data.app_setting_preference_timezone_id),
+        const data_update = {	app_setting_preference_direction_id: 	serverUtilNumberValue(data.app_setting_preference_direction_id),
+                                app_setting_preference_arabic_script_id:serverUtilNumberValue(data.app_setting_preference_arabic_script_id),
+                                app_setting_preference_timezone_id: 	serverUtilNumberValue(data.app_setting_preference_timezone_id),
                                 preference_locale:					data.preference_locale
         };
         service.updateUserAccountApp(app_id, resource_id, data_update)
@@ -59,7 +59,7 @@ const getUserAccountApps = async (app_id, resource_id, locale) => {
  * @param {number} resource_id
  * @param {*} query
  */
-const deleteUserAccountApp = (app_id, resource_id, query) => service.deleteUserAccountApp(app_id, resource_id, getNumberValue(query.get('delete_app_id')))
+const deleteUserAccountApp = (app_id, resource_id, query) => service.deleteUserAccountApp(app_id, resource_id, serverUtilNumberValue(query.get('delete_app_id')))
                                                     .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
 
 export {/*ADMIN + ACCESS*/
