@@ -22,7 +22,10 @@ const {default:ServerError} = await import('../apps/common/src/component/common_
                         more_info:more_info}};
     //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
     res.statusMessage = '';
-    res.status(http).send(message);
+    res.statusCode = http;
+    res.setHeader('Content-Type',  'application/json; charset=utf-8');
+    res.write(JSON.stringify(message), 'utf8');
+    res.end();
 };
 /**
  * Get number value from request key
@@ -114,8 +117,8 @@ const COMMON = {
  * @returns {Promise<import('./types.js').server_server_express>} app
  */
  const serverExpress = async () => {
-    /**@type{import('./config.service.js')} */
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('./config.js')} */
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('./log.service.js')} */
     const {LogRequestE} = await import(`file://${process.cwd()}/server/log.service.js`);
 
@@ -194,10 +197,6 @@ const COMMON = {
     /**@type{import('../microservice/registry.service.js')} */
     const {microservice_api_version}= await import(`file://${process.cwd()}/microservice/registry.service.js`);
 
-    //server app object
-    /**@type{import('../apps/apps.js')} */
-    const app = await import(`file://${process.cwd()}/apps/apps.js`);
-
     //server app common
     /**@type{import('../apps/common/src/common.js')} */
     const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -206,12 +205,9 @@ const COMMON = {
     /**@type{import('./iam.service.js')} */
     const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    //server config object
+    //server config service
     /**@type{import('./config.js')} */
     const config = await import(`file://${process.cwd()}/server/config.js`);
-    //server config service
-    /**@type{import('./config.service.js')} */
-    const config_service = await import(`file://${process.cwd()}/server/config.service.js`);
 
     //server info object
     /**@type{import('./info.js')} */
@@ -274,7 +270,7 @@ const COMMON = {
                 const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
 
-                const COMMON_APP_ID = getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
+                const COMMON_APP_ID = getNumberValue(config.ConfigGet('SERVER', 'APP_COMMON_APP_ID'));
                 let resource_id_not_authorized = false;
                 /**
                  * Returns resource id number from URI path
@@ -337,7 +333,7 @@ const COMMON = {
                         //match block app data search
                         ((params.block_user_app_data_search && getNumberValue(app_query?.get('user_account_id'))==null && getNumberValue(app_query?.get('app_id'))==null) ||params.block_user_app_data_search==false) && 
                         //match app function and app function role
-                        ((params.validate_app_function && config_service.ConfigGetApp(routesparameters.app_id, APP_ID_VALIDATE, 'MODULES')
+                        ((params.validate_app_function && config.ConfigGetApp(routesparameters.app_id, APP_ID_VALIDATE, 'MODULES')
                             .filter((/**@type{*}*/module)=> module[0]=='FUNCTION' && 
                                                             module[1].toUpperCase() == params.validate_app_function?.toUpperCase() && 
                                                             module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase()).length>0) || params.validate_app_function == null)){
@@ -368,9 +364,9 @@ const COMMON = {
                  */
                 const call_microservice = async (app_id, microservice_path, microservice_query) => {
                     //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                    const authorization = `Basic ${Buffer.from(     config_service.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + 
-                                                                    config_service.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
-                    return microserviceRequest(app_id == getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
+                    const authorization = `Basic ${Buffer.from(     config.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + 
+                                                                    config.ConfigGetApp(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
+                    return microserviceRequest(app_id == getNumberValue(config.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
                                                 microservice_path, 
                                                 Buffer.from(microservice_query + `&app_id=${app_id}`).toString('base64'), 
                                                 routesparameters.method,
@@ -389,7 +385,7 @@ const COMMON = {
                     //server routes
                     //app data open routes to apps that got id token at start
                     case route({url:`/bff/app_data/v1/app/apps/${resource_id_string}`, method:'GET'}):{
-                        resolve(app.getApps(routesparameters.app_id, resource_id_get_number(), app_query)
+                        resolve(app_common.commonAppsGet(routesparameters.app_id, resource_id_get_number(), app_query?.get('lang_code') ??'')
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
@@ -588,7 +584,8 @@ const COMMON = {
                     case route({url:`/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_string}`, method:'GET', required:true}):{
                         resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, 
                                                                         /**@ts-ignore */
-                                                                        resource_id_get_number())
+                                                                        resource_id_get_number(),
+                                                                        app_query?.get('lang_code') ??'')
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
@@ -767,7 +764,7 @@ const COMMON = {
                         break;
                     }
                     case route({url:'/bff/admin/v1/app_admin/apps', method:'GET'}):{
-                        resolve(app.getAppsAdmin()
+                        resolve(app_common.commonAppsAdminGet()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -912,7 +909,7 @@ const COMMON = {
                     //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
                     case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
-                        if (getNumberValue(config_service.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
+                        if (getNumberValue(config.ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
                             const params = URI_query.split('&');
                             //set ip from client in case ip query parameter is missing
                             //if ip parameter does not exist
@@ -938,8 +935,8 @@ const COMMON = {
                     case route({url:'/bff/app_data/v1/worldcities/city', method:'GET'}):{
                         resolve(call_microservice(  routesparameters.app_id,
                                                     `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
-                                                    URI_query + `&limit=${getNumberValue(config_service.ConfigGetApp(routesparameters.app_id, 
-                                                    getNumberValue(config_service.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
+                                                    URI_query + `&limit=${getNumberValue(config.ConfigGetApp(routesparameters.app_id, 
+                                                    getNumberValue(config.ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/worldcities/city-random', method:'GET'})||
@@ -984,8 +981,8 @@ const COMMON = {
 const serverStart = async () =>{
     /**@type{import('./db/components/database.js')} */
     const database = await import(`file://${process.cwd()}/server/db/components/database.js`);
-    /**@type{import('./config.service.js')} */
-    const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('./config.js')} */
+    const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('./socket.service.js')} */
     const {SocketCheckInterval} = await import(`file://${process.cwd()}/server/socket.service.js`);
     /**@type{import('./log.service.js')} */

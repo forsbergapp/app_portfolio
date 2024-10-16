@@ -88,7 +88,7 @@ const template = props =>`  <html>
                                                     <tbody>
                                                     <tr>
                                                         <td >
-                                                            <img id='app_logo' src='/apps/common/images/logo.png'>
+                                                            <img id='app_logo' src='/common/images/logo.png'>
                                                         </td>
                                                     </tr>
                                                     <tr>

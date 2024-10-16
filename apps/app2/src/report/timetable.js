@@ -128,7 +128,7 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+	const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.js`);
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodedReportparameters);

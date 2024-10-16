@@ -108,8 +108,8 @@ const post = async (app_id, data) => {
 const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, offset, limit) => {
     /**@type{import('../../../server/server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-    /**@type{import('../../../server/config.service.js')} */
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../../server/config.js')} */
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
     const sql = `SELECT app_id "app_id",
                         json_data "json_data",
                         date_created "date_created",
@@ -146,8 +146,8 @@ const getLogs = async (app_id, data_app_id, year, month, day, sort, order_by, of
 const getStatUniqueVisitor = async (app_id, data_app_id, year, month) => {
     /**@type{import('../../../server/server.service.js')} */
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-    /**@type{import('../../../server/config.service.js')} */
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../../server/config.js')} */
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
     const sql = `SELECT t.chart "chart",
                   t.app_id 		"app_id",
                   :year_log 	"year",

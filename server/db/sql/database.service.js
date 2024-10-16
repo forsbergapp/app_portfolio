@@ -9,8 +9,8 @@
  const Info = async (app_id, DBA) => {
    /**@type{import('../../server.service.js')} */
    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-   /**@type{import('../../config.service.js')} */
-   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+   /**@type{import('../../config.js')} */
+   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
    /**@type{import('../../db/common.service.js')} */
    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
    
@@ -145,8 +145,8 @@
 const InfoSpace = async (app_id, DBA) => {
    /**@type{import('../../server.service.js')} */
    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-   /**@type{import('../../config.service.js')} */
-   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+   /**@type{import('../../config.js')} */
+   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
    /**@type{import('../../db/common.service.js')} */
    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
 
@@ -222,8 +222,8 @@ const InfoSpace = async (app_id, DBA) => {
 const InfoSpaceSum = async (app_id, DBA) => {
    /**@type{import('../../server.service.js')} */
    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-   /**@type{import('../../config.service.js')} */
-   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+   /**@type{import('../../config.js')} */
+   const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
    /**@type{import('../../db/common.service.js')} */
    const {db_execute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
     

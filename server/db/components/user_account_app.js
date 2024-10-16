@@ -39,42 +39,18 @@ const getUserAccountApp = (app_id, resource_id) => service.getUserAccountApp(app
  * 
  * @param {number} app_id 
  * @param {number} resource_id
+ * @param {string} locale
+ * @returns {Promise.<import('../../../server/types.js').server_config_apps_with_db_columns[]>}
  */
-const getUserAccountApps = async (app_id, resource_id) => {
+const getUserAccountApps = async (app_id, resource_id, locale) => {
     
-    /**@type{import('../../config.service.js')} */
-    const {ConfigGet, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+   
+    /**@type{import('../../../apps/common/src/common.js')} */
+    const {commonAppsGet} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    const fs = await import('node:fs');
-
     const apps_db = await service.getUserAccountApps(app_id, resource_id);
-    const apps_registry = ConfigGetApps();
-    /**@type{import('../../types.js').server_config_apps_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{import('../../types.js').server_config_apps_record} */app, /**@type {import('../../types.js').server_config_apps_record}*/current)=> 
-                                        app.concat({APP_ID:current.APP_ID,
-                                                    NAME:current.NAME,
-                                                    LOGO:current.PATH + current.LOGO,
-                                                    SUBDOMAIN:current.SUBDOMAIN
-                                                    }) , []);
-    
-    /**@type{import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
-    const user_account_apps = [];
-    for (const app_db of apps_db){
-        /**@type{import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry}*/
-        const app = {};
-        app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].NAME;
-        app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
-        app.SUBDOMAIN = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].SUBDOMAIN;
-        app.HOST = ConfigGet('SERVER', 'HOST');
-        app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.LOGO = apps.filter(app_registry=>app_registry.APP_ID == app_db.app_id)[0].LOGO;
-        const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
-        /**@ts-ignore */
-        app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
-        app.APP_ID = app.app_id;
-        user_account_apps.push(app);
-    }
-    return user_account_apps;        
+
+    return (await commonAppsGet(app_id, app_id, locale)).filter(app=>app.APP_ID == apps_db.filter(app_db=>app_db.app_id==app.APP_ID)[0].app_id);
 };
 
 /**

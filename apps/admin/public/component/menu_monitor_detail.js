@@ -341,7 +341,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
 *                       monitorShow:function,
 *                       map_update:import('../../../common_types.js').CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
-*                       appSecureDialogueSendBroadcastShow:import('../js/secure.js')['appSecureDialogueSendBroadcastShow'],
+*                       appSecureDialogueSendBroadcastShow:import('../js/app.js')['appSecureDialogueSendBroadcastShow'],
 *                       commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
 *                       commonLovClose:import('../../../common_types.js').CommonModuleCommon['commonLovClose'],
 *                       commonLovShow:import('../../../common_types.js').CommonModuleCommon['commonLovShow'],
