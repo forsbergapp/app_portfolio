@@ -5,8 +5,8 @@ const service = await import(`file://${process.cwd()}/server/db/sql/database.ser
 
 /**@type{import('../../server.service.js')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('../../config.service.js')} */
-const {ConfigGet, ConfigGetApp, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../../config.js')} */
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 const DBA                       = 1;
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -75,8 +75,8 @@ const install_db_get_files = async (install_type) =>{
  * @returns {Promise.<{info: {}[]}>}
  */
  const Install = async (app_id, query)=> {
-    /**@type{import('../../config.service.js')} */
-    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../config.js')} */
+    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('../../db/db.service.js')} */
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     /**@type{import('../../log.service.js')} */
@@ -314,8 +314,8 @@ const install_db_get_files = async (install_type) =>{
   * @returns {Promise.<import('../../types.js').server_db_database_install_uninstall_result>} 
   */
  const Uninstall = async (app_id, query)=> {
-    /**@type{import('../../config.service.js')} */
-    const {ConfigAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../config.js')} */
+    const {ConfigAppSecretDBReset} = await import(`file://${process.cwd()}/server/config.js`);
     
     /**@type{import('../../db/file.service.js')} */
     const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.service.js`);
@@ -441,8 +441,8 @@ const install_db_get_files = async (install_type) =>{
     const {post:DetailDataResourcePost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
     /**@type{import('../../security.service.js')} */
     const {CreateKeyPair, createUUID, createSecret} = await import(`file://${process.cwd()}/server/security.service.js`);
-    /**@type{import('../../config.service.js')} */
-    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.service.js`);
+    /**@type{import('../../config.js')} */
+    const {ConfigAppSecretUpdate} = await import(`file://${process.cwd()}/server/config.js`);
 
     const fs = await import('node:fs');
     /**@type{import('../../types.js').server_db_database_install_result} */
@@ -1088,6 +1088,9 @@ const DemoUninstall = async (app_id, query)=> {
   * Start pools for database used
   */
 const Start = async () => {
+    /**@type{import('../file.service.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    const common_app_id = getNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     if (ConfigGet('SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
@@ -1104,15 +1107,12 @@ const Start = async () => {
                 await pool_db(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of ConfigGetApps()){
-                    if (ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`])
+                for (const app  of fileCache('CONFIG_APPS').APPS){
+                    if (fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`])
                         await pool_db(   db_use, 
                                         dba, 
-                                        ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_USER`], 
-                                        ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                        app.APP_ID, 'SECRETS')[`SERVICE_DB_DB${db_use}_APP_PASSWORD`], 
+                                        fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`],
+                                        fileCache('CONFIG_APPS').APPS[common_app_id].SECRETS[`SERVICE_DB_DB${db_use}_APP_PASSWORD`],
                                         app.APP_ID);
             }  
         }

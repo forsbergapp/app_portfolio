@@ -2,8 +2,8 @@
 
 /**@type{import('../server.service')} */
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('../config.service')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('../config.js')} */
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./file.service')} */
 const {filePath} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 

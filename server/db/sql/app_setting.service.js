@@ -59,7 +59,7 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          s.app_setting_type_app_id = :common_app_id)
                      AND s.display_data IS NOT NULL
                 ORDER BY 1, 2, 3`;
-	const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+	const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
      const parameters = {
                          app_id : app_id,
                          common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),

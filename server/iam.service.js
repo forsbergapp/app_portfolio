@@ -2,14 +2,14 @@
 
 /**@type{import('./server.service.js')} */
 const {response_send_error, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-/**@type{import('./config.service.js')} */
-const {ConfigGet, ConfigFileGet, ConfigGetApp, CheckFirstTime, CreateAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./config.js')} */
+const {ConfigGet, ConfigFileGet, ConfigGetApp, CheckFirstTime, CreateAdmin} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**@type{import('./db/file.service.js')} */
 const {fileFsRead, fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
-/**@type{import('../apps/common/src/common.service.js')} */
-const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+/**@type{import('../apps/common/src/common.js')} */
+const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 

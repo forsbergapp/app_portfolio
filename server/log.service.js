@@ -1,7 +1,7 @@
 /** @module server/log/service */
 
-/**@type{import('./config.service.js')} */
-const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+/**@type{import('./config.js')} */
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./db/file.service.js')} */
 const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
@@ -526,8 +526,8 @@ const getLogsStats = async (data) => {
     /**@type{import('./types.js').server_log_result_getLogsStats[]|[]} */
     const logstat = [];
 
-    /**@type{import('../apps/common/src/common.service.js')} */
-    const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.service.js`);
+    /**@type{import('../apps/common/src/common.js')} */
+    const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
     const files = await fileFsDir();
     /**@type{string} */
