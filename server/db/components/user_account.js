@@ -9,12 +9,12 @@ const { ConfigGet, ConfigGetApp } = await import(`file://${process.cwd()}/server
 const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 
-/**@type{import('../../server.service.js')} */
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{import('../../server.js')} */
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../iam.service.js')} */
-const { iam_decode, AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
-/**@type{import('../../socket.service.js')} */
-const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.service.js`);
+const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('../../socket.js')} */
+const {ConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
 
 /**@type{import('../../db/common.service.js')} */
 const { checked_error } = await import(`file://${process.cwd()}/server/db/common.service.js`);
@@ -29,8 +29,8 @@ const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd
 const user_account_follow_service = await import(`file://${process.cwd()}/server/db/sql/user_account_follow.service.js`);
 /**@type{import('../sql/user_account_like.service.js')} */
 const user_account_like_service = await import(`file://${process.cwd()}/server/db/sql/user_account_like.service.js`);
-/**@type{import('../../security.service.js')} */
-const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.service.js`);
+/**@type{import('../../security.js')} */
+const {PasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
 
 /**
  * 
@@ -149,7 +149,16 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                                         new_code, 
                                                         result_login[0].email)
                                         .then(()=>{
-                                            ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
+                                            ConnectedUpdate(app_id, 
+                                                {   iam:iam,
+                                                    user_account_id:result_login[0].id,
+                                                    admin:null,
+                                                    token_access:data_body.token,
+                                                    token_admin:null,
+                                                    ip:ip,
+                                                    headers_user_agent:user_agent,
+                                                    headers_accept_language:accept_language,
+                                                    res: res})
                                             .then(()=>{
                                                 resolve({
                                                     accessToken: data_body.token,
@@ -165,7 +174,16 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                     });
                                 }
                                 else{
-                                    ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_login[0].id, '', iam_decode(iam).get('authorization_bearer'), data_body.token, null, ip, user_agent, accept_language, res)
+                                    ConnectedUpdate(app_id, 
+                                        {   iam:iam,
+                                            user_account_id:result_login[0].id,
+                                            admin:null,
+                                            token_access:data_body.token,
+                                            token_admin:null,
+                                            ip:ip,
+                                            headers_user_agent:user_agent,
+                                            headers_accept_language:accept_language,
+                                            res: res})
                                     .then(()=>{
                                         resolve({
                                             accessToken: data_body.token,
@@ -275,7 +293,16 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                     .then(()=>{
                         createUserAccountApp(app_id, result_signin[0].id)
                         .then(()=>{
-                            ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_signin[0].id, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
+                            ConnectedUpdate(app_id, 
+                                {   iam:iam,
+                                    user_account_id:result_signin[0].id,
+                                    admin:null,
+                                    token_access:data_login.token,
+                                    token_admin:null,
+                                    ip:ip,
+                                    headers_user_agent:user_agent,
+                                    headers_accept_language:accept_language,
+                                    res: res})
                             .then(()=>{
                                 resolve({
                                     accessToken: data_login.token,
@@ -316,7 +343,16 @@ const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_languag
                         .then(()=>{
                             service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), resource_id)
                             .then(result_signin2=>{
-                                ConnectedUpdate(app_id, getNumberValue(iam_decode(iam).get('client_id')), result_create.insertId, '', iam_decode(iam).get('authorization_bearer'), data_login.token, null, ip, user_agent, accept_language, res)
+                                ConnectedUpdate(app_id, 
+                                    {   iam:iam,
+                                        user_account_id:result_create.insertId,
+                                        admin:null,
+                                        token_access:data_login.token,
+                                        token_admin:null,
+                                        ip:ip,
+                                        headers_user_agent:user_agent,
+                                        headers_accept_language:accept_language,
+                                        res: res})
                                 .then(()=>{
                                     resolve({
                                         accessToken: data_login.token,
