@@ -1,6 +1,6 @@
 /** @module apps/app2/src/report/timetable */
 
-/**@type{import('../../../../server/server.service')} */
+/**@type{import('../../../../server/server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
 const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);

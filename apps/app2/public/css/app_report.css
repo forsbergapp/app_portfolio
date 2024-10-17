@@ -191,8 +191,6 @@
 	--report_theme_default_font_family:var(--font_1);
 	--report_theme_text_color: var(--common_report_color_black);
 	--report_theme_notes_background_color:inherit !important;
-	--report_qr_code_shadow_color1:var(--common_report_color_shadow1);
-	--report_qr_code_shadow_color2:var(--common_report_color_shadow2);
 }
 /*Print preview styles*/
 #printbody {
