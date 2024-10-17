@@ -93,10 +93,6 @@ const COMMON_GLOBAL = {
                             map_update:                 ()=>null
                         }
                     },
-    'module_easy.qrcode_width':null,
-    'module_easy.qrcode_height':null,
-    'module_easy.qrcode_color_dark':null,
-    'module_easy.qrcode_color_light':null,
     service_socket_client_ID:null,
     service_socket_eventsource:null
 };
@@ -2156,10 +2152,10 @@ const commonModuleEasyQRCODECreate = async (div, url) => {
     COMMON_DOCUMENT.querySelector('#' + div).textContent='';
     new QRCode(COMMON_DOCUMENT.querySelector('#' + div), {
         text: url,
-        width: COMMON_GLOBAL['module_easy.qrcode_width'],
-        height: COMMON_GLOBAL['module_easy.qrcode_height'],
-        colorDark: COMMON_GLOBAL['module_easy.qrcode_color_dark'],
-        colorLight: COMMON_GLOBAL['module_easy.qrcode_color_light'],
+        width: 128,
+        height: 128,
+        colorDark: 'DARK',
+        colorLight: 'LIGHT',
         drawer: 'svg'
     });
     //executing await promise 1 ms results in QRCode rendered
@@ -3204,10 +3200,6 @@ const commonParametersAppSet = common_parameters => {
                 case ('LINK_URL' in parameter)                          :{COMMON_GLOBAL.app_link_url = parameter['LINK_URL'];break;}
                 case ('LINK_TITLE' in parameter)                        :{COMMON_GLOBAL.app_link_title = parameter['LINK_TITLE'];break;}
                 case ('TEXT_EDIT' in parameter)                         :{COMMON_GLOBAL.app_text_edit = parameter['TEXT_EDIT'];break;}
-                case ('MODULE_EASY.QRCODE_WIDTH' in parameter)          :{COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter['MODULE_EASY.QRCODE_WIDTH']);break;}
-                case ('MODULE_EASY.QRCODE_HEIGHT' in parameter)         :{COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter['MODULE_EASY.QRCODE_HEIGHT']);break;}
-                case ('MODULE_EASY.QRCODE_COLOR_DARK' in parameter)     :{COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter['MODULE_EASY.QRCODE_COLOR_DARK'];break;}
-                case ('MODULE_EASY.QRCODE_COLOR_LIGHT' in parameter)    :{COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter['MODULE_EASY.QRCODE_COLOR_LIGHT'];break;}
             }
     }
 };
