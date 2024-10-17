@@ -22,7 +22,7 @@ const template = props =>`  <div id='common_profile_main'>
                                         <div id='common_profile_bio'>${props.profile.bio ?? ''}</div>
                                     </div>
                                     <div class='common_profile_main_col'>
-                                        <div id='common_profile_qr'></div>
+                                        <div id='common_profile_qr' class='common_module_easy.qrcode'></div>
                                     </div>
                                 </div>
                                 <div id='common_profile_main_row2' class='common_profile_main_row'>

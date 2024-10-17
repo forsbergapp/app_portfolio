@@ -229,11 +229,7 @@
  *                                          map_line_create:            function,
  *                                          map_update:                 function
  *                                      }
- *                              },
- *              'module_easy.qrcode_width':number|null,
- *              'module_easy.qrcode_height':number|null,
- *              'module_easy.qrcode_color_dark':string|null,
- *              'module_easy.qrcode_color_light':string|null,
+ *                              }
  *              service_socket_client_ID:number|null,
  *              service_socket_eventsource:{onmessage:function,
  *                                       onerror:function,
