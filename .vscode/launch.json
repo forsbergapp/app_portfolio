@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "App Portfolio",
-            "program": "${workspaceFolder}/server/server.js",
+            "program": "${workspaceFolder}/server/init.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
