@@ -39,7 +39,7 @@
  */
 
 /**
- * @param {{config:import('../../../../server/types.js').server_config_apps_record, 
+ * @param {{config:import('../../../../server/types.js').server_db_file_app, 
  *          papersize:'A4'|'Letter',
  *          function_report:function,
  *          data:*
@@ -49,7 +49,7 @@ const template = async props =>`  &lt;!DOCTYPE html>
                             &lt;html>
                             &lt;head>
                                 &lt;meta charset='UTF-8'>
-                                &lt;link rel='stylesheet' type='text/css' href='${props.config.RENDER_CONFIG?.CSS_REPORT}'/>
+                                &lt;link rel='stylesheet' type='text/css' href='${props.config.CSS_REPORT}'/>
                                 &lt;link rel='stylesheet' type='text/css' href='/common/css/common.css' />
                                 &lt;!--Default font
                                 Noto Sans + Noto Sans Mono
@@ -233,7 +233,7 @@ const template = async props =>`  &lt;!DOCTYPE html>
 /**
  * 
  * @param {{data:       {
- *                      CONFIG_APP:import('../../../../server/types.js').server_config_apps_record, 
+ *                      CONFIG_APP:import('../../../../server/types.js').server_db_file_app, 
  *                      data:import('../../../../server/types.js').server_apps_report_create_parameters,
  *                      papersize:'A4'|'Letter'
  *                      },

@@ -138,8 +138,8 @@ const component = async props => {
      */
     let monitorDetailClickItemDetail = (item_type, data) => {item_type;data;};
 
-    const LIMIT = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id}`, query:'key=PARAMETERS', method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].PARAMETERS.filter((/**@type{{APP_LIMIT_RECORDS:number}}*/parameter)=>parameter.APP_LIMIT_RECORDS)[0].APP_LIMIT_RECORDS)); 
+    const LIMIT = await props.methods.commonFFB({path:`/app-common-app-parameter/${props.data.app_id}`, method:'GET', authorization_type:'ADMIN'})
+                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result).COMMON_APP_LIMIT_RECORDS)); 
         
     /**
      * Get log parameters
@@ -345,7 +345,7 @@ const component = async props => {
                 data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
-                    path:'/server-config/config-apps/',
+                    path:'/app-common',
                     query:'key=NAME',
                     method:'GET',
                     authorization_type:'ADMIN',
