@@ -505,6 +505,42 @@
  */
 
 /**
+ * DB FILE server_db_file_app_parameter
+ * apps should use their own types if adding new parameters
+ * @typedef {{ APP_ID?:                             number,
+ *             APP_TEXT_EDIT?:                      {VALUE:string, COMMENT:string},
+ *             APP_COPYRIGHT?:                      {VALUE:string, COMMENT:string},
+ *             APP_EMAIL?:                          {VALUE:string, COMMENT:string},
+ *             APP_LINK_TITLE?:                     {VALUE:string, COMMENT:string},
+ *             APP_LINK_URL?:                       {VALUE:string, COMMENT:string},
+ *             COMMON_APP_START?:                   {VALUE:string, COMMENT: string},
+ *             COMMON_APP_LOG?:                     {VALUE:string, COMMENT: string},
+ *             COMMON_APP_CACHE_CONTROL:            {VALUE:string, COMMENT: string},
+ *             COMMON_APP_CACHE_CONTROL_FONT:       {VALUE:string, COMMENT: string},
+ *             COMMON_APP_FRAMEWORK:                {VALUE:string, COMMENT: string},
+ *             COMMON_APP_FRAMEWORK_MESSAGES:       {VALUE:string, COMMENT: string},
+ *             COMMON_APP_REST_API_VERSION:         {VALUE:string, COMMENT: string},
+ *             COMMON_APP_LIMIT_RECORDS:            {VALUE:string, COMMENT: string},
+ *             COMMON_INFO_LINK_POLICY_NAME:        {VALUE:string},
+ *             COMMON_INFO_LINK_POLICY_URL:         {VALUE:string},
+ *             COMMON_INFO_LINK_DISCLAIMER_NAME:    {VALUE:string},
+ *             COMMON_INFO_LINK_DISCLAIMER_URL:     {VALUE:string},
+ *             COMMON_INFO_LINK_TERMS_NAME:         {VALUE:string},
+ *             COMMON_INFO_LINK_TERMS_URL:          {VALUE:string},
+ *             COMMON_INFO_LINK_ABOUT_NAME:         {VALUE:string},
+ *             COMMON_INFO_LINK_ABOUT_URL:          {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE1:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE2:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE3:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE4:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE5:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_MAX_SIZE:          {VALUE:string},
+ *             COMMON_IMAGE_FILE_MIME_TYPE:         {VALUE:string, COMMENT: string},
+ *             COMMON_IMAGE_AVATAR_HEIGHT:          {VALUE:string, COMMENT: string},
+ *             COMMON_IMAGE_AVATAR_WIDTH:           {VALUE:string, COMMENT: string}}} server_db_file_app_parameter_common
+ */
+
+/**
  * DB FILE server_db_file_app_secret
  * apps should use their own types if adding new secrets
  * required for all apps:
