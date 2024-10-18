@@ -122,7 +122,7 @@ const component = async props => {
                 data:{
                     default_value:'∞',
                     options:[{APP_ID:'', NAME:'∞'}],
-                    path:'/server-config/config-apps/',
+                    path:'/app-common',
                     query:'key=NAME',
                     method:'GET',
                     authorization_type:'ADMIN',

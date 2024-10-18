@@ -128,7 +128,8 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	const {configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
+	/**@type{import('../../../common/src/common.js')} */
+	const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodedReportparameters);
@@ -141,25 +142,23 @@ const timetable = async (timetable_parameters) => {
 	 * @param {string} decodedReportparameters 
 	 * @returns 
 	 */
-	
-	const result_parameters = configAppGet(timetable_parameters.app_id, timetable_parameters.app_id, 'PARAMETERS');
+	/**@type{import('../../../../server/types.js').server_db_file_app_parameter} */
+	const parametersApp = commonRegistryAppParameter(timetable_parameters.app_id);
 	return await new Promise((resolve) => {
-		for (const parameter of result_parameters) {
-			if (parameter['COPYRIGHT'])
-				APP_REPORT_GLOBAL.app_copyright = parameter['COPYRIGHT'];
-			if (parameter['REGIONAL_DEFAULT_CALENDAR_LANG'])
-				APP_REPORT_GLOBAL.regional_def_calendar_lang = parameter['REGIONAL_DEFAULT_CALENDAR_LANG'];
-			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'])
-				APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter['REGIONAL_DEFAULT_LOCALE_EXT_PREFIX'];
-			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'])
-				APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter['REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM'];
-			if (parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'])
-				APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter['REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR'];
-			if (parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'])
-				APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameter['REGIONAL_DEFAULT_CALENDAR_TYPE_GREG'];
-			if (parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'])
-				APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameter['REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM'];
-		}
+		APP_REPORT_GLOBAL.app_copyright = parametersApp.APP_COPYRIGHT.VALUE;
+		/**@ts-ignore */
+		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.REGIONAL_DEFAULT_CALENDAR_LANG.VALUE;
+		/**@ts-ignore */
+		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.REGIONAL_DEFAULT_LOCALE_EXT_PREFIX.VALUE;
+		/**@ts-ignore */
+		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM.VALUE;
+		/**@ts-ignore */
+		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR.VALUE;
+		/**@ts-ignore */
+		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.REGIONAL_DEFAULT_CALENDAR_TYPE_GREG.VALUE;
+		/**@ts-ignore */
+		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM.VALUE;
+		
 		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
 								client_user_agent:  			timetable_parameters.user_agent,

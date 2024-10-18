@@ -4,10 +4,12 @@
 const service = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
 
 /**@type{import('../../config.js')} */
-const { configGet, configAppGet } = await import(`file://${process.cwd()}/server/config.js`);
+const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('../file.service.js')} */
 const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
+/**@type{import('../../../apps/common/src/common.js')} */
+const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 /**@type{import('../../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -141,7 +143,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                     .then(()=>{
                                         //send email UNVERIFIED
                                         sendUserEmail(  app_id, 
-                                                        configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                        commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_UNVERIFIED, 
                                                         ip, 
                                                         user_agent,
                                                         accept_language,
@@ -424,7 +426,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
                 //send email for local users only
                 //send email SIGNUP
                 sendUserEmail(  app_id, 
-                                configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_SIGNUP,
+                                commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_SIGNUP, 
                                 ip, 
                                 user_agent,
                                 accept_language,
@@ -621,7 +623,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                 .then(()=>{
                                     //send email PASSWORD_RESET
                                     sendUserEmail(  app_id, 
-                                                    configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_PASSWORD_RESET,
+                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_PASSWORD_RESET, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -947,7 +949,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     sendUserEmail(  app_id, 
-                                                    configAppGet(app_id, serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),'SECRETS').SERVICE_MAIL_TYPE_CHANGE_EMAIL,
+                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_CHANGE_EMAIL, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,

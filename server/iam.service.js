@@ -3,13 +3,13 @@
 /**@type{import('./server.js')} */
 const {serverResponseErrorSend, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
-const {configGet, configFileGet, configAppGet, configCheckFirstTime, configAdminCreate} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet, configFileGet, configCheckFirstTime, configAdminCreate} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**@type{import('./db/file.service.js')} */
-const {fileFsRead, fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
-const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
+const {commonAppHost, commonRegistryAppSecret}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 
@@ -33,7 +33,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
             //exp, iat, tokentimestamp on token
             try {
                 /**@ts-ignore*/
-                return ((jwt.verify(token, configAppGet(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET).exp ?? 0) * 1000) - Date.now()<0;    
+                return ((jwt.verify(token, commonRegistryAppSecret(app_id).COMMON_APP_ACCESS_SECRET).exp ?? 0) * 1000) - Date.now()<0;    
             } catch (error) {
                 return true;
             }
@@ -191,7 +191,7 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const id_token_decoded = jwt.verify(id_token, configAppGet(app_id_host, app_id_host, 'SECRETS').APP_ID_SECRET);
+            const id_token_decoded = jwt.verify(id_token, commonRegistryAppSecret(app_id_host).COMMON_APP_ID_SECRET);
             /**@type{import('./types.js').server_iam_app_token_record}*/
             const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '').then(result=>result.filter((/**@type{import('./types.js').server_iam_app_token_record}*/row)=> 
                                                                                 row.id == app_id_host && row.ip == ip && row.token == id_token
@@ -254,7 +254,7 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, configAppGet(app_id_host, app_id_host, 'SECRETS').APP_ACCESS_SECRET ?? '');
+                            const access_token_decoded = jwt.verify(access_token, commonRegistryAppSecret(app_id_host).COMMON_APP_ACCESS_SECRET ?? '');
                             const user_id = serverUtilNumberValue(iamUtilDecode(iam).get('user_id'));
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
@@ -479,19 +479,18 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
  * @returns {Promise.<boolean>}
  */
  const iamAppAuthenticate = async (app_id, authorization) =>{
-    const file = await fileFsRead('CONFIG_APPS');
-    if (app_id != null){
-        const CLIENT_ID = file.file_content.APPS.filter((/**@type{import('./types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_ID;
-        const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{import('./types.js').server_config_apps_record}*/row)=>row.APP_ID == app_id)[0].SECRETS.CLIENT_SECRET;
+    if (app_id == null)
+        return false;
+    else{
+        const app_secret = commonRegistryAppSecret(app_id);
+        const CLIENT_ID = app_secret.COMMON_CLIENT_ID;
+        const CLIENT_SECRET = app_secret.COMMON_CLIENT_SECRET;
         const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
         if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
             return true;
         else
             return false;
-    }
-    else
-        return false;
-    
+    }    
 };
 /**
  * Authenticate resource
@@ -505,17 +504,20 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
 const iamResourceAuthenticate = parameters =>  {
     //authenticate access token
     try {
-        /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-        const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], configAppGet(parameters.app_id, parameters.app_id, 'SECRETS').APP_ACCESS_SECRET);
-        return  parameters.resource_id && 
-                access_token_decoded[parameters.claim_key] == parameters.resource_id &&
-                access_token_decoded.app_id == parameters.app_id &&
-                access_token_decoded.scope == parameters.scope &&
-                access_token_decoded.ip == parameters.ip;    
+        if (parameters.app_id == null)
+            return false;
+        else{
+            /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
+            const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], commonRegistryAppSecret(parameters.app_id).COMMON_APP_ACCESS_SECRET);
+            return  parameters.resource_id && 
+                    access_token_decoded[parameters.claim_key] == parameters.resource_id &&
+                    access_token_decoded.app_id == parameters.app_id &&
+                    access_token_decoded.scope == parameters.scope &&
+                    access_token_decoded.ip == parameters.ip;    
+        }
     } catch (error) {
         return false;
     }
-    
 };
                                             
 /**
@@ -565,14 +567,14 @@ const iamResourceAuthenticate = parameters =>  {
     switch (endpoint){
         //APP ID Token
         case 'APP_ID':{
-            secret = configAppGet(app_id, app_id, 'SECRETS').APP_ID_SECRET;
-            expiresin = configAppGet(app_id, app_id, 'SECRETS').APP_ID_EXPIRE;
+            secret = commonRegistryAppSecret(app_id).COMMON_APP_ID_SECRET;
+            expiresin = commonRegistryAppSecret(app_id).COMMON_APP_ID_EXPIRE;
             break;
         }
         //USER Access token
         case 'APP_ACCESS':{
-            secret = configAppGet(app_id, app_id, 'SECRETS').APP_ACCESS_SECRET;
-            expiresin = configAppGet(app_id, app_id, 'SECRETS').APP_ACCESS_EXPIRE;
+            secret = commonRegistryAppSecret(app_id).COMMON_APP_ACCESS_SECRET;
+            expiresin = commonRegistryAppSecret(app_id).COMMON_APP_ACCESS_EXPIRE;
             break;
         }
         //Admin Access token
@@ -583,7 +585,7 @@ const iamResourceAuthenticate = parameters =>  {
         }
         //APP custom token
         case 'APP_CUSTOM':{
-            secret = configAppGet(app_id, app_id, 'SECRETS').APP_ID_SECRET;
+            secret = commonRegistryAppSecret(app_id).COMMON_APP_ID_SECRET;
             expiresin = app_custom_expire ?? '';
             break;
         }

@@ -2,7 +2,7 @@
  * @module apps/app5/src/functions/account_create
  */
 
-/**@type{import('../../../../server/security.service')} */
+/**@type{import('../../../../server/security.js')} */
 const {securitySecretCreate, securityUUIDCreate} = await import(`file://${process.cwd()}/server/security.js`);
 
 const createBankAccountSecret = ()=>securitySecretCreate();
