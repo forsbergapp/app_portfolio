@@ -55,7 +55,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 		switch (data.model){
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
-				/**@type{import('../../../../server/socket.service')} */
+				/**@type{import('../../../../server/socket.js')} */
 				const {socketAppServerFunctionSend} = await import(`file://${process.cwd()}/server/socket.js`);
 
 				const timer1 = Date.now();

@@ -3,7 +3,7 @@
  */
 
 /**
- * @param {{CONFIG_APP:import('../../../../server/types.js').server_config_apps_record, ITEM_COMMON_PARAMETERS:string}} props
+ * @param {{CONFIG_APP:import('../../../../server/types.js').server_db_file_app, ITEM_COMMON_PARAMETERS:string}} props
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
@@ -13,7 +13,7 @@ const template = props =>`  <!DOCTYPE html>
                                 <script type="importmap">
                                     {
                                         "imports": {
-                                            ${props.CONFIG_APP.RENDER_CONFIG?.JS !=''?          `"app" 			: "${props.CONFIG_APP.RENDER_CONFIG?.JS}",`:''}
+                                            ${props.CONFIG_APP.JS !=''?          `"app" 			: "${props.CONFIG_APP.JS}",`:''}
                                             "common"	    : "/common/js/common.js",
                                             "easy.qrcode"   : "/common/modules/easy.qrcode/easy.qrcode.js",
                                             "leaflet"	    : "/common/modules/leaflet/leaflet-src.esm.js",
@@ -28,11 +28,11 @@ const template = props =>`  <!DOCTYPE html>
                                 <script type='module'>
                                     import('app').then((app) => app.appCommonInit('${props.ITEM_COMMON_PARAMETERS}'));
                                 </script>
-                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS}'/>
-                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.RENDER_CONFIG?.CSS_REPORT}'/>
-                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.RENDER_CONFIG?.FAVICON_32x32}' sizes='32x32'/>
-                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.RENDER_CONFIG?.FAVICON_192x192}' sizes='192x192'/>
-                                <link rel='manifest'    href='${props.CONFIG_APP.RENDER_CONFIG?.MANIFEST}'/>
+                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.CSS}'/>
+                                <link rel='stylesheet'  type='text/css'     href='${props.CONFIG_APP.CSS_REPORT}'/>
+                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.FAVICON_32x32}' sizes='32x32'/>
+                                <link rel='icon'        type='image/png'    href='${props.CONFIG_APP.FAVICON_192x192}' sizes='192x192'/>
+                                <link rel='manifest'    href='${props.CONFIG_APP.MANIFEST}'/>
                                 <meta name="HandheldFriendly" content="true"/>
                                 <meta name='mobile-web-app-capable' content='yes'>
                                 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>
@@ -46,7 +46,7 @@ const template = props =>`  <!DOCTYPE html>
                             </html> `;
 /**
  * 
- @param {{data:       {CONFIG_APP:import('../../../../server/types.js').server_config_apps_record, ITEM_COMMON_PARAMETERS:string},
+ @param {{data:       {CONFIG_APP:import('../../../../server/types.js').server_db_file_app, ITEM_COMMON_PARAMETERS:string},
  *        methods:    null}} props 
  * @returns {Promise.<string>}
  */

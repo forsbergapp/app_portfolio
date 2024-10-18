@@ -339,10 +339,8 @@ const serverUtilAppLine = () =>{
                         //match block app data search
                         ((params.block_user_app_data_search && serverUtilNumberValue(app_query?.get('user_account_id'))==null && serverUtilNumberValue(app_query?.get('app_id'))==null) ||params.block_user_app_data_search==false) && 
                         //match app function and app function role
-                        ((params.validate_app_function && config.configAppGet(routesparameters.app_id, APP_ID_VALIDATE, 'MODULES')
-                            .filter((/**@type{*}*/module)=> module[0]=='FUNCTION' && 
-                                                            module[1].toUpperCase() == params.validate_app_function?.toUpperCase() && 
-                                                            module[2].toUpperCase() == params.validate_app_function_role?.toUpperCase()).length>0) || params.validate_app_function == null)){
+                        ((params.validate_app_function && APP_ID_VALIDATE !=null && app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
+                          params.validate_app_function == null)){
                         if (params.resource_validate_type){
                             if (iam_service.iamResourceAuthenticate({  app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
@@ -370,8 +368,8 @@ const serverUtilAppLine = () =>{
                  */
                 const call_microservice = async (app_id, microservice_path, microservice_query) => {
                     //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                    const authorization = `Basic ${Buffer.from(     config.configAppGet(app_id, app_id, 'SECRETS').CLIENT_ID + ':' + 
-                                                                    config.configAppGet(app_id, app_id, 'SECRETS').CLIENT_SECRET,'utf-8').toString('base64')}`;
+                    const authorization = `Basic ${Buffer.from(     app_common.commonRegistryAppSecret(app_id).COMMON_CLIENT_ID + ':' + 
+                                                                    app_common.commonRegistryAppSecret(app_id).COMMON_CLIENT_SECRET,'utf-8').toString('base64')}`;
                     return microserviceRequest(app_id == serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
                                                 microservice_path, 
                                                 Buffer.from(microservice_query + `&app_id=${app_id}`).toString('base64'), 
@@ -490,6 +488,7 @@ const serverUtilAppLine = () =>{
                                                 user_agent:routesparameters.user_agent,
                                                 ip:routesparameters.ip,
                                                 locale:app_query?.get('lang_code') ??'',
+                                                endpoint:routesparameters.endpoint,
                                                 res:routesparameters.res}).then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -770,8 +769,45 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:'/bff/admin/v1/app-common', method:'GET'}):{
+                        //return all apps
                         resolve(app_common.commonAppsAdminGet()
                                     .then(result=>iso_return_message(result, false)));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-common-app/${resource_id_string}`, method:'GET', required:true}):{
+                        //return one app
+                        resolve(iso_return_message(app_common.commonRegistryAppsGet(
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number()), 
+                                                        resource_id_get_number()!=null));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(iso_return_message(app_common.commonRegistryAppModuleAll(
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number()),
+                                                        resource_id_get_number()!=null));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-common-app-parameter/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(iso_return_message(app_common.commonRegistryAppParameter(
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number()),
+                                                        resource_id_get_number()!=null));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-common-app-secret/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(iso_return_message(app_common.commonRegistryAppSecret(
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number()),
+                                                        resource_id_get_number()!=null));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-common-app-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
+                        resolve(app_common.commonRegistryAppParameterUpdate(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                routesparameters.body));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-db_admin/user_account-stat', method:'GET'}):{
@@ -789,21 +825,6 @@ const serverUtilAppLine = () =>{
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             app_query, routesparameters.body, routesparameters.res));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-config/config-apps-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
-                        resolve(config.configAppParameterUpdate(routesparameters.app_id, 
-                                                                /**@ts-ignore */
-                                                                resource_id_get_number(), 
-                                                                routesparameters.body));
-                        break;
-                    }
-                    case route({url:`/bff/admin/v1/server-config/config-apps/${resource_id_string}`, method:'GET'}):{
-                        resolve(iso_return_message(config.configAppsGet(
-                                                        /**@ts-ignore */
-                                                        resource_id_get_number(), 
-                                                        app_query), 
-                                                        resource_id_get_number()!=null));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
@@ -957,8 +978,7 @@ const serverUtilAppLine = () =>{
                     case route({url:'/bff/app_data/v1/worldcities/city', method:'GET'}):{
                         resolve(call_microservice(  routesparameters.app_id,
                                                     `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
-                                                    URI_query + `&limit=${serverUtilNumberValue(config.configAppGet(routesparameters.app_id, 
-                                                    serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS)}`));
+                                                    URI_query + `&limit=${serverUtilNumberValue(app_common.commonRegistryAppParameter(COMMON_APP_ID??0).COMMON_APP_LIMIT_RECORDS.VALUE)}`));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/worldcities/city-random', method:'GET'})||

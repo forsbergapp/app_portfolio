@@ -27,7 +27,7 @@
         "APP_ID": 2,
         "COMMON_TYPE": "MODULE",
         "COMMON_NAME":"MODULE_LIB_TIMETABLE",
-        "COMMON_ROLE":"APP_DATA",
+        "COMMON_ROLE":null,
         "COMMON_PATH":"/apps/app2/src/modules/module_lib_timetable.js",
         "COMMON_DESCRIPTION":"Timetable module"
     },
