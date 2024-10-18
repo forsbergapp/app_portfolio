@@ -9,7 +9,7 @@ const {configGet, configFileGet, configCheckFirstTime, configAdminCreate} = awai
 const {fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
-const {commonAppHost, commonRegistryAppSecret}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
+const {commonAppHost, commonRegistryAppSecret, commonRegistryAppSecretFile}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 
@@ -473,7 +473,9 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
 };
 
 /**
- * 
+ * Authenticate app in microservice
+ * file must be read from file, not file cache as main server
+ * since microservices run in separate processes and servers
  * @param {number|null} app_id 
  * @param {string} authorization 
  * @returns {Promise.<boolean>}
@@ -482,7 +484,7 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
     if (app_id == null)
         return false;
     else{
-        const app_secret = commonRegistryAppSecret(app_id);
+        const app_secret = await commonRegistryAppSecretFile(app_id);
         const CLIENT_ID = app_secret.COMMON_CLIENT_ID;
         const CLIENT_SECRET = app_secret.COMMON_CLIENT_SECRET;
         const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
@@ -615,11 +617,14 @@ const iamUserLogin = async (app_id, query) => {const rows = await fileFsReadLog(
                                                     .then(result=>result
                                                     .filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
                                                         row.id==serverUtilNumberValue(query.get('data_user_account_id')) &&  
-                                                        row.id==(serverUtilNumberValue(query.get('data_app_id')==''?null:query.get('data_app_id')) ?? row.id)));
-                                                return rows.sort(( /**@type{import('./types.js').server_iam_user_login_record}*/a,
+                                                        row.id==(serverUtilNumberValue(query.get('data_app_id')==''?null:query.get('data_app_id')) ?? row.id)))
+                                                    .catch(()=>
+                                                        null
+                                                    );
+                                                return rows?rows.sort(( /**@type{import('./types.js').server_iam_user_login_record}*/a,
                                                     /**@type{import('./types.js').server_iam_user_login_record}*/b)=> 
                                                         //sort descending on created
-                                                        a.created.localeCompare(b.created)==1?-1:1);
+                                                        a.created.localeCompare(b.created)==1?-1:1):[];
                                             };
                                                     
 

@@ -1078,7 +1078,6 @@ const serverStart = async () =>{
     }
     
 };
-serverStart();
 export {serverResponseErrorSend, 
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppFunction,serverUtilAppLine , 
         serverRoutes, serverStart };

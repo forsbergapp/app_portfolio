@@ -368,82 +368,73 @@ const appSecureCommonButtonSave = async (item) => {
     switch (item){
         case 'menu_apps_save':{
             //save changes in menu_apps
-            let x = COMMON_DOCUMENT.querySelectorAll('.menu_apps_row');
-            for (const record of x){
-                if (record.getAttribute('data-changed-record')=='1'){
-                    await appSecureCommonRecordUpdate('app',
-                                        record,
-                                        item,
-                                        {   user_account:{  id:0,
-                                                            active:0,
-                                                            user_level:0,
-                                                            private:0,
-                                                            username:'',
-                                                            bio:'',
-                                                            email:'',
-                                                            email_unverified:'',
-                                                            password:'',
-                                                            password_reminder:'',
-                                                            verification_code:''},
-                                            app:{           id: record.children[0].children[0].textContent},
-                                            app_parameter: {app_id:0,
-                                                            parameter_name:'',
-                                                            parameter_value:'',
-                                                            parameter_comment:''}});
-                }
+            for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_row[data-changed-record=\'1\']')){
+                await appSecureCommonRecordUpdate('app',
+                                    record,
+                                    item,
+                                    {   user_account:{  id:0,
+                                                        active:0,
+                                                        user_level:0,
+                                                        private:0,
+                                                        username:'',
+                                                        bio:'',
+                                                        email:'',
+                                                        email_unverified:'',
+                                                        password:'',
+                                                        password_reminder:'',
+                                                        verification_code:''},
+                                        app:{           id: record.querySelector('[data-column=\'ID\']').textContent},
+                                        app_parameter: {app_id:0,
+                                                        parameter_name:'',
+                                                        parameter_value:'',
+                                                        parameter_comment:''}});
             }
             //save changes in menu_apps_parameters
-            x = COMMON_DOCUMENT.querySelectorAll('.menu_apps_parameters_row');
-            for (const record of x){
-                if (record.getAttribute('data-changed-record')=='1'){
-                    await appSecureCommonRecordUpdate('app_parameter',
-                                        record,
-                                        item,
-                                        {   user_account:{  id:0,
-                                                            active:0,
-                                                            user_level:0,
-                                                            private:0,
-                                                            username:'',
-                                                            bio:'',
-                                                            email:'',
-                                                            email_unverified:'',
-                                                            password:'',
-                                                            password_reminder:'',
-                                                            verification_code:''},
-                                            app:{           id: 0},
-                                            app_parameter: {app_id:record.children[0].children[0].textContent,
-                                                            parameter_name:  record.children[1].children[0].textContent,
-                                                            parameter_value: record.children[2].children[0].textContent,
-                                                            parameter_comment: record.children[3].children[0].textContent}});
-                }
+            for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_parameters_row[data-changed-record=\'1\']')){
+                await appSecureCommonRecordUpdate('app_parameter',
+                                    record,
+                                    item,
+                                    {   user_account:{  id:0,
+                                                        active:0,
+                                                        user_level:0,
+                                                        private:0,
+                                                        username:'',
+                                                        bio:'',
+                                                        email:'',
+                                                        email_unverified:'',
+                                                        password:'',
+                                                        password_reminder:'',
+                                                        verification_code:''},
+                                        app:{           id: 0},
+                                        app_parameter: {app_id:record.querySelector('[data-column=\'APP_ID\']').textContent,
+                                                        parameter_name:  record.querySelector('[data-column=\'NAME\']').textContent,
+                                                        parameter_value: record.querySelector('[data-column=\'VALUE\']').textContent,
+                                                        parameter_comment: record.querySelector('[data-column=\'COMMENT\']').textContent}});
             }
             break;
         }
         case 'menu_users_save':{
             //save changes in menu_users_list
-            const x = COMMON_DOCUMENT.querySelectorAll('.menu_users_list_row');
-            for (const record of x){
-                if (record.getAttribute('data-changed-record')=='1'){
-                    await appSecureCommonRecordUpdate('user_account',
-                                        record,
-                                        item,
-                                        {   user_account:{  id:record.children[1].children[0].textContent,
-                                                            active:record.children[4].children[0].textContent,
-                                                            user_level:record.children[5].children[0].textContent,
-                                                            private:record.children[6].children[0].textContent,
-                                                            username:record.children[7].children[0].textContent,
-                                                            bio: record.children[8].children[0].textContent,
-                                                            email: record.children[9].children[0].textContent,
-                                                            email_unverified: record.children[10].children[0].textContent,
-                                                            password: record.children[11].children[0].textContent,
-                                                            password_reminder: record.children[12].children[0].textContent,
-                                                            verification_code: record.children[13].children[0].textContent},
-                                            app:{           id: 0},
-                                            app_parameter: {app_id:0,
-                                                            parameter_name:  '',
-                                                            parameter_value: '',
-                                                            parameter_comment: ''}});
-                }
+            for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_users_list_row[data-changed-record=\'1\']')){
+                await appSecureCommonRecordUpdate('user_account',
+                                    record,
+                                    item,
+                                    {   user_account:{  id:record.querySelector('[data-column=\'id\']').textContent,
+                                                        active:record.querySelector('[data-column=\'active\']').textContent,
+                                                        user_level:record.querySelector('[data-column=\'level\']').textContent,
+                                                        private:record.querySelector('[data-column=\'private\']').textContent,
+                                                        username:record.querySelector('[data-column=\'username\']').textContent,
+                                                        bio: record.querySelector('[data-column=\'bio\']').textContent,
+                                                        email: record.querySelector('[data-column=\'email\']').textContent,
+                                                        email_unverified: record.querySelector('[data-column=\'email_unverified\']').textContent,
+                                                        password: record.querySelector('[data-column=\'password\']').textContent,
+                                                        password_reminder: record.querySelector('[data-column=\'password_reminder\']').textContent,
+                                                        verification_code: record.querySelector('[data-column=\'verification_code\']').textContent},
+                                        app:{           id: 0},
+                                        app_parameter: {app_id:0,
+                                                        parameter_name:  '',
+                                                        parameter_value: '',
+                                                        parameter_comment: ''}});
             }
             break;
         }
@@ -1188,7 +1179,7 @@ const appFrameworkSet = async (framework=null) => {
 };
 /**
  * App init
- * @param {{app:import('../../../common_types.js').commonAppParameters,
+ * @param {{app:import('../../../common_types.js').CommonAppParametersRecord,
  *          app_service:{admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
@@ -1210,7 +1201,7 @@ const appCommonInit= async parameters => {
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
     
-    common.commonInit(parameters).then((/**@type{{  app:import('../../../common_types.js').commonAppParameters, 
+    common.commonInit(parameters).then((/**@type{{  app:import('../../../common_types.js').CommonAppParametersRecord, 
                                                     app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
         appInit(decodedparameters);
     });

@@ -5,42 +5,41 @@
  * Displays apps
 */
 /**
- * @param {{apps:[{ ID:Number, 
- *                  NAME:string, 
- *                  PROTOCOL:string, 
- *                  SUBDOMAIN:string, 
- *                  HOST:string, 
- *                  PORT:string, 
- *                  STATUS:string, 
- *                  LOGO:string}]|[]}} props
+ * @param {{apps:import('../../../common_types.js').CommonAppRecord[]}} props
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 <div id='menu_apps_title' class='common_icon'></div>
                                 <div id='menu_apps' class='common_list_scrollbar'>
                                     <div id='menu_apps_row_title' class='menu_apps_row'>
-                                        <div id='menu_apps_col_title1' class='menu_apps_col list_title'>ID</div>
-                                        <div id='menu_apps_col_title2' class='menu_apps_col list_title'>NAME</div>
-                                        <div id='menu_apps_col_title3' class='menu_apps_col list_title'>URL</div>
-                                        <div id='menu_apps_col_title4' class='menu_apps_col list_title'>LOGO</div>
-                                        <div id='menu_apps_col_title5' class='menu_apps_col list_title'>STATUS</div>
+                                        <div id='menu_apps_col_title1' data-column='ID' class='menu_apps_col list_title'>ID</div>
+                                        <div id='menu_apps_col_title2' data-column='NAME' class='menu_apps_col list_title'>NAME</div>
+                                        <div id='menu_apps_col_title3' data-column='SUBDOMAIN' class='menu_apps_col list_title'>SUBDOMAIN</div>
+                                        <div id='menu_apps_col_title4' data-column='PATH' class='menu_apps_col list_title'>PATH</div>
+                                        <div id='menu_apps_col_title4' data-column='LOGO' class='menu_apps_col list_title'>LOGO</div>
+                                        <div id='menu_apps_col_title4' data-column='SHOWPARAM' class='menu_apps_col list_title'>SHOWPARAM</div>
+                                        <div id='menu_apps_col_title4' data-column='MANIFEST' class='menu_apps_col list_title'>MANIFEST</div>
+                                        <div id='menu_apps_col_title4' data-column='JS' class='menu_apps_col list_title'>JS</div>
+                                        <div id='menu_apps_col_title4' data-column='CSS' class='menu_apps_col list_title'>CSS</div>
+                                        <div id='menu_apps_col_title4' data-column='CSS_REPORT' class='menu_apps_col list_title'>CSS_REPORT</div>
+                                        <div id='menu_apps_col_title4' data-column='FAVICON_32x32' class='menu_apps_col list_title'>FAVICON_32x32</div>
+                                        <div id='menu_apps_col_title4' data-column='FAVICON_192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
+                                        <div id='menu_apps_col_title5' data-column='STATUS' class='menu_apps_col list_title'>STATUS</div>
                                     </div>
                                     ${props.apps.map(app=>
-                                        `<div data-changed-record='0' data-app_id = '${app.ID}' class='menu_apps_row common_row' >
-                                            <div class='menu_apps_col'>
-                                                <div class='list_readonly'>${app.ID}</div>
-                                            </div>
-                                            <div class='menu_apps_col'>
-                                                <div contentEditable='true' class='common_input list_edit'/>${app.NAME}</div>
-                                            </div>
-                                            <div class='menu_apps_col'>
-                                                <div contentEditable='true' class='common_input list_edit'/>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                                            </div>
-                                            <div class='menu_apps_col'>
-                                                <div contentEditable='true' class='common_input list_edit'/>${app.LOGO}</div>
-                                            </div>
-                                            <div class='menu_apps_col'>
-                                                <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
-                                            </div>
+                                        `<div data-changed-record='0' data-app_id = '${app.APP_ID}' class='menu_apps_row common_row' >
+                                            <div class='menu_apps_col list_readonly' data-column='ID' >${app.APP_ID}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='NAME' contentEditable='true' >${app.NAME}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='SUBDOMAIN' contentEditable='true' >${app.SUBDOMAIN}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='PATH' contentEditable='true' >${app.PATH}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='LOGO' contentEditable='true' >${app.LOGO}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='SHOWPARAM' contentEditable='true' >${app.SHOWPARAM}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='MANIFEST' contentEditable='true' >${app.MANIFEST}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='JS' contentEditable='true' >${app.JS}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='CSS' contentEditable='true' >${app.CSS}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='CSS_REPORT' contentEditable='true' >${app.CSS_REPORT}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='FAVICON_32x32' contentEditable='true' >${app.FAVICON_32x32}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='FAVICON_192x192' contentEditable='true' >${app.FAVICON_192x192}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='STATUS' contentEditable='true' >${app.STATUS}</div>
                                         </div>`
                                     ).join('')}
                                 </div>
@@ -64,6 +63,7 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
 *                      template:string}>}
 */
 const component = async props => {
+    /**@type{import('../../../common_types.js').CommonAppRecord[]} */
     const apps = await props.methods.commonFFB({path:'/app-common', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

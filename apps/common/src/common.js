@@ -727,7 +727,7 @@ const commonApp = async parameters =>{
         }
 };
 /**
- * Get all aps from app registry and translated names
+ * Get all aps from app registry and translated names and add info to create url links
  * @param {number} app_id 
  * @param {number|null} resource_id 
  * @param {string} locale
@@ -768,28 +768,8 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
  * Get all apps from app registry
  * @returns {Promise.<import('../../../server/types.js').server_apps_result_getAppsAdmin[]>}
  */
- const commonAppsAdminGet = async () =>{
-    /**@type{import('../../../server/db/file.service.js')} */
-    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+ const commonAppsAdminGet = async () =>fileCache('APP');
 
-    const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
-
-    return fileCache('APP').map((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>{
-        return {
-                    ID:app.APP_ID,
-                    NAME:app.NAME,
-                    SUBDOMAIN:app.SUBDOMAIN,
-                    LOGO:app.LOGO,
-                    STATUS:app.STATUS,
-                    PROTOCOL : HTTPS_ENABLE =='1'?'https://':'http://',
-                    PATH:app.PATH,
-                    HOST : fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST,
-                    PORT : serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                        fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
-                                            fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT)
-                };
-    });
-};
 /**
  * App registry APP MODULE addmin
  * returns all modules for given app id
@@ -842,6 +822,15 @@ const commonRegistryAppParameter = app_id => fileCache('APP_PARAMETER')
 const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
                                             .filter((/**@type{import('../../../server/types.js').server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0];
 
+/**
+ * App registry APP SECRET from file
+ * @param {number} app_id
+ * @returns {Promise.<import('../../../server/types.js').server_db_file_app_secret>}
+ */
+const commonRegistryAppSecretFile= async app_id => fileFsRead('APP_SECRET').then(result=>
+                                                            result.file_content
+                                                            .filter((/**@type{import('../../../server/types.js').server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0]);
+
 
                                             /**
  * App Registry APP SECRET reset db username and passwords for database in use
@@ -874,7 +863,7 @@ const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
  };
 
  /**
- * App registry APP SECRET update
+ * App registry APP SECRET update a secret
  * @param {number|null} app_id
  * @param {{app_id:             number|null,
  *          parameter_name:     string,
@@ -888,7 +877,7 @@ const commonRegistryAppSecretUpdate = async (app_id, data) => {
     await fileFsCacheSet();
 };
  /**
- * App Registry APP PARAMETER update
+ * App Registry APP PARAMETER update a parameter
  * @param {number} app_id
  * @param {number} resource_id
  * @param {{parameter_name:     string,
@@ -898,17 +887,15 @@ const commonRegistryAppSecretUpdate = async (app_id, data) => {
  */
   const commonRegistryAppParameterUpdate = async (app_id, resource_id, data) => {
     const file = await fileFsRead('APP_PARAMETER', true);
-    const app = file.file_content.filter((/**@type{*}*/row)=> row.APP_ID==resource_id)[0];
-    app[data.parameter_name] = data.parameter_value;
-    if (app.COMMENT)
-        app.COMMENT = data.parameter_comment;
-    file.file_content = app;
+    file.file_content.filter((/**@type{*}*/row)=> row.APP_ID==resource_id)[0][data.parameter_name] = data.parameter_value;
+    file.file_content.filter((/**@type{*}*/row)=> row.APP_ID==resource_id)[0].COMMENT = data.parameter_comment;
+    
     await fileFsWrite('APP_PARAMETER', file.transaction_id, file.file_content);
     await fileFsCacheSet();
  };
 export {commonMailCreate, commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
         commonAppsAdminGet,commonRegistryAppModuleAll,
-        commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,
+        commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,commonRegistryAppSecretFile,
         commonRegistryAppsGet,
         commonRegistryAppSecretDBReset,
         commonRegistryAppSecretUpdate,
