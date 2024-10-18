@@ -316,17 +316,6 @@
  * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
-/**
- * Type CommonAppRecord
- * @typedef {{  APP_ID:number,
- *              SUBDOMAIN:string,
- *              PROTOCOL:string,
- *              HOST:string,
- *              PORT:string,
- *              LOGO:string,
- *              NAME:string,
- *              APP_NAME_TRANSLATION:string}} CommonAppRecord
- */
 
  /**
  * Type CommonCountryType
@@ -407,8 +396,27 @@
  * Type CommonModuleVue
  * @typedef {import('./common/public/modules/vue/vue.esm-browser.js')} CommonModuleVue
  */
+
 /**
- * Type CommonAppParameters
+ * Type CommonAppRecord
+ * @typedef {{
+ *              APP_ID: number,
+ *              NAME: string,
+ *              SUBDOMAIN: string,
+ *              PATH: string,
+ *              LOGO:string,
+ *              SHOWPARAM:number,
+ *              MANIFEST: string,
+ *              JS:string,
+ *              CSS: string,
+ *              CSS_REPORT: string,
+ *              FAVICON_32x32:string,
+ *              FAVICON_192x192:string,
+ *              STATUS:'ONLINE'|'OFFLINE'}} CommonAppRecord
+ */
+
+/**
+ * Type CommonAppParametersRecord
  * @typedef {{  APP_ID:                             number,
  *              APP_TEXT_EDIT:                      {VALUE:string, COMMENT:string},
  *              APP_COPYRIGHT:                      {VALUE:string, COMMENT:string},
@@ -439,6 +447,6 @@
  *              COMMON_IMAGE_FILE_MAX_SIZE:         {VALUE:string},
  *              COMMON_IMAGE_FILE_MIME_TYPE:        {VALUE:string, COMMENT: string},
  *              COMMON_IMAGE_AVATAR_HEIGHT:         {VALUE:string, COMMENT: string},
- *              COMMON_IMAGE_AVATAR_WIDTH:          {VALUE:string, COMMENT: string}}} commonAppParameters
+ *              COMMON_IMAGE_AVATAR_WIDTH:          {VALUE:string, COMMENT: string}}} CommonAppParametersRecord
  */
  export {};

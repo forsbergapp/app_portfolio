@@ -32,7 +32,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
                                 <div data-column='id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
                                 <div data-column='active' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('active')}'></div>
-                                <div data-column='user_level' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('user_level')}'></div>
+                                <div data-column='level' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('level')}'></div>
                                 <div data-column='private' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('private')}'></div>
                                 <div data-column='username' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('username')}'></div>
                                 <div data-column='bio' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('bio')}'></div>
@@ -54,76 +54,28 @@ const template = props => ` <div class='menu_users_list_row'>
                             </div>
                             ${props.users.map(user=>
                                 `<div data-changed-record='0' data-user_account_id='${user.id}' class='menu_users_list_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>
-                                            <div class='common_image common_image_avatar_list' style='background-image:url("${user.avatar}");'></div>
-                                        </div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.id}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.active ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.level ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.private ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.username ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.bio ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.email ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.email_unverified ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit common_input_password' placeholder='******'></div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.password_reminder ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div contentEditable='true' class='common_input list_edit'>${user.verification_code ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.identity_provider ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.provider_name ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.provider_id ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.provider_first_name ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.provider_last_name ?? ''}</div>                        
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>
-                                            <div class='common_image common_image_avatar_list' style='background-image:url("${user.provider_image}");'></div>
-                                        </div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.provider_image_url ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.provider_email ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.date_created ?? ''}</div>
-                                    </div>
-                                    <div class='menu_users_list_col'>
-                                        <div class='list_readonly'>${user.date_modified ?? ''}</div>
-                                    </div>
+                                    <div data-column='avatar' class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='background-image:url("${user.avatar}");'></div>
+                                    <div data-column='id' class='menu_users_list_col list_readonly'>${user.id}</div>
+                                    <div data-column='active' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.active ?? ''}</div>
+                                    <div data-column='level' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.level ?? ''}</div>
+                                    <div data-column='private' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.private ?? ''}</div>
+                                    <div data-column='username' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.username ?? ''}</div>
+                                    <div data-column='bio' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.bio ?? ''}</div>
+                                    <div data-column='email' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.email ?? ''}</div>
+                                    <div data-column='email_unverified' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.email_unverified ?? ''}</div>
+                                    <div data-column='password' class='menu_users_list_col common_input list_edit common_input_password' contentEditable='true' placeholder='******'></div>
+                                    <div data-column='password_reminder' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.password_reminder ?? ''}</div>
+                                    <div data-column='verification_code' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.verification_code ?? ''}</div>
+                                    <div data-column='identity_provider' class='menu_users_list_col common_input list_readonly' >${user.identity_provider ?? ''}</div>
+                                    <div data-column='provider_name' class='menu_users_list_col common_input list_readonly' >${user.provider_name ?? ''}</div>
+                                    <div data-column='provider_id' class='menu_users_list_col common_input list_readonly' >${user.provider_id ?? ''}</div>
+                                    <div data-column='provider_first_name' class='menu_users_list_col common_input list_readonly' >${user.provider_first_name ?? ''}</div>
+                                    <div data-column='provider_last_name' class='menu_users_list_col common_input list_readonly' >${user.provider_last_name ?? ''}</div>
+                                    <div data-column='provider_image' class='menu_users_list_col common_image common_image_avatar_list list_readonly' style='background-image:url("${user.provider_image}");'></div>
+                                    <div data-column='provider_image_url' class='menu_users_list_col list_readonly'>${user.provider_image_url ?? ''}</div>
+                                    <div data-column='provider_email' class='menu_users_list_col list_readonly'>${user.provider_email ?? ''}</div>
+                                    <div data-column='date_created' class='menu_users_list_col list_readonly'>${user.date_created ?? ''}</div>
+                                    <div data-column='date_modified' class='menu_users_list_col list_readonly'>${user.date_modified ?? ''}</div>
                                 </div>`
                             ).join('')
                             }`;
