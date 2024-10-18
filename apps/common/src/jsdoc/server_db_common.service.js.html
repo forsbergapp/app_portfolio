@@ -41,7 +41,10 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 /**@type{import('../log.js')} */
 const {logDBI, logDBE} = await import(`file://${process.cwd()}/server/log.js`);
 /**@type{import('../config.js')} */
-const {configGet, configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+
+/**@type{import('../../apps/common/src/common.js')} */
+const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 /**@type{import('./db.service.js')} */
 const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.service.js`);
@@ -251,17 +254,13 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 			pagination = true;
 			sql = sql.replaceAll('&lt;APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
 			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(	configAppGet(app_id, 
-																serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
-													.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0;
+				parameters.limit = 	serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).COMMON_APP_LIMIT_RECORDS.VALUE);
 		}
 		//manage limit records
 		if (sql.indexOf('&lt;APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
 			sql = sql.replaceAll('&lt;APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(	configAppGet(	app_id, 
-																				serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 'PARAMETERS')
-																.filter((/**@type{*}*/parameter)=>'APP_LIMIT_RECORDS' in parameter)[0].APP_LIMIT_RECORDS) ?? 0}};
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).COMMON_APP_LIMIT_RECORDS.VALUE)}};
 		}
 
 		dbSQL(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, dba)

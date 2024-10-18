@@ -41,29 +41,20 @@
  * Displays app parameters
 */
 /**
- * @param {{app_id:number,
- *          app_parameters:[{COMMENT:string}]|[]}} props
+ * @param {{app_id:number,app_parameters:Object.&lt;String,{VALUE:string, COMMENT:string}>}} props
  */
 const template = props => ` &lt;div id='menu_apps_parameters_row_title' class='menu_apps_parameters_row'>
-                                    &lt;div id='menu_apps_parameters_col_title1' class='menu_apps_parameters_col list_title'>APP ID&lt;/div>
-                                    &lt;div id='menu_apps_parameters_col_title2' class='menu_apps_parameters_col list_title'>NAME&lt;/div>
-                                    &lt;div id='menu_apps_parameters_col_title3' class='menu_apps_parameters_col list_title'>VALUE&lt;/div>
-                                    &lt;div id='menu_apps_parameters_col_title4' class='menu_apps_parameters_col list_title'>COMMENT&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col list_title' data-column='APP_ID'>APP_ID&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col list_title' data-column='NAME'>NAME&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col list_title' data-column='VALUE'>VALUE&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col list_title' data-column='COMMENT'>COMMENT&lt;/div>
                             &lt;/div>
-                            ${props.app_parameters.map(app_parameter=>
-                                `&lt;div data-changed-record='0' class='menu_apps_parameters_row common_row'>
-                                    &lt;div class='menu_apps_parameters_col'>
-                                        &lt;div class='list_readonly'>${props.app_id}&lt;/div>
-                                    &lt;/div>
-                                    &lt;div class='menu_apps_parameters_col'>
-                                        &lt;div class='list_readonly'>${Object.keys(app_parameter).filter(key=>key != 'app_id' &amp;&amp; key != 'COMMENT')[0]}&lt;/div>
-                                    &lt;/div>
-                                    &lt;div class='menu_apps_parameters_col'>
-                                        &lt;div contentEditable='true' class='common_input list_edit'/>${app_parameter[Object.keys(app_parameter).filter(key=>key != 'app_id' &amp;&amp; key != 'COMMENT')[0]] ?? ''}&lt;/div>
-                                    &lt;/div>
-                                    &lt;div class='menu_apps_parameters_col'>
-                                        &lt;div contentEditable='true' class='common_input list_edit'/>${app_parameter.COMMENT ?? ''}&lt;/div>
-                                    &lt;/div>
+                            ${Object.entries(props.app_parameters).map(app_parameter=>
+                                `&lt;div data-changed-record='0' class='menu_apps_parameters_row common_row' data-fk='${app_parameter[0]=='APP_ID'?1:0}'>
+                                    &lt;div class='menu_apps_parameters_col list_readonly' data-column='APP_ID'>${props.app_id}&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col list_readonly' data-column='NAME'>${app_parameter[0]}&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col common_input list_edit' contentEditable='true' data-column='VALUE'>${app_parameter[1].VALUE ?? app_parameter[1]}&lt;/div>
+                                    &lt;div class='menu_apps_parameters_col common_input list_edit' contentEditable='true' data-column='COMMENT'>${app_parameter[1].COMMENT ?? ''}&lt;/div>
                                 &lt;/div>`
                             ).join('')
                             }`;
@@ -79,15 +70,15 @@ const template = props => ` &lt;div id='menu_apps_parameters_row_title' class='m
  *                      template:string}>}
  */
 const component = async props => {
-    const app_parameters = await props.methods.commonFFB({path:`/server-config/config-apps/${props.data.app_id_data}`, query:'key=PARAMETERS', method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>JSON.parse(result)[0].PARAMETERS);
+    /**@type{import('../../../common_types.js').CommonAppParametersRecord} */
+    const app_parameters = await props.methods.commonFFB({path:`/app-common-app-parameter/${props.data.app_id_data}`, method:'GET', authorization_type:'ADMIN'})
+                            .then((/**@type{string}*/result)=>JSON.parse(result));
 
     return {
        lifecycle:   null,
        data:        null,
        methods:     null,
-       template: template({
-                            app_id:props.data.app_id_data, 
+       template: template({app_id:props.data.app_id_data,
                             app_parameters:app_parameters})
     };
 };

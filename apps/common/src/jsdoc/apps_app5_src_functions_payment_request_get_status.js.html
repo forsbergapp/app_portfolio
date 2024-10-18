@@ -52,8 +52,8 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
      
     const {default:jwt} = await import('jsonwebtoken');
 
-    /**@type{import('../../../../server/config.js')} */
-    const {configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../../apps/common/src/common.js')} */
+    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
     const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
@@ -61,10 +61,10 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
     const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
-    /**@type{import('../../../../server/security.service')} */
+    /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
     
-    /**@type{import('../../../../server/socket.service')} */
+    /**@type{import('../../../../server/socket.js')} */
     const {socketClientSend, socketConnectedGet} = await import(`file://${process.cwd()}/server/socket.js`);
 
     const merchant = await MasterGet(app_id, null, null, app_id, 'MERCHANT', null, locale, false)
@@ -81,7 +81,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                                             .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)).filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
             
             /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const token_decoded = jwt.verify(payment_request.token, configAppGet(app_id, app_id, 'SECRETS').APP_ID_SECRET);
+            const token_decoded = jwt.verify(payment_request.token, commonRegistryAppSecret(app_id).COMMON_APP_ID_SECRET);
             
             if (token_decoded.id == payment_request.payerid &amp;&amp; 
                 token_decoded.scope == 'APP_CUSTOM' &amp;&amp; 
