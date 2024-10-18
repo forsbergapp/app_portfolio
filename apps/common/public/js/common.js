@@ -3163,7 +3163,7 @@ const commonEventCommonRemove = () => {
 /**
  * Set app parameters
  * Set common parameters and common app parameters 
- * @param {import('../../../common_types.js').commonAppParameters} common_parameters 
+ * @param {import('../../../common_types.js').CommonAppParametersRecord} common_parameters 
  * @returns {void}
  */
 const commonParametersAppSet = common_parameters => {
@@ -3533,13 +3533,13 @@ const custom_framework = () => {
 /**
  * Init common
  * @param {string} parameters 
- * @returns {Promise.<{ app:import('../../../common_types.js').commonAppParameters,
+ * @returns {Promise.<{ app:import('../../../common_types.js').CommonAppParametersRecord,
  *                      app_service:{admin_only:number, first_time:number}}>}
  */
 const commonInit = async (parameters) => {
     /**
      * Encoded parameters
-     * @type {{ app:import('../../../common_types.js').commonAppParameters,
+     * @type {{ app:import('../../../common_types.js').CommonAppParametersRecord,
      *          app_service:{admin_only:number, first_time:number}}}
      */
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));

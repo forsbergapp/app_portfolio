@@ -521,9 +521,20 @@ const commonComponentCreate = async parameters =>{
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
                 first_time:             admin_only==1?(configCheckFirstTime()==true?1:0):0
             };
+            /**@type{import('../../../server/types.js').server_db_file_app_parameter_common} */
+            const common_parameter = commonRegistryAppParameter(common_app_id);
+            //return only used parameters
+            delete common_parameter.APP_COPYRIGHT;
+            delete common_parameter.APP_EMAIL;
+            delete common_parameter.APP_ID;
+            delete common_parameter.APP_LINK_TITLE;
+            delete common_parameter.APP_LINK_URL;
+            delete common_parameter.APP_TEXT_EDIT;
+            delete common_parameter.COMMON_APP_LOG;
+            delete common_parameter.COMMON_APP_START;
 
             const ITEM_COMMON_PARAMETERS  = {app:   {   ...commonRegistryAppParameter(parameters.app_id), 
-                                                        ...commonRegistryAppParameter(common_app_id)},
+                                                            ...common_parameter},
                                             app_service:app_service_parameters};
             const componentParameter = {data:   {
                                                     CONFIG_APP:             {...commonRegistryApp(parameters.app_id)},
