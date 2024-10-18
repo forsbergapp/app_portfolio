@@ -23,7 +23,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).APP_MERCHANT_API_URL
+    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL
                     .filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_GET_STATUS')[0].value;
    
     /** 
@@ -32,17 +32,17 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
      *          origin:                 string}}
      */
     const body = {	api_secret:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).APP_MERCHANT_API_SECRET,
+                                    commonRegistryAppSecret(app_id).MERCHANT_API_SECRET,
                     payment_request_id: data.payment_request_id,
                     origin:         res.req.protocol + '://' + res.req.hostname
     };
     //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
     //use general id and message keys so no info about what type of message is sent, only the receinving function should know
     const body_encrypted = {id:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).APP_MERCHANT_ID,
+                                    commonRegistryAppSecret(app_id).MERCHANT_ID,
                             message:securityPublicEncrypt(
                                         /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).APP_MERCHANT_PUBLIC_KEY, 
+                                        commonRegistryAppSecret(app_id).MERCHANT_PUBLIC_KEY, 
                                         JSON.stringify(body))};
     
     const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
@@ -56,7 +56,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
          */
         const body_decrypted = JSON.parse(securityPrivateDecrypt(
                                                 /**@ts-ignore */
-                                                commonRegistryAppSecret(app_id).APP_MERCHANT_PRIVATE_KEY, 
+                                                commonRegistryAppSecret(app_id).MERCHANT_PRIVATE_KEY, 
                                                 result_commonBFE.rows[0].message));
 
         return [{   

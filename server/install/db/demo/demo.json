@@ -285,7 +285,7 @@
                                             "country":""
                                         },
                             "app_registry_update_app_id":5,
-                            "app_update_secret":[{"USER_ACCOUNT_ID_OWNER":"USER_ACCOUNT_ID"}],
+                            "app_update_secret":[{"APP_USER_ACCOUNT_ID_OWNER":"USER_ACCOUNT_ID"}],
                             "resource_detail":[{"app_data_resource_master_id":"<MASTER_ID/>",
                                                 "app_data_entity_resource_id":5000,
                                                 "user_account_id"                                 : "<USER_ACCOUNT_ID/>",
@@ -401,7 +401,7 @@
                                             "country":""
                                         },
                             "app_registry_update_app_id":5,
-                            "app_update_secret":[{"USER_ACCOUNT_ID_OWNER":"USER_ACCOUNT_ID"}],
+                            "app_update_secret":[{"APP_USER_ACCOUNT_ID_OWNER":"USER_ACCOUNT_ID"}],
                             "resource_detail":[{"app_data_resource_master_id":"<MASTER_ID/>",
                                                 "app_data_entity_resource_id":5000,
                                                 "user_account_id"                                 : "<USER_ACCOUNT_ID/>",
@@ -449,7 +449,7 @@
                                             "country":""
                                         },
                             "app_registry_update_app_id":6,
-                            "app_update_secret":[{"USER_ACCOUNT_ID_ANONYMOUS":"USER_ACCOUNT_ID"}]
+                            "app_update_secret":[{"APP_USER_ACCOUNT_ID_ANONYMOUS":"USER_ACCOUNT_ID"}]
                             }
         ]
     }
