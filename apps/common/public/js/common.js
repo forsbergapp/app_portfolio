@@ -3163,45 +3163,37 @@ const commonEventCommonRemove = () => {
 /**
  * Set app parameters
  * Set common parameters and common app parameters 
- * @param {*[]} common_parameters 
+ * @param {import('../../../common_types.js').commonAppParameters} common_parameters 
  * @returns {void}
  */
 const commonParametersAppSet = common_parameters => {
-    for (const parameter of common_parameters){
-        if (parameter.app_id == COMMON_GLOBAL.common_app_id)
-            switch (true){
-                case ('APP_FRAMEWORK' in parameter)                     :{COMMON_GLOBAL.app_framework = parseInt(parameter['APP_FRAMEWORK']);break;}
-                case ('APP_FRAMEWORK_MESSAGES' in parameter)            :{COMMON_GLOBAL.app_framework_messages = parseInt(parameter['APP_FRAMEWORK_MESSAGES']);break;}
-                case ('APP_REST_API_VERSION' in parameter)              :{COMMON_GLOBAL.app_rest_api_version = parseInt(parameter['APP_REST_API_VERSION']);break;}    
+    COMMON_GLOBAL.app_framework = parseInt(common_parameters.COMMON_APP_FRAMEWORK.VALUE);
+    COMMON_GLOBAL.app_framework_messages = parseInt(common_parameters.COMMON_APP_FRAMEWORK_MESSAGES.VALUE);
+    COMMON_GLOBAL.app_rest_api_version = parseInt(common_parameters.COMMON_APP_REST_API_VERSION.VALUE);
 
-                case ('INFO_LINK_POLICY_NAME' in parameter)             :{COMMON_GLOBAL.info_link_policy_name = parameter['INFO_LINK_POLICY_NAME'];break;}
-                case ('INFO_LINK_POLICY_URL' in parameter)              :{COMMON_GLOBAL.info_link_policy_url = parameter['INFO_LINK_POLICY_URL'];break;}
-                case ('INFO_LINK_DISCLAIMER_NAME' in parameter)         :{COMMON_GLOBAL.info_link_disclaimer_name = parameter['INFO_LINK_DISCLAIMER_NAME'];break;}
-                case ('INFO_LINK_DISCLAIMER_URL' in parameter)          :{COMMON_GLOBAL.info_link_disclaimer_url = parameter['INFO_LINK_DISCLAIMER_URL'];break;}
-                case ('INFO_LINK_TERMS_NAME' in parameter)              :{COMMON_GLOBAL.info_link_terms_name = parameter['INFO_LINK_TERMS_NAME'];break;}
-                case ('INFO_LINK_TERMS_URL' in parameter)               :{COMMON_GLOBAL.info_link_terms_url = parameter['INFO_LINK_TERMS_URL'];break;}
-                case ('INFO_LINK_ABOUT_NAME' in parameter)              :{COMMON_GLOBAL.info_link_about_name = parameter['INFO_LINK_ABOUT_NAME'];break;}
-                case ('INFO_LINK_ABOUT_URL' in parameter)               :{COMMON_GLOBAL.info_link_about_url = parameter['INFO_LINK_ABOUT_URL'];break;}
+    COMMON_GLOBAL.info_link_policy_name = common_parameters.COMMON_INFO_LINK_POLICY_NAME.VALUE;
+    COMMON_GLOBAL.info_link_policy_url = common_parameters.COMMON_INFO_LINK_POLICY_URL.VALUE;
+    COMMON_GLOBAL.info_link_disclaimer_name = common_parameters.COMMON_INFO_LINK_DISCLAIMER_NAME.VALUE;
+    COMMON_GLOBAL.info_link_disclaimer_url = common_parameters.COMMON_INFO_LINK_DISCLAIMER_URL.VALUE;
+    COMMON_GLOBAL.info_link_terms_name = common_parameters.COMMON_INFO_LINK_TERMS_NAME.VALUE;
+    COMMON_GLOBAL.info_link_terms_url = common_parameters.COMMON_INFO_LINK_TERMS_URL.VALUE;
+    COMMON_GLOBAL.info_link_about_name = common_parameters.COMMON_INFO_LINK_ABOUT_NAME.VALUE;
+    COMMON_GLOBAL.info_link_about_url = common_parameters.COMMON_INFO_LINK_ABOUT_URL.VALUE;
 
-                case ('IMAGE_FILE_ALLOWED_TYPE1' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type1 = parameter['IMAGE_FILE_ALLOWED_TYPE1'];break;}
-                case ('IMAGE_FILE_ALLOWED_TYPE2' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type2 = parameter['IMAGE_FILE_ALLOWED_TYPE2'];break;}
-                case ('IMAGE_FILE_ALLOWED_TYPE3' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type3 = parameter['IMAGE_FILE_ALLOWED_TYPE3'];break;}
-                case ('IMAGE_FILE_ALLOWED_TYPE4' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type4 = parameter['IMAGE_FILE_ALLOWED_TYPE4'];break;}
-                case ('IMAGE_FILE_ALLOWED_TYPE5' in parameter)          :{COMMON_GLOBAL.image_file_allowed_type5 = parameter['IMAGE_FILE_ALLOWED_TYPE5'];break;}
-                case ('IMAGE_FILE_MIME_TYPE' in parameter)              :{COMMON_GLOBAL.image_file_mime_type = parameter['IMAGE_FILE_MIME_TYPE'];break;}
-                case ('IMAGE_FILE_MAX_SIZE' in parameter)               :{COMMON_GLOBAL.image_file_max_size = parseInt(parameter['IMAGE_FILE_MAX_SIZE']);break;}
-                case ('IMAGE_AVATAR_WIDTH' in parameter)                :{COMMON_GLOBAL.image_avatar_width = parseInt(parameter['IMAGE_AVATAR_WIDTH']);break;}
-                case ('IMAGE_AVATAR_HEIGHT' in parameter)               :{COMMON_GLOBAL.image_avatar_height = parseInt(parameter['IMAGE_AVATAR_HEIGHT']);break;}
-            }
-        else
-            switch (true){
-                case ('EMAIL' in parameter)                             :{COMMON_GLOBAL.app_email = parameter['EMAIL'];break;}
-                case ('COPYRIGHT' in parameter)                         :{COMMON_GLOBAL.app_copyright = parameter['COPYRIGHT'];break;}
-                case ('LINK_URL' in parameter)                          :{COMMON_GLOBAL.app_link_url = parameter['LINK_URL'];break;}
-                case ('LINK_TITLE' in parameter)                        :{COMMON_GLOBAL.app_link_title = parameter['LINK_TITLE'];break;}
-                case ('TEXT_EDIT' in parameter)                         :{COMMON_GLOBAL.app_text_edit = parameter['TEXT_EDIT'];break;}
-            }
-    }
+    COMMON_GLOBAL.image_file_allowed_type1 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE1.VALUE;
+    COMMON_GLOBAL.image_file_allowed_type2 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE2.VALUE;
+    COMMON_GLOBAL.image_file_allowed_type3 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE3.VALUE;
+    COMMON_GLOBAL.image_file_allowed_type4 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE4.VALUE;
+    COMMON_GLOBAL.image_file_allowed_type5 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE5.VALUE;
+    COMMON_GLOBAL.image_file_mime_type = common_parameters.COMMON_IMAGE_FILE_MIME_TYPE.VALUE;
+    COMMON_GLOBAL.image_file_max_size = parseInt(common_parameters.COMMON_IMAGE_FILE_MAX_SIZE.VALUE);
+    COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.COMMON_IMAGE_AVATAR_WIDTH.VALUE);
+    COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.COMMON_IMAGE_AVATAR_HEIGHT.VALUE);
+    COMMON_GLOBAL.app_email = common_parameters.APP_EMAIL.VALUE;
+    COMMON_GLOBAL.app_copyright = common_parameters.APP_COPYRIGHT.VALUE;
+    COMMON_GLOBAL.app_link_url = common_parameters.APP_LINK_URL.VALUE;
+    COMMON_GLOBAL.app_link_title = common_parameters.APP_LINK_TITLE.VALUE;
+    COMMON_GLOBAL.app_text_edit = common_parameters.APP_TEXT_EDIT.VALUE;
 };
 /**
  * Mount app using Vue or React framework
@@ -3541,13 +3533,13 @@ const custom_framework = () => {
 /**
  * Init common
  * @param {string} parameters 
- * @returns {Promise.<{ app:{}[],
+ * @returns {Promise.<{ app:import('../../../common_types.js').commonAppParameters,
  *                      app_service:{admin_only:number, first_time:number}}>}
  */
 const commonInit = async (parameters) => {
     /**
      * Encoded parameters
-     * @type {{ app:{}[],
+     * @type {{ app:import('../../../common_types.js').commonAppParameters,
      *          app_service:{admin_only:number, first_time:number}}}
      */
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));

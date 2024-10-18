@@ -3,11 +3,14 @@
 /**@type{import('./server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
-const {configGet, configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./db/file.service.js')} */
 const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 /**@type{import('./iam.service.js')} */
 const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+/**@type{import('../apps/common/src/common.js')} */
+const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 /**@type{import('./types.js').server_socket_connected_list[]} */
 let SOCKET_CONNECTED_CLIENTS = [];
@@ -406,8 +409,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  */
  const socketIntervalCheck = () => {
     //start interval if apps are started
-    const app_id = serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'));
-    if (configAppGet(app_id, app_id, 'PARAMETERS').filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START =='1'){
+    const app_id = serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0;
+    if (commonRegistryAppParameter(app_id).COMMON_APP_START.VALUE =='1'){
         setInterval(() => {
             if (serverUtilNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
                 socketAdminSend(null, { client_id:null,

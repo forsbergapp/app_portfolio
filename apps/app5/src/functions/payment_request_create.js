@@ -17,8 +17,9 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
-    /**@type{import('../../../../server/config.js')} */
-    const {configAppGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../../apps/common/src/common.js')} */
+    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+
 
     /**@type{import('../../../../server/db/sql/app_data_entity.service.js')} */
     const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
@@ -35,7 +36,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/iam.service.js')} */
     const {iamTokenAuthorize} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    /**@type{import('../../../../server/security.service')} */
+    /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
 
     const currency = await MasterGet(app_id, null, null, app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
@@ -72,7 +73,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                 const jwt_data = iamTokenAuthorize(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
                                                                         name:           '',
                                                                         ip:             ip,
-                                                                        scope:          'APP_CUSTOM'}, configAppGet(app_id, app_id, 'SECRETS').PAYMENT_REQUEST_EXPIRE);
+                                                                        /**@ts-ignore */
+                                                                        scope:          'APP_CUSTOM'}, commonRegistryAppSecret(app_id).APP_PAYMENT_REQUEST_EXPIRE);
     
                 const payment_request_id = securityUUIDCreate();
                 const data_payment_request = {

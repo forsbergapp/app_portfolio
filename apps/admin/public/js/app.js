@@ -471,7 +471,7 @@ const appSecureCommonButtonSave = async (item) => {
                 return config_server;
             };
             const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].id.substring('menu_config_'.length).toUpperCase();
-            //file:'CONFIG_SERVER', 'CONFIG_APPS', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
+            //file:'CONFIG_SERVER', 'CONFIG_IAM_BLOCKIP', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};
@@ -537,7 +537,7 @@ const appSecureCommonRecordUpdate = async (table,
             json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
                             parameter_value:    parameters.app_parameter.parameter_value,
                             parameter_comment:  parameters.app_parameter.parameter_comment};
-            path = `/server-config/config-apps-parameter/${parameters.app_parameter.app_id}`;
+            path = `/app-common-app-parameter/${parameters.app_parameter.app_id}`;
             method = 'PATCH';
             break;
         }
@@ -1188,7 +1188,7 @@ const appFrameworkSet = async (framework=null) => {
 };
 /**
  * App init
- * @param {{app:*[],
+ * @param {{app:import('../../../common_types.js').commonAppParameters,
  *          app_service:{admin_only:number, first_time:number}}} parameters 
  * @returns {Promise.<void>}
  */
@@ -1210,7 +1210,8 @@ const appCommonInit= async parameters => {
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
     
-    common.commonInit(parameters).then((/**@type{{ app:{}[], app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then((/**@type{{  app:import('../../../common_types.js').commonAppParameters, 
+                                                    app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
         appInit(decodedparameters);
     });
 };

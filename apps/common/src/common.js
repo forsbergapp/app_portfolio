@@ -10,7 +10,7 @@ const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await 
 const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
 
 /**@type{import('../../../server/db/file.service.js')} */
-const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const fs = await import('node:fs');
 
@@ -24,8 +24,8 @@ const fs = await import('node:fs');
 const commonMailCreate = async (app_id, data) =>{
     const {default:ComponentCreate} = await import('./component/common_mail.js');
     const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
-    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{import('../../../server/types.js').server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
-    const secrets       = fileCache('CONFIG_APPS').APPS.filter((/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>app.APP_ID== common_app_id)[0].SECRETS;
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{import('../../../server/types.js').server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID)??0;
+    const secrets       = commonRegistryAppSecret(common_app_id);
     //email type 1-4 implemented are emails with verification code
     if (parseInt(data.emailtype)==1 || 
         parseInt(data.emailtype)==2 || 
@@ -75,16 +75,18 @@ const commonMailCreate = async (app_id, data) =>{
 const commonAppStart = async (app_id=null) =>{
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     const db_use = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'USE' in key)[0].USE);
-    if (fileCache('CONFIG_SERVER').METADATA.MAINTENANCE==0 && fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/key)=>'START' in key  )[0].START=='1' && 
-        fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS.filter((/**@type{*}*/parameter)=>'APP_START' in parameter)[0].APP_START=='1' &&
-        ((db_use==5 && await InstalledCheck(app_id, 1)
-                                .then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true)
-                                .catch(()=>false)) || 
-         fileCache('CONFIG_APPS').APPS[app_id ?? 0].SECRETS[`SERVICE_DB_DB${db_use}_APP_USER`] ))
+    const NO_MAINTENANCE = fileCache('CONFIG_SERVER').METADATA.MAINTENANCE==0;
+    const DB_START = fileCache('CONFIG_SERVER').SERVICE_DB
+                        .filter((/**@type{*}*/key)=>'START' in key  )[0].START=='1';
+    const APP_START = commonRegistryAppParameter(common_app_id).COMMON_APP_START.VALUE=='1';
+    /**@ts-ignore */
+    const DBOTHER_USER_INSTALLED = commonRegistryAppSecret(app_id ?? common_app_id)[`SERVICE_DB_DB${db_use}_APP_USER`];
+    const DB5_USE_AND_INSTALLED = db_use==5 && await InstalledCheck(app_id, 1).then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true).catch(()=>false);
+    if (NO_MAINTENANCE && DB_START && APP_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
         if (app_id == null)
             return true;
         else{
-            if (fileCache('CONFIG_APPS').APPS[app_id ?? 0].STATUS =='ONLINE')
+            if (commonRegistryApp(app_id).STATUS =='ONLINE')
                 return true;
             else
                 return false;
@@ -271,10 +273,8 @@ const commonBFE = async parameters =>{
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
         const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
-        const app_cache_control = fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
-                                    .filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL' in parameter)[0].APP_CACHE_CONTROL;
-        const app_cache_control_font = fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
-                                        .filter((/**@type{*}*/parameter)=>'APP_CACHE_CONTROL_FONT' in parameter)[0].APP_CACHE_CONTROL_FONT;
+        const app_cache_control = commonRegistryAppParameter(common_app_id).COMMON_APP_CACHE_CONTROL.VALUE;
+        const app_cache_control_font = commonRegistryAppParameter(common_app_id).COMMON_APP_CACHE_CONTROL_FONT.VALUE;
         switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
             case '.css':{
                 parameters.res.type('text/css');
@@ -417,13 +417,14 @@ const commonAssetfile = parameters =>{
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
+ *          endpoint:import('../../../server/types.js').server_server_routesparameters['endpoint'],
  *          res:import('../../../server/types.js').server_server_res|null}} parameters
  * @returns {Promise.<void>}
  */
 const commonFunctionRun = async parameters => {
-    const module_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='FUNCTION' && file[1]==parameters.resource_id);
-    if (module_path[0]){
-        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path[0][4]}`);
+    const module = commonRegistryAppModule(parameters.app_id, {type:'FUNCTION', name:parameters.resource_id,role:parameters.endpoint});
+    if (module){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
     }
     else{
@@ -446,9 +447,9 @@ const commonFunctionRun = async parameters => {
  * @returns {Promise.<*>}
  */
 const commonModuleGet = async parameters => {
-    const module_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='MODULE' && file[1]==parameters.resource_id);
-    if (module_path[0]){
-        const {default:RunFunction} = await import(`file://${process.cwd()}${module_path[0][4]}`);
+    const module = commonRegistryAppModule(parameters.app_id, {type:'MODULE', name:parameters.resource_id,role:null});
+    if (module){
+        const {default:RunFunction} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
     }
     else{
@@ -508,10 +509,10 @@ const commonComponentCreate = async parameters =>{
             /**@type{import('../../../server/types.js').server_apps_app_service_parameters} */
             const app_service_parameters = {   
                 app_id:                 parameters.app_id,
-                app_logo:               fileCache('CONFIG_APPS').APPS[parameters.app_id].LOGO,
+                app_logo:               commonRegistryApp(parameters.app_id).LOGO,
                 app_idtoken:            idtoken ?? '',
                 locale:                 parameters.componentParameters.locale ?? '',
-                admin_only:      admin_only,
+                admin_only:             admin_only,
                 client_latitude:        result_geodata?.latitude,
                 client_longitude:       result_geodata?.longitude,
                 client_place:           result_geodata?.place ?? '',
@@ -520,18 +521,12 @@ const commonComponentCreate = async parameters =>{
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
                 first_time:             admin_only==1?(configCheckFirstTime()==true?1:0):0
             };
-            const ITEM_COMMON_PARAMETERS  = {app:   fileCache('CONFIG_APPS').APPS[parameters.app_id].PARAMETERS
-                                                                        .map((/**@type{*}*/parameter)=>{
-                                                                                                        //add current app id for each parameter
-                                                                                                        return {app_id: parameters.app_id, ...parameter};
-                                                                                                        }).concat(fileCache('CONFIG_APPS').APPS[common_app_id].PARAMETERS
-                                                                                                        .map((/**@type{*}*/parameter)=>{
-                                                                                                                                        //add common app id for each parameter
-                                                                                                                                        return {app_id: common_app_id, ...parameter};
-                                                                                                                                        })),
+
+            const ITEM_COMMON_PARAMETERS  = {app:   {   ...commonRegistryAppParameter(parameters.app_id), 
+                                                        ...commonRegistryAppParameter(common_app_id)},
                                             app_service:app_service_parameters};
             const componentParameter = {data:   {
-                                                    CONFIG_APP:             {...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
+                                                    CONFIG_APP:             {...commonRegistryApp(parameters.app_id)},
                                                     ITEM_COMMON_PARAMETERS: Buffer.from(JSON.stringify(ITEM_COMMON_PARAMETERS)).toString('base64')
                                                 },
                                         methods:null};
@@ -543,10 +538,10 @@ const commonComponentCreate = async parameters =>{
             const {default:ComponentCreate} = await import('./component/common_report.js');
             
             const decodedReportparameters = Buffer.from(parameters.componentParameters.reportid ?? '', 'base64').toString('utf-8');
-            const module = new URLSearchParams(decodedReportparameters).get('module');
+            const module = new URLSearchParams(decodedReportparameters).get('module') ??'';
             const papersize = new URLSearchParams(decodedReportparameters).get('ps');
-            const report_path = fileCache('CONFIG_APPS').APPS[parameters.app_id].MODULES.filter((/**@type{*}*/file)=>file[0]=='REPORT' && file[1]==module)[0][3];
-            const {default:RunReport} = await import(`file://${process.cwd()}${report_path}`);
+            const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:null});
+            const {default:RunReport} = await import(`file://${process.cwd()}${report.COMMON_PATH}`);
 
             /**@type{import('../../../server/types.js').server_apps_report_create_parameters} */
             const data = {  app_id:         parameters.app_id,
@@ -558,7 +553,7 @@ const commonComponentCreate = async parameters =>{
                             longitude:      result_geodata?.longitude
                             };
             return ComponentCreate({data:   {
-                                            CONFIG_APP:{...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
+                                            CONFIG_APP:{...commonRegistryApp(parameters.app_id)},
                                             data:data,
                                             /**@ts-ignore */
                                             papersize:papersize
@@ -576,24 +571,24 @@ const commonComponentCreate = async parameters =>{
 
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
             return ComponentCreate({data:   {
-                                            CONFIG_APP:             {...fileCache('CONFIG_APPS').APPS[parameters.app_id]},
+                                            CONFIG_APP:             {...commonRegistryApp(parameters.app_id)},
                                             ITEM_COMMON_PARAMETERS: Buffer.from(data).toString('base64')},
                                     methods:null
                                     });
         }
         case 'INFO_DISCLAIMER':{
             const {default:ComponentCreate} = await import('./component/common_info_disclaimer.js');
-            return ComponentCreate({data: {app_name:fileCache('CONFIG_APPS').APPS[parameters.app_id].NAME},
+            return ComponentCreate({data: {app_name:commonRegistryApp(parameters.app_id).NAME},
                                     methods:null});
         }
         case 'INFO_PRIVACY_POLICY':{
             const {default:ComponentCreate} = await import('./component/common_info_privacy_policy.js');
-            return ComponentCreate({data: {app_name:fileCache('CONFIG_APPS').APPS[parameters.app_id].NAME},
+            return ComponentCreate({data: {app_name:commonRegistryApp(parameters.app_id).NAME},
                                     methods:null});
         }
         case 'INFO_TERMS':{
             const {default:ComponentCreate} = await import('./component/common_info_terms.js');
-            return ComponentCreate({data: {app_name:fileCache('CONFIG_APPS').APPS[parameters.app_id].NAME},
+            return ComponentCreate({data: {app_name:commonRegistryApp(parameters.app_id).NAME},
                                     methods:null});
         }
         default:{
@@ -612,13 +607,11 @@ const commonAppHost = host =>{
         case 'localhost':
         case 'www':{
             //localhost
-            return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
-                (/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
+            return fileCache('APP').filter((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>app.SUBDOMAIN == 'www')[0].APP_ID;
         }
         default:{
             try {
-                return Object.entries(fileCache('CONFIG_APPS'))[0][1].filter(
-                    (/**@type{import('../../../server//types.js').server_config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+                return fileCache('APP').filter((/**@type{import('../../../server//types.js').server_db_file_app}*/app)=>host.toString().split('.')[0] == app.SUBDOMAIN)[0].APP_ID;    
             } catch (error) {
                 //request can be called from unkown hosts
                 return null;
@@ -667,7 +660,7 @@ const commonApp = async parameters =>{
             case (parameters.url.toLowerCase().startsWith('/images')):
             case (parameters.url.toLowerCase().startsWith('/js')):
             case (parameters.url == '/apps/common_types.js'): {
-                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:fileCache('CONFIG_APPS').APPS[app_id].PATH, res:parameters.res}).catch(()=>null);
+                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:commonRegistryApp(app_id).PATH, res:parameters.res}).catch(()=>null);
             }
             case (parameters.url == '/info/jsdoc'):{
                 return await commonAssetfile({app_id:app_id, url:'/info/jsdoc/index.html'.substring('/info/jsdoc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
@@ -700,11 +693,11 @@ const commonApp = async parameters =>{
                                                 data:null, 
                                                 user_agent:parameters.user_agent, 
                                                 ip:parameters.ip, 
-                                                locale:parameters.accept_language, 
+                                                locale:parameters.accept_language,
                                                 res:parameters.res});
             }
             case (parameters.url == '/'):
-            case ((fileCache('CONFIG_APPS').APPS[app_id].SHOWPARAM == 1 && parameters.url.substring(1) !== '')):{
+            case ((commonRegistryApp(app_id).SHOWPARAM == 1 && parameters.url.substring(1) !== '')):{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.substring(1)==''?null:parameters.url.substring(1),
                                                                                         ip:             parameters.ip, 
                                                                                         user_agent:     parameters.user_agent,
@@ -745,8 +738,8 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
     const {getApp} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
     const apps_db =  await getApp(app_id, resource_id, locale);
     
-    /**@type{import('../../../server/types.js').server_config_apps['APPS']}*/
-    const apps = fileCache('CONFIG_APPS').APPS;
+    /**@type{import('../../../server/types.js').server_db_file_app[]}*/
+    const apps = fileCache('APP');
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.PATH + app.LOGO}`);
         /**@ts-ignore */
@@ -781,7 +774,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
 
     const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
 
-    return fileCache('CONFIG_APPS').APPS.map((/**@type{import('../../../server/types.js').server_config_apps_record}*/app)=>{
+    return fileCache('APP').map((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>{
         return {
                     ID:app.APP_ID,
                     NAME:app.NAME,
@@ -797,4 +790,126 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
                 };
     });
 };
-export {commonMailCreate, commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, commonAppsAdminGet};
+/**
+ * App registry APP MODULE addmin
+ * returns all modules for given app id
+ * @param {number} app_id
+* @returns {import('../../../server/types.js').server_db_file_app_module}
+*/
+const commonRegistryAppModuleAll = app_id => fileCache('APP_MODULE').filter((/**@type{*}*/app)=>app.APP_ID == app_id );
+
+
+/**
+ * App registry APP
+ * @param {number} app_id
+ * @returns {import('../../../server/types.js').server_db_file_app}
+ */
+const commonRegistryApp = app_id => fileCache('APP').filter((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>app.APP_ID == app_id)[0];
+
+/**
+ * App registry get apps
+ * @param {number|null} app_id
+ * @returns {import('../../../server/types.js').server_db_file_app[]}
+ */
+const commonRegistryAppsGet = app_id => fileCache('APP').filter((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>app.APP_ID == (app_id ?? app.APP_ID));
+
+/**
+ * App registry APP MODULE
+ * Modules that are shared by apps and server
+ * @param {number} app_id
+ * @param {{type:string,
+ *          name:string,
+ *          role:string|null}} parameters
+ * @returns {import('../../../server/types.js').server_db_file_app_module}
+ */
+const commonRegistryAppModule = (app_id, parameters) => fileCache('APP_MODULE')
+                                                            .filter((/**@type{*}*/app)=>
+                                                                app.APP_ID == app_id && app.COMMON_TYPE==parameters.type && app.COMMON_NAME==parameters.name && app.COMMON_ROLE == parameters.role)[0];
+
+/**
+ * App registry APP PARAMETER
+ * @param {number} app_id
+ * @returns {import('../../../server/types.js').server_db_file_app_parameter}
+ */
+const commonRegistryAppParameter = app_id => fileCache('APP_PARAMETER')
+                                                .filter((/**@type{import('../../../server/types.js').server_db_file_app_parameter}*/row)=> row.APP_ID == app_id )[0];
+
+/**
+ * App registry APP SECRET
+ * @param {number} app_id
+ * @returns {import('../../../server/types.js').server_db_file_app_secret}
+ */
+const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
+                                            .filter((/**@type{import('../../../server/types.js').server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0];
+
+
+                                            /**
+ * App Registry APP SECRET reset db username and passwords for database in use
+ * @returns {Promise.<void>}
+ */
+  const commonRegistryAppSecretDBReset = async () => {
+    /**@type{import('../../../server/config.js')} */
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const file = await fileFsRead('APP_SECRET', true);
+    /**@type{import('../../../server/types.js').server_db_file_app[]}*/
+    const APPS = file.file_content;
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    for (const app of APPS){
+        /**@ts-ignore */
+        if (app[`SERVICE_DB_DB${db_use}_APP_USER`]){
+            /**@ts-ignore */
+            app[`SERVICE_DB_DB${db_use}_APP_USER`] = '';
+        }
+        /**@ts-ignore */
+        if (app[`SERVICE_DB_DB${db_use}_APP_PASSWORD`]){
+            /**@ts-ignore */
+            app[`SERVICE_DB_DB${db_use}_APP_PASSWORD`] = '';
+        }   
+    }
+    file.file_content = APPS;
+    await fileFsWrite('APP_SECRET', file.transaction_id, file.file_content);
+    await fileFsCacheSet();
+ };
+
+ /**
+ * App registry APP SECRET update
+ * @param {number|null} app_id
+ * @param {{app_id:             number|null,
+ *          parameter_name:     string,
+ *          parameter_value:    string}} data
+ * @returns {Promise.<void>}
+ */
+const commonRegistryAppSecretUpdate = async (app_id, data) => {
+    const file = await fileFsRead('APP_SECRET', true);
+    file.file_content.filter((/**@type{*}*/row)=> row.APP_ID==data.app_id)[0][data.parameter_name] = data.parameter_value;
+    await fileFsWrite('APP_SECRET', file.transaction_id, file.file_content);
+    await fileFsCacheSet();
+};
+ /**
+ * App Registry APP PARAMETER update
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @param {{parameter_name:     string,
+ *          parameter_value:    string,
+ *          parameter_comment:  string|null}} data
+ * @returns {Promise.<void>}
+ */
+  const commonRegistryAppParameterUpdate = async (app_id, resource_id, data) => {
+    const file = await fileFsRead('APP_PARAMETER', true);
+    const app = file.file_content.filter((/**@type{*}*/row)=> row.APP_ID==resource_id)[0];
+    app[data.parameter_name] = data.parameter_value;
+    if (app.COMMENT)
+        app.COMMENT = data.parameter_comment;
+    file.file_content = app;
+    await fileFsWrite('APP_PARAMETER', file.transaction_id, file.file_content);
+    await fileFsCacheSet();
+ };
+export {commonMailCreate, commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
+        commonAppsAdminGet,commonRegistryAppModuleAll,
+        commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,
+        commonRegistryAppsGet,
+        commonRegistryAppSecretDBReset,
+        commonRegistryAppSecretUpdate,
+        commonRegistryAppParameterUpdate};
