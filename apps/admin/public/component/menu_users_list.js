@@ -7,7 +7,7 @@
  *          users:[{id:number,
  *                  avatar:string, 
  *                  active:0|1|null,
- *                  level:number|null,
+ *                  user_level:number|null,
  *                  private:number|null,
  *                  username:string,
  *                  bio:string,
@@ -32,7 +32,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
                                 <div data-column='id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
                                 <div data-column='active' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('active')}'></div>
-                                <div data-column='level' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('level')}'></div>
+                                <div data-column='user_level' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('user_level')}'></div>
                                 <div data-column='private' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('private')}'></div>
                                 <div data-column='username' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('username')}'></div>
                                 <div data-column='bio' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('bio')}'></div>
@@ -57,7 +57,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                     <div data-column='avatar' class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='background-image:url("${user.avatar}");'></div>
                                     <div data-column='id' class='menu_users_list_col list_readonly'>${user.id}</div>
                                     <div data-column='active' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.active ?? ''}</div>
-                                    <div data-column='level' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.level ?? ''}</div>
+                                    <div data-column='user_level' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.user_level ?? ''}</div>
                                     <div data-column='private' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.private ?? ''}</div>
                                     <div data-column='username' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.username ?? ''}</div>
                                     <div data-column='bio' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.bio ?? ''}</div>
@@ -104,8 +104,8 @@ const component = async props => {
 
     let search_user='*';
     //show all records if no search criteria
-    if (props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent.replaceAll('\n','')!='')
-        search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent.replaceAll('\n',''));
+    if (props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent!='')
+        search_user = encodeURI(props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').textContent);
     const users = await props.methods.commonFFB({path:'/server-db_admin/user_account', query:`search=${search_user}&sort=${props.data.sort}&order_by=${props.data.order_by}`, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
@@ -113,15 +113,8 @@ const component = async props => {
         if (props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0])
             //set focus first column in first row
             //this will trigger to show detail records
-            if (props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].getAttribute('readonly')==true){
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].setAttribute('readonly', false);
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].focus();
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].setAttribute('readonly', true);
-            }
-            else
-                props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].focus();
-            //set focus back again to search field
-            props.methods.COMMON_DOCUMENT.querySelector('#menu_users_list_search_input').focus();    
+            props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_users_list .list_edit')[0].dispatchEvent(new Event('focus'));
+
   };
   return {
       lifecycle:    {onMounted:onMounted},

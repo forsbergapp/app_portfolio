@@ -44,7 +44,7 @@
 #menu_users_list .list_title[data-column='avatar']::before{							content:var(--common_app_icon_user_avatar)}
 #menu_users_list .list_title[data-column='id']::before{								content:var(--common_app_icon_provider_id)}
 #menu_users_list .list_title[data-column='active']::before{							content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
-#menu_users_list .list_title[data-column='level']::before{							content:'LEVEL'}
+#menu_users_list .list_title[data-column='user_level']::before{						content:'LEVEL'}
 #menu_users_list .list_title[data-column='private']::before{						content:var(--common_app_icon_private)}
 #menu_users_list .list_title[data-column='username']::before{						content:var(--common_app_icon_user) ' ' var(--common_app_icon_username)}
 #menu_users_list .list_title[data-column='bio']::before{							content:var(--common_app_icon_user_bio)}
