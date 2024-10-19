@@ -447,7 +447,7 @@ const commonFunctionRun = async parameters => {
  * @returns {Promise.<*>}
  */
 const commonModuleGet = async parameters => {
-    const module = commonRegistryAppModule(parameters.app_id, {type:'MODULE', name:parameters.resource_id,role:null});
+    const module = commonRegistryAppModule(parameters.app_id, {type:'MODULE', name:parameters.resource_id,role:''});
     if (module){
         const {default:RunFunction} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
