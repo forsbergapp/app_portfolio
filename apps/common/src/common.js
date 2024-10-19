@@ -481,6 +481,7 @@ const commonModuleGet = async parameters => {
  *                                  reportid?:          string,
  *                                  host?:              string},
  *          type:'APP'|'REPORT'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
+ * @returns {Promise.<string>}
  */
 const commonComponentCreate = async parameters =>{
     /**@type{import('../../../server/iam.service.js')} */
@@ -533,12 +534,12 @@ const commonComponentCreate = async parameters =>{
             delete common_parameter.COMMON_APP_LOG;
             delete common_parameter.COMMON_APP_START;
 
-            const ITEM_COMMON_PARAMETERS  = {app:   {   ...commonRegistryAppParameter(parameters.app_id), 
-                                                            ...common_parameter},
-                                            app_service:app_service_parameters};
+            const APP_PARAMETERS  = {   APP:        commonRegistryAppParameter(parameters.app_id), 
+                                        COMMON:     common_parameter,
+                                        INFO:       app_service_parameters};
             const componentParameter = {data:   {
-                                                    CONFIG_APP:             {...commonRegistryApp(parameters.app_id)},
-                                                    ITEM_COMMON_PARAMETERS: Buffer.from(JSON.stringify(ITEM_COMMON_PARAMETERS)).toString('base64')
+                                                    APP:            commonRegistryApp(parameters.app_id),
+                                                    APP_PARAMETERS: Buffer.from(JSON.stringify(APP_PARAMETERS)).toString('base64')
                                                 },
                                         methods:null};
 

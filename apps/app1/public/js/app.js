@@ -309,8 +309,7 @@ const appFrameworkSet = async (framework=null) => {
 };
 /**
  * Init app
- * @param {{app:import('../../../common_types.js').commonAppParameters,
- *          app_service:{admin_only:number, first_time:number}}} parameters 
+ * @param {import('../../../common_types.js').commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async (parameters) => {
@@ -357,8 +356,7 @@ const appCommonInit= parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
-    common.commonInit(parameters).then((/**@type{{  app:import('../../../common_types.js').commonAppParameters, 
-                                                    app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then(decodedparameters=>{
         appInit(decodedparameters);
     });
 };

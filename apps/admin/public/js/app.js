@@ -1179,8 +1179,7 @@ const appFrameworkSet = async (framework=null) => {
 };
 /**
  * App init
- * @param {{app:import('../../../common_types.js').CommonAppParametersRecord,
- *          app_service:{admin_only:number, first_time:number}}} parameters 
+ * @param {import('../../../common_types.js').commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async (parameters) => {
@@ -1201,8 +1200,7 @@ const appCommonInit= async parameters => {
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;
     
-    common.commonInit(parameters).then((/**@type{{  app:import('../../../common_types.js').CommonAppParametersRecord, 
-                                                    app_service:{admin_only:number, first_time:number}}}*/decodedparameters)=>{
+    common.commonInit(parameters).then(decodedparameters=>{
         appInit(decodedparameters);
     });
 };
