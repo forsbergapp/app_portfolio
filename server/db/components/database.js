@@ -77,14 +77,14 @@ const install_db_get_files = async (install_type) =>{
  const Install = async (app_id, query)=> {
     /**@type{import('../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecretUpdate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('../../db/db.service.js')} */
-    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../db/db.js')} */
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     /**@type{import('../../log.js')} */
     const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../../db/common.service.js')} */
-    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    /**@type{import('../../db/common.js')} */
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
     /**@type{import('../../security.js')} */
 	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
@@ -320,17 +320,17 @@ const install_db_get_files = async (install_type) =>{
     /**@type{import('../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecretDBReset} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    /**@type{import('../../db/file.service.js')} */
-    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    /**@type{import('../../db/file.js')} */
+    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.js`);
 
-    /**@type{import('../../db/db.service.js')} */
-    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../db/db.js')} */
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     /**@type{import('../../log.js')} */
     const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../../db/common.service.js')} */
-    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    /**@type{import('../../db/common.js')} */
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
     
 
     const fs = await import('node:fs');
@@ -1061,8 +1061,8 @@ const DemoUninstall = async (app_id, query)=> {
  const DB_POOL = async (db_use, dba, user, password, pool_id) =>{
     /**@type{import('../../log.js')} */
     const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
-    /**@type{import('../../db/db.service.js')} */
-    const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../db/db.js')} */
+    const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     
     return new Promise ((resolve, reject)=>{
        /**@type{import('../../types.js').server_db_db_pool_parameters} */
@@ -1103,8 +1103,8 @@ const DemoUninstall = async (app_id, query)=> {
   * Start pools for database used
   */
 const Start = async () => {
-    /**@type{import('../file.service.js')} */
-    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    /**@type{import('../file.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     if (configGet('SERVICE_DB', 'START')=='1'){    
         let user;

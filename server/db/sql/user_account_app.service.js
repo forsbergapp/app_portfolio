@@ -1,7 +1,7 @@
 /** @module server/db/sql/user_account_app */
 
-/**@type{import('../../db/common.service.js')} */
-const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+/**@type{import('../../db/common.js')} */
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * 

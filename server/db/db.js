@@ -4,8 +4,8 @@
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../config.js')} */
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-/**@type{import('./file.service')} */
-const {filePath} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('./file.js')} */
+const {filePath} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 //mysql module used for both MariaDB and MySQL
 const MYSQL               = await import('mysql');
