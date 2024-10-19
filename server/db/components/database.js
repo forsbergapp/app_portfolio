@@ -259,13 +259,17 @@ const install_db_get_files = async (install_type) =>{
                             sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
                             await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                {
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
-                                                                parameter_value:    app_admin_username});
+                                                                parameter_value:    app_admin_username
+                                                                });
                             await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                {   
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
-                                                                parameter_value:    sql_and_pw[1]});
+                                                                parameter_value:    sql_and_pw[1]
+                                                                });
                         }
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_admin_username);
                         break;
@@ -276,12 +280,10 @@ const install_db_get_files = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await commonRegistryAppSecretUpdate(file[2], {  app_id:             file[2],
-                                                                            parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
-                                                                            parameter_value:    app_username});
-                            await commonRegistryAppSecretUpdate(file[2], {  app_id:             file[2],
-                                                                            parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
-                                                                            parameter_value:    sql_and_pw[1]});
+                            await commonRegistryAppSecretUpdate(file[2], file[2],{  parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
+                                                                                    parameter_value:    app_username});
+                            await commonRegistryAppSecretUpdate(file[2], file[2],{  parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
+                                                                                    parameter_value:    sql_and_pw[1]});
                         }
                         users_row.sql = users_row.sql.replaceAll('<APP_ID/>', file[2]);
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
@@ -708,10 +710,11 @@ const install_db_get_files = async (install_type) =>{
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
                     await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             resource.app_registry_update_app_id,
-                            parameter_name:     key[0].toUpperCase(),
-                            parameter_value:    value
-                        });
+                                                        resource.app_registry_update_app_id,
+                                                        {   
+                                                            parameter_name:     key[0].toUpperCase(),
+                                                            parameter_value:    value
+                                                        });
                 resource.json_data[key[0]] = value;
             }
             //loop custom secret keys containing USER_ACCOUNT_ID not in json_data
@@ -719,10 +722,11 @@ const install_db_get_files = async (install_type) =>{
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
                     await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            {   app_id:             resource.app_registry_update_app_id,
-                                parameter_name:     Object.keys(key)[0].toUpperCase(),
-                                parameter_value:    value
-                            });
+                                                        resource.app_registry_update_app_id,
+                                                        {   
+                                                            parameter_name:     Object.keys(key)[0].toUpperCase(),
+                                                            parameter_value:    value
+                                                        });
                 }
             return resource.json_data;
         };
