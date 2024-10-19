@@ -1,6 +1,6 @@
 [
     {   
-        "APP_ID": 0, 
+        "ID": 0, 
         "NAME": "Admin",          
         "SUBDOMAIN": "admin",   
         "PATH": "/apps/admin/public",   
@@ -15,7 +15,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 1, 
+        "ID": 1, 
         "NAME": "App Portfolio",  
         "SUBDOMAIN": "www",     
         "PATH": "/apps/app1/public",    
@@ -30,7 +30,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 2,
+        "ID": 2,
         "NAME": "Timetables",
         "SUBDOMAIN": "app2",
         "PATH": "/apps/app2/public",
@@ -45,7 +45,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 3,
+        "ID": 3,
         "NAME": "Presentation",
         "SUBDOMAIN": "app3",    
         "PATH": "/apps/app3/public",    
@@ -60,7 +60,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 4, 
+        "ID": 4, 
         "NAME": "Maps",           
         "SUBDOMAIN": "app4",    
         "PATH": "/apps/app4/public",    
@@ -75,7 +75,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 5, 
+        "ID": 5, 
         "NAME": "Bank",           
         "SUBDOMAIN": "app5",    
         "PATH": "/apps/app5/public",    
@@ -90,7 +90,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 6, 
+        "ID": 6, 
         "NAME": "Shop",           
         "SUBDOMAIN": "app6",    
         "PATH": "/apps/app6/public",    
@@ -105,7 +105,7 @@
         "STATUS":"ONLINE"
     },
     {
-        "APP_ID": 7, 
+        "ID": 7, 
         "NAME": "Cube",           
         "SUBDOMAIN": "app7",
         "PATH": "/apps/app7/public",    

@@ -83,75 +83,6 @@
  */
 
 /**
- * APP server_config_apps_keys
- * @typedef  {  'APP_ID'|
- *              'NAME'|
- *              'SUBDOMAIN'|
- *              'PATH'|
- *              'LOGO'|
- *              'SHOWPARAM'|
- *              'SECRETS'|
- *              'PARAMETERS'|
- *              'RENDER_CONFIG'|
- *              'MODULES'|
- *              'STATUS'} server_config_apps_keys
- */
-
-/**
- * APP server_config_apps_secrets
- * @typedef {{  SERVICE_DB_DB1_APP_USER: string,
- *              SERVICE_DB_DB1_APP_PASSWORD: string,
- *              SERVICE_DB_DB2_APP_USER: string,
- *              SERVICE_DB_DB2_APP_PASSWORD: string,
- *              SERVICE_DB_DB3_APP_USER: string,
- *              SERVICE_DB_DB3_APP_PASSWORD: string,
- *              SERVICE_DB_DB4_APP_USER: string,
- *              SERVICE_DB_DB4_APP_PASSWORD: string,
- *              SERVICE_MAIL_HOST: string,
- *              SERVICE_MAIL_PORT: string,
- *              SERVICE_MAIL_SECURE: string,
- *              SERVICE_MAIL_USERNAME: string,
- *              SERVICE_MAIL_PASSWORD: string,
- *               SERVICE_MAIL_TYPE_SIGNUP: string,
- *              SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME: string,
- *              CLIENT_ID: string, 
- *              CLIENT_SECRET:string, 
- *              APP_ID_SECRET:string, 
- *              APP_ID_EXPIRE:string, 
- *              APP_ACCESS_SECRET:string, 
- *              APP_ACCESS_EXPIRE:string
- *          }} server_config_apps_secrets
- */
-
-/**
- * APP server_config_apps_parameters
- * @typedef {[{}]} server_config_apps_parameters
- */
-
-/**
- * APP server_config_apps_render_config
- * @typedef {{  MANIFEST:boolean,
- *              JS:string,
- *              JS_SECURE:string,
- *              JS_REPORT:string,
- *              CSS:string,
- *              CSS_REPORT:string,
- *              FAVICON_32x32:string,
- *              FAVICON_192x192:string}} server_config_apps_render_config
- */
-
-/**
- * APP server_config_apps_modules
- * @typedef  {[string, string, string, string]} server_config_apps_modules
- */
-
-/**
  * APP server_config_apps_status
  * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
@@ -444,7 +375,7 @@
 /**
  * DB FILE server_db_file_app
  * @typedef {{
- *              APP_ID: number,
+ *              ID: number,
  *              NAME: string,
  *              SUBDOMAIN: string,
  *              PATH: string,

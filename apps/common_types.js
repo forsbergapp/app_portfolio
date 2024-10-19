@@ -260,31 +260,31 @@
 
 /**
  * Type CommonErrorMessageISO20022
- * @typedef {{"error":{
- *               "http":number, 
- *               "code":number|null,
- *               "text":string, 
- *               "developer_text":string|null,
- *               "more_info":string|null}}} CommonErrorMessageISO20022
+ * @typedef {{error:{
+ *               http:number, 
+ *               code:number|null,
+ *               text:string, 
+ *               developer_text:string|null,
+ *               more_info:string|null}}} CommonErrorMessageISO20022
  */
 
 /**
  * Type CommonAppRecord
  * @typedef {{
-*              APP_ID: number,
-*              NAME: string,
-*              SUBDOMAIN: string,
-*              PATH: string,
-*              LOGO:string,
-*              SHOWPARAM:number,
-*              MANIFEST: string,
-*              JS:string,
-*              CSS: string,
-*              CSS_REPORT: string,
-*              FAVICON_32x32:string,
-*              FAVICON_192x192:string,
-*              STATUS:'ONLINE'|'OFFLINE'}} CommonAppRecord
-*/
+ *              ID: number,
+ *              NAME: string,
+ *              SUBDOMAIN: string,
+ *              PATH: string,
+ *              LOGO:string,
+ *              SHOWPARAM:number,
+ *              MANIFEST: string,
+ *              JS:string,
+ *              CSS: string,
+ *              CSS_REPORT: string,
+ *              FAVICON_32x32:string,
+ *              FAVICON_192x192:string,
+ *              STATUS:'ONLINE'|'OFFLINE'}} CommonAppRecord
+ */
 /**
  * Type commonInitAppParameters
  * @typedef {{  APP:    {
@@ -371,6 +371,33 @@
 *              COMMON_IMAGE_AVATAR_HEIGHT:         {VALUE:string, COMMENT: string},
 *              COMMON_IMAGE_AVATAR_WIDTH:          {VALUE:string, COMMENT: string}}} CommonAppParametersRecord
 */
+/**
+* Type CommonAppSecretsRecord
+* @typedef {{   APP_ID:                             number,
+*               SERVICE_DB_DB1_APP_USER:            string,
+*               SERVICE_DB_DB1_APP_PASSWORD:        string,
+*               SERVICE_DB_DB2_APP_USER:            string,
+*               SERVICE_DB_DB2_APP_PASSWORD:        string,
+*               SERVICE_DB_DB3_APP_USER:            string,
+*               SERVICE_DB_DB3_APP_PASSWORD:        string,
+*               SERVICE_DB_DB4_APP_USER:            string,
+*               SERVICE_DB_DB4_APP_PASSWORD:        string,
+*               COMMON_CLIENT_ID:                   string,
+*               COMMON_CLIENT_SECRET:               string,
+*               COMMON_APP_ID_SECRET:               string,
+*               COMMON_APP_ID_EXPIRE:               string,
+*               COMMON_APP_ACCESS_SECRET:           string,
+*               COMMON_APP_ACCESS_EXPIRE:           string}} CommonAppSecretsRecord
+*/
+/**
+ * Type CommonAppModulesRecord
+ * @typedef {{  APP_ID: number,
+ *              COMMON_TYPE: 'FUNCTION'|'MODULE'|'REPORT',
+ *              COMMON_NAME:string,
+ *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|null,
+ *              COMMON_PATH:string,
+ *              COMMON_DESCRIPTION:string}}CommonAppModulesRecord
+ */
 /**
  * Type CommonProfileUser
  * @typedef {{  id:number|null,

@@ -26,8 +26,8 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                         <div id='menu_apps_col_title5' data-column='STATUS' class='menu_apps_col list_title'>STATUS</div>
                                     </div>
                                     ${props.apps.map(app=>
-                                        `<div data-changed-record='0' data-app_id = '${app.APP_ID}' class='menu_apps_row common_row' >
-                                            <div class='menu_apps_col list_readonly' data-column='ID' >${app.APP_ID}</div>
+                                        `<div data-changed-record='0' data-app_id = '${app.ID}' class='menu_apps_row common_row' >
+                                            <div class='menu_apps_col list_readonly' data-column='ID' >${app.ID}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='NAME' contentEditable='true' >${app.NAME}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='SUBDOMAIN' contentEditable='true' >${app.SUBDOMAIN}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='PATH' contentEditable='true' >${app.PATH}</div>
@@ -45,8 +45,12 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 </div>
                             </div>
                             <div id='menu_apps_content_widget2' class='widget'>
-                                <div id='menu_apps_parameters_title' class='common_icon'></div>
-                                <div id='menu_apps_parameters' class='common_list_scrollbar'></div>
+                                <div id='menu_apps_detail_title' class='list_nav'>
+                                    <div id='menu_apps_detail_parameter'    class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
+                                    <div id='menu_apps_detail_secret'       class='list_nav_list list_button common_icon'></div>
+                                    <div id='menu_apps_detail_module'       class='list_nav_list list_button common_icon'></div>
+                                </div>
+                                <div id='menu_apps_detail' class='common_list_scrollbar'></div>
                                 <div id='apps_buttons' class="save_buttons">
                                     <div id='menu_apps_save' class='common_dialogue_button button_save common_icon'></div>
                                 </div>
