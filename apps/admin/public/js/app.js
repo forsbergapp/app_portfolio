@@ -369,72 +369,85 @@ const appSecureCommonButtonSave = async (item) => {
         case 'menu_apps_save':{
             //save changes in menu_apps
             for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_row[data-changed-record=\'1\']')){
-                await appSecureCommonRecordUpdate('app',
-                                    record,
-                                    item,
-                                    {   user_account:{  id:0,
-                                                        active:0,
-                                                        user_level:0,
-                                                        private:0,
-                                                        username:'',
-                                                        bio:'',
-                                                        email:'',
-                                                        email_unverified:'',
-                                                        password:'',
-                                                        password_reminder:'',
-                                                        verification_code:''},
-                                        app:{           id: record.querySelector('[data-column=\'ID\']').textContent},
-                                        app_parameter: {app_id:0,
-                                                        parameter_name:'',
-                                                        parameter_value:'',
-                                                        parameter_comment:''}});
+                await appSecureCommonRecordUpdate(  'app',
+                                                    record,
+                                                    item,
+                                                    record.querySelector('[data-column=\'ID\']').textContent,
+                                                    {
+                                                        ID:             record.querySelector('[data-column=\'ID\']').textContent,
+                                                        NAME:           record.querySelector('[data-column=\'NAME\']').textContent,
+                                                        SUBDOMAIN:      record.querySelector('[data-column=\'SUBDOMAIN\']').textContent,
+                                                        PATH:           record.querySelector('[data-column=\'PATH\']').textContent,
+                                                        LOGO:           record.querySelector('[data-column=\'LOGO\']').textContent,
+                                                        SHOWPARAM:      record.querySelector('[data-column=\'SHOWPARAM\']').textContent,
+                                                        MANIFEST:       record.querySelector('[data-column=\'MANIFEST\']').textContent,
+                                                        JS:             record.querySelector('[data-column=\'JS\']').textContent,
+                                                        CSS:            record.querySelector('[data-column=\'CSS\']').textContent,
+                                                        CSS_REPORT:     record.querySelector('[data-column=\'CSS_REPORT\']').textContent,
+                                                        FAVICON_32x32:  record.querySelector('[data-column=\'FAVICON_32x32\']').textContent,
+                                                        FAVICON_192x192:record.querySelector('[data-column=\'FAVICON_192x192\']').textContent,
+                                                        STATUS:         record.querySelector('[data-column=\'STATUS\']').textContent
+                                                    });
             }
-            //save changes in menu_apps_parameters
-            for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_parameters_row[data-changed-record=\'1\']')){
-                await appSecureCommonRecordUpdate('app_parameter',
-                                    record,
-                                    item,
-                                    {   user_account:{  id:0,
-                                                        active:0,
-                                                        user_level:0,
-                                                        private:0,
-                                                        username:'',
-                                                        bio:'',
-                                                        email:'',
-                                                        email_unverified:'',
-                                                        password:'',
-                                                        password_reminder:'',
-                                                        verification_code:''},
-                                        app:{           id: 0},
-                                        app_parameter: {app_id:record.querySelector('[data-column=\'APP_ID\']').textContent,
-                                                        parameter_name:  record.querySelector('[data-column=\'NAME\']').textContent,
-                                                        parameter_value: record.querySelector('[data-column=\'VALUE\']').textContent,
-                                                        parameter_comment: record.querySelector('[data-column=\'COMMENT\']').textContent}});
-            }
+            
+            if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_parameter.list_nav_selected_tab'))
+                //save changes in menu_apps_parameters
+                for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
+                    await appSecureCommonRecordUpdate(  'app_parameter',
+                                                        record,
+                                                        item,
+                                                        record.querySelector('[data-column=\'APP_ID\']').textContent,
+                                                        {   parameter_name:     record.querySelector('[data-column=\'NAME\']').textContent,
+                                                            parameter_value:    record.querySelector('[data-column=\'VALUE\']').textContent,
+                                                            parameter_comment:  record.querySelector('[data-column=\'COMMENT\']').textContent
+                                                        });
+                }
+            if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_secret.list_nav_selected_tab'))
+                //save changes in menu_apps_parameters
+                for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
+                    await appSecureCommonRecordUpdate(  'app_secret',
+                                                        record,
+                                                        item,
+                                                        record.querySelector('[data-column=\'APP_ID\']').textContent,
+                                                        {   parameter_name:     record.querySelector('[data-column=\'NAME\']').textContent,
+                                                            parameter_value:    record.querySelector('[data-column=\'VALUE\']').textContent
+                                                        });
+                }
+            if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
+                //save changes in menu_apps_parameters
+                for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
+                    await appSecureCommonRecordUpdate(  'app_module',
+                                                        record,
+                                                        item,
+                                                        record.querySelector('[data-column=\'APP_ID\']').textContent,
+                                                        {   APP_ID:             record.querySelector('[data-column=\'APP_ID\']').textContent,
+                                                            COMMON_TYPE:        record.querySelector('[data-column=\'COMMON_TYPE\']').textContent,
+                                                            COMMON_NAME:        record.querySelector('[data-column=\'COMMON_NAME\']').textContent,
+                                                            COMMON_ROLE:        record.querySelector('[data-column=\'COMMON_ROLE\']').textContent,
+                                                            COMMON_PATH:        record.querySelector('[data-column=\'COMMON_PATH\']').textContent,
+                                                            COMMON_DESCRIPTION: record.querySelector('[data-column=\'COMMON_DESCRIPTION\']').textContent
+                                                        });
+                }
             break;
         }
         case 'menu_users_save':{
             //save changes in menu_users_list
             for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_users_list_row[data-changed-record=\'1\']')){
-                await appSecureCommonRecordUpdate('user_account',
-                                    record,
-                                    item,
-                                    {   user_account:{  id:record.querySelector('[data-column=\'id\']').textContent,
-                                                        active:record.querySelector('[data-column=\'active\']').textContent,
-                                                        user_level:record.querySelector('[data-column=\'user_level\']').textContent,
-                                                        private:record.querySelector('[data-column=\'private\']').textContent,
-                                                        username:record.querySelector('[data-column=\'username\']').textContent,
-                                                        bio: record.querySelector('[data-column=\'bio\']').textContent,
-                                                        email: record.querySelector('[data-column=\'email\']').textContent,
-                                                        email_unverified: record.querySelector('[data-column=\'email_unverified\']').textContent,
-                                                        password: record.querySelector('[data-column=\'password\']').textContent,
-                                                        password_reminder: record.querySelector('[data-column=\'password_reminder\']').textContent,
-                                                        verification_code: record.querySelector('[data-column=\'verification_code\']').textContent},
-                                        app:{           id: 0},
-                                        app_parameter: {app_id:0,
-                                                        parameter_name:  '',
-                                                        parameter_value: '',
-                                                        parameter_comment: ''}});
+                await appSecureCommonRecordUpdate(  'user_account',
+                                                    record,
+                                                    item,
+                                                    record.querySelector('[data-column=\'id\']').textContent,
+                                                    {   active:             record.querySelector('[data-column=\'active\']').textContent,
+                                                        user_level:         record.querySelector('[data-column=\'user_level\']').textContent,
+                                                        private:            record.querySelector('[data-column=\'private\']').textContent,
+                                                        username:           record.querySelector('[data-column=\'username\']').textContent,
+                                                        bio:                record.querySelector('[data-column=\'bio\']').textContent,
+                                                        email:              record.querySelector('[data-column=\'email\']').textContent,
+                                                        email_unverified:   record.querySelector('[data-column=\'email_unverified\']').textContent,
+                                                        password:           record.querySelector('[data-column=\'password\']').textContent,
+                                                        password_reminder:  record.querySelector('[data-column=\'password_reminder\']').textContent,
+                                                        verification_code:  record.querySelector('[data-column=\'verification_code\']').textContent
+                                                    });
             }
             break;
         }
@@ -474,66 +487,48 @@ const appSecureCommonButtonSave = async (item) => {
 };
 /**
  * Update record
- * @param {'user_account'|'app'|'app_parameter'} table 
+ * @param {'user_account'|'app'|'app_parameter'|'app_secret'|'app_module'} table 
  * @param {HTMLElement} row_element 
  * @param {string} button 
- * @param {{user_account:{  id:number,
- *                          active:number,
- *                          user_level:number,
- *                          private:number,
- *                          username:string,
- *                          bio:string,
- *                          email:string,
- *                          email_unverified:string,
- *                          password:string,
- *                          password_reminder:string,
- *                          verification_code:string},
- *          app:{           id:number},
- *          app_parameter: {app_id:number,
- *                          parameter_name:string,
- *                          parameter_value:string,
- *                          parameter_comment:string}}} parameters
+ * @param {number} resource_id
+ * @param {*} data
  */
-const appSecureCommonRecordUpdate = async (table, 
-                             row_element,
-                             button,
-                             parameters) => {
+const appSecureCommonRecordUpdate = async ( table, 
+                                            row_element,
+                                            button,
+                                            resource_id,
+                                            data) => {
     let path = '';
-    let json_data;
     /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
     let method;
     switch (table){
         case 'user_account':{
-            json_data = {   active:             parameters.user_account.active,
-                            user_level:         parameters.user_account.user_level,
-                            private:            parameters.user_account.private,
-                            username:           parameters.user_account.username,
-                            bio:                parameters.user_account.bio,
-                            email:              parameters.user_account.email,
-                            email_unverified:   parameters.user_account.email_unverified,
-                            password_new:       parameters.user_account.password,
-                            password_reminder:  parameters.user_account.password_reminder,
-                            verification_code:  parameters.user_account.verification_code};
-            path = `/server-db_admin/user_account/${parameters.user_account.id}`;
+            path = `/server-db_admin/user_account/${resource_id}`;
             method = 'PATCH';
             break;
         }
         case 'app':{
-            json_data = null;
-            path = `/server-db_admin/apps/${parameters.app.id}`;
+            path = `/app-common-app/${resource_id}`;
+            method = 'PUT';
+            break;
+        }
+        case 'app_module':{
+            path = `/app-common-app-module/${resource_id}`;
             method = 'PUT';
             break;
         }
         case 'app_parameter':{
-            json_data = {   parameter_name:     parameters.app_parameter.parameter_name,
-                            parameter_value:    parameters.app_parameter.parameter_value,
-                            parameter_comment:  parameters.app_parameter.parameter_comment};
-            path = `/app-common-app-parameter/${parameters.app_parameter.app_id}`;
+            path = `/app-common-app-parameter/${resource_id}`;
+            method = 'PATCH';
+            break;
+        }
+        case 'app_secret':{
+            path = `/app-common-app-secret/${resource_id}`;
             method = 'PATCH';
             break;
         }
     }
-    await common.commonFFB({path:path, method:method, authorization_type:'ADMIN', body:json_data, spinner_id:button})
+    await common.commonFFB({path:path, method:method, authorization_type:'ADMIN', body:data, spinner_id:button})
             .then(()=>row_element.setAttribute('data-changed-record', '0'));
 };
 
@@ -685,6 +680,21 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     appSecureCommonButtonSave('menu_apps_save');
                     break;
                 }
+                case 'menu_apps_detail_parameter':
+                case 'menu_apps_detail_secret':
+                case 'menu_apps_detail_module':{
+                    COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
+                    COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
+                    common.commonComponentRender({
+                        mountDiv:   'menu_apps_detail',
+                        data:       {
+                                    app_id_data:parseInt(common.commonElementRow(APP_SECURE_GLOBAL.previous_row).getAttribute('data-app_id') ?? ''),
+                                    detail:event_target_id,
+                                    },
+                        methods:    {commonFFB:common.commonFFB},
+                        path:       '/component/menu_apps_detail.js'});
+                    break;
+                }
                 case 'menu_monitor_detail_filesearch':{
                     APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowLogDir();
                     break;
@@ -799,11 +809,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     //event on master to automatically show detail records
                     if (APP_SECURE_GLOBAL.previous_row != common.commonElementRow(event.target)){
                         APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
-                        common.commonComponentRender({
-                            mountDiv:   'menu_apps_parameters',
-                            data:       {app_id_data:parseInt(common.commonElementRow(event.target).getAttribute('data-app_id') ?? '')},
-                            methods:    {commonFFB:common.commonFFB},
-                            path:       '/component/menu_apps_parameters.js'});
+                        COMMON_DOCUMENT.querySelector('#menu_apps_detail_parameter').click();
                     }
                     break;
                 }
@@ -852,32 +858,29 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
             break;
         }
         case 'keydown':{
-            if (event_target_id=='menu_apps' && !event.code.startsWith('Arrow') && event.code !='Tab')
-                event.preventDefault();
-            else
-                if (event.target.classList.contains('list_edit')){
-                    if (event.code=='ArrowUp') {
-                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
-                        event.preventDefault();
-                        //focus on first list_edit item in the row
-                        const element_previous = common.commonElementRow(event.target).previousSibling;
+            if (event.target.classList.contains('list_edit')){
+                if (event.code=='ArrowUp') {
+                    APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    event.preventDefault();
+                    //focus on first list_edit item in the row
+                    const element_previous = common.commonElementRow(event.target).previousSibling;
+                    /**@ts-ignore */
+                    if (element_previous && element_previous.classList?.contains('common_row')){
                         /**@ts-ignore */
-                        if (element_previous && element_previous.classList?.contains('common_row')){
-                            /**@ts-ignore */
-                            element_previous.querySelectorAll('.list_edit')[0].focus();
-                        }
-                    }
-                    if (event.code=='ArrowDown') {
-                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
-                        event.preventDefault();
-                        //focus on first list_edit item in the row
-                        const element_next = common.commonElementRow(event.target).nextSibling;
-                        if (element_next){
-                            /**@ts-ignore */
-                            element_next.querySelectorAll?element_next.querySelectorAll('.list_edit')[0].focus():null;
-                        }
+                        element_previous.querySelectorAll('.list_edit')[0].focus();
                     }
                 }
+                if (event.code=='ArrowDown') {
+                    APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    event.preventDefault();
+                    //focus on first list_edit item in the row
+                    const element_next = common.commonElementRow(event.target).nextSibling;
+                    if (element_next){
+                        /**@ts-ignore */
+                        element_next.querySelectorAll?element_next.querySelectorAll('.list_edit')[0].focus():null;
+                    }
+                }
+            }
             break;
         }
     }
