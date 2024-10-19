@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: apps/app6/src/functions/payment_request_get_status.js</title>
+    <title>JSDoc: Source: server/db/db.js</title>
     <base href='/info/jsdoc/'/>
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -25,7 +25,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: apps/app6/src/functions/payment_request_get_status.js</h1>
+    <h1 class="page-title">Source: server/db/db.js</h1>
 
     
 
@@ -34,72 +34,538 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @module apps/app6/src/functions/payment_request_get_status
+            <pre class="prettyprint source linenums"><code>/** @module server/db/db */
+
+/**@type{import('../server.js')} */
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+/**@type{import('../config.js')} */
+const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+/**@type{import('./file.js')} */
+const {filePath} = await import(`file://${process.cwd()}/server/db/file.js`);
+
+//mysql module used for both MariaDB and MySQL
+const MYSQL               = await import('mysql');
+const {default: PG}       = await import('pg');
+const {default: ORACLEDB} = await import('oracledb');
+const {default:sqlite3}   = await import('sqlite3');
+const sqlite              = await import('sqlite');
+/**
+ * DB_POOL
+ * All database pool connections are saved here
+ * Oracle uses number to 
+ * @type{import('../types.js').server_db_db_pool[]}
  */
+const DB_POOL =[ 
+                  [1, null, null], //MySQL pools      [db number, dba pool object, apps pool object]
+                  [2, null, null], //MariaDB pools    [db number, dba pool object, apps pool object]
+                  [3, null, null], //PostgreSQL pools [db number, dba pool object, apps pool object]
+                  [4, null, null], //Oracle pools     [db number, dba pool object {pool_id_dba: 0}, apps pool object {pool_id_app: 0}]
+                  [5, null, null]  //SQLite           [db number, db object, null]
+               ];                     
+
+if (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==4){
+   ORACLEDB.autoCommit = true;
+   ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
+   ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
+}
+/**
+ * Delete all pools for given database
+ * Deletes variable content, not the same as 
+ * using API to close, release or end connection
+ * and all database API use different logic.
+ * Needed to restart database connection after admin
+ * have changed parameters and without having to restart server
+ * @param {number} db
+ */
+const dbPoolDeleteAll = (db)=>{
+      //relase db pools from memory
+      DB_POOL.map(pool=>{if (pool[0]==db){
+                           pool[1]=null;
+                           pool[2]=null;
+                        }
+                        });
+};
+/**
+ * Pool start
+ * 
+ *    parameters:
+ * 
+ *    use:                     1-5
+ *    pool_id:                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
+ *    port:                    port,
+ *    host:                    host,
+ *    dba:                     1/0,
+ *    user:                    username,
+ *    password:                password,
+ *    database:                database,
+ *
+ *    db 1 + 2 parameters      see MariaDB/MySQL documentation
+ *    charset:                 character set,
+ *    connnectionLimit:        connection limit
+ *
+ *    db 3 parameters          see PostgreSQL documentation
+ *    connectionTimeoutMillis: connection timout milliseconds
+ *    idleTimeoutMillis:       idle timeout milliseconds
+ *    max:                     max
+ *
+ *    db 4 parameters          see Oracle documentation
+ *    connectString:           connectstring
+ *    poolMin:                 pool min
+ *    poolMax:                 pool max
+ *    poolIncrement:           pool increment
+ * 
+ * @param {import('../types.js').server_db_db_pool_parameters} dbparameters 
+ * @returns {Promise.&lt;null>}
+ */
+const dbPoolStart = async (dbparameters) =>{
+   return new Promise((resolve, reject) => {
+      switch(dbparameters.use){
+         case 1:
+         case 2:{            
+            /**@type{object} */
+            const mysql_pool = MYSQL.createPool({
+                                 host: dbparameters.host ?? '',
+                                 port: dbparameters.port ?? undefined,
+                                 user: dbparameters.user ?? '',
+                                 password: dbparameters.password ?? '',
+                                 database: dbparameters.database==null?'':dbparameters.database,
+                                 charset: dbparameters.charset==null?'':dbparameters.charset,
+                                 connectionLimit: dbparameters.connectionLimit==null?0:dbparameters.connectionLimit
+                              });
+            DB_POOL.map(db=>
+               {if (db[0]==dbparameters.use)
+                  if (dbparameters.dba==1)
+                     db[1]= mysql_pool;
+                  else
+                     if (db[2])
+                        db[2].push(mysql_pool);
+                     else
+                        db[2] = [mysql_pool];
+            });
+            resolve(null);
+            break;
+         }
+         case 3:{
+            const createpoolPostgreSQL = () =>{
+               return new Promise(resolve=>{
+                  resolve(new PG.Pool({
+                     user: dbparameters.user ?? '',
+                     password: dbparameters.password ?? '',
+                     host: dbparameters.host ?? '',
+                     port: dbparameters.port ?? undefined,
+                     database: dbparameters.database==null?'':dbparameters.database,
+                     connectionTimeoutMillis: dbparameters.connectionTimeoutMillis ?? undefined,
+                     idleTimeoutMillis: dbparameters.idleTimeoutMillis ?? undefined,
+                     max: dbparameters.max ?? undefined
+                  }));
+               });
+            };
+            if (dbparameters.dba==1)
+               createpoolPostgreSQL()
+               .then(pool=>{
+                  DB_POOL.map(db=>{ if (db[0]==dbparameters.use)
+                     db[1]=pool;
+                  });
+                  resolve(null);
+               });
+            else
+               createpoolPostgreSQL()
+               .then(pool=>{
+                  DB_POOL.map(db=>{ if (db[0]==dbparameters.use)
+                     if (db[2])
+                        db[2].push(pool);
+                     else
+                        db[2] = [pool];
+                  });
+                  resolve(null);
+               });
+            break;
+         }
+         case 4:{
+            /**
+             * 
+             * @param {string} poolAlias
+             */
+            const createpoolOracle= poolAlias=>{
+               ORACLEDB.createPool({	
+                  user: dbparameters.user ?? '',
+                  password: dbparameters.password ?? '',
+                  connectString: dbparameters.connectString==null?'':dbparameters.connectString,
+                  poolMin: dbparameters.poolMin==null?0:dbparameters.poolMin,
+                  poolMax: dbparameters.poolMax==null?0:dbparameters.poolMax,
+                  poolIncrement: dbparameters.poolIncrement==null?0:dbparameters.poolIncrement,
+                  poolAlias: poolAlias
+               }, (err) => {
+                  if (err)
+                     reject(err);
+                  else
+                     resolve(null);
+               });
+            };
+            if (dbparameters.dba==1){
+               const pool_id_dba = 'DBA';
+               DB_POOL.map(db=>{ if (db[0]==dbparameters.use) 
+                                    db[1]={pool_id_dba};
+                              });
+               createpoolOracle(pool_id_dba);
+            }
+            else{
+               DB_POOL.map(db=>{if (db[0]==dbparameters.use) 
+                                 if (db[2])
+                                    db[2].push({pool_id_app:dbparameters.pool_id?.toString()});
+                                 else
+                                    db[2] = [{pool_id_app: dbparameters.pool_id?.toString()}];
+                              });
+               if (dbparameters.pool_id!=null)
+                  createpoolOracle(dbparameters.pool_id.toString());
+            }
+            break;
+         }
+         case 5:{
+            DB_POOL.map(db=>{
+               if (db[0]==dbparameters.use)
+                  sqlite.open({
+                     filename: process.cwd() + filePath('DB_FILE'),
+                     driver: sqlite3.Database
+                  })
+                  .then((sqlite_db)=>{
+                     db[1]=sqlite_db;
+                     sqlite_db.get('PRAGMA foreign_keys = ON');
+                     resolve(null);
+                  })
+                  .catch((error)=>reject(error));
+            });
+            break;
+         }
+      }
+   });
+};
+/**
+ * Delete pool for given database
+ * @param {number|null} pool_id 
+ * @param {number|null} db_use 
+ * @param {number} dba 
+ * @returns {Promise.&lt;void>}
+ */
+const dbPoolClose = async (pool_id, db_use, dba) =>{
+
+      if (dba==1)
+         DB_POOL.map(db=>{
+                           if (db[0]==db_use)
+                              db[1] = null;
+         });
+      else
+         if (db_use==5){
+            DB_POOL.map(db=>{
+               if (db[0]==db_use)
+                  db[1] = null;
+            });           
+         }
+         else
+            if (pool_id)
+               DB_POOL.map(db=>{
+                  if (db[0]==db_use)
+                     if (db[2])
+                        db[2][pool_id] = null;
+               });
+      
+
+};
+/**
+ * Get pool for database
+ * @param {number|null} pool_id 
+ * @param {number} db_use 
+ * @param {number|null} dba 
+ * @returns {object|string|null}
+ */
+const dbPoolGet = (pool_id, db_use, dba) => {
+   let pool;
+   try {
+      if (db_use==5)
+         return DB_POOL.filter(db=>db[0]==db_use)[0][1];
+      else
+         if (pool_id!=null)
+            if (dba==1)
+               if (db_use==4){
+                  /**@ts-ignore */
+                  return DB_POOL.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
+               }
+               else
+                  return DB_POOL.filter(db=>db[0]==db_use)[0][1];
+            else{
+               pool = DB_POOL.filter(db=>db[0]==db_use)[0];
+               if (pool[2])
+                  if (db_use==4){
+                     /**@ts-ignore */
+                     return pool[2][pool_id].pool_id_app;
+                  }
+                  else
+                     return pool[2][pool_id];
+               else
+                  return null;
+            }
+         else
+            return null;
+   } catch (err) {
+      return null;
+   }  
+};
 
 /**
- * @param {number} app_id
- * @param {{payment_request_id: string,
-*          data_app_id: number}} data
-* @param {string} user_agent
-* @param {string} ip
-* @param {string} locale
-* @param {import('../../../../server/types.js').server_server_res} res
-* @returns {Promise.&lt;{ status:string}[]>}
-*/
-const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
-
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
-    /**@type{import('../../../../server/security.js')} */
-    const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
-    /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL_PAYMENT_REQUEST_GET_STATUS;
-   
-    /** 
-     * @type {{ api_secret:             string,
-     *          payment_request_id:     string,
-     *          origin:                 string}}
-     */
-    const body = {	api_secret:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).MERCHANT_API_SECRET,
-                    payment_request_id: data.payment_request_id,
-                    origin:         res.req.protocol + '://' + res.req.hostname
-    };
-    //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
-    //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-    const body_encrypted = {id:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).MERCHANT_ID,
-                            message:securityPublicEncrypt(
-                                        /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).MERCHANT_PUBLIC_KEY, 
-                                        JSON.stringify(body))};
-    
-    const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
-    if (result_commonBFE.error){
-        res.statusCode = result_commonBFE.error.http;
-        throw '⛔';
-    }
-    else{
-        /**
-         * @type {{ status:string}}
-         */
-        const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                /**@ts-ignore */
-                                                commonRegistryAppSecret(app_id).MERCHANT_PRIVATE_KEY, 
-                                                result_commonBFE.rows[0].message));
-
-        return [{   
-                    status:                 body_decrypted.status
-                }];
-    }
+ * Execute query for given database
+ * @param {number|null} pool_id 
+ * @param {number|null} db_use   - 1 MariaDB 
+ *                               - 2 MySQL
+ *                               - 3 PostgreSQL
+ *                               - 4 Oracle
+ *                               - 5 SQLite
+ * @param {string} sql
+ * @param {*} parameters      - can have an extra DB_RETURN_ID and DB_CLOB key
+ * @param {number|null} dba 
+ * @returns {Promise.&lt;*>}
+ */
+const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
+   return new Promise((resolve,reject)=>{
+      switch (db_use){
+         case 1:
+         case 2:{
+            try {
+               //DB_RETURN_ID not used here
+               if ('DB_RETURN_ID' in parameters)
+                  delete parameters.DB_RETURN_ID;
+               //DB_CLOB not used here
+               if ('DB_CLOB' in parameters)
+                  delete parameters.DB_CLOB;
+               /**@ts-ignore */
+               dbPoolGet(pool_id, db_use, dba).getConnection((/**@type{import('../types.js').server_server_error}*/err, /**@type{import('../types.js').pool_connection_1_2}*/conn) => {
+                  if (err)
+                     return reject (err);
+                  else{
+                     //change parameters to [] syntax with bind variable names
+                     //common syntax:  ... ("UPDATE [table] SET [column] = :title", { title: "value" });
+                     //mysql syntax:   ... ("UPDATE [table] SET [column] = ?", ["value"];
+                     conn.config.queryFormat = (/**@type{string}*/sql, /**@type{[]}*/parameters) => {
+                        if (!parameters) return sql;
+                        return sql.replace(/:(\w+)/g, (txt, key) => {
+                           if (key in parameters)
+                              return conn.escape(parameters[key]);
+                           else
+                              return txt;
+                        });
+                     };
+                     conn.query(sql, parameters, (/**@type{import('../types.js').server_server_error}*/err, /**@type{[import('../types.js').server_db_db_pool_connection_1_2_result]}*/result, /**@type{import('../types.js').server_db_db_pool_connection_3_fields}*/fields) => {
+                        if (err)
+                           return reject (err);
+                        else{
+                           conn.release();
+                           //convert blob buffer to string if any column is a BLOB type
+                           if (result.length>0){
+                              for (let dbcolumn=0;dbcolumn&lt;fields.length; dbcolumn++){
+                                 if (fields[dbcolumn].type == 252) { //BLOB
+                                    for (let i=0;i&lt;result.length;i++){
+                                       if (fields[dbcolumn].name == Object.keys(result[i])[dbcolumn])
+                                          if (result[i][Object.keys(result[i])[dbcolumn]]!=null &amp;&amp; result[i][Object.keys(result[i])[dbcolumn]]!='')
+                                             result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
+                                    }
+                                 }
+                              }
+                           }
+                           return resolve(result);
+                        }
+                     });
+                  }
+               });					
+            } catch (err) {
+               return reject (err);
+            }
+            break;
+         }
+         case 3:{
+            // add RETURNING statement to get insertId
+            if ('DB_RETURN_ID' in parameters){
+               sql += ` RETURNING ${parameters.DB_RETURN_ID}` ;
+               delete parameters.DB_RETURN_ID;
+            }
+            //DB_CLOB not used here
+            if ('DB_CLOB' in parameters)
+                  delete parameters.DB_CLOB;
+            /**
+             * change parameters to $ syntax
+             * use unique index with $1, $2 etc, parameter can be used several times
+             * example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+             * use indexorder received from parameters
+             * common syntax:     ... ("UPDATE [table] SET [column] = :title", { title: "value" });
+             * postgresql syntax: ... ("UPDATE [table] SET [column] = $1", [0, "value"];
+             * @param {string} parameterizedSql
+             * @param {object} params
+             */
+            const queryConvert = (parameterizedSql, params) => {
+                const [text, values] = Object.entries(params).reduce(
+               /**@ts-ignore */
+                    ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
+                                                               if (key in params)
+                                                                  return `$${Object.keys(params).indexOf(key) + 1}`;
+                                                               else
+                                                                  return txt;
+                                                               }),
+                                                      [...array, param[1]], 
+                                                      index + 1
+                                                    ],
+                                                    [parameterizedSql, [], 1]
+                );
+                return { text, values };
+            };	
+            const parsed_result = queryConvert(sql, parameters);
+            try {
+               /**@ts-ignore */
+               dbPoolGet(pool_id, db_use, dba).connect().then((/**@type{import('../types.js').server_db_db_pool_connection_3}*/pool3)=>{
+                  pool3.query(parsed_result.text, parsed_result.values)
+                  .then((/**@type{import('../types.js').server_db_db_pool_connection_3_result}*/result) => {
+                     pool3.release();
+                     //add common attributes
+                     if (result.command == 'INSERT' &amp;&amp; result.rows.length>0)
+                        result.insertId = result.rows[0].id;
+                     if (result.command == 'INSERT' ||
+                        result.command == 'DELETE' ||
+                        result.command == 'UPDATE'){
+                        result.affectedRows = result.rowCount;
+                     }
+                     //convert blob buffer to string if any column is a BYTEA type
+                     if (result.rows.length>0){
+                        for (let dbcolumn=0;dbcolumn&lt;result.fields.length; dbcolumn++){
+                           if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+                              for (let i=0;i&lt;result.rows.length;i++){
+                                 if (result.fields[dbcolumn].name == Object.keys(result.rows[i])[dbcolumn])
+                                    if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null &amp;&amp; result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+                                       result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+                              }
+                           }
+                        }
+                     }
+                     if (result.command == 'SELECT')
+                        return resolve(result.rows);
+                     else
+                        return resolve(result);
+                  })
+                  .catch((/**@type{import('../types.js').server_server_error}*/err) => reject(err));
+               }).catch((/**@type{import('../types.js').server_server_error}*/err)=> reject(err));
+            } catch (err) {
+               return reject(err);
+            }
+            break;
+         }
+         case 4:{
+            try{
+               const db_pool_id = dbPoolGet(pool_id, db_use, dba);
+               /**@ts-ignore */
+               const pool4 = ORACLEDB.getPool(db_pool_id);
+               pool4.getConnection().then((pool)=>{
+                  //Fix CLOB column syntax to avoid ORA-01461 for these columns:
+                  if ('DB_CLOB' in parameters){
+                     parameters.DB_CLOB.forEach((/**@type{string}*/column) => {
+                        parameters[column] = {  dir: ORACLEDB.BIND_IN, val: parameters[column], 
+                                                type: ORACLEDB.CLOB };
+                     });
+                     delete parameters.DB_CLOB;
+                  }
+                  // add RETURNING statement to get insertId
+                  if ('DB_RETURN_ID' in parameters){
+                     sql += ` RETURNING ${parameters.DB_RETURN_ID} INTO :insertId` ;
+                     delete parameters.DB_RETURN_ID;
+                     Object.assign(parameters, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
+                  }
+                  /**@ts-ignore */
+                  pool.execute(sql, parameters, (/**@type{import('../types.js').server_server_error}*/err, /**@type{import('../types.js').pool_connection_4_result}*/result) => {
+                     if (err)
+                        return reject(err);
+                     else{
+                        pool.close();
+                        //add common attributes
+                        if (result.outBinds)
+                           result.insertId = result.outBinds.insertId[0];
+                        if (result.rowsAffected){
+                           //add custom key using same name as other databases
+                           result.affectedRows = result.rowsAffected;
+                        }
+                        if (result.rows)
+                           return resolve(result.rows);
+                        else
+                           return resolve(result);
+                     }
+                  });
+               })
+               .catch(err=> reject(err));
+            }catch (err) {
+               return reject(err);
+            }
+            break;
+         }
+         case 5:{
+            //DB_RETURN_ID not used here
+            if ('DB_RETURN_ID' in parameters)
+                  delete parameters.DB_RETURN_ID;
+            //DB_CLOB not used here
+            if ('DB_CLOB' in parameters)
+               delete parameters.DB_CLOB;
+            /**
+             * change parameters to $[parameter name] syntax
+             * common syntax: ... "UPDATE [table] SET [column] = :title", { title: "value" });
+             * SQLite syntax: ... "UPDATE [table] SET [column] = $title", [$title, "value"];
+             * @param {string} parameterizedSql
+             * @param {*} params
+             */
+            const queryConvert = (parameterizedSql, params) => {
+                const [text] = Object.entries(params).reduce(
+               /**@ts-ignore */
+                    ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
+                                                               if (key in params){
+                                                                  return `$${key}`;
+                                                               }
+                                                               else
+                                                                  return txt;
+                                                               }),
+                                                      [...array, param[1]], 
+                                                      index + 1
+                                                    ],
+                                                    [parameterizedSql, [], 1]
+                );
+                return text;
+            };	
+            // change parameter key names to $[parameter name] syntax
+            const parameters_convert = {};
+            Object.entries(parameters).map(parameter=>{
+               parameter[0]= `$${parameter[0]}`;
+               /**@ts-ignore*/
+               parameters_convert[parameter[0]] = parameter[1];
+            });
+            const sql_convert = queryConvert(sql, parameters);
+            const db = dbPoolGet(pool_id, db_use, dba);
+            try {
+               /**@ts-ignore */
+               (sql.trimStart().toUpperCase().startsWith('SELECT')?db.all(sql_convert, parameters_convert):db.run(sql_convert, parameters_convert))
+               .then((/**@type{*}*/result)=>{
+                  if (result.lastID)
+                     result.insertId = result.lastID;
+                  if (result.changes)
+                        result.affectedRows = result.changes;
+                  resolve(result);
+               })
+               .catch((/**@type{Error}*/err)=> reject(err));   
+            }catch (err) {
+               return reject(err);
+            }
+            break;
+         }
+         default:{
+            return reject();
+         }
+      }
+   });
 };
-export default payment_request_get_status;</code></pre>
+
+export{dbPoolDeleteAll, 
+       dbPoolStart, dbPoolClose, dbPoolGet,
+       dbSQL};</code></pre>
         </article>
     </section>
 

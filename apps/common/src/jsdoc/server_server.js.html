@@ -818,11 +818,25 @@ const serverUtilAppLine = () =>{
                                                         resource_id_get_number()!=null));
                         break;
                     }
+                    case route({url:`/bff/admin/v1/app-common-app/${resource_id_string}`, method:'PUT', required:true}):{
+                        resolve(app_common.commonRegistryAppUpdate(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                routesparameters.body));
+                        break;
+                    }
                     case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'GET', required:true}):{
                         resolve(iso_return_message(app_common.commonRegistryAppModuleAll(
                                                         /**@ts-ignore */
                                                         resource_id_get_number()),
                                                         resource_id_get_number()!=null));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'PUT', required:true}):{
+                        resolve(app_common.commonRegistryAppModuleUpdate(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/app-common-app-parameter/${resource_id_string}`, method:'GET', required:true}):{
@@ -832,6 +846,13 @@ const serverUtilAppLine = () =>{
                                                         resource_id_get_number()!=null));
                         break;
                     }
+                    case route({url:`/bff/admin/v1/app-common-app-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
+                        resolve(app_common.commonRegistryAppParameterUpdate(routesparameters.app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id_get_number(), 
+                                                                routesparameters.body));
+                        break;
+                    }
                     case route({url:`/bff/admin/v1/app-common-app-secret/${resource_id_string}`, method:'GET', required:true}):{
                         resolve(iso_return_message(app_common.commonRegistryAppSecret(
                                                         /**@ts-ignore */
@@ -839,8 +860,8 @@ const serverUtilAppLine = () =>{
                                                         resource_id_get_number()!=null));
                         break;
                     }
-                    case route({url:`/bff/admin/v1/app-common-app-parameter/${resource_id_string}`, method:'PATCH', required:true}):{
-                        resolve(app_common.commonRegistryAppParameterUpdate(routesparameters.app_id, 
+                    case route({url:`/bff/admin/v1/app-common-app-secret/${resource_id_string}`, method:'PATCH', required:true}):{
+                        resolve(app_common.commonRegistryAppSecretUpdate(routesparameters.app_id, 
                                                                 /**@ts-ignore */
                                                                 resource_id_get_number(), 
                                                                 routesparameters.body));

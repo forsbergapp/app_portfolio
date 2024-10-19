@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: apps/app6/src/functions/payment_request_get_status.js</title>
+    <title>JSDoc: Source: apps/admin/public/component/menu_apps_detail.js</title>
     <base href='/info/jsdoc/'/>
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -25,7 +25,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: apps/app6/src/functions/payment_request_get_status.js</h1>
+    <h1 class="page-title">Source: apps/admin/public/component/menu_apps_detail.js</h1>
 
     
 
@@ -35,71 +35,98 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @module apps/app6/src/functions/payment_request_get_status
+ * @module apps/admin/component/menu_apps_parameters
  */
-
 /**
- * @param {number} app_id
- * @param {{payment_request_id: string,
-*          data_app_id: number}} data
-* @param {string} user_agent
-* @param {string} ip
-* @param {string} locale
-* @param {import('../../../../server/types.js').server_server_res} res
-* @returns {Promise.&lt;{ status:string}[]>}
+ * Displays app parameters
 */
-const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
+/**
+ * @param {{app_id:number,
+ *          detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret',
+ *          app_detail:*}} props
+ */
+const template = props => ` &lt;div class='menu_apps_detail_row'>
+                                    &lt;div class='menu_apps_detail_col list_title' data-column='APP_ID'>APP_ID&lt;/div>
+                                    ${props.detail=='menu_apps_detail_module'?
+                                        `&lt;div class='menu_apps_detail_col list_title' data-column='COMMON_TYPE'>TYPE&lt;/div>
+                                        &lt;div class='menu_apps_detail_col list_title' data-column='COMMON_NAME'>NAME&lt;/div>
+                                        &lt;div class='menu_apps_detail_col list_title' data-column='COMMON_ROLE'>ROLE&lt;/div>
+                                        &lt;div class='menu_apps_detail_col list_title' data-column='COMMON_PATH'>PATH&lt;/div>
+                                        &lt;div class='menu_apps_detail_col list_title' data-column='COMMON_DESCRIPTION'>DESCRIPTION&lt;/div>`:
 
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
-    /**@type{import('../../../../server/security.js')} */
-    const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
-    /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL_PAYMENT_REQUEST_GET_STATUS;
-   
-    /** 
-     * @type {{ api_secret:             string,
-     *          payment_request_id:     string,
-     *          origin:                 string}}
-     */
-    const body = {	api_secret:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).MERCHANT_API_SECRET,
-                    payment_request_id: data.payment_request_id,
-                    origin:         res.req.protocol + '://' + res.req.hostname
+                                        `&lt;div class='menu_apps_detail_col list_title' data-column='NAME'>NAME&lt;/div>
+                                        &lt;div class='menu_apps_detail_col list_title' data-column='VALUE'>VALUE&lt;/div>`
+                                    }
+                                    ${props.detail=='menu_apps_detail_parameter'?
+                                        '&lt;div class=\'menu_apps_detail_col list_title\' data-column=\'COMMENT\'>COMMENT&lt;/div>':''
+                                    }
+                            &lt;/div>
+                            ${props.detail=='menu_apps_detail_module'?
+                                `${props.app_detail.map((/**@type{import('../../../common_types.js').CommonAppModulesRecord}*/row)=>
+                                        `&lt;div data-changed-record='0' class='menu_apps_detail_row common_row'>
+                                            &lt;div class='menu_apps_detail_col list_readonly' data-column='APP_ID'>${row.APP_ID}&lt;/div>
+                                            &lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_TYPE'>${row.COMMON_TYPE}&lt;/div>
+                                            &lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_NAME'>${row.COMMON_NAME}&lt;/div>
+                                            &lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_ROLE'>${row.COMMON_ROLE}&lt;/div>
+                                            &lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_PATH'>${row.COMMON_PATH}&lt;/div>
+                                            &lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_DESCRIPTION'>${row.COMMON_DESCRIPTION}&lt;/div>
+                                        &lt;/div>`).join('')
+                                }`:
+                                `${Object.entries(props.app_detail).map(row=>
+                                    `&lt;div data-changed-record='0' class='menu_apps_detail_row common_row' data-fk='${row[0]=='APP_ID'?1:0}'>
+                                        &lt;div class='menu_apps_detail_col list_readonly' data-column='APP_ID'>${props.app_id}&lt;/div>
+                                        &lt;div class='menu_apps_detail_col list_edit' data-column='NAME'>${row[0]}&lt;/div>
+                                        ${props.detail=='menu_apps_detail_secret'?
+                                            `&lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='VALUE'>${row[1]}&lt;/div>`:''
+                                        }
+                                        ${props.detail=='menu_apps_detail_parameter'?
+                                            `&lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='VALUE'>${row[1].VALUE ?? row[1]}&lt;/div>
+                                             &lt;div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMENT'>${row[1].COMMENT ?? ''}&lt;/div>`:''
+                                        }
+                                    &lt;/div>`
+                                    ).join('')
+                                }`
+                            }`;
+/**
+ * 
+ * @param {{data:{      commonMountdiv:string,
+ *                      app_id_data:number,
+ *                      detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret'},
+ *          methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props 
+ * @returns {Promise.&lt;{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
+const component = async props => {
+    let path = '';
+    switch (props.data.detail){
+        case 'menu_apps_detail_parameter':{
+            path = `/app-common-app-parameter/${props.data.app_id_data}`;
+            break;
+        }
+        case 'menu_apps_detail_module':{
+            path = `/app-common-app-module/${props.data.app_id_data}`;
+            break;
+        }
+        case 'menu_apps_detail_secret':{
+            path = `/app-common-app-secret/${props.data.app_id_data}`;
+            break;
+        }
+    }
+    const app_detail = await props.methods.commonFFB({path:path, method:'GET', authorization_type:'ADMIN'})
+                            .then((/**@type{string}*/result)=>JSON.parse(result));
+    return {
+       lifecycle:   null,
+       data:        null,
+       methods:     null,
+       template: template({ app_id:props.data.app_id_data,
+                            detail:props.data.detail,
+                            app_detail:app_detail})
     };
-    //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
-    //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-    const body_encrypted = {id:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).MERCHANT_ID,
-                            message:securityPublicEncrypt(
-                                        /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).MERCHANT_PUBLIC_KEY, 
-                                        JSON.stringify(body))};
-    
-    const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
-    if (result_commonBFE.error){
-        res.statusCode = result_commonBFE.error.http;
-        throw '⛔';
-    }
-    else{
-        /**
-         * @type {{ status:string}}
-         */
-        const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                /**@ts-ignore */
-                                                commonRegistryAppSecret(app_id).MERCHANT_PRIVATE_KEY, 
-                                                result_commonBFE.rows[0].message));
-
-        return [{   
-                    status:                 body_decrypted.status
-                }];
-    }
 };
-export default payment_request_get_status;</code></pre>
+export default component;</code></pre>
         </article>
     </section>
 

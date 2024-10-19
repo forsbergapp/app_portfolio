@@ -132,7 +132,7 @@ const component = async props => {
                                                     method:'POST', authorization_type:'APP_DATA',
                                                     body:{data_app_id : props.data.common_app_id}
                                                 })
-                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);                                    
+                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const is_provider_user = () =>{
         if (props.data.user_account_id == parseInt(user.id))
             return user.identity_provider_id!=null;
