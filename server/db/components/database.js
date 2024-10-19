@@ -633,8 +633,8 @@ const install_db_get_files = async (install_type) =>{
 
         //generate vpa for each user that can be saved both in resource and apps configuration
         const demo_vpa = securityUUIDCreate();
-        //create user_account_app record for all apps
-        for (const app of apps){
+        //create user_account_app record for all apps except admin
+        for (const app of apps.filter(app=>app.id != serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))) ){
             await create_user_account_app(app.id, demo_user.id);
         }
         for (const demo_user_account_app_data_post of demo_user.settings){
