@@ -394,7 +394,7 @@
  * @typedef {{  APP_ID: number,
  *              COMMON_TYPE: 'FUNCTION'|'MODULE'|'REPORT',
  *              COMMON_NAME:string,
- *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|null,
+ *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'',
  *              COMMON_PATH:string,
  *              COMMON_DESCRIPTION:string}} server_db_file_app_module
  */
