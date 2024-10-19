@@ -38,8 +38,8 @@
 
 /**@type{import('./config.js')} */
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-/**@type{import('./db/file.service.js')} */
-const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('./db/file.js')} */
+const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**
  * Send log

@@ -62,8 +62,8 @@ const template = props => ` &lt;div id='menu_apps_content_widget1' class='widget
                                         &lt;div id='menu_apps_col_title5' data-column='STATUS' class='menu_apps_col list_title'>STATUS&lt;/div>
                                     &lt;/div>
                                     ${props.apps.map(app=>
-                                        `&lt;div data-changed-record='0' data-app_id = '${app.APP_ID}' class='menu_apps_row common_row' >
-                                            &lt;div class='menu_apps_col list_readonly' data-column='ID' >${app.APP_ID}&lt;/div>
+                                        `&lt;div data-changed-record='0' data-app_id = '${app.ID}' class='menu_apps_row common_row' >
+                                            &lt;div class='menu_apps_col list_readonly' data-column='ID' >${app.ID}&lt;/div>
                                             &lt;div class='menu_apps_col common_input list_edit' data-column='NAME' contentEditable='true' >${app.NAME}&lt;/div>
                                             &lt;div class='menu_apps_col common_input list_edit' data-column='SUBDOMAIN' contentEditable='true' >${app.SUBDOMAIN}&lt;/div>
                                             &lt;div class='menu_apps_col common_input list_edit' data-column='PATH' contentEditable='true' >${app.PATH}&lt;/div>
@@ -81,8 +81,12 @@ const template = props => ` &lt;div id='menu_apps_content_widget1' class='widget
                                 &lt;/div>
                             &lt;/div>
                             &lt;div id='menu_apps_content_widget2' class='widget'>
-                                &lt;div id='menu_apps_parameters_title' class='common_icon'>&lt;/div>
-                                &lt;div id='menu_apps_parameters' class='common_list_scrollbar'>&lt;/div>
+                                &lt;div id='menu_apps_detail_title' class='list_nav'>
+                                    &lt;div id='menu_apps_detail_parameter'    class='list_nav_list list_button common_icon list_nav_selected_tab'>&lt;/div>
+                                    &lt;div id='menu_apps_detail_secret'       class='list_nav_list list_button common_icon'>&lt;/div>
+                                    &lt;div id='menu_apps_detail_module'       class='list_nav_list list_button common_icon'>&lt;/div>
+                                &lt;/div>
+                                &lt;div id='menu_apps_detail' class='common_list_scrollbar'>&lt;/div>
                                 &lt;div id='apps_buttons' class="save_buttons">
                                     &lt;div id='menu_apps_save' class='common_dialogue_button button_save common_icon'>&lt;/div>
                                 &lt;/div>

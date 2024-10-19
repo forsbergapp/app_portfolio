@@ -139,7 +139,7 @@ const component = async props => {
     let monitorDetailClickItemDetail = (item_type, data) => {item_type;data;};
 
     const LIMIT = await props.methods.commonFFB({path:`/app-common-app-parameter/${props.data.app_id}`, method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result).COMMON_APP_LIMIT_RECORDS)); 
+                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result).COMMON_APP_LIMIT_RECORDS.VALUE)); 
         
     /**
      * Get log parameters

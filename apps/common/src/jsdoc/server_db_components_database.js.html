@@ -113,14 +113,14 @@ const install_db_get_files = async (install_type) =>{
  const Install = async (app_id, query)=> {
     /**@type{import('../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecretUpdate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('../../db/db.service.js')} */
-    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../db/db.js')} */
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     /**@type{import('../../log.js')} */
     const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../../db/common.service.js')} */
-    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    /**@type{import('../../db/common.js')} */
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
     /**@type{import('../../security.js')} */
 	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
@@ -295,13 +295,17 @@ const install_db_get_files = async (install_type) =>{
                             sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
                             await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                {
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
-                                                                parameter_value:    app_admin_username});
+                                                                parameter_value:    app_admin_username
+                                                                });
                             await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                            {   app_id:             serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                                                                {   
                                                                 parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
-                                                                parameter_value:    sql_and_pw[1]});
+                                                                parameter_value:    sql_and_pw[1]
+                                                                });
                         }
                         users_row.sql = users_row.sql.replace('&lt;APP_USERNAME/>', app_admin_username);
                         break;
@@ -312,12 +316,10 @@ const install_db_get_files = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await commonRegistryAppSecretUpdate(file[2], {  app_id:             file[2],
-                                                                            parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
-                                                                            parameter_value:    app_username});
-                            await commonRegistryAppSecretUpdate(file[2], {  app_id:             file[2],
-                                                                            parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
-                                                                            parameter_value:    sql_and_pw[1]});
+                            await commonRegistryAppSecretUpdate(file[2], file[2],{  parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
+                                                                                    parameter_value:    app_username});
+                            await commonRegistryAppSecretUpdate(file[2], file[2],{  parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
+                                                                                    parameter_value:    sql_and_pw[1]});
                         }
                         users_row.sql = users_row.sql.replaceAll('&lt;APP_ID/>', file[2]);
                         users_row.sql = users_row.sql.replace('&lt;APP_USERNAME/>', app_username);
@@ -356,17 +358,17 @@ const install_db_get_files = async (install_type) =>{
     /**@type{import('../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecretDBReset} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    /**@type{import('../../db/file.service.js')} */
-    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    /**@type{import('../../db/file.js')} */
+    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.js`);
 
-    /**@type{import('../../db/db.service.js')} */
-    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../db/db.js')} */
+    const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     /**@type{import('../../log.js')} */
     const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
     /**@type{import('../../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../../db/common.service.js')} */
-    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+    /**@type{import('../../db/common.js')} */
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
     
 
     const fs = await import('node:fs');
@@ -667,8 +669,8 @@ const install_db_get_files = async (install_type) =>{
 
         //generate vpa for each user that can be saved both in resource and apps configuration
         const demo_vpa = securityUUIDCreate();
-        //create user_account_app record for all apps
-        for (const app of apps){
+        //create user_account_app record for all apps except admin
+        for (const app of apps.filter(app=>app.id != serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))) ){
             await create_user_account_app(app.id, demo_user.id);
         }
         for (const demo_user_account_app_data_post of demo_user.settings){
@@ -730,9 +732,8 @@ const install_db_get_files = async (install_type) =>{
                         case 'USER_ACCOUNT_ID':
                             return demo_user.id.toString();
                         default:{
-                            //if value is array then replace string in the array
-                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('&lt;HOST/>', configGet('SERVER','HOST') ?? '')):
-                                    key_name[1].replaceAll('&lt;HOST/>', configGet('SERVER','HOST') ?? '');
+                            //replace if containing HOST parameter
+                            return key_name[1].replaceAll('&lt;HOST/>', configGet('SERVER','HOST') ?? '');
                         }
                             
                     }
@@ -744,10 +745,11 @@ const install_db_get_files = async (install_type) =>{
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id &amp;&amp; resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
                     await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                        {   app_id:             resource.app_registry_update_app_id,
-                            parameter_name:     key[0].toUpperCase(),
-                            parameter_value:    value
-                        });
+                                                        resource.app_registry_update_app_id,
+                                                        {   
+                                                            parameter_name:     key[0].toUpperCase(),
+                                                            parameter_value:    value
+                                                        });
                 resource.json_data[key[0]] = value;
             }
             //loop custom secret keys containing USER_ACCOUNT_ID not in json_data
@@ -755,10 +757,11 @@ const install_db_get_files = async (install_type) =>{
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
                     await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            {   app_id:             resource.app_registry_update_app_id,
-                                parameter_name:     Object.keys(key)[0].toUpperCase(),
-                                parameter_value:    value
-                            });
+                                                        resource.app_registry_update_app_id,
+                                                        {   
+                                                            parameter_name:     Object.keys(key)[0].toUpperCase(),
+                                                            parameter_value:    value
+                                                        });
                 }
             return resource.json_data;
         };
@@ -1097,8 +1100,8 @@ const DemoUninstall = async (app_id, query)=> {
  const DB_POOL = async (db_use, dba, user, password, pool_id) =>{
     /**@type{import('../../log.js')} */
     const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
-    /**@type{import('../../db/db.service.js')} */
-    const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    /**@type{import('../../db/db.js')} */
+    const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     
     return new Promise ((resolve, reject)=>{
        /**@type{import('../../types.js').server_db_db_pool_parameters} */
@@ -1139,8 +1142,8 @@ const DemoUninstall = async (app_id, query)=> {
   * Start pools for database used
   */
 const Start = async () => {
-    /**@type{import('../file.service.js')} */
-    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    /**@type{import('../file.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     if (configGet('SERVICE_DB', 'START')=='1'){    
         let user;

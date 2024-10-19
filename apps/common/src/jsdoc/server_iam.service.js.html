@@ -41,8 +41,8 @@ const {serverResponseErrorSend, serverUtilNumberValue} = await import(`file://${
 /**@type{import('./config.js')} */
 const {configGet, configFileGet, configCheckFirstTime, configAdminCreate} = await import(`file://${process.cwd()}/server/config.js`);
 
-/**@type{import('./db/file.service.js')} */
-const {fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('./db/file.js')} */
+const {fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
 const {commonAppHost, commonRegistryAppSecret, commonRegistryAppSecretFile}= await import(`file://${process.cwd()}/apps/common/src/common.js`);

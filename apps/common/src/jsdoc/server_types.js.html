@@ -119,75 +119,6 @@
  */
 
 /**
- * APP server_config_apps_keys
- * @typedef  {  'APP_ID'|
- *              'NAME'|
- *              'SUBDOMAIN'|
- *              'PATH'|
- *              'LOGO'|
- *              'SHOWPARAM'|
- *              'SECRETS'|
- *              'PARAMETERS'|
- *              'RENDER_CONFIG'|
- *              'MODULES'|
- *              'STATUS'} server_config_apps_keys
- */
-
-/**
- * APP server_config_apps_secrets
- * @typedef {{  SERVICE_DB_DB1_APP_USER: string,
- *              SERVICE_DB_DB1_APP_PASSWORD: string,
- *              SERVICE_DB_DB2_APP_USER: string,
- *              SERVICE_DB_DB2_APP_PASSWORD: string,
- *              SERVICE_DB_DB3_APP_USER: string,
- *              SERVICE_DB_DB3_APP_PASSWORD: string,
- *              SERVICE_DB_DB4_APP_USER: string,
- *              SERVICE_DB_DB4_APP_PASSWORD: string,
- *              SERVICE_MAIL_HOST: string,
- *              SERVICE_MAIL_PORT: string,
- *              SERVICE_MAIL_SECURE: string,
- *              SERVICE_MAIL_USERNAME: string,
- *              SERVICE_MAIL_PASSWORD: string,
- *               SERVICE_MAIL_TYPE_SIGNUP: string,
- *              SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME: string,
- *              CLIENT_ID: string, 
- *              CLIENT_SECRET:string, 
- *              APP_ID_SECRET:string, 
- *              APP_ID_EXPIRE:string, 
- *              APP_ACCESS_SECRET:string, 
- *              APP_ACCESS_EXPIRE:string
- *          }} server_config_apps_secrets
- */
-
-/**
- * APP server_config_apps_parameters
- * @typedef {[{}]} server_config_apps_parameters
- */
-
-/**
- * APP server_config_apps_render_config
- * @typedef {{  MANIFEST:boolean,
- *              JS:string,
- *              JS_SECURE:string,
- *              JS_REPORT:string,
- *              CSS:string,
- *              CSS_REPORT:string,
- *              FAVICON_32x32:string,
- *              FAVICON_192x192:string}} server_config_apps_render_config
- */
-
-/**
- * APP server_config_apps_modules
- * @typedef  {[string, string, string, string]} server_config_apps_modules
- */
-
-/**
  * APP server_config_apps_status
  * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
@@ -480,7 +411,7 @@
 /**
  * DB FILE server_db_file_app
  * @typedef {{
- *              APP_ID: number,
+ *              ID: number,
  *              NAME: string,
  *              SUBDOMAIN: string,
  *              PATH: string,
@@ -499,7 +430,7 @@
  * @typedef {{  APP_ID: number,
  *              COMMON_TYPE: 'FUNCTION'|'MODULE'|'REPORT',
  *              COMMON_NAME:string,
- *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|null,
+ *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'',
  *              COMMON_PATH:string,
  *              COMMON_DESCRIPTION:string}} server_db_file_app_module
  */
@@ -538,6 +469,42 @@
  *              COMMON_IMAGE_FILE_MIME_TYPE:        {VALUE:string, COMMENT: string},
  *              COMMON_IMAGE_AVATAR_HEIGHT:         {VALUE:string, COMMENT: string},
  *              COMMON_IMAGE_AVATAR_WIDTH:          {VALUE:string, COMMENT: string}}} server_db_file_app_parameter
+ */
+
+/**
+ * DB FILE server_db_file_app_parameter
+ * apps should use their own types if adding new parameters
+ * @typedef {{ APP_ID?:                             number,
+ *             APP_TEXT_EDIT?:                      {VALUE:string, COMMENT:string},
+ *             APP_COPYRIGHT?:                      {VALUE:string, COMMENT:string},
+ *             APP_EMAIL?:                          {VALUE:string, COMMENT:string},
+ *             APP_LINK_TITLE?:                     {VALUE:string, COMMENT:string},
+ *             APP_LINK_URL?:                       {VALUE:string, COMMENT:string},
+ *             COMMON_APP_START?:                   {VALUE:string, COMMENT: string},
+ *             COMMON_APP_LOG?:                     {VALUE:string, COMMENT: string},
+ *             COMMON_APP_CACHE_CONTROL:            {VALUE:string, COMMENT: string},
+ *             COMMON_APP_CACHE_CONTROL_FONT:       {VALUE:string, COMMENT: string},
+ *             COMMON_APP_FRAMEWORK:                {VALUE:string, COMMENT: string},
+ *             COMMON_APP_FRAMEWORK_MESSAGES:       {VALUE:string, COMMENT: string},
+ *             COMMON_APP_REST_API_VERSION:         {VALUE:string, COMMENT: string},
+ *             COMMON_APP_LIMIT_RECORDS:            {VALUE:string, COMMENT: string},
+ *             COMMON_INFO_LINK_POLICY_NAME:        {VALUE:string},
+ *             COMMON_INFO_LINK_POLICY_URL:         {VALUE:string},
+ *             COMMON_INFO_LINK_DISCLAIMER_NAME:    {VALUE:string},
+ *             COMMON_INFO_LINK_DISCLAIMER_URL:     {VALUE:string},
+ *             COMMON_INFO_LINK_TERMS_NAME:         {VALUE:string},
+ *             COMMON_INFO_LINK_TERMS_URL:          {VALUE:string},
+ *             COMMON_INFO_LINK_ABOUT_NAME:         {VALUE:string},
+ *             COMMON_INFO_LINK_ABOUT_URL:          {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE1:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE2:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE3:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE4:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_ALLOWED_TYPE5:     {VALUE:string},
+ *             COMMON_IMAGE_FILE_MAX_SIZE:          {VALUE:string},
+ *             COMMON_IMAGE_FILE_MIME_TYPE:         {VALUE:string, COMMENT: string},
+ *             COMMON_IMAGE_AVATAR_HEIGHT:          {VALUE:string, COMMENT: string},
+ *             COMMON_IMAGE_AVATAR_WIDTH:           {VALUE:string, COMMENT: string}}} server_db_file_app_parameter_common
  */
 
 /**
