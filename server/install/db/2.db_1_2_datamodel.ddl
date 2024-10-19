@@ -152,18 +152,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_translation TO app
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_common;
 
-CREATE TABLE <DB_SCHEMA/>.app_device (
-    app_id          INTEGER NOT NULL,
-    app_setting_id  INTEGER NOT NULL,
-    json_data       TEXT,
-    CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
-                                           app_setting_id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_device TO app_portfolio_role_app_admin;
-
 CREATE TABLE <DB_SCHEMA/>.app_setting (
     id                                      INT NOT NULL AUTO_INCREMENT,
     app_setting_type_app_id                 INTEGER NOT NULL,
@@ -534,15 +522,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_translation
 ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES <DB_SCHEMA/>.language ( id );
-
-ALTER TABLE <DB_SCHEMA/>.app_device
-    ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_device
-    ADD CONSTRAINT app_device_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
 ALTER TABLE <DB_SCHEMA/>.app_setting
     ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,

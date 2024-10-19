@@ -171,19 +171,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
         REFERENCES language ( id )
 );
 
-CREATE TABLE <DB_SCHEMA/>.app_device (
-    app_id          INTEGER NOT NULL,
-    app_setting_id  INTEGER NOT NULL,
-    json_data       TEXT,
-    CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
-                                           app_setting_id ),
-    CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_device_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_setting ( id )
-);
-
 CREATE TABLE <DB_SCHEMA/>.app_setting (
     id                                      INTEGER NOT NULL CONSTRAINT app_setting_pk PRIMARY KEY AUTOINCREMENT,
     app_setting_type_app_id                 INTEGER NOT NULL,
