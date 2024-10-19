@@ -41,8 +41,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL
-                    .filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_CREATE')[0].value;
+    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL_PAYMENT_REQUEST_CREATE;
     const currency = await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
     //validate
 	if (data.currency_code==currency.currency_code && data.payerid !='' && data.payerid !=null){
