@@ -421,7 +421,7 @@ const appSecureCommonButtonSave = async (item) => {
                                     item,
                                     {   user_account:{  id:record.querySelector('[data-column=\'id\']').textContent,
                                                         active:record.querySelector('[data-column=\'active\']').textContent,
-                                                        user_level:record.querySelector('[data-column=\'level\']').textContent,
+                                                        user_level:record.querySelector('[data-column=\'user_level\']').textContent,
                                                         private:record.querySelector('[data-column=\'private\']').textContent,
                                                         username:record.querySelector('[data-column=\'username\']').textContent,
                                                         bio: record.querySelector('[data-column=\'bio\']').textContent,
