@@ -696,9 +696,8 @@ const install_db_get_files = async (install_type) =>{
                         case 'USER_ACCOUNT_ID':
                             return demo_user.id.toString();
                         default:{
-                            //if value is array then replace string in the array
-                            return key_name[1].constructor===Array?JSON.parse(JSON.stringify(key_name[1]).replaceAll('<HOST/>', configGet('SERVER','HOST') ?? '')):
-                                    key_name[1].replaceAll('<HOST/>', configGet('SERVER','HOST') ?? '');
+                            //replace if containing HOST parameter
+                            return key_name[1].replaceAll('<HOST/>', configGet('SERVER','HOST') ?? '');
                         }
                             
                     }
