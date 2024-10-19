@@ -1,8 +1,8 @@
 /** @module microservice/registry */
 
 
-/**@type{import('../server/db/file.service.js')} */
-const {fileFsRead} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('../server/db/file.js')} */
+const {fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 const CONFIG = await fileFsRead('CONFIG_MICROSERVICE').then((/**@type{import('../server/types.js').server_db_file_result_fileFsRead}*/file)=>file.file_content);
 

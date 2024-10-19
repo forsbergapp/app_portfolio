@@ -4,8 +4,8 @@
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-/**@type{import('./db/file.service.js')} */
-const {fileCache} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('./db/file.js')} */
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('./iam.service.js')} */
 const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.service.js`);
 

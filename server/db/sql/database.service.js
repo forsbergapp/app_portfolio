@@ -11,8 +11,8 @@
    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
    /**@type{import('../../config.js')} */
    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-   /**@type{import('../../db/common.service.js')} */
-   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   /**@type{import('../../db/common.js')} */
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
    
    let sql = '';
    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
@@ -147,8 +147,8 @@ const InfoSpace = async (app_id, DBA) => {
    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
    /**@type{import('../../config.js')} */
    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-   /**@type{import('../../db/common.service.js')} */
-   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   /**@type{import('../../db/common.js')} */
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
    let sql = '';
    switch (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))){
@@ -224,8 +224,8 @@ const InfoSpaceSum = async (app_id, DBA) => {
    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
    /**@type{import('../../config.js')} */
    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-   /**@type{import('../../db/common.service.js')} */
-   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   /**@type{import('../../db/common.js')} */
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
     
    let sql = '';
    switch (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))){
@@ -286,8 +286,8 @@ const InfoSpaceSum = async (app_id, DBA) => {
   * @returns Promise.<{import('../../types.js').server_db_database_install_db_check[]}>
   */
  const InstalledCheck = async (app_id, DBA) =>{
-   /**@type{import('../../db/common.service.js')} */
-   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+   /**@type{import('../../db/common.js')} */
+   const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
    const sql = `SELECT 1 "installed"
                   FROM <DB_SCHEMA/>.app
                   WHERE id = :app_id`;

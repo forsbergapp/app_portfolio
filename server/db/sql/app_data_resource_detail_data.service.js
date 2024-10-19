@@ -1,8 +1,8 @@
 /** @module server/db/sql/app_data_resource_detail_data */
 
 
-/**@type{import('../common.service.js')} */
-const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.service.js`);
+/**@type{import('../common.js')} */
+const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * 

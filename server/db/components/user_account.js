@@ -5,8 +5,8 @@ const service = await import(`file://${process.cwd()}/server/db/sql/user_account
 
 /**@type{import('../../config.js')} */
 const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
-/**@type{import('../file.service.js')} */
-const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('../file.js')} */
+const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../../../apps/common/src/common.js')} */
 const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -18,8 +18,8 @@ const { iamTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.s
 /**@type{import('../../socket.js')} */
 const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
 
-/**@type{import('../../db/common.service.js')} */
-const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.service.js`);
+/**@type{import('../../db/common.js')} */
+const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**@type{import('../sql/app_setting.service.js')} */
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`);
@@ -745,8 +745,8 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                     });
                 }
                 else{
-                    import(`file://${process.cwd()}/server/db/common.service.js`)
-                    .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                    import(`file://${process.cwd()}/server/db/common.js`)
+                    .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                         dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                     });
                 }
@@ -801,8 +801,8 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                 });
             }
             else{
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
@@ -870,8 +870,8 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                 });
             }
             else{
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
@@ -967,8 +967,8 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                                 resolve({sent_change_email: 0});
                         }
                         else{
-                            import(`file://${process.cwd()}/server/db/common.service.js`)
-                            .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                            import(`file://${process.cwd()}/server/db/common.js`)
+                            .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                                 dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
@@ -1026,8 +1026,8 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
             if (result_update)
                 resolve(result_update);
             else{
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
@@ -1062,8 +1062,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
             }
                 
             else{
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
@@ -1091,8 +1091,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                         if (result_delete)
                             resolve(result_delete);
                         else{
-                            import(`file://${process.cwd()}/server/db/common.service.js`)
-                            .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                            import(`file://${process.cwd()}/server/db/common.js`)
+                            .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                                 dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
@@ -1110,8 +1110,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                                         if (result_delete)
                                             resolve(result_delete);
                                         else{
-                                            import(`file://${process.cwd()}/server/db/common.service.js`)
-                                            .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                                            import(`file://${process.cwd()}/server/db/common.js`)
+                                            .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                                                 dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                                             });
                                         }
@@ -1179,8 +1179,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
             if (result)
                 resolve(result);
             else {
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../../db/common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
