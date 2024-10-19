@@ -19,7 +19,7 @@
         "APP_ID": 2,
         "COMMON_TYPE": "REPORT",
         "COMMON_NAME":"TIMETABLE",
-        "COMMON_ROLE":null,
+        "COMMON_ROLE":"",
         "COMMON_PATH":"/apps/app2/src/report/timetable.js",
         "COMMON_DESCRIPTION":"Timetable day, month and year"
     },
@@ -27,7 +27,7 @@
         "APP_ID": 2,
         "COMMON_TYPE": "MODULE",
         "COMMON_NAME":"MODULE_LIB_TIMETABLE",
-        "COMMON_ROLE":null,
+        "COMMON_ROLE":"",
         "COMMON_PATH":"/apps/app2/src/modules/module_lib_timetable.js",
         "COMMON_DESCRIPTION":"Timetable module"
     },
