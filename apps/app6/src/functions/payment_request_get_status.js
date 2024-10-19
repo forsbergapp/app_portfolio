@@ -23,8 +23,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL
-                    .filter((/**@type{*}*/url)=>url.key=='PAYMENT_REQUEST_GET_STATUS')[0].value;
+    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL_PAYMENT_REQUEST_GET_STATUS;
    
     /** 
      * @type {{ api_secret:             string,
