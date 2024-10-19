@@ -9,8 +9,8 @@ const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await 
 /**@type{import('../../../server/db/sql/database.service.js')} */
 const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
 
-/**@type{import('../../../server/db/file.service.js')} */
-const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('../../../server/db/file.js')} */
+const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 const fs = await import('node:fs');
 

@@ -1,7 +1,7 @@
 /** @module microservice/messagequeue */
 
-/**@type{import('../server/db/file.service.js')} */
-const {fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+/**@type{import('../server/db/file.js')} */
+const {fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**
  * 

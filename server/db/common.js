@@ -10,8 +10,8 @@ const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('../../apps/common/src/common.js')} */
 const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-/**@type{import('./db.service.js')} */
-const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+/**@type{import('./db.js')} */
+const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
 
 /**
  * Get app code derived from database error

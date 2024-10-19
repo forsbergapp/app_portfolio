@@ -22,8 +22,8 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
             if (result)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
@@ -43,8 +43,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
             if (result)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
@@ -65,8 +65,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
             if (result[0])
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
@@ -85,8 +85,8 @@ const getProfileStatPost = (app_id, query, res) =>{
             if (result)
                 resolve(result); 
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
@@ -107,8 +107,8 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
             if (result)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
@@ -178,8 +178,8 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
             if (result)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
@@ -201,8 +201,8 @@ const deleteUserPost = (app_id, resource_id, query, data, res) => {
             if (result)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/db/common.service.js`)
-                .then((/**@type{import('../common.service.js')} */{dbCommonRecordNotFound}) => {
+                import(`file://${process.cwd()}/server/db/common.js`)
+                .then((/**@type{import('../common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         })
