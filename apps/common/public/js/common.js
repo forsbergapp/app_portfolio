@@ -442,6 +442,28 @@ const commonSelectEventAction = async (event_target_id, target) =>{
         *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
         */
        await commonUserPreferenceSave();
+       await commonComponentRender({
+        mountDiv:   'common_dialogue_user_menu_user_locale_select', 
+        data:       {
+                    default_data_value:COMMON_GLOBAL.user_locale,
+                    default_value:'',
+                    options: await commonFFB({
+                                                path:'/app-function/COMMON_LOCALE', 
+                                                query:`lang_code=${COMMON_GLOBAL.user_locale}`, 
+                                                method:'POST', authorization_type:'APP_DATA',
+                                                body:{data_app_id : COMMON_GLOBAL.common_app_id}
+                                            })
+                                            .then((/**@type{string}*/result)=>JSON.parse(result).rows),
+                    path:null,
+                    query:null,
+                    method:null,
+                    authorization_type:null,
+                    column_value:'locale',
+                    column_text:'text'
+                    },
+        methods:    {commonFFB:commonFFB},
+        path:       '/common/component/common_select.js'});
+        commonSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', COMMON_GLOBAL.user_locale);
    }
    if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
        COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
