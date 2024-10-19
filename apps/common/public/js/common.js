@@ -2554,7 +2554,7 @@ const commonException = (appException_function, error) => {
  * @param {*} parameters 
  * @returns {void}
  */
-const commonParametersAppServiceSet = parameters => {
+const commonInitParametersInfoSet = parameters => {
     //app info
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
@@ -3163,10 +3163,11 @@ const commonEventCommonRemove = () => {
 /**
  * Set app parameters
  * Set common parameters and common app parameters 
- * @param {import('../../../common_types.js').CommonAppParametersRecord} common_parameters 
+ * @param {import('../../../common_types.js').commonInitAppParameters['APP']} app_parameters 
+ * @param {import('../../../common_types.js').commonInitAppParameters['COMMON']} common_parameters 
  * @returns {void}
  */
-const commonParametersAppSet = common_parameters => {
+const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.app_framework = parseInt(common_parameters.COMMON_APP_FRAMEWORK.VALUE);
     COMMON_GLOBAL.app_framework_messages = parseInt(common_parameters.COMMON_APP_FRAMEWORK_MESSAGES.VALUE);
     COMMON_GLOBAL.app_rest_api_version = parseInt(common_parameters.COMMON_APP_REST_API_VERSION.VALUE);
@@ -3189,11 +3190,12 @@ const commonParametersAppSet = common_parameters => {
     COMMON_GLOBAL.image_file_max_size = parseInt(common_parameters.COMMON_IMAGE_FILE_MAX_SIZE.VALUE);
     COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.COMMON_IMAGE_AVATAR_WIDTH.VALUE);
     COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.COMMON_IMAGE_AVATAR_HEIGHT.VALUE);
-    COMMON_GLOBAL.app_email = common_parameters.APP_EMAIL.VALUE;
-    COMMON_GLOBAL.app_copyright = common_parameters.APP_COPYRIGHT.VALUE;
-    COMMON_GLOBAL.app_link_url = common_parameters.APP_LINK_URL.VALUE;
-    COMMON_GLOBAL.app_link_title = common_parameters.APP_LINK_TITLE.VALUE;
-    COMMON_GLOBAL.app_text_edit = common_parameters.APP_TEXT_EDIT.VALUE;
+    
+    COMMON_GLOBAL.app_email = app_parameters.APP_EMAIL.VALUE;
+    COMMON_GLOBAL.app_copyright = app_parameters.APP_COPYRIGHT.VALUE;
+    COMMON_GLOBAL.app_link_url = app_parameters.APP_LINK_URL.VALUE;
+    COMMON_GLOBAL.app_link_title = app_parameters.APP_LINK_TITLE.VALUE;
+    COMMON_GLOBAL.app_text_edit = app_parameters.APP_TEXT_EDIT.VALUE;
 };
 /**
  * Mount app using Vue or React framework
@@ -3533,14 +3535,12 @@ const custom_framework = () => {
 /**
  * Init common
  * @param {string} parameters 
- * @returns {Promise.<{ app:import('../../../common_types.js').CommonAppParametersRecord,
- *                      app_service:{admin_only:number, first_time:number}}>}
+ * @returns {Promise.<import('../../../common_types.js').commonInitAppParameters>}
  */
 const commonInit = async (parameters) => {
     /**
      * Encoded parameters
-     * @type {{ app:import('../../../common_types.js').CommonAppParametersRecord,
-     *          app_service:{admin_only:number, first_time:number}}}
+     * @type {import('../../../common_types.js').commonInitAppParameters}
      */
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
     setUserAgentAttributes();
@@ -3557,8 +3557,8 @@ const commonInit = async (parameters) => {
                                     methods:    null,
                                     path:       '/common/component/common_app.js'});
     if (COMMON_GLOBAL.app_id ==null){
-        commonParametersAppServiceSet(decoded_parameters.app_service);
-        commonParametersAppSet(decoded_parameters.app);
+        commonInitParametersInfoSet(decoded_parameters.INFO);
+        commonInitParametersAppSet(decoded_parameters.APP, decoded_parameters.COMMON);
         commonEventCommonAdd();
     }
     if (COMMON_GLOBAL.app_framework==0){
