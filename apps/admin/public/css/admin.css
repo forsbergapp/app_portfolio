@@ -131,7 +131,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 #menu_server_process_title::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
 
 
-#common_user_start_logo{
+#common_dialogue_iam_start_logo{
 	background-image: url('/images/logo.png') !important;
 }
 
@@ -1072,7 +1072,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	bottom:0px !important;
 	top: unset !important;
 }
-#common_dialogue_user_start{
+#common_dialogue_iam_start{
 	height: auto !important;
 	text-align: center;
 }
@@ -1084,15 +1084,15 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 #common_dialouge_user_menu_log_out{
 	display:none;
 }
-#common_user_menu{
+#common_iam_avatar{
 	margin-inline-start:unset !important;
 	margin-top: unset !important;
 }
-#common_user_menu_default_avatar{
+#common_iam_avatar_default_avatar{
 	font-size: inherit !important;
 	height: unset !important;
 }
-#common_user_menu_avatar_img{
+#common_iam_avatar_avatar_img{
 	width:2em !important;
 	height: 2em !important;
 }
@@ -1515,10 +1515,10 @@ body{
     box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
 }
 
-#common_dialogue_user_start .common_input{
+#common_dialogue_iam_start .common_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
-.common_user_start_selected {
+.common_dialogue_iam_start_selected {
 	background-color:var(--app_theme_login_nav_selected_background_color);
 }
 .common_input{

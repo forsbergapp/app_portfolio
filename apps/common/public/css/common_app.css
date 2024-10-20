@@ -62,38 +62,38 @@
 #common_profile_btn_top::before{										content:var(--common_app_icon_user_profile_stat)}
 
 /*Icons dialogue user edit*/
-#common_user_edit_btn_avatar_img::before{								content:var(--common_app_icon_user_avatar_edit)}
-#common_user_edit_private::before{										content:var(--common_app_icon_private)}
-#common_user_edit_close::before{										content:var(--common_app_icon_close)}
-#common_user_edit_label_provider::before{								content:var(--common_app_icon_provider)}
-#common_user_edit_label_provider_id::before{							content:var(--common_app_icon_provider_id)}
-#common_user_edit_label_provider_email::before{							content:var(--common_app_icon_email)}
-#common_user_edit_input_username_icon::before{							content:var(--common_app_icon_user)}
-#common_user_edit_input_bio_icon::before{								content:var(--common_app_icon_user_profile)}
-#common_user_edit_input_email_icon::before{								content:var(--common_app_icon_email)}
-#common_user_edit_input_new_email_icon::before{							content:var(--common_app_icon_email)}
-#common_user_edit_input_password_icon::before{							content:var(--common_app_icon_user_password)}
-#common_user_edit_input_password_confirm_icon::before{					content:var(--common_app_icon_user_password_confirm)}
-#common_user_edit_input_password_new_icon::before{						content:var(--common_app_icon_user_password)}
-#common_user_edit_input_password_new_confirm_icon::before{				content:var(--common_app_icon_user_password_confirm)}
-#common_user_edit_input_password_reminder_icon::before{					content:var(--common_app_icon_user_password_reminder)}
+#common_dialogue_iam_edit_btn_avatar_img::before{								content:var(--common_app_icon_user_avatar_edit)}
+#common_dialogue_iam_edit_private::before{										content:var(--common_app_icon_private)}
+#common_dialogue_iam_edit_close::before{										content:var(--common_app_icon_close)}
+#common_dialogue_iam_edit_label_provider::before{								content:var(--common_app_icon_provider)}
+#common_dialogue_iam_edit_label_provider_id::before{							content:var(--common_app_icon_provider_id)}
+#common_dialogue_iam_edit_label_provider_email::before{							content:var(--common_app_icon_email)}
+#common_dialogue_iam_edit_input_username_icon::before{							content:var(--common_app_icon_user)}
+#common_dialogue_iam_edit_input_bio_icon::before{								content:var(--common_app_icon_user_profile)}
+#common_dialogue_iam_edit_input_email_icon::before{								content:var(--common_app_icon_email)}
+#common_dialogue_iam_edit_input_new_email_icon::before{							content:var(--common_app_icon_email)}
+#common_dialogue_iam_edit_input_password_icon::before{							content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_confirm_icon::before{					content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_new_icon::before{						content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_new_confirm_icon::before{				content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_reminder_icon::before{					content:var(--common_app_icon_user_password_reminder)}
 
-#common_user_edit_label_last_logontime::before{							content:var(--common_app_icon_user_last_logontime)}
-#common_user_edit_label_account_created::before{						content:var(--common_app_icon_user_account_created)}
-#common_user_edit_label_account_modified::before{						content:var(--common_app_icon_user_account_modified)}
+#common_dialogue_iam_edit_label_last_logontime::before{							content:var(--common_app_icon_user_last_logontime)}
+#common_dialogue_iam_edit_label_account_created::before{						content:var(--common_app_icon_user_account_created)}
+#common_dialogue_iam_edit_label_account_modified::before{						content:var(--common_app_icon_user_account_modified)}
 
-#common_user_edit_btn_user_delete_account::before{						content:var(--common_app_icon_delete)}	
-#common_user_edit_btn_user_update.spinner::before{						content: ''}
-#common_user_edit_btn_user_update::before{								content:var(--common_app_icon_update)}	
+#common_dialogue_iam_edit_btn_user_delete_account::before{						content:var(--common_app_icon_delete)}	
+#common_dialogue_iam_edit_btn_user_update.spinner::before{						content: ''}
+#common_dialogue_iam_edit_btn_user_update::before{								content:var(--common_app_icon_update)}	
 
-#common_user_edit_input_username:empty::before{							content:var(--common_app_icon_user)}
-#common_user_edit_input_bio:empty::before{								content:var(--common_app_icon_user_profile)}
-#common_user_edit_input_new_email:empty::before{						content:var(--common_app_icon_email)}
-#common_user_edit_input_password:empty::before{							content:var(--common_app_icon_user_password)}
-#common_user_edit_input_password_confirm:empty::before{					content:var(--common_app_icon_user_password_confirm)}
-#common_user_edit_input_password_new:empty::before{						content:var(--common_app_icon_user_password)}
-#common_user_edit_input_password_new_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
-#common_user_edit_input_password_reminder:empty::before{				content:var(--common_app_icon_user_password_reminder)}
+#common_dialogue_iam_edit_input_username:empty::before{							content:var(--common_app_icon_user)}
+#common_dialogue_iam_edit_input_bio:empty::before{								content:var(--common_app_icon_user_profile)}
+#common_dialogue_iam_edit_input_new_email:empty::before{						content:var(--common_app_icon_email)}
+#common_dialogue_iam_edit_input_password:empty::before{							content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_confirm:empty::before{					content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_new:empty::before{						content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_edit_input_password_new_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_edit_input_password_reminder:empty::before{				content:var(--common_app_icon_user_password_reminder)}
 
 /*Icons dialogue user menu*/
 #common_dialogue_user_menu_edit::before{								content:var(--common_app_icon_edit)}
@@ -107,47 +107,47 @@
 #common_dialogue_user_menu_close::before{								content:var(--common_app_icon_close)}
 
 /*Icons dialogue user password new*/
-#common_user_password_new_icon::before{									content:var(--common_app_icon_user_password)}
-#common_user_password_new_cancel::before{								content:var(--common_app_icon_cancel)}
-#common_user_password_new_ok::before{									content:var(--common_app_icon_close)}
+#common_dialogue_iam_password_new_icon::before{									content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_password_new_cancel::before{								content:var(--common_app_icon_cancel)}
+#common_dialogue_iam_password_new_ok::before{									content:var(--common_app_icon_close)}
 
-#common_user_password_new::before{										content:var(--common_app_icon_password)}
-#common_user_password_new_confirm::before{								content:var(--common_app_icon_password_confirm)}
+#common_dialogue_iam_password_new::before{										content:var(--common_app_icon_password)}
+#common_dialogue_iam_password_new_confirm::before{								content:var(--common_app_icon_password_confirm)}
 
 /*Icons dialogue user start*/
-#common_user_start_login::before{										content:var(--common_app_icon_user)}
-#common_user_start_login_button::before{								content:var(--common_app_icon_login)}
-#common_user_start_login_admin_button::before{							content:var(--common_app_icon_login)}
+#common_dialogue_iam_start_login::before{										content:var(--common_app_icon_user)}
+#common_dialogue_iam_start_login_button::before{								content:var(--common_app_icon_login)}
+#common_dialogue_iam_start_login_admin_button::before{							content:var(--common_app_icon_login)}
 
-#common_user_start_login_username:empty::before{						content:var(--common_app_icon_user)}
-#common_user_start_login_password:empty::before{						content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_start_login_username:empty::before{						content:var(--common_app_icon_user)}
+#common_dialogue_iam_start_login_password:empty::before{						content:var(--common_app_icon_user_password)}
 
-#common_user_start_login_admin_username:empty::before{					content:var(--common_app_icon_user);}
-#common_user_start_login_admin_password:empty::before{					content:var(--common_app_icon_user_password)}
-#common_user_start_login_admin_password_confirm:empty::before{			content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_start_login_admin_username:empty::before{					content:var(--common_app_icon_user);}
+#common_dialogue_iam_start_login_admin_password:empty::before{					content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_start_login_admin_password_confirm:empty::before{			content:var(--common_app_icon_user_password_confirm)}
 
-#common_user_start_signup::before{										content:var(--common_app_icon_signup)}
-#common_user_start_signup_button::before{								content:var(--common_app_icon_signup)}
+#common_dialogue_iam_start_signup::before{										content:var(--common_app_icon_signup)}
+#common_dialogue_iam_start_signup_button::before{								content:var(--common_app_icon_signup)}
 
-#common_user_start_signup_username:empty::before{						content:var(--common_app_icon_user)}
-#common_user_start_signup_email:empty::before{							content:var(--common_app_icon_email)}
-#common_user_start_signup_password:empty::before{						content:var(--common_app_icon_user_password)}
-#common_user_start_signup_password_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
-#common_user_start_signup_password_reminder:empty::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_question)}
-#common_user_start_forgot_email:empty::before{							content:var(--common_app_icon_email)}
+#common_dialogue_iam_start_signup_username:empty::before{						content:var(--common_app_icon_user)}
+#common_dialogue_iam_start_signup_email:empty::before{							content:var(--common_app_icon_email)}
+#common_dialogue_iam_start_signup_password:empty::before{						content:var(--common_app_icon_user_password)}
+#common_dialogue_iam_start_signup_password_confirm:empty::before{				content:var(--common_app_icon_user_password_confirm)}
+#common_dialogue_iam_start_signup_password_reminder:empty::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_question)}
+#common_dialogue_iam_start_forgot_email:empty::before{							content:var(--common_app_icon_email)}
 
-#common_user_start_forgot::before{										content:var(--common_app_icon_forgot)}
-#common_user_start_forgot_button::before{								content:var(--common_app_icon_email)}
+#common_dialogue_iam_start_forgot::before{										content:var(--common_app_icon_forgot)}
+#common_dialogue_iam_start_forgot_button::before{								content:var(--common_app_icon_email)}
 
-#common_user_start_forgot_email:empty::before{							content:var(--common_app_icon_email)}
+#common_dialogue_iam_start_forgot_email:empty::before{							content:var(--common_app_icon_email)}
 
-#common_user_start_close::before{										content:var(--common_app_icon_close)}
-#common_user_start_login_admin_first_time::before{						content:var(--common_app_icon_init)}
+#common_dialogue_iam_start_close::before{										content:var(--common_app_icon_close)}
+#common_dialogue_iam_start_login_admin_first_time::before{						content:var(--common_app_icon_init)}
 
 
 /*Icons dialogue user verify*/
-#common_user_verify_email_icon::before{									content:var(--common_app_icon_email)}
-#common_user_verify_cancel::before{										content:var(--common_app_icon_cancel)}
+#common_dialogue_iam_verify_email_icon::before{									content:var(--common_app_icon_email)}
+#common_dialogue_iam_verify_cancel::before{										content:var(--common_app_icon_cancel)}
 
 /*Icons module leaflet control*/
 #common_module_leaflet_control_search_button::before{					content:var(--common_app_icon_search)}
@@ -166,7 +166,7 @@
 #common_profile_search_icon::before{									content:var(--common_app_icon_search)}
 
 /*Icons user account*/
-#common_user_menu_default_avatar::before{								content:var(--common_app_icon_user_avatar)}
+#common_iam_avatar_default_avatar::before{								content:var(--common_app_icon_user_avatar)}
 
 /*Icons window info*/
 #common_window_info_btn_close::before{									content:var(--common_app_icon_close)}
@@ -765,34 +765,34 @@ body.rtl{
 	vertical-align: top;
 }
 /* Dialogue Verification code*/
-#common_dialogue_user_verify.common_dialogue_show2{
+#common_dialogue_iam_verify.common_dialogue_show2{
 	height:280px;
 }
-#common_user_verify_email_icon{
+#common_dialogue_iam_verify_email_icon{
 	font-size:30px;
 	height:30px;
 }
-#common_user_verify_email{
+#common_dialogue_iam_verify_email{
     margin-top: 20px;
 	height: 30px;
 }
-#common_user_verify_data_verification_type,
-#common_user_verify_data_username,
-#common_user_verify_data_password{
+#common_dialogue_iam_verify_data_verification_type,
+#common_dialogue_iam_verify_data_username,
+#common_dialogue_iam_verify_data_password{
 	display: none;
 }
-#common_user_verify_verification_container{
+#common_dialogue_iam_verify_verification_container{
 	margin-top:40px;
 	margin-bottom:40px;	
 }
-.common_user_verify_verification_wrap{
+.common_dialogue_iam_verify_verification_wrap{
 	width: 30px;
 	height: 40px;
 	padding: 0;
 	display:inline-block;
 	margin:5px;
 }
-.common_user_verify_input_verification_char{
+.common_dialogue_iam_verify_input_verification_char{
 	border-radius: 4px;
 	font-size: 30px;
 	text-align: center;
@@ -807,51 +807,51 @@ body.rtl{
 }
 
 /*Dialogue user password new*/
-#common_dialogue_user_password_new.common_dialogue_show2{
+#common_dialogue_iam_password.common_dialogue_show2{
 	width: 300px;
 	height:150px;
 }
-#common_user_password_new_icon{
+#common_dialogue_iam_password_new_icon{
 	font-size: 30px;
     height: 30px;
 }
-#common_user_password_new_auth{
+#common_dialogue_iam_password_new_auth{
 	display: none;
 }
-#common_user_password_new,
-#common_user_password_new_mask,
-#common_user_password_new_confirm,
-#common_user_password_new_confirm_mask{
+#common_dialogue_iam_password_new,
+#common_dialogue_iam_password_new_mask,
+#common_dialogue_iam_password_new_confirm,
+#common_dialogue_iam_password_new_confirm_mask{
 	margin-top: 10px;
 	height: 30px;
 	padding: 4px 10px;
     box-sizing: border-box;
 }
 /*Dialogue user start*/
-#common_dialogue_user_start.common_dialogue_show1{
+#common_dialogue_iam_start.common_dialogue_show1{
 	max-height: 90%;
 	width: 300px;
 	height: 430px;
 }
-.common_user_start_form{
+.common_dialogue_iam_start_form{
 	width: 100%;
 }
-#common_user_start_nav > div{
+#common_dialogue_iam_start_nav > div{
 	margin:10px;
 	cursor: pointer;
 	width: 20%;
 }
-#common_user_start_logo{
+#common_dialogue_iam_start_logo{
 	background-image: url('/common/images/logo.png');
 	margin: 0 auto;
 }
-#common_dialogue_user_start .common_input, .common_login_input{
+#common_dialogue_iam_start .common_input, .common_login_input{
 	height: 2em;
 	margin-top: 10px;
 	padding: 2px 10px;
 	box-sizing: border-box;
 }
-#common_dialogue_user_start .common_user_start_button{
+#common_dialogue_iam_start .common_dialogue_iam_start_button{
 	display: inline-block;
 	height:30px;
 	padding:1px;
@@ -860,49 +860,49 @@ body.rtl{
 	margin-bottom:10px;
 	cursor:pointer;
 }
-#common_dialogue_user_start .common_login_provider_id, 
-#common_dialogue_user_start .common_login_provider_name{
+#common_dialogue_iam_start .common_login_provider_id, 
+#common_dialogue_iam_start .common_login_provider_name{
 	display:inline-block;
 }
-#common_user_start_forgot_form{
+#common_dialogue_iam_start_forgot_form{
 	width: 100%;
 }
-#common_user_start_forgot_button{
+#common_dialogue_iam_start_forgot_button{
 	margin:10px;
 	cursor:pointer;
 }
-#common_user_start_close{
+#common_dialogue_iam_start_close{
 	width: 100%;
 	margin-top:10px;
 }
-#common_user_start_login_button{
+#common_dialogue_iam_start_login_button{
 	width: 100%;
 }
-#common_user_start_identity_provider_login >div,
-#common_user_start_identity_provider_login{
+#common_dialogue_iam_start_identity_provider_login >div,
+#common_dialogue_iam_start_identity_provider_login{
 	display: block !important;
 }
 /*Dialogue user edit*/
-#common_dialogue_user_edit.common_dialogue_show1{
+#common_dialogue_iam_edit.common_dialogue_show1{
 	width: 360px;
 	height: auto;
 	padding-bottom: 0px;
 }
-#common_dialogue_user_edit .common_input{
+#common_dialogue_iam_edit .common_input{
 	height: 1.5em;
 	width: 100%;
 	border: 0.5px solid;
 }
-#common_user_edit_avatar{
+#common_dialogue_iam_edit_avatar{
 	width:48px;
 	height:48px;
 	position: fixed;
     top: 4px;
 }
-#common_user_edit_input_avatar_img{
+#common_dialogue_iam_edit_input_avatar_img{
 	display:none;
 }
-#common_user_edit_btn_avatar_img{
+#common_dialogue_iam_edit_btn_avatar_img{
 	border: 0.5px solid;
 	border-radius: 4px;
     width: 26px;	
@@ -910,49 +910,49 @@ body.rtl{
 	cursor: pointer;
 	display: inline-block;
 }
-#common_dialogue_user_edit .common_setting_horizontal_row{
+#common_dialogue_iam_edit .common_setting_horizontal_row{
 	display: block;
 }
-#common_dialogue_user_edit #common_user_edit_common .common_setting_horizontal_row:first-child{
+#common_dialogue_iam_edit #common_dialogue_iam_edit_common .common_setting_horizontal_row:first-child{
 	height: 60px;
 }
-#common_dialogue_user_edit #common_user_edit_common .common_setting_horizontal_row:first-child .common_setting_horizontal_col:nth-child(2){
+#common_dialogue_iam_edit #common_dialogue_iam_edit_common .common_setting_horizontal_row:first-child .common_setting_horizontal_col:nth-child(2){
 	text-align: center !important;
 	vertical-align: top;
 }
-#common_dialogue_user_edit .common_setting_horizontal_col:nth-child(1){
+#common_dialogue_iam_edit .common_setting_horizontal_col:nth-child(1){
 	width :10%;
 	display: inline-block;
 }
-#common_dialogue_user_edit .common_setting_horizontal_col:nth-child(2){
+#common_dialogue_iam_edit .common_setting_horizontal_col:nth-child(2){
 	width :85%;
 	text-align: start;
 	display: inline-block;
 }
-#common_dialogue_user_edit #common_user_edit_provider .common_setting_horizontal_row:nth-child(5){
+#common_dialogue_iam_edit #common_dialogue_iam_edit_provider .common_setting_horizontal_row:nth-child(5){
 	height:0px;
 }
-#common_dialogue_user_edit #common_user_edit_provider{
+#common_dialogue_iam_edit #common_dialogue_iam_edit_provider{
 	margin-top: 10px;
     margin-bottom: 10px;
 }
-#common_user_edit_buttons{
+#common_dialogue_iam_edit_buttons{
 	margin-bottom: 10px;
 }
-#common_user_edit_close{
+#common_dialogue_iam_edit_close{
 	margin-bottom:20px;
 }
-#common_dialogue_user_edit #common_user_edit_buttons .common_setting_horizontal_col:nth-child(1) {
+#common_dialogue_iam_edit #common_dialogue_iam_edit_buttons .common_setting_horizontal_col:nth-child(1) {
 	width: 0%;
 	display: none;
 }
-#common_dialogue_user_edit #common_user_edit_buttons .common_setting_horizontal_col:nth-child(2) {
+#common_dialogue_iam_edit #common_dialogue_iam_edit_buttons .common_setting_horizontal_col:nth-child(2) {
 	width: 100%;
 	text-align: center !important;
 }
-#common_user_edit_label_data_last_logontime,
-#common_user_edit_label_data_account_created,
-#common_user_edit_label_data_account_modified {
+#common_dialogue_iam_edit_label_data_last_logontime,
+#common_dialogue_iam_edit_label_data_account_created,
+#common_dialogue_iam_edit_label_data_account_modified {
 	font-size: 0.5em;
 }
 
@@ -1306,24 +1306,24 @@ body.rtl{
 
 /*Dialogue User Edit*/
 
-#common_user_edit_btn_label_user_update,
-#common_user_edit_btn_label_user_delete_account{
+#common_dialogue_iam_edit_btn_label_user_update,
+#common_dialogue_iam_edit_btn_label_user_delete_account{
 	display:inline-block;
 	width:120px;
 	text-align: center;
 	vertical-align: top;
 	text-transform: uppercase;
 }
-#common_user_edit_label_provider_image_url,
-#common_user_edit_label_provider_image_url_data{
+#common_dialogue_iam_edit_label_provider_image_url,
+#common_dialogue_iam_edit_label_provider_image_url_data{
 	display:none !important;
 }
-#common_dialogue_user_edit #common_user_edit_btn_user_delete_account
+#common_dialogue_iam_edit #common_dialogue_iam_edit_btn_user_delete_account
 {
 	display: inline-block;
 }
-#common_user_edit_btn_user_update,
-#common_user_edit_btn_user_delete_account
+#common_dialogue_iam_edit_btn_user_update,
+#common_dialogue_iam_edit_btn_user_delete_account
 {
 	margin-left:10px;
 	margin-right:10px;
@@ -1332,7 +1332,7 @@ body.rtl{
 }
 
 /*User account*/
-#common_user_menu{
+#common_iam_avatar{
 	margin-inline-start: 10px;
 	width: 48px;
 	height:48px;
@@ -1345,19 +1345,19 @@ body.rtl{
 #common_dialogue_user_menu_token_countdown > div {
 	display: inline-block;
 }
-#common_user_menu_logged_in, #common_dialogue_user_menu_logged_in{
+#common_iam_avatar_logged_in, #common_dialogue_user_menu_logged_in{
 	display: none;
 }
-#common_user_menu_logged_out{
+#common_iam_avatar_logged_out{
 	display: inline-block;
 	height: 48px;
 }
-#common_user_menu_default_avatar{
+#common_iam_avatar_default_avatar{
 	font-size: 48px;
 	height: 48px;
 	margin-top: var(--common_app_useragent_fix_margin_top);
 }
-#common_user_menu_default_avatar::before{
+#common_iam_avatar_default_avatar::before{
 	vertical-align: top;
 	display: inline-block;
 }
