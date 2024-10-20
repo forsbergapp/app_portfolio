@@ -70,7 +70,7 @@ const configDefault = async () => {
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_useragent],
                 [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config],
                 [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config_service],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_iam_user],
+                [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_iam_user[]],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app[]],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app_module[]],
                 [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app_parameter[]],
@@ -124,10 +124,7 @@ const configDefault = async () => {
         row.COMMON_CLIENT_SECRET = securitySecretCreate();
         row.COMMON_APP_ID_SECRET = securitySecretCreate();
         row.COMMON_APP_ACCESS_SECRET = securitySecretCreate();
-    });    
-    //set created for user
-    config_obj[6][1].USER[0].created = new Date().toISOString();
-    
+    });        
     //set paths in microservice config
     /**@type{import('../microservice/types.js').microservice_config} */
     const microservice_config = config_obj[4][1];
@@ -232,39 +229,4 @@ const configFileSave = async (resource_id, data) => {
     }
     await fileFsWrite(resource_id, file_config.transaction_id, file_config.file_content);
 };
-/**
- * Check first time
- * @returns {boolean}
- */
-const configCheckFirstTime = () => {
-    if (fileCache('IAM_USER').USER[0].username=='')
-        return true;
-    else
-        return false;
-};
-/**
- * Create admin
- * @async
- * @param {string} admin_name
- * @param {string} admin_password
- * @returns {Promise.<void>}
- */
-const configAdminCreate = async (admin_name, admin_password) => {
-    /**@type{import('./security.js')} */
-    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-    
-    /**@type{import('./types.js').server_db_file_result_fileFsRead} */
-    const file = await fileFsRead('IAM_USER', true);
-    /**@type{import('./types.js').server_iam_user['USER']} */
-    const user = file.file_content.USER;
-    user[0].username = admin_name;
-    user[0].password = await securityPasswordCreate(admin_password);
-    user[0].modified = new Date().toISOString();
-    file.file_content.USER = user;
-    await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
-    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
-};
-
-export{ configFileGet, configFileSave, configCheckFirstTime,
-        configAdminCreate, 
-        configGet, configInit};
+export{ configFileGet, configFileSave, configGet, configInit};

@@ -2002,12 +2002,12 @@ const appEventClick = event => {
                     break;
                 }
                 //dialogue user menu
-                case 'common_user_menu':
-                    case 'common_user_menu_logged_in':
-                    case 'common_user_menu_avatar':
-                    case 'common_user_menu_avatar_img':
-                    case 'common_user_menu_logged_out':
-                    case 'common_user_menu_default_avatar':{
+                case 'common_iam_avatar':
+                    case 'common_iam_avatar_logged_in':
+                    case 'common_iam_avatar_avatar':
+                    case 'common_iam_avatar_avatar_img':
+                    case 'common_iam_avatar_logged_out':
+                    case 'common_iam_avatar_default_avatar':{
                         common.commonComponentRender({
                             mountDiv:   'common_dialogue_user_menu',
                             data:       {
@@ -2059,11 +2059,11 @@ const appEventClick = event => {
                     break;
                 }
                 //dialogue user start
-                case 'common_user_start_login_button':{
+                case 'common_dialogue_iam_start_login_button':{
                     appUserLogin();
                     break;
                 }
-                case 'common_user_start_identity_provider_login':{
+                case 'common_dialogue_iam_start_identity_provider_login':{
                     const target_row = common.commonElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
@@ -2202,8 +2202,8 @@ const appEventKeyUp = event => {
                     break;
                 }
                 //common
-                case 'common_user_start_login_username':
-                case 'common_user_start_login_password':{
+                case 'common_dialogue_iam_start_login_username':
+                case 'common_dialogue_iam_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
                         appUserLogin().catch(()=>null);
@@ -2211,16 +2211,16 @@ const appEventKeyUp = event => {
                     break;
                 }
                 //dialogue verify
-                case 'common_user_verify_verification_char1':
-                case 'common_user_verify_verification_char2':
-                case 'common_user_verify_verification_char3':
-                case 'common_user_verify_verification_char4':
-                case 'common_user_verify_verification_char5':{
+                case 'common_dialogue_iam_verify_verification_char1':
+                case 'common_dialogue_iam_verify_verification_char2':
+                case 'common_dialogue_iam_verify_verification_char3':
+                case 'common_dialogue_iam_verify_verification_char4':
+                case 'common_dialogue_iam_verify_verification_char5':{
                     common.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event_target_id}`), 
-                                                    'common_user_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), appUserLogin);
+                                                    'common_dialogue_iam_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), appUserLogin);
                     break;
                 }
-                case 'common_user_verify_verification_char6':{
+                case 'common_dialogue_iam_verify_verification_char6':{
                     common.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event_target_id}`), '', appUserLogin);
                     break;
                 }
@@ -2336,7 +2336,7 @@ const appInit = async parameters => {
             mountDiv:   'app_user_account',
             data:       null,
             methods:    null,
-            path:       '/common/component/common_user_account.js'}));
+            path:       '/common/component/common_iam_avatar.js'}));
     //set papersize
     appPaperZoom();
     //set app and report globals

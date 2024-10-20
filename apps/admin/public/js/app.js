@@ -924,11 +924,11 @@ const appLogin = async () => {
                 mountDiv:   'secure_app_user_account',
                 data:       null,
                 methods:    null,
-                path:       '/common/component/common_user_account.js'})
+                path:       '/common/component/common_iam_avatar.js'})
             .then(()=>{
-                COMMON_DOCUMENT.querySelector('#common_user_menu_default_avatar').classList.add('app_role_admin');
-                COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
-                COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+                COMMON_DOCUMENT.querySelector('#common_iam_avatar_default_avatar').classList.add('app_role_admin');
+                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
+                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
                 appSecureInit();
             });
         });
@@ -977,7 +977,7 @@ const appEventClick = event => {
                     appLogout();
                     break;
                 }
-                case 'common_user_start_login_admin_button':{
+                case 'common_dialogue_iam_start_login_admin_button':{
                     appLogin();
                     break;
                 }
@@ -995,12 +995,12 @@ const appEventClick = event => {
                     break;
                 }
                 /**user account */
-                case 'common_user_menu':
-                case 'common_user_menu_logged_in':
-                case 'common_user_menu_avatar':
-                case 'common_user_menu_avatar_img':
-                case 'common_user_menu_logged_out':
-                case 'common_user_menu_default_avatar':{
+                case 'common_iam_avatar':
+                case 'common_iam_avatar_logged_in':
+                case 'common_iam_avatar_avatar':
+                case 'common_iam_avatar_avatar_img':
+                case 'common_iam_avatar_logged_out':
+                case 'common_iam_avatar_default_avatar':{
                     common.commonComponentRender({
                                         mountDiv:   'common_dialogue_user_menu',
                                         data:       {
@@ -1080,9 +1080,9 @@ const appEventKeyUp = event => {
         common.commonEvent('keyup',event)
         .then(()=>{
             switch (event_target_id){
-                case 'common_user_start_login_admin_username':
-                case 'common_user_start_login_admin_password':
-                case 'common_user_start_login_admin_password_confirm':{
+                case 'common_dialogue_iam_start_login_admin_username':
+                case 'common_dialogue_iam_start_login_admin_password':
+                case 'common_dialogue_iam_start_login_admin_password_confirm':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
                         appLogin().catch(()=>null);

@@ -19,7 +19,7 @@
 #common_profile_search_list_wrap{
 	visibility: hidden;
 }
-#common_user_menu{
+#common_iam_avatar{
 	position: absolute;
 	bottom:10px;
 }
@@ -85,11 +85,11 @@ body{
 }
 
 /*APP THEME COMMON*/
-#common_user_menu_avatar{
+#common_iam_avatar_avatar{
 	background-color: var(--app_theme_main_branding_color1);
     border-radius: 50%;
 }
-#common_user_edit_btn_avatar_img{
+#common_dialogue_iam_edit_btn_avatar_img{
 	background-color: var(--app_theme_main_branding_color1);
 }
 .common_list_row_selected{
