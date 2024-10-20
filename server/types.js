@@ -298,7 +298,7 @@
 /**
  * DB FILE server_db_file_iam_user
  * @typedef {{
- *          id?:number, 
+ *          id:number, 
  *          username:string, 
  *          password:string, 
  *          type: 'ADMIN'|'USER', 
@@ -307,13 +307,59 @@
  *          email:string|null, 
  *          email_unverified:string|null, 
  *          avatar:string|null,
- *          user_level?:number|null, 
+ *          user_level:number|null, 
  *          verification_code?: number|null, 
- *          status?:number|null, 
- *          created?:string, 
- *          modified?:string}} server_db_file_iam_user
+ *          status:number|null, 
+ *          created:string, 
+ *          modified:string}} server_db_file_iam_user
  */
-
+/**
+ * DB FILE server_db_file_iam_user_new
+ * @typedef {{
+*          id?:number, 
+*          username:string, 
+*          password:string, 
+*          type: 'ADMIN'|'USER', 
+*          bio:string|null, 
+*          private:number|null, 
+*          email:string|null, 
+*          email_unverified:string|null, 
+*          avatar:string|null,
+*          user_level?:number|null, 
+*          verification_code?: number|null, 
+*          status?:number|null, 
+*          created?:string, 
+*          modified?:string}} server_db_file_iam_user_new
+*/
+/**
+ * DB FILE server_db_file_iam_user_get
+ * @typedef {{
+*          id:number, 
+*          username:string, 
+*          password:string, 
+*          type: 'ADMIN'|'USER', 
+*          bio:string|null, 
+*          private:number|null, 
+*          email:string|null, 
+*          email_unverified:string|null, 
+*          avatar:string|null,
+*          user_level:number|null, 
+*          status:number|null, 
+*          created:string, 
+*          modified:string}} server_db_file_iam_user_get
+*/
+/**
+ * DB FILE server_db_file_iam_user_update
+ * @typedef {{
+ *          username:string, 
+ *          password:string,
+ *          password_new:string|null,
+ *          bio:string|null, 
+ *          private:number|null, 
+ *          email:string|null, 
+ *          email_unverified:string|null, 
+ *          avatar:string|null}} server_db_file_iam_user_update
+ */
 /**
  * DB FILE server_db_file_db_name
  * 

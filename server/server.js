@@ -171,15 +171,15 @@ const serverUtilAppLine = () =>{
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all                  (iam.iamIdTokenAuthenticate,                   bffAppData);
-    app.route('/bff/app_signup/v1*').post               (iam.iamIdTokenAuthenticateRegistration,       bffAppSignup);
-    app.route('/bff/app_access/v1*').all                (iam.iamAccessTokenAuthenticate,               bffAppAccess);
-    app.route('/bff/app_external/v1/app-function*').post (iam.iamExternalAuthenticate,                 bffAppExternal);
-    app.route('/bff/admin/v1*').all                     (iam.iamAccessTokenAuthenticateAdmin,          bffAdmin);
-    app.route('/bff/socket/v1*').get                    (iam.iamSocketAuthenticate,                    bffSocket);
-    app.route('/bff/iam_admin/v1*').post                (iam.iamAdminAuthenticate,                  bffIAMAdmin);
-    app.route('/bff/iam_user/v1*').post                 (iam.iamUserAuthenticate,                   bffIAMUser);
-    app.route('/bff/iam_provider/v1*').post             (iam.iamProviderAuthenticate,               bffIAMProvider);
+    app.route('/bff/app_data/v1*').all                      (iam.iamIdTokenAuthenticate,                bffAppData);
+    app.route('/bff/app_signup/v1*').post                   (iam.iamIdTokenAuthenticateRegistration,    bffAppSignup);
+    app.route('/bff/app_access/v1*').all                    (iam.iamAccessTokenAuthenticate,            bffAppAccess);
+    app.route('/bff/app_external/v1/app-function*').post    (iam.iamExternalAuthenticate,               bffAppExternal);
+    app.route('/bff/admin/v1*').all                         (iam.iamAccessTokenAuthenticateAdmin,       bffAdmin);
+    app.route('/bff/socket/v1*').get                        (iam.iamSocketAuthenticate,                 bffSocket);
+    app.route('/bff/iam_admin/v1/server-iam-login').post    (iam.iamAdminAuthenticate,                  bffIAMAdmin);
+    app.route('/bff/iam_user/v1*').post                     (iam.iamUserAuthenticate,                   bffIAMUser);
+    app.route('/bff/iam_provider/v1*').post                 (iam.iamProviderAuthenticate,               bffIAMProvider);
     
     //app asset, common asset, info page, report and app
     app.route('*').get                          (bffApp);
@@ -916,6 +916,26 @@ const serverUtilAppLine = () =>{
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
+                    case route({url:`/bff/admin/v1/server-iam/user/${resource_id_string}`, method:'GET'}):{
+                        resolve(iam_service.iamUserGet(
+                                                        /**@ts-ignore */
+                                                        resource_id_get_number(), 
+                                                        routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/server-iam/user/${resource_id_string}`, method:'PATCH'}):{
+                        resolve(iam_service.iamUserUpdate(
+                            /**@ts-ignore */
+                            resource_id_get_number(),
+                            routesparameters.body,
+                            routesparameters.res));
+                        break;
+                    }
+                    case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
+                        resolve(iam_service.iamUserLogin(routesparameters.app_id, app_query)
+                                    .then(result=>iso_return_message(result, true)));
+                        break;
+                    }
                     //socket using EventSource route
                     case route({url:'/bff/socket/v1/server-socket/socket', method:'GET'}):{
                         //EventSource uses GET method, should otherwise be POST
@@ -934,23 +954,23 @@ const serverUtilAppLine = () =>{
                         resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    //iam routes
-                    case route({url:'/bff/iam_admin/v1/server-iam/login', method:'POST'}):{
+                    //iam routes, for login and logout
+                    case route({url:'/bff/iam_admin/v1/server-iam-login', method:'POST'}):{
                         resolve(iam_service.iamAdminAuthenticate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/iam_user/v1/server-iam/login', method:'POST'}):{
+                    case route({url:'/bff/iam_user/v1/server-iam-login', method:'POST'}):{
                         resolve(db_user_account.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route({url:`/bff/iam_provider/v1/server-iam/login/${resource_id_string}`, method:'POST', required:true}):{
+                    case route({url:`/bff/iam_provider/v1/server-iam-login/${resource_id_string}`, method:'POST', required:true}):{
                         resolve(db_user_account.login_provider( routesparameters.app_id, routesparameters.res.req.query.iam, 
                                                                 /**@ts-ignore */
                                                                 resource_id_get_number(), 
                                                                 routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
-                    case route({url:'/bff/app_data/v1/server-iam/user/logout', method:'POST'}):{
+                    case route({url:'/bff/app_data/v1/server-iam-logout', method:'POST'}):{
                         resolve(socket.socketConnectedUpdate(routesparameters.app_id, 
                                 {   iam:routesparameters.res.req.query.iam,
                                     user_account_id:null,
@@ -961,11 +981,6 @@ const serverUtilAppLine = () =>{
                                     headers_user_agent:routesparameters.user_agent,
                                     headers_accept_language:routesparameters.accept_language,
                                     res: routesparameters.res}));
-                        break;
-                    }
-                    case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
-                        resolve(iam_service.iamUserLogin(routesparameters.app_id, app_query)
-                                    .then(result=>iso_return_message(result, true)));
                         break;
                     }
                     //microservice routes
