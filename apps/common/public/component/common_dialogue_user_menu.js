@@ -4,14 +4,21 @@
 
 /**
  * 
- * @param {{username:string,
+ * @param {{app_id:number,
+ *          common_app_id:number,
+ *          user_account_id:number|null,
+ *          username:string,
  *          admin:string,
- *          countdown:0|1}} props 
+ *          countdown:0|1,
+ *          function_is_provider_user:function}} props 
  * @returns 
  */
-const template = props =>`  ${(props.admin !='' && props.admin!=null)?
+const template = props =>`  ${props.app_id == props.common_app_id?
                                 `<div id='common_dialogue_user_menu_admin'>${props.admin ?? ''}</div>`:
-                                `<div id='common_dialogue_user_menu_username'>${props.username}</div>`
+                                `${props.username?
+                                    `<div id='common_dialogue_user_menu_username'>${props.username}</div>`:
+                                    ''
+                                }`
                             }
                             ${props.countdown==1?
                                 `<div id='common_dialogue_user_menu_token_countdown'>
@@ -37,14 +44,21 @@ const template = props =>`  ${(props.admin !='' && props.admin!=null)?
                                     <div id='common_dialogue_user_menu_user_arabic_script_select'></div>
                                 </div>
                             </div>
-                            <div id='common_dialogue_user_menu_logged_in'>
-                                <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
-                                <div id='common_dialogue_user_menu_log_out' class='common_icon'></div>
-                            </div>
-                            <div id='common_dialogue_user_menu_logged_out'>
-                                <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
-                                <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
-                            </div>
+                            ${props.app_id == props.common_app_id || props.username || (props.user_account_id!=null && props.function_is_provider_user())?
+                                `<div id='common_dialogue_user_menu_logged_in'>
+                                    <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
+                                    ${props.app_id == props.common_app_id?
+                                        '':
+                                        '<div id=\'common_dialogue_user_menu_log_out\' class=\'common_icon\'></div>'
+                                    }
+                                </div>`:
+                                `${props.app_id == props.common_app_id?'':
+                                    `<div id='common_dialogue_user_menu_logged_out'>
+                                        <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
+                                        <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
+                                    </div>`
+                                }`
+                            }
                             <div id='common_dialogue_user_menu_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
@@ -107,26 +121,6 @@ const component = async props => {
         }
     };
     
-    const adjust_logged_out_logged_in = () =>{
-        //set logged out or logged in
-        if (props.data.username || (props.data.user_account_id!=null && is_provider_user())){
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'inline-block';
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
-            //admin does not show log out icon here
-            if (props.data.app_id == props.data.common_app_id)
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_log_out').style.display = 'none';
-        }
-        else
-            if (props.data.admin){
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'none';
-            }
-            else{
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_username').style.display = 'none';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_in').style.display = 'none';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_logged_out').style.display = 'inline-block';
-            }
-    };
     const onMounted = async () =>{                                                               
         
         //mount select
@@ -204,7 +198,6 @@ const component = async props => {
             props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
             props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
         }
-        adjust_logged_out_logged_in();
         if (props.data.token_exp && props.data.token_iat){
             const element_id = 'common_dialogue_user_menu_token_countdown_time';
             props.methods.commonUserSessionCountdown(props.methods.COMMON_DOCUMENT.querySelector(`#${element_id}`), props.data.token_exp);
@@ -214,9 +207,14 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({  username:props.data.username,
+        template:   template({  app_id:props.data.app_id,
+                                common_app_id:props.data.common_app_id,
+                                user_account_id:props.data.user_account_id,
+                                username:props.data.username,
                                 admin:props.data.admin,
-                                countdown:(props.data.token_exp && props.data.token_iat)?1:0})
+                                countdown:(props.data.token_exp && props.data.token_iat)?1:0,
+                                function_is_provider_user:is_provider_user
+                            })
     };
 };
 export default component;

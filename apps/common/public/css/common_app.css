@@ -1388,11 +1388,7 @@ body.rtl{
 {
 	display: block;
 }
-#common_dialogue_user_menu_logged_in{
-	display:none;
-	width:100%;
-	font-size: 30px !important;
-}
+#common_dialogue_user_menu_logged_in,
 #common_dialogue_user_menu_logged_out{
 	display: inline-block;
 	width:100%;
