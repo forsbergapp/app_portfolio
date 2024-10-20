@@ -152,7 +152,7 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
                                 private:1, 
                                 email:null, 
                                 email_unverified:null, 
-                                avatar:null})
+                                avatar:null}, res)
                 .then(()=>check_user(username, password));
             else
                 check_user(username, password);
@@ -639,37 +639,47 @@ const iamUserLogin = async (app_id, query) => {const rows = await fileFsReadLog(
 /**
  * Create user
  * @param {import('./types.js').server_db_file_iam_user} data
+ * @param {import('./types.js').server_server_res} res
  * @returns {Promise.<void>}
  */
-const iamUserCreate = async data => {
-    /**@type{import('./db/file.js')} */
-    const {fileFsWrite, fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
-    /**@type{import('./security.js')} */
-    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-    
-    /**@type{import('./types.js').server_db_file_result_fileFsRead} */
-    const file = await fileFsRead('IAM_USER', true);
+const iamUserCreate = async (data, res) => {
+    //check required attributes
+    if (!data.username || !data.password ||
+        //check not allowed attributes when creating a user
+        data.id||data.user_level ||data.verification_code||data.status||data.created||data.modified){
+        res.statusCode = 400;
+        throw '⛔';    
+    }
+    else{
+        /**@type{import('./db/file.js')} */
+        const {fileFsWrite, fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
+        /**@type{import('./security.js')} */
+        const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
 
-    /**@type{import('./types.js').server_db_file_iam_user} */
-    const user =     {
-                        id:Date.now(), 
-                        username:data.username, 
-                        //save encrypted password
-                        password:await securityPasswordCreate(data.password), 
-                        type: data.type, 
-                        bio:data.bio, 
-                        private:data.private, 
-                        email:data.email, 
-                        email_unverified:data.email_unverified, 
-                        avatar:data.avatar,
-                        user_level:data.user_level, 
-                        verification_code: null, 
-                        status:null, 
-                        created:new Date().toISOString(), 
-                        modified:new Date().toISOString()
-                    };
-    await fileFsWrite('IAM_USER', file.transaction_id, file.file_content.concat(user))
-    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+        /**@type{import('./types.js').server_db_file_result_fileFsRead} */
+        const file = await fileFsRead('IAM_USER', true);
+
+        /**@type{import('./types.js').server_db_file_iam_user} */
+        const user =     {
+                            id:Date.now(), 
+                            username:data.username, 
+                            //save encrypted password
+                            password:await securityPasswordCreate(data.password), 
+                            type: data.type, 
+                            bio:data.bio, 
+                            private:data.private, 
+                            email:data.email, 
+                            email_unverified:data.email_unverified, 
+                            avatar:data.avatar,
+                            user_level:null, 
+                            verification_code: null, 
+                            status:null, 
+                            created:new Date().toISOString(), 
+                            modified:new Date().toISOString()
+                        };
+        await fileFsWrite('IAM_USER', file.transaction_id, file.file_content.concat(user))
+        .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+    }
 };
                                                     
 
