@@ -79,7 +79,8 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
  * @param {string} accept_language
  * @param {import('./types.js').server_server_res} res 
  * @return {Promise.<{
- *                  username:string,
+ *                  iam_user_id:number,
+ *                  iam_user_name:string,
  *                  token_at:string,
  *                  exp:number,
  *                  iat:number,
@@ -88,79 +89,87 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
 const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, accept_language, res)=>{
     /**@type{import('./socket.js')} */
     const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
-    return new Promise((resolve, reject)=>{
-        const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
+    /**
+     * @param {1|0} result
+     * @param {number} id
+     * @param {string} username
+     * @returns {Promise.<{
+     *                  iam_user_id:number,
+     *                  iam_user_name:string,
+     *                  token_at:string,
+     *                  exp:number,
+     *                  iat:number,
+     *                  tokentimestamp:number}>}
+     */
+    const check_user = async (result, id, username) => {       
+        const jwt_data = iamTokenAuthorize(app_id, 'ADMIN', {id:null, name:username, ip:ip, scope:'USER'});
+        /**@type{import('./types.js').server_iam_admin_login_record} */
+        const file_content = {	id:         app_id,
+                                user:		username,
+                                res:		result,
+                                token:      jwt_data.token,
+                                ip:         ip,
+                                ua:         null,
+                                long:       null,
+                                lat:        null,
+                                created:    new Date().toISOString()};
+        await fileFsAppend('IAM_ADMIN_LOGIN', file_content, '');
+        if (result == 1){
+            return await socketConnectedUpdate(app_id, 
+                {   iam:iam,
+                    user_account_id:null,
+                    admin:username,
+                    token_access:null,
+                    token_admin:jwt_data.token,
+                    ip:ip,
+                    headers_user_agent:user_agent,
+                    headers_accept_language:accept_language,
+                    res: res})
+            .then(()=>{
+                return  {   iam_user_id: id,
+                            iam_user_name:username,
+                            token_at: jwt_data.token,
+                            exp:jwt_data.exp,
+                            iat:jwt_data.iat,
+                            tokentimestamp:jwt_data.tokentimestamp
+                        };
+            })
+            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+        }
+        else
+            throw iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, fileFsAppend', true);
+    };
+    if(authorization){       
+        const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+        const username = userpass.split(':')[0];
+        const password = userpass.split(':')[1];
+        if (fileCache('IAM_USER').length==0)
+            return iamUserCreate({
+                            username:username, 
+                            password:password, 
+                            type: 'ADMIN', 
+                            bio:null, 
+                            private:1, 
+                            email:null, 
+                            email_unverified:null, 
+                            avatar:null}, res)
+            .then(result=>check_user(1, result.id, username));
+        else{
             /**@type{import('./security.js')} */
             const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
 
             /**@type{import('./types.js').server_db_file_iam_user}*/
             const user =  fileCache('IAM_USER').filter((/**@type{import('./types.js').server_db_file_iam_user}*/user)=>user.username == username)[0];
 
-            /**@type{0|1} */
-            let result = 0;
             if (user && user.username == username && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
-                result = 1;
+                return check_user(1, user.id, username); 
             else
-                result = 0;
-            const jwt_data = iamTokenAuthorize(app_id, 'ADMIN', {id:null, name:username, ip:ip, scope:'USER'});
-            /**@type{import('./types.js').server_iam_admin_login_record} */
-            const file_content = {	id:         app_id,
-                                    user:		username,
-                                    res:		result,
-                                    token:      jwt_data.token,
-                                    ip:         ip,
-                                    ua:         null,
-                                    long:       null,
-                                    lat:        null,
-                                    created:    new Date().toISOString()};
-            await fileFsAppend('IAM_ADMIN_LOGIN', file_content, '')
-            .then(()=>{
-                if (result == 1){
-                    socketConnectedUpdate(app_id, 
-                        {   iam:iam,
-                            user_account_id:null,
-                            admin:username,
-                            token_access:null,
-                            token_admin:jwt_data.token,
-                            ip:ip,
-                            headers_user_agent:user_agent,
-                            headers_accept_language:accept_language,
-                            res: res})
-                    .then(()=>{
-                        resolve({   username:username,
-                                    token_at: jwt_data.token,
-                                    exp:jwt_data.exp,
-                                    iat:jwt_data.iat,
-                                    tokentimestamp:jwt_data.tokentimestamp});
-                                })
-                    .catch((/**@type{import('./types.js').server_server_error}*/error)=>reject(error));
-                }
-                else
-                    reject (iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, fileFsAppend', true));
-            });
-        };
-        if(authorization){       
-            const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-            const username = userpass.split(':')[0];
-            const password = userpass.split(':')[1];
-            if (fileCache('IAM_USER').length==0)
-                iamUserCreate({
-                                username:username, 
-                                password:password, 
-                                type: 'ADMIN', 
-                                bio:null, 
-                                private:1, 
-                                email:null, 
-                                email_unverified:null, 
-                                avatar:null}, res)
-                .then(()=>check_user(username, password));
-            else
-                check_user(username, password);
+                return check_user(0, user.id, username);
         }
-        else{
-            reject (iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, authorization', true));
-        }
-    });
+    }
+    else{
+        throw iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, authorization', true);
+    }
     
 };
 
@@ -637,10 +646,10 @@ const iamUserLogin = async (app_id, query) => {const rows = await fileFsReadLog(
                                                         a.created.localeCompare(b.created)==1?-1:1):[];
                                             };
 /**
- * Create user
- * @param {import('./types.js').server_db_file_iam_user} data
+ * User create
+ * @param {import('./types.js').server_db_file_iam_user_new} data
  * @param {import('./types.js').server_server_res} res
- * @returns {Promise.<void>}
+ * @returns {Promise.<{id:number}>}
  */
 const iamUserCreate = async (data, res) => {
     //check required attributes
@@ -658,10 +667,10 @@ const iamUserCreate = async (data, res) => {
 
         /**@type{import('./types.js').server_db_file_result_fileFsRead} */
         const file = await fileFsRead('IAM_USER', true);
-
-        /**@type{import('./types.js').server_db_file_iam_user} */
+        const id = Date.now();
+        /**@type{import('./types.js').server_db_file_iam_user_new} */
         const user =     {
-                            id:Date.now(), 
+                            id:id,
                             username:data.username, 
                             //save encrypted password
                             password:await securityPasswordCreate(data.password), 
@@ -679,10 +688,92 @@ const iamUserCreate = async (data, res) => {
                         };
         await fileFsWrite('IAM_USER', file.transaction_id, file.file_content.concat(user))
         .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+        return {id:id}; 
     }
 };
-                                                    
+/**
+ * User get
+ * @param {number} id
+ * @param {import('./types.js').server_server_res} res
+ * @returns {import('./types.js').server_db_file_iam_user_get}
+ */
+const iamUserGet = (id, res) =>{
+    /**@type{import('./types.js').server_db_file_iam_user_get}*/
+    const user = fileCache('IAM_USER')
+                .map((/**@type{import('./types.js').server_db_file_iam_user} */row)=>{return { id: row.id,
+                                    username: row.username,
+                                    password: row.password,
+                                    type: row.type,
+                                    bio: row.bio,
+                                    private: row.private,
+                                    email: row.email,
+                                    email_unverified: row.email_unverified,
+                                    avatar: row.avatar,
+                                    user_level: row.user_level,
+                                    status: row.status,
+                                    created: row.created,
+                                    modified: row.modified};})
+                .filter((/**@type{import('./types.js').server_db_file_iam_user_get}*/row)=>row.id==id)[0];
+    if (user)
+        return user;
+    else{
+        res.statusCode = 404;
+        throw '⛔';    
+    }
+};
+/**
+ * User udpate
+ * @param {number} id
+ * @param {import('./types.js').server_db_file_iam_user_update} data
+ * @param {import('./types.js').server_server_res} res
+ * @returns {Promise.<void>}
+ */
 
+const iamUserUpdate = async (id, data, res) =>{
+    /**@type{import('./db/file.js')} */
+    const {fileFsWrite, fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('./security.js')} */
+    const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+
+    /**@type{import('./types.js').server_db_file_result_fileFsRead} */
+    const file = await fileFsRead('IAM_USER', true);
+
+    /**@type{import('./types.js').server_db_file_iam_user_get}*/
+    const user = fileCache('IAM_USER')
+                .filter((/**@type{import('./types.js').server_db_file_iam_user_get}*/row)=>row.id==id)[0];
+    if (user){
+        if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
+            for (const index in file.file_content)
+                if (file.file_content[index].id==id)
+                    file.file_content[index] =  {
+                                                    id:id,
+                                                    username:data.username, 
+                                                    //save encrypted password
+                                                    password:await securityPasswordCreate(data.password_new ?? data.password), 
+                                                    type: user.type, 
+                                                    bio:data.bio, 
+                                                    private:data.private, 
+                                                    email:data.email, 
+                                                    email_unverified:data.email_unverified, 
+                                                    avatar:data.avatar,
+                                                    user_level:user.user_level, 
+                                                    status:user.status, 
+                                                    created:user.created, 
+                                                    modified:new Date().toISOString()
+                                                };
+            await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
+            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+        }
+        else{
+            res.statusCode = 400;
+            throw '⛔';        
+        }
+    }
+    else{
+        res.statusCode = 404;
+        throw '⛔';    
+    }
+};
 export{ iamUtilDecode,
         iamUtilTokenExpired,
         iamUtilResponseNotAuthorized,
@@ -695,4 +786,7 @@ export{ iamUtilDecode,
         iamResourceAuthenticate,
         iamIdTokenAuthorize,
         iamTokenAuthorize,
-        iamUserLogin}; 
+        iamUserLogin,
+        iamUserCreate,
+        iamUserGet,
+        iamUserUpdate}; 

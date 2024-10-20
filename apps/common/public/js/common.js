@@ -36,7 +36,8 @@ const COMMON_GLOBAL = {
     info_link_disclaimer_url:null,
     info_link_terms_url:null,
     info_link_about_url:null,
-    admin:null,
+    iam_user_id:null,
+    iam_user_name:null,
     admin_first_time:null,
     admin_only:null,
     user_identity_provider_id:null,
@@ -472,8 +473,10 @@ const commonSelectEventAction = async (event_target_id, target) =>{
                commonComponentRender({
                    mountDiv:   'common_dialogue_iam_edit',
                    data:       {
-                               user_account_id:COMMON_GLOBAL.user_account_id,
-                               common_app_id:COMMON_GLOBAL.common_app_id
+                                app_id:COMMON_GLOBAL.app_id,
+                                iam_user_id:COMMON_GLOBAL.iam_user_id,
+                                user_account_id:COMMON_GLOBAL.user_account_id,
+                                common_app_id:COMMON_GLOBAL.common_app_id
                                },
                    methods:    {
                               commonFFB:commonFFB,
@@ -1535,7 +1538,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                         password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent),
                         ...commonUservariables()
         };
-        path = '/server-iam/login';
+        path = '/server-iam-login';
         authorization_type = 'IAM_ADMIN';
         if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                         {
@@ -1579,7 +1582,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                             provider_email:         provider_data.profile_email,
                             ...commonUservariables()
                         };
-            path = `/server-iam/login/${provider_data.profile_id}`;
+            path = `/server-iam-login/${provider_data.profile_id}`;
             authorization_type = 'IAM_PROVIDER';
         }
         else{
@@ -1592,7 +1595,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                                                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
                             ...commonUservariables()
             };
-            path = '/server-iam/login';
+            path = '/server-iam-login';
             authorization_type = 'IAM_USER';
             if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                             {
@@ -1609,7 +1612,8 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
     }
     const result_iam = await commonFFB({path:path, method:'POST', authorization_type:authorization_type, body:json_data, spinner_id:spinner_item});
     if (admin){
-        COMMON_GLOBAL.admin = JSON.parse(result_iam).username==''?null:JSON.parse(result_iam).username;
+        COMMON_GLOBAL.iam_user_id = JSON.parse(result_iam).iam_user_id;
+        COMMON_GLOBAL.iam_user_name = JSON.parse(result_iam).iam_user_name;
         COMMON_GLOBAL.token_admin_at = JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
@@ -1619,6 +1623,8 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         return {avatar: null};
     }
     else{
+        COMMON_GLOBAL.iam_user_id = null;
+        COMMON_GLOBAL.iam_user_name = null;
         const login_data = provider_id?JSON.parse(result_iam).items[0]:JSON.parse(result_iam).login[0];
         COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
         COMMON_GLOBAL.token_at	= JSON.parse(result_iam).accessToken;
@@ -1710,7 +1716,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
  */
 const commonUserLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
-    await commonFFB({path:'/server-iam/user/logout', method:'POST', authorization_type:'APP_DATA'})
+    await commonFFB({path:'/server-iam-logout', method:'POST', authorization_type:'APP_DATA'})
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
@@ -1736,7 +1742,8 @@ const commonUserLogout = async () => {
     })
     .finally(()=>{
         COMMON_GLOBAL.token_admin_at = '';
-        COMMON_GLOBAL.admin = null;
+        COMMON_GLOBAL.iam_user_id = null;
+        COMMON_GLOBAL.iam_user_name = null;
 
         COMMON_GLOBAL.token_at ='';
         COMMON_GLOBAL.user_account_id = null;
@@ -1761,8 +1768,8 @@ const commonUserUpdate = async () => {
     
         let path;
         let json_data;
-            
-        
+        /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
+        let authorization_type = 'APP_ACCESS';
         if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display == 'block') {
             if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                             {
@@ -1782,18 +1789,43 @@ const commonUserUpdate = async () => {
             const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
             const password_reminder = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
         
-            json_data = {   username:           username,
-                            bio:                bio,
-                            private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
-                            password:           password,
-                            password_new:       password_new,
-                            password_reminder:  password_reminder,
-                            email:              email,
-                            new_email:          new_email==''?null:new_email,
-                            avatar:             avatar,
-                            ...commonUservariables()
-                        };
-            path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
+                /**@type{{
+                *          username:string, 
+                *          password:string,
+                *          password_new:string,
+                *          bio:string|null, 
+                *          private:number|null, 
+                *          email:string|null, 
+                *          email_unverified:string|null, 
+                *          avatar:string|null}} */
+                json_data = {   username:           username,
+                                password:           password,
+                                password_new:       password_new==''?null:password_new,
+                                bio:                bio,
+                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
+                                password_reminder:  password_reminder,
+                                email:              new_email==''?email:new_email,
+                                avatar:             avatar
+                            };
+                path = `server-iam/user/${COMMON_GLOBAL.iam_user_id ?? ''}`;
+                authorization_type = 'ADMIN';
+            }
+            else{
+                json_data = {   username:           username,
+                                bio:                bio,
+                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
+                                password:           password,
+                                password_new:       password_new,
+                                password_reminder:  password_reminder,
+                                email:              email,
+                                new_email:          new_email==''?null:new_email,
+                                avatar:             avatar,
+                                ...commonUservariables()
+                            };
+                path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            }
+                
         } else {
             if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                             {
@@ -1808,11 +1840,11 @@ const commonUserUpdate = async () => {
             path = `/server-db/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         //update user using REST API
-       commonFFB({path:path, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_update'})
+       commonFFB({path:path, method:'PATCH', authorization_type:authorization_type, body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_update'})
         .then(result=>{
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',avatar);
-            if (JSON.parse(result).sent_change_email == 1){
+            if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id && JSON.parse(result).sent_change_email == 1){
                 commonDialogueShow('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
@@ -2313,7 +2345,7 @@ const commonFFB = async parameter => {
     const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
-    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&admin=${COMMON_GLOBAL.admin ?? ''}` + 
+    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&admin=${COMMON_GLOBAL.iam_user_name ?? ''}` + 
                                     `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                                     `&app_id=${COMMON_GLOBAL.app_id??''}`);
 
@@ -2588,8 +2620,9 @@ const commonInitParametersInfoSet = parameters => {
     //client credentials
     COMMON_GLOBAL.token_dt = parameters.app_idtoken;
 
-    //system admin
-    COMMON_GLOBAL.admin = null;
+    //admin
+    COMMON_GLOBAL.iam_user_id = null;
+    COMMON_GLOBAL.iam_user_name = null;
     COMMON_GLOBAL.admin_only = parameters.admin_only;
     COMMON_GLOBAL.admin_first_time = parameters.first_time;
 
@@ -2843,6 +2876,8 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRender({
                                 mountDiv:   'common_dialogue_iam_edit',
                                 data:       {
+                                            app_id:COMMON_GLOBAL.app_id,
+                                            iam_user_id:COMMON_GLOBAL.iam_user_id,
                                             user_account_id:COMMON_GLOBAL.user_account_id,
                                             common_app_id:COMMON_GLOBAL.common_app_id
                                             },

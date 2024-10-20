@@ -187,6 +187,8 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
 /**
  * @param {{data:       {
  *                      commonMountdiv:string,
+ *                      app_id:number,
+ *                      iam_user_id:number,
  *                      user_account_id:number,
  *                      common_app_id:number,
  *                      },
@@ -205,15 +207,19 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
-    const user = await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
-                    .then((/**@type{string}*/result)=>JSON.parse(result));
+    const user = props.data.app_id == props.data.common_app_id?
+                        await props.methods.commonFFB({path:`/server-iam/user/${props.data.iam_user_id ?? ''}`, method:'GET', authorization_type:'ADMIN'})
+                        .then((/**@type{string}*/result)=>JSON.parse(result)):
+                            await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
+                                    .then((/**@type{string}*/result)=>JSON.parse(result));
     /**
      * User get
      * @returns {Promise.<void>}
      */
     const user_get = async () => {
         
-        if (props.data.user_account_id == parseInt(user.id)) {
+        if ((props.data.app_id == props.data.common_app_id && props.data.iam_user_id == user.id)||
+            props.data.user_account_id == parseInt(user.id)) {
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display = 'none';
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_provider').style.display = 'none';
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit').style.visibility = 'visible';
@@ -255,8 +261,8 @@ const component = async props => {
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img').setAttribute('data-image',user.provider_image);
                 } 
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_last_logontime').textContent = props.methods.commonFormatJsonDate(user.last_logontime, null);
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_created').textContent = props.methods.commonFormatJsonDate(user.date_created, null);
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_modified').textContent = props.methods.commonFormatJsonDate(user.date_modified, null);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_created').textContent = props.methods.commonFormatJsonDate(user.date_created ?? user.created, null);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_modified').textContent = props.methods.commonFormatJsonDate(user.date_modified ?? user.modified, null);
             props.methods.COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (user.avatar ?? user.provider_image)?
                                                                                                             `url('${user.avatar ?? user.provider_image}')`:
                                                                                                             'url()';

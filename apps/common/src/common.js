@@ -880,8 +880,11 @@ const commonRegistryAppSecretDBReset = async () => {
 const commonRegistryAppUpdate = async (app_id, resource_id, data) => {
     const file = await fileFsRead('APP', true);
     for (const index in file.file_content)
-        if (file.file_content[index].ID==resource_id)
+        if (file.file_content[index].ID==resource_id){
+            data.ID = Number(data.ID),
             file.file_content[index] = data;
+        }
+            
    
    await fileFsWrite('APP', file.transaction_id, file.file_content);
    await fileFsCacheSet();
@@ -899,9 +902,10 @@ const commonRegistryAppModuleUpdate = async (app_id, resource_id, data) => {
         if (file.file_content[index].APP_ID     ==resource_id && 
             file.file_content[index].COMMON_TYPE== data.COMMON_TYPE &&
             file.file_content[index].COMMON_NAME== data.COMMON_NAME &&
-            file.file_content[index].COMMON_ROLE== data.COMMON_ROLE)
-            file.file_content[index] = data;
-    
+            file.file_content[index].COMMON_ROLE== data.COMMON_ROLE){
+                data.APP_ID = Number(data.APP_ID);
+                file.file_content[index] = data;
+            }
     await fileFsWrite('APP_MODULE', file.transaction_id, file.file_content);
     await fileFsCacheSet();
  };

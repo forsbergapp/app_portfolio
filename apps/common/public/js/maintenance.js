@@ -34,9 +34,10 @@ const appCommonInit= parameters => {
     common.COMMON_GLOBAL.rest_resource_bff = decoded_parameters.rest_resource_bff;
     common.COMMON_GLOBAL.user_account_id = null;
     common.COMMON_GLOBAL.user_identity_provider_id = null;
-    common.COMMON_GLOBAL.admin = null;
+    common.COMMON_GLOBAL.iam_user_id = null;
+    common.COMMON_GLOBAL.iam_user_name = null;
     common.COMMON_GLOBAL.token_dt = decoded_parameters.app_idtoken;
     common.commonSocketConnectOnline();    
     common.commonSocketMaintenanceShow(null,1);
 };
-export{appException, init};
+export{appException, appCommonInit};
