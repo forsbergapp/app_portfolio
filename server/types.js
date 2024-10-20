@@ -272,7 +272,7 @@
  *              server_config_iam_useragent|
  *              import('../microservice/types.js').microservice_config|
  *              import('../microservice/types.js').microservice_config_service|
- *              server_iam_user|
+ *              server_db_file_iam_user[]|
  *              server_db_file_app[]|
  *              server_db_file_app_module[]|
  *              server_db_file_app_parameter[]|
@@ -296,27 +296,22 @@
  */
 
 /**
- * DB FILE server_iam_user_record
+ * DB FILE server_db_file_iam_user
  * @typedef {{
- *          id:string, 
+ *          id?:number, 
  *          username:string, 
  *          password:string, 
  *          type: 'ADMIN'|'USER', 
  *          bio:string|null, 
  *          private:number|null, 
- *          user_level:number|null, 
  *          email:string|null, 
  *          email_unverified:string|null, 
  *          avatar:string|null,
- *          verification_code: number|null, 
- *          status:number|null, 
- *          created:string, 
- *          modified:string}} server_iam_user_record
- */
-
-/**
- * DB FILE server_iam_user
- * @typedef {{ USER: server_iam_user_record[]}} server_iam_user
+ *          user_level?:number|null, 
+ *          verification_code?: number|null, 
+ *          status?:number|null, 
+ *          created?:string, 
+ *          modified?:string}} server_db_file_iam_user
  */
 
 /**

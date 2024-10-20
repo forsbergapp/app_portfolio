@@ -504,9 +504,6 @@ const commonComponentCreate = async parameters =>{
     
     switch (parameters.type){
         case 'APP':{
-            /**@type{import('../../../server/config.js')} */
-            const {configCheckFirstTime} = await import(`file://${process.cwd()}/server/config.js`);
-
             /**@type{import('../../../server/types.js').server_apps_app_service_parameters} */
             const app_service_parameters = {   
                 app_id:                 parameters.app_id,
@@ -520,7 +517,7 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
-                first_time:             admin_only==1?(configCheckFirstTime()==true?1:0):0
+                first_time:             admin_only==1?(fileCache('IAM_USER').length==0?1:0):0
             };
             /**@type{import('../../../server/types.js').server_db_file_app_parameter_common} */
             const common_parameter = commonRegistryAppParameter(common_app_id);

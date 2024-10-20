@@ -1,14 +1,14 @@
 /**
- * @module apps/common/component/common_user_account
+ * @module apps/common/component/common_iam_avatar
  */
-const template = () =>` <div id='common_user_menu'>
-                            <div id='common_user_menu_logged_in'>
-                                <div id='common_user_menu_avatar'>
-                                    <div id='common_user_menu_avatar_img' class='common_image common_image_avatar'></div>
+const template = () =>` <div id='common_iam_avatar'>
+                            <div id='common_iam_avatar_logged_in'>
+                                <div id='common_iam_avatar_avatar'>
+                                    <div id='common_iam_avatar_avatar_img' class='common_image common_image_avatar'></div>
                                 </div>
                             </div>
-                            <div id='common_user_menu_logged_out'>
-                                <div id='common_user_menu_default_avatar' class='common_icon'></div>
+                            <div id='common_iam_avatar_logged_out'>
+                                <div id='common_iam_avatar_default_avatar' class='common_icon'></div>
                             </div>
                         </div>`;
 /**

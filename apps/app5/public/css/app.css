@@ -131,12 +131,12 @@ body {
     top: unset !important;
 	position: fixed !important;
 }
-#common_user_menu{
+#common_iam_avatar{
 	margin-inline-start: unset !important;
 	position: unset !important;
 	margin-top: unset !important;
 }
-#common_user_menu{
+#common_iam_avatar{
 	transition-duration: .3s;
     transition-property: box-shadow;
 }
@@ -201,7 +201,7 @@ body {
 	border: 1px solid var(--common_app_color_gold);
 	background-color: var(--common_app_color_white);
 }
-.common_user_start_selected {
+.common_dialogue_iam_start_selected {
     background-color: var(--common_app_color_white3);
 }
 .common_link:hover,
@@ -233,8 +233,8 @@ body {
 #common_dialouge_user_menu{
 	background-color: var(--common_app_color_white);
 }
-#common_user_menu:hover,
-#common_user_menu:active{
+#common_iam_avatar:hover,
+#common_iam_avatar:active{
 	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 #common_window_info_toolbar{

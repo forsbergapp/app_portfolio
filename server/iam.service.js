@@ -3,7 +3,7 @@
 /**@type{import('./server.js')} */
 const {serverResponseErrorSend, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
-const {configGet, configFileGet, configCheckFirstTime, configAdminCreate} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**@type{import('./db/file.js')} */
 const {fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -92,8 +92,10 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
             /**@type{import('./security.js')} */
             const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
-            /**@type{import('./types.js').server_iam_user_record}*/
-            const user =  fileCache('IAM_USER').USER.filter((/**@type{import('./types.js').server_iam_user_record}*/user)=>user.username == username)[0];
+
+            /**@type{import('./types.js').server_db_file_iam_user}*/
+            const user =  fileCache('IAM_USER').filter((/**@type{import('./types.js').server_db_file_iam_user}*/user)=>user.username == username)[0];
+
             /**@type{0|1} */
             let result = 0;
             if (user && user.username == username && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
@@ -141,8 +143,16 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
             const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
             const username = userpass.split(':')[0];
             const password = userpass.split(':')[1];
-            if (configCheckFirstTime())
-                configAdminCreate(username, password)
+            if (fileCache('IAM_USER').length==0)
+                iamUserCreate({
+                                username:username, 
+                                password:password, 
+                                type: 'ADMIN', 
+                                bio:null, 
+                                private:1, 
+                                email:null, 
+                                email_unverified:null, 
+                                avatar:null})
                 .then(()=>check_user(username, password));
             else
                 check_user(username, password);
@@ -626,6 +636,42 @@ const iamUserLogin = async (app_id, query) => {const rows = await fileFsReadLog(
                                                         //sort descending on created
                                                         a.created.localeCompare(b.created)==1?-1:1):[];
                                             };
+/**
+ * Create user
+ * @param {import('./types.js').server_db_file_iam_user} data
+ * @returns {Promise.<void>}
+ */
+const iamUserCreate = async data => {
+    /**@type{import('./db/file.js')} */
+    const {fileFsWrite, fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('./security.js')} */
+    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+    
+    /**@type{import('./types.js').server_db_file_result_fileFsRead} */
+    const file = await fileFsRead('IAM_USER', true);
+
+    /**@type{import('./types.js').server_db_file_iam_user} */
+    const user =     {
+                        id:Date.now(), 
+                        username:data.username, 
+                        //save encrypted password
+                        password:await securityPasswordCreate(data.password), 
+                        type: data.type, 
+                        bio:data.bio, 
+                        private:data.private, 
+                        email:data.email, 
+                        email_unverified:data.email_unverified, 
+                        avatar:data.avatar,
+                        user_level:data.user_level, 
+                        verification_code: null, 
+                        status:null, 
+                        created:new Date().toISOString(), 
+                        modified:new Date().toISOString()
+                    };
+    file.file_content.concat(user);
+    await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
+    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+};
                                                     
 
 export{ iamUtilDecode,

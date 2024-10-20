@@ -2,8 +2,12 @@
 
 /**@type{import('./server.js')} */
 const {serverUtilResponseTime, serverResponseErrorSend, serverUtilNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.js`);
+
 /**@type{import('./config.js')} */
-const {configCheckFirstTime, configGet, configFileGet} = await import(`file://${process.cwd()}/server/config.js`);
+const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/config.js`);
+
+/**@type{import('./db/file.js')} */
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('./log.js')} */
 const {logRequestI, logServiceI, logServiceE} = await import(`file://${process.cwd()}/server/log.js`);
@@ -158,8 +162,8 @@ const bffStart = async (req, res) =>{
                 return {reason:null, redirect:null};
         }
     };
-    //if first time, when no system admin exists, then redirect everything to admin
-    if (configCheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+    //if first time, when no user exists, then redirect everything to admin
+    if (fileCache('IAM_USER').length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
         return {reason:'REDIRECT', redirect:`http://admin.${configGet('SERVER','HOST')}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
