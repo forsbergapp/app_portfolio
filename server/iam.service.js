@@ -668,8 +668,7 @@ const iamUserCreate = async data => {
                         created:new Date().toISOString(), 
                         modified:new Date().toISOString()
                     };
-    file.file_content.concat(user);
-    await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
+    await fileFsWrite('IAM_USER', file.transaction_id, file.file_content.concat(user))
     .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
 };
                                                     
