@@ -186,6 +186,11 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	z-index: 10;
 	display: none;
 }
+#common_iam_avatar,
+#secure_app_user_account{
+	height: 2em !important;
+	width:  2em !important;
+}
 .secure_menuitem{
 	cursor: pointer;
 	text-align: start;
@@ -685,9 +690,6 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display: inline-block;
 }
 /*CONNECTED*/
-.app_role_admin{
-	transform: translate(5px,-1px) scale(1.5);
-}
 .menu_monitor_detail_connected_col{
 	width:70px;
 }
@@ -1506,6 +1508,10 @@ body{
 	background-color: var(--app_theme_list_background_color) !important;
 }
 /*APP THEME COMMON*/
+#common_iam_avatar:hover,
+#common_iam_avatar:active{
+	box-shadow: 0 0px 2px 2px var(--app_theme_hover_color);
+}
 .common_toolbar_selected{
 	background-color: var(--app_theme_login_nav_selected_background_color) !important;
 }

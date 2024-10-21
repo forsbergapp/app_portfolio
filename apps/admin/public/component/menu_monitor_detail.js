@@ -557,7 +557,6 @@ const component = async props => {
      * @returns {void}
      */
     const monitorDetailClickItem = (item_type, data) => {
-        //check if gps_click and if not system admin only when map is not loaded
         if (item_type=='GPS'){
             if (data['ip']){
                 props.methods.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
