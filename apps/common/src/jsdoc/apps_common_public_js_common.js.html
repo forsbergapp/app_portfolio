@@ -72,7 +72,8 @@ const COMMON_GLOBAL = {
     info_link_disclaimer_url:null,
     info_link_terms_url:null,
     info_link_about_url:null,
-    admin:null,
+    iam_user_id:null,
+    iam_user_name:null,
     admin_first_time:null,
     admin_only:null,
     user_identity_provider_id:null,
@@ -504,19 +505,21 @@ const commonSelectEventAction = async (event_target_id, target) =>{
    if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
        COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
        await commonUserPreferenceSave().then(()=>{
-           if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit').textContent !='') {
+           if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit').textContent !='') {
                commonComponentRender({
-                   mountDiv:   'common_dialogue_user_edit',
+                   mountDiv:   'common_dialogue_iam_edit',
                    data:       {
-                               user_account_id:COMMON_GLOBAL.user_account_id,
-                               common_app_id:COMMON_GLOBAL.common_app_id
+                                app_id:COMMON_GLOBAL.app_id,
+                                iam_user_id:COMMON_GLOBAL.iam_user_id,
+                                user_account_id:COMMON_GLOBAL.user_account_id,
+                                common_app_id:COMMON_GLOBAL.common_app_id
                                },
                    methods:    {
                               commonFFB:commonFFB,
                                commonMessageShow:commonMessageShow,
                                commonFormatJsonDate:commonFormatJsonDate
                                },
-                   path:       '/common/component/common_dialogue_user_edit.js'})
+                   path:       '/common/component/common_dialogue_iam_edit.js'})
                .then(()=>{
                    commonComponentRemove('common_dialogue_user_menu');
                });
@@ -993,7 +996,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
         case 'PASSWORD_NEW':
             {    
                 commonComponentRender({
-                    mountDiv:   'common_dialogue_user_password_new',
+                    mountDiv:   'common_dialogue_iam_password_new',
                     data:       {
                                 user_account_id:COMMON_GLOBAL.user_account_id,
                                 common_app_id:COMMON_GLOBAL.common_app_id
@@ -1003,29 +1006,29 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                                 commonMessageShow:commonMessageShow,
                                 commonFormatJsonDate:commonFormatJsonDate
                                 },
-                    path:'/common/component/common_dialogue_user_password_new.js'});
+                    path:'/common/component/common_dialogue_iam_password.js'});
                 break;
             }
         case 'VERIFY':
             {    
                 commonComponentRender({
-                    mountDiv:   'common_dialogue_user_verify',
+                    mountDiv:   'common_dialogue_iam_verify',
                     data:       {
                                 user_verification_type:user_verification_type,
-                                username_login:COMMON_DOCUMENT.querySelector('#common_user_start_login_username').textContent,
-                                password_login:COMMON_DOCUMENT.querySelector('#common_user_start_login_password').textContent,
-                                username_signup:COMMON_DOCUMENT.querySelector('#common_user_start_signup_username').textContent,
-                                password_signup:COMMON_DOCUMENT.querySelector('#common_user_start_signup_password').textContent,
+                                username_login:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent,
+                                password_login:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent,
+                                username_signup:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username').textContent,
+                                password_signup:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
                                 title: title
                                 },
                     methods:    {data_function:click_cancel_event},
-                    path:       '/common/component/common_dialogue_user_verify.js'});
-                commonComponentRemove('common_dialogue_user_start');
+                    path:       '/common/component/common_dialogue_iam_verify.js'});
+                commonComponentRemove('common_dialogue_iam_start');
                 break;
             }
         case 'LOGIN_ADMIN':{
             await commonComponentRender({
-                mountDiv:       'common_dialogue_user_start',
+                mountDiv:       'common_dialogue_iam_start',
                 data:           {
                                 type:               null,
                                 app_id:             COMMON_GLOBAL.app_id,
@@ -1034,14 +1037,14 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
                 methods:        {commonFFB:commonFFB},
-                path:           '/common/component/common_dialogue_user_start.js'});
+                path:           '/common/component/common_dialogue_iam_start.js'});
             break;
         }
         case 'LOGIN':
         case 'SIGNUP':
         case 'FORGOT':{
             await commonComponentRender({
-                mountDiv:       'common_dialogue_user_start',
+                mountDiv:       'common_dialogue_iam_start',
                 data:           {
                                 type:               dialogue,
                                 app_id:             COMMON_GLOBAL.app_id,
@@ -1050,7 +1053,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
                 methods:        {commonFFB:commonFFB},
-                path:           '/common/component/common_dialogue_user_start.js'});
+                path:           '/common/component/common_dialogue_iam_start.js'});
             break;
         }
     }
@@ -1086,7 +1089,7 @@ const commonMessageShow = async (message_type, code, function_event, text_class=
  * @returns {void}
  */
 const commonDialoguePasswordNewClear = () => {
-    commonComponentRemove('common_dialogue_user_password_new');
+    commonComponentRemove('common_dialogue_iam_password_new');
     COMMON_GLOBAL.user_account_id = null;
     COMMON_GLOBAL.token_at = '';
 };
@@ -1564,21 +1567,21 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
     let spinner_item = '';
     let current_dialogue = '';
     if (admin) {
-        spinner_item = 'common_user_start_login_admin_button';
-        current_dialogue = 'common_dialogue_user_start';
+        spinner_item = 'common_dialogue_iam_start_login_admin_button';
+        current_dialogue = 'common_dialogue_iam_start';
         // ES6 object spread operator for user variables
-        json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_username').textContent),
-                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password').textContent),
+        json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username').textContent),
+                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent),
                         ...commonUservariables()
         };
-        path = '/server-iam/login';
+        path = '/server-iam-login';
         authorization_type = 'IAM_ADMIN';
-        if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
+        if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                         {
-                        username: COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_username'),
-                        password: COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password'),
-                        password_confirm: COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password_confirm')?
-                                            COMMON_DOCUMENT.querySelector('#common_user_start_login_admin_password_confirm'):
+                        username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username'),
+                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password'),
+                        password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password_confirm')?
+                                            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password_confirm'):
                                                 null
                         })==false)
             throw 'ERROR';
@@ -1586,12 +1589,12 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
     }
     else{
         if (username_verify){
-            spinner_item = 'common_user_verify_email_icon';
-            current_dialogue = 'common_dialogue_user_verify';
+            spinner_item = 'common_dialogue_iam_verify_email_icon';
+            current_dialogue = 'common_dialogue_iam_verify';
         }
         else{
-            spinner_item = 'common_user_start_login_button';
-            current_dialogue = 'common_dialogue_user_start';
+            spinner_item = 'common_dialogue_iam_start_login_button';
+            current_dialogue = 'common_dialogue_iam_start';
         }
         if (provider_id){
             const provider_data = { identity_provider_id:   provider_id,
@@ -1615,29 +1618,29 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                             provider_email:         provider_data.profile_email,
                             ...commonUservariables()
                         };
-            path = `/server-iam/login/${provider_data.profile_id}`;
+            path = `/server-iam-login/${provider_data.profile_id}`;
             authorization_type = 'IAM_PROVIDER';
         }
         else{
             // ES6 object spread operator for user variables
             json_data = {   username:  encodeURI(username_verify?
                                             COMMON_DOCUMENT.querySelector(`#${username_verify}`).textContent:
-                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_username').textContent),
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent),
                             password:  encodeURI(password_verify?
                                             COMMON_DOCUMENT.querySelector(`#${password_verify}`).textContent:
-                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_password').textContent),
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
                             ...commonUservariables()
             };
-            path = '/server-iam/login';
+            path = '/server-iam-login';
             authorization_type = 'IAM_USER';
-            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
+            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                             {
                             username: username_verify?
                                             COMMON_DOCUMENT.querySelector(`#${username_verify}`):
-                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_username'),
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username'),
                             password: password_verify?
                                             COMMON_DOCUMENT.querySelector(`#${password_verify}`):
-                                                COMMON_DOCUMENT.querySelector('#common_user_start_login_password')
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password')
                             })==false)
                 throw 'ERROR';
             
@@ -1645,16 +1648,20 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
     }
     const result_iam = await commonFFB({path:path, method:'POST', authorization_type:authorization_type, body:json_data, spinner_id:spinner_item});
     if (admin){
-        COMMON_GLOBAL.admin = JSON.parse(result_iam).username==''?null:JSON.parse(result_iam).username;
+        COMMON_GLOBAL.iam_user_id = JSON.parse(result_iam).iam_user_id;
+        COMMON_GLOBAL.iam_user_name = JSON.parse(result_iam).iam_user_name;
         COMMON_GLOBAL.token_admin_at = JSON.parse(result_iam).token_at;
         COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
         COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
+
         commonComponentRemove(current_dialogue, true);
         
-        return {avatar: null};
+        return {avatar: JSON.parse(result_iam).avatar};
     }
     else{
+        COMMON_GLOBAL.iam_user_id = null;
+        COMMON_GLOBAL.iam_user_name = null;
         const login_data = provider_id?JSON.parse(result_iam).items[0]:JSON.parse(result_iam).login[0];
         COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
         COMMON_GLOBAL.token_at	= JSON.parse(result_iam).accessToken;
@@ -1665,14 +1672,12 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         COMMON_GLOBAL.user_account_username = login_data.username;
         COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
 
-        if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
-            //set avatar or empty if not in admin app
-            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
-                                                                                                        `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`:
-                                                                                                        'url()';
-            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'none';
-        }
+        //set avatar or empty
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
+                                                                                                    `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`:
+                                                                                                    'url()';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
 
         const result = await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
         const user_account_app = JSON.parse(result)[0];
@@ -1746,16 +1751,16 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
  */
 const commonUserLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
-    await commonFFB({path:'/server-iam/user/logout', method:'POST', authorization_type:'APP_DATA'})
+    await commonFFB({path:'/server-iam-logout', method:'POST', authorization_type:'APP_DATA'})
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
-            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_in').style.display = 'none';
-            COMMON_DOCUMENT.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= 'url()';
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
             commonWindoInfoClose();
-            commonComponentRemove('common_dialogue_user_edit');
+            commonComponentRemove('common_dialogue_iam_edit');
             commonDialoguePasswordNewClear();
-            commonComponentRemove('common_dialogue_user_start');
+            commonComponentRemove('common_dialogue_iam_start');
             commonComponentRemove('common_dialogue_profile', true);
         }
         commonUserPreferencesGlobalSetDefault('LOCALE');
@@ -1772,7 +1777,8 @@ const commonUserLogout = async () => {
     })
     .finally(()=>{
         COMMON_GLOBAL.token_admin_at = '';
-        COMMON_GLOBAL.admin = null;
+        COMMON_GLOBAL.iam_user_id = null;
+        COMMON_GLOBAL.iam_user_name = null;
 
         COMMON_GLOBAL.token_at ='';
         COMMON_GLOBAL.user_account_id = null;
@@ -1790,69 +1796,94 @@ const commonUserLogout = async () => {
  */
 const commonUserUpdate = async () => {
     return new Promise(resolve=>{
-        const username = COMMON_DOCUMENT.querySelector('#common_user_edit_input_username').textContent;
-        const bio = COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio').textContent;
-        const avatar = COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img').getAttribute('data-image');
-        const new_email = COMMON_DOCUMENT.querySelector('#common_user_edit_input_new_email').textContent;
+        const username = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username').textContent;
+        const bio = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio').textContent;
+        const avatar = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img').getAttribute('data-image');
+        const new_email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_new_email').textContent;
     
         let path;
         let json_data;
-            
-        
-        if (COMMON_DOCUMENT.querySelector('#common_user_edit_local').style.display == 'block') {
-            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
+        /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
+        let authorization_type = 'APP_ACCESS';
+        if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display == 'block') {
+            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                             {
-                            username: COMMON_DOCUMENT.querySelector('#common_user_edit_input_username'),
-                            password: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password'),
-                            password_confirm: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_confirm'),
-                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_reminder'),
-                            password_new: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_new'),
-                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_new_confirm'),
-                            bio: COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio'),
-                            email: COMMON_DOCUMENT.querySelector('#common_user_edit_input_email')
+                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username'),
+                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password'),
+                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_confirm'),
+                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder'),
+                            password_new: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new'),
+                            password_new_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new_confirm'),
+                            bio: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio'),
+                            email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_email')
                             })==false)
                 return null;
 
-            const email = COMMON_DOCUMENT.querySelector('#common_user_edit_input_email').textContent;    
-            const password = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password').textContent;
-            const password_new = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_new').textContent;
-            const password_reminder = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password_reminder').textContent;
+            const email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_email').textContent;    
+            const password = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
+            const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
+            const password_reminder = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
         
-            json_data = {   username:           username,
-                            bio:                bio,
-                            private:            Number(COMMON_DOCUMENT.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
-                            password:           password,
-                            password_new:       password_new,
-                            password_reminder:  password_reminder,
-                            email:              email,
-                            new_email:          new_email==''?null:new_email,
-                            avatar:             avatar,
-                            ...commonUservariables()
-                        };
-            path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
+                /**@type{{
+                *          username:string, 
+                *          password:string,
+                *          password_new:string,
+                *          bio:string|null, 
+                *          private:number|null, 
+                *          email:string|null, 
+                *          email_unverified:string|null, 
+                *          avatar:string|null}} */
+                json_data = {   username:           username,
+                                password:           password,
+                                password_new:       password_new==''?null:password_new,
+                                bio:                bio,
+                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
+                                password_reminder:  password_reminder,
+                                email:              new_email==''?email:new_email,
+                                avatar:             avatar
+                            };
+                path = `/server-iam/user/${COMMON_GLOBAL.iam_user_id ?? ''}`;
+                authorization_type = 'ADMIN';
+            }
+            else{
+                json_data = {   username:           username,
+                                bio:                bio,
+                                private:            Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked')),
+                                password:           password,
+                                password_new:       password_new,
+                                password_reminder:  password_reminder,
+                                email:              email,
+                                new_email:          new_email==''?null:new_email,
+                                avatar:             avatar,
+                                ...commonUservariables()
+                            };
+                path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
+            }
+                
         } else {
-            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
+            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                             {
-                            bio: COMMON_DOCUMENT.querySelector('#common_user_edit_input_bio')
+                            bio: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio')
                             })==false)
                 return null;
-            json_data = {   provider_id:    COMMON_DOCUMENT.querySelector('#common_user_edit_provider_id').textContent,
+            json_data = {   provider_id:    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_provider_id').textContent,
                             username:       username,
                             bio:            bio,
-                            private:        Number(COMMON_DOCUMENT.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
+                            private:        Number(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_checkbox_profile_private').classList.contains('checked'))
                         };
             path = `/server-db/user_account-common/${COMMON_GLOBAL.user_account_id ?? ''}`;
         }
         //update user using REST API
-       commonFFB({path:path, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_update'})
+       commonFFB({path:path, method:'PATCH', authorization_type:authorization_type, body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_update'})
         .then(result=>{
-            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
-            COMMON_DOCUMENT.querySelector('#common_user_menu_avatar_img').setAttribute('data-image',avatar);
-            if (JSON.parse(result).sent_change_email == 1){
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',avatar);
+            if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id &amp;&amp; JSON.parse(result).sent_change_email == 1){
                 commonDialogueShow('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
-                commonComponentRemove('common_dialogue_user_edit', true);
+                commonComponentRemove('common_dialogue_iam_edit', true);
             resolve(null);
         });
     });
@@ -1862,24 +1893,24 @@ const commonUserUpdate = async () => {
  * @returns {void}
  */
 const commonUserSignup = () => {
-    const email = COMMON_DOCUMENT.querySelector('#common_user_start_signup_email').textContent;
-    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_start'),
+    const email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_email').textContent;
+    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                             {
-                            username: COMMON_DOCUMENT.querySelector('#common_user_start_signup_username'),
-                            password: COMMON_DOCUMENT.querySelector('#common_user_start_signup_password'),
-                            password_confirm: COMMON_DOCUMENT.querySelector('#common_user_start_signup_password_confirm'),
-                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_user_start_signup_password_reminder'),
-                            email: COMMON_DOCUMENT.querySelector('#common_user_start_signup_email')
+                            username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username'),
+                            password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password'),
+                            password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_confirm'),
+                            password_confirm_reminder: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder'),
+                            email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_email')
                             })==true){
-        const json_data = { username:           COMMON_DOCUMENT.querySelector('#common_user_start_signup_username').textContent,
-                            password:           COMMON_DOCUMENT.querySelector('#common_user_start_signup_password').textContent,
-                            password_reminder:  COMMON_DOCUMENT.querySelector('#common_user_start_signup_password_reminder').textContent,
+        const json_data = { username:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username').textContent,
+                            password:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
+                            password_reminder:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder').textContent,
                             email:              email,
                             active:             0,
                             ...commonUservariables()
                             };
            
-       commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_SIGNUP', body:json_data, spinner_id:'common_user_start_signup_button'})
+       commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
         .then(result=>{
             const signup = JSON.parse(result);
             COMMON_GLOBAL.token_at = signup.accessToken;
@@ -1902,41 +1933,41 @@ const commonUserSignup = () => {
 const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
     return new Promise((resolve, reject)=>{
         let json_data;
-        const verification_type = parseInt(COMMON_DOCUMENT.querySelector('#common_user_verify_data_verification_type').textContent);
+        const verification_type = parseInt(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_data_verification_type').textContent);
         //only accept 0-9
         if (item.textContent &amp;&amp; item.textContent.length==1 &amp;&amp; ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.textContent) > -1)
-            if (nextField == '' || (COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').textContent != '' &amp;&amp;
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').textContent != '' &amp;&amp;
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').textContent != '' &amp;&amp;
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').textContent != '' &amp;&amp;
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').textContent != '' &amp;&amp;
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').textContent != '')) {
+            if (nextField == '' || (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').textContent != '' &amp;&amp;
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').textContent != '' &amp;&amp;
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').textContent != '' &amp;&amp;
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').textContent != '' &amp;&amp;
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').textContent != '' &amp;&amp;
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').textContent != '')) {
                 //last field, validate entered code
-                const verification_code = parseInt(COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').textContent +
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').textContent +
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').textContent +
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').textContent +
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').textContent +
-                    COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').textContent);
-                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
-                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
-                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
-                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
-                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
-                COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
+                const verification_code = parseInt(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').textContent +
+                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').textContent);
+                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.remove('common_input_error');
+                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.remove('common_input_error');
     
                 //activate user
                 json_data = {   verification_code:  verification_code,
                                 verification_type:  verification_type,
                                 ...commonUservariables()
                             };
-               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_user_verify_email_icon'})
+               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_dialogue_iam_verify_email_icon'})
                 .then(result=>{
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
                         const resolve_function = () => {
-                            commonComponentRemove('common_dialogue_user_verify');
-                            commonComponentRemove('common_dialogue_user_edit', true);
+                            commonComponentRemove('common_dialogue_iam_verify');
+                            commonComponentRemove('common_dialogue_iam_edit', true);
                             resolve({   actived: 1, 
                                         verification_type : verification_type});
                         };
@@ -1946,8 +1977,8 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                             case 1:
                             case 2:{
                                 login_function( false, 
-                                                'common_user_verify_data_username',
-                                                'common_user_verify_data_password')
+                                                'common_dialogue_iam_verify_data_username',
+                                                'common_dialogue_iam_verify_data_password')
                                                 .then(()=> resolve_function());
                                 break;
                             }
@@ -1971,12 +2002,12 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                         
                     } 
                     else{
-                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
-                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
-                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
-                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
-                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
-                        COMMON_DOCUMENT.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char2').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char3').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char4').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.add('common_input_error');
+                        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
                         commonMessageShow('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
@@ -2004,13 +2035,13 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
  */
 const commonUserDelete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
-        const password = COMMON_DOCUMENT.querySelector('#common_user_edit_input_password').textContent;
+        const password = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
         switch (choice){
             case null:{
-                if (COMMON_DOCUMENT.querySelector('#common_user_edit_local').style.display == 'block' &amp;&amp;
-                    commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
+                if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display == 'block' &amp;&amp;
+                    commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                                     {
-                                        password: COMMON_DOCUMENT.querySelector('#common_user_edit_input_password')
+                                        password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password')
                                     })==false)
                     resolve(null);
                 else{
@@ -2024,7 +2055,7 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
                 
                 const json_data = { password: password};
     
-               commonFFB({path:`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_edit_btn_user_delete_account'})
+               commonFFB({path:`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
                 .then(()=>  resolve({deleted: 1}))
                 .catch(err=>reject(err));
                 break;
@@ -2108,16 +2139,16 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
  * @returns {Promise.&lt;void>}
  */
 const commonUserForgot = async () => {
-    const email = COMMON_DOCUMENT.querySelector('#common_user_start_forgot_email').textContent;
+    const email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email').textContent;
     const json_data = { email: email,
                         ...commonUservariables()
                     };
-    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
+    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                     {
-                    email: COMMON_DOCUMENT.querySelector('#common_user_start_forgot_email')
+                    email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email')
                     })==true){
         
-       commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_user_start_forgot_button'})
+       commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_dialogue_iam_start_forgot_button'})
         .then(result=>{
             const forgot = JSON.parse(result);
             if (forgot.sent == 1){
@@ -2132,19 +2163,19 @@ const commonUserForgot = async () => {
  * @returns {void}
  */
 const commonUserUpdatePassword = () => {
-    const password_new = COMMON_DOCUMENT.querySelector('#common_user_password_new').textContent;
-    const user_password_new_auth = COMMON_DOCUMENT.querySelector('#common_user_password_new_auth').textContent;
+    const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new').textContent;
+    const user_password_new_auth = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_auth').textContent;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
                         ...commonUservariables()
                      };
-    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_user_edit'),
+    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                      {
-                     password: COMMON_DOCUMENT.querySelector('#common_user_password_new'),
-                     password_confirm: COMMON_DOCUMENT.querySelector('#common_user_password_new_confirm'),
+                     password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new'),
+                     password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_confirm'),
                      
                      })==true){
-       commonFFB({path:`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_user_password_new_icon'})
+       commonFFB({path:`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_password_new_icon'})
         .then(()=>{
             commonDialoguePasswordNewClear();
             commonDialogueShow('LOGIN');
@@ -2332,7 +2363,7 @@ const commonFFB = async parameter => {
         case 'IAM_ADMIN':
         case 'IAM_PROVIDER':
         case 'IAM_USER':{
-            //user,admin or system admin login
+            //user or admin login
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             authorization_basic = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id &amp;&amp; parameter.authorization_type == 'IAM_USER')
@@ -2349,7 +2380,7 @@ const commonFFB = async parameter => {
     const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
-    const iam =  commonWindowToBase64(    `&amp;authorization_bearer=${authorization_iam}&amp;user_id=${COMMON_GLOBAL.user_account_id ?? ''}&amp;admin=${COMMON_GLOBAL.admin ?? ''}` + 
+    const iam =  commonWindowToBase64(    `&amp;authorization_bearer=${authorization_iam}&amp;user_id=${COMMON_GLOBAL.user_account_id ?? ''}&amp;admin=${COMMON_GLOBAL.iam_user_name ?? ''}` + 
                                     `&amp;client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                                     `&amp;app_id=${COMMON_GLOBAL.app_id??''}`);
 
@@ -2624,8 +2655,9 @@ const commonInitParametersInfoSet = parameters => {
     //client credentials
     COMMON_GLOBAL.token_dt = parameters.app_idtoken;
 
-    //system admin
-    COMMON_GLOBAL.admin = null;
+    //admin
+    COMMON_GLOBAL.iam_user_id = null;
+    COMMON_GLOBAL.iam_user_name = null;
     COMMON_GLOBAL.admin_only = parameters.admin_only;
     COMMON_GLOBAL.admin_first_time = parameters.first_time;
 
@@ -2712,21 +2744,21 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         // dialogue login/signup/forgot
-                        case 'common_user_start_login':
-                        case 'common_user_start_signup':
-                        case 'common_user_start_forgot':{
-                            commonDialogueShow(event_target_id.substring('common_user_start_'.length).toUpperCase());
+                        case 'common_dialogue_iam_start_login':
+                        case 'common_dialogue_iam_start_signup':
+                        case 'common_dialogue_iam_start_forgot':{
+                            commonDialogueShow(event_target_id.substring('common_dialogue_iam_start_'.length).toUpperCase());
                             break;
                         }
-                        case 'common_user_start_close':{
-                            commonComponentRemove('common_dialogue_user_start', true);
+                        case 'common_dialogue_iam_start_close':{
+                            commonComponentRemove('common_dialogue_iam_start', true);
                             break;
                         }
-                        case 'common_user_start_forgot_button':{
+                        case 'common_dialogue_iam_start_forgot_button':{
                             await commonUserForgot();
                             break;
                         }
-                        case 'common_user_start_signup_button':{
+                        case 'common_dialogue_iam_start_signup_button':{
                             commonUserSignup();
                             break;
                         }
@@ -2742,11 +2774,11 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         //dialogue password
-                        case 'common_user_password_new_cancel':{
+                        case 'common_dialogue_iam_password_new_cancel':{
                             commonDialoguePasswordNewClear();
                             break;
                         }
-                        case 'common_user_password_new_ok':{
+                        case 'common_dialogue_iam_password_new_ok':{
                             commonUserUpdatePassword();
                             break;
                         }
@@ -2877,8 +2909,10 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         case 'common_dialogue_user_menu_edit':{
                             commonComponentRender({
-                                mountDiv:   'common_dialogue_user_edit',
+                                mountDiv:   'common_dialogue_iam_edit',
                                 data:       {
+                                            app_id:COMMON_GLOBAL.app_id,
+                                            iam_user_id:COMMON_GLOBAL.iam_user_id,
                                             user_account_id:COMMON_GLOBAL.user_account_id,
                                             common_app_id:COMMON_GLOBAL.common_app_id
                                             },
@@ -2887,7 +2921,7 @@ const commonEvent = async (event_type,event=null) =>{
                                             commonMessageShow:commonMessageShow,
                                             commonFormatJsonDate:commonFormatJsonDate
                                             },
-                                path:       '/common/component/common_dialogue_user_edit.js'})
+                                path:       '/common/component/common_dialogue_iam_edit.js'})
                             .then(()=>{
                                 commonComponentRemove('common_dialogue_user_menu');
                             });
@@ -2900,23 +2934,23 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         //dialogue user edit
-                        case 'common_user_edit_close':{
-                            commonComponentRemove('common_dialogue_user_edit', true);
+                        case 'common_dialogue_iam_edit_close':{
+                            commonComponentRemove('common_dialogue_iam_edit', true);
                             break;
                         }
-                        case 'common_user_edit_btn_avatar_img':{
-                            COMMON_DOCUMENT.querySelector('#common_user_edit_input_avatar_img').click();
+                        case 'common_dialogue_iam_edit_btn_avatar_img':{
+                            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_avatar_img').click();
                             break;
                         }
-                        case 'common_user_edit_input_avatar_img':{
-                            commonImageShow(COMMON_DOCUMENT.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                        case 'common_dialogue_iam_edit_input_avatar_img':{
+                            commonImageShow(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
                             break;
                         }
-                        case 'common_user_edit_btn_user_update':{
+                        case 'common_dialogue_iam_edit_btn_user_update':{
                             await commonUserUpdate();
                             break;
                         }
-                        case 'common_user_edit_btn_user_delete_account':{
+                        case 'common_dialogue_iam_edit_btn_user_delete_account':{
                             const function_delete_user_account = () => { 
                                 commonUserDelete(1, null)
                                 .then(()=>COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null)
@@ -2927,8 +2961,8 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }        
                         //dialogue verify
-                        case 'common_user_verify_cancel':{
-                            commonComponentRemove('common_dialogue_user_verify');
+                        case 'common_dialogue_iam_verify_cancel':{
+                            commonComponentRemove('common_dialogue_iam_verify');
                             break;
                         }
                         //search list
@@ -3107,12 +3141,12 @@ const commonEvent = async (event_type,event=null) =>{
                 }
                 else
                     switch (event.target.id){
-                        case 'common_user_start_forgot_email':{
+                        case 'common_dialogue_iam_start_forgot_email':{
                             if (event.code === 'Enter') {
                                 event.preventDefault();
                                 await commonUserForgot().then(()=>{
                                     //unfocus
-                                    COMMON_DOCUMENT.querySelector('#common_user_start_forgot_email').blur();
+                                    COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email').blur();
                                 });
                             }
                             break;
@@ -3716,7 +3750,7 @@ export{/* GLOBALS*/
 </div>
 
 <nav>
-    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_app.html">apps/admin/app</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_edit.html">apps/common/component/common_dialogue_user_edit</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_dialogue_user_password_new.html">apps/common/component/common_dialogue_user_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_user_start.html">apps/common/component/common_dialogue_user_start</a></li><li><a href="module-apps_common_component_common_dialogue_user_verify.html">apps/common/component/common_dialogue_user_verify</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_user_account.html">apps/common/component/common_user_account</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_security.html">server/security</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-circuitBreakerClass.html">circuitBreakerClass</a></li></ul><h3><a href="global.html">Global</a></h3>
+    <h2><a href="index.html">App Portolio</a></h2><h3>Modules</h3><ul><li><a href="module-apps_admin_app.html">apps/admin/app</a></li><li><a href="module-apps_admin_component_admin_secure.html">apps/admin/component/admin_secure</a></li><li><a href="module-apps_admin_component_app.html">apps/admin/component/app</a></li><li><a href="module-apps_admin_component_dialogue_send_broadcast.html">apps/admin/component/dialogue_send_broadcast</a></li><li><a href="module-apps_admin_component_menu_apps.html">apps/admin/component/menu_apps</a></li><li><a href="module-apps_admin_component_menu_apps_parameters.html">apps/admin/component/menu_apps_parameters</a></li><li><a href="module-apps_admin_component_menu_config.html">apps/admin/component/menu_config</a></li><li><a href="module-apps_admin_component_menu_config_detail.html">apps/admin/component/menu_config_detail</a></li><li><a href="module-apps_admin_component_menu_db_info.html">apps/admin/component/menu_db_info</a></li><li><a href="module-apps_admin_component_menu_installation.html">apps/admin/component/menu_installation</a></li><li><a href="module-apps_admin_component_menu_monitor.html">apps/admin/component/menu_monitor</a></li><li><a href="module-apps_admin_component_menu_monitor_detail.html">apps/admin/component/menu_monitor_detail</a></li><li><a href="module-apps_admin_component_menu_monitor_detail_server_log.html">apps/admin/component/menu_monitor_detail_server_log</a></li><li><a href="module-apps_admin_component_menu_server.html">apps/admin/component/menu_server</a></li><li><a href="module-apps_admin_component_menu_start.html">apps/admin/component/menu_start</a></li><li><a href="module-apps_admin_component_menu_start_chart.html">apps/admin/component/menu_start_chart</a></li><li><a href="module-apps_admin_component_menu_user_stat.html">apps/admin/component/menu_user_stat</a></li><li><a href="module-apps_admin_component_menu_users.html">apps/admin/component/menu_users</a></li><li><a href="module-apps_admin_component_menu_users_list.html">apps/admin/component/menu_users_list</a></li><li><a href="module-apps_admin_component_menu_users_logon.html">apps/admin/component/menu_users_logon</a></li><li><a href="module-apps_app1_app.html">apps/app1/app</a></li><li><a href="module-apps_app1_component_app.html">apps/app1/component/app</a></li><li><a href="module-apps_app1_component_app_theme.html">apps/app1/component/app_theme</a></li><li><a href="module-apps_app2_app.html">apps/app2/app</a></li><li><a href="module-apps_app2_app_types.html">apps/app2/app/types</a></li><li><a href="module-apps_app2_component_app.html">apps/app2/component/app</a></li><li><a href="module-apps_app2_component_dialogue_info.html">apps/app2/component/dialogue_info</a></li><li><a href="module-apps_app2_component_dialogue_scan_open_mobile.html">apps/app2/component/dialogue_scan_open_mobile</a></li><li><a href="module-apps_app2_component_print.html">apps/app2/component/print</a></li><li><a href="module-apps_app2_component_profile_info.html">apps/app2/component/profile_info</a></li><li><a href="module-apps_app2_component_profile_stat.html">apps/app2/component/profile_stat</a></li><li><a href="module-apps_app2_component_settings_tab1.html">apps/app2/component/settings_tab1</a></li><li><a href="module-apps_app2_component_settings_tab2.html">apps/app2/component/settings_tab2</a></li><li><a href="module-apps_app2_component_settings_tab3.html">apps/app2/component/settings_tab3</a></li><li><a href="module-apps_app2_component_settings_tab4.html">apps/app2/component/settings_tab4</a></li><li><a href="module-apps_app2_component_settings_tab5.html">apps/app2/component/settings_tab5</a></li><li><a href="module-apps_app2_component_settings_tab6.html">apps/app2/component/settings_tab6</a></li><li><a href="module-apps_app2_component_settings_tab7.html">apps/app2/component/settings_tab7</a></li><li><a href="module-apps_app2_component_settings_tab_nav_7.html">apps/app2/component/settings_tab_nav_7</a></li><li><a href="module-apps_app2_report_lib_timetable.html">apps/app2/report/lib_timetable</a></li><li><a href="module-apps_app2_src_modules_module_timetable_lib.html">apps/app2/src/modules/module_timetable_lib</a></li><li><a href="module-apps_app2_src_report_timetable.html">apps/app2/src/report/timetable</a></li><li><a href="module-apps_app2_src_types.html">apps/app2/src/types</a></li><li><a href="module-apps_app2_sw.html">apps/app2/sw</a></li><li><a href="module-apps_app3_app.html">apps/app3/app</a></li><li><a href="module-apps_app3_component_app.html">apps/app3/component/app</a></li><li><a href="module-apps_app3_component_docs.html">apps/app3/component/docs</a></li><li><a href="module-apps_app4_app.html">apps/app4/app</a></li><li><a href="module-apps_app4_component_app.html">apps/app4/component/app</a></li><li><a href="module-apps_app5_app.html">apps/app5/app</a></li><li><a href="module-apps_app5_component_app.html">apps/app5/component/app</a></li><li><a href="module-apps_app5_component_page_secure.html">apps/app5/component/page_secure</a></li><li><a href="module-apps_app5_component_page_start.html">apps/app5/component/page_start</a></li><li><a href="module-apps_app5_src_functions_account_create.html">apps/app5/src/functions/account_create</a></li><li><a href="module-apps_app5_src_functions_account_get.html">apps/app5/src/functions/account_get</a></li><li><a href="module-apps_app5_src_functions_account_metadata.html">apps/app5/src/functions/account_metadata</a></li><li><a href="module-apps_app5_src_functions_account_statement.html">apps/app5/src/functions/account_statement</a></li><li><a href="module-apps_app5_src_functions_account_transactions.html">apps/app5/src/functions/account_transactions</a></li><li><a href="module-apps_app5_src_functions_customer_create.html">apps/app5/src/functions/customer_create</a></li><li><a href="module-apps_app5_src_functions_customer_get.html">apps/app5/src/functions/customer_get</a></li><li><a href="module-apps_app5_src_functions_customer_metadata.html">apps/app5/src/functions/customer_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_create.html">apps/app5/src/functions/payment_request_create</a></li><li><a href="module-apps_app5_src_functions_payment_request_get.html">apps/app5/src/functions/payment_request_get</a></li><li><a href="module-apps_app5_src_functions_payment_request_get_status.html">apps/app5/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app5_src_functions_payment_request_metadata.html">apps/app5/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app5_src_functions_payment_request_update.html">apps/app5/src/functions/payment_request_update</a></li><li><a href="module-apps_app5_src_functions_transaction_metadata.html">apps/app5/src/functions/transaction_metadata</a></li><li><a href="module-apps_app6_app.html">apps/app6/app</a></li><li><a href="module-apps_app6_component_app.html">apps/app6/component/app</a></li><li><a href="module-apps_app6_component_page_start.html">apps/app6/component/page_start</a></li><li><a href="module-apps_app6_src_functions_payment_metadata.html">apps/app6/src/functions/payment_metadata</a></li><li><a href="module-apps_app6_src_functions_payment_request_create.html">apps/app6/src/functions/payment_request_create</a></li><li><a href="module-apps_app6_src_functions_payment_request_get_status.html">apps/app6/src/functions/payment_request_get_status</a></li><li><a href="module-apps_app6_src_functions_payment_request_metadata.html">apps/app6/src/functions/payment_request_metadata</a></li><li><a href="module-apps_app6_src_functions_product_get.html">apps/app6/src/functions/product_get</a></li><li><a href="module-apps_app6_src_functions_product_location_get.html">apps/app6/src/functions/product_location_get</a></li><li><a href="module-apps_app6_src_functions_product_metadata.html">apps/app6/src/functions/product_metadata</a></li><li><a href="module-apps_app6_src_functions_product_variant_location_metadata.html">apps/app6/src/functions/product_variant_location_metadata</a></li><li><a href="module-apps_app7_app.html">apps/app7/app</a></li><li><a href="module-apps_app7_app_types.html">apps/app7/app/types</a></li><li><a href="module-apps_app7_component_app.html">apps/app7/component/app</a></li><li><a href="module-apps_app7_component_cube.html">apps/app7/component/cube</a></li><li><a href="module-apps_app7_component_cube_lib.html">apps/app7/component/cube_lib</a></li><li><a href="module-apps_app7_src_functions_solve.html">apps/app7/src/functions/solve</a></li><li><a href="module-apps_app7_src_functions_solver1.html">apps/app7/src/functions/solver1</a></li><li><a href="module-apps_app7_src_functions_solver1_algorithms.html">apps/app7/src/functions/solver1/algorithms</a></li><li><a href="module-apps_app7_src_functions_solver1_coordinates.html">apps/app7/src/functions/solver1/coordinates</a></li><li><a href="module-apps_app7_src_functions_solver1_cube.html">apps/app7/src/functions/solver1/cube</a></li><li><a href="module-apps_app7_src_functions_solver1_movetable.html">apps/app7/src/functions/solver1/movetable</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable.html">apps/app7/src/functions/solver1/pruningtable</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_2gll.html">apps/app7/src/functions/solver1/scramblers/2gll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_3x3.html">apps/app7/src/functions/solver1/scramblers/3x3</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_cmll.html">apps/app7/src/functions/solver1/scramblers/cmll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_corners.html">apps/app7/src/functions/solver1/scramblers/corners</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_edges.html">apps/app7/src/functions/solver1/scramblers/edges</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lse.html">apps/app7/src/functions/solver1/scramblers/lse</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_lsll.html">apps/app7/src/functions/solver1/scramblers/lsll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_pll.html">apps/app7/src/functions/solver1/scramblers/pll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_scramblepieces.html">apps/app7/src/functions/solver1/scramblers/scramblepieces</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zbll.html">apps/app7/src/functions/solver1/scramblers/zbll</a></li><li><a href="module-apps_app7_src_functions_solver1_scramblers_zzls.html">apps/app7/src/functions/solver1/scramblers/zzls</a></li><li><a href="module-apps_app7_src_functions_solver1_search.html">apps/app7/src/functions/solver1/search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_crosssolver.html">apps/app7/src/functions/solver1/solvers/crosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_eolinesolver.html">apps/app7/src/functions/solver1/solvers/eolinesolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_firstblocksolver.html">apps/app7/src/functions/solver1/solvers/firstblocksolver</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba.html">apps/app7/src/functions/solver1/solvers/kociemba</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_xcrosssolver.html">apps/app7/src/functions/solver1/solvers/xcrosssolver</a></li><li><a href="module-apps_app7_src_functions_solver1_tools.html">apps/app7/src/functions/solver1/tools</a></li><li><a href="module-apps_app7_src_functions_solver1_worker.html">apps/app7/src/functions/solver1/worker</a></li><li><a href="module-apps_app7_src_functions_solver2.html">apps/app7/src/functions/solver2</a></li><li><a href="module-apps_app7_src_functions_solver3.html">apps/app7/src/functions/solver3</a></li><li><a href="module-apps_app7_src_functions_solver3_algorithm-shortener.html">apps/app7/src/functions/solver3/algorithm-shortener</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube.html">apps/app7/src/functions/solver3/models/cube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face.html">apps/app7/src/functions/solver3/models/face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector.html">apps/app7/src/functions/solver3/models/vector</a></li><li><a href="module-apps_app7_src_functions_solver3_module_combiner.html">apps/app7/src/functions/solver3/module/combiner</a></li><li><a href="module-apps_app7_src_functions_solver3_module_gl-vec3.html">apps/app7/src/functions/solver3/module/gl-vec3</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver.html">apps/app7/src/functions/solver3/solvers/basesolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_cross.html">apps/app7/src/functions/solver3/solvers/cross</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l.html">apps/app7/src/functions/solver3/solvers/f2l</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_oll.html">apps/app7/src/functions/solver3/solvers/oll</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_pll.html">apps/app7/src/functions/solver3/solvers/pll</a></li><li><a href="module-apps_app7_src_functions_solver3_utils.html">apps/app7/src/functions/solver3/utils</a></li><li><a href="module-apps_app7_src_types.html">apps/app7/src/types</a></li><li><a href="module-apps_common_common.html">apps/common/common</a></li><li><a href="module-apps_common_component_common_app.html">apps/common/component/common_app</a></li><li><a href="module-apps_common_component_common_app_data_display.html">apps/common/component/common_app_data_display</a></li><li><a href="module-apps_common_component_common_broadcast.html">apps/common/component/common_broadcast</a></li><li><a href="module-apps_common_component_common_construction.html">apps/common/component/common_construction</a></li><li><a href="module-apps_common_component_common_dialogue_apps.html">apps/common/component/common_dialogue_apps</a></li><li><a href="module-apps_common_component_common_dialogue_iam_edit.html">apps/common/component/common_dialogue_iam_edit</a></li><li><a href="module-apps_common_component_common_dialogue_iam_password_new.html">apps/common/component/common_dialogue_iam_password_new</a></li><li><a href="module-apps_common_component_common_dialogue_iam_start.html">apps/common/component/common_dialogue_iam_start</a></li><li><a href="module-apps_common_component_common_dialogue_iam_verify.html">apps/common/component/common_dialogue_iam_verify</a></li><li><a href="module-apps_common_component_common_dialogue_lov.html">apps/common/component/common_dialogue_lov</a></li><li><a href="module-apps_common_component_common_dialogue_maintenance.html">apps/common/component/common_dialogue_maintenance</a></li><li><a href="module-apps_common_component_common_dialogue_message.html">apps/common/component/common_dialogue_message</a></li><li><a href="module-apps_common_component_common_dialogue_profile.html">apps/common/component/common_dialogue_profile</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info.html">apps/common/component/common_dialogue_profile_info</a></li><li><a href="module-apps_common_component_common_dialogue_profile_info_detail.html">apps/common/component/common_dialogue_profile_info_detail</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat.html">apps/common/component/common_dialogue_profile_stat</a></li><li><a href="module-apps_common_component_common_dialogue_profile_stat_list.html">apps/common/component/common_dialogue_profile_stat_list</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu.html">apps/common/component/common_dialogue_user_menu</a></li><li><a href="module-apps_common_component_common_dialogue_user_menu_app_theme.html">apps/common/component/common_dialogue_user_menu_app_theme</a></li><li><a href="module-apps_common_component_common_iam_avatar.html">apps/common/component/common_iam_avatar</a></li><li><a href="module-apps_common_component_common_module_leaflet.html">apps/common/component/common_module_leaflet</a></li><li><a href="module-apps_common_component_common_module_leaflet_control.html">apps/common/component/common_module_leaflet_control</a></li><li><a href="module-apps_common_component_common_module_leaflet_popup.html">apps/common/component/common_module_leaflet_popup</a></li><li><a href="module-apps_common_component_common_module_leaflet_search_city.html">apps/common/component/common_module_leaflet_search_city</a></li><li><a href="module-apps_common_component_common_profile_search.html">apps/common/component/common_profile_search</a></li><li><a href="module-apps_common_component_common_profile_search_list.html">apps/common/component/common_profile_search_list</a></li><li><a href="module-apps_common_component_common_profile_toolbar.html">apps/common/component/common_profile_toolbar</a></li><li><a href="module-apps_common_component_common_select.html">apps/common/component/common_select</a></li><li><a href="module-apps_common_component_common_window_info.html">apps/common/component/common_window_info</a></li><li><a href="module-apps_common_maintenance.html">apps/common/maintenance</a></li><li><a href="module-apps_common_src_common_service.html">apps/common/src/common/service</a></li><li><a href="module-apps_common_src_component_common_app.html">apps/common/src/component/common_app</a></li><li><a href="module-apps_common_src_component_common_info_disclaimer.html">apps/common/src/component/common_info_disclaimer</a></li><li><a href="module-apps_common_src_component_common_info_privacy_policy.html">apps/common/src/component/common_info_privacy_policy</a></li><li><a href="module-apps_common_src_component_common_info_terms.html">apps/common/src/component/common_info_terms</a></li><li><a href="module-apps_common_src_component_common_mail.html">apps/common/src/component/common_mail</a></li><li><a href="module-apps_common_src_component_common_maintenance.html">apps/common/src/component/common_maintenance</a></li><li><a href="module-apps_common_src_component_common_report.html">apps/common/src/component/common_report</a></li><li><a href="module-apps_common_src_component_common_server_error.html">apps/common/src/component/common_server_error</a></li><li><a href="module-apps_common_src_functions_common_country.html">apps/common/src/functions/common_country</a></li><li><a href="module-apps_common_src_functions_common_locale.html">apps/common/src/functions/common_locale</a></li><li><a href="module-apps_default_PWA_app.html">apps/default_PWA/app</a></li><li><a href="module-apps_default_PWA_component_app.html">apps/default_PWA/component/app</a></li><li><a href="module-apps_default_PWA_sw.html">apps/default_PWA/sw</a></li><li><a href="module-apps_types.html">apps/types</a></li><li><a href="module-microservice.html">microservice</a></li><li><a href="module-microservice_batch_server.html">microservice/batch/server</a></li><li><a href="module-microservice_batch_service.html">microservice/batch/service</a></li><li><a href="module-microservice_cirtcuitbreaker.html">microservice/cirtcuitbreaker</a></li><li><a href="module-microservice_geolocation_server.html">microservice/geolocation/server</a></li><li><a href="module-microservice_geolocation_service.html">microservice/geolocation/service</a></li><li><a href="module-microservice_mail_server.html">microservice/mail/server</a></li><li><a href="module-microservice_mail_service.html">microservice/mail/service</a></li><li><a href="module-microservice_messagequeue.html">microservice/messagequeue</a></li><li><a href="module-microservice_registry.html">microservice/registry</a></li><li><a href="module-microservice_worldcities_server.html">microservice/worldcities/server</a></li><li><a href="module-microservice_worldcities_service.html">microservice/worldcities/service</a></li><li><a href="module-server_bff.html">server/bff</a></li><li><a href="module-server_bff_service.html">server/bff/service</a></li><li><a href="module-server_config.html">server/config</a></li><li><a href="module-server_db_common.html">server/db/common</a></li><li><a href="module-server_db_components_app_data_entity.html">server/db/components/app_data_entity</a></li><li><a href="module-server_db_components_app_data_resource.html">server/db/components/app_data_resource</a></li><li><a href="module-server_db_components_app_data_stat.html">server/db/components/app_data_stat</a></li><li><a href="module-server_db_components_app_setting.html">server/db/components/app_setting</a></li><li><a href="module-server_db_components_database.html">server/db/components/database</a></li><li><a href="module-server_db_components_identity_provider.html">server/db/components/identity_provider</a></li><li><a href="module-server_db_components_user_account.html">server/db/components/user_account</a></li><li><a href="module-server_db_components_user_account_app.html">server/db/components/user_account_app</a></li><li><a href="module-server_db_components_user_account_app_data_post.html">server/db/components/user_account_app_data_post</a></li><li><a href="module-server_db_db.html">server/db/db</a></li><li><a href="module-server_db_file.html">server/db/file</a></li><li><a href="module-server_db_sql_app.html">server/db/sql/app</a></li><li><a href="module-server_db_sql_app_data_entity.html">server/db/sql/app_data_entity</a></li><li><a href="module-server_db_sql_app_data_entity_resource.html">server/db/sql/app_data_entity_resource</a></li><li><a href="module-server_db_sql_app_data_resource_detail.html">server/db/sql/app_data_resource_detail</a></li><li><a href="module-server_db_sql_app_data_resource_detail_data.html">server/db/sql/app_data_resource_detail_data</a></li><li><a href="module-server_db_sql_app_data_resource_master.html">server/db/sql/app_data_resource_master</a></li><li><a href="module-server_db_sql_app_data_stat.html">server/db/sql/app_data_stat</a></li><li><a href="module-server_db_sql_app_setting.html">server/db/sql/app_setting</a></li><li><a href="module-server_db_sql_database.html">server/db/sql/database</a></li><li><a href="module-server_db_sql_identity_provider.html">server/db/sql/identity_provider</a></li><li><a href="module-server_db_sql_user_account.html">server/db/sql/user_account</a></li><li><a href="module-server_db_sql_user_account_app.html">server/db/sql/user_account_app</a></li><li><a href="module-server_db_sql_user_account_app_data_post.html">server/db/sql/user_account_app_data_post</a></li><li><a href="module-server_db_sql_user_account_app_data_post_like.html">server/db/sql/user_account_app_data_post_like</a></li><li><a href="module-server_db_sql_user_account_app_data_post_view.html">server/db/sql/user_account_app_data_post_view</a></li><li><a href="module-server_db_sql_user_account_event.html">server/db/sql/user_account_event</a></li><li><a href="module-server_db_sql_user_account_follow.html">server/db/sql/user_account_follow</a></li><li><a href="module-server_db_sql_user_account_like.html">server/db/sql/user_account_like</a></li><li><a href="module-server_db_sql_user_account_view.html">server/db/sql/user_account_view</a></li><li><a href="module-server_iam.html">server/iam</a></li><li><a href="module-server_iam_service.html">server/iam/service</a></li><li><a href="module-server_info.html">server/info</a></li><li><a href="module-server_log.html">server/log</a></li><li><a href="module-server_security.html">server/security</a></li><li><a href="module-server_server.html">server/server</a></li><li><a href="module-server_socket.html">server/socket</a></li><li><a href="module-server_types.html">server/types</a></li><li><a href="module-test.html">test</a></li></ul><h3>Classes</h3><ul><li><a href="module-apps_app2_report_lib_timetable-PrayTimes.html">PrayTimes</a></li><li><a href="module-apps_app7_src_functions_solver1_pruningtable-PruningTable.html">PruningTable</a></li><li><a href="module-apps_app7_src_functions_solver1_search-Search.html">Search</a></li><li><a href="module-apps_app7_src_functions_solver1_solvers_kociemba-PhaseOneSearch.html">PhaseOneSearch</a></li><li><a href="module-apps_app7_src_functions_solver3_models_cube-Cubie.html">Cubie</a></li><li><a href="module-apps_app7_src_functions_solver3_models_face-Face.html">Face</a></li><li><a href="module-apps_app7_src_functions_solver3_models_rubikscube-RubiksCube.html">RubiksCube</a></li><li><a href="module-apps_app7_src_functions_solver3_models_vector-Vector.html">Vector</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_basesolver-BaseSolver.html">BaseSolver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case1Solver.html">Case1Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case2Solver.html">Case2Solver</a></li><li><a href="module-apps_app7_src_functions_solver3_solvers_f2l-Case3Solver.html">Case3Solver</a></li><li><a href="module-apps_app7_src_functions_solver3-Solver.html">Solver</a></li><li><a href="module-microservice_cirtcuitbreaker-circuitBreakerClass.html">circuitBreakerClass</a></li></ul><h3><a href="global.html">Global</a></h3>
 </nav>
 
 <br class="clear">
