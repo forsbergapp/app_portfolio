@@ -150,10 +150,10 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
                         <div id='common_dialogue_iam_edit_account_info'>
                             <div class='common_setting_horizontal_row'>
                                 <div class='common_setting_horizontal_col'>
-                                    <div id='common_dialogue_iam_edit_label_last_logontime' class='common_icon'></div>
+                                    <div id='common_dialogue_iam_edit_label_last_logintime' class='common_icon'></div>
                                 </div>
                                 <div class='common_setting_horizontal_col'>
-                                    <div id='common_dialogue_iam_edit_label_data_last_logontime'></div>
+                                    <div id='common_dialogue_iam_edit_label_data_last_logintime'></div>
                                 </div>
                             </div>
                             <div class='common_setting_horizontal_row'>
@@ -217,7 +217,6 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const user_get = async () => {
-        
         if ((props.data.app_id == props.data.common_app_id && props.data.iam_user_id == user.id)||
             props.data.user_account_id == parseInt(user.id)) {
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display = 'none';
@@ -260,7 +259,7 @@ const component = async props => {
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img').style.backgroundImage= user.provider_image?`url('${user.provider_image}')`:'url()';
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img').setAttribute('data-image',user.provider_image);
                 } 
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_last_logontime').textContent = props.methods.commonFormatJsonDate(user.last_logontime, null);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_last_logintime').textContent = props.methods.commonFormatJsonDate(user.last_logintime, null);
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_created').textContent = props.methods.commonFormatJsonDate(user.date_created ?? user.created, null);
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_modified').textContent = props.methods.commonFormatJsonDate(user.date_modified ?? user.modified, null);
             props.methods.COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (user.avatar ?? user.provider_image)?
@@ -268,7 +267,7 @@ const component = async props => {
                                                                                                             'url()';
         } else {
             //User not found
-            props.methods.commonMessageShow('ERROR', '20305', null, null, props.data.common_app_id);
+            props.methods.commonMessageShow('ERROR', '20305', null, null, null, props.data.common_app_id);
         }
     };
     return {

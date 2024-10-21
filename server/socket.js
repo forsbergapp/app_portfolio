@@ -169,7 +169,7 @@ const socketClientAdd = (newClient) => {
 };
 
 /**
- * Socket client send as system admin
+ * Socket client send as admin
  * @param {number|null} app_id
  * @param {{client_id:number|null,
  *          client_id_current:number|null,

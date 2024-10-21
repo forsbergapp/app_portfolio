@@ -6,7 +6,7 @@ const service = await import(`file://${process.cwd()}/server/db/sql/user_account
 /**@type{import('../../config.js')} */
 const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('../file.js')} */
-const { fileCache, fileFsReadLog, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.js`);
+const { fileCache, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../../../apps/common/src/common.js')} */
 const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -14,7 +14,7 @@ const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/com
 /**@type{import('../../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../iam.service.js')} */
-const { iamTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const { iamTokenAuthorize, iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('../../socket.js')} */
 const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
 
@@ -1043,24 +1043,17 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
  * @param {number} resource_id
  * @param {*} query 
  * @param {import('../../types.js').server_server_res} res 
- * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_getUserByUserId[]|{last_logontime:string|null}>}
+ * @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_getUserByUserId[]|{last_logintime:string|null}>}
  */
 const getUserByUserId = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
         service.getUserByUserId(app_id, resource_id)
         .then(result=>{
             if (result[0]){
-                fileFsReadLog('IAM_USER_LOGIN', null, '')
-                    .then(result=>result
-                    .filter((/**@type{import('../../types.js').server_iam_user_login_record}*/row)=>
-                        row.id==resource_id &&  row.id==app_id && row.res==1)[0])
-                .then((/**@type{import('../../types.js').server_iam_user_login_record}*/iam_user_login)=>{
-                    //concat db result with IAM last logon time
-                    resolve({...result[0], ...{last_logontime:iam_user_login?iam_user_login.created:null}});
-                })
-                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
+                iamUserGetLastLogin(app_id, resource_id)
+                .then(last_logintime=>
+                        resolve({...result[0], ...{last_logintime:last_logintime}}));
             }
-                
             else{
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('../../db/common.js')} */{dbCommonRecordNotFound}) => {

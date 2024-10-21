@@ -917,7 +917,7 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-iam/user/${resource_id_string}`, method:'GET'}):{
-                        resolve(iam_service.iamUserGet(
+                        resolve(iam_service.iamUserGet(routesparameters.app_id,
                                                         /**@ts-ignore */
                                                         resource_id_get_number(), 
                                                         routesparameters.res));

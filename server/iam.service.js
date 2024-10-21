@@ -70,7 +70,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
 };
 
 /**
- * Middleware authenticates system admin login
+ * Middleware authenticates admin login
  * @param {number} app_id
  * @param {string} iam
  * @param {string} authorization
@@ -102,10 +102,12 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
      *                  tokentimestamp:number}>}
      */
     const check_user = async (result, id, username) => {       
-        const jwt_data = iamTokenAuthorize(app_id, 'ADMIN', {id:null, name:username, ip:ip, scope:'USER'});
-        /**@type{import('./types.js').server_iam_admin_login_record} */
-        const file_content = {	id:         app_id,
+        const jwt_data = iamTokenAuthorize(app_id, 'ADMIN', {id:id, name:username, ip:ip, scope:'USER'});
+        /**@type{import('./types.js').server_iam_user_login_record} */
+        const file_content = {	id:         id,
+                                app_id:     app_id,
                                 user:		username,
+                                db:         fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
                                 res:		result,
                                 token:      jwt_data.token,
                                 ip:         ip,
@@ -113,7 +115,7 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
                                 long:       null,
                                 lat:        null,
                                 created:    new Date().toISOString()};
-        await fileFsAppend('IAM_ADMIN_LOGIN', file_content, '');
+        await fileFsAppend('IAM_USER_LOGIN', file_content, '');
         if (result == 1){
             return await socketConnectedUpdate(app_id, 
                 {   iam:iam,
@@ -128,6 +130,7 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
             .then(()=>{
                 return  {   iam_user_id: id,
                             iam_user_name:username,
+                            avatar: fileCache('IAM_USER').filter((/**@type{import('./types.js').server_db_file_iam_user}*/user)=>user.id == id)[0].avatar,
                             token_at: jwt_data.token,
                             exp:jwt_data.exp,
                             iat:jwt_data.iat,
@@ -150,7 +153,7 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
                             type: 'ADMIN', 
                             bio:null, 
                             private:1, 
-                            email:null, 
+                            email:'admin@localhost', 
                             email_unverified:null, 
                             avatar:null}, res)
             .then(result=>check_user(1, result.id, username));
@@ -161,7 +164,7 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
             /**@type{import('./types.js').server_db_file_iam_user}*/
             const user =  fileCache('IAM_USER').filter((/**@type{import('./types.js').server_db_file_iam_user}*/user)=>user.username == username)[0];
 
-            if (user && user.username == username && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
+            if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
                 return check_user(1, user.id, username); 
             else
                 return check_user(0, user.id, username);
@@ -192,7 +195,7 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
 /**
  * Middleware authenticate IAM users
  * @param {string} iam
- * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'APP_ADMIN'|'APP_ACCESS'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
+ * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'ADMIN'|'APP_ACCESS'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
  * @param {string} authorization
  * @param {string} host
  * @param {string} ip
@@ -236,21 +239,22 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
                                 iamUtilResponseNotAuthorized(res, 403, 'iamUserCommonAuthenticate, user login disabled');
                             break;
                         }
-                        case scope=='APP_ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
                             const access_token_decoded = jwt.verify(access_token, configGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
-                            /**@type{import('./types.js').server_iam_admin_login_record[]}*/
+                            /**@type{import('./types.js').server_iam_user_login_record[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
                                 access_token_decoded.name == iamUtilDecode(iam).get('admin'))
-                                await fileFsReadLog('IAM_ADMIN_LOGIN', null,'')
+                                await fileFsReadLog('IAM_USER_LOGIN', null,'')
                                 .then(result=>{
-                                    /**@type{import('./types.js').server_iam_admin_login_record}*/
-                                    const iam_admin_login = result.filter((/**@type{import('./types.js').server_iam_admin_login_record}*/row)=>
-                                                                            row.id      == app_id_host && 
+                                    /**@type{import('./types.js').server_iam_user_login_record}*/
+                                    const iam_admin_login = result.filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                                                            row.id      == access_token_decoded.id && 
+                                                                            row.app_id  == app_id_host &&
                                                                             row.user    == access_token_decoded.name && 
                                                                             row.res     == 1 &&
                                                                             row.ip      == ip &&
@@ -693,11 +697,12 @@ const iamUserCreate = async (data, res) => {
 };
 /**
  * User get
+ * @param {number} app_id
  * @param {number} id
  * @param {import('./types.js').server_server_res} res
- * @returns {import('./types.js').server_db_file_iam_user_get}
+ * @returns {Promise.<import('./types.js').server_db_file_iam_user_get>}
  */
-const iamUserGet = (id, res) =>{
+const iamUserGet = async (app_id, id, res) =>{
     /**@type{import('./types.js').server_db_file_iam_user_get}*/
     const user = fileCache('IAM_USER')
                 .map((/**@type{import('./types.js').server_db_file_iam_user} */row)=>{return { id: row.id,
@@ -714,13 +719,29 @@ const iamUserGet = (id, res) =>{
                                     created: row.created,
                                     modified: row.modified};})
                 .filter((/**@type{import('./types.js').server_db_file_iam_user_get}*/row)=>row.id==id)[0];
+                
     if (user)
-        return user;
+        //add last login time
+        return {...user, ...{last_logintime:await iamUserGetLastLogin(app_id, id)}};
     else{
         res.statusCode = 404;
         throw '⛔';    
     }
 };
+/**
+ * User get last login in current app
+ * @param {number} app_id
+ * @param {number} id
+ * @returns {Promise.<string>}
+ */
+const iamUserGetLastLogin = async (app_id, id) =>fileFsReadLog('IAM_USER_LOGIN', null, '')
+                                                    .then(result=>result
+                                                                    .filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                                                        row.id==id &&  row.app_id==app_id && row.res==1)
+                                                                    .sort((/**@type{import('./types.js').server_iam_user_login_record}*/a,
+                                                                            /**@type{import('./types.js').server_iam_user_login_record}*/b)=>a.created < b.created?1:-1)[0].created)
+                                                    .catch(()=>null);
+
 /**
  * User udpate
  * @param {number} id
@@ -789,4 +810,5 @@ export{ iamUtilDecode,
         iamUserLogin,
         iamUserCreate,
         iamUserGet,
+        iamUserGetLastLogin,
         iamUserUpdate}; 

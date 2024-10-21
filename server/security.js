@@ -81,7 +81,7 @@ const securityPasswordCreate = async (password) => {
  */
 const securityPasswordCompare = async (password, compare_password) =>{
     const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-    //system admin uses different parameters than apps
+    //admin uses different parameters than apps
     const AppPasswordEncryptionKey = configGet('SERVICE_IAM', 'ADMIN_PASSWORD_ENCRYPTION_KEY');
     const AppPasswordInitializationVector = configGet('SERVICE_IAM', 'ADMIN_PASSWORD_INIT_VECTOR');
     const decipher = createDecipheriv('aes-256-cbc', AppPasswordEncryptionKey, AppPasswordInitializationVector);

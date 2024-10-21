@@ -7,12 +7,12 @@
 const iamService = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**
- * Middleware authenticates system admin token
+ * Middleware authenticates admin token
  * @param {import('./types.js').server_server_req} req
  * @param {import('./types.js').server_server_res} res
  * @param {function} next
  */
- const iamAccessTokenAuthenticateAdmin = (req, res, next) => iamService.iamUserCommonAuthenticate(req.query.iam, 'APP_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+ const iamAccessTokenAuthenticateAdmin = (req, res, next) => iamService.iamUserCommonAuthenticate(req.query.iam, 'ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates id token
@@ -70,7 +70,7 @@ const iamAdminAuthenticate = (req, res, next)  => iamService.iamUserCommonAuthen
 const iamUserAuthenticate = (req, res, next) => iamService.iamUserCommonAuthenticate(req.query.iam, 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
  /**
- * Middleware authenticates IAM System Admin
+ * Middleware authenticates IAM Provider
  * @param {import('./types.js').server_server_req} req
  * @param {import('./types.js').server_server_res} res
  * @param {function} next

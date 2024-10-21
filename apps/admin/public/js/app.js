@@ -225,14 +225,8 @@ const appSecureDialogueSendBroadcastSend = () => {
                             client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                             broadcast_type:     broadcast_type, 
                             broadcast_message:  common.commonWindowToBase64(broadcast_message)};
-        let path='';
-        if (common.COMMON_GLOBAL.admin!=null){
-            path = '/server-socket/message';
-        }
-        else{
-            path = '/server-socket/message';
-        }
-        common.commonFFB({path:path, method:'POST', authorization_type:'ADMIN', body:json_data})
+        
+        common.commonFFB({path:'/server-socket/message', method:'POST', authorization_type:'ADMIN', body:json_data})
         .then((/**@type{string}*/result)=>{
             if (Number(JSON.parse(result).sent) > 0)
                 common.commonMessageShow('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
@@ -913,7 +907,7 @@ const appLogout = () => {
  */
 const appLogin = async () => {
     await common.commonUserLogin(true)
-    .then(()=>{
+    .then(result=>{
         common.commonComponentRender({
             mountDiv:   'secure',
             data:       null,
@@ -926,9 +920,12 @@ const appLogin = async () => {
                 methods:    null,
                 path:       '/common/component/common_iam_avatar.js'})
             .then(()=>{
-                COMMON_DOCUMENT.querySelector('#common_iam_avatar_default_avatar').classList.add('app_role_admin');
-                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
-                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
+                COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (result.avatar ?? null)?
+                                                                                                    `url('${result.avatar ?? null}')`:
+                                                                                                    'url()';
+                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
+                COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
+
                 appSecureInit();
             });
         });
@@ -1176,7 +1173,7 @@ const appFrameworkSet = async (framework=null) => {
                         Focus: appEventFocus,
                         Input:appEventInput})
     .then(()=>{
-        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.admin==null)
+        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.iam_user_id==null)
             common.commonDialogueShow('LOGIN_ADMIN');
     });                        
 };

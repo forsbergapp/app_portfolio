@@ -8,8 +8,6 @@
 .common_search_icon::before{											content:var(--common_app_icon_search)}
 .common_reload::before{													content:var(--common_app_icon_reload)}
 .common_user_session_expired::before{									content:var(--common_app_icon_user_session_expired)}
-/*Icons dialogue user account + menu monitor detail*/
-.app_role_admin::before{												content:var(--common_app_icon_user_admin) !important}
 
 /*Icons app data display*/
 .common_app_data_display_button_update::before{							content:var(--common_app_icon_update)}
@@ -78,7 +76,7 @@
 #common_dialogue_iam_edit_input_password_new_confirm_icon::before{				content:var(--common_app_icon_user_password_confirm)}
 #common_dialogue_iam_edit_input_password_reminder_icon::before{					content:var(--common_app_icon_user_password_reminder)}
 
-#common_dialogue_iam_edit_label_last_logontime::before{							content:var(--common_app_icon_user_last_logontime)}
+#common_dialogue_iam_edit_label_last_logintime::before{							content:var(--common_app_icon_user_last_logintime)}
 #common_dialogue_iam_edit_label_account_created::before{						content:var(--common_app_icon_user_account_created)}
 #common_dialogue_iam_edit_label_account_modified::before{						content:var(--common_app_icon_user_account_modified)}
 
@@ -950,7 +948,7 @@ body.rtl{
 	width: 100%;
 	text-align: center !important;
 }
-#common_dialogue_iam_edit_label_data_last_logontime,
+#common_dialogue_iam_edit_label_data_last_logintime,
 #common_dialogue_iam_edit_label_data_account_created,
 #common_dialogue_iam_edit_label_data_account_modified {
 	font-size: 0.5em;
