@@ -1618,9 +1618,10 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
         COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
         COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
+
         commonComponentRemove(current_dialogue, true);
         
-        return {avatar: null};
+        return {avatar: JSON.parse(result_iam).avatar};
     }
     else{
         COMMON_GLOBAL.iam_user_id = null;
@@ -1635,14 +1636,12 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         COMMON_GLOBAL.user_account_username = login_data.username;
         COMMON_GLOBAL.user_identity_provider_id = provider_id?login_data.identity_provider_id:null;
 
-        if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
-            //set avatar or empty if not in admin app
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
-                                                                                                        `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`:
-                                                                                                        'url()';
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
-        }
+        //set avatar or empty
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (provider_id?login_data.provider_image:login_data.avatar ?? null)?
+                                                                                                    `url('${provider_id?login_data.provider_image:login_data.avatar ?? null}')`:
+                                                                                                    'url()';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
 
         const result = await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
         const user_account_app = JSON.parse(result)[0];
@@ -1808,7 +1807,7 @@ const commonUserUpdate = async () => {
                                 email:              new_email==''?email:new_email,
                                 avatar:             avatar
                             };
-                path = `server-iam/user/${COMMON_GLOBAL.iam_user_id ?? ''}`;
+                path = `/server-iam/user/${COMMON_GLOBAL.iam_user_id ?? ''}`;
                 authorization_type = 'ADMIN';
             }
             else{
@@ -2328,7 +2327,7 @@ const commonFFB = async parameter => {
         case 'IAM_ADMIN':
         case 'IAM_PROVIDER':
         case 'IAM_USER':{
-            //user,admin or system admin login
+            //user or admin login
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
             authorization_basic = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && parameter.authorization_type == 'IAM_USER')

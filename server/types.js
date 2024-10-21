@@ -376,7 +376,6 @@
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
  *              'IAM_APP_TOKEN'|
- *              'IAM_ADMIN_LOGIN'|
  *              'IAM_USER'|
  *              'IAM_USER_LOGIN'|
  *              'LOG_APP_INFO'|
@@ -558,18 +557,6 @@
  *		        created:    string}} server_iam_app_token_record
  */
 
-/**
- * DB FILE server_iam_admin_login_record
- * @typedef {{	id:		number,
- *              user:   string,
- *              res:	0|1,
- *   	        token:  string,
- *		        ip:     string,
- *		        ua:     string|null,
- *		        long:   string|null,
- *		        lat:    string|null,
- *		        created:string}} server_iam_admin_login_record
- */
 /**
  * DB FILE server_iam_user_login_record
  * @typedef {{	id:		number|null,
