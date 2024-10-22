@@ -33,7 +33,7 @@
         {"CHECK_INTERVAL": "5000", "COMMENT": "maintenance check interval in milliseconds"}
     ],
     "SERVICE_DB":[
-        {"START": "1", "COMMENT": "0=NO, 1=YES, when 0 then only system admin can login in admin"},
+        {"START": "1", "COMMENT": "0=NO, 1=YES, when 0 then only admin can login in admin app"},
         {"USE": "5", "COMMENT": "1=MariaDB(mysql module), 2=MySQL(mysql module), 3=PostgreSQL(pg module), 4=Oracle(oracledb module), 5=SQLite"},
         {"DB1_DBA_USER": "", "COMMENT": ""},
         {"DB1_DBA_PASS": "", "COMMENT": ""},

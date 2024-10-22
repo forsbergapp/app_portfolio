@@ -190,8 +190,6 @@
  *               USE:string,
  *               DB1_DBA_USER:string,
  *               DB1_DBA_PASS:string,
- *               DB1_APP_ADMIN_USER:string,
- *               DB1_APP_ADMIN_PASS:string,
  *               DB1_PORT:string,
  *               DB1_HOST:string,
  *               DB1_NAME:string,
@@ -199,8 +197,6 @@
  *               DB1_CONNECTION_LIMIT:string,
  *               DB2_DBA_USER:string,
  *               DB2_DBA_PASS:string,
- *               DB2_APP_ADMIN_USER:string,
- *               DB2_APP_ADMIN_PASS:string,
  *               DB2_PORT:string,
  *               DB2_HOST:string,
  *               DB2_NAME:string,
@@ -208,8 +204,6 @@
  *               DB2_CONNECTION_LIMIT:string,
  *               DB3_DBA_USER:string,
  *               DB3_DBA_PASS:string,
- *               DB3_APP_ADMIN_USER:string,
- *               DB3_APP_ADMIN_PASS:string,
  *               DB3_PORT:string,
  *               DB3_HOST:string,
  *               DB3_NAME:string,
@@ -218,8 +212,6 @@
  *               DB3_MAX:string,
  *               DB4_DBA_USER:string,
  *               DB4_DBA_PASS:string,
- *               DB4_APP_ADMIN_USER:string,
- *               DB4_APP_ADMIN_PASS:string,
  *               DB4_HOST:string,
  *               DB4_NAME:string,
  *               DB4_CONNECT_STRING:string,
@@ -514,7 +506,8 @@
 /**
  * DB FILE server_db_file_app_secret
  * apps should use their own types if adding new secrets
- * required for all apps:
+ * SERVICE_DB* not used by admin app
+ * SERVICE_MAIL* only used by admin app
  * @typedef {{  APP_ID:number,
  *              SERVICE_DB_DB1_APP_USER: string,
  *              SERVICE_DB_DB1_APP_PASSWORD: string,
@@ -530,13 +523,13 @@
  *              SERVICE_MAIL_USERNAME: string,
  *              SERVICE_MAIL_PASSWORD: string,
  *              SERVICE_MAIL_TYPE_SIGNUP: string,
- *              SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME:string,
+ *              SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME: string,
  *              SERVICE_MAIL_TYPE_UNVERIFIED: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME:string,
+ *              SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME: string,
  *              SERVICE_MAIL_TYPE_PASSWORD_RESET: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME:string,
+ *              SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME: string,
  *              SERVICE_MAIL_TYPE_CHANGE_EMAIL: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME:string,
+ *              SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME: string,
  *              COMMON_CLIENT_ID: string, 
  *              COMMON_CLIENT_SECRET:string, 
  *              COMMON_APP_ID_SECRET:string, 
@@ -544,7 +537,6 @@
  *              COMMON_APP_ACCESS_SECRET:string, 
  *              COMMON_APP_ACCESS_EXPIRE:string}} server_db_file_app_secret
  */
-
 /** 
  * DB FILE server_iam_app_token_record
  * @typedef {{	id:			number,

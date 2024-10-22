@@ -1,8 +1,3 @@
-CREATE ROLE app_portfolio_role_app_admin NOT IDENTIFIED;
-
-GRANT connect,
-    CREATE SESSION, resource TO app_portfolio_role_app_admin;
-
 CREATE ROLE app_portfolio_role_app_common NOT IDENTIFIED;
 
 GRANT connect,
@@ -30,8 +25,6 @@ CREATE TABLE <DB_SCHEMA/>.app (
 
 GRANT SELECT ON <DB_SCHEMA/>.app TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app TO app_portfolio_role_app_admin;
-
 ALTER TABLE <DB_SCHEMA/>.app ADD CONSTRAINT app_pk PRIMARY KEY ( id );
 
 CREATE TABLE <DB_SCHEMA/>.app_data_entity (
@@ -41,8 +34,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_entity (
     app_id    INTEGER NOT NULL,
     json_data CLOB
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_entity TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_entity TO app_portfolio_role_app_common;
 
@@ -58,8 +49,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_entity_resource (
     app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_id     INTEGER NOT NULL
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_entity_resource TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_entity_resource TO app_portfolio_role_app_common;
 
@@ -80,8 +69,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail (
     app_data_resource_master_attribute_id           INTEGER
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail TO app_portfolio_role_app_admin;
-
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail TO app_portfolio_role_app_common;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail ADD CONSTRAINT app_data_resource_detail_pk PRIMARY KEY ( id );
@@ -96,8 +83,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_detail_data (
     app_data_resource_detail_id           INTEGER NOT NULL,
     app_data_resource_master_attribute_id INTEGER
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail_data TO app_portfolio_role_app_admin;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_detail_data TO app_portfolio_role_app_common;
 
@@ -114,8 +99,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_master (
     app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
     app_data_entity_resource_id                     INTEGER NOT NULL
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO app_portfolio_role_app_admin;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO app_portfolio_role_app_common;
 
@@ -156,8 +139,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
                                       AND ( user_account_app_app_id IS NULL )
                                       AND ( user_account_id IS NULL ) ) );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_admin;
-
 GRANT SELECT ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_common;
 
 CREATE TABLE <DB_SCHEMA/>.app_data_translation (
@@ -165,8 +146,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
     language_id                 INTEGER NOT NULL,
     app_data_resource_master_id INTEGER NOT NULL
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_common;
 
@@ -189,8 +168,6 @@ CREATE TABLE <DB_SCHEMA/>.app_setting (
 
 GRANT SELECT ON <DB_SCHEMA/>.app_setting TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_setting TO app_portfolio_role_app_admin;
-
 ALTER TABLE <DB_SCHEMA/>.app_setting ADD CONSTRAINT app_setting_pk PRIMARY KEY ( id );
 
 ALTER TABLE <DB_SCHEMA/>.app_setting
@@ -203,8 +180,6 @@ CREATE TABLE <DB_SCHEMA/>.app_setting_type (
     app_id                INTEGER NOT NULL,
     app_setting_type_name VARCHAR2(100) NOT NULL
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_common;
 
@@ -225,8 +200,6 @@ ALTER TABLE <DB_SCHEMA/>.app_translation
                                  OR ( ( app_id IS NOT NULL )
                                       AND ( app_setting_id IS NULL ) ) );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_admin;
-
 GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
 
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
@@ -246,8 +219,6 @@ CREATE TABLE <DB_SCHEMA/>.event (
     event_type_id INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.event TO app_portfolio_role_app_admin;
-
 GRANT SELECT ON <DB_SCHEMA/>.event TO app_portfolio_role_app_common;
 
 ALTER TABLE <DB_SCHEMA/>.event ADD CONSTRAINT event_pk PRIMARY KEY ( id );
@@ -261,8 +232,6 @@ CREATE TABLE <DB_SCHEMA/>.event_status (
 
 GRANT SELECT ON <DB_SCHEMA/>.event_status TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.event_status TO app_portfolio_role_app_admin;
-
 ALTER TABLE <DB_SCHEMA/>.event_status ADD CONSTRAINT event_status_pk PRIMARY KEY ( id );
 
 CREATE TABLE <DB_SCHEMA/>.event_type (
@@ -271,8 +240,6 @@ CREATE TABLE <DB_SCHEMA/>.event_type (
     NOT NULL,
     event_type_name VARCHAR2(100) NOT NULL
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.event_type TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.event_type TO app_portfolio_role_app_common;
 
@@ -292,8 +259,6 @@ CREATE TABLE <DB_SCHEMA/>.identity_provider (
 
 GRANT SELECT ON <DB_SCHEMA/>.identity_provider TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.identity_provider TO app_portfolio_role_app_admin;
-
 ALTER TABLE <DB_SCHEMA/>.identity_provider ADD CONSTRAINT identity_provider_pk PRIMARY KEY ( id );
 
 ALTER TABLE <DB_SCHEMA/>.identity_provider ADD CONSTRAINT identity_provider_identity_provider_order_un UNIQUE ( identity_provider_order
@@ -310,8 +275,6 @@ CREATE INDEX <DB_SCHEMA/>.lang_code_index ON
     <DB_SCHEMA/>.language (
         lang_code
     ASC );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.language TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON <DB_SCHEMA/>.language TO app_portfolio_role_app_common;
 
@@ -345,8 +308,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account (
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfolio_role_app_admin;
-
 ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_pk PRIMARY KEY ( id );
 
 ALTER TABLE <DB_SCHEMA/>.user_account ADD CONSTRAINT user_account_email_un UNIQUE ( email );
@@ -368,8 +329,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app (
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app TO app_portfolio_role_app_admin;
-
 ALTER TABLE <DB_SCHEMA/>.user_account_app ADD CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                                                             app_id );
 
@@ -385,8 +344,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post (
     user_account_app_app_id          INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post TO app_portfolio_role_app_admin;
-
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post TO app_portfolio_role_app_common;
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post ADD CONSTRAINT user_account_app_data_post_pk PRIMARY KEY ( id );
@@ -397,8 +354,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_like (
     user_account_app_user_account_id INTEGER NOT NULL,
     user_account_app_app_id          INTEGER NOT NULL
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_like TO app_portfolio_role_app_admin;
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_like TO app_portfolio_role_app_common;
 
@@ -417,8 +372,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_view (
     user_account_app_user_account_id INTEGER,
     user_account_app_app_id          INTEGER
 );
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_view TO app_portfolio_role_app_admin;
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_view TO app_portfolio_role_app_common;
 
@@ -442,8 +395,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_event (
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_event TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_event TO app_portfolio_role_app_admin;
-
 CREATE TABLE <DB_SCHEMA/>.user_account_follow (
     user_account_id        INTEGER NOT NULL,
     user_account_id_follow INTEGER NOT NULL,
@@ -451,8 +402,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_follow (
 );
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_follow TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_follow TO app_portfolio_role_app_admin;
 
 ALTER TABLE <DB_SCHEMA/>.user_account_follow ADD CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id,
                                                                                                   user_account_id_follow );
@@ -464,8 +413,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_like (
 );
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_like TO app_portfolio_role_app_admin;
 
 ALTER TABLE <DB_SCHEMA/>.user_account_like ADD CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id,
                                                                                               user_account_id_like );
@@ -481,8 +428,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_view (
 );
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.user_account_view TO app_portfolio_role_app_admin;
 
 ALTER TABLE <DB_SCHEMA/>.app_data_entity
     ADD CONSTRAINT app_data_entity_app_fk FOREIGN KEY ( app_id )
