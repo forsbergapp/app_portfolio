@@ -254,24 +254,7 @@ const install_db_get_files = async (install_type) =>{
             for (const users_row of install_obj.users.filter((/**@type{import('../../types.js').server_db_database_install_database_app_user_script}*/row) => row.db == db_use || row.db == null)){
                 switch (file[0]){
                     case 1:{
-                        const app_admin_username = 'app_portfolio_app_admin';
-                        if (users_row.sql.includes(password_tag)){
-                            sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
-                            users_row.sql = sql_and_pw[0];
-                            await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                                serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
-                                                                {
-                                                                parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
-                                                                parameter_value:    app_admin_username
-                                                                });
-                            await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                                serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
-                                                                {   
-                                                                parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
-                                                                parameter_value:    sql_and_pw[1]
-                                                                });
-                        }
-                        users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_admin_username);
+                        //do not install any database user for admin app, admin app uses database dba user
                         break;
                     }
                     default:{
