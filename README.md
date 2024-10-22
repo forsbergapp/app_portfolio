@@ -151,7 +151,7 @@
 # Apps included
 
 	App 0 - Admin app
-	Admin app for app admins and system admins with configuration, monitoring of live connections and logs, statistics, 
+	Admin app for admins with configuration, monitoring of live connections and logs, statistics, 
 	broadcast functions, database management, OS info, process info and user role management
 
 	App 1 - App portfolio app
