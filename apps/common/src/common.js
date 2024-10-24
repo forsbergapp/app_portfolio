@@ -671,11 +671,11 @@ const commonApp = async parameters =>{
             case (parameters.url == '/apps/common_types.js'): {
                 return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:commonRegistryApp(app_id).PATH, res:parameters.res}).catch(()=>null);
             }
-            case (parameters.url == '/info/jsdoc'):{
-                return await commonAssetfile({app_id:app_id, url:'/info/jsdoc/index.html'.substring('/info/jsdoc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
+            case (parameters.url == '/info/doc'):{
+                return await commonAssetfile({app_id:app_id, url:'/info/doc/index.html'.substring('/info/doc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
             }
-            case (parameters.url.toLowerCase().startsWith('/info/jsdoc')):{
-                return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/info/jsdoc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
+            case (parameters.url.toLowerCase().startsWith('/info/doc')):{
+                return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/info/doc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
             }
             case (parameters.url.toLowerCase().startsWith('/info/about')):{
                 //Use JSDoc for about app

@@ -44,7 +44,7 @@ function hashToLink(doclet, hash) {
     url = helper.createLink(doclet);
     url = url.replace(/(#.+|$)/, hash);
 
-    return `<a href="${url}">${hash}</a>`;
+    return `<div class='a' href="${url}">${hash}</div>`;
 }
 
 function needsSignature({kind, type, meta}) {
@@ -309,7 +309,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
             let displayName;
 
             if ( !hasOwnProp.call(item, 'longname') ) {
-                itemsNav += `<li>${linktoFn('', item.name)}</li>`;
+                itemsNav += `<div class='li'>${linktoFn('', item.name)}</div>`;
             }
             else if ( !hasOwnProp.call(itemsSeen, item.longname) ) {
                 if (env.conf.templates.default.useLongnameInNav) {
@@ -317,14 +317,14 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
                 } else {
                     displayName = item.name;
                 }
-                itemsNav += `<li>${linktoFn(item.longname, displayName.replace(/\b(module|event):/g, ''))}</li>`;
+                itemsNav += `<div class='li'>${linktoFn(item.longname, displayName.replace(/\b(module|event):/g, ''))}</div>`;
 
                 itemsSeen[item.longname] = true;
             }
         });
 
         if (itemsNav !== '') {
-            nav += `<h3>${itemHeading}</h3><ul>${itemsNav}</ul>`;
+            nav += `<div class='title_h3'>${itemHeading}</div><div class='ul'>${itemsNav}</div>`;
         }
     }
 
@@ -355,10 +355,9 @@ function linktoExternal(longName, name) {
  */
 function buildNav(members) {
     let globalNav;
-    let nav = '<h2><a href="index.html">App Portolio</a></h2>';
+    let nav = '';
     const seen = {};
     const seenTutorials = {};
-
     nav += buildMemberNav(members.modules, 'Modules', {}, linkto);
     nav += buildMemberNav(members.externals, 'Externals', seen, linktoExternal);
     nav += buildMemberNav(members.namespaces, 'Namespaces', seen, linkto);
@@ -373,17 +372,17 @@ function buildNav(members) {
 
         members.globals.forEach(({kind, longname, name}) => {
             if ( kind !== 'typedef' && !hasOwnProp.call(seen, longname) ) {
-                globalNav += `<li>${linkto(longname, name)}</li>`;
+                globalNav += `<div class='li'>${linkto(longname, name)}</div>`;
             }
             seen[longname] = true;
         });
 
         if (!globalNav) {
             // turn the heading into a link so you can actually get to the global page
-            nav += `<h3>${linkto('global', 'Global')}</h3>`;
+            nav += `<div class='title_h3'>${linkto('global', 'Global')}</div>`;
         }
         else {
-            nav += `<h3>Global</h3><ul>${globalNav}</ul>`;
+            nav += `<div class='title_h3'>Global</div><div class='ul'>${globalNav}</div>`;
         }
     }
 
@@ -599,10 +598,17 @@ exports.publish = (taffyData, opts, tutorials) => {
     view.outputSourceFiles = outputSourceFiles;
 
     // once for all
-    view.nav = buildNav(members);
+    //START CHANGE - save menu to separate file once
+    //view.nav = buildNav(members);
+    fs.writeFileSync(path.join(outdir, 'nav.html'), buildNav(members), 'utf8');
+    //END CHANGE
     attachModuleSymbols( find({ longname: {left: 'module:'} }), members.modules );
 
     // generate the pretty-printed source files first so other pages can link to them
+    //START CHANGE: layout should only be available for main page
+    const LAYOUT_MAIN_ONLY = view.layout;
+    view.layout = null;
+    //END CHANGE
     if (outputSourceFiles) {
         generateSourceFiles(sourceFiles, opts.encoding);
     }
@@ -613,6 +619,9 @@ exports.publish = (taffyData, opts, tutorials) => {
     files = find({kind: 'file'});
     packages = find({kind: 'package'});
 
+    //START CHANGE - make layout available for main page
+    view.layout = LAYOUT_MAIN_ONLY;
+    //END CHANGE
     generate('App Portfolio',
         packages.concat(
             [{
@@ -621,6 +630,9 @@ exports.publish = (taffyData, opts, tutorials) => {
                 longname: (opts.mainpagetitle) ? opts.mainpagetitle : 'Main Page'
             }]
         ).concat(files), indexUrl);
+    //START CHANGE - remove layout for other pages
+    view.layout = null;
+    //END CHANGE
 
     // set up the lists that we'll use to generate pages
     classes = taffy(members.classes);

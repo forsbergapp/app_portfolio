@@ -1,19 +1,19 @@
-<section>
+<div class='section'>
 
-<header>
+<div class='header'>
     <?js if (children.length > 0) { ?>
-    <ul><?js
+    <div class='ul'><?js
         var self = this;
         children.forEach(function(t) { ?>
-        <li><?js= self.tutoriallink(t.name) ?></li>
-    <?js }); ?></ul>
+        <div class='li'><?js= self.tutoriallink(t.name) ?></div>
+    <?js }); ?></div>
     <?js } ?>
 
-    <h2><?js= header ?></h2>
-</header>
+    <div class='title_h2'><?js= header ?></div>
+</div>
 
-<article>
+<div class='article'>
     <?js= content ?>
-</article>
+</div>
 
-</section>
+</div>

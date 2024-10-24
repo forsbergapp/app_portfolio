@@ -24,9 +24,9 @@ const APP_GLOBAL = {
                             'doc_image':'/common/documents/data_model.webp',
                             'doc_image_small':'/common/documents/data_model_small.webp'},
                             {'id':3,
-                            'doc_title':'JSDoc',
+                            'doc_title':'Documentation',
                             'doc_type':'URL',
-                            'doc_url':'/info/jsdoc',
+                            'doc_url':'/info/doc',
                             'doc_image':null,
                             'doc_image_small':null}
                             ]
