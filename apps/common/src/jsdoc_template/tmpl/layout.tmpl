@@ -44,17 +44,15 @@
                             linenumber(target.href);
                         });
         }
-        document.querySelector(`#main`).addEventListener('click',event => {
-            event.preventDefault();
+        document.body.addEventListener('click',event => {
+            event.preventDefault();               
             if(event.target.id=='title'){
                 document.querySelector('#content_title').innerHTML= '';
                         document.querySelector('#content').innerHTML= '';
             }
-        });
-        document.querySelector(`#nav`).addEventListener('click',event => {
-            event.preventDefault();
-            if(event.target.href)
-                show(event.target);
+            else
+                if (event.target.href)
+                    show(event.target);
         });
     </script>
 
