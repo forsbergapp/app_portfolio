@@ -1,10 +1,13 @@
 /**
+ * Displays start
  * @module apps/admin/component/menu_start
  */
 /**
- * Displays start
- * 
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
+
 /**
  * @param {{maintenance:0|1|null}} props
  */
@@ -33,12 +36,12 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
 * 
 * @param {{ data:       {commonMountdiv:string},
 *           methods:    {
-*                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonComponentRender:commonComponentRender,
+*                       commonFFB:commonFFB
 *                       },
 *           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null,
 *                      methods:null,
 *                      template:string}>}

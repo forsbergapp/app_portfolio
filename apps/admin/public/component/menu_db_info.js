@@ -1,8 +1,17 @@
 /**
+ * Displays stat of users
  * @module apps/admin/component/menu_db_info
  */
+
 /**
- * Displays stat of users
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
+ */
+
+
+/**
  * @param {{size:string,
  *          db:{database_use:string, 
  *              database_name:string,
@@ -65,11 +74,11 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
 /**
 * 
 * @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonRoundOff:commonRoundOff,
+*                       commonFFB:commonFFB},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

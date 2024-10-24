@@ -1,10 +1,15 @@
 /**
+ * Displays server logs
  * @module apps/admin/component/menu_monitor_detail_server_log
  */
+
 /**
- * Displays server logs
- * 
+ * @import {CommonRESTAPIAuthorizationType, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
  */
+
 /**
  * @param {{function_get_order_by:function,
  *          function_roundOff:function,
@@ -316,15 +321,15 @@ const template = props => ` ${  /*
 * @param {{ data:{      commonMountdiv:string,
 *                       path:string,
 *                       query:string,
-*                       token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
+*                       token_type:CommonRESTAPIAuthorizationType,
 *                       sort:string,
 *                       order_by:string,
 *                       LIMIT:number},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonRoundOff:commonRoundOff,
+*                       commonFFB:commonFFB},
 *           lifeycle:   null}} props 
-* @returns {Promise.<{ lifecycle:   import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:   CommonComponentLifecycle, 
 *                      data:        {page_last:number, total_count:number},
 *                      methods:     null,
 *                      template:    string}>}

@@ -1,7 +1,4 @@
 /**
- * @module apps/admin/component/menu_monitor_detail
- */
-/**
  * Displays monitor
  * 
  * Connected
@@ -12,8 +9,23 @@
  * Server log 
  *      menu_monitor_detail_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
  *      menu_monitor_detail_server_log         contains records
- * 
+ * @module apps/admin/component/menu_monitor_detail
  */
+
+/**
+ * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
+ * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
+ * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
+ * @typedef {CommonModuleCommon['commonInputControl']} commonInputControl
+ * @typedef {CommonModuleCommon['commonWindowUserAgentPlatform']} commonWindowUserAgentPlatform
+ * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
+ * @typedef {CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update']} map_update
+ * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
+ */
+
 /**
  * @param {{
  *          service_socket_client_ID:number,
@@ -338,21 +350,21 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                                       logscope_level_options:{log_scope:string, log_level:string}[]}
 *                       },
 *           methods:    {
-*                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                       monitorShow:function,
-*                       map_update:import('../../../common_types.js').CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
-*                       appSecureDialogueSendBroadcastShow:import('../js/app.js')['appSecureDialogueSendBroadcastShow'],
-*                       commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
-*                       commonLovClose:import('../../../common_types.js').CommonModuleCommon['commonLovClose'],
-*                       commonLovShow:import('../../../common_types.js').CommonModuleCommon['commonLovShow'],
-*                       commonInputControl:import('../../../common_types.js').CommonModuleCommon['commonInputControl'],
-*                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
-*                       commonWindowUserAgentPlatform:import('../../../common_types.js').CommonModuleCommon['commonWindowUserAgentPlatform'],
-*                       commonRoundOff:import('../../../common_types.js').CommonModuleCommon['commonRoundOff'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+*                       map_update:map_update,
+*                       appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
+*                       commonElementRow:commonElementRow,
+*                       commonLovClose:commonLovClose,
+*                       commonLovShow:commonLovShow,
+*                       commonInputControl:commonInputControl,
+*                       commonComponentRender:commonComponentRender,
+*                       commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
+*                       commonRoundOff:commonRoundOff,
+*                       commonFFB:commonFFB
 *                       },
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:    null,
 *                      methods: {
 *                               monitorDetailPage:function,
@@ -606,7 +618,7 @@ const component = async props => {
     const monitorDetailShowLogDir = () => {
         /**
          * Event for LOV
-         * @param {import('../../../common_types.js').CommonAppEvent} event 
+         * @param {CommonAppEvent} event 
          */
         const function_event = event => {
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'

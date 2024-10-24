@@ -1,5 +1,11 @@
 /**
+ * Displays dialogue to send broadcast messages
  * @module apps/admin/component/dialogue_send_broadcast
+ */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
 
 const template = () => `<div id='dialogue_send_broadcast_form'>
@@ -12,18 +18,17 @@ const template = () => `<div id='dialogue_send_broadcast_form'>
                             <div id='dialogue_send_broadcast_close' class='common_dialogue_button common_icon' ></div>
                         </div>`;
 /**
- * 
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:        COMMON_DOCUMENT,
+ *                      commonComponentRender:  commonComponentRender,
+ *                      commonFFB:              commonFFB
  *                      }
  *          }} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
- *                      data:null, 
- *                      methods:null,
- *                      template:string}>}
+ * @returns {Promise.<{ lifecycle:              CommonComponentLifecycle,
+ *                      data:                   null, 
+ *                      methods:                null,
+ *                      template:               string}>}
  */
 const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');

@@ -9,12 +9,15 @@
  * @module apps/admin/component/app
  */
 
+/**
+ *  @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+
 const template = () =>' &lt;div id=\'secure\'>&lt;/div>';
 /**
- * 
- * @param {{data:{      commonMountdiv:string},
- *          methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @returns {Promise.&lt;{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @param {{data:       {commonMountdiv:string},
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null, 
  *                      template:string}>}

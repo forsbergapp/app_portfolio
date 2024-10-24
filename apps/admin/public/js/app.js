@@ -2,11 +2,15 @@
  * Admin app
  * @module apps/admin/app
  */
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**
+ * @import {commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT}  from '../../../common_types.js'
+ */
+
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
-/**@type {import('../../../common_types.js').CommonModuleCommon} */
+/**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
 /**
@@ -36,6 +40,7 @@ Object.seal(APP_SECURE_GLOBAL);
 
 /**
  * Set globals to null
+ * @function
  * @returns {void}
  */
 const appSecureGlobalDelete = () => {
@@ -52,6 +57,7 @@ const appSecureGlobalDelete = () => {
 
 /**
  * Show given menu
+ * @function
  * @param {number} menu 
  * @returns {void}
  */
@@ -183,6 +189,7 @@ const appSecureMenuShow = menu => {
 };
 /**
  * Show charts
+ * @function
  * @returns{Promise.<void>}
  */
 const appSecureMenuStartChartShow = async () => {
@@ -197,6 +204,7 @@ const appSecureMenuStartChartShow = async () => {
 };
 /**
  * Broadcast send
+ * @function
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastSend = () => {
@@ -238,6 +246,7 @@ const appSecureDialogueSendBroadcastSend = () => {
 };    
 /**
  * Broadcast close
+ * @function
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastClose = () => {
@@ -245,6 +254,7 @@ const appSecureDialogueSendBroadcastClose = () => {
 };
 /**
  * Broadcast close
+ * @function
  * @param {string} dialogue_type 
  * @param {number|null} client_id 
  * @returns{Promise.<void>}
@@ -298,6 +308,7 @@ const appSecureDialogueSendBroadcastShow = async (dialogue_type, client_id=null)
 };
 /**
  * Broadcast set type
+ * @function
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastBroadcastTypeSet = () => {
@@ -324,6 +335,7 @@ const appSecureDialogueSendBroadcastBroadcastTypeSet = () => {
 };
 /**
  * Maintenance set
+ * @function
  * @returns{void}
  */
 const appSecureDialogueSendBroadcastMaintenanceSet = () => {
@@ -336,10 +348,11 @@ const appSecureDialogueSendBroadcastMaintenanceSet = () => {
     common.commonFFB({path:'/server-config/config/CONFIG_SERVER', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
 };
 /**
- * 
+ * Renders component menu_users_list
+ * @function
  * @param {string} sort 
  * @param {string} order_by 
- * @returns 
+ * @returns {void}
  */
 const appSecureMenuUsers = (sort='username', order_by='asc') => {
     common.commonComponentRender({
@@ -356,7 +369,11 @@ const appSecureMenuUsers = (sort='username', order_by='asc') => {
 
 /**
  * Button save
+ * Saves apps, modules, parameters and secrets
+ * or config or users
+ * @function
  * @param {string} item 
+ * @returns {Promise.<void>}
  */
 const appSecureCommonButtonSave = async (item) => {
     switch (item){
@@ -480,12 +497,14 @@ const appSecureCommonButtonSave = async (item) => {
     }
 };
 /**
- * Update record
+ * Updates record
+ * @function
  * @param {'user_account'|'app'|'app_parameter'|'app_secret'|'app_module'} table 
  * @param {HTMLElement} row_element 
  * @param {string} button 
  * @param {number} resource_id
  * @param {*} data
+ * @returns {Promise.<void>}
  */
 const appSecureCommonRecordUpdate = async ( table, 
                                             row_element,
@@ -493,7 +512,7 @@ const appSecureCommonRecordUpdate = async ( table,
                                             resource_id,
                                             data) => {
     let path = '';
-    /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
+    /**@type{CommonRESTAPIMethod} */
     let method;
     switch (table){
         case 'user_account':{
@@ -529,11 +548,12 @@ const appSecureCommonRecordUpdate = async ( table,
 
 /**
  * Executes installation rest API and presents the result
+ * @function
  * @param {string} id 
  * @param {boolean|null} db_icon 
  * @param {string} path 
  * @param {string} query
- * @param {import('../../../common_types.js').CommonRESTAPIMethod} method 
+ * @param {CommonRESTAPIMethod} method 
  * @param {{demo_password:string}|null} data 
  * @returns {void}
  */
@@ -555,6 +575,7 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, quer
 };
 /**
  * Installs DB
+ * @function
  * @returns {void}
  */
 const appSecureMenuInstallationDbInstall = () =>{
@@ -566,6 +587,7 @@ const appSecureMenuInstallationDbInstall = () =>{
 };
 /**
  * Uninstalls DB
+ * @function
  * @returns {void}
  */
 const appSecureMenuInstallationDbUninstall = () =>{
@@ -576,6 +598,7 @@ const appSecureMenuInstallationDbUninstall = () =>{
 };
 /**
  * Installs Demo data
+ * @function
  * @returns {void}
  */
 const appSecureMenuInstallationDemoInstall = () =>{
@@ -592,6 +615,7 @@ const appSecureMenuInstallationDemoInstall = () =>{
 };
 /**
  * Uninstalls Demo data
+ * @function
  * @returns {void}
  */
 const appSecureMenuInstallationDemoUninstall = () =>{
@@ -603,8 +627,9 @@ const appSecureMenuInstallationDemoUninstall = () =>{
 
 /**
  * App events
+ * @function
  * @param {string} event_type 
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @param {CommonAppEvent} event 
  * @param {string} event_target_id 
  * @param {HTMLElement|null} event_list_title 
  * @returns {void}
@@ -880,7 +905,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
     }
 };
 /**
- * Init
+ * Init secure
+ * @function
  * @returns {void}
  */
 const appSecureInit = () => {
@@ -891,25 +917,27 @@ const appSecureInit = () => {
 };
 
 /**
- * Admin logout
+ * App logout
+ * @function
  * @returns {void}
  */
 const appLogout = () => {
     common.commonUserLogout().then(() => {
         appSecureGlobalDelete();
-        common.commonComponentRemove('secure');
+        common.commonComponentRemove('app');
         common.commonDialogueShow('LOGIN_ADMIN');
     });
 };
 /**
  * Admin login
+ * @function
  * @returns {Promise.<void>}
  */
 const appLogin = async () => {
     await common.commonUserLogin(true)
     .then(result=>{
         common.commonComponentRender({
-            mountDiv:   'secure',
+            mountDiv:   'app',
             data:       null,
             methods:    null,
             path:       '/component/secure.js'})
@@ -933,13 +961,14 @@ const appLogin = async () => {
     .catch(()=>common.commonComponentRemove('secure'));
 };
 /**
- * Event click
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * App event click
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         }, true);
     }
@@ -1045,13 +1074,14 @@ const appEventClick = event => {
     }
 };
 /**
- * Event change
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * App event change
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventChange = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{CommonAppEvent}*/event) => {
             appEventChange(event);
         });
     }
@@ -1062,13 +1092,14 @@ const appEventChange = event => {
     }
 };
 /**
- * Event keyup
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * App event keyup
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
             appEventKeyUp(event);
         });
     }
@@ -1094,13 +1125,14 @@ const appEventKeyUp = event => {
     }
 };
 /**
- * Event keydown
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * App event keydown
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyDown = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keydown',(/**@type{CommonAppEvent}*/event) => {
             appEventKeyDown(event);
         });
     }
@@ -1113,13 +1145,14 @@ const appEventKeyDown = event => {
     }
 };
 /**
- * Event input
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * App event input
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventInput = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('input',(/**@type{CommonAppEvent}*/event) => {
             appEventInput(event);
         }, true);
     }
@@ -1132,13 +1165,14 @@ const appEventInput = event => {
     }
 };
 /**
- * Event focus
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * App event focus
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventFocus = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('focus',(/**@type{CommonAppEvent}*/event) => {
             appEventFocus(event);
         }, true);
     }
@@ -1152,7 +1186,8 @@ const appEventFocus = event => {
 };
 
 /**
- * Exception function
+ * App exception function
+ * @function
  * @param {Error} error
  * @returns {void}
  */
@@ -1161,6 +1196,7 @@ const appException = (error) => {
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
@@ -1179,19 +1215,17 @@ const appFrameworkSet = async (framework=null) => {
 };
 /**
  * App init
- * @param {import('../../../common_types.js').commonInitAppParameters} parameters 
+ * @function
+ * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async (parameters) => {
     parameters;
-    await common.commonComponentRender({  mountDiv:   common.COMMON_GLOBAL.app_div,
-                                    data:       null,
-                                    methods:    null,
-                                    path:       '/component/app.js'});
    appFrameworkSet();
 };
 /**
  * Init common
+ * @function
  * @param {string} parameters 
  * @returns {Promise.<void>}
  */

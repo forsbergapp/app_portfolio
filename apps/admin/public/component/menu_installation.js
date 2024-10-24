@@ -1,8 +1,15 @@
 /**
+ * Displays stat of users
  * @module apps/admin/component/menu_installation
  */
+
 /**
- * Displays stat of users
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ */
+
+/**
  * @param {{installed:boolean|null}} props
  */
 const template = props => ` <div id='menu_installation_content_widget1' class='widget'>
@@ -34,11 +41,11 @@ const template = props => ` <div id='menu_installation_content_widget1' class='w
 * 
 * @param {{data:        {commonMountdiv:string},
 *          methods:     {
-*                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonFFB:commonFFB
 *                       },
 *          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

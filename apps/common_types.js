@@ -46,7 +46,7 @@
  *  CommonModuleReactDOM
  *  CommonModuleVue
  * 
- * @module apps/types 
+ * @module apps/common/types 
 */
 
 /**

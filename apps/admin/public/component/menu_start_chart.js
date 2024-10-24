@@ -1,10 +1,14 @@
 /**
+ * Displays pie chart and bar chart
  * @module apps/admin/component/menu_start_chart
  */
+
 /**
- * Displays pie chart and bar chart
- * 
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
+
 /**
  * @param {{app_id:number|null,
  *          chart1_stat:{   chart:number,
@@ -73,12 +77,12 @@ const template = props => ` <div id='menu_start_chart_box1'>
 /**
 * @param {{ data:       {commonMountdiv:string},
 *           methods:    {
-*                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonComponentRender:commonComponentRender,
+*                       commonFFB:commonFFB
 *                       },
 *           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null,
 *                      methods:null,
 *                      template:string}>}
