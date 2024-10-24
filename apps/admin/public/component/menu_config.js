@@ -1,10 +1,11 @@
 /**
+ * Displays config
  * @module apps/admin/component/menu_config
  */
 /**
- * Displays config
- * 
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
+
 const template = () => ` <div id='menu_config_content_widget1' class='widget'>
                             <div id='menu_config' class='list_nav'>
                                 <div id='menu_config_config_server'        class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
@@ -20,9 +21,9 @@ const template = () => ` <div id='menu_config_content_widget1' class='widget'>
 /**
 * 
 * @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT},
+*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

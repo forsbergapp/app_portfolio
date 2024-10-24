@@ -1,11 +1,17 @@
 /**
+ * Display apps
  * @module apps/admin/component/menu_apps
  */
+
+
 /**
- * Displays apps
-*/
+ * @import {CommonAppRecord,CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ */
+
 /**
- * @param {{apps:import('../../../common_types.js').CommonAppRecord[]}} props
+ * @param {{apps:CommonAppRecord[]}} props
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 <div id='menu_apps_title' class='common_icon'></div>
@@ -56,18 +62,19 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 </div>
                             </div>` ;
 /**
-* 
-* @param {{data:{       commonMountdiv:string},
-*          methods:{    COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB: import('../../../common_types.js').CommonModuleCommon['commonFFB']},
-*          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @param {{data:       {commonMountdiv:string},
+ *          methods:    {
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB: commonFFB
+ *                      },
+ *          lifecycle:  null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
-    /**@type{import('../../../common_types.js').CommonAppRecord[]} */
+    /**@type{CommonAppRecord[]} */
     const apps = await props.methods.commonFFB({path:'/app-common', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
