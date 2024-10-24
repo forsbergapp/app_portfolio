@@ -11,7 +11,7 @@
                     "apps/common/public/modules",
                     "apps/common/src/jsdoc",
                     "apps/common/src/jsdoc_template",
-                    "data", "dev", "docs", "node_modules"],
+                    "data", "dev", "node_modules"],
         "includePattern": ".+\\.js?$",
         "excludePattern": ""
     },
