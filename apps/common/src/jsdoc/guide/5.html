@@ -1,3 +1,4 @@
+<div class='markdown'>
 # Start app or report
     In browser
     apps:
@@ -14,7 +15,7 @@
         centralized result from both sources.
         URI syntax implemented:
         [protocol]://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
-	    URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
+	    URI query: iam=[iam parameters base64 encoded]&ampparameters=[app parameters base64 encoded]
 
 # App registry
     The file /data/config_apps.json is generated first time from /server/install/default/config_apps.json with SHA256 secrets and 
@@ -77,3 +78,5 @@
     Components use Vue lifecycle pattern onMounted, onBeforeMounted and onUnmounted implemented with pure javascript.
     All React events are removed. All events created by third party code are restricted to maximum document level.
     Switching framework in apps means that different framework rendered components can exist simultaneously.
+
+</div>

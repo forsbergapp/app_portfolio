@@ -60,6 +60,13 @@ body {
 #nav a{
     color: var(--common_app_color_light) !important;
 }
+#nav_content_guide{
+    font-size: 0.9em;
+}
+#nav_content_guide > div{
+    cursor:pointer;
+}
+
 #content{
     width: calc(100% - 360px);
     margin-inline-start: 370px;
@@ -99,4 +106,8 @@ body {
 }
 .details .li{
     padding-top: 6px;
+}
+.markdown{
+    white-space: preserve;
+    font-size: 0.8em;
 }
