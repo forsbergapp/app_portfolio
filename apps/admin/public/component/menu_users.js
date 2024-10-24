@@ -1,9 +1,13 @@
 /**
+ * Displays stat of users
  * @module apps/admin/component/menu_users
  */
+
 /**
- * Displays stat of users
-*/
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
 const template = () => `<div id='menu_users_content_widget1' class='widget'>
                             <div id='menu_users_list_title' class='common_icon'></div>
                             <div class='list_search'>
@@ -22,9 +26,9 @@ const template = () => `<div id='menu_users_content_widget1' class='widget'>
 /**
 * 
 * @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT},
+*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

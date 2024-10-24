@@ -1,10 +1,14 @@
 /**
+ * Displays config
  * @module apps/admin/component/menu_config_detail
  */
+
 /**
- * Displays config
- * 
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
+
 /**
  * @param {{server_group:number[],
  *          file:'CONFIG_SERVER'|'CONFIG_IAM_BLOCKIP'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT',
@@ -48,10 +52,10 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
 * 
 * @param {{data:{       commonMountdiv:string,
 *                       file:'CONFIG_SERVER'|'CONFIG_IAM_BLOCKIP'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT'},
-*          methods:{    COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*          methods:{    COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonFFB:commonFFB},
 *          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

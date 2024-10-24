@@ -1,8 +1,14 @@
 /**
+ * Displays stat of users
  * @module apps/admin/component/menu_users_logon
  */
+
 /**
- * Displays stat of users
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * @param {{user_logons:[{  id:number,
  *                          app_id:number,
  *                          res:string,
@@ -60,10 +66,10 @@ const template = props => ` <div id='menu_users_iam_user_login_row_title' class=
 * 
 * @param {{ data:{      commonMountdiv:string,
 *                       user_account_id:number},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonFFB:commonFFB},
 *           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}

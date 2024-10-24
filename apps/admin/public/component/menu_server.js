@@ -1,8 +1,14 @@
 /**
+ * Displays stat of users
  * @module apps/admin/component/menu_server
  */
+
 /**
- * Displays stat of users
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * @param {{function_seconds_to_time:function,
  *          server_info:{os:{   hostname:string,
  *                              cpus:{length:number},
@@ -70,10 +76,10 @@ const template = props => ` <div id='menu_server_content_widget1' class='widget'
 /**
 * 
 * @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
-*                       commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']},
+*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+*                       commonFFB:commonFFB},
 *           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
 *                      template:string}>}
