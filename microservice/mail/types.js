@@ -1,4 +1,7 @@
 /**
+ * @module microservice/mail/types
+ */
+/**
  * Type Microservice mail
  * @typedef  {{
 *              email_host:         string,

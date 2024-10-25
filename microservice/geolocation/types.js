@@ -1,3 +1,6 @@
+/**
+ * @module microservice/geolocation/types
+ */
 /** 
  * Type Microservice geolocation
  * @typedef  {object}       microservice_geolocation_data

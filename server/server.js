@@ -201,7 +201,7 @@ const serverUtilAppLine = () =>{
     /**@type{import('../microservice/microservice.js')} */
     const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.js`);
     /**@type{import('../microservice/registry.js')} */
-    const {microservice_api_version}= await import(`file://${process.cwd()}/microservice/registry.js`);
+    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/microservice/registry.js`);
 
     //server app common
     /**@type{import('../apps/common/src/common.js')} */
@@ -1000,7 +1000,7 @@ const serverUtilAppLine = () =>{
                                     params.map(parm=>parm = parm.replace('ip=', `ip=${routesparameters.ip}`));
                             }
                             resolve(call_microservice(  routesparameters.app_id,
-                                                `/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, 
+                                                `/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, 
                                                 `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`));
                         }   
                         else
@@ -1008,27 +1008,27 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:'/bff/app_data/v1/geolocation/place', method:'GET'}):{
-                        resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${microservice_api_version('GEOLOCATION')}${routesparameters.route_path}`, URI_query));
+                        resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/worldcities/city', method:'GET'}):{
                         resolve(call_microservice(  routesparameters.app_id,
-                                                    `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, 
+                                                    `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, 
                                                     URI_query + `&limit=${serverUtilNumberValue(app_common.commonRegistryAppParameter(COMMON_APP_ID??0).COMMON_APP_LIMIT_RECORDS.VALUE)}`));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/worldcities/city-random', method:'GET'})||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/worldcities/city-random'):{
-                        resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                        resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
                     case route({url:`/bff/app_data/v1/worldcities/country/${resource_id_string}`, method:'GET'}):{
-                        resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${microservice_api_version('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                        resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
                     case routesparameters.route_path=='/mail/sendemail' && routesparameters.endpoint.startsWith('SERVER'):{
                         //mail can only be sent from server
-                        resolve(call_microservice(  routesparameters.app_id, `/mail/v${microservice_api_version('MAIL')}${routesparameters.route_path}`, URI_query));
+                        resolve(call_microservice(  routesparameters.app_id, `/mail/v${registryMicroserviceApiVersion('MAIL')}${routesparameters.route_path}`, URI_query));
                         break;
                     }
                     default:{

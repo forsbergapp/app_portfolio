@@ -1,15 +1,20 @@
 /** @module microservice/messagequeue */
 
+/**
+ * @import {server_server_error} from '../server/types.js'
+ */
+
 /**@type{import('../server/db/file.js')} */
 const {fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**
- * 
+ * Message queue
+ * @function
  * @param {string} service 
  * @param {string} message_type 
  * @param {object|null} message
  * @param {string} message_id 
- * @returns 
+ * @returns {Promise.<void|null>}
  */
 const messageQueue = async (service, message_type, message, message_id) => {
     /**@type{import('../microservice/mail/service.js')} */
@@ -25,7 +30,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
         const write_file = async (file, message, result) =>{
             fileFsAppend(file==0?'MICROSERVICE_MESSAGE_QUEUE_ERROR':file==1?'MICROSERVICE_MESSAGE_QUEUE_PUBLISH':file==2?'MICROSERVICE_MESSAGE_QUEUE_CONSUME':'MICROSERVICE_MESSAGE_QUEUE_ERROR', 
                             file==0?{message_id: new Date().toISOString(), message:   message, result:result}:message??{})
-            .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{throw error;});
+            .catch((/**@type{server_server_error}*/error)=>{throw error;});
         };
         try {
             switch (message_type) {
@@ -38,7 +43,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                     .then(()=>{
                         resolve (messageQueue(service, 'CONSUME', null, new_message_id));
                     })
-                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{server_server_error}*/error)=>{
                         reject(error);
                     });
                     break;
@@ -78,7 +83,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                                     .then(()=>{
                                         resolve (null);
                                     })
-                                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
+                                    .catch((/**@type{server_server_error}*/error)=>{
                                         write_file(0, message_consume, error)
                                         .then(()=>{
                                             reject (error);
@@ -88,12 +93,12 @@ const messageQueue = async (service, message_type, message, message_id) => {
                                         });
                                     });
                                 })
-                                .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
+                                .catch((/**@type{server_server_error}*/error)=>{
                                     write_file(0, message_consume, error)
                                     .then(()=>{
                                         reject (error);
                                     })
-                                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
+                                    .catch((/**@type{server_server_error}*/error)=>{
                                         reject(error);
                                     });
                                 });
@@ -101,7 +106,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                             }
                         }
                     })
-                    .catch((/**@type{import('../server/types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{server_server_error}*/error)=>{
                         write_file(0, message, error).then(()=>{
                             reject(message);
                         });
@@ -115,7 +120,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                     });
                 }
             }
-        } catch (/**@type{import('../server/types.js').server_server_error}*/error){
+        } catch (/**@type{server_server_error}*/error){
             write_file(0, message, error).then(()=>{
                 reject(message);
             });

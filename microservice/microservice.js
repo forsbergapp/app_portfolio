@@ -1,10 +1,15 @@
-/** @module microservice */
+/** @module microservice/microservice */
+
+/**
+ * @import {server_server_req_id_number} from '../server/types.js'
+ * @import {microservice_res} from './types.js'
+ */
 
 const http = await import('node:http');
 const https = await import('node:https');
 
 /**@type{import('./registry.js')} */
-const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**@type{import('../server/iam.service.js')} */
 const { iamAppAuthenticate } = await import(`file://${process.cwd()}/server/iam.service.js`);
@@ -14,6 +19,7 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
 /**
  * Returns resource id number from URI path
  * if resource id not requested for a route using resource id and last part of path is string then return null
+ * @function
  * @param {string} uri_path
  * @returns {number|null}
  */
@@ -21,12 +27,14 @@ const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
 /**
  * Returns resource id string from URI path
  * if resource id not requested for a route using resource id and last part of path is string then return null
+ * @function
  * @param {string} uri_path
  * @returns {string|null}
  */
  const microserviceUtilResourceIdStringGet = uri_path => uri_path.substring(uri_path.lastIndexOf('/') + 1);
 /**
  * Route match
+ * @function
  * @param {string} route_path
  * @param {string} route_method
  * @param {string} request_path
@@ -39,6 +47,7 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
 
 /**
  * Request microservice using circuitbreaker
+ * @function
  * @param {boolean} admin 
  * @param {string} path 
  * @param {string} query
@@ -61,17 +70,20 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending arguement to service functions
- * @param {import('../server/types.js').server_server_req_id_number} param
+ * @function
+ * @param {server_server_req_id_number} param
  * @returns {number|null}
  */
  const microserviceUtilNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
 
 /**
- * Return result
+ * Return result from microservice
+ * @function
  * @param {number} code 
  * @param {string|null} error 
  * @param {*} result 
- * @param {import('./types.js').microservice_res} res
+ * @param {microservice_res} res
+ * @returns {void}
  */
  const microserviceResultReturn = (code, error, result, res)=>{
     res.statusCode = code;
@@ -96,6 +108,7 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
 
 /**
  * Request microservice
+ * @function
  * @param {string} service
  * @param {string|undefined} path
  * @param {string} query
@@ -110,8 +123,8 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  */                    
 const microserviceHttpRequest = async (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
 
-    const request_protocol = ConfigServices(service).HTTPS_ENABLE ==1?https:http;
-    const port = ConfigServices(service).HTTPS_ENABLE ==1?ConfigServices(service).HTTPS_PORT:ConfigServices(service).PORT;
+    const request_protocol = registryConfigServices(service).HTTPS_ENABLE ==1?https:http;
+    const port = registryConfigServices(service).HTTPS_ENABLE ==1?registryConfigServices(service).HTTPS_PORT:registryConfigServices(service).PORT;
     
     return new Promise ((resolve, reject)=>{
         let headers;
@@ -188,4 +201,4 @@ const microserviceHttpRequest = async (service, path, query, method, timeout, cl
 };
 
 
-export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, ConfigServices, microserviceRequest, iamAppAuthenticate};
+export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, registryConfigServices, microserviceRequest, iamAppAuthenticate};
