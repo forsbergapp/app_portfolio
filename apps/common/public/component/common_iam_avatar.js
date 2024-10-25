@@ -1,5 +1,14 @@
 /**
+ * Displays IAM avatar
  * @module apps/common/component/common_iam_avatar
+ */
+
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ */
+/**
+ * @returns {string}
  */
 const template = () =>` <div id='common_iam_avatar'>
                             <div id='common_iam_avatar_logged_in'>
@@ -14,8 +23,8 @@ const template = () =>` <div id='common_iam_avatar'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

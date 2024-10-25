@@ -6,9 +6,16 @@
     <div class='section'>
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/**
+ * Displays app theme
  * @module apps/app1/component/app_theme
  */
 
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+/**
+ * @returns {string}
+ */
 const template = () =>` &lt;div id="app_themes">
                             &lt;div id="app_theme_checkbox" class="toggle checked">
                                 &lt;div class="toggle-button">
@@ -34,10 +41,10 @@ const template = () =>` &lt;div id="app_themes">
  * 
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appPreferencesPostMount:import('../js/app.js')['appPreferencesPostMount']
  *                      }}} props 
- * @returns {Promise.&lt;{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

@@ -1,7 +1,17 @@
 /**
+ * Displays maintenance
  * @module apps/common/component/common_dialogue_maintenance
  */
 
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
+ * @typedef {CommonModuleCommon['commonWindowLocationReload']} commonWindowLocationReload
+ */
+
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
                             <div id='common_maintenance_header'>
                                 <div id='common_maintenance_logo' class='common_image common_image_alert'></div>
@@ -13,11 +23,11 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
 /**
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonWindowSetTimeout:import('../../../common_types.js').CommonModuleCommon['commonWindowSetTimeout'],
- *                      commonWindowLocationReload:import('../../../common_types.js').CommonModuleCommon['commonWindowLocationReload']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonWindowSetTimeout:commonWindowSetTimeout,
+ *                      commonWindowLocationReload:commonWindowLocationReload
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

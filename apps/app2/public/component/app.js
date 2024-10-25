@@ -1,7 +1,14 @@
 /**
+ * Displays app
  * @module apps/app2/component/app
  */
 
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+/**
+ * @returns {string}
+ */
 const template = ()=>`  <div id='toolbar_top'>
                             <div id='app_user_account'></div>
                             <div id='toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
@@ -42,8 +49,8 @@ const template = ()=>`  <div id='toolbar_top'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

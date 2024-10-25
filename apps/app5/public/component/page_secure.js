@@ -1,11 +1,16 @@
 /**
+ * Displays page secure
  * @module apps/app5/component/page_secure
  */
-
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
 /**
  *  
  * @param {{customer:[]}} props 
- * @returns 
+ * @returns {string}
  */
 const template = props => ` <div id='app_page_secure'>
                                 ${props.customer.length>0?
@@ -35,12 +40,12 @@ const template = props => ` <div id='app_page_secure'>
  *                      timezone:string,
  *                      locale:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      button_post:function,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonFFB:commonFFB
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

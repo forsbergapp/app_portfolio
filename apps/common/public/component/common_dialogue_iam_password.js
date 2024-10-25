@@ -1,8 +1,15 @@
 /**
+ * Displays IAM pasword
  * @module apps/common/component/common_dialogue_iam_password_new
  */
+
+/**
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+
 /**
  * @param {{auth:string}} props
+ * @returns {string}
  */
 const template = props =>`  <div id='common_dialogue_iam_password_new_icon' class='common_icon'></div>
                             <div id='common_dialogue_iam_password_new_auth'>${props.auth}</div>
@@ -23,8 +30,8 @@ const template = props =>`  <div id='common_dialogue_iam_password_new_icon' clas
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      auth:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

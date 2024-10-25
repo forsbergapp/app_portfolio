@@ -13,6 +13,7 @@
  * @param {{server_group:number[],
  *          file:'CONFIG_SERVER'|'CONFIG_IAM_BLOCKIP'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT',
  *          config:[]}} props
+ * @returns {string}
  */
 const template = props => ` ${props.file=='CONFIG_SERVER'?
                                 `<div id='menu_config_detail' class='common_list_scrollbar'>

@@ -14,9 +14,15 @@
  * 3    print only
  * @module apps/common/component/common_window_info
  */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
+ */
 
 /**
  * @param {{info_type:number, info:string, iframe_class:string, content:string}} props
+ * @returns {string}
  */
 const template = props => ` &lt;div id='common_window_info_btn_close' class='common_toolbar_button common_icon'>&lt;/div>
                             ${props.info_type==0?
@@ -53,14 +59,14 @@ const template = props => ` &lt;div id='common_window_info_btn_close' class='com
  *                      info:number, 
  *                      url:string,
  *                      content_type:string,
- *                      frame:import('../../../common_types.js').COMMON_DOCUMENT|null,
+ *                      frame:COMMON_DOCUMENT|null,
  *                      iframe_content:string,
  *                      iframe_class:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonWindowSetTimeout:import('../../../common_types.js').CommonModuleCommon['commonWindowSetTimeout']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonWindowSetTimeout:commonWindowSetTimeout
  *                      }}} props
- * @returns {Promise.&lt;{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}

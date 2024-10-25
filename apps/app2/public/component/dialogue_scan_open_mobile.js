@@ -1,17 +1,26 @@
 /**
+ * Displays dialogue scan mobile
  * @module apps/app2/component/dialogue_scan_open_mobile
  */
 
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonModuleEasyQRCODECreate']} commonModuleEasyQRCODECreate
+ * @typedef {CommonModuleCommon['commonWindowHostname']} commonWindowHostname
+ */
+/**
+ * @returns {string}
+ */
 const template = () => `<div id='scan_open_mobile_qrcode' class='common_module_easy.qrcode'></div>
                         <div id='scan_open_mobile_title1' class='common_icon'></div>
                         <div id='scan_open_mobile_close' class='common_dialogue_button common_icon' ></div>`;
 /**
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonModuleEasyQRCODECreate:import('../../../common_types.js').CommonModuleCommon['commonModuleEasyQRCODECreate'],
- *                      commonWindowHostname:import('../../../common_types.js').CommonModuleCommon['commonWindowHostname']}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
+ *                      commonWindowHostname:commonWindowHostname}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

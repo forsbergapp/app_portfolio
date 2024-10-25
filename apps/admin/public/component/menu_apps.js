@@ -12,6 +12,7 @@
 
 /**
  * @param {{apps:CommonAppRecord[]}} props
+ * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 <div id='menu_apps_title' class='common_icon'></div>

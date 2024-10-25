@@ -34,7 +34,8 @@
  *                                  path:string,
  *                                  start_arg_0:string,
  *                                  start_arg_1:string}}|null}} props
-*/
+ * @returns {string}
+ */
 const template = props => ` <div id='menu_server_content_widget1' class='widget'>
                                 <div id='menu_server_os_title' class='common_icon'></div>
                                 <div id='menu_server_os_info'>

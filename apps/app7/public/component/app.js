@@ -1,7 +1,13 @@
 /**
+ * Displays app
  * @module apps/app7/component/app
  */
-
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id='app_main'>
                             <div id='app_main_page'>
                             </div>
@@ -9,8 +15,8 @@ const template = () =>` <div id='app_main'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

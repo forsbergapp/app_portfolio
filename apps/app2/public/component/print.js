@@ -1,11 +1,17 @@
 /**
+ * Print template
  * @module apps/app2/component/print
+ */
+
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
  * @param {{app_link_app_report_css:string,
  *          common_link_common_css:string,
  *          html:string}} props
+ * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
@@ -24,9 +30,9 @@ const template = props =>`  <!DOCTYPE html>
  *                      commonMountdiv:string,
  *                      appHtml:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
  * 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

@@ -1,7 +1,15 @@
 /**
+ * App
  * @module apps/default_PWA/component/app
  */
 
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id='dialogue_documents' class='dialogue'>
                             <div id='dialogue_documents_content' class='dialogue_content'>
                                 <div id='app_logo'></div>
@@ -11,8 +19,8 @@ const template = () =>` <div id='dialogue_documents' class='dialogue'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
- * @returns {Promise.<{ lifecycle:  import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null, 
  *                      methods:    null,
  *                      template:   string}>}

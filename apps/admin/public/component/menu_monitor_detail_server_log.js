@@ -15,6 +15,7 @@
  *          function_roundOff:function,
  *          logs:[],
  *          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} props
+ * @returns {string}
  */
 const template = props => ` ${  /*
                                 use this grouping to decide column orders

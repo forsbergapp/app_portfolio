@@ -1,8 +1,16 @@
 /**
+ * Profile info
  * @module apps/app2/component/profile_info
  */
 /**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * @param {{setting:boolean}} props
+ * @returns {string}
  */
 const template = props => ` ${props.setting?
                                 `<div id='profile_info_user_settings'>
@@ -46,10 +54,10 @@ const template = props => ` ${props.setting?
  *                      profile_id:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonFFB:commonFFB}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {
  *                                  profile_user_setting_update:       function,

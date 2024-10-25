@@ -1,10 +1,17 @@
 /**
+ * Displays profile search list
  * @module apps/common/component/common_profile_search_list
  */
 
 /**
+ * @import {CommonProfileSearchRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonInputControl']} commonInputControl
+ */
+
+/**
  * 
- * @param {{records:import('../../../common_types.js').CommonProfileSearchRecord[]}} props 
+ * @param {{records:CommonProfileSearchRecord[]}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.records.length>0?
@@ -33,11 +40,11 @@ const template = props =>`  ${props.records.length>0?
  *                      client_latitude:string,
  *                      client_longitude:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonInputControl:import('../../../common_types.js').CommonModuleCommon['commonInputControl'],
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonInputControl:commonInputControl,
  *                      function_click_function:function,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
+ *                      commonFFB:commonFFB}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

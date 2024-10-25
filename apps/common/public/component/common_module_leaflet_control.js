@@ -1,5 +1,14 @@
 /**
+ * Displays Leaflet control
  * @module apps/common/component/common_module_leaflet_control
+ */
+
+/**
+ * @import {CommonModuleRegional, CommonAppEvent, CommonModuleLeafletEvent, CommonModuleLeafletMapLayer, CommonGlobal, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonMicroserviceGeolocationPlace']} commonMicroserviceGeolocationPlace
+ * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
  */
 
 /**
@@ -9,6 +18,7 @@
  *          title_my_location:string,
  *          longitude : string, 
  *          latitude : string}} props
+ * @returns {string}
  */
 const template = props =>` <div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='${props.title_search}' role='button'>
                             <div id='common_module_leaflet_control_search_button' class='common_module_leaflet_control_button common_icon'></div>
@@ -47,18 +57,18 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      latitude:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event_doubleclick:function,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonMicroserviceGeolocationPlace:import('../../../common_types.js').CommonModuleCommon['commonMicroserviceGeolocationPlace'],
- *                      commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
+ *                      commonElementRow:commonElementRow,
+ *                      commonFFB:commonFFB,
  *                      moduleLeafletContainer:function,
  *                      moduleLeafletLibrary:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:  import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null,
- *                      methods:    import('../../../common_types.js').CommonGlobal['moduleLeaflet']['methods'],
+ *                      methods:    CommonGlobal['moduleLeaflet']['methods'],
  *                      template:   null}>}
  */
 const component = async props => {
@@ -70,7 +80,7 @@ const component = async props => {
     const MODULE_LEAFLET_ZOOM_CITY  =14;
     const MODULE_LEAFLET_FLY_TO_DURATION  =8; //seconds
     
-    /** @type {import('../../../common_types.js').CommonModuleLeafletMapLayer[]}*/
+    /** @type {CommonModuleLeafletMapLayer[]}*/
     const  MAP_LAYERS = [{
                             display_data: 'OpenStreetMap_Mapnik',
                             value: 'OpenStreetMap_Mapnik',
@@ -106,7 +116,7 @@ const component = async props => {
     }
     else{
         /**
-         * @param{import('../../../common_types.js').CommonModuleLeafletEvent} e
+         * @param{CommonModuleLeafletEvent} e
          */
         const default_dbl_click_event = e => {
             if (e.originalEvent.target.id == props.methods.moduleLeafletContainer()._container.id){
@@ -159,7 +169,7 @@ const component = async props => {
                         }).then(()=>map_toolbar_reset());
     };                        
     /**
-     * @param {import('../../../common_types.js').CommonAppEvent['target']} target
+     * @param {CommonAppEvent['target']} target
      */
     const eventClickMapLayer = target =>{
         map_setstyle(target?.getAttribute('data-value'));
@@ -212,7 +222,7 @@ const component = async props => {
         map_control_toggle_expand('layer');
     };
     /**
-     * @param {import('../../../common_types.js').CommonAppEvent['target']} target
+     * @param {CommonAppEvent['target']} target
      */
     const eventClickSearchList = async target =>{
         //execute function from inparameter or use default when not specified
@@ -480,7 +490,7 @@ const component = async props => {
      */
     const map_update = async (parameters) => {
         const path_regional ='regional';
-        /**@type {import('../../../common_types.js').CommonModuleRegional} */
+        /**@type {CommonModuleRegional} */
         const {getTimezone} = await import(path_regional);
         return new Promise((resolve)=> {
             /**

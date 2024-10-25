@@ -1,11 +1,17 @@
 /**
+ * Displays profile stat list
  * @module apps/common/component/common_dialogue_profile_stat_list
  */
 
 /**
+ * @import {CommonProfileStatRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
 * 
-* @param {{stat_list:import('../../../common_types.js').CommonProfileStatRecord[]|[]}} props 
-* @returns 
+* @param {{stat_list:CommonProfileStatRecord[]|[]}} props 
+* @returns {string}
 */
 const template = props =>`   
                             ${props.stat_list.map(row=>
@@ -35,10 +41,10 @@ const template = props =>`
  *                      stat_list_app_rest_url:string,
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
