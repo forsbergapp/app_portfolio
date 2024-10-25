@@ -1,18 +1,27 @@
-/** @module microservice/mail/server */
+/** 
+ * Microservice mail server
+ * @module microservice/mail/server 
+ */
+
+/**
+ * @import {microservice_req, microservice_res} from '../types.js'
+ */
 
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
 /**@type{import('../../microservice/microservice.js')} */
 const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAppAuthenticate } = await import(`file://${process.cwd()}/microservice/microservice.js`);
 /**@type{import('../../microservice/registry.js')} */
-const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
+const { registryMicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
  * Starts the server
+ * @function
+ * @returns {Promise.<void>}
  */
 const serverStart = async () =>{
-	const request = await MicroServiceServer('MAIL');
-	request.server.createServer(request.options, (/**@type{import('../types.js').microservice_req}*/req, /**@type{import('../types.js').microservice_res}*/res) => {
+	const request = await registryMicroServiceServer('MAIL');
+	request.server.createServer(request.options, (/**@type{microservice_req}*/req, /**@type{microservice_res}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'POST');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		const URI_query = Buffer.from(req.url.substring(req.url.indexOf('?')), 'base64').toString('utf-8');

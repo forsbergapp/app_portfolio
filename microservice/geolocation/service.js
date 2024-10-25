@@ -1,13 +1,21 @@
-/** @module microservice/geolocation/service */
+/** 
+ * Microservice geolocation service
+ * @module microservice/geolocation/service 
+ */
+
+/**
+ * @import {microservice_config_service_record} from '../types.js'
+ */
 
 /**@type{import('../../microservice/registry.js')} */
-const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+const {REGISTRY_CONFIG, registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 const fs = await import('node:fs');
 const http = await import('node:http');
 
 /**
- * 
+ * Returns empty geodata
+ * @function
  * @param {'IP'|'PLACE'} geotype 
  * @returns {*}
  */
@@ -62,7 +70,8 @@ const getGeodataEmpty = (geotype) => {
 	}
 };
 /**
- * 
+ * Returns cached geodata
+ * @function
  * @param {'IP'|'PLACE'} cachetype 
  * @param {string|null} ip 
  * @param {string} latitude 
@@ -70,13 +79,13 @@ const getGeodataEmpty = (geotype) => {
  * @returns {Promise.<*>}
  */
 const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
-    /**@type{import('../types.js').microservice_config_service_record}*/
-    const config_service = ConfigServices('GEOLOCATION');
+    /**@type{microservice_config_service_record}*/
+    const config_service = registryConfigServices('GEOLOCATION');
     let geodata_cache;
     try {
         switch (cachetype){
             case 'IP':{
-                geodata_cache = await fs.promises.readFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 'utf8');
                 geodata_cache = geodata_cache.split('\r\n');
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
@@ -88,7 +97,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 return null;
             }
             case 'PLACE':{
-                geodata_cache = await fs.promises.readFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 'utf8');
                 geodata_cache =  geodata_cache.split('\r\n');
                 /**
                  * 
@@ -135,21 +144,22 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     
 };
 /**
- * 
+ * Writes geodata cache
+ * @function
  * @param {'IP'|'PLACE'} cachetype 
  * @param {*} geodata 
  */
 const writeCacheGeodata = async (cachetype, geodata) =>{
-    /**@type{import('../types.js').microservice_config_service_record}*/
-    const config_service = ConfigServices('GEOLOCATION');
+    /**@type{microservice_config_service_record}*/
+    const config_service = registryConfigServices('GEOLOCATION');
     switch (cachetype){
         case 'IP':{
-            await fs.promises.appendFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 
+            await fs.promises.appendFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 
                                                           JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
         case 'PLACE':{
-            await fs.promises.appendFile(`${process.cwd()}${CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 
+            await fs.promises.appendFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 
                                                              JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
@@ -159,10 +169,11 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
     }
 };
 /**
- * 
+ * Returns geodata from http.request
+ * @function
  * @param {string} url 
  * @param {string} language 
- * @returns 
+ * @returns {Promise.<string>}
  */
 const getGeodata = async (url, language) => {
     return new Promise((resolve) =>{
@@ -190,10 +201,12 @@ const getGeodata = async (url, language) => {
     });
 };
 /**
- * 
+ * Get place
+ * @function
  * @param {string} latitude
  * @param {string} longitude
  * @param {string} accept_language
+ * @returns {Promise<string>}
  */
  const getPlace = async (latitude, longitude, accept_language) => {
 	let geodata;
@@ -201,7 +214,7 @@ const getGeodata = async (url, language) => {
 	if (geodata != null)
         return geodata;
 	else{
-        const url = ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
+        const url = registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
                     .replace('<LATITUDE/>', latitude)
                     .replace('<LONGITUDE/>', longitude);
 		geodata = await getGeodata(url, accept_language);
@@ -211,9 +224,11 @@ const getGeodata = async (url, language) => {
 	}
 };
 /**
- * 
+ * Get geodata for ip
+ * @function
  * @param {string} ip
  * @param {string} accept_language
+ * @returns {Promise.<string>}
  */
 const getIp = async (ip, accept_language) => {
 	let geodata;
@@ -225,11 +240,11 @@ const getIp = async (ip, accept_language) => {
 		if (ip == '::1' || ip == '::ffff:127.0.0.1' || ip == '127.0.0.1'){
 			//create empty record with ip ::1 first time
 			writeCacheGeodata('IP', getGeodataEmpty('IP'));
-            url =   ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+            url =   registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
                     .replace('<IP/>', '');
 		}
 		else
-            url =   ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+            url =   registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
                     .replace('<IP/>', ip);
 		geodata = await getGeodata(url, accept_language);
 		writeCacheGeodata('IP', geodata);

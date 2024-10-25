@@ -1,13 +1,20 @@
-/** @module microservice/mail/service */
+/** 
+ * Microservice mail service
+ * @module microservice/mail/service 
+ */
+/**
+ * @import {microservice_config_service_record} from '../types.js'
+ */
 
 /**@type{import('../../microservice/microservice.js')} */
 const { microserviceUtilNumberValue} = await import(`file://${process.cwd()}/microservice/microservice.js`);
 /**@type{import('../../microservice/registry.js')} */
-const { ConfigServices } = await import(`file://${process.cwd()}/microservice/registry.js`);
+const { registryConfigServices } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 const nodemailer = await import('nodemailer');
 /**
- * 
+ * Send email
+ * @function
  * @param {{
  *          email_host:         string,
  *          email_port:         number,
@@ -22,9 +29,9 @@ const nodemailer = await import('nodemailer');
  * @returns {Promise.<object>}
  */
 const sendEmail = async (data) => {
-    /**@type{import('../types.js').microservice_config_service_record}*/
+    /**@type{microservice_config_service_record}*/
 
-    if (microserviceUtilNumberValue(ConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
+    if (microserviceUtilNumberValue(registryConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
         return {test: 'ok'};
     else
         return new Promise((resolve, reject)=>{
