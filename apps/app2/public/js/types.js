@@ -1,5 +1,9 @@
 /**
+ * App types
  * @module apps/app2/app/types
+ */
+/**
+ * @import {CommonComponentLifecycle} from '../../../common_types.js'
  */
 /**
  * @typedef {{

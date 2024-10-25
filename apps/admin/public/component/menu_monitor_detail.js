@@ -30,9 +30,9 @@
  * @param {{
  *          service_socket_client_ID:number,
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
- *          function_commonWindowUserAgentPlatform:function,
+ *          function_commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
  *          function_get_order_by:function,
- *          function_roundOff:function,
+ *          function_roundOff:commonRoundOff,
  *          logs:[],
  *          SERVICE_LOG_DATA_PARAMETERS:{
  *                                      SCOPE_REQUEST:string,

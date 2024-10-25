@@ -3,14 +3,19 @@
  * @module apps/app6/app
  */
 
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**
+ * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ */
+
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
-/**@type {import('../../../common_types.js').CommonModuleCommon} */
+/**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 /**
  * App exception function
+ * @function
  * @param {Error} error 
  * @returns {void}
  */
@@ -19,12 +24,13 @@ const appException = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         });
     }
@@ -73,12 +79,13 @@ const appEventClick = event => {
 };
 /**
  * App event keyup
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
             appEventKeyUp(event);
         }, true);
     }
@@ -97,7 +104,8 @@ const appEventKeyUp = event => {
 };
 /**
  * Validate VPA
- * @param {import('../../../common_types.js').CommonAppEvent['target']} element
+ * @function
+ * @param {CommonAppEvent['target']} element
  * @param {string} str
  * @returns {boolean}
  */
@@ -113,6 +121,8 @@ const appVPAIsValid = (element, str) => {
 };
 /**
  * Product update attributes
+ * @function
+ * @returns {Promise.<void>}
  */
 const appProductUpdate = async () =>{
     COMMON_DOCUMENT.querySelector('#tshirt').style.fill = COMMON_DOCUMENT.querySelector('.common_select_dropdown_value.common_app_data_display_master_row_list [data-product_color]').getAttribute('data-product_color');
@@ -156,6 +166,7 @@ const appProductUpdate = async () =>{
 };
 /**
  * Get payment request status
+ * @function
  * @returns {void}
  */
 const appPaymentRequestStatus = ()=>{
@@ -175,6 +186,8 @@ const appPaymentRequestStatus = ()=>{
 };
 /**
  * Payment request
+ * @function
+ * @returns {Promise.<void>}
  */
 const appPaymentRequest = async () =>{
     const sku = COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-sku]')[0].getAttribute('data-sku');
@@ -239,6 +252,8 @@ const appPaymentRequest = async () =>{
 };
 /**
  * Pay cancel
+ * @function
+ * @returns {Promise.<void>}
  */
 const appPayCancel = async () =>{
     common.commonMessageShow('INFO',null,null,null, 'Payment cancel');
@@ -246,6 +261,8 @@ const appPayCancel = async () =>{
 };
 /**
  * Pay product
+ * @function
+ * @returns {Promise.<void>}
  */
 const appPay = async () =>{
     await common.commonComponentRender({
@@ -290,6 +307,7 @@ const appPay = async () =>{
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
@@ -304,6 +322,7 @@ const appPay = async () =>{
 };
 /**
  * Init app
+ * @function
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
@@ -332,6 +351,7 @@ const appInit = async () => {
 };
 /**
  * Init common
+ * @function
  * @param {string} parameters 
  * @returns {void}
  */

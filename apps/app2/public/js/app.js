@@ -2,24 +2,29 @@
  * Timetable app
  * @module apps/app2/app
  */
+/**
+ * @import {commonInitAppParameters, CommonAppEvent, CommonRESTAPIMethod, CommonComponentResult, CommonModuleRegional, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, APP_REPORT_settings, APP_GLOBAL, 
+ *          CommonModuleLibTimetable, APP_user_setting} from './types.js'
+ */
 
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
-/**@type {import('../../../common_types.js').CommonModuleCommon} */
+/**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
 const path_regional ='regional';
-/**@type {import('../../../common_types.js').CommonModuleRegional} */
+/**@type {CommonModuleRegional} */
 const {getTimezone} = await import(path_regional);
 
 const appLibTimetable = '/app-module/MODULE_LIB_TIMETABLE';
-/**@type {import('./types.js').CommonModuleLibTimetable} */
+/**@type {CommonModuleLibTimetable} */
 const {APP_REPORT_GLOBAL, component} = await import(appLibTimetable);
 
 
-/**@type{import('./types.js').APP_user_setting} */
+/**@type{APP_user_setting} */
 const APP_USER_SETTINGS_EMPTY = {current_id:0,
                              data:[{id:0,
                                     json_data: {description: '',
@@ -75,7 +80,7 @@ const APP_USER_SETTINGS_EMPTY = {current_id:0,
                                 ]
                             };
 
-/**@type{import('./types.js').APP_GLOBAL} */
+/**@type{APP_GLOBAL} */
 const APP_GLOBAL = {
     app_default_startup_page:0,
     app_report_timetable:'',
@@ -152,13 +157,14 @@ Object.seal(APP_GLOBAL);
 
 /**
  * Print timetable
+ * @function
  * @returns {Promise.<void>}
  */
 const appReportTimetablePrint = async () => {
     //use app component to get HTML
     const component_print = '/component/print.js';
     const {default:component} = await import(component_print);
-    /**@type{import('../../../common_types.js').CommonComponentResult}*/
+    /**@type{CommonComponentResult}*/
     const {template} = await component({ data:  {   
                                                 commonMountdiv:null, 
                                                 appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
@@ -178,7 +184,8 @@ const appReportTimetablePrint = async () => {
 };
 /**
  * Get report settings
- * @returns {import('./types.js').APP_REPORT_settings}
+ * @function
+ * @returns {APP_REPORT_settings}
  */
 const appReportTimetableSettings = () => {
     const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data;
@@ -245,9 +252,10 @@ const appReportTimetableSettings = () => {
 };
 /**
  * Timetable update
+ * @function
  * @param {number} timetable_type 
  * @param {'toolbar_btn_left' | 'toolbar_btn_right' | null} item_id 
- * @param {import('./types.js').APP_REPORT_settings} settings 
+ * @param {APP_REPORT_settings} settings 
  * @returns {Promise.<void>}
  */
 const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, settings) => {
@@ -255,7 +263,7 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
     switch (timetable_type){
         //create timetable month or day or year if they are visible instead
         case 0:{
-            /**@type{import('./types.js').APP_REPORT_day_user_account_app_data_posts[]} */
+            /**@type{APP_REPORT_day_user_account_app_data_posts[]} */
             const current_user_settings =[];
             for (const setting of APP_GLOBAL.user_settings.data){
                 current_user_settings.push(
@@ -324,6 +332,7 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
 };
 /**
  * Get report url
+ * @function
  * @param {number|null} id 
  * @param {number} sid 
  * @param {string} papersize 
@@ -358,6 +367,7 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
 
 /**
  * Update thumbnails with timetables
+ * @function
  * @param {{type:'day'|'month'|'year'|null,
  *          theme_id:string}|null} theme
  * @returns {Promise.<void>}
@@ -450,6 +460,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
 
 /**
  * Get theme id
+ * @function
  * @param {string} type 
  * @returns {string}
  */
@@ -464,7 +475,8 @@ const appSettingThemeId = type => {
 };
 
 /**
- * 
+ * Updates settings theme thumbnail
+ * @function
  * @param {number} nav 
  * @param {'day'|'month'|'year'} type 
  * @returns {Promise.<void>}
@@ -506,6 +518,7 @@ const appSettingThemeNav = async (nav, type) => {
 
 /**
  * Get horizontal alignment
+ * @function
  * @param {boolean} al 
  * @param {boolean} ac 
  * @param {boolean} ar 
@@ -522,6 +535,7 @@ const appSettingAlignGet = (al,ac,ar) => {
 };
 /**
  * Show settings times for users timezone and timetable timezone
+ * @function
  * @returns {Promise.<void>}
  */
 const settingsTimesShow = async () => {
@@ -556,6 +570,7 @@ const settingsTimesShow = async () => {
 };
 /**
  * Toolbar button
+ * @function
  * @param {number} choice 
  * @returns {Promise.<void>}
  */
@@ -621,7 +636,9 @@ const appToolbarButton = async (choice) => {
 
 /**
  * Show setting
+ * @function
  * @param {number} tab_selected 
+ * @returns {Promise.<void>}
  */
 const SettingShow = async (tab_selected) => {
     //remove mark for all tabs
@@ -741,6 +758,7 @@ const SettingShow = async (tab_selected) => {
 };
 /**
  * Get alignment for button
+ * @function
  * @param {string} report_align_where 
  * @returns {string}
  */
@@ -756,6 +774,7 @@ const appSettingButtonAlignValue = (report_align_where) => {
 };
 /**
  * Zoom paper
+ * @function
  * @param {number|null} zoomvalue 
  * @returns {void}
  */
@@ -779,6 +798,7 @@ const appPaperZoom = (zoomvalue = null) => {
 
 /**
  * Show dialogue
+ * @function
  * @param {*} dialogue 
  * @returns {void}
  */
@@ -795,6 +815,7 @@ const appDialogueShow = (dialogue) => {
 };
 /**
  * Update ui
+ * @function
  * @param {'REGIONAL'|'GPS'|'DESIGN'|'IMAGE'|'TEXT'|'PRAYER'|'USER'} setting_tab
  * @param {string} setting_type
  * @param {string|null} item_id 
@@ -1002,6 +1023,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
 
 /**
  * User login
+ * @function
  * @param {boolean} admin
  * @param {string|null} username_verify
  * @param {string|null} password_verify
@@ -1018,6 +1040,7 @@ const appUserLogin = async (admin=false, username_verify=null, password_verify=n
 
 /**
  * User function
+ * @function
  * @param {'FOLLOW'|'LIKE'} function_name 
  * @returns {Promise.<void>}
  */
@@ -1029,6 +1052,7 @@ const appUserFunction = async (function_name) => {
 
 /**
  * User logout
+ * @function
  * @returns {void}
  */
 const appUserLogout = () => {
@@ -1045,9 +1069,11 @@ const appUserLogout = () => {
 };
 /**
  * Login common
+ * @function
  * @param {string|null} avatar 
+ * @returns {void}
  */
-const appUserLoginCommon = (avatar) => {
+const appUserLoginCommon = avatar => {
     //create intitial user setting if not exist, send initial=true
     appUserSettingFunction('ADD_LOGIN', true)
     .then(()=>{
@@ -1070,6 +1096,7 @@ const appUserLoginCommon = (avatar) => {
 };
 /**
  * Provider login
+ * @function
  * @param {*} provider_id 
  * @returns {Promise.<void>}
  */
@@ -1082,6 +1109,7 @@ const appUserLoginProvider = async (provider_id) => {
 };
 /**
  * Profile stat update
+ * @function
  * @returns {Promise.<void>}
  */
 const appUserProfileStatUpdate = async () => {
@@ -1090,6 +1118,7 @@ const appUserProfileStatUpdate = async () => {
 };
 /**
  * Profile stat
+ * @function
  * @param {number} statchoice 
  * @param {string|null} app_rest_url
  * @returns {Promise.<void>}
@@ -1105,7 +1134,8 @@ const appUserProfileStatUpdate = async () => {
     });
  };
 /**
- * 
+ * Profile detail
+ * @function
  * @param {number} detailchoice 
  * @returns {void}
  */
@@ -1129,13 +1159,14 @@ const appUserProfileDetail = (detailchoice) => {
 };
 /**
  * User settings get
+ * @function
  * @returns {Promise.<null>}
  */
 const appUserSettingsGet = async () => {
     return new Promise(resolve=>{
         common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
         .then((/**@type{string}*/result)=>{
-            const settings = JSON.parse(result).map((/** @type{import('./types.js').APP_user_setting_record}*/setting)=>{
+            const settings = JSON.parse(result).map((/** @type{APP_user_setting_record}*/setting)=>{
                 const json_data = {description:setting.description,
                     regional_language_locale:setting.regional_language_locale,
                     regional_timezone:setting.regional_timezone,
@@ -1195,6 +1226,7 @@ const appUserSettingsGet = async () => {
 };
 /**
  * User setting show link
+ * @function
  * @param {HTMLElement} item 
  * @returns {void}
  */
@@ -1227,6 +1259,7 @@ const appUserSettingLink = (item) => {
 };
 /**
  * User settings function
+ * @function
  * @param {'ADD'|'ADD_LOGIN'|'SAVE'} function_name 
  * @param {boolean} initial_user_setting 
  * @param {boolean} add_settings
@@ -1251,7 +1284,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                             json_data:          APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             user_account_id:    common.COMMON_GLOBAL.user_account_id
                         };
-        /**@type {import('../../../common_types.js').CommonRESTAPIMethod}*/
+        /**@type {CommonRESTAPIMethod}*/
         let method;
         let path = '';
         let query = null;
@@ -1280,7 +1313,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                 case 'ADD':{
                     if (add_settings==true){
                         //update user settings
-                        /** @type{import('./types.js').APP_user_setting_data}*/
+                        /** @type{APP_user_setting_data}*/
                         const data = {  id:         JSON.parse(result).id, 
                                         json_data:  JSON.parse(JSON.stringify(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data))};
                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.data.length+0] = data;
@@ -1319,6 +1352,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
 };
 /**
  * User settings delete
+ * @function
  * @param {number|null} choice 
  * @returns {void}
  */
@@ -1371,6 +1405,7 @@ const appUserSettingDelete = (choice=null) => {
 };
 /**
  * Set default settings
+ * @function
  * @returns {Promise.<void>}
  */
 const appUserSettingDefaultSet = async () => {
@@ -1437,13 +1472,15 @@ const appUserSettingDefaultSet = async () => {
     COMMON_DOCUMENT.querySelector('#paper').className=APP_GLOBAL.design_default_papersize;
 };
  /**
-  * 
+  * Fix float number
+  * @function
   * @param {string} value 
   * @returns {number|null}
   */
 const appCommonFixFloat = value =>  (value==''||value==null)?null:parseFloat(value);
 /**
  * Settings update
+ * @function
  * @param {'REGIONAL'|'GPS'|'DESIGN'|'IMAGE'|'TEXT'|'PRAYER'|'USER'} setting_tab
  * @returns {void}
  */
@@ -1544,6 +1581,7 @@ const appUserSettingUpdate = setting_tab => {
 
 /**
  * Profile user setting show link
+ * @function
  * @param {HTMLElement} item 
  * @returns {void}
  */
@@ -1584,11 +1622,12 @@ const appUserSettingProfileLink = item => {
 
 /**
  * User settings like
+ * @function
  * @param {number} user_account_app_data_post_id 
  * @returns {void}
  */
 const appUserSettingsLike = user_account_app_data_post_id => {
-    /**@type{import('../../../common_types.js').CommonRESTAPIMethod} */
+    /**@type{CommonRESTAPIMethod} */
     let method;
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
     if (common.COMMON_GLOBAL.user_account_id == null)
@@ -1607,11 +1646,13 @@ const appUserSettingsLike = user_account_app_data_post_id => {
 };
 /**
  * App event click
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
+ * @returns {void}
  */
 const appEventClick = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         }, true);
     }
@@ -2134,12 +2175,13 @@ const appEventClick = event => {
 };
 /**
  * App event change
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventChange = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{CommonAppEvent}*/event) => {
             appEventChange(event);
         }, true);
     }
@@ -2165,12 +2207,13 @@ const appEventChange = event => {
 };
 /**
  * App event keyup
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
             appEventKeyUp(event);
         }, true);
     }
@@ -2231,6 +2274,7 @@ const appEventKeyUp = event => {
 
 /**
  * Map show qibbla
+ * @function
  * @returns {void}
  */
 const appModuleLeafletMapQibblaShow = () => {
@@ -2258,6 +2302,7 @@ const appModuleLeafletMapQibblaShow = () => {
 };
 /**
  * Map update
+ * @function
  * @param {{longitude:string,
  *          latitude:string,
  *          text_place:string,
@@ -2285,6 +2330,7 @@ const appModuleLeafletMapUpdate = async (parameters) => {
 
 /**
  * App exception function
+ * @function
  * @param {Error} error
  * @returns {void}
  */
@@ -2293,6 +2339,7 @@ const appException = (error) => {
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
@@ -2307,10 +2354,11 @@ const appFrameworkSet = async (framework=null) => {
 };
 
 /**
- * 
- * @param {{APP:import('./types.js').APP_PARAMETERS,
- *          COMMON:import('../../../common_types.js').commonInitAppParameters['COMMON'],
- *          INFO:import('../../../common_types.js').commonInitAppParameters['INFO']}} parameters 
+ * Init app
+ * @function
+ * @param {{APP:APP_PARAMETERS,
+ *          COMMON:commonInitAppParameters['COMMON'],
+ *          INFO:commonInitAppParameters['INFO']}} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
@@ -2439,7 +2487,8 @@ const appInit = async parameters => {
     });
 };
 /**
- * 
+ * Init common
+ * @function
  * @param {string} parameters 
  * @returns {void}
  */

@@ -1,6 +1,6 @@
 /**
  * App
- * @module apps/default_PWA/component/app
+ * @module apps/default_app/component/app
  */
 
 /**

@@ -9,14 +9,20 @@
  * Cube app
  * @module apps/app7/app
  */
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+
+/**
+ * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {APP_GLOBAL} from './types.js'
+ */
+
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
-/**@type {import('../../../common_types.js').CommonModuleCommon} */
+/**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
-/**@type{import('./types.js').APP_GLOBAL} */
+/**@type{APP_GLOBAL} */
 const APP_GLOBAL = {
     cube :{},
     cube_controls:{},
@@ -32,6 +38,7 @@ const APP_GLOBAL = {
 
 /**
  * App exception function
+ * @function
  * @param {Error} error 
  * @returns {void}
  */
@@ -40,12 +47,13 @@ const appException = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../common_types.js').CommonAppEvent|null} event 
+ * @function
+ * @param {CommonAppEvent|null} event 
  * @returns {void}
  */
 const appEventClick = (event=null) => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         });
     }
@@ -128,10 +136,11 @@ const appEventClick = (event=null) => {
 };
 /**
  * App event other
+ * @function
  * @returns {void}
  */
 const appEvenOther = () => {
-    const onmousedown = function(/**@type{import('../../../common_types.js').CommonAppEvent}*/e){
+    const onmousedown = function(/**@type{CommonAppEvent}*/e){
 		APP_GLOBAL.cube.mouseDown = true;
 		if(e.touches &amp;&amp; e.touches.length > 0){
 			e = e.touches[0];
@@ -150,7 +159,7 @@ const appEvenOther = () => {
             APP_GLOBAL.cube.render();
 		}
 	};
-	const onmousemove = function(/**@type{import('../../../common_types.js').CommonAppEvent}*/e){
+	const onmousemove = function(/**@type{CommonAppEvent}*/e){
 		if(APP_GLOBAL.cube.mouseDown){
 			e.preventDefault();
 			if(e.touches &amp;&amp; e.touches.length > 0){
@@ -162,38 +171,39 @@ const appEvenOther = () => {
             APP_GLOBAL.cube.render();
 		}
 	};
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousedown',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousedown',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousedown(event);
     });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mouseup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mouseup',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousemove(event);
     });
 
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchstart',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchstart',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousedown(event);
     });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchend',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchend',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchcancel',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchcancel',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmouseup();
     });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchmove',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchmove',(/**@type{CommonAppEvent}*/event) => {
         if (event.target.classList.contains('cube_face'))
             onmousemove(event);
     });
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.&lt;void>}
  */
@@ -210,6 +220,7 @@ const appEvenOther = () => {
 
 /**
  * Init app
+ * @function
  * @returns {Promise.&lt;void>}
  */
 const appInit = async () => {
@@ -256,6 +267,7 @@ const appInit = async () => {
 };
 /**
  * Init common
+ * @function
  * @param {string} parameters 
  * @returns {void}
  */

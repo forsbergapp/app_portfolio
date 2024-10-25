@@ -3,15 +3,20 @@
  * @module apps/app1/app
  */
 
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**
+ * @import {commonInitAppParameters, CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ */
+
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
- /**@type {import('../../../common_types.js').CommonModuleCommon} */
+ /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
 /**
  * Show or hide dialogue
+ * @function
  * @returns {void}
  */
 const appDialogueAppsShowHide = () => {
@@ -27,12 +32,13 @@ const appDialogueAppsShowHide = () => {
 };
 /**
  * App event click
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click', (/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         }, true);
     }
@@ -141,12 +147,13 @@ const appEventClick = event => {
 };
 /**
  * App event change
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventChange = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change', (/**@type{CommonAppEvent}*/event) => {
             appEventChange(event);
         }, true);
     }
@@ -155,12 +162,13 @@ const appEventChange = event => {
 };
 /**
  * App event keyup
- * @param {import('../../../common_types.js').CommonAppEvent} event
+ * @function
+ * @param {CommonAppEvent} event
  * @returns {void} 
  */
 const appEventKeyUp = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup', (/**@type{CommonAppEvent}*/event) => {
             appEventKeyUp(event);
         });
     }
@@ -197,6 +205,7 @@ const appEventKeyUp = event => {
 };
 /**
  * App theme update
+ * @function
  * @param {boolean} toggle_theme 
  * @returns {void}
  */
@@ -221,6 +230,7 @@ const appThemeUpdate = (toggle_theme=false) => {
 };
 /**
  * App theme get
+ * @function
  * @returns {void}
  */
  const appThemeUpdateFromBody = () => {
@@ -245,6 +255,7 @@ const appThemeUpdate = (toggle_theme=false) => {
 
 /**
  * User login app
+ * @function
  * @param {boolean|null} admin 
  * @param {string|null} username_verify
  * @param {string|null} password_verify
@@ -257,6 +268,7 @@ const appUserLogin = async (admin=false, username_verify=null, password_verify=n
 };
 /**
  * User logout app
+ * @function
  * @returns {Promise.<void>}
  */
  const appUserLogout = async () =>{
@@ -266,6 +278,7 @@ const appUserLogin = async (admin=false, username_verify=null, password_verify=n
 
 /**
  * Get apps
+ * @function
  * @returns {void}
  */
 const appAppsGet = () => {
@@ -287,6 +300,7 @@ const appAppsGet = () => {
 };
 /**
  * App exception function
+ * @function
  * @param {Error} error 
  * @returns {void}
  */
@@ -295,6 +309,7 @@ const appException = (error) => {
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
@@ -309,7 +324,8 @@ const appFrameworkSet = async (framework=null) => {
 };
 /**
  * Init app
- * @param {import('../../../common_types.js').commonInitAppParameters} parameters 
+ * @function
+ * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
  */
 const appInit = async (parameters) => {
@@ -349,6 +365,7 @@ const appInit = async (parameters) => {
 };
 /**
  * Init common
+ * @function
  * @param {string} parameters 
  * @returns {void}
  */

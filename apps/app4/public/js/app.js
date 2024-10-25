@@ -3,15 +3,20 @@
  * @module apps/app4/app
  */
 
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**
+ * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ */
+
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
-/**@type {import('../../../common_types.js').CommonModuleCommon} */
+/**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
 /**
  * App exception function
+ * @function
  * @param {*} error 
  * @returns {void}
  */
@@ -20,12 +25,13 @@ const appException = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event =>{
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         });
     }
@@ -112,6 +118,7 @@ const appEventClick = event =>{
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
@@ -126,7 +133,8 @@ const appEventClick = event =>{
 };
 
 /**
- * Init app
+ * Leaflet init
+ * @function
  * @returns {Promise.<void>}
  */
 const appModuleLeafletInit = async ()=>{
@@ -146,6 +154,7 @@ const appModuleLeafletInit = async ()=>{
 };
 /**
  * Init app
+ * @function
  * @returns {Promise.<void>}
  */
 const appInit = async () =>{
@@ -158,6 +167,7 @@ const appInit = async () =>{
 };
 /**
  * Init common
+ * @function
  * @param {string} parameters 
  * @returns {void}
  */
