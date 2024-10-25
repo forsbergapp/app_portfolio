@@ -1,6 +1,12 @@
 /**
+ * Displays dialogue info
  * @module apps/app2/component/dialogue_info
  */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
 /**
  * @param {{about_logo:String,
  *          app_copyright:string,
@@ -10,6 +16,7 @@
  *          info_link3:string,
  *          info_link4:string,
  * }} props
+ * @returns {string}
  */
 const template = props => ` <div id='about_logo' style='background-image:url(${props.about_logo})'></div>
                             <div id='app_copyright'>${props.app_copyright}</div>
@@ -31,8 +38,8 @@ const template = props => ` <div id='about_logo' style='background-image:url(${p
  *                      info_link_terms_name:string,
  *                      info_link_about_name:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null, 
  *                      template:string}>}

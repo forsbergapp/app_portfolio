@@ -1,5 +1,15 @@
 /**
+ * Settings tab 5
  * @module apps/app2/component/settings_tab5
+ */
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {appComponentSettingUpdate}  from '../js/app.js'
+ * @import {APP_user_setting_record}  from '../js/types.js'
+ */
+
+/**
+ * @returns {string}
  */
 
 const template = () =>` <div class='setting_horizontal_row'>
@@ -39,13 +49,13 @@ const template = () =>` <div class='setting_horizontal_row'>
 /**
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:import('../js//types.js').APP_user_setting_record
+ *                      user_settings:APP_user_setting_record
  *                      },
  *          methods:    {
- *                       COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                       appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate']
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       appComponentSettingUpdate:appComponentSettingUpdate
  *                       }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

@@ -7,7 +7,9 @@
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
-
+/**
+ * @returns {string}
+ */
 const template = () => `<div id='menu_users_content_widget1' class='widget'>
                             <div id='menu_users_list_title' class='common_icon'></div>
                             <div class='list_search'>

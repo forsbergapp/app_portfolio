@@ -1,8 +1,15 @@
 /**
+ * Displays broadcast
  * @module apps/common/component/common_broadcast
  */
+
+/**
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+
 /**
  * @param {{message:string}} props
+ * @returns {string}
  */
 const template = props =>` <div id='common_broadcast_info'>
                             <div id='common_broadcast_banner'>
@@ -24,8 +31,8 @@ const template = props =>` <div id='common_broadcast_info'>
  *                      commonMountdiv:string,
  *                      message:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

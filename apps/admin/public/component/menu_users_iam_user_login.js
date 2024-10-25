@@ -18,6 +18,7 @@
  *                          ua:string,
  *                          token:string|null,
  *                          created:string}]|[]}} props
+ * @returns {string}
  */
 const template = props => ` <div id='menu_users_iam_user_login_row_title' class='menu_users_iam_user_login_row'>
                                 <div id='menu_users_iam_user_login_col_title1' class='menu_users_iam_user_login_col list_title'>USER ACCOUNT ID</div>

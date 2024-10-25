@@ -1,5 +1,15 @@
 /**
+ * Displays user menu
  * @module apps/common/component/common_dialogue_user_menu
+ */
+
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonUserSessionCountdown']} commonUserSessionCountdown
+ * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
  */
 
 /**
@@ -11,7 +21,7 @@
  *          admin:string,
  *          countdown:0|1,
  *          function_is_provider_user:function}} props 
- * @returns 
+ * @returns {string}
  */
 const template = props =>`  ${props.app_id == props.common_app_id?
                                 `<div id='common_dialogue_user_menu_admin'>${props.admin ?? ''}</div>`:
@@ -79,14 +89,14 @@ const template = props =>`  ${props.app_id == props.common_app_id?
  *                      user_direction:string,
  *                      user_arabic_script:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonUserSessionCountdown:import('../../../common_types.js').CommonModuleCommon['commonUserSessionCountdown'],
- *                      commonMessageShow:import('../../../common_types.js').CommonModuleCommon['commonMessageShow']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonFFB:commonFFB,
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonUserSessionCountdown:commonUserSessionCountdown,
+ *                      commonMessageShow:commonMessageShow
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

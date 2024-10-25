@@ -1,7 +1,16 @@
 /**
+ * Settings tab 7
  * @module apps/app2/component/settings_tab7
  */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @import {APP_user_setting}  from '../js/types.js'
+ */
 
+/**
+ * @returns {string}
+ */
 const template = () =>`  <div id='user_settings'>
                                 <div class='setting_horizontal_row'>
                                     <div class='setting_horizontal_col'></div>
@@ -63,13 +72,13 @@ const template = () =>`  <div id='user_settings'>
 /**
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:import('../js/types.js').APP_user_setting,
+ *                      user_settings:APP_user_setting,
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonComponentRender:commonComponentRender
  *                       }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

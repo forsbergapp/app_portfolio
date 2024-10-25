@@ -5,7 +5,9 @@
 /**
  * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
-
+/**
+ * @returns {string}
+ */
 const template = () => ` <div id='menu_config_content_widget1' class='widget'>
                             <div id='menu_config' class='list_nav'>
                                 <div id='menu_config_config_server'        class='list_nav_list list_button common_icon list_nav_selected_tab'></div>

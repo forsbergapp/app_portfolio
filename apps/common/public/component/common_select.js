@@ -1,13 +1,19 @@
 /**
+ * Common select
  * @module apps/common/component/common_select
  */
 /**
- * Displays stat of users
+ * @import {CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * @param {{default_data_value:string,
  *          default_value:string,
  *          options:[{value:string, text:string}]|[],
  *          column_value:string,
  *          column_text:string}} props
+ * @returns {string}
  */
 const template = props => ` <div class='common_select_dropdown'>
                                 <div class='common_select_dropdown_value' data-value='${props.default_data_value}'>${props.default_value}</div>
@@ -27,16 +33,16 @@ const template = props => ` <div class='common_select_dropdown'>
  *                      options:[{value:string, text:string}],
  *                      path:string,
  *                      query:string,
- *                      method:import('../../../common_types.js').CommonRESTAPIMethod,
- *                      authorization_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
+ *                      method:CommonRESTAPIMethod,
+ *                      authorization_type:CommonRESTAPIAuthorizationType,
  *                      column_value:string,
  *                      column_text:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

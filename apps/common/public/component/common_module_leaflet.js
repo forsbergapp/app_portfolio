@@ -1,9 +1,15 @@
 /**
+ * Displays Leaflet
  * @module apps/common/component/common_module_leaflet
  */
 /**
+ * @import {CommonModuleLeaflet, CommonModuleLeafletMapData, CommonModuleLeafletMethods, CommonGlobal, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+
+/**
  * @param {{css_url:string,
  *          leaflet_container:string}} props
+ * @returns {string}
  */
 const template = props => ` <link media="all" rel="stylesheet" href='${props.css_url}' type="text/css"/>
                             <div id='${props.leaflet_container}'></div>`;
@@ -13,21 +19,22 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      commonMountdiv:string,
  *                      longitude:string,
  *                      latitude:string,
- *                      app_eventListeners:import('../../../common_types.js').CommonGlobal['app_eventListeners']},
+ *                      app_eventListeners:CommonGlobal['app_eventListeners']
+ *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT
  *                       }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
- *                      methods:import('../../../common_types.js').CommonModuleLeafletMethods,
+ *                      methods:CommonModuleLeafletMethods,
  *                      template:string}>}
  */
 const component = async props => {
     const path_leaflet ='leaflet';
-    /**@type {import('../../../common_types.js').CommonModuleLeaflet} */
+    /**@type {CommonModuleLeaflet} */
     const LEAFLET = await import(path_leaflet);
     const LEAFLET_CONTAINER_DIV = 'leaflet';
-    /**@type{import('../../../common_types.js').CommonModuleLeafletMapData} */
+    /**@type{CommonModuleLeafletMapData} */
     let LEAFLET_CONTAINER;
     const MODULE_LEAFLET_ZOOM       =14;
     

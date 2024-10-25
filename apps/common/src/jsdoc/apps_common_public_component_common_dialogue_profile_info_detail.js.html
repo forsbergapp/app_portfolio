@@ -9,6 +9,12 @@
  * @module apps/common/component/common_dialogue_profile_info_detail
  */
 /**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonDialogueShow']} commonDialogueShow
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * Displays profile detail
  * @param {{user_account_id:number,
  *          user_account_id_profile:number,
@@ -26,6 +32,7 @@
  *                  avatar:string,
  *                  provider_image:string,
  *                  username:string}]|[]}} props
+ * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
                                     `${props.detailchoice==5 &amp;&amp; typeof row.id =='undefined'?
@@ -75,11 +82,11 @@ const template = props => `     ${props.list.map(row=>
  *                      detailchoice:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonDialogueShow:import('../../../common_types.js').CommonModuleCommon['commonDialogueShow'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonDialogueShow:commonDialogueShow,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.&lt;{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle,
+ * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle,
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

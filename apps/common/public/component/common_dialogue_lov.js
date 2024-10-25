@@ -1,5 +1,10 @@
 /**
+ * Displays list of values
  * @module apps/common/component/common_dialogue_lov
+ */
+/**
+ * @import {CommonRESTAPIAuthorizationType, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -40,11 +45,11 @@ const template = props =>`  <div id='common_lov_form'>
  *                      lov_custom_value?:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event:function,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
@@ -55,9 +60,9 @@ const component = async props => {
 
     let path = '';
     let query = null;
-    /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
+    /**@type{CommonRESTAPIAuthorizationType}*/
     let token_type;
-    /**@type{import('../../../common_types.js').CommonRESTAPIMethod}*/
+    /**@type{CommonRESTAPIMethod}*/
     let method;
     let body = null;
     let lov_column = '';

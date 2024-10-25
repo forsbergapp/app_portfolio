@@ -11,6 +11,7 @@
 
 /**
  * @param {{installed:boolean|null}} props
+ * @returns {string}
  */
 const template = props => ` <div id='menu_installation_content_widget1' class='widget'>
                                 <div id='menu_installation_db'>

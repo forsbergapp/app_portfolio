@@ -1,7 +1,22 @@
 /**
+ * Settings tab 2
  * @module apps/app2/component/settings_tab2
  */
 
+/**
+ * @import {CommonModuleCommon, CommonModuleRegional, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleRegional['getTimezone']} getTimezone
+ * @typedef {CommonModuleCommon['commonDbAppSettingsGet']} commonDbAppSettingsGet
+ * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonTimezoneDate']} commonTimezoneDate
+ * @typedef {CommonModuleCommon['commonModuleLeafletInit']} commonModuleLeafletInit
+ * @import {appComponentSettingUpdate}  from '../js/app.js'
+ * @import {APP_REPORT_GLOBAL, APP_user_setting_record}  from '../js/types.js'
+ */
+/**
+ * @returns {string}
+ */
 const template = () => `<div id='mapid'></div>
                         <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
@@ -43,25 +58,25 @@ const template = () => `<div id='mapid'></div>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
- *                      user_settings:import('../js//types.js').APP_user_setting_record,
+ *                      user_settings:APP_user_setting_record,
  *                      user_locale:string,
  *                      user_timezone:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate'],
- *                      REPORT_GLOBAL:import('../js/types.js').APP_REPORT_GLOBAL,
- *                      getTimezone:import('../../../common_types.js').CommonModuleRegional['getTimezone'],
- *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
- *                      commonTimezoneDate:import('../../../common_types.js').CommonModuleCommon['commonTimezoneDate'],
- *                      commonModuleLeafletInit:import('../../../common_types.js').CommonModuleCommon['commonModuleLeafletInit'],
- *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender']}}} props
- * @param {{COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      appComponentSettingUpdate:appComponentSettingUpdate,
+ *                      REPORT_GLOBAL:APP_REPORT_GLOBAL,
+ *                      getTimezone:getTimezone,
+ *                      commonDbAppSettingsGet:commonDbAppSettingsGet,
+ *                      commonTimezoneDate:commonTimezoneDate,
+ *                      commonModuleLeafletInit:commonModuleLeafletInit,
+ *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonComponentRender:commonComponentRender}}} props
+ * @param {{COMMON_DOCUMENT:COMMON_DOCUMENT,
  *          commonMountdiv:string,
  *          app_id:number,
  *          user_settings:import('../js//types.js').APP_user_setting_record,
  *          }} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

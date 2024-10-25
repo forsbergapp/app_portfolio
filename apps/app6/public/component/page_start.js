@@ -1,7 +1,12 @@
 /**
+ * Displays page start
  * @module apps/app6/component/page_start
  */
-
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
 /**
  * @returns {string}
  */
@@ -14,12 +19,12 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  *                      timezone:string,
  *                      locale:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      pay:function,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:commonFFB,
+ *                      commonComponentRender:commonComponentRender,
  *                      commonMessageShow:function}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

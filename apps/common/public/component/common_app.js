@@ -1,5 +1,10 @@
 /**
+ * Displays common app
  * @module apps/common/component/common_app
+ */
+
+/**
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
@@ -10,7 +15,7 @@
  *          font_prio1:boolean|null,
  *          font_prio2:boolean|null,
  *          font_prio3:boolean|null}} props 
- * @returns 
+ * @returns {string}
  */
 const template = props =>`  <div id='common_toolbar_framework'>
                                 <div id='common_toolbar_framework_js' class='common_icon common_toolbar_button'></div>
@@ -234,8 +239,8 @@ const template = props =>`  <div id='common_toolbar_framework'>
  *                      font_prio1:boolean|null,
  *                      font_prio2:boolean|null,
  *                      font_prio3:boolean|null},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

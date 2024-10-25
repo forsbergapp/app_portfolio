@@ -6,7 +6,9 @@
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
-
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id='secure'>
                             <div id='dialogues'>
                                 <div id='dialogue_send_broadcast' class='common_dialogue common_dialogue_content'></div>

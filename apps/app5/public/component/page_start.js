@@ -1,14 +1,18 @@
 /**
+ * Displays page start
  * @module apps/app5/component/page_start
  */
 
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ */
 /**
  *  
  * @param {{text_account:string,
  *          text_statements:string,
  *          text_directpayment:string,
  *          text_iso:string}} props 
- * @returns 
+ * @returns {string}
  */
 const template = props => ` <div id='app_page_start_divs'>
                                 <div class='app_page_start_divs_row'>
@@ -23,8 +27,8 @@ const template = props => ` <div id='app_page_start_divs'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

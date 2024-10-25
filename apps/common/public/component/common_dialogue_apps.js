@@ -1,9 +1,15 @@
 /**
+ * Displays dialogue apps
  * @module apps/common/component/common_dialogue_apps
  */
 
 /**
- * @param {{apps:import('../../../common_types.js').CommonAppRecord[],
+ * @import {CommonAppRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
+ * @param {{apps:CommonAppRecord[],
  *          app_copyright:string,
  *          app_email:string,
  *          app_link_url:string,
@@ -66,10 +72,10 @@ const template = props => `
  *                      info_link_terms_name:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

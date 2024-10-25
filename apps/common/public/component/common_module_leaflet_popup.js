@@ -1,5 +1,10 @@
 /**
+ * Displays Leaflet popup
  * @module apps/common/component/common_module_leaflet_popup
+ */
+
+/**
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
@@ -10,7 +15,7 @@
  *          text_place:string,
  *          latitude:string,
  *          longitude:string}} props 
- * @returns 
+ * @returns {string}
  */
 const template = props => ` <div class='common_module_leaflet_popup_title'>${props.text_place}</div>
                             <div class='common_module_leaflet_popup_sub_title common_icon'></div>
@@ -32,11 +37,11 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
  *                      city:string,
  *                      text_place:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      moduleLeafletLibrary:function,
  *                      moduleLeafletContainer:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:null}>}

@@ -6,12 +6,18 @@
     <div class='section'>
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/**
+ * Displays Leaflet search city
  * @module apps/common/component/common_module_leaflet_search_city
  */
 
 /**
+ * @import {CommonMicroserviceWorldcitiesRecordType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * 
- * @param {{records:import('../../../common_types.js').CommonMicroserviceWorldcitiesRecordType[]}
+ * @param {{records:CommonMicroserviceWorldcitiesRecordType[]}
  *          } props 
  * @returns {string}
  */
@@ -41,11 +47,11 @@ const template = props =>`  &lt;div id='common_module_leaflet_search_list'>
  *                      commonMountdiv:string,
  *                      search:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      click_function:function,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.&lt;{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

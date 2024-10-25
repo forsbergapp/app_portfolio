@@ -1,8 +1,17 @@
 /**
+ * Displays IAM edit
  * @module apps/common/component/common_dialogue_iam_edit
  */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonFormatJsonDate']} commonFormatJsonDate
+ * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
+ */
 
-
+/**
+ * @returns {string}
+ */
 const template = () => `<div id='common_dialogue_iam_edit_common'>
                             <div class='common_setting_horizontal_row'>
                                 <div class='common_setting_horizontal_col'>
@@ -193,12 +202,12 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
  *                      common_app_id:number,
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFormatJsonDate:import('../../../common_types.js').CommonModuleCommon['commonFormatJsonDate'],
- *                      commonMessageShow:import('../../../common_types.js').CommonModuleCommon['commonMessageShow'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFormatJsonDate:commonFormatJsonDate,
+ *                      commonMessageShow:commonMessageShow,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

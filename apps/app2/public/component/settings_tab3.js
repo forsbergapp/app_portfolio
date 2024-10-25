@@ -1,10 +1,22 @@
 /**
+ * Setings tab 3
  * @module apps/app2/component/settings_tab3
  */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonDbAppSettingsGet']} commonDbAppSettingsGet
+ * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
+ * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
+ * @typedef {APP_GLOBAL['themes']} themes
+ */
+
 /**
  * @param {{theme_id_day:string,
  *          theme_id_month:string,
  *          theme_id_year:string}} props
+ * @returns {string}
  */
 const template = props =>`  <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'>
@@ -103,16 +115,16 @@ const template = props =>`  <div class='setting_horizontal_row'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
- *                      user_settings:import('../js//types.js').APP_user_setting_record,
- *                      themes:import('../js//types.js').APP_GLOBAL['themes']
+ *                      user_settings:APP_user_setting_record,
+ *                      themes:themes
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      appSettingThemeThumbnailsUpdate:import('../js/app.js')['appSettingThemeThumbnailsUpdate'],
- *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet']}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
+ *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonDbAppSettingsGet:commonDbAppSettingsGet}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

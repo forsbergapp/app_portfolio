@@ -1,10 +1,15 @@
 /**
+ * Displays IAM start
  * @module apps/common/component/common_dialogue_iam_start
+ */
+/**
+ * @import {CommonProvider, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
  * 
- * @param {{providers:import('../../../common_types.js').CommonProvider[],
+ * @param {{providers:CommonProvider[],
  *          admin_app:boolean,
  *          type:'LOGIN'|'SIGNUP'|'FORGOT',
  *          first_time: boolean}} props 
@@ -90,10 +95,10 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
  *                      common_app_id:number,
  *                      admin_first_time:number},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

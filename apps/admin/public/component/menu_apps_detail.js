@@ -13,6 +13,8 @@
  * @param {{app_id:number,
  *          detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret',
  *          app_detail:*}} props
+ *
+ * @returns {string}
  */
 const template = props => ` <div class='menu_apps_detail_row'>
                                     <div class='menu_apps_detail_col list_title' data-column='APP_ID'>APP_ID</div>

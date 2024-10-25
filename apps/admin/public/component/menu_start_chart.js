@@ -27,6 +27,7 @@
  *                          statValue:string}[],
  *          chart2_legend_text:string,
  *          chart2_legend_text_apps:string}} props
+ * @returns {string}
  */
 const template = props => ` <div id='menu_start_chart_box1'>
                                 <div id='menu_start_chart_box1_title' class='menu_start_chart_box_title common_icon'></div>

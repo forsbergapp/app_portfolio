@@ -1,7 +1,14 @@
 /**
+ * Displays app theme
  * @module apps/app1/component/app_theme
  */
 
+/**
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id="app_themes">
                             <div id="app_theme_checkbox" class="toggle checked">
                                 <div class="toggle-button">
@@ -27,10 +34,10 @@ const template = () =>` <div id="app_themes">
  * 
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appPreferencesPostMount:import('../js/app.js')['appPreferencesPostMount']
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

@@ -1,16 +1,27 @@
 /**
+ * Displays user menu app theme
  * @module apps/common/component/common_dialogue_user_menu_app_theme
  */
 
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonThemeDefaultList']} commonThemeDefaultList
+ */
+
+/**
+ * @returns {string}
+ */
 const template = () => '';
 /**
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonThemeDefaultList:import('../../../common_types.js').CommonModuleCommon['commonThemeDefaultList'],
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonThemeDefaultList:commonThemeDefaultList,
+ *                      commonComponentRender:commonComponentRender,
  *                      app_theme_update:function}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}
