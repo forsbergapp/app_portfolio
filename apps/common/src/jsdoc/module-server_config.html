@@ -38,7 +38,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>configDefault<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;null>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>configDefault<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
     
 
     
@@ -90,7 +90,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line56">line 56</a>
+        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line66">line 66</a>
     </div></div></dd>
     
 
@@ -113,21 +113,6 @@
 
 
 
-<div class='title_h5'>Throws:</div>
-
-        
-
-    <div class="param-desc">
-    
-        
-<span class="param-type">object</span>
-
-
-    
-    </div>
-
-
-    
 
 
 <div class='title_h5'>Returns:</div>
@@ -141,7 +126,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;null></span>
+<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -212,7 +197,7 @@ Checks if all config files exist</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line36">line 36</a>
+        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line46">line 46</a>
     </div></div></dd>
     
 
@@ -266,7 +251,7 @@ Checks if all config files exist</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>configFileGet<span class="signature">(query)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>configFileGet<span class="signature">(file, query)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
     
 
     
@@ -300,6 +285,8 @@ Checks if all config files exist</p>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -310,15 +297,24 @@ Checks if all config files exist</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>file</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_db_file_db_name</span>
+
+
             
             </td>
 
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -342,6 +338,12 @@ Checks if all config files exist</p>
 
             
 
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -385,7 +387,7 @@ Checks if all config files exist</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line177">line 177</a>
+        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line187">line 187</a>
     </div></div></dd>
     
 
@@ -439,7 +441,7 @@ Checks if all config files exist</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>configFileSave<span class="signature">(data)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>configFileSave<span class="signature">(resource_id, data)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
     
 
     
@@ -483,10 +485,15 @@ Checks if all config files exist</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>resource_id</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_db_file_db_name</span>
+
+
             
             </td>
 
@@ -558,7 +565,7 @@ Checks if all config files exist</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line199">line 199</a>
+        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line211">line 211</a>
     </div></div></dd>
     
 
@@ -583,6 +590,24 @@ Checks if all config files exist</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;void></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -594,7 +619,7 @@ Checks if all config files exist</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>configGet<span class="signature">(parameter)</span><span class="type-signature"> &rarr; {string|null}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>configGet<span class="signature">(config_group, parameter)</span><span class="type-signature"> &rarr; {string|null}</span></div>
     
 
     
@@ -638,10 +663,15 @@ Checks if all config files exist</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>config_group</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_config_server_group</span>
+
+
             
             </td>
 
@@ -713,7 +743,7 @@ Checks if all config files exist</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line17">line 17</a>
+        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line26">line 26</a>
     </div></div></dd>
     
 
@@ -822,7 +852,7 @@ Checks if all config files exist</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line148">line 148</a>
+        <a href="server_config.js.html">server/config.js</a>, <a href="server_config.js.html#line157">line 157</a>
     </div></div></dd>
     
 
@@ -845,21 +875,6 @@ Checks if all config files exist</p>
 
 
 
-<div class='title_h5'>Throws:</div>
-
-        
-
-    <div class="param-desc">
-    
-        
-<span class="param-type">object</span>
-
-
-    
-    </div>
-
-
-    
 
 
 <div class='title_h5'>Returns:</div>

@@ -3,6 +3,8 @@
 <div class='header'>
     
         
+            
+        
     
 </div>
 
@@ -10,6 +12,88 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>Server
+Uses Express framework
+Role based routes are defined in Express and are using IAM middleware for authentication and authorization.
+If IAM authorizes the request then BFF calls either server functions or microservices
+REST API is implemented following ISO20022 with additional resource authentication and authorization implemented</p></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1">line 1</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         
     
@@ -38,7 +122,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverExpress<span class="signature">()</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverExpress<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;server_server_express>}</span></div>
     
 
     
@@ -58,12 +142,12 @@ returns disallow for robots.txt and empty favicon.ico
 *	                                get	                                                bffStart	        redirects naked domain, http to https if enabled
 and to admin subdomain if first time,
 responds to SSL verification if enabled
-/bff/app_data/v1*                   all     iam.iamIdTokenAuthenticate                     bffAppData
-/bff/app_signup/v1*                 post    iam.iamIdTokenAuthenticateRegistration         bffAppSignup
-/bff/app_access/v1*                 all     iam.iamAccessTokenAuthenticate                 bffAppAccess
-/bff/app_external/v1/app-function*  post    iam.iamExternalAuthenticate                    bffAppExternal
-/bff/admin/v1*                      all     iam.iamAccessTokenAuthenticateAdmin            bffAdmin
-/bff/socket/v1*                     get     iam.iamSocketAuthenticate                      bffSocket
+/bff/app_data/v1*                   all     iam.iamIdTokenAuthenticate                  bffAppData
+/bff/app_signup/v1*                 post    iam.iamIdTokenAuthenticateRegistration      bffAppSignup
+/bff/app_access/v1*                 all     iam.iamAccessTokenAuthenticate              bffAppAccess
+/bff/app_external/v1/app-function*  post    iam.iamExternalAuthenticate                 bffAppExternal
+/bff/admin/v1*                      all     iam.iamAccessTokenAuthenticateAdmin         bffAdmin
+/bff/socket/v1*                     get     iam.iamSocketAuthenticate                   bffSocket
 /bff/iam_admin/v1*                  post    iam.iamAdminAuthenticate                    bffIAMAdmin
 /bff/iam_user/v1*                   post    iam.iamUserAuthenticate                     bffIAMUser
 /bff/iam_provider/v1*               post    iam.iamProviderAuthenticate                 bffIAMProvider
@@ -115,7 +199,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line125">line 125</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line146">line 146</a>
     </div></div></dd>
     
 
@@ -143,7 +227,23 @@ report and app</p>
 <div class='title_h5'>Returns:</div>
 
         
+<div class="param-desc">
+    <p>app</p>
+</div>
 
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;server_server_express></span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -157,7 +257,7 @@ report and app</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>serverResponseErrorSend<span class="signature">(http, code, text, developer_text, more_info)</span><span class="type-signature"> &rarr; {void}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>serverResponseErrorSend<span class="signature">(res, http, code, text, developer_text, more_info)</span><span class="type-signature"> &rarr; {void}</span></div>
     
 
     
@@ -201,10 +301,15 @@ report and app</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -386,7 +491,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line15">line 15</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line28">line 28</a>
     </div></div></dd>
     
 
@@ -440,7 +545,7 @@ report and app</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverRoutes<span class="signature">()</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverRoutes<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
     
 
     
@@ -532,7 +637,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line200">line 200</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line222">line 222</a>
     </div></div></dd>
     
 
@@ -557,6 +662,24 @@ report and app</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;*></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -576,7 +699,9 @@ report and app</p>
 
 
 <div class="description">
-    <p>server start</p>
+    <p>Server start
+Logs uncaughtException and unhandledRejection
+Start http server and https server if enabled</p>
 </div>
 
 
@@ -620,7 +745,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1059">line 1059</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1084">line 1084</a>
     </div></div></dd>
     
 
@@ -662,6 +787,10 @@ report and app</p>
     
 
 
+
+<div class="description">
+    <p>Returns filename/module used</p>
+</div>
 
 
 
@@ -753,7 +882,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line54">line 54</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line71">line 71</a>
     </div></div></dd>
     
 
@@ -814,6 +943,10 @@ report and app</p>
 
 
 
+<div class="description">
+    <p>Returns function used</p>
+</div>
+
 
 
 
@@ -855,7 +988,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line62">line 62</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line81">line 81</a>
     </div></div></dd>
     
 
@@ -916,6 +1049,10 @@ report and app</p>
 
 
 
+<div class="description">
+    <p>Returns function row number from Error stack</p>
+</div>
+
 
 
 
@@ -957,7 +1094,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line83">line 83</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line104">line 104</a>
     </div></div></dd>
     
 
@@ -1011,7 +1148,7 @@ report and app</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>serverUtilNumberValue<span class="signature">()</span><span class="type-signature"> &rarr; {number|null}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>serverUtilNumberValue<span class="signature">(param)</span><span class="type-signature"> &rarr; {number|null}</span></div>
     
 
     
@@ -1039,6 +1176,8 @@ so undefined and '' are avoided sending argument to service functions</p>
     <thead>
     <tr>
         
+        <th>Name</th>
+        
 
         <th>Type</th>
 
@@ -1055,8 +1194,15 @@ so undefined and '' are avoided sending argument to service functions</p>
 
         <tr>
             
+                <td class="name"><code>param</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_req_id_number</span>
+
+
             
             </td>
 
@@ -1105,7 +1251,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line37">line 37</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line51">line 51</a>
     </div></div></dd>
     
 
@@ -1162,7 +1308,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>serverUtilResponseTime<span class="signature">()</span><span class="type-signature"> &rarr; {number}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>serverUtilResponseTime<span class="signature">(res)</span><span class="type-signature"> &rarr; {number}</span></div>
     
 
     
@@ -1188,6 +1334,8 @@ so undefined and '' are avoided sending argument to service functions</p>
     <thead>
     <tr>
         
+        <th>Name</th>
+        
 
         <th>Type</th>
 
@@ -1204,8 +1352,15 @@ so undefined and '' are avoided sending argument to service functions</p>
 
         <tr>
             
+                <td class="name"><code>res</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -1254,7 +1409,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line45">line 45</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line60">line 60</a>
     </div></div></dd>
     
 

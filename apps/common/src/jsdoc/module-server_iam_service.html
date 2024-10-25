@@ -72,7 +72,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line628">line 628</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line656">line 656</a>
     </div></div></dd>
     
 
@@ -130,7 +130,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line630">line 630</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line658">line 658</a>
     </div></div></dd>
     
 
@@ -188,7 +188,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line632">line 632</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line660">line 660</a>
     </div></div></dd>
     
 
@@ -216,7 +216,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamAdminAuthenticate<span class="signature">(app_id, iam, authorization, ip, user_agent, accept_language)</span><span class="type-signature"> &rarr; {Promise.&lt;{iam_user_id:number, iam_user_name:string, token_at:string, exp:number, iat:number, tokentimestamp:number}>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamAdminAuthenticate<span class="signature">(app_id, iam, authorization, ip, user_agent, accept_language, res)</span><span class="type-signature"> &rarr; {Promise.&lt;{iam_user_id:number, iam_user_name:string, token_at:string, exp:number, iat:number, tokentimestamp:number}>}</span></div>
     
 
     
@@ -224,7 +224,7 @@
 
 
 <div class="description">
-    <p>Middleware authenticates admin login</p>
+    <p>IAM Middleware authenticates admin login</p>
 </div>
 
 
@@ -398,10 +398,15 @@
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -450,7 +455,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line89">line 89</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line102">line 102</a>
     </div></div></dd>
     
 
@@ -633,7 +638,7 @@ since microservices run in separate processes and servers</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line506">line 506</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line532">line 532</a>
     </div></div></dd>
     
 
@@ -687,12 +692,16 @@ since microservices run in separate processes and servers</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamExternalAuthenticate<span class="signature">(endpoint, host, user_agent, accept_language, ip, body, next)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamExternalAuthenticate<span class="signature">(endpoint, host, user_agent, accept_language, ip, body, res, next)</span><span class="type-signature"> &rarr; {void}</span></div>
     
 
     
 
 
+
+<div class="description">
+    <p>IAM external authenticate</p>
+</div>
 
 
 
@@ -865,10 +874,15 @@ since microservices run in separate processes and servers</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -940,7 +954,7 @@ since microservices run in separate processes and servers</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line335">line 335</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line354">line 354</a>
     </div></div></dd>
     
 
@@ -965,6 +979,24 @@ since microservices run in separate processes and servers</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1103,7 +1135,7 @@ since microservices run in separate processes and servers</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line555">line 555</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line583">line 583</a>
     </div></div></dd>
     
 
@@ -1157,7 +1189,7 @@ since microservices run in separate processes and servers</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamRequestAuthenticate<span class="signature">(ip, host, method, user_agent, accept_language, path)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamRequestAuthenticate<span class="signature">(ip, host, method, user_agent, accept_language, path)</span><span class="type-signature"> &rarr; {Promise.&lt;(null|{statusCode:number, statusMessage: string})>}</span></div>
     
 
     
@@ -1381,7 +1413,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line359">line 359</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line381">line 381</a>
     </div></div></dd>
     
 
@@ -1406,6 +1438,24 @@ if decodeURIComponent() no error then return null else return 400</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;(null|{statusCode:number, statusMessage: string})></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1417,7 +1467,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamResourceAuthenticate<span class="signature">()</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamResourceAuthenticate<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></div>
     
 
     
@@ -1509,7 +1559,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line529">line 529</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line557">line 557</a>
     </div></div></dd>
     
 
@@ -1534,6 +1584,24 @@ if decodeURIComponent() no error then return null else return 400</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1545,7 +1613,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamSocketAuthenticate<span class="signature">(path, host, iam, ip, next)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamSocketAuthenticate<span class="signature">(path, host, iam, ip, res, next)</span><span class="type-signature"> &rarr; {void}</span></div>
     
 
     
@@ -1681,10 +1749,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -1756,7 +1829,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line188">line 188</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line203">line 203</a>
     </div></div></dd>
     
 
@@ -1781,6 +1854,24 @@ if decodeURIComponent() no error then return null else return 400</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -1969,7 +2060,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line588">line 588</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line616">line 616</a>
     </div></div></dd>
     
 
@@ -2011,7 +2102,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserCommonAuthenticate<span class="signature">(iam, scope, authorization, host, ip, next)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserCommonAuthenticate<span class="signature">(iam, scope, authorization, host, ip, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
     
 
     
@@ -2019,7 +2110,7 @@ if decodeURIComponent() no error then return null else return 400</p>
 
 
 <div class="description">
-    <p>Middleware authenticate IAM users</p>
+    <p>IAM Middleware authenticate IAM users</p>
 </div>
 
 
@@ -2188,10 +2279,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -2263,7 +2359,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line205">line 205</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line222">line 222</a>
     </div></div></dd>
     
 
@@ -2288,6 +2384,24 @@ if decodeURIComponent() no error then return null else return 400</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;void></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -2299,7 +2413,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserCreate<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;{id:number}>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserCreate<span class="signature">(data, res)</span><span class="type-signature"> &rarr; {Promise.&lt;{id:number}>}</span></div>
     
 
     
@@ -2325,6 +2439,8 @@ if decodeURIComponent() no error then return null else return 400</p>
     <thead>
     <tr>
         
+        <th>Name</th>
+        
 
         <th>Type</th>
 
@@ -2341,8 +2457,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
+                <td class="name"><code>data</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_db_file_iam_user_new</span>
+
+
             
             </td>
 
@@ -2357,8 +2480,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
+                <td class="name"><code>res</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -2407,7 +2537,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line658">line 658</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line690">line 690</a>
     </div></div></dd>
     
 
@@ -2461,7 +2591,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserGet<span class="signature">(app_id, id)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserGet<span class="signature">(app_id, id, res)</span><span class="type-signature"> &rarr; {Promise.&lt;server_db_file_iam_user_get>}</span></div>
     
 
     
@@ -2551,10 +2681,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -2603,7 +2738,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line705">line 705</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line738">line 738</a>
     </div></div></dd>
     
 
@@ -2632,6 +2767,18 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;server_db_file_iam_user_get></span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -2769,7 +2916,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line737">line 737</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line771">line 771</a>
     </div></div></dd>
     
 
@@ -2823,12 +2970,16 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserLogin<span class="signature">(app_id, query)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserLogin<span class="signature">(app_id, query)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;server_iam_user_login_record>>}</span></div>
     
 
     
 
 
+
+<div class="description">
+    <p>Get user login records</p>
+</div>
 
 
 
@@ -2943,7 +3094,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line639">line 639</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line670">line 670</a>
     </div></div></dd>
     
 
@@ -2968,6 +3119,24 @@ if decodeURIComponent() no error then return null else return 400</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Array.&lt;server_iam_user_login_record>></span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -2979,7 +3148,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserUpdate<span class="signature">(id)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>iamUserUpdate<span class="signature">(id, data, res)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
     
 
     
@@ -3046,10 +3215,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_db_file_iam_user_update</span>
+
+
             
             </td>
 
@@ -3064,10 +3238,15 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -3116,7 +3295,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line753">line 753</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line788">line 788</a>
     </div></div></dd>
     
 
@@ -3176,6 +3355,10 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
 
+
+<div class="description">
+    <p>IAM util decode base64 in query</p>
+</div>
 
 
 
@@ -3267,7 +3450,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line21">line 21</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line29">line 29</a>
     </div></div></dd>
     
 
@@ -3321,12 +3504,16 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamUtilResponseNotAuthorized<span class="signature">(status, reason, bff)</span><span class="type-signature"> &rarr; {string|null|void}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamUtilResponseNotAuthorized<span class="signature">(res, status, reason, bff)</span><span class="type-signature"> &rarr; {string|null|void}</span></div>
     
 
     
 
 
+
+<div class="description">
+    <p>IAM util response not authorized</p>
+</div>
 
 
 
@@ -3351,6 +3538,8 @@ if decodeURIComponent() no error then return null else return 400</p>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -3361,15 +3550,24 @@ if decodeURIComponent() no error then return null else return 400</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -3394,6 +3592,10 @@ if decodeURIComponent() no error then return null else return 400</p>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"></td>
         </tr>
@@ -3417,6 +3619,10 @@ if decodeURIComponent() no error then return null else return 400</p>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"></td>
         </tr>
@@ -3439,6 +3645,12 @@ if decodeURIComponent() no error then return null else return 400</p>
 
             
 
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -3482,7 +3694,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line62">line 62</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line74">line 74</a>
     </div></div></dd>
     
 
@@ -3548,6 +3760,10 @@ if decodeURIComponent() no error then return null else return 400</p>
     
 
 
+
+<div class="description">
+    <p>IAM util token expired</p>
+</div>
 
 
 
@@ -3694,7 +3910,7 @@ if decodeURIComponent() no error then return null else return 400</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line30">line 30</a>
+        <a href="server_iam.service.js.html">server/iam.service.js</a>, <a href="server_iam.service.js.html#line40">line 40</a>
     </div></div></dd>
     
 
