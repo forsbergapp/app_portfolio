@@ -1,7 +1,10 @@
-/** @module microservice/batch/service */
+/** 
+ * Microservice batch service
+ * @module microservice/batch/service 
+ */
 
 /**@type{import('../../microservice/registry.js')} */
-const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+const {REGISTRY_CONFIG, registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 
@@ -13,11 +16,12 @@ const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microserv
 const JOBS = [];
 
 /**
- * 
+ * Get month string from number
+ * @function
  * @param {string|number} month 
  * @returns {number}
  */
-const get_month = (month) => {
+const get_month = month => {
     /**@type{[index:any][*]} */
     const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
     if (Number.isNaN(month))
@@ -26,7 +30,8 @@ const get_month = (month) => {
         return  Number(month);  
 };
 /**
- * 
+ * Get day string of weekday number
+ * @function
  * @param {string|number} weekday 
  * @returns {number}
  */
@@ -39,7 +44,8 @@ const get_day_of_week = (weekday) => {
         return  Number(weekday);      
 };
 /**
- * 
+ * Validate cron expression
+ * @function
  * @param {string} expression 
  * @returns {boolean}
  */
@@ -75,19 +81,21 @@ const validate_cron_expression = (expression) =>{
     }
 };	
 /**
- * 
+ * Get batchlog filename
+ * @function
  * @returns {string}
  */
 const get_batchlog_filename = () => {
-    const configservice = ConfigServices('BATCH');
+    const configservice = registryConfigServices('BATCH');
     //new log every day, format YYYY-MM-DD_[file_batchlog]
     const logdate = new Date();
     const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
     const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${CONFIG.PATH_DATA}${configservice.NAME}_${new Date().getFullYear()}${month}${day}.log`; 
+    return `${REGISTRY_CONFIG.PATH_DATA}${configservice.NAME}_${new Date().getFullYear()}${month}${day}.log`; 
 };
 /**
- * 
+ * Add job log
+ * @function
  * @param {{log_id: number|null,
  *          jobid: number|null,
  *          scheduled_start: Date|null,
@@ -138,6 +146,7 @@ const joblog_add = async (joblog)=>{
  *          second
  *          year
  *          ~ (random)
+ * @function
  * @param {string} cron_expression 
  * @returns {number}
  */
@@ -228,13 +237,15 @@ const scheduled_milliseconds = (cron_expression) =>{
     }
 };
 /**
- * 
+ * Schedule job
+ * @function
  * @param {number} jobid 
  * @param {'OS'} command_type 
  * @param {string} path 
  * @param {string} command 
  * @param {string} argument 
  * @param {string} cron_expression 
+ * @returns {Promise.<void>}
  */
 const schedule_job = async (jobid, command_type, path, command, argument, cron_expression) =>{
     const {exec} = await import('node:child_process');
@@ -313,7 +324,11 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
         }
     }		
 };
-    
+/**
+ * Start jobs
+ * @function
+ * @returns {Promise.<void>}
+ */
 const start_jobs = async () =>{
     const os = await import('node:os');
     //add server start in log, meaning all jobs were terminated
@@ -334,7 +349,7 @@ const start_jobs = async () =>{
      *          cron_expression:string,
      *          enabled:boolean}[]} 
      */
-    const jobs = ConfigServices('BATCH').CONFIG.filter(row=>'jobs' in row)[0].jobs;
+    const jobs = registryConfigServices('BATCH').CONFIG.filter(row=>'jobs' in row)[0].jobs;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax

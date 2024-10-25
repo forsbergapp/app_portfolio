@@ -1,4 +1,7 @@
 /**
+ * @module microservice/types
+ */
+/**
  * MicroService - Request
  * @typedef {object}        microservice_req
  * @property {string}       url

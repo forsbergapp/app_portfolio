@@ -1,45 +1,57 @@
-/** @module microservice/worldcities/service */
-
+/**
+ * Microservice worldcities service
+ * @module microservice/worldcities/service 
+ */
+/**
+ * @import {microservice_config_service_record} from '../types.js'
+ */
+/**
+ * @import {type_city} from './types.js'
+ */
 /**@type{import('../../microservice/registry.js')} */
-const {ConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
  * Get file with cities 
- * @returns {Promise.<import('./types.js').type_city[]>}  
+ * @function
+ * @returns {Promise.<type_city[]>}  
  */
 const getService = async () => {
     const fs = await import('node:fs');
-    /**@type{import('../types.js').microservice_config_service_record}*/
-    const config = ConfigServices('WORLDCITIES');
+    /**@type{microservice_config_service_record}*/
+    const config = registryConfigServices('WORLDCITIES');
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}${config.PATH}worldcities.json`, 'utf8')
     .catch(error=>{throw error;});
     return JSON.parse(fileBuffer.toString());
 };
 /**
- * 
+ * Get cities for given country
+ * @function
  * @param {string|null} country 
- * @returns {Promise.<*>}
+ * @returns {Promise.<type_city[]>}
  */
 const getCities = async (country) => {
     const cities = await getService();
     return cities.filter((item) => item.iso2 == country);
 };
 /**
- * 
- * @returns {Promise.<*>}
+ * Get random city
+ * @function
+ * @returns {Promise.<type_city>}
  */
 const getCityRandom = async () => {
     const cities = await getService();
     return cities[Math.floor(Math.random() * cities.length - 1)];
 };
 /**
- * 
+ * Get searched cities
+ * @function
  * @param {string} search 
  * @param {number} limit 
  * @returns Promise.<{list_header:{total_count:number, offset:number, count:number}, rows:type_city[]}>
  */
 const getCitySearch = async (search, limit) => {
-    /**@type{import('./types.js').type_city[]} */
+    /**@type{type_city[]} */
     let cities = await getService();
     /**
      * Filter searched and limit records 
