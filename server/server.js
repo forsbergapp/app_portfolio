@@ -1,10 +1,23 @@
-/** @module server/server */
+/** 
+ * Server
+ * Uses Express framework
+ * Role based routes are defined in Express and are using IAM middleware for authentication and authorization.
+ * If IAM authorizes the request then BFF calls either server functions or microservices
+ * REST API is implemented following ISO20022 with additional resource authentication and authorization implemented
+ * @module server/server 
+ */
+
+/**
+ * @import {server_server_error_stack, server_server_error, server_server_req, server_server_res, server_server_req_id_number,
+ *          server_server_express} from './types.js'
+ */
 
 const {default:ServerError} = await import('../apps/common/src/component/common_server_error.js');
 
 /**
  * Sends ISO 20022 error format
- * @param {import('./types.js').server_server_res} res 
+ * @function
+ * @param {server_server_res} res 
  * @param {number} http 
  * @param {string|null} code 
  * @param {string|number|object|null} text 
@@ -31,7 +44,8 @@ const {default:ServerError} = await import('../apps/common/src/component/common_
  * Get number value from request key
  * returns number or null for numbers
  * so undefined and '' are avoided sending argument to service functions
- * @param {import('./types.js').server_server_req_id_number} param
+ * @function
+ * @param {server_server_req_id_number} param
  * @returns {number|null}
  */
  const serverUtilNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
@@ -39,7 +53,8 @@ const {default:ServerError} = await import('../apps/common/src/component/common_
 
 /**
  * Calculate responsetime
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_res} res
  * @returns {number}
  */
 const serverUtilResponseTime = (res) => {
@@ -48,6 +63,8 @@ const serverUtilResponseTime = (res) => {
 };    
 
 /**
+ * Returns filename/module used
+ * @function
  * @param {string} module
  * @returns {string}
  */
@@ -56,7 +73,9 @@ const serverUtilAppFilename = module =>{
     return module.substring(from_app_root);
 };
 /**
- * @param{import('./types.js').server_server_error_stack} stack
+ * Returns function used
+ * @function
+ * @param{server_server_error_stack} stack
  * @returns {string}
  */
 const serverUtilAppFunction = stack => {
@@ -78,10 +97,12 @@ const serverUtilAppFunction = stack => {
     return functionName ?? '';
 };
 /**
+ * Returns function row number from Error stack
+ * @function
  * @returns {number}
  */
 const serverUtilAppLine = () =>{
-    /**@type {import('./types.js').server_server_error} */
+    /**@type {server_server_error} */
     const e = new Error() || '';
     const frame = e.stack.split('\n')[2];
     const lineNumber = frame.split(':').reverse()[1];
@@ -103,12 +124,12 @@ const serverUtilAppLine = () =>{
  *	*	                                get	                                                bffStart	        redirects naked domain, http to https if enabled 
  *							                                                                                    and to admin subdomain if first time, 
  *							                                                                                    responds to SSL verification if enabled
- *  /bff/app_data/v1*                   all     iam.iamIdTokenAuthenticate                     bffAppData
- *  /bff/app_signup/v1*                 post    iam.iamIdTokenAuthenticateRegistration         bffAppSignup
- *  /bff/app_access/v1*                 all     iam.iamAccessTokenAuthenticate                 bffAppAccess
- *  /bff/app_external/v1/app-function*  post    iam.iamExternalAuthenticate                    bffAppExternal
- *  /bff/admin/v1*                      all     iam.iamAccessTokenAuthenticateAdmin            bffAdmin
- *  /bff/socket/v1*                     get     iam.iamSocketAuthenticate                      bffSocket
+ *  /bff/app_data/v1*                   all     iam.iamIdTokenAuthenticate                  bffAppData
+ *  /bff/app_signup/v1*                 post    iam.iamIdTokenAuthenticateRegistration      bffAppSignup
+ *  /bff/app_access/v1*                 all     iam.iamAccessTokenAuthenticate              bffAppAccess
+ *  /bff/app_external/v1/app-function*  post    iam.iamExternalAuthenticate                 bffAppExternal
+ *  /bff/admin/v1*                      all     iam.iamAccessTokenAuthenticateAdmin         bffAdmin
+ *  /bff/socket/v1*                     get     iam.iamSocketAuthenticate                   bffSocket
  *  /bff/iam_admin/v1*                  post    iam.iamAdminAuthenticate                    bffIAMAdmin
  *  /bff/iam_user/v1*                   post    iam.iamUserAuthenticate                     bffIAMUser
  *  /bff/iam_provider/v1*               post    iam.iamProviderAuthenticate                 bffIAMProvider
@@ -119,8 +140,8 @@ const serverUtilAppLine = () =>{
  *	
  * 3.Middleware error logging
  * 
- * @async
- * @returns {Promise<import('./types.js').server_server_express>} app
+ * @function
+ * @returns {Promise<server_server_express>} app
  */
  const serverExpress = async () => {
     /**@type{import('./config.js')} */
@@ -131,13 +152,13 @@ const serverUtilAppLine = () =>{
     const {default:express} = await import('express');
     const {default:compression} = await import('compression');
     
-    /**@type{import('./types.js').server_server_express} */
+    /**@type{server_server_express} */
     const app = express();
     //
     //MIDDLEWARES
     //
     //use compression for better performance
-    const shouldCompress = (/**@type{import('./types.js').server_server_req}*/req) => {
+    const shouldCompress = (/**@type{server_server_req}*/req) => {
         //exclude broadcast messages using socket
         if (req.headers.accept == 'text/event-stream')
             return false;
@@ -185,7 +206,7 @@ const serverUtilAppLine = () =>{
     app.route('*').get                          (bffApp);
     
     //ERROR LOGGING
-    app.use((/**@type{import('./types.js').server_server_error}*/err,/**@type{import('./types.js').server_server_req}*/req,/**@type{import('./types.js').server_server_res}*/res, /**@type{function}*/next) => {
+    app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res, /**@type{function}*/next) => {
         logRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
             next();
         });
@@ -194,8 +215,9 @@ const serverUtilAppLine = () =>{
 };
 /**
  * server routes
+ * @function
  * @param {import('./types.js').server_server_routesparameters} routesparameters
- * @async
+ * @returns {Promise.<*>}
  */
  const serverRoutes = async (routesparameters) =>{
     /**@type{import('../microservice/microservice.js')} */
@@ -380,7 +402,7 @@ const serverUtilAppLine = () =>{
                                                 routesparameters.accept_language, 
                                                 routesparameters.body?routesparameters.body:null,
                                                 routesparameters.endpoint == 'SERVER_APP')
-                            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+                            .catch((/**@type{server_server_error}*/error)=>{throw error;});
                 };
 
                 
@@ -1053,8 +1075,11 @@ const serverUtilAppLine = () =>{
  };
 
 /**
- * server start
- * @async
+ * Server start
+ * Logs uncaughtException and unhandledRejection
+ * Start http server and https server if enabled
+ * @function
+ * @returns{Promise.<void>}
  */
 const serverStart = async () =>{
     /**@type{import('./db/components/database.js')} */
@@ -1083,7 +1108,7 @@ const serverStart = async () =>{
         await configInit();
         await database.Start();
         //Get express app with all configurations
-        /**@type{import('./types.js').server_server_express}*/
+        /**@type{server_server_express}*/
         const app = await serverExpress();
         socketIntervalCheck();
         //START HTTP SERVER
@@ -1109,7 +1134,7 @@ const serverStart = async () =>{
                 });
             });            
         }
-    } catch (/**@type{import('./types.js').server_server_error}*/error) {
+    } catch (/**@type{server_server_error}*/error) {
         logServerE('serverStart: ' + error.stack);
     }
     

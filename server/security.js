@@ -8,6 +8,7 @@ const { randomUUID,
 
 /**
  * Create random string
+ * @function
  * @returns {string}
  */
  const securityCreateRandomString =()=>{
@@ -20,12 +21,14 @@ const { randomUUID,
 };
 
 /**
- * 
+ * Creates random UUID
+ * @function
  * @returns {string}
  */
 const securityUUIDCreate = () =>randomUUID();
 /**
- * Creates request id using UUID
+ * Creates request id using UUID and removes '-'
+ * @function
  * @returns {string}
  */
 const securityRequestIdCreate = () =>randomUUID().replaceAll('-','');
@@ -38,6 +41,7 @@ const securityCorrelationIdCreate = text =>createHash('md5').update(text).digest
 
 /**
  * Creates secret using SHA256
+ * @function
  * @param {boolean} extra           some databases requires extra '!' and random A-Z character
  * @param {number|null} max_length  some databases requires maximum length
  * @returns {string}
@@ -59,7 +63,8 @@ const securitySecretCreate = (extra=false, max_length=null) =>{
             return createHash('sha256').update(securityCreateRandomString()).digest('hex');
 };
 /**
- * Creates password using aes-256-cbc 
+ * Creates password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ * @function
  * @param {string} password 
  * @returns {Promise.<string>}
  */
@@ -74,7 +79,8 @@ const securityPasswordCreate = async (password) => {
 };
 
 /**
- * 
+ * Compares password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ * @function
  * @param {string} password 
  * @param {string} compare_password 
  * @returns {Promise.<boolean>}
@@ -93,6 +99,12 @@ const securityPasswordCompare = async (password, compare_password) =>{
     }
 };
 /**
+ * Creates key pair using 8192 bits giving 8192/8 - 11 = 1013 max characters length
+ * to be used for external server communication when longer encrypted message must be used
+ * function can take several seconds to execute
+ * public : spki and pem format
+ * private: pkcs8 and pem format
+ * @function
  * @returns {Promise.<{ publicKey:string, privateKey:string }>}
  */
 const securityKeyPairCreate = async () => {
@@ -117,14 +129,15 @@ const securityKeyPairCreate = async () => {
     });
 };
 /**
- * 
+ * Encrypt with public key
+ * @function
  * @param {string} publicKey 
  * @param {string} text 
  * @returns {string}
  */
 const securityPublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
 /**
- * 
+ * Decrypt with private key
  * @param {string} privateKey 
  * @param {string} text 
  * @returns {string}

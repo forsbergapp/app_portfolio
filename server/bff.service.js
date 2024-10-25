@@ -1,5 +1,9 @@
 /** @module server/bff/service */
 
+/**
+ * @import {server_config_iam_policy, server_iam_authenticate_request, server_server_req, server_server_res, server_server_error, server_bff_parameters} from './types.js'
+ */
+
 /**@type{import('./server.js')} */
 const {serverUtilResponseTime, serverResponseErrorSend, serverUtilNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.js`);
 
@@ -23,11 +27,13 @@ const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/com
 const fs = await import('node:fs');
 
 /**
- * 
+ * Logs error and returns error
+ * @function
  * @param {number} app_id 
- * @param {import('./types.js').server_bff_parameters} bff_parameters
+ * @param {server_bff_parameters} bff_parameters
  * @param {string} service
- * @param {import('./types.js').server_server_error} error 
+ * @param {server_server_error} error 
+ * @returns {*}
  */
 const bffErrorLog = (app_id, bff_parameters, service, error) =>{
     logServiceE(app_id, service, bff_parameters.query, error).then(() => {
@@ -61,8 +67,8 @@ const bffErrorLog = (app_id, bff_parameters, service, error) =>{
  * Checks robots.txt and favicon.ico
  * Returns a reason if response should be closed
  * 
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
+ * @param {server_server_req} req
+ * @param {server_server_res} res
  * @returns Promise.<{  reason:'ROBOT'|'FAVICON'|'REQUEST'|null}>
  */
 const bffInit = async (req, res) =>{
@@ -79,9 +85,9 @@ const bffInit = async (req, res) =>{
         });
     });
     //access control that stops request if not passing controls
-    /**@type{import('./types.js').server_iam_authenticate_request}*/
+    /**@type{server_iam_authenticate_request}*/
     const result = await iamRequestAuthenticate(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
-                        .catch((/**@type{import('./types.js').server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+                        .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
     if (result != null){
         res.statusCode = result.statusCode;
         res.statusMessage = 'access control: ' + result.statusMessage;
@@ -100,7 +106,7 @@ const bffInit = async (req, res) =>{
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
         if (configGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
-            /**@type{import('./types.js').server_config_iam_policy}*/
+            /**@type{server_config_iam_policy}*/
             const iam_policy = await configFileGet('CONFIG_IAM_POLICY', false);
             res.setHeader('content-security-policy', iam_policy['content-security-policy']);
         }
@@ -141,9 +147,9 @@ const bffInit = async (req, res) =>{
  * and sends requested verifcation file
  * Redirects naked domain to www except for localhost
  * Redirects from http to https if https is enabled
- * 
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
+ * @functions
+ * @param {server_server_req} req
+ * @param {server_server_res} res
  * @returns Promise.<{reason:'REDIRECT'|'SEND'|null,redirect:string}>
  */
 const bffStart = async (req, res) =>{
@@ -182,8 +188,9 @@ const bffStart = async (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) called from client
- * 
- * @param {import('./types.js').server_bff_parameters} bff_parameters
+ * @function
+ * @param {server_bff_parameters} bff_parameters
+ * @returns {*}
  */
  const bff = (bff_parameters) =>{
     const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
@@ -316,7 +323,7 @@ const bffStart = async (req, res) =>{
                 });
             }
         })
-        .catch((/**@type{import('./types.js').server_server_error}*/error) => {
+        .catch((/**@type{server_server_error}*/error) => {
             bffErrorLog(app_id, bff_parameters, service, error);
         });
     }
@@ -330,8 +337,9 @@ const bffStart = async (req, res) =>{
 };
 /**
  * BFF called from server
+ * @function
  * @param {number|null} app_id
- * @param {import('./types.js').server_bff_parameters} bff_parameters
+ * @param {server_bff_parameters} bff_parameters
  * @returns {Promise<(*)>}
  */
  const bffServer = async (app_id, bff_parameters) => {
@@ -352,7 +360,7 @@ const bffStart = async (req, res) =>{
                             body:bff_parameters.body, 
                             res:bff_parameters.res})
             .then((/**@type{string}*/result)=>resolve(result))
-            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 logServiceE(app_id, service, bff_parameters.query, error).then(() => {
                     reject(error);
                 });

@@ -1,5 +1,12 @@
 /** @module server/socket */
 
+/**
+ * @import {server_socket_broadcast_type_all, server_server_res, server_bff_parameters, 
+ *          server_socket_broadcast_type_app_function,
+ *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
+ */
+
+
 /**@type{import('./server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
@@ -12,17 +19,18 @@ const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.s
 /**@type{import('../apps/common/src/common.js')} */
 const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-/**@type{import('./types.js').server_socket_connected_list[]} */
+/**@type{server_socket_connected_list[]} */
 let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
-     * 
-     * @param {number} app_id 
-     * @param {number|null} user_account_id 
-     * @param {string} ip
-     * @param {string} headers_user_agent 
-     * @param {string} headers_accept_language 
-     * @returns {Promise.<{  latitude:string,
+ * Get geodata and user account data for connected user
+ * @function
+ * @param {number} app_id 
+ * @param {number|null} user_account_id 
+ * @param {string} ip
+ * @param {string} headers_user_agent 
+ * @param {string} headers_accept_language 
+ * @returns {Promise.<{  latitude:string,
  *              longitude:string,
  *               place:string,
  *               timezone:string,
@@ -32,7 +40,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
     /**@type{import('./bff.service.js')} */
     const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{import('./types.js').server_bff_parameters}*/
+    /**@type{server_bff_parameters}*/
     const parameters = {endpoint:'SERVER_SOCKET',
                         host:null,
                         url:'/geolocation/ip',
@@ -68,9 +76,10 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
 /**
  * Socket client send
  * Used by EventSource and closes connection
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_res} res
  * @param {string} message
- * @param {import('./types.js').server_socket_broadcast_type_all} message_type
+ * @param {server_socket_broadcast_type_all} message_type
  * @returns {void}
  */
  const socketClientSend = (res, message, message_type) => {
@@ -81,7 +90,8 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
 /**
  * Socket client connect
  * Used by EventSource and leaves connection open
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_res} res
  * @returns {void}
  */
  const socketClientConnect = (res) => {
@@ -91,7 +101,8 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
 /**
  * Socket client close
  * Used by EventSource and closes connection
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_res} res
  * @param {number} client_id
  * @returns {void}
  */
@@ -103,7 +114,8 @@ const socketClientOnClose = (res, client_id) => {
 };
 /**
  * Socket client add
- * @param {import('./types.js').server_socket_connected_list} newClient
+ * @function
+ * @param {server_socket_connected_list} newClient
  * @returns {void}
  */
 const socketClientAdd = (newClient) => {
@@ -112,6 +124,7 @@ const socketClientAdd = (newClient) => {
 
 /**
  * Socket connected update
+ * @function
  * @param {number} app_id,
  * @param {{iam:string,
  *          user_account_id:number|null,
@@ -121,7 +134,7 @@ const socketClientAdd = (newClient) => {
  *          ip:string,
  *          headers_user_agent:string,
  *          headers_accept_language:string,
- *          res: import('./types.js').server_server_res}} parameters
+ *          res: server_server_res}} parameters
  * @returns {Promise.<void>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
@@ -161,8 +174,9 @@ const socketClientAdd = (newClient) => {
 };
 /**
  * Socket check connected
+ * @function
  * @param {number} user_account_id
- * @returns {import('./types.js').server_socket_connected_list[]}
+ * @returns {server_socket_connected_list[]}
  */
  const socketConnectedGet = user_account_id => {
     return SOCKET_CONNECTED_CLIENTS.filter(client => client.user_account_id == user_account_id);
@@ -170,10 +184,11 @@ const socketClientAdd = (newClient) => {
 
 /**
  * Socket client send as admin
+ * @function
  * @param {number|null} app_id
  * @param {{client_id:number|null,
  *          client_id_current:number|null,
- *          broadcast_type:import('./types.js').server_socket_broadcast_type_all,
+ *          broadcast_type:server_socket_broadcast_type_all,
  *          broadcast_message:string}} data
  * @returns {{sent:number}}
  */
@@ -211,9 +226,10 @@ const socketClientAdd = (newClient) => {
 };
 /**
  * Socket connected list
+ * @function
  * @param {number} app_id
  * @param {*} query
- * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:import('./types.js').server_socket_connected_list_no_res[]}>}
+ * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:server_socket_connected_list_no_res[]}>}
  */
  const socketConnectedList = async (app_id, query) => {
     const app_id_select = serverUtilNumberValue(query.get('select_app_id'));
@@ -229,7 +245,7 @@ const socketClientAdd = (newClient) => {
     const day= serverUtilNumberValue(query.get('day'));
     /**@type{string} */
     const order_by = query.get('order_by');
-    /**@type{import('./types.js').server_socket_connected_list_sort} */
+    /**@type{server_socket_connected_list_sort} */
     const sort = query.get('sort');
 
     const order_by_num = order_by =='asc'?1:-1;
@@ -303,9 +319,10 @@ const socketClientAdd = (newClient) => {
  * 
  * Sends message to given app having the correct authorization_header
  * Used for sending server side event from an app server function
+ * @function
  * @param {number} app_id
  * @param {string} iam
- * @param {import('./types.js').server_socket_broadcast_type_app_function} message_type
+ * @param {server_socket_broadcast_type_app_function} message_type
  * @param {string} message
  * @returns {Promise.<{sent:number}>}
  */
@@ -323,6 +340,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 };
 /**
  * Socket connected count
+ * @function
  * @param {*} query
  * @returns {{count_connected:number}}
  */
@@ -346,12 +364,13 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 /**
  * Socket connect
  * Used by EventSource and leaves connection open
+ * @function
  * @param {number} app_id
  * @param {{iam:string,
  *          headers_user_agent:string,
  *          headers_accept_language:string,
  *          ip:string,
- *          response:import('./types.js').server_server_res}} parameters
+ *          response:server_server_res}} parameters
  * @returns {Promise.<void>}
  */
  const socketConnect = async (  app_id, parameters) =>{
@@ -372,7 +391,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         socketClientOnClose(parameters.response, client_id);
     
         const connectUserData =  await socketConnectedUserDataGet(app_id, user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
-        /**@type{import('./types.js').server_socket_connected_list} */
+        /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
                             app_id:                 app_id,
@@ -404,7 +423,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 };
 
 /**
- * Socket check interval
+ * Socket start setInterval to check maintenance and logout users with expired tokens using server side event
+ * @function
  * @returns {void}
  */
  const socketIntervalCheck = () => {
@@ -425,6 +445,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 };
 /**
  * Sends SESSION_EXPIRED message to clients with expired token
+ * @function
  * @returns {void}
  */
 const socketExpiredTokensUpdate = () =>{
@@ -435,8 +456,10 @@ const socketExpiredTokensUpdate = () =>{
     }
 };
 /**
- * 
+ * Checks if user is online
+ * @function
  * @param {number} resource_id 
+ * @returns {{online:1|0}}
  */
 const CheckOnline = resource_id =>socketConnectedGet(resource_id).length>0?{online:1}:{online:0};
 

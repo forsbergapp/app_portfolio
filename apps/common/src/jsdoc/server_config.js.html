@@ -7,6 +7,14 @@
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/** @module server/config */
 
+/**
+ * @import {server_db_file_db_name, server_config_server_group, server_server_error, 
+ *          server_config_server,server_config_iam_blockip, server_config_iam_policy, server_config_iam_useragent,
+ *          server_config_server_server, server_config_server_service_iam,
+ *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret} from './types.js'
+ * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../microservice/types.js'
+ */
+
 /**@type{import('./db/file.js')} */
 const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('./server.js')} */
@@ -17,7 +25,8 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
 /**
  * Config get
- * @param {import('./types.js').server_config_server_group} config_group
+ * @function
+ * @param {server_config_server_group} config_group
  * @param {string} parameter
  * @returns {string|null}
  */
@@ -38,6 +47,7 @@ const configGet = (config_group, parameter) => {
 /**
  * Config exists
  * Checks if all config files exist
+ * @function
  * @returns {Promise&lt;boolean>}
  */
 const configExists = async () => {
@@ -57,31 +67,31 @@ const configExists = async () => {
 };
 /**
  * Default config
- * @throws {object}
- * @returns {Promise&lt;null>}
+ * @function
+ * @returns {Promise&lt;void>}
  */
 const configDefault = async () => {
     const fs = await import('node:fs');
     /**@type{import('./security.js')} */
     const {securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
     await fileFsAccessMkdir()
-    .catch((/**@type{import('./types.js').server_server_error}*/err) => {
+    .catch((/**@type{server_server_error}*/err) => {
         throw err;
     }); 
     const i = 0;
     //read all default files
 
-    /**@type{[  [import('./types.js').server_db_file_db_name, import('./types.js').server_config_server],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_blockip],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_policy],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_config_iam_useragent],
-                [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config],
-                [import('./types.js').server_db_file_db_name, import('../microservice/types.js').microservice_config_service],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_iam_user[]],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app[]],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app_module[]],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app_parameter[]],
-                [import('./types.js').server_db_file_db_name, import('./types.js').server_db_file_app_secret[]]
+    /**@type{[  [server_db_file_db_name, server_config_server],
+                [server_db_file_db_name, server_config_iam_blockip],
+                [server_db_file_db_name, server_config_iam_policy],
+                [server_db_file_db_name, server_config_iam_useragent],
+                [server_db_file_db_name, microservice_config],
+                [server_db_file_db_name, microservice_config_service],
+                [server_db_file_db_name, server_db_file_iam_user[]],
+                [server_db_file_db_name, server_db_file_app[]],
+                [server_db_file_db_name, server_db_file_app_module[]],
+                [server_db_file_db_name, server_db_file_app_parameter[]],
+                [server_db_file_db_name, server_db_file_app_secret[]]
             ]} 
     */
     const config_obj = [
@@ -98,7 +108,7 @@ const configDefault = async () => {
                             ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_secret.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
-    config_obj[0][1].SERVER.map((/**@type{import('./types.js').server_config_server_server}*/row)=>{
+    config_obj[0][1].SERVER.map((/**@type{server_config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
                 row.HTTPS_KEY = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -107,7 +117,7 @@ const configDefault = async () => {
         } 
     });
     //generate hash
-    config_obj[0][1].SERVICE_IAM.map((/**@type{import('./types.js').server_config_server_service_iam}*/row)=>{
+    config_obj[0][1].SERVICE_IAM.map((/**@type{server_config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row)){
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = securitySecretCreate();
@@ -126,18 +136,18 @@ const configDefault = async () => {
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for app secrets
-    config_obj[10][1].map((/**@type{import('./types.js').server_db_file_app_secret}*/row)=>{
+    config_obj[10][1].map((/**@type{server_db_file_app_secret}*/row)=>{
         row.COMMON_CLIENT_ID = securitySecretCreate();
         row.COMMON_CLIENT_SECRET = securitySecretCreate();
         row.COMMON_APP_ID_SECRET = securitySecretCreate();
         row.COMMON_APP_ACCESS_SECRET = securitySecretCreate();
     });        
     //set paths in microservice config
-    /**@type{import('../microservice/types.js').microservice_config} */
+    /**@type{microservice_config} */
     const microservice_config = config_obj[4][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
-    config_obj[5][1].SERVICES.map((/**@type{import('../microservice/types.js').microservice_config_service_record}*/row)=>{
+    config_obj[5][1].SERVICES.map((/**@type{microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -145,11 +155,10 @@ const configDefault = async () => {
     for (const config_row of config_obj){
         await fileFsWriteAdmin(config_row[0], config_row[1]);
     }
-    return null;
 };
 /**
  * Init config
- * @throws {object}
+ * @function
  * @returns {Promise&lt;null>}
  */
 const configInit = async () => {
@@ -159,7 +168,7 @@ const configInit = async () => {
                 fileFsCacheSet().then(() => {
                     resolve(null);
                 })
-                .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
+                .catch((/**@type{server_server_error}*/error)=>{
                     reject (error);
                 });
             else{
@@ -167,7 +176,7 @@ const configInit = async () => {
                     fileFsCacheSet().then(() => {
                         resolve(null);
                     })
-                    .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{server_server_error}*/error)=>{
                         reject (error);
                     });
                 });
@@ -177,7 +186,8 @@ const configInit = async () => {
 };
 /**
  * Config get saved
- * @param {import('./types.js').server_db_file_db_name} file
+ * @function
+ * @param {server_db_file_db_name} file
  * @param {*} query
  * @returns {Promise.&lt;*>}
  */
@@ -200,17 +210,19 @@ const configFileGet = async (file, query=null) => {
 };
 /**
  * Config save
- * @param {import('./types.js').server_db_file_db_name} resource_id
+ * @function
+ * @param {server_db_file_db_name} resource_id
  * @param { *} data
+ * @returns {Promise.&lt;void>}
  */
 const configFileSave = async (resource_id, data) => {
-    /**@type{import('./types.js').server_config_server|
-             import('./types.js').server_db_file_app[]|
-             import('./types.js').server_config_iam_blockip|
-             import('./types.js').server_config_iam_policy|
-             import('./types.js').server_config_iam_useragent|
-             import('../microservice/types.js').microservice_config|
-             import('../microservice/types.js').microservice_config_service|null} */
+    /**@type{server_config_server|
+             server_db_file_app[]|
+             server_config_iam_blockip|
+             server_config_iam_policy|
+             server_config_iam_useragent|
+             microservice_config|
+             microservice_config_service|null} */
     const config = data.config;
     const maintenance = serverUtilNumberValue(data.maintenance);
     const comment = data.comment;
