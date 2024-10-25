@@ -38,7 +38,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>bff<span class="signature">()</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>bff<span class="signature">(bff_parameters)</span><span class="type-signature"> &rarr; {*}</span></div>
     
 
     
@@ -64,6 +64,8 @@
     <thead>
     <tr>
         
+        <th>Name</th>
+        
 
         <th>Type</th>
 
@@ -80,8 +82,15 @@
 
         <tr>
             
+                <td class="name"><code>bff_parameters</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_bff_parameters</span>
+
+
             
             </td>
 
@@ -130,7 +139,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line188">line 188</a>
+        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line195">line 195</a>
     </div></div></dd>
     
 
@@ -155,6 +164,24 @@
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -166,12 +193,16 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>bffErrorLog<span class="signature">(app_id, service)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>bffErrorLog<span class="signature">(app_id, bff_parameters, service, error)</span><span class="type-signature"> &rarr; {*}</span></div>
     
 
     
 
 
+
+<div class="description">
+    <p>Logs error and returns error</p>
+</div>
 
 
 
@@ -229,10 +260,15 @@
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>bff_parameters</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_bff_parameters</span>
+
+
             
             </td>
 
@@ -270,10 +306,15 @@
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>error</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_error</span>
+
+
             
             </td>
 
@@ -322,7 +363,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line32">line 32</a>
+        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line38">line 38</a>
     </div></div></dd>
     
 
@@ -347,6 +388,24 @@
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -358,7 +417,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>bffInit<span class="signature">()</span><span class="type-signature"> &rarr; {reason:'ROBOT'|'FAVICON'|'REQUEST'|null}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>bffInit<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {reason:'ROBOT'|'FAVICON'|'REQUEST'|null}</span></div>
     
 
     
@@ -390,6 +449,8 @@ Returns a reason if response should be closed</p>
     <thead>
     <tr>
         
+        <th>Name</th>
+        
 
         <th>Type</th>
 
@@ -406,8 +467,15 @@ Returns a reason if response should be closed</p>
 
         <tr>
             
+                <td class="name"><code>req</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_req</span>
+
+
             
             </td>
 
@@ -422,8 +490,15 @@ Returns a reason if response should be closed</p>
 
         <tr>
             
+                <td class="name"><code>res</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -472,7 +547,7 @@ Returns a reason if response should be closed</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line68">line 68</a>
+        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line74">line 74</a>
     </div></div></dd>
     
 
@@ -539,7 +614,7 @@ Returns a reason if response should be closed</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>bffServer<span class="signature">(app_id)</span><span class="type-signature"> &rarr; {Promise.&lt;(*)>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>bffServer<span class="signature">(app_id, bff_parameters)</span><span class="type-signature"> &rarr; {Promise.&lt;(*)>}</span></div>
     
 
     
@@ -609,10 +684,15 @@ Returns a reason if response should be closed</p>
 
         <tr>
             
-                <td class="name"><code></code></td>
+                <td class="name"><code>bff_parameters</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">server_bff_parameters</span>
+
+
             
             </td>
 
@@ -661,7 +741,7 @@ Returns a reason if response should be closed</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line337">line 337</a>
+        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line345">line 345</a>
     </div></div></dd>
     
 
@@ -715,7 +795,7 @@ Returns a reason if response should be closed</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>bffStart<span class="signature">()</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>bffStart<span class="signature">(req, res)</span><span class="type-signature"></span></div>
     
 
     
@@ -746,6 +826,8 @@ Redirects from http to https if https is enabled</p>
     <thead>
     <tr>
         
+        <th>Name</th>
+        
 
         <th>Type</th>
 
@@ -762,8 +844,15 @@ Redirects from http to https if https is enabled</p>
 
         <tr>
             
+                <td class="name"><code>req</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_req</span>
+
+
             
             </td>
 
@@ -778,8 +867,15 @@ Redirects from http to https if https is enabled</p>
 
         <tr>
             
+                <td class="name"><code>res</code></td>
+            
 
             <td class="type">
+            
+                
+<span class="param-type">server_server_res</span>
+
+
             
             </td>
 
@@ -828,7 +924,7 @@ Redirects from http to https if https is enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line149">line 149</a>
+        <a href="server_bff.service.js.html">server/bff.service.js</a>, <a href="server_bff.service.js.html#line155">line 155</a>
     </div></div></dd>
     
 

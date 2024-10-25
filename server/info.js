@@ -1,9 +1,14 @@
 /** @module server/info */
 
 /**
+ * @import {server_info_result_Info} from './types.js'
+*/
+
+/**
  * 
  * Info about operating system and process
- * @returns {Promise.<import('./types.js').server_info_result_Info>}
+ * @function
+ * @returns {Promise.<server_info_result_Info>}
  */
  const info = async () => {
     const os = await import('node:os');

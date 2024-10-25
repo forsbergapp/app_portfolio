@@ -8,16 +8,19 @@
  * 
  * @module server/bff 
  */
-
+/**
+ * @import {server_server_req, server_server_res} from './types.js'
+ */
 /**@type{import('./bff.service.js')} */
 const bffService = await import('./bff.service.js');
 
 /**
  * Backend for frontend (BFF) init for all methods
- * 
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req
+ * @param {server_server_res} res
  * @param {function} next
+ * @returns {Promise.<void>}
  */
  const bffInit = async (req, res, next) =>{
     const result = await bffService.bffInit(req, res);
@@ -28,10 +31,11 @@ const bffService = await import('./bff.service.js');
 };
 /**
  * Backend for frontend (BFF) start for get method
- * 
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req
+ * @param {server_server_res} res
  * @param {function} next
+ * @returns {Promise.<void>}
  */
  const bffStart = async (req, res, next) =>{
     const result = await bffService.bffStart(req, res);
@@ -51,10 +55,20 @@ const bffService = await import('./bff.service.js');
 };
 /**
  * Backend for frontend (BFF) common
- * 
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
- * returns {{}}
+ * @function
+ * @param {server_server_req} req
+ * @param {server_server_res} res
+ * returns {{host:string,
+ *          url:string,
+ *          route_path:string,
+ *          method:string,
+ *          query:string,
+ *          body:string,
+ *          autohorization:string
+ *          ip:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          res:server_server_res}}
  */
  const bffCommon = (req, res) =>{
 
@@ -77,9 +91,10 @@ const bffService = await import('./bff.service.js');
  };
 /**
  * Backend for frontend (BFF) APP including assets, report and info pages
- * 
- * @param {import('./types.js').server_server_req} req
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffApp = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -90,9 +105,10 @@ const bffService = await import('./bff.service.js');
 };
 /**
  * Backend for frontend (BFF) APP_DATA
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffAppData = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -103,9 +119,10 @@ const bffService = await import('./bff.service.js');
 };
 /**
  * Backend for frontend (BFF) APP_SIGNUP
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffAppSignup = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -116,9 +133,10 @@ const bffService = await import('./bff.service.js');
 };
 /**
  * Backend for frontend (BFF) APP_ACCESS
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffAppAccess = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -129,9 +147,10 @@ const bffService = await import('./bff.service.js');
 };
 /**
  * Backend for frontend (BFF) APP_EXTERNAL
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
 const bffAppExternal = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -142,9 +161,10 @@ const bffAppExternal = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) ADMIN
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffAdmin = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -156,9 +176,10 @@ const bffAppExternal = (req, res) =>{
 
 /**
  * Backend for frontend (BFF) socket
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
 const bffSocket = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -169,9 +190,10 @@ const bffSocket = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) IAM_ADMIN
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
 const bffIAMAdmin = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -182,9 +204,10 @@ const bffIAMAdmin = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) IAM_USER
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffIAMUser = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
@@ -195,9 +218,10 @@ const bffIAMAdmin = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) IAM_PROVIDER
- * 
- * @param {import('./types.js').server_server_req} req - Request
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
  */
  const bffIAMProvider = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */

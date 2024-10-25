@@ -1,5 +1,12 @@
 /** @module server/iam/service */
 
+/**
+ * @import {server_iam_authenticate_request, server_iam_app_token_record, server_iam_user_login_record,server_iam_access_token_claim_type,
+ *          server_config_iam_blockip,server_config_iam_useragent,
+ *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_db_file_result_fileFsRead, server_server_error, server_db_file_iam_user, server_db_file_iam_user_new, 
+ *          server_server_res} from './types.js'
+*/
+
 /**@type{import('./server.js')} */
 const {serverResponseErrorSend, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./config.js')} */
@@ -14,7 +21,8 @@ const {commonAppHost, commonRegistryAppSecret, commonRegistryAppSecretFile}= awa
 const {default:jwt} = await import('jsonwebtoken');
 
 /**
- * 
+ * IAM util decode base64 in query
+ * @function
  * @param {string} query 
  * @returns {URLSearchParams}
  */
@@ -22,6 +30,8 @@ const {default:jwt} = await import('jsonwebtoken');
     return new URLSearchParams(atob(query));
 };
 /**
+ * IAM util token expired
+ * @function
  * @param {number|null}  app_id
  * @param {'APP_ACCESS'|'APP_DATA'|'ADMIN'} token_type 
  * @param {string} token 
@@ -53,7 +63,9 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
     }
 };
 /**
- * @param {import('./types.js').server_server_res} res
+ * IAM util response not authorized
+ * @function
+ * @param {server_server_res} res
  * @param {number} status
  * @param {string} reason
  * @param {boolean} bff
@@ -70,15 +82,16 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
 };
 
 /**
- * Middleware authenticates admin login
+ * IAM Middleware authenticates admin login
+ * @function
  * @param {number} app_id
  * @param {string} iam
  * @param {string} authorization
  * @param {string} ip
  * @param {string} user_agent
  * @param {string} accept_language
- * @param {import('./types.js').server_server_res} res 
- * @return {Promise.<{
+ * @param {server_server_res} res 
+ * @returns {Promise.<{
  *                  iam_user_id:number,
  *                  iam_user_name:string,
  *                  token_at:string,
@@ -103,7 +116,7 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
      */
     const check_user = async (result, id, username) => {       
         const jwt_data = iamTokenAuthorize(app_id, 'ADMIN', {id:id, name:username, ip:ip, scope:'USER'});
-        /**@type{import('./types.js').server_iam_user_login_record} */
+        /**@type{server_iam_user_login_record} */
         const file_content = {	id:         id,
                                 app_id:     app_id,
                                 user:		username,
@@ -130,14 +143,14 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
             .then(()=>{
                 return  {   iam_user_id: id,
                             iam_user_name:username,
-                            avatar: fileCache('IAM_USER').filter((/**@type{import('./types.js').server_db_file_iam_user}*/user)=>user.id == id)[0].avatar,
+                            avatar: fileCache('IAM_USER').filter((/**@type{server_db_file_iam_user}*/user)=>user.id == id)[0].avatar,
                             token_at: jwt_data.token,
                             exp:jwt_data.exp,
                             iat:jwt_data.iat,
                             tokentimestamp:jwt_data.tokentimestamp
                         };
             })
-            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+            .catch((/**@type{server_server_error}*/error)=>{throw error;});
         }
         else
             throw iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, fileFsAppend', true);
@@ -161,8 +174,8 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
             /**@type{import('./security.js')} */
             const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
 
-            /**@type{import('./types.js').server_db_file_iam_user}*/
-            const user =  fileCache('IAM_USER').filter((/**@type{import('./types.js').server_db_file_iam_user}*/user)=>user.username == username)[0];
+            /**@type{server_db_file_iam_user}*/
+            const user =  fileCache('IAM_USER').filter((/**@type{server_db_file_iam_user}*/user)=>user.username == username)[0];
 
             if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
                 return check_user(1, user.id, username); 
@@ -178,12 +191,14 @@ const iamAdminAuthenticate = async (app_id, iam, authorization, ip, user_agent, 
 
 /**
  * Middleware authenticate socket used for EventSource
+ * @function
  * @param {string} path
  * @param {string} host
  * @param {string} iam
  * @param {string} ip
- * @param {import('./types.js').server_server_res} res
+ * @param {server_server_res} res
  * @param {function} next
+ * @returns {void}
  */
 const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
     if (iam && iamUtilDecode(iam).get('authorization_bearer') && path.startsWith('/server-socket')){
@@ -193,14 +208,16 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
         iamUtilResponseNotAuthorized(res, 401, 'iamSocketAuthenticate');
 };
 /**
- * Middleware authenticate IAM users
+ * IAM Middleware authenticate IAM users
+ * @function
  * @param {string} iam
  * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'ADMIN'|'APP_ACCESS'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
  * @param {string} authorization
  * @param {string} host
  * @param {string} ip
- * @param {import('./types.js').server_server_res} res
+ * @param {server_server_res} res
  * @param {function} next
+ * @returns {Promise.<void>}
  */
  const iamUserCommonAuthenticate = async (iam, scope, authorization, host, ip, res, next) =>{
     const app_id_host = serverUtilNumberValue(commonAppHost(host));
@@ -214,8 +231,8 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const id_token_decoded = jwt.verify(id_token, commonRegistryAppSecret(app_id_host).COMMON_APP_ID_SECRET);
-            /**@type{import('./types.js').server_iam_app_token_record}*/
-            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '').then(result=>result.filter((/**@type{import('./types.js').server_iam_app_token_record}*/row)=> 
+            /**@type{server_iam_app_token_record}*/
+            const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '').then(result=>result.filter((/**@type{server_iam_app_token_record}*/row)=> 
                                                                                 row.id == app_id_host && row.ip == ip && row.token == id_token
                                                                                 )[0]);
             if (id_token_decoded.app_id == app_id_host && 
@@ -244,15 +261,15 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
                             const access_token_decoded = jwt.verify(access_token, configGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
-                            /**@type{import('./types.js').server_iam_user_login_record[]}*/
+                            /**@type{server_iam_user_login_record[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
                                 access_token_decoded.name == iamUtilDecode(iam).get('admin'))
                                 await fileFsReadLog('IAM_USER_LOGIN', null,'')
                                 .then(result=>{
-                                    /**@type{import('./types.js').server_iam_user_login_record}*/
-                                    const iam_admin_login = result.filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                    /**@type{server_iam_user_login_record}*/
+                                    const iam_admin_login = result.filter((/**@type{server_iam_user_login_record}*/row)=>
                                                                             row.id      == access_token_decoded.id && 
                                                                             row.app_id  == app_id_host &&
                                                                             row.user    == access_token_decoded.name && 
@@ -287,8 +304,8 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
                                 //and if app_id=0 then check user is admin
                                 await fileFsReadLog('IAM_USER_LOGIN', null,'')
                                 .then(result=>{
-                                    /**@type{import('./types.js').server_iam_user_login_record}*/
-                                    const iam_user_login = result.filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                    /**@type{server_iam_user_login_record}*/
+                                    const iam_user_login = result.filter((/**@type{server_iam_user_login_record}*/row)=>
                                                                             row.id      == user_id && 
                                                                             row.res     == 1 &&
                                                                             row.app_id  == app_id_host &&
@@ -322,15 +339,17 @@ const iamSocketAuthenticate = (iam, path, host, ip, res, next) =>{
 };
 
 /**
- * 
+ * IAM external authenticate
+ * @function
  * @param {'APP_EXTERNAL'} endpoint 
  * @param {string} host 
  * @param {string} user_agent 
  * @param {string} accept_language 
  * @param {string} ip 
  * @param {*} body
- * @param {import('./types.js').server_server_res} res
+ * @param {server_server_res} res
  * @param {function} next
+ * @returns {void}
  */
 const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip, body, res, next) => {
     //add host, user_agent, accept_language and ip validation if needed
@@ -349,16 +368,20 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
  *  if AUTHENTICATE_REQUEST_USER_AGENT_EXIST=1 then check if user agent exists else return 406
  *  if AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE=1 then check if accept language exists else return 406
  *  if decodeURIComponent() no error then return null else return 400
+ * @function
  * @param {string} ip
  * @param {string} host
  * @param {string} method
  * @param {string} user_agent
  * @param {string} accept_language
  * @param {string} path
+ * @returns {Promise.<null|{statusCode:number,
+ *                          statusMessage: string}>}
  */
  const iamRequestAuthenticate = (ip, host, method, user_agent, accept_language, path) => {
     /**
      * IP to number
+     * @function
      * @param {string} ip
      * @returns {number}
      */
@@ -372,12 +395,13 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
     /**
      * Controls if ip is blocked
      *  if ip is blocked return 403
+     * @function
      * @param {string} ip_v4
-     * @returns {Promise.<import('./types.js').server_iam_authenticate_request|null>}
+     * @returns {Promise.<server_iam_authenticate_request|null>}
      */
     const block_ip_control = async (ip_v4) => {
         if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
-            /**@type{import('./types.js').server_config_iam_blockip} */
+            /**@type{server_config_iam_blockip} */
             const ranges = await configFileGet('CONFIG_IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
@@ -397,12 +421,13 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
     };
     /**
      * Controls if user agent is safe
+     * @function
      * @param {string} client_user_agent
      * @returns {Promise.<boolean>}
      */
     const safe_user_agents = async (client_user_agent) => {
         if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
-            /**@type{import('./types.js').server_config_iam_useragent} */
+            /**@type{server_config_iam_useragent} */
             const {user_agents} = await configFileGet('CONFIG_IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
@@ -416,7 +441,7 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
     return new Promise((resolve)=>{
         if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
             const ip_v4 = ip.replace('::ffff:','');
-            block_ip_control(ip_v4).then((/**@type{import('./types.js').server_iam_authenticate_request}*/result_range)=>{
+            block_ip_control(ip_v4).then((/**@type{server_iam_authenticate_request}*/result_range)=>{
                 if (result_range){
                     resolve({   statusCode:result_range.statusCode,
                                 statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
@@ -499,6 +524,7 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
  * Authenticate app in microservice
  * file must be read from file, not file cache as main server
  * since microservices run in separate processes and servers
+ * @function
  * @param {number|null} app_id 
  * @param {string} authorization 
  * @returns {Promise.<boolean>}
@@ -519,12 +545,14 @@ const iamExternalAuthenticate = (endpoint, host, user_agent, accept_language, ip
 };
 /**
  * Authenticate resource
+ * @function
  * @param { {app_id:number|null,
  *           ip:string,
  *           authorization:string,
  *           resource_id:string|number|null,
  *           scope: 'USER'|'APP',
  *           claim_key:string}} parameters
+ * @returns {boolean}
  */
 const iamResourceAuthenticate = parameters =>  {
     //authenticate access token
@@ -534,11 +562,11 @@ const iamResourceAuthenticate = parameters =>  {
         else{
             /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], commonRegistryAppSecret(parameters.app_id).COMMON_APP_ACCESS_SECRET);
-            return  parameters.resource_id && 
+            return  parameters.resource_id!=null && 
                     access_token_decoded[parameters.claim_key] == parameters.resource_id &&
                     access_token_decoded.app_id == parameters.app_id &&
                     access_token_decoded.scope == parameters.scope &&
-                    access_token_decoded.ip == parameters.ip;    
+                    access_token_decoded.ip == parameters.ip;
         }
     } catch (error) {
         return false;
@@ -547,7 +575,7 @@ const iamResourceAuthenticate = parameters =>  {
                                             
 /**
  * Authorize token app
- * 
+ * @function
  * @param {number} app_id
  * @param {string|null} ip
  * @returns {Promise.<string>}
@@ -558,7 +586,7 @@ const iamResourceAuthenticate = parameters =>  {
                                                         name:'', 
                                                         scope:'APP'});
 
-    /**@type{import('./types.js').server_iam_app_token_record} */
+    /**@type{server_iam_app_token_record} */
     const file_content = {	id:         app_id,
                             res:		1,
                             token:   	jwt_data.token,
@@ -571,7 +599,7 @@ const iamResourceAuthenticate = parameters =>  {
  };
 /**
  * Authorize token
- * 
+ * @function
  * @param {number} app_id
  * @param {'APP_ID'|'APP_ACCESS'|'ADMIN'|'APP_CUSTOM'} endpoint
  * @param {{id:number|string|null, 
@@ -615,7 +643,7 @@ const iamResourceAuthenticate = parameters =>  {
             break;
         }
     }
-    /**@type{import('./types.js').server_iam_access_token_claim_type} */
+    /**@type{server_iam_access_token_claim_type} */
     const access_token_claim = {app_id:         app_id,
                                 id:             claim.id,
                                 name:           claim.name,
@@ -633,26 +661,30 @@ const iamResourceAuthenticate = parameters =>  {
 };
 
 /**
+ * Get user login records
+ * @function
  * @param {number} app_id
  * @param {*} query
+ * @returns {Promise.<server_iam_user_login_record[]>}
  */
 const iamUserLogin = async (app_id, query) => {const rows = await fileFsReadLog('IAM_USER_LOGIN', null, '')
                                                     .then(result=>result
-                                                    .filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                                    .filter((/**@type{server_iam_user_login_record}*/row)=>
                                                         row.id==serverUtilNumberValue(query.get('data_user_account_id')) &&  
                                                         row.id==(serverUtilNumberValue(query.get('data_app_id')==''?null:query.get('data_app_id')) ?? row.id)))
                                                     .catch(()=>
                                                         null
                                                     );
-                                                return rows?rows.sort(( /**@type{import('./types.js').server_iam_user_login_record}*/a,
-                                                    /**@type{import('./types.js').server_iam_user_login_record}*/b)=> 
+                                                return rows?rows.sort(( /**@type{server_iam_user_login_record}*/a,
+                                                    /**@type{server_iam_user_login_record}*/b)=> 
                                                         //sort descending on created
                                                         a.created.localeCompare(b.created)==1?-1:1):[];
                                             };
 /**
  * User create
- * @param {import('./types.js').server_db_file_iam_user_new} data
- * @param {import('./types.js').server_server_res} res
+ * @function
+ * @param {server_db_file_iam_user_new} data
+ * @param {server_server_res} res
  * @returns {Promise.<{id:number}>}
  */
 const iamUserCreate = async (data, res) => {
@@ -669,10 +701,10 @@ const iamUserCreate = async (data, res) => {
         /**@type{import('./security.js')} */
         const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
 
-        /**@type{import('./types.js').server_db_file_result_fileFsRead} */
+        /**@type{server_db_file_result_fileFsRead} */
         const file = await fileFsRead('IAM_USER', true);
         const id = Date.now();
-        /**@type{import('./types.js').server_db_file_iam_user_new} */
+        /**@type{server_db_file_iam_user_new} */
         const user =     {
                             id:id,
                             username:data.username, 
@@ -691,21 +723,22 @@ const iamUserCreate = async (data, res) => {
                             modified:new Date().toISOString()
                         };
         await fileFsWrite('IAM_USER', file.transaction_id, file.file_content.concat(user))
-        .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+        .catch((/**@type{server_server_error}*/error)=>{throw error;});
         return {id:id}; 
     }
 };
 /**
  * User get
+ * @function
  * @param {number} app_id
  * @param {number} id
- * @param {import('./types.js').server_server_res} res
- * @returns {Promise.<import('./types.js').server_db_file_iam_user_get>}
+ * @param {server_server_res} res
+ * @returns {Promise.<server_db_file_iam_user_get>}
  */
 const iamUserGet = async (app_id, id, res) =>{
-    /**@type{import('./types.js').server_db_file_iam_user_get}*/
+    /**@type{server_db_file_iam_user_get}*/
     const user = fileCache('IAM_USER')
-                .map((/**@type{import('./types.js').server_db_file_iam_user} */row)=>{return { id: row.id,
+                .map((/**@type{server_db_file_iam_user} */row)=>{return { id: row.id,
                                     username: row.username,
                                     password: row.password,
                                     type: row.type,
@@ -718,7 +751,7 @@ const iamUserGet = async (app_id, id, res) =>{
                                     status: row.status,
                                     created: row.created,
                                     modified: row.modified};})
-                .filter((/**@type{import('./types.js').server_db_file_iam_user_get}*/row)=>row.id==id)[0];
+                .filter((/**@type{server_db_file_iam_user_get}*/row)=>row.id==id)[0];
                 
     if (user)
         //add last login time
@@ -730,23 +763,25 @@ const iamUserGet = async (app_id, id, res) =>{
 };
 /**
  * User get last login in current app
+ * @function
  * @param {number} app_id
  * @param {number} id
  * @returns {Promise.<string>}
  */
 const iamUserGetLastLogin = async (app_id, id) =>fileFsReadLog('IAM_USER_LOGIN', null, '')
                                                     .then(result=>result
-                                                                    .filter((/**@type{import('./types.js').server_iam_user_login_record}*/row)=>
+                                                                    .filter((/**@type{server_iam_user_login_record}*/row)=>
                                                                         row.id==id &&  row.app_id==app_id && row.res==1)
-                                                                    .sort((/**@type{import('./types.js').server_iam_user_login_record}*/a,
-                                                                            /**@type{import('./types.js').server_iam_user_login_record}*/b)=>a.created < b.created?1:-1)[0].created)
+                                                                    .sort((/**@type{server_iam_user_login_record}*/a,
+                                                                            /**@type{server_iam_user_login_record}*/b)=>a.created < b.created?1:-1)[0].created)
                                                     .catch(()=>null);
 
 /**
  * User udpate
+ * @function
  * @param {number} id
- * @param {import('./types.js').server_db_file_iam_user_update} data
- * @param {import('./types.js').server_server_res} res
+ * @param {server_db_file_iam_user_update} data
+ * @param {server_server_res} res
  * @returns {Promise.<void>}
  */
 
@@ -756,12 +791,12 @@ const iamUserUpdate = async (id, data, res) =>{
     /**@type{import('./security.js')} */
     const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
 
-    /**@type{import('./types.js').server_db_file_result_fileFsRead} */
+    /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead('IAM_USER', true);
 
-    /**@type{import('./types.js').server_db_file_iam_user_get}*/
+    /**@type{server_db_file_iam_user_get}*/
     const user = fileCache('IAM_USER')
-                .filter((/**@type{import('./types.js').server_db_file_iam_user_get}*/row)=>row.id==id)[0];
+                .filter((/**@type{server_db_file_iam_user_get}*/row)=>row.id==id)[0];
     if (user){
         if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
             for (const index in file.file_content)
@@ -783,7 +818,7 @@ const iamUserUpdate = async (id, data, res) =>{
                                                     modified:new Date().toISOString()
                                                 };
             await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
-            .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
+            .catch((/**@type{server_server_error}*/error)=>{throw error;});
         }
         else{
             res.statusCode = 400;

@@ -1,23 +1,29 @@
 /** @module server/log */
 
+/**
+ * @import {server_log_result_logFilesGet, server_log_request_record, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
+ *          server_server_error, server_server_req, server_server_req_verbose, server_db_common_result, server_db_common_result_error} from './types.js'
+*/
+
 /**@type{import('./config.js')} */
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./db/file.js')} */
 const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**
- * Send log
+ * Write log
+ * @function
  * @param {'APP'|'DB'|'REQUEST'|'SERVER'|'SERVICE'} logscope 
  * @param {'INFO'|'ERROR'} loglevel 
  * @param {object} log 
  * @returns {Promise.<null>}
  */
- const logSend = async (logscope, loglevel, log) => {
+ const logWrite = async (logscope, loglevel, log) => {
     return await new Promise((resolve) => {
         const config_file_interval = configGet('SERVICE_LOG', 'FILE_INTERVAL');
         fileFsAppend(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
-        .catch((/**@type{import('./types.js').server_server_error}*/error)=>{
+        .catch((/**@type{server_server_error}*/error)=>{
             console.log(error);
             console.log(log);
             resolve(null);});
@@ -25,16 +31,17 @@ const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.
 };
 /**
  * Log date format
+ * @function
  * @returns {string}
  */
 const logDate = () => new Date().toISOString();
 /**
  * Log request error
- * @param {import('./types.js').server_server_req} req 
+ * @param {server_server_req} req 
  * @param {number} statusCode 
  * @param {string|number|object|Error|null} statusMessage 
  * @param {number} responsetime 
- * @param {import('./types.js').server_server_error} err 
+ * @param {server_server_error} err 
  * @returns 
  */
 const logRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
@@ -57,12 +64,13 @@ const logRequestE = async (req, statusCode, statusMessage, responsetime, err) =>
                                     logtext:            err.status + '-' + err.message
                                 };
         /**@ts-ignore */
-        resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_REQUEST'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
+        resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_REQUEST'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
     });
 };
 /**
  * Log request Info
- * @param {import('./types.js').server_server_req} req 
+ * @function
+ * @param {server_server_req} req 
  * @param {number} statusCode 
  * @param {string} statusMessage 
  * @param {number} responsetime 
@@ -97,7 +105,7 @@ const logRequestI = async (req, statusCode, statusMessage, responsetime) => {
             }
             case '2':{
                 log_level = configGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-                /**@type{import('./types.js').server_server_req_verbose} */
+                /**@type{server_server_req_verbose} */
                 const logtext_req = Object.assign({}, req);
                 const getCircularReplacer = () => {
                     const seen = new WeakSet();
@@ -145,11 +153,12 @@ const logRequestI = async (req, statusCode, statusMessage, responsetime) => {
             }
         }   
         /**@ts-ignore */
-        return resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
+        return resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
     });
 };
 /**
- *  Log server
+ * Log server
+ * @function
  * @param {string} log_level 
  * @param {string} logtext 
  * @returns {Promise.<null>}
@@ -161,11 +170,12 @@ const logServer = async (log_level, logtext) =>{
                                 logtext: logtext
                               };
         /**@ts-ignore */
-        resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
+        resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
     });
 };
 /**
  * Log server Info
+ * @function
  * @param {*} logtext 
  * @returns {Promise.<null>}
  */
@@ -177,6 +187,7 @@ const logServerI = async (logtext)=>{
 };
 /**
  * Log server error
+ * @function
  * @param {*} logtext 
  * @returns {Promise.<null>}
  */
@@ -188,11 +199,12 @@ const logServerE = async (logtext)=>{
 };
 /**
  * Log DB Info
+ * @function
  * @param {number|null} app_id 
  * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
- * @param {import('./types.js').server_db_common_result} result 
+ * @param {server_db_common_result} result 
  * @returns {Promise.<null>}
  */
 const logDBI = async (app_id, db, sql, parameters, result) => {
@@ -230,16 +242,17 @@ const logDBI = async (app_id, db, sql, parameters, result) => {
             }
         }
         /**@ts-ignore */
-        return resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
+        return resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
     });
 };
 /**
  * Log DB Error
+ * @function
  * @param {number|null} app_id 
  * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
- * @param {import('./types.js').server_db_common_result_error} result 
+ * @param {server_db_common_result_error} result 
  * @returns {Promise.<null>}
  */
 const logDBE = async (app_id, db, sql, parameters, result) => {
@@ -253,11 +266,12 @@ const logDBE = async (app_id, db, sql, parameters, result) => {
             logtext:        result
             };
         /**@ts-ignore */
-        resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_DB'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
+        resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_DB'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
     });
 };
 /**
  * Log service Info
+ * @function
  * @param {number} app_id 
  * @param {string} service 
  * @param {string} parameters 
@@ -295,11 +309,12 @@ const logServiceI = async (app_id, service, parameters, logtext) => {
             }
         }
         /**@ts-ignore */
-        return resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
+        return resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
     });
 };
 /**
  * Log service Error
+ * @function
  * @param {number} app_id 
  * @param {string} service 
  * @param {string} parameters 
@@ -316,11 +331,12 @@ const logServiceE = async (app_id, service, parameters, logtext) => {
                         logtext:    logtext
                        };
         /**@ts-ignore */
-        return resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_SERVICE'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
+        return resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_SERVICE'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
     });
 };
 /**
  * Log App
+ * @function
  * @param {number} app_id 
  * @param {string} level_info 
  * @param {string} app_filename 
@@ -340,11 +356,12 @@ const logApp = async (app_id, level_info, app_filename, app_function_name, app_l
                     logtext:            logtext
                     };
     /**@ts-ignore */
-    resolve(logSend(configGet('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
+    resolve(logWrite(configGet('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
     });
 };
 /**
  * Log App Info
+ * @function
  * @param {number} app_id 
  * @param {string} app_filename 
  * @param {string} app_function_name 
@@ -364,6 +381,7 @@ const logAppI = async (app_id, app_filename, app_function_name, app_line, logtex
 };
 /**
  * Logg App Error
+ * @function
  * @param {number} app_id 
  * @param {string} app_filename 
  * @param {string} app_function_name 
@@ -381,6 +399,7 @@ const logAppE = async (app_id, app_filename, app_function_name, app_line, logtex
 /**
  * Get logs with page navigation support using limit and offset parameters
  * and returns in ISO20022 format
+ * @function
  * @param {number} app_id
  * @param {*} query
  * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:[]}>}
@@ -389,7 +408,7 @@ const logGet = async (app_id, query) => {
     /**@type{import('./server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('./types.js').server_log_data_parameter_logGet} */
+    /**@type{server_log_data_parameter_logGet} */
     const data = {  app_id:			app_id,
         select_app_id:	serverUtilNumberValue(query.get('select_app_id')),
         logscope:		query.get('logscope'),
@@ -524,7 +543,8 @@ const logGet = async (app_id, query) => {
  *  nodejs codes:
  *  100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
  *  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
- *  @returns {Promise.<object>}
+ * @function
+ * @returns {Promise.<object>}
  */
 const logStatusCodesGet = async () =>{
     const {STATUS_CODES} = await import('node:http');
@@ -535,14 +555,15 @@ const logStatusCodesGet = async () =>{
 };
 /**
  * Get log stat
+ * @function
  * @param {*} query
- * @returns{Promise.<import('./types.js').server_log_result_logStatGet[]|[]>}
+ * @returns{Promise.<server_log_result_logStatGet[]|[]>}
  */
 const logStatGet = async query => {
     /**@type{import('./server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('./types.js').server_log_data_parameter_getLogStats} */
+    /**@type{server_log_data_parameter_getLogStats} */
     const data = {	app_id:			serverUtilNumberValue(query.get('select_app_id')),
                     statGroup:		query.get('statGroup')==''?null:query.get('statGroup'),
                     unique:		    serverUtilNumberValue(query.get('unique')),
@@ -550,9 +571,9 @@ const logStatGet = async query => {
                     year: 			serverUtilNumberValue(query.get('year')) ?? new Date().getFullYear(),
                     month:			serverUtilNumberValue(query.get('month')) ?? new Date().getMonth() +1
                     };
-    /**@type{import('./types.js').server_log_result_logStatGet[]|[]} */
+    /**@type{server_log_result_logStatGet[]|[]} */
     const logfiles = [];
-    /**@type{import('./types.js').server_log_result_logStatGet[]|[]} */
+    /**@type{server_log_result_logStatGet[]|[]} */
     const logstat = [];
 
     /**@type{import('../apps/common/src/common.js')} */
@@ -578,7 +599,7 @@ const logStatGet = async query => {
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
             await fileFsReadLog(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
             .then((logs)=>{
-                logs.forEach((/**@type{import('./types.js').server_log_request_record|''}*/record) => {
+                logs.forEach((/**@type{server_log_request_record|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
                             const domain_app_id = record.host?commonAppHost(record.host):null;
@@ -661,11 +682,11 @@ const logStatGet = async query => {
 };
 /**
  * Get log files
- * 
- * @returns{Promise.<[import('./types.js').server_log_result_logFilesGet]|[]>}
+ * @function
+ * @returns{Promise.<[server_log_result_logFilesGet]|[]>}
  */
 const logFilesGet = async () => {
-    /**@type{[import('./types.js').server_log_result_logFilesGet]|[]} */
+    /**@type{[server_log_result_logFilesGet]|[]} */
     const logfiles =[];
     const files = await fileFsDir();
     let i =1;
