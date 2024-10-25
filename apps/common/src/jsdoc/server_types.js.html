@@ -121,6 +121,12 @@
  * @property {number|null} PORT
  */
 
+/**
+ * APP serverComponentLifecycle
+ * @typedef  {{ onBeforeMounted?:function|null,
+*              onMounted?:function|null, 
+*              onUnmounted?:function|null}|null} serverComponentLifecycle
+*/
 /** 
  * BFF server_bff_endpoint_type
  * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|

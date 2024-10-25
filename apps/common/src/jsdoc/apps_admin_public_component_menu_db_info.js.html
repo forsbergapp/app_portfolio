@@ -29,15 +29,15 @@
  *              started:string},
  *          db_detail:[{table_name:string,
  *                      total_size: number,
- *                      data_used:string,
- *                      data_free:string,
- *                      pct_used:string}]|[],
+ *                      data_used:number,
+ *                      data_free:number,
+ *                      pct_used:number}]|[],
  *          db_detail_sum:{ table_name:string,
  *                          total_size: number,
- *                          data_used:string,
- *                          data_free:string,
- *                          pct_used:string},
- *          function_roundOff:function}} props
+ *                          data_used:number,
+ *                          data_free:number,
+ *                          pct_used:number},
+ *          function_roundOff:commonRoundOff}} props
  * @returns {string}
  */
 const template = props => ` &lt;div id='menu_db_info_content_widget1' class='widget'>

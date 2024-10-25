@@ -3,14 +3,19 @@
  * @module apps/app5/app
  */
 
-/**@type{import('../../../common_types.js').COMMON_DOCUMENT} */
+/**
+ * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ */
+
+/**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const commonPath ='common';
-/**@type {import('../../../common_types.js').CommonModuleCommon} */
+/**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 /**
  * App exception function
+ * @function
  * @param {Error} error 
  * @returns {void}
  */
@@ -19,12 +24,13 @@ const appException = (error) => {
 };
 /**
  * App event click
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
         });
     }
@@ -242,12 +248,13 @@ const appEventClick = event => {
 };
 /**
  * App event change
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventChange = event =>{
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('change',(/**@type{CommonAppEvent}*/event) => {
             appEventChange(event);
         });
     }
@@ -256,12 +263,13 @@ const appEventChange = event =>{
 };
 /**
  * App event keyup
- * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @function
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('keyup',(/**@type{CommonAppEvent}*/event) => {
             appEventKeyUp(event);
         }, true);
     }
@@ -283,13 +291,22 @@ const appEventKeyUp = event => {
         });
     }
 };
-
+/**
+ * User login
+ * @function
+ * @returns {void}
+ */
 const appUserLogin = () =>{
     common.commonUserLogin()
     .then(()=>common.commonComponentRemove('app_main_page'))
     .then(()=>appSecureInit())
     .catch(()=>null);
 };
+/**
+ * User logout
+ * @function
+ * @returns {void}
+ */
 const appUserLogout = () =>{
     common.commonUserLogout()
     .then(()=>common.commonComponentRemove('app_main_page'))
@@ -302,6 +319,7 @@ const appUserLogout = () =>{
 };
 /**
  * Sets framework
+ * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
  */
@@ -314,7 +332,11 @@ const appFrameworkSet = async (framework=null) => {
             Focus: null,
             Input:null});
 };
-
+/**
+ * Customer create
+ * @function
+ * @returns {Promise.<void>}
+ */
 const appCustomerCreate = async () => {
     await common.commonFFB({  path:'/app-function/CUSTOMER_CREATE', 
                         method:'POST', 
@@ -333,8 +355,10 @@ const appCustomerCreate = async () => {
     appSecureInit();
 };
 /**
- * 
+ * Payment request update
+ * @function
  * @param {1|0} status 
+ * @returns {Promise.<void>}
  */
 const appPaymentRequestUpdate = async status => {
     await common.commonFFB({  path:'/app-function/PAYMENT_REQUEST_UPDATE', 
@@ -349,15 +373,27 @@ const appPaymentRequestUpdate = async status => {
     .then((result)=>status==1?common.commonMessageShow('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
     .finally(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
 };
+/**
+ * Payment request accept
+ * @function
+ * @returns {Promise.<void>}
+ */
 const appPaymentRequestAccept = async () => {
     appPaymentRequestUpdate(1);
 };
+/**
+ * Payment request cancel
+ * @function
+ * @returns {Promise.<void>}
+ */
 const appPaymentRequestCancel = async () => {
     appPaymentRequestUpdate(0);
 };
 /**
- * 
+ * Payment request show
+ * @function
  * @param {string} message 
+ * @returns {Promise.<void>}
  */
 const appPaymentRequestShow = async message =>{
     if (COMMON_DOCUMENT.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
@@ -416,6 +452,7 @@ const appPaymentRequestShow = async message =>{
 
 /**
  * Init secure
+ * @functions
  * @returns {void}
  */
 const appSecureInit = () => {
@@ -435,6 +472,7 @@ const appSecureInit = () => {
 };
 /**
  * Init app
+ * @function
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
@@ -460,6 +498,7 @@ const appInit = async () => {
 };
 /**
  * Init common
+ * @function
  * @param {string} parameters 
  * @returns {void}
  */

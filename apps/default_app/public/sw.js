@@ -1,5 +1,5 @@
 /**
- * @module apps/default_PWA/sw
+ * @module apps/default_app/sw
  */
 
 self.addEventListener('install', () => {

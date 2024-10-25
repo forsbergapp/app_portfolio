@@ -2,7 +2,12 @@
  * @module apps/app2/report/lib_timetable
  */
 
-/**@type{import('../types.js').APP_REPORT_GLOBAL} */
+/**
+ * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts}  from '../types.js'
+ * @import {serverComponentLifecycle}  from '../../../../server/types.js'
+ */
+
+/**@type{APP_REPORT_GLOBAL} */
 const APP_REPORT_GLOBAL = {
 	app_copyright:'',
 	session_currentDate:new Date(),
@@ -102,7 +107,7 @@ Object.seal(APP_REPORT_GLOBAL);
  * 			TIMETABLE_MONTH_DATA:{class:string, columns:{class:string, attribute?:string, value:string}[]}[],
  * 			TIMETABLE_YEAR_MONTH_DATA: string[]|[],
  * 			TIMETABLE_COPYRIGHT:string,
- * 			settings:import('../types.js').APP_REPORT_settings, 
+ * 			settings:APP_REPORT_settings, 
  * 			function_StyleGet:function}} props
  */
 const template = props => `<div id='${props.TIMETABLE_ID}' 
@@ -272,12 +277,12 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  * @param {{data:       {
  * 						commonMountdiv:null,
  * 						timetable:'DAY'|'MONTH'|'YEAR',
- * 						user_account_app_data_post:import('../types.js').APP_REPORT_settings, 
+ * 						user_account_app_data_post:APP_REPORT_settings, 
  * 						button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
- * 						user_account_app_data_posts_parameters:import('../types.js').APP_REPORT_day_user_account_app_data_posts[]|null
+ * 						user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
  * 						},
  *          methods:    {COMMON_DOCUMENT:null}}} props
- * @returns {{ lifecycle:CommonComponentLifecycle, 
+ * @returns {{ lifecycle:serverComponentLifecycle, 
  *                      data:   	null,
  *                      methods:	null,
  *                      template:string}}
@@ -1491,10 +1496,10 @@ const component = props => {
 	/**
 	 * Set current date and current Hijri Date after navigating in app
 	 * @param {'DAY'|'MONTH'|'YEAR'} timetable
-	 * @param {import('../types.js').APP_REPORT_settings['ui_navigation_left']} ui_navigation_left
-	 * @param {import('../types.js').APP_REPORT_settings['ui_navigation_right']} ui_navigation_right
+	 * @param {APP_REPORT_settings['ui_navigation_left']} ui_navigation_left
+	 * @param {APP_REPORT_settings['ui_navigation_right']} ui_navigation_right
 	 * @param {'GREGORIAN'|'HIJRI'} calendartype
-	 * @param {import('../types.js').APP_REPORT_settings['ui_navigation_left']|import('../types.js').APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
 	 * @returns {void}
 	 */
 	const setCurrent = (timetable, ui_navigation_left, ui_navigation_right, calendartype, button_id) =>{
@@ -1561,9 +1566,9 @@ const component = props => {
 
 	/**
 	 * Timetable day
-	 * @param {import('../types.js').APP_REPORT_settings} settings 
-	 * @param {import('../types.js').APP_REPORT_settings['ui_navigation_left']|import('../types.js').APP_REPORT_settings['ui_navigation_right']} button_id
-	 * @param {import('../types.js').APP_REPORT_day_user_account_app_data_posts[]} user_settings 
+	 * @param {APP_REPORT_settings} settings 
+	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {APP_REPORT_day_user_account_app_data_posts[]} user_settings 
 	 * @returns {string}
 	 */
 	const displayDay = (settings, button_id, user_settings) => {
@@ -1716,16 +1721,16 @@ const component = props => {
 	};
 /**
 	 * Make a timetable month row
-	 * @param {import('../types.js').APP_REPORT_times} data 
+	 * @param {APP_REPORT_times} data 
 	 * @param {number} year 
 	 * @param {number} month 
-	 * @param {import('../types.js').APP_REPORT_settings} settings 
+	 * @param {APP_REPORT_settings} settings 
 	 * @param {[number, number, number]|null} date 
 	 * @returns {{class:string, attribute?:string, value:string}[]}
 	 */
 	const makeTableRow = (data, year, month, settings, date = null) => {
 
-		/**@type{import('../types.js').APP_REPORT_column_titles} */
+		/**@type{APP_REPORT_column_titles} */
 		const columns = {
 							day: '',
 							weekday: '',
@@ -1904,8 +1909,8 @@ const component = props => {
 	};
 	/**
 	 * Timetable month
-	 * @param {import('../types.js').APP_REPORT_settings} settings 
-	 * @param {import('../types.js').APP_REPORT_settings['ui_navigation_left']|import('../types.js').APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {APP_REPORT_settings} settings 
+	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
 	 * @param {string} year_class 
 	 * @returns {string}
 	 */
@@ -2083,8 +2088,8 @@ const component = props => {
 
 	/**
 	 * Timetable year
-	 * @param {import('../types.js').APP_REPORT_settings} settings 
-	 * @param {import('../types.js').APP_REPORT_settings['ui_navigation_left']|import('../types.js').APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {APP_REPORT_settings} settings 
+	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
 	 * @returns {string}
 	 */
 	const displayYear = (settings, button_id) => {
