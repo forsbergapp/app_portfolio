@@ -1,16 +1,18 @@
 /**
+ * Settings tab 3 thumbnail
  * @module apps/app2/component/settings_tab_nav_7
  */
 /**
- * @param {{avatar:string|null}} props
+ * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
+
 /**
  * @param {{class:string,
  *          theme_id:string
  *          type:'day'|'month'|'year',
  *          html:string}} props
+ * @returns {string}
  */
-//month position 2, day position 1 year position 1
 const template = props => ` <div class='paper ${props.class}'>
                                 ${props.html}
                             </div>`;
@@ -22,8 +24,8 @@ const template = props => ` <div class='paper ${props.class}'>
  *                      type:'day'|'month'|'year',
  *                      html:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

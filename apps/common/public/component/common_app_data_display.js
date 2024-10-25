@@ -1,30 +1,5 @@
 /**
- * @module apps/common/component/common_app_data_display
- */
-
-/**
- * 
- * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
- *              master_object:import('./../../../common_types.js').CommonMasterObjectType,
- *              rows:[],
- *              detail_class:string,
- *              new_resource:boolean,
- *              mode:'EDIT'|'READ',
- *              function_format_value:function,
- *              function_div_id:function,
- *              timezone:string,
- *              locale:string,
- *              button_print:boolean,
- *              button_print_icon_class:string,
- *              button_update:boolean,
- *              button_update_icon_class:string,
- *              button_post:boolean,
- *              button_post_icon_class:string,
- *              button_delete:boolean,
- *              button_delete_icon_class:string}} props_template
- */
-/**
- *  Display types:
+ *  Displays app data:
  *                              usage suggestion        design
  *  VERTICAL_KEY_VALUE          form                    key value vertical array list, 2 columns
  *                                                      
@@ -42,8 +17,37 @@
  * 
  *  Set optional custom styles using class on div where component is mounted in the app
  * 
+ * @module apps/common/component/common_app_data_display
+ */
+/**
+ * @import {CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, CommonModuleCommon, CommonMasterObjectType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
+ * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
+ *              master_object:CommonMasterObjectType,
+ *              rows:[],
+ *              detail_class:string,
+ *              new_resource:boolean,
+ *              mode:'EDIT'|'READ',
+ *              function_format_value:function,
+ *              function_div_id:function,
+ *              timezone:string,
+ *              locale:string,
+ *              button_print:boolean,
+ *              button_print_icon_class:string,
+ *              button_update:boolean,
+ *              button_update_icon_class:string,
+ *              button_post:boolean,
+ *              button_post_icon_class:string,
+ *              button_delete:boolean,
+ *              button_delete_icon_class:string}} props_template
+ */
+
+/**
  * @param {props_template} props 
- * @returns 
+ * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
                                 `<div class='common_app_data_display_master_title'>${props.master_object.filter((/**@type{*}*/row)=>row.title).length>0?props.master_object.filter((/**@type{*}*/row)=>row.title)[0].title.default_text:''}</div>`:''
@@ -163,14 +167,14 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      master_path:string,
  *                      master_query:string,
  *                      master_body:string,
- *                      master_method:import('../../../common_types.js').CommonRESTAPIMethod,
- *                      master_token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
+ *                      master_method:CommonRESTAPIMethod,
+ *                      master_token_type:CommonRESTAPIAuthorizationType,
  *                      master_resource:string,
  *                      detail_path:string,
  *                      detail_query:string,
  *                      detail_body:string,
- *                      detail_method:import('../../../common_types.js').CommonRESTAPIMethod,
- *                      detail_token_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
+ *                      detail_method:CommonRESTAPIMethod,
+ *                      detail_token_type:CommonRESTAPIAuthorizationType,
  *                      detail_resource:string,
  *                      detail_class:string,
  *                      new_resource:boolean,
@@ -186,13 +190,13 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_delete: boolean,
  *                      button_delete_icon_class:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB:commonFFB,
  *                      button_print:function,
  *                      button_update:function,
  *                      button_post:function,
  *                      button_delete:function}}} props 
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null,
  *                      template:string}>}

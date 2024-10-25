@@ -1,12 +1,24 @@
 /**
+ * Displays profile info
  * @module apps/common/component/common_dialogue_profile_info
  */
 
 /**
+ * @import {CommonProfileUser, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonDialogueShow']} commonDialogueShow
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonFormatJsonDate']} commonFormatJsonDate
+ * @typedef {CommonModuleCommon['commonModuleEasyQRCODECreate']} commonModuleEasyQRCODECreate
+ * @typedef {CommonModuleCommon['commonWindowHostname']} commonWindowHostname
+ * @typedef {CommonModuleCommon['commonSocketConnectOnlineCheck']} commonSocketConnectOnlineCheck
+ * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
+ */
+
+/**
  * 
- * @param {{profile:import('../../../common_types.js').CommonProfileUser,
- *          function_commonFormatJsonDate:import('../../../common_types.js').CommonModuleCommon['commonFormatJsonDate']}} props 
- * @returns 
+ * @param {{profile:CommonProfileUser,
+ *          function_commonFormatJsonDate:commonFormatJsonDate}} props 
+ * @returns {string}
  */
 const template = props =>`  <div id='common_profile_main'>
                                 <div id='common_profile_main_row1' class='common_profile_main_row'>
@@ -91,16 +103,16 @@ const template = props =>`  <div id='common_profile_main'>
  *                      username:string
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFormatJsonDate:import('../../../common_types.js').CommonModuleCommon['commonFormatJsonDate'],
- *                      commonModuleEasyQRCODECreate:import('../../../common_types.js').CommonModuleCommon['commonModuleEasyQRCODECreate'],
- *                      commonWindowHostname:import('../../../common_types.js').CommonModuleCommon['commonWindowHostname'],
- *                      commonDialogueShow:import('../../../common_types.js').CommonModuleCommon['commonDialogueShow'],
- *                      commonSocketConnectOnlineCheck:import('../../../common_types.js').CommonModuleCommon['commonSocketConnectOnlineCheck'],
- *                      commonWindowSetTimeout:import('../../../common_types.js').CommonModuleCommon['commonWindowSetTimeout'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFormatJsonDate:commonFormatJsonDate,
+ *                      commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
+ *                      commonWindowHostname:commonWindowHostname,
+ *                      commonDialogueShow:commonDialogueShow,
+ *                      commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
+ *                      commonWindowSetTimeout:commonWindowSetTimeout,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

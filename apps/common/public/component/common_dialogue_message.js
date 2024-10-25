@@ -1,5 +1,12 @@
 /**
+ * Displays message
  * @module apps/common/component/common_dialogue_message
+ */
+
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonComponentRemove']} commonComponentRemove
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -7,7 +14,7 @@
  *          message_type:string,
  *          message_title_font_class:string|null,
  *          message_title_icon_class:string}} props 
- * @returns 
+ * @returns {string}
  */
 const template = props =>`  ${props.message_type=='CONFIRM'?
                                 '<div id=\'common_message_confirm_question\' class=\'common_icon\'></div>':''
@@ -55,12 +62,12 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      code:string,
  *                      message:*},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB'],
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonFFB:commonFFB,
  *                      function_event:function,
- *                      commonComponentRemove:import('../../../common_types.js').CommonModuleCommon['commonComponentRemove']
+ *                      commonComponentRemove:commonComponentRemove
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null, 
  *                      template:string}>}

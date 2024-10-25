@@ -1,7 +1,17 @@
 /**
+ * Displays profile stat
  * @module apps/common/component/common_dialogue_profile_stat
  */
 
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * 
+ */
+/**
+ * @returns {string}
+ */
 const template = () =>  `   <div id='common_profile_stat_row1'>
                                 <div id='common_profile_stat_row1_1' class='common_link common_icon'></div>
                                 <div id='common_profile_stat_row1_2' class='common_link common_icon'></div>
@@ -16,11 +26,11 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
  *                      statchoice:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

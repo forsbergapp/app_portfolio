@@ -31,6 +31,7 @@
  *                          data_free:string,
  *                          pct_used:string},
  *          function_roundOff:function}} props
+ * @returns {string}
  */
 const template = props => ` <div id='menu_db_info_content_widget1' class='widget'>
                                 <div id='menu_db_info1' >

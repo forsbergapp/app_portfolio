@@ -33,7 +33,8 @@
  *                  date_modified:string
  *                  }]|[],
  *          function_get_order_by:function}} props
-*/
+ * @returns {string}
+ */
 const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
                                 <div data-column='id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>

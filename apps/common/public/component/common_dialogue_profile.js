@@ -1,7 +1,17 @@
 /**
+ * Displays profile
  * @module apps/common/component/common_dialogue_profile
  */
 
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ */
+
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id='common_dialogue_profile_home' class='common_dialogue_button common_icon' ></div>
                         <div id='common_dialogue_profile_content'></div>
                         <div id='common_dialogue_profile_close' class='common_dialogue_button common_icon' ></div>`;
@@ -13,11 +23,11 @@ const template = () =>` <div id='common_dialogue_profile_home' class='common_dia
  *                      statchoice:number
  *                      },
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

@@ -1,7 +1,14 @@
 /**
+ * Displays profile search
  * @module apps/common/component/common_profile_search
  */
 
+/**
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+/**
+ * @returns {string}
+ */
 const template = () =>` <div id='common_profile_input_row'>
                             <div id='common_profile_search_input' contentEditable='true' class='common_input '/></div>
                             <div id='common_profile_search_icon' class='common_icon'></div>
@@ -10,8 +17,8 @@ const template = () =>` <div id='common_profile_input_row'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT}}} props  
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props  
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

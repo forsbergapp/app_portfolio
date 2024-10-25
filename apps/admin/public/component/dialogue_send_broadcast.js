@@ -8,6 +8,9 @@
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
 
+/**
+ * @returns {string}
+ */
 const template = () => `<div id='dialogue_send_broadcast_form'>
                             <div id='dialogue_send_broadcast_title' class='common_icon'></div>
                             <div id='dialogue_send_broadcast_select_broadcast_type' ></div>

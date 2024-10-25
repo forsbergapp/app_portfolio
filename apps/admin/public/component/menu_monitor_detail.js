@@ -47,6 +47,7 @@
  *                                      LEVEL_ERROR:string,
  *                                      LEVEL_INFO:string,
  *                                      FILE_INTERVAL:string}}} props
+ * @returns {string}
  */
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 `<div id='menu_monitor_detail_connected_form'>    

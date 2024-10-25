@@ -1,10 +1,16 @@
 /**
+ * Displays Leaflet search city
  * @module apps/common/component/common_module_leaflet_search_city
  */
 
 /**
+ * @import {CommonMicroserviceWorldcitiesRecordType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ */
+
+/**
  * 
- * @param {{records:import('../../../common_types.js').CommonMicroserviceWorldcitiesRecordType[]}
+ * @param {{records:CommonMicroserviceWorldcitiesRecordType[]}
  *          } props 
  * @returns {string}
  */
@@ -34,11 +40,11 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
  *                      commonMountdiv:string,
  *                      search:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      click_function:function,
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']
+ *                      commonFFB:commonFFB
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

@@ -10,6 +10,7 @@
 
 /**
  * @param {{maintenance:0|1|null}} props
+ * @returns {string}
  */
 const template = props => ` <div id='menu_start_content_widget1' class='widget'>
                                 <div id='menu_start_row_sample'>

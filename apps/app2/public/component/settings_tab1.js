@@ -1,8 +1,21 @@
 /**
+ * Settings tab 1
  * @module apps/app2/component/settings_tab1
  */
+
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonDbAppSettingsGet']} commonDbAppSettingsGet
+ * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
+ * @import {appComponentSettingUpdate}  from '../js/app.js'
+ * 
+ */
+
 /**
  * @param {{user_timezone:string}} props
+ * @returns {string}
  */
 const template = props => ` <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
@@ -119,13 +132,13 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      user_locale:string,
  *                      user_timezone:string
  *                      },
- *          methods:    {COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      appComponentSettingUpdate:import('../js/app.js')['appComponentSettingUpdate'],
- *                      commonDbAppSettingsGet:import('../../../common_types.js').CommonModuleCommon['commonDbAppSettingsGet'],
- *                      commonSelectCurrentValueSet:import('../../../common_types.js').CommonModuleCommon['commonSelectCurrentValueSet'],
- *                      commonComponentRender:import('../../../common_types.js').CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      appComponentSettingUpdate:appComponentSettingUpdate,
+ *                      commonDbAppSettingsGet:commonDbAppSettingsGet,
+ *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonComponentRender:commonComponentRender,
+ *                      commonFFB:commonFFB}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

@@ -1,11 +1,18 @@
 /**
+ * Displays IAM verify
  * @module apps/common/component/common_dialogue_iam_verify
  */
+
+/**
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ */
+
 /**
  * @param {{title: string,
  *          verification_type:string,
  *          username:string,
  *          password:string}} props
+ * @returns {string}
  */
 const template = props => `
                             <div id='common_dialogue_iam_verify_email_icon' class='common_icon'></div>
@@ -32,10 +39,10 @@ const template = props => `
  *                      password_signup:string,
  *                      title:string},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_data_function:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

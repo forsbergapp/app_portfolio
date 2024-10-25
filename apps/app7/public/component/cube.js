@@ -1,13 +1,24 @@
 /**
+ * Displays the cube
  * @module apps/app7/component/cube
+ */
+/**
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
+ * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
+ * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
+ * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
+ * @typedef {CommonModuleCommon['commonComponentRemove']} commonComponentRemove
+ * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
  * @param {{icon_robot:string,
-*          icon_human:string, 
-*          icon_solution:string,
-*          icon_solution_list:string}} props
-*/
+ *          icon_human:string, 
+ *          icon_solution:string,
+ *          icon_solution_list:string}} props
+ * @returns {string}
+ */
 const template = props =>`  <div id='cube'>
                                 <svg xmlns='http://www.w3.org/2000/svg'>
                                     ${Array(...Array(156)).map((i, index)=>
@@ -103,14 +114,14 @@ const template = props =>`  <div id='cube'>
  *                      cube_width:number,
  *                      common_app_id:number},
  *          methods:    {
- *                      COMMON_DOCUMENT:import('../../../common_types.js').COMMON_DOCUMENT,
- *                      commonElementRow:import('../../../common_types.js').CommonModuleCommon['commonElementRow'],
- *                      commonLovShow:import('../../../common_types.js').CommonModuleCommon['commonLovShow'],
- *                      commonLovClose:import('../../../common_types.js').CommonModuleCommon['commonLovClose'],
- *                      commonMessageShow:import('../../../common_types.js').CommonModuleCommon['commonMessageShow'],
- *                      commonComponentRemove:import('../../../common_types.js').CommonModuleCommon['commonComponentRemove'],
- *                      commonFFB:import('../../../common_types.js').CommonModuleCommon['commonFFB']}}} props
- * @returns {Promise.<{ lifecycle:import('../../../common_types.js').CommonComponentLifecycle, 
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonElementRow:commonElementRow,
+ *                      commonLovShow:commonLovShow,
+ *                      commonLovClose:commonLovClose,
+ *                      commonMessageShow:commonMessageShow,
+ *                      commonComponentRemove:commonComponentRemove,
+ *                      commonFFB:commonFFB}}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
  *                      data:   null
  *                      methods:{
  *                              cube_init:                  function, 
