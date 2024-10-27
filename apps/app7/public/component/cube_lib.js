@@ -7,11 +7,9 @@ const commonPath ='common';
 
 /**
  * @import {CommonModuleCommon}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
  */
-
-/**@type {commonWindowSetTimeout} */
-const commonWindowSetTimeout = await import(commonPath);
+/**@type{CommonModuleCommon} */
+const {commonWindowSetTimeout} = await import(commonPath);
 
 
 /**

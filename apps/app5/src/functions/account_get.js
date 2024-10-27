@@ -11,9 +11,11 @@
  * @returns {Promise.<import('../../../../server/types.js').server_db_sql_result_app_data_resource_detail_get[]>}
  */
 const account_get = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
-    const {get} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
+    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
     
-    return await get(app_id, data.resource_id, null, data.user_account_id, data.data_app_id, 'ACCOUNT', data.entity_id, locale, false);
+    return await DetailGet(app_id, data.resource_id, 
+                    new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=ACCOUNT&entity_id=${data.entity_id}`), 
+                    false);
 };
 export default account_get;
