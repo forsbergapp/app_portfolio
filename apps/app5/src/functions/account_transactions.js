@@ -13,14 +13,14 @@
  */
 const getTransacions = async (app_id, data, user_agent, ip, locale, res) =>{
 
-    /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
-    const {get:DetailDataGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
+    const {DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
 
-    const transactions = await DetailDataGet(app_id, null, null, data.user_account_id, data.data_app_id, 
-                                'RESOURCE_TYPE', 'ACCOUNT', 
-                                'RESOURCE_TYPE', 'CUSTOMER', 
-                                null, null, null, null, false);
-    
+    const transactions = await DataGet(app_id, null, 
+                                new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&`+ 
+                                                    'resource_name_type=RESOURCE_TYPE&resource_name=ACCOUNT&'+
+                                                    'resource_name_master_attribute_type=RESOURCE_TYPE&resource_name_master_attribute=CUSTOMER'),
+                                false);    
     return transactions;
 }; 
 export default getTransacions;

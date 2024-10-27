@@ -1,9 +1,9 @@
-/** @module server/db/components/user_account_app */
+/** @module server/db/dbModeluser_account_app */
 
-/**@type{import('../sql/user_account_app.service.js')} */
+/**@type{import('./sql/user_account_app.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);
 
-/**@type{import('../../server.js')} */
+/**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
@@ -15,7 +15,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  */
 const update = (app_id, resource_id, query, data) => {
     return new Promise((resolve, reject)=> {
-        /**@type{import('../../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} */
+        /**@type{import('../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} */
         const data_update = {	app_setting_preference_direction_id: 	serverUtilNumberValue(data.app_setting_preference_direction_id),
                                 app_setting_preference_arabic_script_id:serverUtilNumberValue(data.app_setting_preference_arabic_script_id),
                                 app_setting_preference_timezone_id: 	serverUtilNumberValue(data.app_setting_preference_timezone_id),
@@ -25,7 +25,7 @@ const update = (app_id, resource_id, query, data) => {
         .then(result=>{
             resolve(result);
         })
-        .catch((/**@type{import('../../types.js').server_server_error}*/error)=>reject(error));
+        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
     });
 };
 /**
@@ -34,18 +34,18 @@ const update = (app_id, resource_id, query, data) => {
  * @param {number} resource_id
  */
 const getUserAccountApp = (app_id, resource_id) => service.getUserAccountApp(app_id, resource_id)
-                                                .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
+                                                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {string} locale
- * @returns {Promise.<import('../../../server/types.js').server_config_apps_with_db_columns[]>}
+ * @returns {Promise.<import('../../server/types.js').server_config_apps_with_db_columns[]>}
  */
 const getUserAccountApps = async (app_id, resource_id, locale) => {
     
    
-    /**@type{import('../../../apps/common/src/common.js')} */
+    /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppsGet} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
     const apps_db = await service.getUserAccountApps(app_id, resource_id);
@@ -60,7 +60,7 @@ const getUserAccountApps = async (app_id, resource_id, locale) => {
  * @param {*} query
  */
 const deleteUserAccountApp = (app_id, resource_id, query) => service.deleteUserAccountApp(app_id, resource_id, serverUtilNumberValue(query.get('delete_app_id')))
-                                                    .catch((/**@type{import('../../types.js').server_server_error}*/error)=>{throw error;});
+                                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
 
 export {/*ADMIN + ACCESS*/
         update, getUserAccountApp,
