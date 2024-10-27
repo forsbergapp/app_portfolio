@@ -20,14 +20,14 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @returns {Promise.<import('../../../../server/types.js').server_db_sql_result_app_data_resource_detail_post>}
  */
 const createBankAccount = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
-    const {post} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
+    const {DetailPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
     data.json_data = {
             bank_account_number :createBankAccountNumber(),
             bank_account_secret :createBankAccountSecret(),
             bank_account_vpa    :createBankAccountVPA()
     };
-    return await post(app_id, data);
+    return await DetailPost(app_id, data);
 };
 
 export default createBankAccount;

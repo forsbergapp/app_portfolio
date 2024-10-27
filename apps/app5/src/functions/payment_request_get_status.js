@@ -19,11 +19,8 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-    /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
-    const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
-
-    /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
-    const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
+    const {MasterGet, DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
@@ -31,7 +28,9 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../server/socket.js')} */
     const {socketClientSend, socketConnectedGet} = await import(`file://${process.cwd()}/server/socket.js`);
 
-    const merchant = await MasterGet(app_id, null, null, app_id, 'MERCHANT', null, locale, false)
+    const merchant = await MasterGet(app_id, null, 
+                            new URLSearchParams(`data_app_id=${app_id}&resource_name=MERCHANT`),
+                            false)
                            .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==data.id)[0]);
     if (merchant){
         /** 
@@ -41,16 +40,18 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
         */
         const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, data.message));
         if (merchant.merchant_api_secret==body_decrypted.api_secret && merchant.merchant_url == body_decrypted.origin){
-            const payment_request = await MasterGet(app_id, null, null, app_id, 'PAYMENT_REQUEST', null, locale, true)
-                                            .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)).filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
-            
+            const payment_requests = await MasterGet(app_id, null, 
+                                            new URLSearchParams(`data_app_id=${app_id}&resource_name=PAYMENT_REQUEST`),
+                                            false)
+                                            .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)));
+            const payment_request = payment_requests.filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0];
             /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const token_decoded = jwt.verify(payment_request.token, commonRegistryAppSecret(app_id).COMMON_APP_ID_SECRET);
             
-            if (token_decoded.id == payment_request.payerid && 
+            if (payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0 &&
+                token_decoded.id == payment_request.payerid && 
                 token_decoded.scope == 'APP_CUSTOM' && 
-                token_decoded.ip == ip &&
-                payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0){
+                token_decoded.ip == ip){
                     /**
                      * @type {{ status:string}}
                      */
@@ -58,13 +59,17 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                     };
                     const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
 
-                    const account_payer =  await DetailGet(app_id, null, null, null, app_id, 'ACCOUNT', null, locale, false)
+                    const account_payer =  await DetailGet(app_id, null, 
+                                                    new URLSearchParams(`data_app_id=${app_id}&resource_name=ACCOUNT`),
+                                                    false)
                                                     /**@ts-ignore */
                                                     .then(result=>result.filter(result=>result.bank_account_vpa == payment_request.payerid)[0]);
                     if (account_payer){
                         //if status is still pending then send server side event message to customer
                         if (payment_request.status=='PENDING'){
-                            const customer = await MasterGet(app_id, account_payer.app_data_resource_master_id, null, app_id, 'CUSTOMER', null, locale, false).then(result=>result[0]);
+                            const customer = await MasterGet(app_id, account_payer.app_data_resource_master_id, 
+                                                        new URLSearchParams(`data_app_id=${app_id}&resource_name=CUSTOMER`),
+                                                        false).then(result=>result[0]);
                             //check SOCKET connected list
                             for (const user_connected of socketConnectedGet(customer.user_account_app_user_account_id ?? 0)){
                                 const message = {
@@ -85,7 +90,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
             else{
                     res.statusCode = 404;
                     throw '⛔';
-                }
+            }
         }
         else{
             res.statusCode = 404;

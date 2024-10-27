@@ -6,8 +6,8 @@ const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 /**@type{import('../../../server/server.js')} */
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../../../server/db/sql/database.service.js')} */
-const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
+/**@type{import('../../../server/db/dbModelDatabase.js')} */
+const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
 
 /**@type{import('../../../server/db/file.js')} */
 const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -81,7 +81,7 @@ const commonAppStart = async (app_id=null) =>{
     const APP_START = commonRegistryAppParameter(common_app_id).COMMON_APP_START.VALUE=='1';
     /**@ts-ignore */
     const DBOTHER_USER_INSTALLED = commonRegistryAppSecret(app_id ?? common_app_id)[`SERVICE_DB_DB${db_use}_APP_USER`];
-    const DB5_USE_AND_INSTALLED = db_use==5 && await InstalledCheck(app_id, 1).then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true).catch(()=>false);
+    const DB5_USE_AND_INSTALLED = db_use==5 && await InstalledCheck(app_id).then(result=>app_id?result[0].installed:true).catch(()=>false);
     if (NO_MAINTENANCE && DB_START && APP_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
         if (app_id == null)
             return true;
@@ -743,8 +743,8 @@ const commonApp = async parameters =>{
  * @returns {Promise.<import('../../../server/types.js').server_config_apps_with_db_columns[]>}
  */
 const commonAppsGet = async (app_id, resource_id, locale) =>{
-    /**@type{import('../../../server/db/sql/app.service.js')} */
-    const {getApp} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
+    /**@type{import('../../../server/db/dbModelApp.js')} */
+    const {getApp} = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
     const apps_db =  await getApp(app_id, resource_id, locale);
     
     /**@type{import('../../../server/types.js').server_db_file_app[]}*/
