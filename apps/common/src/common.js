@@ -528,12 +528,12 @@ const commonModuleGet = async parameters => {
  */
 const commonComponentCreate = async parameters =>{
     /**@type{import('../../../server/iam.service.js')} */
-    const { iamIdTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     //id token for APP, REPORT and MAINTENANCE
     const idtoken = (parameters.type=='APP' || parameters.type=='REPORT' || parameters.type=='MAINTENANCE')?
-                        await iamIdTokenAuthorize(parameters.app_id, parameters.componentParameters.ip):
+                        await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip):
                             null;
     //geodata for APP and REPORT
     const result_geodata = (parameters.type=='APP' || parameters.type=='REPORT')?
