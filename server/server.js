@@ -373,7 +373,7 @@ const serverUtilAppLine = () =>{
                         ((params.validate_app_function && APP_ID_VALIDATE !=null && app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
                           params.validate_app_function == null)){
                         if (params.resource_validate_type){
-                            if (iam_service.iamResourceAuthenticate({  app_id:routesparameters.app_id, 
+                            if (iam_service.iamAuthenticateResource({  app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
                                                                     authorization:routesparameters.authorization, 
                                                                     resource_id:params.resource_validate_value ?? null, 
@@ -450,14 +450,14 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_data/v1/server-db/user_account-activate/${resource_id_string}`, method:'PUT', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.activate(routesparameters.app_id, 
+                        resolve(iam_service.iamAuthenticateUserActivate(routesparameters.app_id, 
                                 /**@ts-ignore */
                                 resource_id_get_number(), 
                                 routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/server-db/user_account-forgot', method:'POST'}):{
-                        resolve(dbModelUserAccount.forgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
+                        resolve(iam_service.iamAuthenticateUserForgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
                         break;
                     }
                     case route({url:'/bff/app_data/v1/server-db/user_account-profile-stat', method:'GET'}):{
@@ -538,7 +538,7 @@ const serverUtilAppLine = () =>{
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
                     case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.updateUserLocal(routesparameters.app_id, 
+                        resolve(iam_service.iamAuthenticateUserUpdate(routesparameters.app_id, 
                                                                 /**@ts-ignore */ 
                                                                 resource_id_get_number(), 
                                                                 routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
@@ -563,7 +563,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'DELETE', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.deleteUser(routesparameters.app_id, 
+                        resolve(iam_service.iamAuthenticateUserDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             app_query, routesparameters.body, routesparameters.res));
@@ -962,7 +962,7 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
-                        resolve(iam_service.iamUserLogin(routesparameters.app_id, app_query)
+                        resolve(iam_service.iamUserLoginGet(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
@@ -981,20 +981,20 @@ const serverUtilAppLine = () =>{
                     }
                     // app_signup route
                     case route({url:'/bff/app_signup/v1/server-db/user_account-signup', method:'POST'}):{
-                        resolve(dbModelUserAccount.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                        resolve(iam_service.iamAuthenticateUserSignup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                         break;
                     }
                     //iam routes, for login and logout
                     case route({url:'/bff/iam_admin/v1/server-iam-login', method:'POST'}):{
-                        resolve(iam_service.iamAdminAuthenticate(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
+                        resolve(iam_service.iamAuthenticateAdmin(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                         break;
                     }
                     case route({url:'/bff/iam_user/v1/server-iam-login', method:'POST'}):{
-                        resolve(dbModelUserAccount.login(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
+                        resolve(iam_service.iamAuthenticateUser(routesparameters.app_id, routesparameters.res.req.query.iam, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.body, routesparameters.res));
                         break;
                     }
                     case route({url:`/bff/iam_provider/v1/server-iam-login/${resource_id_string}`, method:'POST', required:true}):{
-                        resolve(dbModelUserAccount.login_provider( routesparameters.app_id, routesparameters.res.req.query.iam, 
+                        resolve(iam_service.iamAuthenticateUserProvider( routesparameters.app_id, routesparameters.res.req.query.iam, 
                                                                 /**@ts-ignore */
                                                                 resource_id_get_number(), 
                                                                 routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
