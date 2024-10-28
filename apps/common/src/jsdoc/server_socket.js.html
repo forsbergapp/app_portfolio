@@ -37,13 +37,14 @@ let SOCKET_CONNECTED_CLIENTS = [];
  * @param {string} ip
  * @param {string} headers_user_agent 
  * @param {string} headers_accept_language 
+ * @param {server_server_res} res
  * @returns {Promise.&lt;{  latitude:string,
  *              longitude:string,
  *               place:string,
  *               timezone:string,
  *               identity_provider_id:number|null}>}
  */
-const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
+const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language, res) =>{
     /**@type{import('./bff.service.js')} */
     const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
@@ -69,10 +70,10 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                     (result_geodata.geoplugin_city + ', ' +
                     result_geodata.geoplugin_regionName + ', ' +
                     result_geodata.geoplugin_countryName):'';
-    /**@type{import('./db/sql/user_account.service.js')} */
-    const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
-    const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id)
-                                                    .then(result=>result[0].identity_provider_id)
+    /**@type{import('./db/dbModelUserAccount.js')} */
+    const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    const identity_provider_id = user_account_id?await getUserByUserId(app_id, user_account_id, null,res)
+                                                    .then(result=>result.identity_provider_id)
                                                     .catch(()=>null):null;
     return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
             longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
@@ -158,7 +159,7 @@ const socketClientAdd = (newClient) => {
     else
         for (const connected of SOCKET_CONNECTED_CLIENTS){
             if (connected.id==client_id &amp;&amp; connected.authorization_bearer == authorization_bearer){
-                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language, parameters.res);
                 connected.connection_date = new Date().toISOString();
                 connected.user_account_id = parameters.user_account_id;
                 connected.token_access = parameters.token_access;
@@ -397,7 +398,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         socketClientConnect(parameters.response);
         socketClientOnClose(parameters.response, client_id);
     
-        const connectUserData =  await socketConnectedUserDataGet(app_id, user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
+        const connectUserData =  await socketConnectedUserDataGet(app_id, user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language, parameters.response);
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,

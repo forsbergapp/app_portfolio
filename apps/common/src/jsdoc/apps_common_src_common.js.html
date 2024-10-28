@@ -13,8 +13,8 @@ const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 /**@type{import('../../../server/server.js')} */
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../../../server/db/sql/database.service.js')} */
-const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/sql/database.service.js`);
+/**@type{import('../../../server/db/dbModelDatabase.js')} */
+const {InstalledCheck} = await await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
 
 /**@type{import('../../../server/db/file.js')} */
 const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -75,6 +75,49 @@ const commonMailCreate = async (app_id, data) =>{
         throw '';
 };
 /**
+ * 
+ * @param {number} app_id 
+ * @param {string} emailtype 
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {number} userid 
+ * @param {string|null} verification_code 
+ * @param {string} email 
+ */
+const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
+    /**@type{import('../../../server/bff.service.js')} */
+    const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
+    /**@type{import('../../../server/config.js')} */
+    const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
+
+    const email_rendered = await commonMailCreate( app_id, 
+                                    {
+                                        emailtype:        emailtype,
+                                        host:             configGet('SERVER', 'HOST'),
+                                        app_user_id:      userid,
+                                        verificationCode: verification_code,
+                                        to:               email,
+                                    })
+                                    .catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
+        
+    /**@type{import('../../../server/types.js').server_bff_parameters}*/
+    const parameters = {endpoint:'SERVER_MAIL',
+                        host:null,
+                        url:'/mail/sendemail',
+                        route_path:'/mail/sendemail',
+                        method:'POST', 
+                        query:'',
+                        body:email_rendered,
+                        authorization:null,
+                        ip:ip, 
+                        user_agent:user_agent, 
+                        accept_language:accept_language,
+                        /**@ts-ignore */
+                        res:null};
+    return await bffServer(app_id, parameters);
+};
+/**
  * Checks if ok to start app
  * @param {number|null} app_id
  * @returns {Promise.&lt;boolean>}
@@ -88,7 +131,7 @@ const commonAppStart = async (app_id=null) =>{
     const APP_START = commonRegistryAppParameter(common_app_id).COMMON_APP_START.VALUE=='1';
     /**@ts-ignore */
     const DBOTHER_USER_INSTALLED = commonRegistryAppSecret(app_id ?? common_app_id)[`SERVICE_DB_DB${db_use}_APP_USER`];
-    const DB5_USE_AND_INSTALLED = db_use==5 &amp;&amp; await InstalledCheck(app_id, 1).then((/**@type{{installed:boolean}[]}*/result)=>app_id?result[0].installed:true).catch(()=>false);
+    const DB5_USE_AND_INSTALLED = db_use==5 &amp;&amp; await InstalledCheck(app_id).then(result=>app_id?result[0].installed:true).catch(()=>false);
     if (NO_MAINTENANCE &amp;&amp; DB_START &amp;&amp; APP_START &amp;&amp; (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
         if (app_id == null)
             return true;
@@ -492,12 +535,12 @@ const commonModuleGet = async parameters => {
  */
 const commonComponentCreate = async parameters =>{
     /**@type{import('../../../server/iam.service.js')} */
-    const { iamIdTokenAuthorize } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     //id token for APP, REPORT and MAINTENANCE
     const idtoken = (parameters.type=='APP' || parameters.type=='REPORT' || parameters.type=='MAINTENANCE')?
-                        await iamIdTokenAuthorize(parameters.app_id, parameters.componentParameters.ip):
+                        await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip):
                             null;
     //geodata for APP and REPORT
     const result_geodata = (parameters.type=='APP' || parameters.type=='REPORT')?
@@ -556,7 +599,7 @@ const commonComponentCreate = async parameters =>{
             const decodedReportparameters = Buffer.from(parameters.componentParameters.reportid ?? '', 'base64').toString('utf-8');
             const module = new URLSearchParams(decodedReportparameters).get('module') ??'';
             const papersize = new URLSearchParams(decodedReportparameters).get('ps');
-            const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:null});
+            const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:''});
             const {default:RunReport} = await import(`file://${process.cwd()}${report.COMMON_PATH}`);
 
             /**@type{import('../../../server/types.js').server_apps_report_create_parameters} */
@@ -750,8 +793,8 @@ const commonApp = async parameters =>{
  * @returns {Promise.&lt;import('../../../server/types.js').server_config_apps_with_db_columns[]>}
  */
 const commonAppsGet = async (app_id, resource_id, locale) =>{
-    /**@type{import('../../../server/db/sql/app.service.js')} */
-    const {getApp} = await import(`file://${process.cwd()}/server/db/sql/app.service.js`);
+    /**@type{import('../../../server/db/dbModelApp.js')} */
+    const {getApp} = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
     const apps_db =  await getApp(app_id, resource_id, locale);
     
     /**@type{import('../../../server/types.js').server_db_file_app[]}*/
@@ -948,7 +991,8 @@ const commonRegistryAppSecretUpdate = async (app_id, resource_id, data) => {
    await fileFsCacheSet();
 };
 
-export {commonMailCreate, commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
+export {commonMailCreate, commonMailSend,
+        commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
         commonAppsAdminGet,commonRegistryAppModuleAll,
         commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,commonRegistryAppSecretFile,
         commonRegistryAppsGet,

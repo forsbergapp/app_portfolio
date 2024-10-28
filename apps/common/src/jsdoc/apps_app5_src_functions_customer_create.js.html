@@ -19,14 +19,16 @@
  * @returns {Promise.&lt;import('../../../../server/types.js').server_db_sql_result_app_data_resource_master_post>}
  */
 const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/db/sql/app_data_entity_resource.service.js')} */
-    const {get} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity_resource.service.js`);
-    /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
-    const {post:MasterPost} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
+    const {EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
+    const {MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
     /**@type{import('./account_create.js')} */
     const {default:createBankAccount} = await import('./account_create.js');
 
-    const resource_customer = await get(app_id, null, app_id, 'CUSTOMER', null, null);
+    const resource_customer = await EntityResourceGet(app_id, null, 
+        new URLSearchParams(`data_app_id=${data.data_app_id}&amp;resource_name=CUSTOMER`)
+    );
     
     const post_data = {
                         json_data                                   : {
@@ -45,7 +47,7 @@ const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
     //create CUSTOMER    
     const Customer = await MasterPost(app_id, post_data);
 
-    const resource_account = await get(app_id, null, app_id, 'ACCOUNT', null, null);
+    const resource_account = await EntityResourceGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&amp;resource_name=ACCOUNT`));
     const post_data_account = {
                         user_account_id                             : data.user_account_id,
                         user_account_app_id                         : data.data_app_id,

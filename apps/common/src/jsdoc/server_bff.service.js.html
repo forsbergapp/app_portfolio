@@ -23,7 +23,7 @@ const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('./log.js')} */
 const {logRequestI, logServiceI, logServiceE} = await import(`file://${process.cwd()}/server/log.js`);
 /**@type{import('./iam.service.js')} */
-const {iamRequestAuthenticate} = await import(`file://${process.cwd()}/server/iam.service.js`);
+const {iamAuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('./security.js')} */
 const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}= await import(`file://${process.cwd()}/server/security.js`);
 
@@ -93,7 +93,7 @@ const bffInit = async (req, res) =>{
     });
     //access control that stops request if not passing controls
     /**@type{server_iam_authenticate_request}*/
-    const result = await iamRequestAuthenticate(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
+    const result = await iamAuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
                         .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
     if (result != null){
         res.statusCode = result.statusCode;
