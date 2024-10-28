@@ -68,6 +68,49 @@ const commonMailCreate = async (app_id, data) =>{
         throw '';
 };
 /**
+ * 
+ * @param {number} app_id 
+ * @param {string} emailtype 
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {number} userid 
+ * @param {string|null} verification_code 
+ * @param {string} email 
+ */
+const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
+    /**@type{import('../../../server/bff.service.js')} */
+    const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
+    /**@type{import('../../../server/config.js')} */
+    const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
+
+    const email_rendered = await commonMailCreate( app_id, 
+                                    {
+                                        emailtype:        emailtype,
+                                        host:             configGet('SERVER', 'HOST'),
+                                        app_user_id:      userid,
+                                        verificationCode: verification_code,
+                                        to:               email,
+                                    })
+                                    .catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
+        
+    /**@type{import('../../../server/types.js').server_bff_parameters}*/
+    const parameters = {endpoint:'SERVER_MAIL',
+                        host:null,
+                        url:'/mail/sendemail',
+                        route_path:'/mail/sendemail',
+                        method:'POST', 
+                        query:'',
+                        body:email_rendered,
+                        authorization:null,
+                        ip:ip, 
+                        user_agent:user_agent, 
+                        accept_language:accept_language,
+                        /**@ts-ignore */
+                        res:null};
+    return await bffServer(app_id, parameters);
+};
+/**
  * Checks if ok to start app
  * @param {number|null} app_id
  * @returns {Promise.<boolean>}
@@ -941,7 +984,8 @@ const commonRegistryAppSecretUpdate = async (app_id, resource_id, data) => {
    await fileFsCacheSet();
 };
 
-export {commonMailCreate, commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
+export {commonMailCreate, commonMailSend,
+        commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
         commonAppsAdminGet,commonRegistryAppModuleAll,
         commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,commonRegistryAppSecretFile,
         commonRegistryAppsGet,
