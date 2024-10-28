@@ -79,31 +79,28 @@ const IBAN_validate = iban => {
  */
 const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
 
-    /**@type{import('../../../../server/db/sql/app_data_entity.service.js')} */
-    const {get:EntityGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_entity.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
+    const {EntityGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
 
-    /**@type{import('../../../../server/db/sql/app_data_resource_master.service.js')} */
-    const {get:MasterGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_master.service.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
+    const {MasterGet, DetailGet, DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
 
-    /**@type{import('../../../../server/db/sql/app_data_resource_detail.service.js')} */
-    const {get:DetailGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail.service.js`);
 
-    /**@type{import('../../../../server/db/sql/app_data_resource_detail_data.service.js')} */
-    const {get:TransactionsGet} = await import(`file://${process.cwd()}/server/db/sql/app_data_resource_detail_data.service.js`);
+    const transactions = await DataGet(app_id, null, 
+        new URLSearchParams(`user_account_id=${data.user_account_id}&amp;data_app_id=${data.data_app_id}&amp;`+ 
+                            'resource_name_type=RESOURCE_TYPE&amp;resource_name=ACCOUNT&amp;'+ 
+                            'resource_name_master_attribute_type=RESOURCE_TYPE&amp;resource_name_master_attribute=CUSTOMER&amp;'+ 
+                            `entity_id=${data.entity_id}`),
+        false);
 
-    const transactions = await TransactionsGet(app_id, null, null, data.user_account_id, data.data_app_id, 
-                                                'RESOURCE_TYPE', 'ACCOUNT', 
-                                                'RESOURCE_TYPE', 'CUSTOMER',
-                                                null, null, null, null, false);
-
-    const Entity            = await EntityGet(app_id, null, data.data_app_id, null)
+    const Entity            = await EntityGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}`))
                                         .then(result=>JSON.parse(result[0].json_data));
 
-    const AccountMetaData   = await MasterGet(app_id, null, null, data.data_app_id, 'ACCOUNT', null, null, true)
+    const AccountMetaData   = await MasterGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&amp;resource_name=ACCOUNT`), true)
                                     .then(result=>result.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-    const CustomerAccount   = await DetailGet(app_id, null, null, data.user_account_id, data.data_app_id, 'ACCOUNT', null, null, false)
+    const CustomerAccount   = await DetailGet(app_id, null, new URLSearchParams(`user_account_id=${data.user_account_id}&amp;data_app_id=${data.data_app_id}&amp;resource_name=ACCOUNT`), false)
                                         .then(result=>JSON.parse(result[0].json_data));
-    const currency          = await MasterGet(app_id, null, null, data.data_app_id, 'CURRENCY', null, locale, true).then(result=>JSON.parse(result[0].json_data));
+    const currency          = await MasterGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&amp;resource_name=CURRENCY`), true).then(result=>JSON.parse(result[0].json_data));
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_DATA json_data content
     const balance = transactions.reduce((balance, current_row)=>balance += 
                                                                     /**@ts-ignore */
