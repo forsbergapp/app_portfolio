@@ -433,8 +433,8 @@ const install_db_get_files = async (install_type) =>{
 
     /**@type{import('./dbModelApp.js')} */
     const {getAppsAdminId} = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
-    /**@type{import('./sql/user_account.service.js')} */
-    const {create} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
+    /**@type{import('./dbModelUserAccount.js')} */
+    const {userPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./dbModelUserAccountApp.js')} */
     const {createUserAccountApp} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
     /**@type{import('./dbModelUserAccountLike.js')} */
@@ -510,7 +510,7 @@ const install_db_get_files = async (install_type) =>{
                                         provider_email:         null,
                                         admin:                  1
                                     };
-                return await create(app_id, data_create)
+                return await userPost(app_id, data_create)
                                 .catch((/**@type{import('../types.js').server_server_error}*/err)=> {
                                     throw err;
                                 });
@@ -787,7 +787,7 @@ const install_db_get_files = async (install_type) =>{
      */
     const create_likeuser = async (app_id, id, id_like ) =>{
         return new Promise((resolve, reject) => {
-            user_account_like.like(app_id, id, id_like)
+            user_account_like.like(app_id, id, {user_account_id:id_like})
             .then(result => {
                 if (result.affectedRows == 1)
                     records_user_account_like++;
@@ -826,7 +826,7 @@ const install_db_get_files = async (install_type) =>{
      */
     const create_user_account_follow = async (app_id, id, id_follow ) =>{
         return new Promise((resolve, reject) => {
-            user_account_follow.follow(app_id, id, id_follow)
+            user_account_follow.follow(app_id, id, {user_account_id:id_follow})
             .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_follow++;
@@ -1015,10 +1015,10 @@ const DemoUninstall = async (app_id, query)=> {
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../log.js')} */
     const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
-    /**@type{import('./sql/user_account.service.js')} */
-	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
+    /**@type{import('./dbModelUserAccount.js')} */
+	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     return new Promise((resolve, reject)=>{
-        getDemousers(app_id)
+        userDemoGet(app_id)
         .then(result_demo_users=>{
             let deleted_user = 0;
             if (result_demo_users.length>0){
@@ -1028,7 +1028,7 @@ const DemoUninstall = async (app_id, query)=> {
                                                     client_id_current:null,
                                                     broadcast_type:'PROGRESS',
                                                     broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))});
-                        await deleteUser(app_id, user.id)
+                        await userDelete(app_id, user.id)
                         .then(()=>{
                             deleted_user++;
                             if (deleted_user == result_demo_users.length)

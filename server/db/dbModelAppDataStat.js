@@ -152,7 +152,7 @@ const getStatUniqueVisitor = (app_id, query) =>{
 const post = async (app_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
-                        dbSql.APP_DATA_STAT_SELECT, 
+                        dbSql.APP_DATA_STAT_INSERT, 
                         {json_data:                                             JSON.stringify(data.json_data),
                             app_id:                                             data.app_id ?? null,
                             user_account_id:                                    data.user_account_id ?? null,

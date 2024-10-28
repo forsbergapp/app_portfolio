@@ -1,612 +1,324 @@
 /** @module server/db/dbModelUserAccount */
 
-/**@type{import('./sql/user_account.service.js')} */
-const service = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
+/**@type{import('./dbSql.js')} */
+const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
 /**@type{import('../config.js')} */
 const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
-/**@type{import('./file.js')} */
-const { fileCache, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.js`);
-
-/**@type{import('../../apps/common/src/common.js')} */
-const {commonMailSend, commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+
 /**@type{import('../iam.service.js')} */
-const { iamTokenAuthorize, iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.service.js`);
-/**@type{import('../socket.js')} */
-const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 /**@type{import('../db/common.js')} */
 const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
-/**@type{import('./dbModelAppSetting.js')} */
-const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
-/**@type{import('./dbModelUserAccountApp.js')} */
-const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
 /**@type{import('./dbModelUserAccountEvent.js')} */
-const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
-/**@type{import('../security.js')} */
-const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
-
+const { insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
 /**
- * 
- * @param {number} app_id 
+ * @param {string|null} password 
+ * @returns {Promise.<string|null>}
  */
-const login_error = async (app_id) =>{
-    return getSettingDisplayData(   app_id,
-        new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20300}`))
-    .then(result_message=>result_message[0].display_data)
-    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+const set_password = async (password) =>{
+	/**@type{import('../security.js')} */
+	const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+	return password==null?null:await securityPasswordCreate(password);
 };
 /**
+ * Checks password between 10 and 100 characters
+ * @param {import('../types.js').server_db_sql_parameter_user_account_updatePassword} data 
+ * @returns {object|null}
+ */
+const data_validation_password = (data) => {
+    if (data.password_new == null || data.password_new.length < 10 || data.password_new.length > 100){
+        //'Password 10 - 100 characters'
+		return {'errorNum' : 20106};
+    }
+    else
+        return null;
+};
+
+/**
  * 
+ * @param {import('../types.js').server_db_sql_parameter_user_account_updateUserCommon} data 
+ * @returns {object|null}
+ */
+ const data_validation_common = data => {
+	data.username = data.username ?? null;
+	data.bio = data.bio ?? null;
+	if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
+		//'username 5 - 100 characters'
+		return {'errorNum' : 20100};
+	}
+	else
+		if (data.username != null &&
+			(data.username.indexOf(' ') > -1 || 
+			data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1)){
+			//'not valid username'
+			return {'errorNum' : 20101};
+		}
+		else
+			return null;
+ };
+/**
+ * 
+ * @param {	import('../types.js').server_db_sql_parameter_user_account_create|
+ * 			import('../types.js').server_db_sql_parameter_user_account_updateUserLocal|
+ *         	import('../types.js').server_db_sql_parameter_user_account_updateAdmin} data 
+ * @returns {object|null}
+ */
+const data_validation = data => {
+	data.username = data.username ?? null;
+	data.bio = data.bio ?? null;
+	data.password_reminder = data.password_reminder ?? null;
+	data.email_unverified = data.email_unverified ?? null;
+	data.verification_code = data.verification_code ?? null;
+	data.provider_id = data.provider_id ?? null;
+	
+	if (data.provider_id != null){
+		data.password = null;
+		data.password_new = null;
+		data.password_reminder = null;
+		data.email = null;
+		data.email_unverified = null;
+		data.avatar = null;
+		data.verification_code = null;
+	}
+    if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
+		//'username 5 - 100 characters'
+		return {'errorNum' : 20100};
+	}
+	else 
+		if (data.username != null &&
+			(data.username.indexOf(' ') > -1 || 
+			data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1)){
+			//'not valid username'
+			return {'errorNum' : 20101};
+		}
+		else
+			if (data.bio != null && data.bio.length > 100){
+				//'bio max 100 characters'
+				return {'errorNum' : 20102};
+			}
+			else 
+				if (data.email != null && data.email.length > 100){
+					//'email max 100 characters'
+					return {'errorNum' : 20103};
+				}
+				else
+					if (data.password_reminder != null && data.password_reminder.length > 100){
+						//'reminder max 100 characters'
+						return {'errorNum' : 20104};
+					}
+					else{
+						//Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
+						/**
+						 * 
+						 * @param {string} email 
+						 * @returns 
+						 */
+						const email_ok = email =>{
+							const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
+							try {
+								/**@ts-ignore */
+								return email == email.match(email_regexp)[0];	
+							} catch (error) {
+								return false;
+							}
+							
+						};
+						if (data.email != null && data.email.slice(-10) != '@localhost' && email_ok(data.email)==false){
+							//'not valid email' (ignore emails that ends with '@localhost')
+							return {'errorNum' : 20105};
+						}
+						else
+							if (data.email_unverified != null && email_ok(data.email_unverified)==false){
+								//'not valid email'
+								return {'errorNum' : 20105};
+							}
+							else
+								if (data.provider_id == null && (data.username == null || (data.password_new??data.admin==1?data.admin:data.password)==null || data.email==null)){
+									//'Username, password and email are required'
+									return {'errorNum' : 20107};
+								}
+								else
+									if (data.provider_id == null && ((data.admin==1 && data.password_new != null) || data.admin==0))
+										return data_validation_password({password_new: data.password_new??data.password, auth:null});
+									else
+										return null;
+					}
+};
+
+
+/**
  * @param {number} app_id
- * @param {string} iam
- * @param {string} ip
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {*} data
- * @param {import('../types.js').server_server_res} res
- * @return {Promise.<{
- *                  accessToken:string|null,
- *                  exp:number,
- *                  iat:number,
- *                  tokentimestamp:number,
- *                  login:import('../types.js').server_db_sql_result_user_account_userLogin[]}>}
+ * @param {import('../types.js').server_db_sql_parameter_user_account_userLogin} data
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_userLogin[]>}
  */
-const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
-    return new Promise((resolve, reject)=>{        
-        
-        /**@type{import('../types.js').server_db_sql_parameter_user_account_userLogin} */
-        const data_login =    {   username: data.username};
-        service.userLogin(app_id, data_login)
-        .then(result_login=>{
-            const user_account_id = result_login[0]?serverUtilNumberValue(result_login[0].id):null;
-            /**@type{import('../types.js').server_iam_user_login_record} */
-            const data_body = { id:     user_account_id,
-                                app_id: app_id,
-                                user:   data.username,
-                                db:     fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
-                                res:    0,
-                                token:  null,
-                                ip:     ip,
-                                ua:     user_agent,
-                                long:   data.client_longitude ?? null,
-                                lat:    data.client_latitude ?? null,
-                                created: new Date().toISOString()
-                            };
-            if (result_login[0]) {
-                securityPasswordCompare(data.password, result_login[0].password).then((result_password)=>{
-                    data_body.res = result_password?1:0;
-                    if (result_password) {
-                        const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_login[0].id, name:result_login[0].username, ip:ip, scope:'USER'});
-                        data_body.token = jwt_data.token;
-                        fileFsAppend('IAM_USER_LOGIN', data_body, '')
-                        .then(()=>{
-                            createUserAccountApp(app_id, result_login[0].id)
-                            .then(()=>{
-                                //if user not activated then send email with new verification code
-                                const new_code = service.verification_code();
-                                if (result_login[0].active == 0){
-                                    service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
-                                    .then(()=>{
-                                        //send email UNVERIFIED
-                                        commonMailSend(  app_id, 
-                                                        commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_UNVERIFIED, 
-                                                        ip, 
-                                                        user_agent,
-                                                        accept_language,
-                                                        result_login[0].id, 
-                                                        new_code, 
-                                                        result_login[0].email)
-                                        .then(()=>{
-                                            socketConnectedUpdate(app_id, 
-                                                {   iam:iam,
-                                                    user_account_id:result_login[0].id,
-                                                    admin:null,
-                                                    token_access:data_body.token,
-                                                    token_admin:null,
-                                                    ip:ip,
-                                                    headers_user_agent:user_agent,
-                                                    headers_accept_language:accept_language,
-                                                    res: res})
-                                            .then(()=>{
-                                                resolve({
-                                                    accessToken: data_body.token,
-                                                    exp:jwt_data.exp,
-                                                    iat:jwt_data.iat,
-                                                    tokentimestamp:jwt_data.tokentimestamp,
-                                                    login: Array(result_login[0])
-                                                });
-                                            })
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                        })
-                                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                    });
-                                }
-                                else{
-                                    socketConnectedUpdate(app_id, 
-                                        {   iam:iam,
-                                            user_account_id:result_login[0].id,
-                                            admin:null,
-                                            token_access:data_body.token,
-                                            token_admin:null,
-                                            ip:ip,
-                                            headers_user_agent:user_agent,
-                                            headers_accept_language:accept_language,
-                                            res: res})
-                                    .then(()=>{
-                                        resolve({
-                                            accessToken: data_body.token,
-                                            exp:jwt_data.exp,
-                                            iat:jwt_data.iat,
-                                            tokentimestamp:jwt_data.tokentimestamp,
-                                            login: Array(result_login[0])
-                                        });
-                                    })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                }
-                            })
-                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                        })
-                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                    } else {
-                        //Username or password not found
-                        fileFsAppend('IAM_USER_LOGIN', data_body, '')
-                        .then(()=>{
-                            res.statusCode = 400;
-                            login_error(app_id)
-                            .then((/**@type{string}*/text)=>reject(text));
-                        })
-                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                    }
-                });
-            } else{
-                //User not found
-                fileFsAppend('IAM_USER_LOGIN', data_body, '')
-                .then(()=>{
-                    res.statusCode = 404;
-                    login_error(app_id)
-                    .then((/**@type{string}*/text)=>reject(text));
-                })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-    });
-};
+const userGetUsername = (app_id, data) =>
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_USERNAME,
+                        {
+                            username: data.username
+                        },
+                        null, 
+                        null));
+
 /**
  * 
  * @param {number} app_id 
- * @param {string} iam
- * @param {number} resource_id
- * @param {string} ip 
- * @param {string} user_agent 
- * @param {string} accept_language
- * @param {*} query 
- * @param {*} data 
- * @param {import('../types.js').server_server_res} res
- * @return {Promise.<{
- *                  accessToken:string|null,
- *                  exp:number,
- *                  iat:number,
- *                  tokentimestamp:number,
- *                  items:import('../types.js').server_db_sql_result_user_account_providerSignIn[],
- *                  userCreated:0|1}>}
+ * @param {number|null} identity_provider_id 
+ * @param {number} search_id
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_providerSignIn[]>}
  */
-const login_provider = (app_id, iam, resource_id, ip, user_agent, accept_language, query, data, res) =>{
-    return new Promise((resolve, reject)=>{
-        service.providerSignIn(app_id, serverUtilNumberValue(data.identity_provider_id), resource_id)
-        .then(result_signin=>{
-            /** @type{import('../types.js').server_db_sql_parameter_user_account_create} */
-            const data_user = { bio:                    null,
-                                private:                null,
-                                user_level:             null,
-                                username:               null,
-                                password:               null,
-                                password_new:           null,
-                                password_reminder:      null,
-                                email_unverified:       null,
-                                email:                  null,
-                                avatar:                 null,
-                                verification_code:      null,
-                                active:                 1,
-                                identity_provider_id:   serverUtilNumberValue(data.identity_provider_id),
-                                provider_id:            data.provider_id,
-                                provider_first_name:    data.provider_first_name,
-                                provider_last_name:     data.provider_last_name,
-                                provider_image:         data.provider_image,
-                                provider_image_url:     data.provider_image_url,
-                                provider_email:         data.provider_email,
-                                admin:                  0};
-            /**@type{import('../types.js').server_iam_user_login_record} */
-            const data_login = {
-                                id:     null,
-                                app_id: app_id,
-                                user:   result_signin[0].username,
-                                db:     fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
-                                res:    0,
-                                token:  null,
-                                ip:     ip,
-                                ua:     user_agent,
-                                long:   data.client_longitude,
-                                lat:    data.client_latitude,
-                                created: new Date().toISOString()
-                            };
-            if (result_signin.length > 0) {        
-                const jwt_data_exists = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_signin[0].id, name:result_signin[0].username, ip:ip, scope:'USER'});
-                data_login.token = jwt_data_exists.token;
-                data_login.res = 1;
-                data_login.id = result_signin[0].id;
-                fileFsAppend('IAM_USER_LOGIN', data_login, '')
-                .then(()=>{
-                    service.updateSigninProvider(app_id, result_signin[0].id, data_user)
-                    .then(()=>{
-                        createUserAccountApp(app_id, result_signin[0].id)
-                        .then(()=>{
-                            socketConnectedUpdate(app_id, 
-                                {   iam:iam,
-                                    user_account_id:result_signin[0].id,
-                                    admin:null,
-                                    token_access:data_login.token,
-                                    token_admin:null,
-                                    ip:ip,
-                                    headers_user_agent:user_agent,
-                                    headers_accept_language:accept_language,
-                                    res: res})
-                            .then(()=>{
-                                resolve({
-                                    accessToken: data_login.token,
-                                    exp:jwt_data_exists.exp,
-                                    iat:jwt_data_exists.iat,
-                                    tokentimestamp:jwt_data_exists.tokentimestamp,
-                                    items: result_signin,
-                                    userCreated: 0
-                                });
-                            })
-                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                        })
-                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
-                        dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-                    });    
-                })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-            }
-            else{
-                //if provider user not found then create user and one user setting
-                //avatar not used by providers, set default null
-                data_user.avatar = data.avatar ?? null;
-                data_user.provider_image = data.provider_image ?? null;
-                //generate local username for provider 1
-                data_user.username = `${data_user.provider_first_name}${Date.now()}`;
-                
-                service.create(app_id, data_user)
-                .then(result_create=>{
-                    const jwt_data_new = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data_user.username ?? '', ip:ip, scope:'USER'});
-                    data_login.token = jwt_data_new.token;
-                    data_login.res = 1;
-                    data_login.id = result_create.insertId;
-                    fileFsAppend('IAM_USER_LOGIN', data_login, '')
-                    .then(()=>{
-                        createUserAccountApp(app_id, result_create.insertId)
-                        .then(()=>{
-                            service.providerSignIn(app_id, serverUtilNumberValue(data.identity_provider_id), resource_id)
-                            .then(result_signin2=>{
-                                socketConnectedUpdate(app_id, 
-                                    {   iam:iam,
-                                        user_account_id:result_create.insertId,
-                                        admin:null,
-                                        token_access:data_login.token,
-                                        token_admin:null,
-                                        ip:ip,
-                                        headers_user_agent:user_agent,
-                                        headers_accept_language:accept_language,
-                                        res: res})
-                                .then(()=>{
-                                    resolve({
-                                        accessToken: data_login.token,
-                                        exp:jwt_data_new.exp,
-                                        iat:jwt_data_new.iat,
-                                        tokentimestamp:jwt_data_new.tokentimestamp,
-                                        items: result_signin2,
-                                        userCreated: 1
-                                    });
-                                })
-                                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                            })
-                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                        })
-                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-    });
-};
+const userGetProvider = async (app_id, identity_provider_id, search_id) =>
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_PROVIDER,
+                        {
+                            provider_id: search_id,
+                            identity_provider_id: identity_provider_id
+                        },
+                        null, 
+                        null));
 /**
  * 
  * @param {number} app_id 
- * @param {string} ip 
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {*} query 
- * @param {*} data 
- * @param {import('../types.js').server_server_res} res 
- * @return {Promise.<{
- *              accessToken:string|null,
- *              exp:number,
- *              iat:number,
- *              tokentimestamp:number,
- *              id:number,
- *              data:import('../types.js').server_db_sql_result_user_account_create}>}
+ * @param {number} id 
+ * @param {string} verification_code 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updateUserVerificationCode>}
  */
-const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
-    return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_db_sql_parameter_user_account_create} */
-        const data_body = { bio:                    data.bio,
-                            private:                data.private,
-                            user_level:             data.user_level,
-                            username:               data.username,
-                            password:               null,
-                            password_new:           data.password,
-                            password_reminder:      data.password_reminder,
-                            email:                  data.email,
-                            email_unverified:       null,
-                            avatar:                 data.avatar,
-                            verification_code:      data.provider_id?null:service.verification_code(),
-                            active:                 serverUtilNumberValue(data.active) ?? 0,
-                            identity_provider_id:   serverUtilNumberValue(data.identity_provider_id),
-                            provider_id:            data.provider_id ?? null,
-                            provider_first_name:    data.provider_first_name,
-                            provider_last_name:     data.provider_last_name,
-                            provider_image:         data.provider_image,
-                            provider_image_url:     data.provider_image_url,
-                            provider_email:         data.provider_email,
-                            admin:                  0
-                        };
-        service.create(app_id, data_body)
-        .then(result_create=>{
-            if (data.provider_id == null ) {
-                //send email for local users only
-                //send email SIGNUP
-                commonMailSend(  app_id, 
-                                commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_SIGNUP, 
-                                ip, 
-                                user_agent,
-                                accept_language,
-                                result_create.insertId, 
-                                data_body.verification_code, 
-                                data_body.email ?? '')
-                .then(()=>{
-                    const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
-                    resolve({
-                        accessToken: jwt_data.token,
-                        exp:jwt_data.exp,
-                        iat:jwt_data.iat,
-                        tokentimestamp:jwt_data.tokentimestamp,
-                        id: result_create.insertId,
-                        data: result_create
-                    });
-                })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-            }
-            else{
-                const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
-                resolve({
-                    accessToken: jwt_data.token,
-                    exp:jwt_data.exp,
-                    iat:jwt_data.iat,
-                    tokentimestamp:jwt_data.tokentimestamp,
-                    id: result_create.insertId,
-                    data: result_create
-                });
-            }
-                
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
-            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-        });
-    });
-};
+const updateUserVerificationCode = async (app_id, id, verification_code) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_UPDATE_VERIFICATION_CODE,
+                        {
+                            verification_code: verification_code,
+                            id: id   
+                        },
+                        null, 
+                        null));
+
 /**
  * 
  * @param {number} app_id 
- * @param {number} resource_id
- * @param {string} ip 
- * @param {string} user_agent 
- * @param {string} accept_language 
- * @param {string} host 
- * @param {*} query 
- * @param {*} data 
- * @param {import('../types.js').server_server_res} res
- * @return {Promise.<{
- *              count: number,
- *              auth: string|null,
- *              accessToken: string|null,
- *              exp:number|null,
- *              iat:number|null,
- *              tokentimestamp:number|null,
- *              items: import('../types.js').server_db_sql_result_user_account_activateUser[]}>}
+ * @param {number} id 
+ * @param {import('../types.js').server_db_sql_parameter_user_account_create} data
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updateSigninProvider>}
  */
-const activate = (app_id, resource_id, ip, user_agent, accept_language, host, query, data, res) =>{
-    return new Promise((resolve, reject)=>{
-        /**@type{string|null} */
-        let auth_password_new = null;
-        if (serverUtilNumberValue(data.verification_type) == 3){
-            //reset password
-            auth_password_new = service.verification_code();
-        }
-        service.activateUser(app_id, resource_id, serverUtilNumberValue(data.verification_type), data.verification_code, auth_password_new)
-        .then(result_activate=>{
-            if (auth_password_new == null){
-                if (result_activate.affectedRows==1 && serverUtilNumberValue(data.verification_type)==4){
-                    //new email verified
-                    /**@type{import('../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                    const eventData = {
-                        user_account_id: resource_id,
-                        event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                        event_status: 'SUCCESSFUL',
-                        user_language: data.user_language,
-                        user_timezone: data.user_timezone,
-                        user_number_system: data.user_number_system,
-                        user_platform: data.user_platform,
-                        server_remote_addr : ip,
-                        server_user_agent : user_agent,
-                        server_http_host : host,
-                        server_http_accept_language : accept_language,
-                        client_latitude : data.client_latitude,
-                        client_longitude : data.client_longitude
-                    };
-                    insertUserEvent(app_id, eventData)
-                    .then(result_insert=>{
-                        resolve({
-                            count: result_insert.affectedRows,
-                            auth: null,
-                            accessToken: null,
-                            exp:null,
-                            iat:null,
-                            tokentimestamp:null,
-                            items: Array(result_insert)
-                        });
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                }
-                else
-                    resolve({
-                        count: result_activate.affectedRows,
-                        auth: null,
-                        accessToken: null,
-                        exp:null,
-                        iat:null,
-                        tokentimestamp:null,
-                        items: Array(result_activate)
-                    });
-            }
-            else{
-                const jwt_data = iamTokenAuthorize(app_id, 'APP_ACCESS', {id:resource_id, name:'', ip:ip, scope:'USER'});
-                //return accessToken since PASSWORD_RESET is in progress
-                //email was verified and activated with id token, but now the password will be updated
-                //using accessToken and authentication code
-                /**@type{import('../types.js').server_iam_user_login_record} */
-                const data_body = { 
-                    id:         resource_id,
-                    app_id:     app_id,
-                    user:       '',
-                    db:         fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
-                    res:        1,
-                    token:      jwt_data.token,
-                    ip:         ip,
-                    ua:         user_agent,
-                    long:       data.client_longitude ?? null,
-                    lat:        data.client_latitude ?? null,
-                    created:    new Date().toISOString()};
-                fileFsAppend('IAM_USER_LOGIN', data_body, '')
-                .then(()=>{
-                    resolve({
-                        count: result_activate.affectedRows,
-                        auth: auth_password_new,
-                        accessToken: data_body.token,
-                        exp:jwt_data.exp,
-                        iat:jwt_data.iat,
-                        tokentimestamp:jwt_data.tokentimestamp,
-                        items: Array(result_activate)
-                    });
-                })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
-            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-        });
-    });
+const updateUserProvider = async (app_id, id, data) => {
+    const error_code = data_validation(data);
+    if (error_code==null)
+        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_UPDATE_PROVIDER,
+                            {
+                                identity_provider_id: data.identity_provider_id,
+                                provider_id: data.provider_id,
+                                provider_first_name: data.provider_first_name,
+                                provider_last_name: data.provider_last_name,
+                                provider_image: data.provider_image,
+                                provider_image_url: data.provider_image_url,
+                                provider_email: data.provider_email,
+                                id: id,
+                                DB_CLOB: ['provider_image']
+                            },
+                            null, 
+                            null));
+    else
+        throw error_code;
 };
+
 /**
  * 
  * @param {number} app_id 
- * @param {string} ip 
- * @param {string} user_agent 
- * @param {string} accept_language 
- * @param {*} host 
- * @param {*} data 
- * @returns {Promise.<{sent: number,id?: number}>}
+ * @param {import('../types.js').server_db_sql_parameter_user_account_create} data 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_create>}
  */
-const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
-    return new Promise((resolve, reject)=>{
-        const email = data.email ?? '';
-        if (email !='')
-            service.getEmailUser(app_id, email)
-            .then(result_emailuser=>{
-                if (result_emailuser[0]){
-                    getLastUserEvent(app_id, serverUtilNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
-                    .then(result_user_event=>{
-                        if (result_user_event[0] &&
-                            result_user_event[0].status_name == 'INPROGRESS' &&
-                            (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) < 1)
-                            resolve({sent: 0});
-                        else{
-                            /**@type{import('../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                            const eventData = {
-                                                user_account_id: result_emailuser[0].id,
-                                                event: 'PASSWORD_RESET',
-                                                event_status: 'INPROGRESS',
-                                                user_language: data.user_language,
-                                                user_timezone: data.user_timezone,
-                                                user_number_system: data.user_number_system,
-                                                user_platform: data.user_platform,
-                                                server_remote_addr : ip,
-                                                server_user_agent : user_agent,
-                                                server_http_host : host,
-                                                server_http_accept_language : accept_language,
-                                                client_latitude : data.client_latitude,
-                                                client_longitude : data.client_longitude
-                                            };
-                            insertUserEvent(app_id, eventData)
-                            .then(()=>{
-                                const new_code = service.verification_code();
-                                service.updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
-                                .then(()=>{
-                                    //send email PASSWORD_RESET
-                                    commonMailSend(  app_id, 
-                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_PASSWORD_RESET, 
-                                                    ip, 
-                                                    user_agent,
-                                                    accept_language,
-                                                    result_emailuser[0].id, 
-                                                    new_code, 
-                                                    email)
-                                    .then(()=>{
-                                        resolve({
-                                            sent: 1,
-                                            id: result_emailuser[0].id
-                                        });  
-                                    })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                })
-                                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                            })
-                            .catch(()=> {
-                                resolve({sent: 0});
-                            });
-                        }
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));         
-                }
-                else
-                    resolve({sent: 0});
-            })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-        else
-            resolve({sent: 0});
-    });
+const userPost = async (app_id, data) =>{ 
+    const error_code = data_validation(data);
+    if (error_code==null)
+        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            set_password(data.password_new)
+            .then(password=>dbCommonExecute(app_id, 
+                                            dbSql.USER_ACCOUNT_INSERT,
+                                            {
+                                                bio: data.bio,
+                                                private: data.private,
+                                                user_level: data.user_level,
+                                                username: data.username,
+                                                password_new: password,
+                                                password_reminder: data.password_reminder,
+                                                email: data.email,
+                                                avatar: data.avatar,
+                                                verification_code: data.verification_code,
+                                                active: data.active,
+                                                identity_provider_id: data.identity_provider_id,
+                                                provider_id: data.provider_id,
+                                                provider_first_name: data.provider_first_name,
+                                                provider_last_name: data.provider_last_name,
+                                                provider_image: data.provider_image,
+                                                provider_image_url: data.provider_image_url,
+                                                provider_email: data.provider_email,
+                                                DB_RETURN_ID:'id',
+                                                DB_CLOB: ['avatar', 'provider_image']
+                                            },
+                                            null, 
+                                            null)));
+    else
+        throw error_code;
 };
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {number|null} verification_type 
+ * @param {string} verification_code 
+ * @param {string|null} auth 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_activateUser>}
+ */
+const userUpdateActivate = async (app_id, id, verification_type, verification_code, auth) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_UPDATE_ACTIVATE,
+                        {
+                            auth: auth,
+                            verification_type: verification_type,
+                            id: id,
+                            verification_code: verification_code
+                        },
+                        null, 
+                        null));
+    
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} email 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getEmailUser[]>}
+ */
+const userGetEmail = async (app_id, email) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_EMAIL,
+                        {
+                            email: email
+                        },
+                        null, 
+                        null));
+
 /**
  * 
  * @param {number} app_id 
@@ -647,8 +359,55 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                         }
                 return row;
             });
+        /**
+         * @param {string} search
+         */
+        const user_where = search =>{
+            switch (true){
+                case (search!='' && search != null):{
+                    return 'u.username LIKE :user_value OR u.provider_first_name LIKE :user_value';
+                }
+                case (resource_id_name!='' && resource_id_name != null):{
+                    return 'u.username = :user_value';
+                }
+                case (resource_id_number != null):{
+                    return 'u.id = :user_value';
+                }
+                default:{
+                    return '1=2';
+                }
+            }
+        };
+        /**
+         * @param {string} search
+         */
+        const user_where_value = search =>{
+            switch (true){
+                case (search!='' && search != null):{
+                    return `${search}%`;
+                }
+                case (resource_id_name!='' && resource_id_name != null):{
+                    return resource_id_name;
+                }
+                case (resource_id_number != null):{
+                    return resource_id_number;
+                }
+                default:{
+                    return null;
+                }
+            }
+        };
         //resource id can be number, string or empty if searching
-        service.getProfileUser(app_id, resource_id_number, resource_id_name, query.get('search'), serverUtilNumberValue(query.get('id')))
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_SELECT_PROFILE
+                            .replace('<USER_WHERE/>',user_where(query.get('search'))),
+                            {
+                                user_accound_id_current_user: serverUtilNumberValue(query.get('id')),
+                                user_value: user_where_value(query.get('search'))
+                            },
+                            null, 
+                            null))
         .then(result_getProfileUser=>{
             if (query.get('search')){
                 //searching, return result
@@ -681,7 +440,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
             else
                 if (result_getProfileUser[0]){
                     //always save stat who is viewing, same user, none or someone else
-                    import(`file://${process.cwd()}/server/db/sql/user_account_view.service.js`)
+                    import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`)
                     .then((/**@type{import('./dbModelUserAccountView.js')} */{ insertUserAccountView }) => {
                         const data_body = { user_account_id:        serverUtilNumberValue(query.get('id')),    //who views
                                             user_account_id_view:   serverUtilNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
@@ -710,10 +469,50 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
  * 
  * @param {number} app_id 
  * @param {*} query
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getProfileStat[]>}
  */
-const getProfileStat = (app_id, query) => service.getProfileStat(app_id, serverUtilNumberValue(query.get('statchoice')))
-                                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+const getProfileStat = (app_id, query) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_PROFILE_STAT,
+                        {
+                            statchoice: serverUtilNumberValue(query.get('statchoice')),
+                            app_id: app_id
+                        },
+                        null, 
+                        null));
 
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {import('../types.js').server_db_sql_parameter_user_account_updateAdmin} data 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updateAdmin>}
+ */
+const userUpdateAdmin = async (app_id, id, data) =>{
+	const error_code = data_validation(data);
+	if (error_code==null)
+        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            set_password(data.password_new)
+            .then(password=>dbCommonExecute(app_id, 
+                                            dbSql.USER_ACCOUNT_UPDATE,
+                                            {id: id,
+                                                active: data.active,
+                                                user_level: data.user_level,
+                                                private: data.private,
+                                                username: data.username,
+                                                bio: data.bio==''?null:data.bio,
+                                                email: data.email,
+                                                email_unverified: data.email_unverified==''?null:data.email_unverified,
+                                                password_new: password,
+                                                password_reminder: data.password_reminder==''?null:data.password_reminder,
+                                                verification_code: data.verification_code==''?null:data.verification_code
+                                                },
+                                            null, 
+                                            null)));
+    else
+        throw error_code;
+};
 /**
  * 
  * @param {number} app_id 
@@ -726,9 +525,9 @@ const getProfileStat = (app_id, query) => service.getProfileStat(app_id, serverU
 const updateAdmin =(app_id, resource_id, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         // get avatar and provider column used to validate
-        service.getUserByUserId(app_id, resource_id)
+        getUserByUserId(app_id, resource_id, query, res)
         .then(result_user=>{
-            if (result_user[0]) {
+            if (result_user) {
                 /**@type{import('../types.js').server_db_sql_parameter_user_account_updateAdmin} */
                 const body = {  active:             serverUtilNumberValue(data.active),
                                 user_level:         serverUtilNumberValue(data.user_level),
@@ -741,10 +540,10 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
                                 password_new:       data.password_new==''?null:data.password_new,
                                 password_reminder:  data.password_reminder,
                                 verification_code:  data.verification_code,
-                                provider_id:        result_user[0].provider_id,
-                                avatar:             result_user[0].avatar,
+                                provider_id:        result_user.provider_id,
+                                avatar:             result_user.avatar,
                                 admin:              1};
-                service.updateAdmin(app_id, resource_id, body)
+                userUpdateAdmin(app_id, resource_id, body)
                 .then(result_update=>{
                     resolve(result_update);
                 })
@@ -766,15 +565,33 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
  * 
  * @param {number} app_id 
  * @param {*} query 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getUsersAdmin[]>}
  */
-const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), query.get('sort'), query.get('order_by'), serverUtilNumberValue(query.get('offset')), serverUtilNumberValue(query.get('limit')))
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+const getUsersAdmin = (app_id, query) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT
+                        .replace('<SORT/>', query.get('sort'))
+                        .replace('<ORDER_BY/>', query.get('order_by')),
+                        {   search: query.get('search')=='*'?query.get('search'):'%' + query.get('search') + '%',
+							offset: serverUtilNumberValue(query.get('offset')) ?? 0,
+							limit:  serverUtilNumberValue(query.get('limit'))
+							},
+                        null, 
+                        null));
 
 /**
  * 
  * @param {number} app_id 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getStatCountAdmin[]>}
  */
-const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+const getStatCountAdmin = app_id => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_STAT_COUNT,
+                        {},
+                        null, 
+                        null));
  
 /**
  * 
@@ -787,203 +604,129 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
  * @param {*} query 
  * @param {*} data 
  * @param {import('../types.js').server_server_res} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updatePassword|{sent: number}>}
+ * @returns {Promise.<void>}
  */
- const updatePassword = (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
-    return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_db_sql_parameter_user_account_updatePassword} */
-        const data_update = {   password_new:   data.password_new,
-                                auth:           data.auth};
-        service.updatePassword(app_id, resource_id, data_update)
-        .then(result_update=>{
-            if (result_update) {
-                /**@type{import('../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                const eventData = {
-                    user_account_id: resource_id,
-                    event: 'PASSWORD_RESET',
-                    event_status: 'SUCCESSFUL',
-                    user_language: data.user_language,
-                    user_timezone: data.user_timezone,
-                    user_number_system: data.user_number_system,
-                    user_platform: data.user_platform,
-                    server_remote_addr : ip,
-                    server_user_agent : user_agent,
-                    server_http_host : host,
-                    server_http_accept_language : accept_language,
-                    client_latitude : data.client_latitude,
-                    client_longitude : data.client_longitude
-                };
-                insertUserEvent(app_id, eventData)
-                .then(()=>{
-                    resolve(result_update);
+ const updatePassword = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
+    const error_code = data_validation_password(data);
+    if (error_code==null){
+        import(`file://${process.cwd()}/server/db/common.js`)
+            .then((/**@type{import('./common.js')} */{dbCommonExecute})=>{
+                set_password(data.password_new)
+                .then(password=>dbCommonExecute(app_id, 
+                                dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
+                                {
+                                    password_new: password,
+                                    id: resource_id,
+                                    auth: data.auth
+                                },
+                                null, 
+                                null))
+                .then(result_update=>{
+                    if (result_update) {
+                        /**@type{import('../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
+                        const eventData = {
+                            user_account_id: resource_id,
+                            event: 'PASSWORD_RESET',
+                            event_status: 'SUCCESSFUL',
+                            user_language: data.user_language,
+                            user_timezone: data.user_timezone,
+                            user_number_system: data.user_number_system,
+                            user_platform: data.user_platform,
+                            server_remote_addr : ip,
+                            server_user_agent : user_agent,
+                            server_http_host : host,
+                            server_http_accept_language : accept_language,
+                            client_latitude : data.client_latitude,
+                            client_longitude : data.client_longitude
+                        };
+                        insertUserEvent(app_id, eventData);
+                    }
+                    else{
+                        return import(`file://${process.cwd()}/server/db/common.js`)
+                        .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) =>
+                            dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>{throw message;}));
+                    }
                 })
-                .catch(()=> {
-                    resolve({sent: 0});
-                });
-            }
-            else{
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
-            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-        });
-    });
+                .catch((/**@type{import('../types.js').server_server_error}*/error)=>
+                        dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>{throw message;}));
+            });
+    }
+    else
+        throw error_code;
 };
 /**
  * 
  * @param {number} app_id 
- * @param {number} resource_id
- * @param {string} ip
- * @param {string} user_agent
- * @param {string} host
- * @param {string} accept_language
- * @param {*} query 
- * @param {*} data 
- * @param {import('../types.js').server_server_res} res 
- * @returns {Promise.<{sent_change_email: number}>}
+ * @param {import('../types.js').server_db_sql_parameter_user_account_updateUserLocal} data 
+ * @param {number} search_id
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updateUserLocal>}
  */
- const updateUserLocal = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
-    /**@type{import('../types.js').server_db_sql_result_user_account_getUserByUserId[]}*/
-    const result_user = await service.getUserByUserId(app_id, resource_id);
-    /**@type{import('../types.js').server_db_sql_result_user_account_event_getLastUserEvent[]}*/
-    const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
-    return new Promise((resolve, reject)=>{
-        if (result_user[0]) {
-            securityPasswordCompare(data.password, result_user[0].password ?? '').then((result_compare)=>{
-                if (result_compare){
-                    let send_email=false;
-                    if (data.new_email && data.new_email!=''){
-                        if ((result_user_event[0] && 
-                            (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
-                                result_user_event.length == 0)
-                            send_email=true;
-                    }
-                    /**@type{import('../types.js').server_db_sql_parameter_user_account_updateUserLocal} */
-                    const data_update = {   bio:                data.bio,
-                                            private:            data.private,
-                                            username:           data.username,
-                                            password:           data.password,
-                                            password_new:       (data.password_new && data.password_new!='')==true?data.password_new:null,
-                                            password_reminder:  (data.password_reminder && data.password_reminder!='')==true?data.password_reminder:null,
-                                            email:              data.email,
-                                            email_unverified:   (data.new_email && data.new_email!='')==true?data.new_email:null,
-                                            avatar:             data.avatar,
-                                            verification_code:  send_email==true?service.verification_code():null,
-                                            provider_id:        result_user[0].provider_id,
-                                            admin:              0
-                                        };
-                    service.updateUserLocal(app_id, data_update, resource_id)
-                    .then(result_update=>{
-                        if (result_update){
-                            if (send_email){
-                                //no change email in progress or older than at least 1 day
-                                /**@type{import('../types.js').server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                                const eventData = {
-                                    user_account_id: resource_id,
-                                    event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                                    event_status: 'INPROGRESS',
-                                    user_language: data.user_language,
-                                    user_timezone: data.user_timezone,
-                                    user_number_system: data.user_number_system,
-                                    user_platform: data.user_platform,
-                                    server_remote_addr : ip,
-                                    server_user_agent : user_agent,
-                                    server_http_host : host,
-                                    server_http_accept_language : accept_language,
-                                    client_latitude : data.client_latitude,
-                                    client_longitude : data.client_longitude
-                                };
-                                insertUserEvent(app_id, eventData)
-                                .then(()=>{
-                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                    commonMailSend(  app_id, 
-                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_CHANGE_EMAIL, 
-                                                    ip, 
-                                                    user_agent,
-                                                    accept_language,
-                                                    resource_id,
-                                                    data.verification_code, 
-                                                    data.new_email)
-                                    .then(()=>{
-                                        resolve({sent_change_email: 1});
-                                    })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                })
-                                .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                            }
-                            else
-                                resolve({sent_change_email: 0});
-                        }
-                        else{
-                            import(`file://${process.cwd()}/server/db/common.js`)
-                            .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                                dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                            });
-                        }
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
-                        dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-                    });
-                } 
-                else {
-                    res.statusCode=400;
-                    res.statusMessage = 'invalid password attempt for user id:' + resource_id;
-                    //invalid password
-                    getSettingDisplayData(  app_id,
-                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
-                    .then(result_message=>{
-                        reject(result_message[0].display_data);
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                }
-            });
-        } 
-        else {
-            //user not found
-            res.statusCode=404;
-            getSettingDisplayData(  app_id,
-                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
-            .then(result_message=>{
-                reject(result_message[0].display_data);
-            })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-        }
-    });
+const userUpdateLocal = async (app_id, data, search_id) =>{
+    const error_code = data_validation(data);
+    if (error_code==null)
+        return import(`file://${process.cwd()}/server/db/common.js`)
+            .then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                set_password(data.password_new)
+                .then(password=>dbCommonExecute(app_id, 
+                                dbSql.USER_ACCOUNT_UPDATE_LOCAL,
+                                {
+                                    bio: data.bio,
+                                    private: data.private,
+                                    username: data.username,
+                                    password_new: password,
+                                    password_reminder: data.password_reminder,
+                                    email: data.email,
+                                    email_unverified: data.email_unverified,
+                                    avatar: data.avatar,
+                                    verification_code: data.verification_code,
+                                    id: search_id,
+                                    DB_CLOB: ['avatar']
+                                },
+                                null, 
+                                null)));
+    else
+        throw error_code;
 };
+
 /**
  * 
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
- * @param {*} data
+ * @param {import('../types.js').server_db_sql_parameter_user_account_updateUserCommon} data 
  * @param {import('../types.js').server_server_res} res
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updateUserCommon>}
  */
  const updateUserCommon = (app_id, resource_id, query, data, res) => {
-    return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_db_sql_parameter_user_account_updateUserCommon} */
-        const data_update = {   username:   data.username,
-                                bio:        data.bio,
-                                private:    data.private};
-        service.updateUserCommon(app_id, data_update, resource_id)
-        .then(result_update=>{
-            if (result_update)
-                resolve(result_update);
-            else{
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
-            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+    const error_code = data_validation_common(data);
+	if (error_code==null)
+        return new Promise((resolve, reject)=>{
+            import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                dbCommonExecute(app_id, 
+                                dbSql.USER_ACCOUNT_UDPATE_COMMON,
+                                {	username: data.username,
+                                    bio: data.bio,
+                                    private: data.private,
+                                    id: resource_id
+                                },
+                                null, 
+                                null))
+            .then(result_update=>{
+                if (result_update)
+                    resolve(result_update);
+                else{
+                    import(`file://${process.cwd()}/server/db/common.js`)
+                    .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
+                        dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    });
+                }
+            })
+            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+            });
         });
-    });
+    else
+        throw error_code;
 };
 /**
  * 
@@ -991,125 +734,79 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
  * @param {number} resource_id
  * @param {*} query 
  * @param {import('../types.js').server_server_res} res 
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getUserByUserId[]|{last_logintime:string|null}>}
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getUserByUserId>}
  */
 const getUserByUserId = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getUserByUserId(app_id, resource_id)
-        .then(result=>{
-            if (result[0]){
-                iamUserGetLastLogin(app_id, resource_id)
-                .then(last_logintime=>
-                        resolve({...result[0], ...{last_logintime:last_logintime}}));
-            }
-            else{
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-    });
-};
-/**
- * 
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} query
- * @param {*} data
- * @param {import('../types.js').server_server_res} res 
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_deleteUser>}
- */
- const deleteUser = (app_id, resource_id, query, data, res) => {
-    return new Promise((resolve, reject)=>{
-        service.getUserByUserId(app_id, resource_id)
-        .then(result_user=>{
-            if (result_user[0]) {
-                if (result_user[0].provider_id !=null){
-                    service.deleteUser(app_id, resource_id)
-                    .then(result_delete=>{
-                        if (result_delete)
-                            resolve(result_delete);
-                        else{
-                            import(`file://${process.cwd()}/server/db/common.js`)
-                            .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                                dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                            });
-                        }
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_SELECT_ID,
+                            {id: resource_id},
+                            null, 
+                            null))
+            .then(result=>{
+                if (result[0]){
+                    iamUserGetLastLogin(app_id, resource_id)
+                    .then(last_logintime=>
+                            resolve({...result[0], ...{last_logintime:last_logintime}}));
                 }
                 else{
-                    service.checkPassword(app_id, resource_id)
-                    .then(result_password=>{
-                        if (result_password[0]) {
-                            securityPasswordCompare(data.password, result_password[0].password).then((result_password)=>{
-                                if (result_password){
-                                    service.deleteUser(app_id, resource_id)
-                                    .then(result_delete=>{
-                                        if (result_delete)
-                                            resolve(result_delete);
-                                        else{
-                                            import(`file://${process.cwd()}/server/db/common.js`)
-                                            .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                                                dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                    })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                }
-                                else{
-                                    res.statusMessage = 'invalid password attempt for user id:' + resource_id;
-                                    res.statusCode = 400;
-                                    //invalid password
-                                    getSettingDisplayData(  app_id,
-                                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
-                                    .then(result_message=>{
-                                        reject(result_message[0].display_data);
-                                    })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                                } 
-                            });
-                            
-                        }
-                        else{
-                            //user not found
-                            res.statusCode = 404;
-                            getSettingDisplayData(  app_id,
-                                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
-                            .then(result_message=>{
-                                reject(result_message[0].display_data);
-                            })
-                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-                        }
-                    })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+                    import(`file://${process.cwd()}/server/db/common.js`)
+                    .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
+                        dbCommonRecordNotFound(app_id, query.get('lang_code') ?? 'en', res).then((/**@type{string}*/message)=>reject(message));
+                    });
                 }
-            }
-            else{
-                //user not found
-                res.statusCode = 404;
-                getSettingDisplayData(  app_id,
-                                        new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
-                .then(result_message=>{
-                    reject(result_message[0].display_data);
-                });
-            }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+            })
+            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
     });
 };
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_checkPassword[]>}
+ */
+const userGetPassword = async (app_id, id) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_PASWORD,
+                        {id: id},
+                        null, 
+                        null));
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_deleteUser>}
+ */
+const userDelete = async (app_id, id) =>
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_DELETE,
+                        {id: id},
+                        null, 
+                        null));
 /**
  * 
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
  * @param {import('../types.js').server_server_res} res 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getProfileDetail[]>}
  */
  const getProfileDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getProfileDetail(app_id, resource_id, serverUtilNumberValue(query.get('detailchoice')))
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_SELECT_PROFILE_DETAIL,
+                            {
+                                user_account_id: resource_id,
+                                detailchoice: serverUtilNumberValue(query.get('detailchoice'))
+                            },
+                            null, 
+                            null))
         .then(result=>{
             if (result)
                 resolve(result);
@@ -1119,20 +816,34 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        });
     });
     
 };
-
-
-export {/*DATA_LOGIN*/
-        login, login_provider, 
-        /*DATA_SIGNUP*/
-        signup, 
-        /*DATA*/
-        activate, forgot, getProfile, getProfileStat,
-        /*ADMIN*/
+/**
+ * 
+ * @param {number} app_id
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getDemousers[]>}
+ */
+const userDemoGet = async app_id => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_SELECT_DEMO,
+                        {
+                            demo_level: 2
+                        },
+                        null, 
+                        null));
+                        
+export {userGetUsername,
+        userGetProvider,
+        updateUserProvider,
+        updateUserVerificationCode,
+        userPost,
+        userUpdateActivate, 
+        userGetEmail,
+        userUpdateAdmin,
+        getProfile, getProfileStat,
         updateAdmin, getUsersAdmin, getStatCountAdmin,
-        /*ACCESS*/
-        updatePassword, updateUserLocal, updateUserCommon, getUserByUserId, deleteUser, getProfileDetail};
+        updatePassword, updateUserCommon, userUpdateLocal, getUserByUserId, userGetPassword, userDelete, getProfileDetail,
+        userDemoGet};

@@ -96,7 +96,7 @@ const dbCommonAppCodeGet = error => {
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/db/sql/app_setting.service.js`).then(({ getSettingDisplayData }) => {
+		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getSettingDisplayData }) => {
 			getSettingDisplayData( 	app_id,
 				new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20400}`))
 			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
