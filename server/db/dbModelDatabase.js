@@ -435,14 +435,14 @@ const install_db_get_files = async (install_type) =>{
     const {getAppsAdminId} = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
     /**@type{import('./sql/user_account.service.js')} */
     const {create} = await import(`file://${process.cwd()}/server/db/sql/user_account.service.js`);
-    /**@type{import('./sql/user_account_app.service.js')} */
-    const {createUserAccountApp} = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);
-    /**@type{import('./sql/user_account_like.service.js')} */
-    const user_account_like = await import(`file://${process.cwd()}/server/db/sql/user_account_like.service.js`);
-    /**@type{import('./sql/user_account_view.service.js')} */
-    const {insertUserAccountView} = await import(`file://${process.cwd()}/server/db/sql/user_account_view.service.js`);
-    /**@type{import('./sql/user_account_follow.service.js')} */
-    const user_account_follow = await import(`file://${process.cwd()}/server/db/sql/user_account_follow.service.js`);
+    /**@type{import('./dbModelUserAccountApp.js')} */
+    const {createUserAccountApp} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
+    /**@type{import('./dbModelUserAccountLike.js')} */
+    const user_account_like = await import(`file://${process.cwd()}/server/db/dbModelUserAccountLike.js`);
+    /**@type{import('./dbModelUserAccountView.js')} */
+    const {insertUserAccountView} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`);
+    /**@type{import('./dbModelUserAccountFollow.js')} */
+    const user_account_follow = await import(`file://${process.cwd()}/server/db/dbModelUserAccountFollow.js`);
     /**@type{import('./dbModelUserAccountAppDataPost.js')} */
     const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
     /**@type{import('./dbModelUserAccountAppDataPostLike.js')} */
