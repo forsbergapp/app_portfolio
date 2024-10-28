@@ -18,7 +18,7 @@
 /**@type{import('./service.js')} */
 const service = await import('./service.js');
 /**@type{import('../../microservice/microservice.js')} */
-const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAppAuthenticate } = await import(`file://${process.cwd()}/microservice/microservice.js`);
+const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, iamAuthenticateApp } = await import(`file://${process.cwd()}/microservice/microservice.js`);
 /**@type{import('../../microservice/registry.js')} */
 const { registryMicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
@@ -42,7 +42,7 @@ const serverStart = async () =>{
 						ip: 		app_query.get('ip')};
 		req.query = {	app_id:	microserviceUtilNumberValue(app_query.get('app_id')),
 						data:	data};
-		iamAppAuthenticate(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
+		iamAuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 			if (authenticate){
 				switch (true){
 					case microserviceRouteMatch('/geolocation/v1/geolocation/place' , 'GET', URI_path, req.method):{

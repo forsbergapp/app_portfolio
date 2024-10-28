@@ -19,7 +19,7 @@ const https = await import('node:https');
 const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**@type{import('../server/iam.service.js')} */
-const { iamAppAuthenticate } = await import(`file://${process.cwd()}/server/iam.service.js`);
+const { iamAuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
 const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
@@ -208,7 +208,7 @@ const microserviceHttpRequest = async (service, path, query, method, timeout, cl
 };
 
 
-export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, registryConfigServices, microserviceRequest, iamAppAuthenticate};</code></pre>
+export {MICROSERVICE_RESOURCE_ID_STRING, microserviceUtilResourceIdNumberGet, microserviceUtilResourceIdStringGet, microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultReturn, registryConfigServices, microserviceRequest, iamAuthenticateApp};</code></pre>
         </div>
     </div>
 
