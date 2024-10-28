@@ -443,12 +443,12 @@ const install_db_get_files = async (install_type) =>{
     const {insertUserAccountView} = await import(`file://${process.cwd()}/server/db/sql/user_account_view.service.js`);
     /**@type{import('./sql/user_account_follow.service.js')} */
     const user_account_follow = await import(`file://${process.cwd()}/server/db/sql/user_account_follow.service.js`);
-    /**@type{import('./sql/user_account_app_data_post.service.js')} */
-    const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
-    /**@type{import('./sql/user_account_app_data_post_like.service.js')} */
-    const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_like.service.js`);
-    /**@type{import('./sql/user_account_app_data_post_view.service.js')} */
-    const {insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
+    /**@type{import('./dbModelUserAccountAppDataPost.js')} */
+    const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
+    /**@type{import('./dbModelUserAccountAppDataPostLike.js')} */
+    const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostLike.js`);
+    /**@type{import('./dbModelUserAccountAppDataPostView.js')} */
+    const {insertUserPostView} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
     /**@type{import('./dbModelAppDataResource.js')} */
     const {MasterPost, DetailPost, DataPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
     
@@ -547,11 +547,11 @@ const install_db_get_files = async (install_type) =>{
      */
     const create_user_post = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
-            createUserPost(user_account_post_app_id, data)
+            createUserPost(user_account_post_app_id, new URLSearchParams('initial=0'), data)
             .then(result=>{
-                if (result.affectedRows == 1)
-                            records_user_account_app_data_post++;
-                        resolve(null);
+                if (result.data?.affectedRows == 1)
+                    records_user_account_app_data_post++;
+                resolve(null);
             })
             .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
                 reject(error);
@@ -846,10 +846,10 @@ const install_db_get_files = async (install_type) =>{
      */
     const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
         return new Promise((resolve, reject) => {
-            getUserPostsByUserId(app_id, user1)
+            getUserPostsByUserId(app_id, user1,null,null)
             .then(result_posts=>{
                 const random_posts_index = Math.floor(1 + Math.random() * result_posts.length - 1 );
-                user_account_app_data_post_like.like(app_id, user2, result_posts[random_posts_index].id)
+                user_account_app_data_post_like.like(app_id, user2, {user_account_app_data_post_id:result_posts[random_posts_index].id})
                 .then(result => {
                     if (result.affectedRows == 1)
                         records_user_account_app_data_post_like++;
@@ -874,7 +874,7 @@ const install_db_get_files = async (install_type) =>{
      */
     const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
         return new Promise((resolve, reject) => {
-            getUserPostsByUserId(app_id, user1)
+            getUserPostsByUserId(app_id, user1, null,null)
             .then(result_posts=>{
                 //choose random post from user
                         const random_index = Math.floor(1 + Math.random() * result_posts.length -1);

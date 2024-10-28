@@ -2,8 +2,8 @@
 
 /**@type{import('../../../../server/server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../../../../server/db/sql/user_account_app_data_post_view.service.js')} */
-const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_view.service.js`);
+/**@type{import('../../../../server/db/dbModelUserAccountAppDataPostView.js')} */
+const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
 
 const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
@@ -14,7 +14,9 @@ const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
  * @returns {Promise.<import('../types.js').APP_REPORT_settings>}
  */
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
-    const { getUserPost} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
+	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
+    const { getUserPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
+	/**@ts-ignore */
 	return getUserPost(app_id, user_account_app_data_post_id)
 	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
 		/**@type{import('../types.js').APP_user_setting_record}*/
@@ -89,9 +91,9 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 const timetable_day_user_account_app_data_posts_get = async (app_id, user_account_id) => {
 	/**@type{import('../types.js').APP_REPORT_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
-
-    const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
-    return getUserPostsByUserId(app_id, user_account_id)
+	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
+    const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
+    return getUserPostsByUserId(app_id, user_account_id,null,null)
 	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts) {
 			//use settings that can be used on a day timetable showing different user settings
