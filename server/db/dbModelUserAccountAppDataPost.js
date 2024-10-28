@@ -1,23 +1,78 @@
-/** @module server/db/dbModeluser_account_app_data_post */
+/** @module server/db/dbModelUserAccountAppDataPost */
 
-/**@type{import('./sql/user_account_app_data_post.service.js')} */
-const service = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post.service.js`);
+/**@type{import('./dbSql.js')} */
+const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
-/**@type{import('./sql/user_account_app_data_post_like.service.js')} */
-const user_account_app_data_post_like_service = await import(`file://${process.cwd()}/server/db/sql/user_account_app_data_post_like.service.js`);
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
  * 
  * @param {number} app_id 
- * @param {number} resource_id
+ * @param {number} id 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]>}
+ */
+const getUserPost = async (app_id, id) => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_ID, 
+                        {id: id},
+                        null, 
+                        null));
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number|null} resource_id
  * @param {*} query 
- * @param {import('../types.js').server_server_error} res
+ * @param {import('../types.js').server_server_error|null} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]>}
  */
 const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getUserPostsByUserId(app_id, resource_id)
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER, 
+                            {
+                                user_account_id: resource_id,
+                                app_id: app_id
+                            },
+                            null, 
+                            null))
+        .then(result=>{
+            if (result)
+                resolve(result);
+            else
+                if (res)
+                    import(`file://${process.cwd()}/server/db/common.js`)
+                    .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
+                        dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    });
+                else
+                    resolve(result);
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} query
+ * @param {import('../types.js').server_server_res} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getProfileUserPosts[]>}
+ */
+const getProfileUserPosts =(app_id, resource_id, query, res) =>{
+    return new Promise((resolve, reject)=>{
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE, 
+                            {
+                                user_account_id_current: serverUtilNumberValue(query.get('id_current_user')),
+                                user_account_id: resource_id,
+                                app_id: app_id
+                                },
+                            null, 
+                            null))
         .then(result=>{
             if (result)
                 resolve(result);
@@ -35,32 +90,19 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
  * @param {number} resource_id
  * @param {*} query
  * @param {import('../types.js').server_server_res} res
- */
-const getProfileUserPosts =(app_id, resource_id, query, res) =>{
-    return new Promise((resolve, reject)=>{
-        service.getProfileUserPosts(app_id, resource_id, serverUtilNumberValue(query.get('id_current_user')))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                });
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
-    });
-};
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} query
- * @param {import('../types.js').server_server_res} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_data_post_getProfileStatLike[]>}
  */
  const getProfileStatLike = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileStatLike(app_id, resource_id)
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_LIKE, 
+                            {
+                                id: resource_id,
+                                app_id: app_id
+                            },
+                            null, 
+                            null))
         .then(result=>{
             if (result[0])
                 resolve(result);
@@ -77,10 +119,19 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
  * @param {number} app_id 
  * @param {*} query
  * @param {import('../types.js').server_server_res} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getProfileStatPost[]>}
  */
 const getProfileStatPost = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileStatPost(app_id, serverUtilNumberValue(query.get('statchoice')))
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST, 
+                            {
+                                app_id: app_id,
+                                statchoice: serverUtilNumberValue(query.get('statchoice'))
+                            },
+                            null, 
+                            null))
         .then(result=>{
             if (result)
                 resolve(result); 
@@ -89,8 +140,7 @@ const getProfileStatPost = (app_id, query, res) =>{
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        });
     });
 };
 /**
@@ -99,10 +149,20 @@ const getProfileStatPost = (app_id, query, res) =>{
  * @param {number} resource_id
  * @param {*} query 
  * @param {*} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[]>}
  */
 const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getProfileUserPostDetail(app_id, resource_id, serverUtilNumberValue(query.get('detailchoice')))
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL, 
+                            {
+                                user_account_id: resource_id,
+                                app_id: app_id,
+                                detailchoice: serverUtilNumberValue(query.get('detailchoice'))
+                            },
+                            null, 
+                            null))
         .then(result=>{
             if (result)
                 resolve(result);
@@ -111,8 +171,7 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        });
     });
 };
 /**
@@ -120,16 +179,25 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
  * @param {number} app_id
  * @param {*} query
  * @param {*} data
+ * @returns {Promise.<{ id:number|null,
+ *                      data: import('../types.js').server_db_sql_result_user_account_app_data_post_createUserPost|null}>}
  */
 const createUserPost = (app_id, query, data) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_db_sql_parameter_user_account_app_data_post_createUserPost} */
-        const data_create = {	description:		data.description,
-                                json_data: 		    data.json_data,
-                                user_account_id:	serverUtilNumberValue(data.user_account_id)
-                            };
-        const call_service = ()=> {
-            service.createUserPost(app_id, data_create)
+        const create = ()=> {
+            import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                dbCommonExecute(app_id, 
+                                dbSql.USER_ACCOUNT_APP_DATA_POST_INSERT, 
+                                {
+                                    description: data.description,
+                                    json_data: JSON.stringify(data.json_data),
+                                    user_account_id: serverUtilNumberValue(data.user_account_id),
+                                    app_id: app_id,
+                                    DB_RETURN_ID:'id',
+                                    DB_CLOB: ['json_data']
+                                },
+                                null, 
+                                null))
             .then(result=>{
                 resolve({
                     id: result.insertId,
@@ -140,11 +208,11 @@ const createUserPost = (app_id, query, data) => {
         };
         //Check if first time
         if (serverUtilNumberValue(query.get('initial'))==1){
-            service.getUserPostsByUserId(app_id, serverUtilNumberValue(data.user_account_id))
+            getUserPostsByUserId(app_id, serverUtilNumberValue(data.user_account_id), query,null)
             .then(result=>{
                 if (result.length==0){
                     //no user settings found, ok to create initial user setting
-                    call_service();
+                    create();
                 }
                 else
                     resolve({
@@ -155,7 +223,7 @@ const createUserPost = (app_id, query, data) => {
             .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
         }
         else
-            call_service();
+            create();
     });
 	
 };
@@ -166,14 +234,23 @@ const createUserPost = (app_id, query, data) => {
  * @param {*} query 
  * @param {*} data 
  * @param {import('../types.js').server_server_res} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_updateUserPost>}
  */
 const updateUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        /**@type{import('../types.js').server_db_sql_parameter_user_account_app_data_post_updateUserPost} */
-        const data_update = {	description:		data.description,
-                                json_data: 		    data.json_data,
-                                user_account_id:	serverUtilNumberValue(data.user_account_id)};
-        service.updateUserPost(app_id, data_update, resource_id)
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_UPDATE, 
+                            {
+                                description: data.description,
+                                json_data: JSON.stringify(data.json_data),
+                                user_account_id: serverUtilNumberValue(data.user_account_id),
+                                app_id: app_id,
+                                id: resource_id,
+                                DB_CLOB: ['json_data']
+                            },
+                            null, 
+                            null))
         .then(result=>{
             if (result)
                 resolve(result);
@@ -182,8 +259,7 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        });
     });
 };
 /**
@@ -193,10 +269,18 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
  * @param {*} data
  * @param {*} query 
  * @param {import('../types.js').server_server_res} res
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_deleteUserPost>}
  */
 const deleteUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        service.deleteUserPost(app_id, resource_id, data.user_account_id)
+        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            dbCommonExecute(app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_DELETE, 
+                            {   id: resource_id,
+                                user_account_id: serverUtilNumberValue(data.user_account_id),
+                                app_id:app_id},
+                            null, 
+                            null))
         .then(result=>{
             if (result)
                 resolve(result);
@@ -205,28 +289,9 @@ const deleteUserPost = (app_id, resource_id, query, data, res) => {
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
                     dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+        });
     });
 };
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} data
- */
-const like = (app_id, resource_id, data) => user_account_app_data_post_like_service.like(app_id, resource_id, serverUtilNumberValue(data.user_account_app_data_post_id))
-                                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
 
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} data
- */
-const unlike = (app_id, resource_id, data) => user_account_app_data_post_like_service.unlike(app_id, resource_id, serverUtilNumberValue(data.user_account_app_data_post_id))
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
-
-export{ getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
-        /*ACCESS */
-        getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost, like, unlike};
+export{ getUserPost, getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
+        getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost};

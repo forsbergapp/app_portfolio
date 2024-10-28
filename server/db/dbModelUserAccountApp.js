@@ -1,4 +1,4 @@
-/** @module server/db/dbModeluser_account_app */
+/** @module server/db/dbModelUserAccountApp */
 
 /**@type{import('./sql/user_account_app.service.js')} */
 const service = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);

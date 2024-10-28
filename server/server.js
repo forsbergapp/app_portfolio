@@ -276,6 +276,9 @@ const serverUtilAppLine = () =>{
     /**@type{import('./db/dbModelUserAccountAppDataPost.js')} */
     const dbModelUserAccountAppDataPost = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
     
+    /**@type{import('./db/dbModelUserAccountAppDataPostLike.js')} */
+    const dbModelUserAccountAppDataPostLike = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostLike.js`);
+
     return new Promise((resolve, reject)=>{
         try {
             if (routesparameters.endpoint == 'APP' && routesparameters.method == 'GET'){
@@ -660,7 +663,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'POST', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccountAppDataPost.like(routesparameters.app_id, 
+                        resolve(dbModelUserAccountAppDataPostLike.like(routesparameters.app_id, 
                                                                     /**@ts-ignore */
                                                                     resource_id_get_number(), 
                                                                     routesparameters.body));
@@ -668,7 +671,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_string}`, method:'DELETE', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccountAppDataPost.unlike(routesparameters.app_id, 
+                        resolve(dbModelUserAccountAppDataPostLike.unlike(routesparameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         resource_id_get_number(), 
                                                                         routesparameters.body));

@@ -1,11 +1,19 @@
-/** @module server/db/dbModelidentity_provider */
+/** @module server/db/dbModelIdentityProvider */
 
-/**@type{import('./sql/identity_provider.service.js')} */
-const service = await import(`file://${process.cwd()}/server/db/sql/identity_provider.service.js`);
+/**@type{import('./dbSql.js')} */
+const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
+
 /**
  * 
  * @param {number} app_id 
+ * @returns {Promise.<import('../types.js').server_db_sql_result_identity_provider_getIdentityProviders[]>}
  */
-const getIdentityProviders = app_id => service.getIdentityProviders(app_id)
-                                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
+const getIdentityProviders = app_id => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(app_id, 
+                        dbSql.IDENTITY_PROVIDER_SELECT, 
+                        {},
+                        null, 
+                        null));
+
 export {getIdentityProviders};
