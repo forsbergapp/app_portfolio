@@ -549,7 +549,7 @@ const commonComponentCreate = async parameters =>{
             const decodedReportparameters = Buffer.from(parameters.componentParameters.reportid ?? '', 'base64').toString('utf-8');
             const module = new URLSearchParams(decodedReportparameters).get('module') ??'';
             const papersize = new URLSearchParams(decodedReportparameters).get('ps');
-            const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:null});
+            const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:''});
             const {default:RunReport} = await import(`file://${process.cwd()}${report.COMMON_PATH}`);
 
             /**@type{import('../../../server/types.js').server_apps_report_create_parameters} */
