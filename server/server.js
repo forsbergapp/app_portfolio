@@ -270,6 +270,12 @@ const serverUtilAppLine = () =>{
     /**@type{import('./db/dbModelUserAccount.js')} */
     const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
 
+    /**@type{import('./db/dbModelUserAccountFollow.js')} */
+    const dbModelUserAccountFollow = await import(`file://${process.cwd()}/server/db/dbModelUserAccountFollow.js`);
+
+    /**@type{import('./db/dbModelUserAccountLike.js')} */
+    const dbModelUserAccountLike = await import(`file://${process.cwd()}/server/db/dbModelUserAccountLike.js`);
+
     /**@type{import('./db/dbModelUserAccountApp.js')} */
     const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
 
@@ -573,7 +579,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'POST', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.follow(routesparameters.app_id, 
+                        resolve(dbModelUserAccountFollow.follow(routesparameters.app_id, 
                                                         /**@ts-ignore */
                                                         resource_id_get_number(), 
                                                         routesparameters.body));
@@ -581,7 +587,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_follow/${resource_id_string}`, method:'DELETE', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.unfollow(routesparameters.app_id, 
+                        resolve(dbModelUserAccountFollow.unfollow(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
@@ -589,7 +595,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'POST', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.like(routesparameters.app_id, 
+                        resolve(dbModelUserAccountLike.like(routesparameters.app_id, 
                                                         /**@ts-ignore */
                                                         resource_id_get_number(), 
                                                         routesparameters.body));
@@ -597,7 +603,7 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_like/${resource_id_string}`, method:'DELETE', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccount.unlike(routesparameters.app_id, 
+                        resolve(dbModelUserAccountLike.unlike(routesparameters.app_id, 
                                                         /**@ts-ignore */
                                                         resource_id_get_number(), 
                                                         routesparameters.body));
@@ -621,10 +627,9 @@ const serverUtilAppLine = () =>{
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'PATCH', 
                                 resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                        resolve(dbModelUserAccountApp.update(routesparameters.app_id, 
-                                                            /**@ts-ignore */
-                                                            resource_id_get_number(), 
-                                                            app_query, routesparameters.body));
+                        resolve(dbModelUserAccountApp.updateUserAccountApp(routesparameters.app_id, 
+                                                                            /**@ts-ignore */
+                                                                            resource_id_get_number(), routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/app_access/v1/server-db/user_account_app/${resource_id_string}`, method:'DELETE', 

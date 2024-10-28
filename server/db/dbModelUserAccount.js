@@ -9,7 +9,7 @@ const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
 const { fileCache, fileFsAppend } = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../../apps/common/src/common.js')} */
-const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+const {commonMailSend, commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -23,60 +23,14 @@ const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db
 
 /**@type{import('./dbModelAppSetting.js')} */
 const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
-/**@type{import('./sql/user_account_app.service.js')} */
-const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/sql/user_account_app.service.js`);
-/**@type{import('./sql/user_account_event.service.js')} */
-const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/sql/user_account_event.service.js`);
-/**@type{import('./sql/user_account_follow.service.js')} */
-const user_account_follow_service = await import(`file://${process.cwd()}/server/db/sql/user_account_follow.service.js`);
-/**@type{import('./sql/user_account_like.service.js')} */
-const user_account_like_service = await import(`file://${process.cwd()}/server/db/sql/user_account_like.service.js`);
+/**@type{import('./dbModelUserAccountApp.js')} */
+const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
+/**@type{import('./dbModelUserAccountEvent.js')} */
+const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 /**@type{import('../security.js')} */
 const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
 
-/**
- * 
- * @param {number} app_id 
- * @param {string} emailtype 
- * @param {string} ip
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {number} userid 
- * @param {string|null} verification_code 
- * @param {string} email 
- */
- const sendUserEmail = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
-    /**@type{import('../../apps/common/src/common.js')} */
-    const { commonMailCreate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('../bff.service.js')} */
-    const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
-    
-    const email_rendered = await commonMailCreate( app_id, 
-                                    {
-                                        emailtype:        emailtype,
-                                        host:             configGet('SERVER', 'HOST'),
-                                        app_user_id:      userid,
-                                        verificationCode: verification_code,
-                                        to:               email,
-                                    })
-                                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
-        
-    /**@type{import('../types.js').server_bff_parameters}*/
-    const parameters = {endpoint:'SERVER_MAIL',
-                        host:null,
-                        url:'/mail/sendemail',
-                        route_path:'/mail/sendemail',
-                        method:'POST', 
-                        query:'',
-                        body:email_rendered,
-                        authorization:null,
-                        ip:ip, 
-                        user_agent:user_agent, 
-                        accept_language:accept_language,
-                        /**@ts-ignore */
-                        res:null};
-    return await bffServer(app_id, parameters);
-};
+
 /**
  * 
  * @param {number} app_id 
@@ -140,7 +94,7 @@ const login = (app_id, iam, ip, user_agent, accept_language, data, res) =>{
                                     service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
                                     .then(()=>{
                                         //send email UNVERIFIED
-                                        sendUserEmail(  app_id, 
+                                        commonMailSend(  app_id, 
                                                         commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_UNVERIFIED, 
                                                         ip, 
                                                         user_agent,
@@ -423,7 +377,7 @@ const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
             if (data.provider_id == null ) {
                 //send email for local users only
                 //send email SIGNUP
-                sendUserEmail(  app_id, 
+                commonMailSend(  app_id, 
                                 commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_SIGNUP, 
                                 ip, 
                                 user_agent,
@@ -620,7 +574,7 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                 service.updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
                                 .then(()=>{
                                     //send email PASSWORD_RESET
-                                    sendUserEmail(  app_id, 
+                                    commonMailSend(  app_id, 
                                                     commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_PASSWORD_RESET, 
                                                     ip, 
                                                     user_agent,
@@ -728,7 +682,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 if (result_getProfileUser[0]){
                     //always save stat who is viewing, same user, none or someone else
                     import(`file://${process.cwd()}/server/db/sql/user_account_view.service.js`)
-                    .then((/**@type{import('./sql/user_account_view.service.js')} */{ insertUserAccountView }) => {
+                    .then((/**@type{import('./dbModelUserAccountView.js')} */{ insertUserAccountView }) => {
                         const data_body = { user_account_id:        serverUtilNumberValue(query.get('id')),    //who views
                                             user_account_id_view:   serverUtilNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
                                             client_ip:              ip,
@@ -946,7 +900,7 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/
                                 insertUserEvent(app_id, eventData)
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                    sendUserEmail(  app_id, 
+                                    commonMailSend(  app_id, 
                                                     commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_CHANGE_EMAIL, 
                                                     ip, 
                                                     user_agent,
@@ -1170,38 +1124,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
     });
     
 };
-/**
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} data
- */
-const follow = (app_id, resource_id, data) => user_account_follow_service.follow(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
-/**
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} data
- */
-const unfollow = (app_id, resource_id, data) => user_account_follow_service.unfollow(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
 
-/**
- * 
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} data
- */
-const like = (app_id, resource_id, data) => user_account_like_service.like(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
-
-/**
- * 
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} data
- */
-const unlike = (app_id, resource_id, data) => user_account_like_service.unlike(app_id, resource_id, serverUtilNumberValue(data.user_account_id))
-                                            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{throw error;});
 
 export {/*DATA_LOGIN*/
         login, login_provider, 
@@ -1212,6 +1135,4 @@ export {/*DATA_LOGIN*/
         /*ADMIN*/
         updateAdmin, getUsersAdmin, getStatCountAdmin,
         /*ACCESS*/
-        updatePassword, updateUserLocal, updateUserCommon, getUserByUserId, deleteUser, getProfileDetail,
-        follow, unfollow,
-        like, unlike};
+        updatePassword, updateUserLocal, updateUserCommon, getUserByUserId, deleteUser, getProfileDetail};
