@@ -18,7 +18,7 @@ const iamService = await import(`file://${process.cwd()}/server/iam.service.js`)
  * @param {function} next
  * @returns {Promise.<void>}
  */
- const iamAccessTokenAuthenticateAdmin = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+ const iamAuthenticateAccessTokenAdmin = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates id token
@@ -28,7 +28,7 @@ const iamService = await import(`file://${process.cwd()}/server/iam.service.js`)
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamIdTokenAuthenticate = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_DATA', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_DATA', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates id token registration
@@ -38,7 +38,7 @@ const iamIdTokenAuthenticate = (req, res, next) => iamService.iamAuthenticateUse
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamIdTokenAuthenticateRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_DATA_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_DATA_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates access token
@@ -48,7 +48,7 @@ const iamIdTokenAuthenticateRegistration = (req, res, next) => iamService.iamAut
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAccessTokenAuthenticate = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ACCESS', req.headers.authorization, req.headers.host, req.ip, res, next);    
+const iamAuthenticateAccessToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ACCESS', req.headers.authorization, req.headers.host, req.ip, res, next);    
 
 /**
  * Middleware authenticates external request
@@ -58,7 +58,7 @@ const iamAccessTokenAuthenticate = (req, res, next) => iamService.iamAuthenticat
  * @param {function} next
  * @returns {void}
  */
-const iamExternalAuthenticate = (req, res, next) => iamService.iamAuthenticateExternal('APP_EXTERNAL', req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.ip, req.body, res, next);    
+const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateExternal('APP_EXTERNAL', req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.ip, req.body, res, next);    
 /**
  * Middleware authenticates socket used for EventSource
  * @function
@@ -67,7 +67,7 @@ const iamExternalAuthenticate = (req, res, next) => iamService.iamAuthenticateEx
  * @param {function} next
  * @returns {void}
  */
- const iamSocketAuthenticate = (req, res, next) => iamService.iamAuthenticateSocket(req.query.iam, req.originalUrl.substring(req.route.path.indexOf('*')), req.headers.host, req.ip, res, next);    
+ const iamAuthenticateSocket = (req, res, next) => iamService.iamAuthenticateSocket(req.query.iam, req.originalUrl.substring(req.route.path.indexOf('*')), req.headers.host, req.ip, res, next);    
 
 /**
  * Middleware authenticates IAM Admin
@@ -77,7 +77,7 @@ const iamExternalAuthenticate = (req, res, next) => iamService.iamAuthenticateEx
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAdminAuthenticate = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * Middleware authenticates IAM User
@@ -87,7 +87,7 @@ const iamAdminAuthenticate = (req, res, next)  => iamService.iamAuthenticateUser
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamUserAuthenticate = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
  /**
  * Middleware authenticates IAM Provider
@@ -97,12 +97,12 @@ const iamUserAuthenticate = (req, res, next) => iamService.iamAuthenticateUserCo
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamProviderAuthenticate = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateProvider = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
-export{ iamIdTokenAuthenticate, iamIdTokenAuthenticateRegistration,
-        iamAccessTokenAuthenticateAdmin, iamAccessTokenAuthenticate, 
-        iamExternalAuthenticate,
-        iamSocketAuthenticate,
-        iamAdminAuthenticate, 
-        iamUserAuthenticate,
-        iamProviderAuthenticate};
+export{ iamAuthenticateIdToken, iamAuthenticateIdTokenRegistration,
+        iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, 
+        iamAuthenticateExternal,
+        iamAuthenticateSocket,
+        iamAuthenticateAdmin, 
+        iamAuthenticateUser,
+        iamAuthenticateProvider};

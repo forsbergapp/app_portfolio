@@ -25,7 +25,7 @@ const getSettings = (app_id, query) =>
                             app_setting_type_name: query.get('setting_type') ?? (query.get('setting_type')==''?null:query.get('setting_type'))
                             },
                         null, 
-                        null));
+                        query.get('lang_code')));
 /**
  * Get setting display data
  * @param {number} app_id 

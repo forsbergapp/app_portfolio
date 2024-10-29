@@ -75,8 +75,14 @@ const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
     const {EntityGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet, DetailGet, DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
+    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
+    const {DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
 
     const transactions = await DataGet(app_id, null, 

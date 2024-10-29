@@ -161,7 +161,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             .catch((/**@type{server_server_error}*/error)=>{throw error;});
         }
         else
-            throw iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, fileFsAppend', true);
+            throw iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateAdmin, fileFsAppend', true);
     };
     if(authorization){       
         const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
@@ -192,7 +192,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
         }
     }
     else{
-        throw iamUtilResponseNotAuthorized(res, 401, 'iamAdminAuthenticate, authorization', true);
+        throw iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateAdmin, authorization', true);
     }
     
 };
@@ -1086,7 +1086,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
         iamAuthenticateUserCommon(iam, 'APP_DATA', iamUtilDecode(iam).get('authorization_bearer')??'', host, ip, res, next);
     }
     else
-        iamUtilResponseNotAuthorized(res, 401, 'iamSocketAuthenticate');
+        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateSocket');
 };
 /**
  * IAM Middleware authenticate IAM users
@@ -1134,7 +1134,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 next();
                             }
                             else
-                                iamUtilResponseNotAuthorized(res, 403, 'iamUserCommonAuthenticate, user login disabled');
+                                iamUtilResponseNotAuthorized(res, 403, 'iamAuthenticateUserCommon, user login disabled');
                             break;
                         }
                         case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
@@ -1161,10 +1161,10 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                     if (iam_admin_login)
                                         next();
                                     else
-                                    iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate');
+                                    iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                                 });
                             else
-                                iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate');
+                                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
                         case scope=='APP_DATA_REGISTRATION' && serverUtilNumberValue(configGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
@@ -1196,27 +1196,27 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                     if (iam_user_login)
                                         next();
                                     else
-                                        iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate, no record APP_ACCESS');
+                                        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, no record APP_ACCESS');
                                 });
                             else
-                                iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate, token claim error');
+                                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, token claim error');
                             break;
                         }
                         default:{
-                            iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate, scope error or wrong app or wrong header authorization');
+                            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, scope error or wrong app or wrong header authorization');
                             break;
                         }
                     }
                 }
             }
             else
-                iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate, not IAM or no authorization');
+                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, not IAM or no authorization');
         } catch (error) {
-            iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate, token error');
+            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, token error');
         }
     }
     else
-        iamUtilResponseNotAuthorized(res, 401, 'iamUserCommonAuthenticate, not IAM or no authorization');
+        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, not IAM or no authorization');
 };
 
 /**
@@ -1237,7 +1237,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
     if (endpoint =='APP_EXTERNAL' && ('id' in body) && ('message' in body))
         next();
     else
-        iamUtilResponseNotAuthorized(res, 401, 'iamExternalAuthenticate');
+        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateExternal');
 };
 /**
  * Authorize request

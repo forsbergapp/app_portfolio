@@ -13,8 +13,8 @@
  */
 const getTransacions = async (app_id, data, user_agent, ip, locale, res) =>{
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
+    const {DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
     const transactions = await DataGet(app_id, null, 
                                 new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&`+ 

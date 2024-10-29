@@ -19,8 +19,11 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet, DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
+    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
