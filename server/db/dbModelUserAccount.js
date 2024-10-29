@@ -19,6 +19,8 @@ const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db
 const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
 /**
+ * Sets password using defined encryption
+ * @function
  * @param {string|null} password 
  * @returns {Promise.<string|null>}
  */
@@ -29,6 +31,7 @@ const set_password = async (password) =>{
 };
 /**
  * Checks password between 10 and 100 characters
+ * @function
  * @param {import('../types.js').server_db_sql_parameter_user_account_updatePassword} data 
  * @returns {object|null}
  */
@@ -42,7 +45,8 @@ const data_validation_password = (data) => {
 };
 
 /**
- * 
+ * Common validation logic
+ * @function
  * @param {import('../types.js').server_db_sql_parameter_user_account_updateUserCommon} data 
  * @returns {object|null}
  */
@@ -68,7 +72,8 @@ const data_validation_password = (data) => {
 			return null;
  };
 /**
- * 
+ * Data validation
+ * @function
  * @param {	import('../types.js').server_db_sql_parameter_user_account_create|
  * 			import('../types.js').server_db_sql_parameter_user_account_updateUserLocal|
  *         	import('../types.js').server_db_sql_parameter_user_account_updateAdmin} data 
@@ -162,6 +167,8 @@ const data_validation = data => {
 
 
 /**
+ * Get username
+ * @function
  * @param {number} app_id
  * @param {import('../types.js').server_db_sql_parameter_user_account_userLogin} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_userLogin[]>}
@@ -177,7 +184,8 @@ const userGetUsername = (app_id, data) =>
                         null));
 
 /**
- * 
+ * Get user provider
+ * @function
  * @param {number} app_id 
  * @param {number|null} identity_provider_id 
  * @param {number} search_id
@@ -194,7 +202,8 @@ const userGetProvider = async (app_id, identity_provider_id, search_id) =>
                         null, 
                         null));
 /**
- * 
+ * Update verification code
+ * @function
  * @param {number} app_id 
  * @param {number} id 
  * @param {string} verification_code 
@@ -212,7 +221,8 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
                         null));
 
 /**
- * 
+ * Update user provider
+ * @function
  * @param {number} app_id 
  * @param {number} id 
  * @param {import('../types.js').server_db_sql_parameter_user_account_create} data
@@ -242,7 +252,8 @@ const userUpdateProvider = async (app_id, id, data) => {
 };
 
 /**
- * 
+ * Create user
+ * @function
  * @param {number} app_id 
  * @param {import('../types.js').server_db_sql_parameter_user_account_create} data 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_create>}
@@ -282,7 +293,8 @@ const userPost = async (app_id, data) =>{
 };
 
 /**
- * 
+ * Update user activate
+ * @function
  * @param {number} app_id 
  * @param {number} id 
  * @param {number|null} verification_type 
@@ -304,7 +316,8 @@ const userUpdateActivate = async (app_id, id, verification_type, verification_co
                         null));
     
 /**
- * 
+ * Get user email
+ * @function
  * @param {number} app_id 
  * @param {string} email 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getEmailUser[]>}
@@ -320,7 +333,8 @@ const userGetEmail = async (app_id, email) =>
                         null));
 
 /**
- * 
+ * Get user profile
+ * @function
  * @param {number} app_id 
  * @param {number|null} resource_id_number
  * @param {string|null} resource_id_name
@@ -466,7 +480,8 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
     });
 };
 /**
- * 
+ * Get profile stat
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getProfileStat[]>}
@@ -483,7 +498,8 @@ const getProfileStat = (app_id, query) =>
                         null));
 
 /**
- * 
+ * Updates user by admin
+ * @function
  * @param {number} app_id 
  * @param {number} id 
  * @param {import('../types.js').server_db_sql_parameter_user_account_updateAdmin} data 
@@ -514,7 +530,8 @@ const userUpdateAdmin = async (app_id, id, data) =>{
         throw error_code;
 };
 /**
- * 
+ * Gets user and updates user by admin
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query 
@@ -562,7 +579,8 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
     });
 };
 /**
- * 
+ * Get users by admin
+ * @function
  * @param {number} app_id 
  * @param {*} query 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getUsersAdmin[]>}
@@ -581,7 +599,8 @@ const getUsersAdmin = (app_id, query) =>
                         null));
 
 /**
- * 
+ * Get user stat
+ * @function
  * @param {number} app_id 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getStatCountAdmin[]>}
  */
@@ -594,7 +613,8 @@ const getStatCountAdmin = app_id =>
                         null));
  
 /**
- * 
+ * Update user password
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {string} ip 
@@ -655,7 +675,8 @@ const getStatCountAdmin = app_id =>
         throw error_code;
 };
 /**
- * 
+ * Update user local
+ * @function
  * @param {number} app_id 
  * @param {import('../types.js').server_db_sql_parameter_user_account_updateUserLocal} data 
  * @param {number} search_id
@@ -689,7 +710,8 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
 };
 
 /**
- * 
+ * Update user common
+ * @function
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
@@ -729,7 +751,8 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
         throw error_code;
 };
 /**
- * 
+ * Get user by id
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query 
@@ -762,7 +785,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
 };
 
 /**
- * 
+ * Get password for given user
+ * @function
  * @param {number} app_id 
  * @param {number} id
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_checkPassword[]>}
@@ -776,7 +800,8 @@ const userGetPassword = async (app_id, id) =>
                         null));
 
 /**
- * 
+ * Delete user
+ * @function
  * @param {number} app_id 
  * @param {number} id 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_deleteUser>}
@@ -789,7 +814,8 @@ const userDelete = async (app_id, id) =>
                         null, 
                         null));
 /**
- * 
+ * Get user profile detail
+ * @function
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
@@ -821,7 +847,8 @@ const userDelete = async (app_id, id) =>
     
 };
 /**
- * 
+ * Get demo users
+ * @function
  * @param {number} app_id
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_getDemousers[]>}
  */

@@ -7,7 +7,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Get master resource
+ * @function
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} query
@@ -30,7 +31,8 @@ const get = (app_id, resource_id, query, user_null=false) =>
                     null));
 
 /**
- * 
+ * Create master resource
+ * @function
  * @param {number} app_id 
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_post>}
@@ -49,7 +51,8 @@ const get = (app_id, resource_id, query, user_null=false) =>
                     null, 
                     null));
 /**
- * 
+ * Update master resource
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data
@@ -70,7 +73,8 @@ const get = (app_id, resource_id, query, user_null=false) =>
                     null, 
                     null));
  /**
- * 
+ * Delete master resource
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*}      data

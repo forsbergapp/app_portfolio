@@ -1,5 +1,5 @@
 /**
- * All SQL statements for database model
+ * All SQL statements for database model used by admin
  * @module server/db/dbSqlDatabase
  */
 /**@type{import('../server.js')} */

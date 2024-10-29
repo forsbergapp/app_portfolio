@@ -39,7 +39,9 @@ if (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==4){
  * and all database API use different logic.
  * Needed to restart database connection after admin
  * have changed parameters and without having to restart server
+ * @function
  * @param {number} db
+ * @returns {void}
  */
 const dbPoolDeleteAll = (db)=>{
       //relase db pools from memory
@@ -77,7 +79,7 @@ const dbPoolDeleteAll = (db)=>{
  *    poolMin:                 pool min
  *    poolMax:                 pool max
  *    poolIncrement:           pool increment
- * 
+ * @function
  * @param {import('../types.js').server_db_db_pool_parameters} dbparameters 
  * @returns {Promise.<null>}
  */
@@ -206,6 +208,7 @@ const dbPoolStart = async (dbparameters) =>{
 };
 /**
  * Delete pool for given database
+ * @function
  * @param {number|null} pool_id 
  * @param {number|null} db_use 
  * @param {number} dba 
@@ -237,6 +240,7 @@ const dbPoolClose = async (pool_id, db_use, dba) =>{
 };
 /**
  * Get pool for database
+ * @function
  * @param {number|null} pool_id 
  * @param {number} db_use 
  * @param {number|null} dba 
@@ -277,6 +281,23 @@ const dbPoolGet = (pool_id, db_use, dba) => {
 
 /**
  * Execute query for given database
+ * Common optional parameters:
+ * DB_RETURN_ID
+ * Returns new inserted id from table if used for given column in the parameter
+ * DB_CLOB
+ * Sets CLOB attributes if used 
+ * contains array of columns with CLOB datatype
+ * 
+ * All databases return same metadata keys
+ * INSERT:
+ * result.insertId
+ * INSERT, DELETE, UPDATE:
+ * result.affectedRows 
+ * 
+ * Conversion functions are implemented to support same parameter syntax inside SQL for all databases
+ * and supports ':' before parameter in the SQL
+ * 
+ * @function
  * @param {number|null} pool_id 
  * @param {number|null} db_use   - 1 MariaDB 
  *                               - 2 MySQL

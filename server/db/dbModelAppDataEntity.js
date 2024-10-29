@@ -7,7 +7,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Get Entity
+ * @function
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} query

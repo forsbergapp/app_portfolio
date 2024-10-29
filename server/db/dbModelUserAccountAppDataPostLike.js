@@ -7,7 +7,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Like
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data
@@ -25,12 +26,13 @@ const post = (app_id, resource_id, data) =>
                         null, 
                         null));
 /**
-* 
-* @param {number} app_id 
-* @param {number} resource_id
-* @param {*} data
-* @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_like_unlike>}
-*/
+ * Unlike
+ * @function
+ * @param {number} app_id 
+ * @param {number} resource_id
+ * @param {*} data
+ * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_like_unlike>}
+ */
 const deleteRecord = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
