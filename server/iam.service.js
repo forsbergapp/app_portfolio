@@ -226,9 +226,9 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
     /**@type{import('./db/dbModelUserAccount.js')} */
     const { updateUserVerificationCode, userGetUsername} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./db/dbModelUserAccountApp.js')} */
-    const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
+    const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
     /**@type{import('./db/dbModelAppSetting.js')} */
-    const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+    const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
     return new Promise((resolve, reject)=>{           
         /**
@@ -236,7 +236,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
          * @param {number} app_id 
          */
         const login_error = async (app_id) =>{
-            return getSettingDisplayData(   app_id,
+            return getDisplayData(   app_id,
                 new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20300}`))
             .then(result_message=>result_message[0].display_data)
             .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
@@ -268,7 +268,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                        data_body.token = jwt_data.token;
                        fileFsAppend('IAM_USER_LOGIN', data_body, '')
                        .then(()=>{
-                           createUserAccountApp(app_id, result_login[0].id)
+                           dbModelUserAccountApp.post(app_id, result_login[0].id)
                            .then(()=>{
                                //if user not activated then send email with new verification code
                                const new_code = iamUtilVerificationCode();
@@ -387,9 +387,9 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
     const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
     /**@type{import('./db/dbModelUserAccount.js')} */
-    const { userGetProvider, updateUserProvider,userPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    const { userGetProvider, userUpdateProvider,userPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./db/dbModelUserAccountApp.js')} */
-    const { createUserAccountApp} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
+    const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
 
     return new Promise((resolve, reject)=>{
        userGetProvider(app_id, serverUtilNumberValue(data.identity_provider_id), resource_id)
@@ -436,9 +436,9 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                data_login.id = result_signin[0].id;
                fileFsAppend('IAM_USER_LOGIN', data_login, '')
                .then(()=>{
-                updateUserProvider(app_id, result_signin[0].id, data_user)
+                userUpdateProvider(app_id, result_signin[0].id, data_user)
                    .then(()=>{
-                       createUserAccountApp(app_id, result_signin[0].id)
+                       dbModelUserAccountApp.post(app_id, result_signin[0].id)
                        .then(()=>{
                            socketConnectedUpdate(app_id, 
                                {   iam:iam,
@@ -486,7 +486,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                    data_login.id = result_create.insertId;
                    fileFsAppend('IAM_USER_LOGIN', data_login, '')
                    .then(()=>{
-                       createUserAccountApp(app_id, result_create.insertId)
+                       dbModelUserAccountApp.post(app_id, result_create.insertId)
                        .then(()=>{
                             userGetProvider(app_id, serverUtilNumberValue(data.identity_provider_id), resource_id)
                            .then(result_signin2=>{
@@ -646,7 +646,7 @@ const iamAuthenticateUserActivate = async (app_id, resource_id, ip, user_agent, 
     /**@type{import('./db/dbModelUserAccount.js')} */
     const { userUpdateActivate} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./db/dbModelUserAccountEvent.js')} */
-    const { insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
+    const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
     return new Promise((resolve, reject)=>{
        /**@type{string|null} */
        let auth_password_new = null;
@@ -675,7 +675,7 @@ const iamAuthenticateUserActivate = async (app_id, resource_id, ip, user_agent, 
                        client_latitude : data.client_latitude,
                        client_longitude : data.client_longitude
                    };
-                   insertUserEvent(app_id, eventData)
+                   dbModelUserAccountEvent.post(app_id, eventData)
                    .then(result_insert=>{
                        resolve({
                            count: result_insert.affectedRows,
@@ -755,7 +755,7 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
     const {commonMailSend} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('./db/dbModelUserAccountEvent.js')} */
-    const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
+    const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
     /**@type{import('./db/dbModelUserAccount.js')} */
     const { userGetEmail, updateUserVerificationCode} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
@@ -766,7 +766,7 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
             userGetEmail(app_id, email)
             .then(result_emailuser=>{
                 if (result_emailuser[0]){
-                    getLastUserEvent(app_id, serverUtilNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
+                    dbModelUserAccountEvent.getLastUserEvent(app_id, serverUtilNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
                     .then(result_user_event=>{
                         if (result_user_event[0] &&
                             result_user_event[0].status_name == 'INPROGRESS' &&
@@ -789,7 +789,7 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
                                                 client_latitude : data.client_latitude,
                                                 client_longitude : data.client_longitude
                                             };
-                            insertUserEvent(app_id, eventData)
+                            dbModelUserAccountEvent.post(app_id, eventData)
                             .then(()=>{
                                 const new_code = iamUtilVerificationCode();
                                 updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
@@ -857,15 +857,15 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
     const { getUserByUserId, userUpdateLocal} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     
     /**@type{import('./db/dbModelUserAccountEvent.js')} */
-    const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
+    const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
     /**@type{import('./db/dbModelAppSetting.js')} */
-    const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+    const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
     const result_user = await getUserByUserId(app_id, resource_id, query, res);
     
     /**@type{import('./types.js').server_db_sql_result_user_account_event_getLastUserEvent[]}*/
-    const result_user_event = await getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
+    const result_user_event = await dbModelUserAccountEvent.getLastUserEvent(app_id, resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
 
     return new Promise((resolve, reject)=>{
         if (result_user) {
@@ -913,7 +913,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                                     client_latitude : data.client_latitude,
                                     client_longitude : data.client_longitude
                                 };
-                                insertUserEvent(app_id, eventData)
+                                dbModelUserAccountEvent.post(app_id, eventData)
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     commonMailSend(  app_id, 
@@ -949,7 +949,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                     res.statusCode=400;
                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                     //invalid password
-                    getSettingDisplayData(  app_id,
+                    getDisplayData(  app_id,
                                             new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
                     .then(result_message=>{
                         reject(result_message[0].display_data);
@@ -961,7 +961,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
         else {
             //user not found
             res.statusCode=404;
-            getSettingDisplayData(  app_id,
+            getDisplayData(  app_id,
                                     new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
             .then(result_message=>{
                 reject(result_message[0].display_data);
@@ -986,7 +986,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
     const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
     
     /**@type{import('./db/dbModelAppSetting.js')} */
-    const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+    const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
     /**@type{import('./db/dbModelUserAccount.js')} */
     const { getUserByUserId, userDelete, userGetPassword} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
@@ -1032,7 +1032,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                                     res.statusCode = 400;
                                     //invalid password
-                                    getSettingDisplayData(  app_id,
+                                    getDisplayData(  app_id,
                                                             new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
                                     .then(result_message=>{
                                         reject(result_message[0].display_data);
@@ -1045,7 +1045,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                         else{
                             //user not found
                             res.statusCode = 404;
-                            getSettingDisplayData(  app_id,
+                            getDisplayData(  app_id,
                                                     new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
                             .then(result_message=>{
                                 reject(result_message[0].display_data);
@@ -1059,7 +1059,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
             else{
                 //user not found
                 res.statusCode = 404;
-                getSettingDisplayData(  app_id,
+                getDisplayData(  app_id,
                                         new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
                 .then(result_message=>{
                     reject(result_message[0].display_data);

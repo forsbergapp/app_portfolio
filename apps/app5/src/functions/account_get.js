@@ -12,9 +12,9 @@
  */
 const account_get = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
     
-    return await DetailGet(app_id, data.resource_id, 
+    return await dbModelAppDataResourceDetail.get(app_id, data.resource_id, 
                     new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=ACCOUNT&entity_id=${data.entity_id}`), 
                     false);
 };

@@ -13,9 +13,9 @@
  */
 const customer_get = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
-    return await MasterGet(app_id, data.resource_id, 
+    return await dbModelAppDataResourceMaster.get(app_id, data.resource_id, 
         new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=CUSTOMER&entity_id=${data.entity_id}`), 
         false);
 };

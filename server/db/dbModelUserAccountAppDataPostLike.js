@@ -13,7 +13,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_like_like>}
  */
-const like = (app_id, resource_id, data) => 
+const post = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT, 
@@ -31,7 +31,7 @@ const like = (app_id, resource_id, data) =>
 * @param {*} data
 * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_like_unlike>}
 */
-const unlike = (app_id, resource_id, data) => 
+const deleteRecord = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE, 
@@ -43,4 +43,4 @@ const unlike = (app_id, resource_id, data) =>
                         null, 
                         null));
 
-export{like, unlike};
+export{post, deleteRecord};

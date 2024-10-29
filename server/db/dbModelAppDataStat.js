@@ -31,7 +31,7 @@ const get = (app_id, query) =>
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_logGet[]>}
  */
-const logGet = (app_id, query) => 
+const getLog = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.APP_DATA_STAT_SELECT_LOG
@@ -166,4 +166,4 @@ const post = async (app_id, data) =>
                         null, 
                         null));
 
-export{get, logGet, getStatUniqueVisitor, post};
+export{get, getLog, getStatUniqueVisitor, post};

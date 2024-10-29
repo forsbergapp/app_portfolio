@@ -877,8 +877,8 @@
  */
 
 /**
- * DB SQL APP server_db_sql_result_app_getAppsAdminId
- * @typedef {{  id:number}} server_db_sql_result_app_getAppsAdminId
+ * DB SQL APP server_db_sql_result_app_getAdminId
+ * @typedef {{  id:number}} server_db_sql_result_app_getAdminId
  */
 
 
@@ -1117,7 +1117,7 @@
  */
 
 /**
- * DB SQL APP SETTING server_db_sql_result_app_setting_getSettingDisplayData
+ * DB SQL APP SETTING server_db_sql_result_app_setting_getDisplayData
  * @typedef {{  id:string,
  *              value:string, 
  *              name:null, 
@@ -1125,7 +1125,7 @@
  *              data2:string|null, 
  *              data3:string|null, 
  *              data4:string|null, 
- *              data5:string|null}} server_db_sql_result_app_setting_getSettingDisplayData
+ *              data5:string|null}} server_db_sql_result_app_setting_getDisplayData
  */
 
 /**

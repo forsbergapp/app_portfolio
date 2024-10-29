@@ -16,7 +16,7 @@ const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam
 const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**@type{import('./dbModelUserAccountEvent.js')} */
-const { insertUserEvent } = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
+const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
 /**
  * @param {string|null} password 
@@ -218,7 +218,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
  * @param {import('../types.js').server_db_sql_parameter_user_account_create} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_updateSigninProvider>}
  */
-const updateUserProvider = async (app_id, id, data) => {
+const userUpdateProvider = async (app_id, id, data) => {
     const error_code = data_validation(data);
     if (error_code==null)
         return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -441,14 +441,14 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 if (result_getProfileUser[0]){
                     //always save stat who is viewing, same user, none or someone else
                     import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`)
-                    .then((/**@type{import('./dbModelUserAccountView.js')} */{ insertUserAccountView }) => {
+                    .then((/**@type{import('./dbModelUserAccountView.js')} */dbModelUserAccountView) => {
                         const data_body = { user_account_id:        serverUtilNumberValue(query.get('id')),    //who views
                                             user_account_id_view:   serverUtilNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
                                             client_ip:              ip,
                                             client_user_agent:      user_agent,
                                             client_longitude:       query.get('client_longitude'),
                                             client_latitude:        query.get('client_latitude')};
-                        insertUserAccountView(app_id, data_body)
+                        dbModelUserAccountView.post(app_id, data_body)
                         .then(()=>{
                             resolve(clear_private(result_getProfileUser));
                         })
@@ -639,7 +639,7 @@ const getStatCountAdmin = app_id =>
                             client_latitude : data.client_latitude,
                             client_longitude : data.client_longitude
                         };
-                        insertUserEvent(app_id, eventData);
+                        dbModelUserAccountEvent.post(app_id, eventData);
                     }
                     else{
                         return import(`file://${process.cwd()}/server/db/common.js`)
@@ -837,7 +837,7 @@ const userDemoGet = async app_id =>
                         
 export {userGetUsername,
         userGetProvider,
-        updateUserProvider,
+        userUpdateProvider,
         updateUserVerificationCode,
         userPost,
         userUpdateActivate, 

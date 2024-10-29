@@ -21,16 +21,16 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
-    const {EntityGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
+    const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntityResource.js')} */
-    const {EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
+    const dbModelAppDataEntityResource = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const {MasterGet, MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     /**@type{import('../../../../server/iam.service.js')} */
     const {iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
@@ -38,12 +38,12 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
 
-    const currency = await MasterGet(app_id, null, 
+    const currency = await dbModelAppDataResourceMaster.get(app_id, null, 
                             new URLSearchParams(`data_app_id=${app_id}&resource_name=CURRENCY`),
                             true)
                             .then(result=>JSON.parse(result[0].json_data));
     
-    const merchant = await MasterGet(app_id, null, 
+    const merchant = await dbModelAppDataResourceMaster.get(app_id, null, 
                             new URLSearchParams(`data_app_id=${app_id}&resource_name=MERCHANT`),
                             false)
                             .then(result=>result.map(result=>{return {  /**@ts-ignore */
@@ -80,11 +80,11 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         */
         const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, data.message));
     
-        const merchant_bankaccount = await DetailGet(app_id, null, 
+        const merchant_bankaccount = await dbModelAppDataResourceDetail.get(app_id, null, 
                                             new URLSearchParams(`master_id=${merchant.id}&user_account_id=${merchant.user_account_app_user_account_id}&data_app_id=${app_id}&resource_name=ACCOUNT`),
                                             false)
                                             .then(result=>result.map(account=>JSON.parse(account.json_data)).filter(account=>account.bank_account_vpa==merchant.merchant_vpa)[0]);
-        const bankaccount_payer = await DetailGet(app_id, null, 
+        const bankaccount_payer = await dbModelAppDataResourceDetail.get(app_id, null, 
                                             new URLSearchParams(`data_app_id=${app_id}&resource_name=ACCOUNT`),
                                             false)
                                             .then(result=>result.map(account=>JSON.parse(account.json_data)).filter(account=>account.bank_account_vpa==body_decrypted.payerid)[0]);
@@ -126,10 +126,10 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                 user_account_id                             : merchant.user_account_app_user_account_id,
                                                 user_account_app_id                         : merchant.user_account_app_app_id,
                                                 data_app_id                                 : app_id,
-                                                app_data_entity_resource_app_data_entity_id : await EntityGet(app_id, null, new URLSearchParams(`data_app_id=${app_id}`)).then(result=>result[0].id),
-                                                app_data_entity_resource_id                 : await EntityResourceGet(app_id, null, new URLSearchParams(`data_app_id=${app_id}&resource_name=PAYMENT_REQUEST`)).then(result=>result[0].id)
+                                                app_data_entity_resource_app_data_entity_id : await dbModelAppDataEntity.get(app_id, null, new URLSearchParams(`data_app_id=${app_id}`)).then(result=>result[0].id),
+                                                app_data_entity_resource_id                 : await dbModelAppDataEntityResource.get(app_id, null, new URLSearchParams(`data_app_id=${app_id}&resource_name=PAYMENT_REQUEST`)).then(result=>result[0].id)
                                                 };
-                await MasterPost(app_id, data_new_payment_request);
+                await dbModelAppDataResourceMaster.post(app_id, data_new_payment_request);
     
     
                 /**

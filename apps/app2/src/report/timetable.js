@@ -3,7 +3,7 @@
 /**@type{import('../../../../server/server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../../../../server/db/dbModelUserAccountAppDataPostView.js')} */
-const { insertUserPostView} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
+const dbModelUserAccountAppDataPostView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
 
 const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
@@ -163,7 +163,7 @@ const timetable = async (timetable_parameters) => {
 								user_account_id:    			uid_view,
 								user_account_app_data_post_id:  serverUtilNumberValue(user_account_app_data_post_id)};
 		
-		insertUserPostView(timetable_parameters.app_id, data_ViewStat)
+		dbModelUserAccountAppDataPostView.post(timetable_parameters.app_id, data_ViewStat)
 		.then(()=>{
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{

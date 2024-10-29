@@ -9,7 +9,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @param {import('../types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} data 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_view_insertUserPostView>}
  */
-const insertUserPostView = async (app_id, data) =>
+const post = async (app_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_VIEW_INSERT, 
@@ -25,4 +25,4 @@ const insertUserPostView = async (app_id, data) =>
                         null, 
                         null));
 
-export {insertUserPostView};
+export {post};

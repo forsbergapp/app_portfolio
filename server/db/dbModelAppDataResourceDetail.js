@@ -14,7 +14,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_get[]>}
  */
- const DetailGet = (app_id, resource_id, query, user_null=false) => 
+ const get = (app_id, resource_id, query, user_null=false) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_SELECT, 
@@ -35,7 +35,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_post>}
  */
- const DetailPost = (app_id, data) => 
+ const post = (app_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_INSERT, 
@@ -58,7 +58,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_update>}
  */
- const DetailUpdate = (app_id, resource_id, data) => 
+ const update = (app_id, resource_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_UPDATE, 
@@ -81,7 +81,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_delete>}
  */
- const DetailDelete = (app_id, resource_id, data) => 
+ const deleteRecord = (app_id, resource_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DELETE, 
@@ -91,4 +91,4 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                       data_app_id         :data.data_app_id ?? null}, 
                     null, 
                     null));
-export{DetailGet, DetailPost, DetailUpdate, DetailDelete};
+export{get, post, update, deleteRecord};

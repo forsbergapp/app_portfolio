@@ -15,7 +15,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} query 
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getSettings[]>}
  */
-const getSettings = (app_id, query) => 
+const get = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.APP_SETTING_SELECT, 
@@ -30,9 +30,9 @@ const getSettings = (app_id, query) =>
  * Get setting display data
  * @param {number} app_id 
  * @param {*} query 
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]>}
+ * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getDisplayData[]>}
  */
-const getSettingDisplayData = (app_id, query) => 
+const getDisplayData = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.APP_SETTING_SELECT_DISPLAYDATA, 
@@ -44,4 +44,4 @@ const getSettingDisplayData = (app_id, query) =>
                         null, 
                         null));    
                                         
-export{getSettings, getSettingDisplayData};
+export{get, getDisplayData};
