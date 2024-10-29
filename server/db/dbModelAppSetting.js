@@ -10,7 +10,8 @@ const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Get setting with translation text
+ * @function
  * @param {number} app_id 
  * @param {*} query 
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getSettings[]>}
@@ -27,7 +28,8 @@ const get = (app_id, query) =>
                         null, 
                         query.get('lang_code')));
 /**
- * Get setting display data
+ * Get setting display data without translation
+ * @function
  * @param {number} app_id 
  * @param {*} query 
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getDisplayData[]>}

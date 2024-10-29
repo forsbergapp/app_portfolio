@@ -4,7 +4,8 @@
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
 /**
- * 
+ * Get identity providers
+ * @function
  * @param {number} app_id 
  * @returns {Promise.<import('../types.js').server_db_sql_result_identity_provider_getIdentityProviders[]>}
  */

@@ -8,7 +8,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Get user post
+ * @function
  * @param {number} app_id 
  * @param {number} id 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]>}
@@ -21,7 +22,8 @@ const getUserPost = async (app_id, id) =>
                         null, 
                         null));
 /**
- * 
+ * Get user post by id
+ * @function
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} query 
@@ -54,7 +56,8 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
     });
 };
 /**
- * 
+ * Get user profile post
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query
@@ -85,7 +88,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     });
 };
 /**
- * 
+ * Get profile stat like
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query
@@ -115,7 +119,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     });
 };
 /**
- * 
+ * Get profile post stat
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @param {import('../types.js').server_server_res} res
@@ -144,7 +149,8 @@ const getProfileStatPost = (app_id, query, res) =>{
     });
 };
 /**
- * 
+ * Get profile user detail post
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query 
@@ -175,7 +181,8 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
     });
 };
 /**
- * 
+ * Create user post
+ * @function
  * @param {number} app_id
  * @param {*} query
  * @param {*} data
@@ -228,7 +235,8 @@ const createUserPost = (app_id, query, data) => {
 	
 };
 /**
- * 
+ * Update user post
+ * @function
  * @param {number} app_id 
  * @param {*} resource_id
  * @param {*} query 
@@ -263,7 +271,8 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
     });
 };
 /**
- * 
+ * Delete user post
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data

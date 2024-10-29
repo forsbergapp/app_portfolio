@@ -88,7 +88,8 @@ const getApps = async (app_id, resource_id, locale) => {
 };
 
 /**
- * 
+ * Delete record
+ * @function
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query

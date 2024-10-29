@@ -7,7 +7,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
  /**
- * 
+ * Get detail data resource
+ * @function
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} query
@@ -35,7 +36,8 @@ const get = (app_id, resource_id, query, user_null=false) =>
                     null, 
                     null));
 /**
- * 
+ * Create detail data resource
+ * @function
  * @param {number} app_id 
  * @param {*}      data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_data_post>}
@@ -55,7 +57,8 @@ const post = (app_id, data) =>
                     null));
 
 /**
- * 
+ * Update detail data resource
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*}      data
@@ -77,7 +80,8 @@ const post = (app_id, data) =>
                     null));
 
 /**
- * 
+ * Delete detail data resource
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*}      data

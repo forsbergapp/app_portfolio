@@ -1,4 +1,13 @@
-/** @module server/db/file */
+/** 
+ * File database using race condition, pessmistic lock and database transaction pattern
+ * File types supported
+ *  JSON            json
+ *  JSON_LOG        json records, comma separated
+ *  JSON_LOG_DATE   json record, comma separateed with file name suffixes
+ *  BINARY          used by sqLite database
+ * 
+ * @module server/db/file 
+ */
 
 const fs = await import('node:fs');
 
@@ -41,14 +50,17 @@ const FILE_DB = [   {NAME:'CONFIG_SERVER',                      TYPE:'JSON',    
 Object.seal(FILE_DB);
 
 /**
- * 
+ * Get file record from file db
+ * @function
  * @param {import('../types.js').server_db_file_db_name} filename 
  * @returns {import('../types.js').server_db_file_db_record}
  */
 const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
 /**
- * 
+ * Start transaction
+ * Using race condition, pessmistic lock and database transaction pattern
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {object|string} filecontent
  * @returns {Promise.<number>}
@@ -86,7 +98,8 @@ const fileTransactionStart = async (file, filecontent)=>{
     });
 };
 /**
- * 
+ * Transation commit
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
@@ -103,7 +116,8 @@ const fileTransactionCommit = (file, transaction_id)=>{
     }
 };
 /**
- * 
+ * Transaction rollback
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
@@ -122,7 +136,8 @@ const fileTransactionRollback = (file, transaction_id)=>{
     }
 };
 /**
- * 
+ * Get file suffix
+ * @function
  * @param {string|null} filesuffix 
  * @param {string|null} sample 
  * @returns 
@@ -154,13 +169,15 @@ const fileTransactionRollback = (file, transaction_id)=>{
 
 /**
  * Returns file path for given file
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @returns {string}
  */
 const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
 
 /**
- * 
+ * Get file from cache already JSON parsed
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file
  * @returns {*}
  */
@@ -168,6 +185,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  /**
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {string|null} filesuffix 
  * @param {string|null} sample
@@ -180,13 +198,15 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
     return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row));
 };
 /**
- * 
+ * Get files from directory
+ * @function
  * @returns {Promise.<string[]>}
  */
 const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
 /**
  * 
  * Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {boolean} lock
  * @returns {Promise.<import('../types.js').server_db_file_result_fileFsRead>}
@@ -207,7 +227,10 @@ const fileFsRead = async (file, lock=false) =>{
     }
 };
 /**
- * 
+ * Set cache for files using CACHE_CONTENT key to avoid using too much disk read
+ * to increase performance
+ * Cache content is updated after admin updates a file
+ * @function
  * @returns {Promise.<void>}
  */
  const fileFsCacheSet = async () => {
@@ -223,10 +246,11 @@ const fileFsRead = async (file, lock=false) =>{
 /**
  * 
  * Updates config files
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {number|null} transaction_id 
  * @param {object} file_content 
- * @returns 
+ * @returns {Promise.<string|null>}
  */
 const fileFsWrite = async (file, transaction_id, file_content) =>{
     if (!transaction_id || fileRecord(file).TRANSACTION_ID != transaction_id)
@@ -239,7 +263,7 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
                                     JSON.stringify(fileRecord(file).TRANSACTION_CONTENT, undefined, 2),  
                                     'utf8');
         //write new file content
-        await fs.promises.writeFile(process.cwd() + filepath, 
+        return await fs.promises.writeFile(process.cwd() + filepath, 
                                     JSON.stringify(file_content, undefined, 2),  
                                     'utf8')
         .then(()=>{
@@ -259,10 +283,12 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
 };
 
 /**
- * 
+ * Append log to file
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file
  * @param {object} file_content 
  * @param {string|null} filesuffix
+ * @returns {Promise.<null>}
  */
 const fileFsAppend = async (file, file_content, filesuffix = null) =>{
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
@@ -270,7 +296,7 @@ const fileFsAppend = async (file, file_content, filesuffix = null) =>{
     .catch(()=>null);
     const transaction_id = await fileTransactionStart(file, old_file ?? '');
     
-    await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+    return await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
     .then(()=>{
         if (fileTransactionCommit(file, transaction_id))
             return null;
@@ -284,7 +310,11 @@ const fileFsAppend = async (file, file_content, filesuffix = null) =>{
             throw('⛔ ' + error);
     });
 };
-
+/**
+ * Created directories and should be used only when server is started first time
+ * @function
+ * @returns{Promise.<void>}
+ */
 const fileFsAccessMkdir = async () => {
     const mkdir = async (/**@type{string} */dir) =>{
         await fs.promises.mkdir(process.cwd() + dir)
@@ -310,7 +340,9 @@ const fileFsAccessMkdir = async () => {
     }
 };
 /**
- * 
+ * Write to a file.
+ * Should only be used by admin since no transaction is used
+ * @function
  * @param {import('../types.js').server_db_file_db_name} file 
  * @param {import('../types.js').server_db_file_config_files} file_content 
  */
