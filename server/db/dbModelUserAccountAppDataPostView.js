@@ -1,5 +1,10 @@
 /** @module server/db/dbModelUserAccountAppDataPostView */
 
+/**
+ * @import {server_db_sql_result_user_account_app_data_post_view_insertUserPostView,
+ *          server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -7,8 +12,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * Create view record
  * @function
  * @param {number} app_id 
- * @param {import('../types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} data 
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_view_insertUserPostView>}
+ * @param {server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} data 
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_view_insertUserPostView>}
  */
 const post = async (app_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

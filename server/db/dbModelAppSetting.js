@@ -1,5 +1,9 @@
 /** @module server/db/dbModelAppSetting */
 
+/**
+ * @import {server_db_sql_result_app_setting_getDisplayData, server_db_sql_result_app_setting_getSettings} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -14,7 +18,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @param {number} app_id 
  * @param {*} query 
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getSettings[]>}
+ * @returns {Promise.<server_db_sql_result_app_setting_getSettings[]>}
  */
 const get = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -32,7 +36,7 @@ const get = (app_id, query) =>
  * @function
  * @param {number} app_id 
  * @param {*} query 
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_setting_getDisplayData[]>}
+ * @returns {Promise.<server_db_sql_result_app_setting_getDisplayData[]>}
  */
 const getDisplayData = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

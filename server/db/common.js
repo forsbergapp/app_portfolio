@@ -1,5 +1,9 @@
 /** @module server/db/common */
 
+/**
+ * @import {server_db_common_result, server_db_sql_result_app_setting_getDisplayData, server_server_res, server_server_error, server_db_common_result_error} from '../types.js'
+*/
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../log.js')} */
@@ -26,7 +30,7 @@ const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
  *	Oracle message:
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  * @function
- * @param {import('../types.js').server_db_common_result_error} error
+ * @param {server_db_common_result_error} error
  * @returns (string|null)
  * 
  */
@@ -62,8 +66,8 @@ const dbCommonAppCodeGet = error => {
  * @function
  * @param {number} app_id 
  * @param {string} lang_code 
- * @param {import('../types.js').server_server_error} err 
- * @param {import('../types.js').server_server_res} res
+ * @param {server_server_error} err 
+ * @param {server_server_res} res
  */
  const dbCommonCheckedError = async (app_id, lang_code, err, res) =>{
 	/**@type{import('./dbModelAppSetting.js')} */
@@ -94,14 +98,14 @@ const dbCommonAppCodeGet = error => {
  * @function
  * @param {number} app_id 
  * @param {string} lang_code
- * @param {import('../types.js').server_server_res} res
+ * @param {server_server_res} res
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getDisplayData }) => {
 			getDisplayData( 	app_id,
 				new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20400}`))
-			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getDisplayData[]}*/result_message)=>{
+			.then((/**@type{server_db_sql_result_app_setting_getDisplayData[]}*/result_message)=>{
 				res.statusCode = 404;
 				res.statusMessage = result_message[0].display_data;
 				resolve(result_message[0].display_data);
@@ -238,7 +242,7 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 		}
 
 		dbSQL(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, dba)
-		.then((/**@type{import('../types.js').server_db_common_result}*/result)=> {
+		.then((/**@type{server_db_common_result}*/result)=> {
 			logDBI(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
@@ -267,7 +271,7 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 						
 			});
 		})
-		.catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+		.catch((/**@type{server_server_error}*/error)=>{
 			const database_error = 'DATABASE ERROR';
 			//add db_message key since message is not saved for SQLite
 			if (error.message)

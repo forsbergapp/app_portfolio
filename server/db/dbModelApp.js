@@ -1,5 +1,9 @@
 /** @module server/db/dbModelApp */
 
+/**
+ * @import {server_db_sql_result_app_getAdminId, server_db_sql_result_app_getApp} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -15,7 +19,7 @@ const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
  * @param {number} app_id 
  * @param {number|null} id
  * @param {string}  locale
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_getApp[]>}
+ * @returns {Promise.<server_db_sql_result_app_getApp[]>}
  */
 const get = async (app_id, id, locale) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -29,7 +33,7 @@ const get = async (app_id, id, locale) =>
  * Get apps id
  * @function
  * @param {number} app_id 
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_getAdminId[]>}
+ * @returns {Promise.<server_db_sql_result_app_getAdminId[]>}
  */
 const getAdminId = async (app_id) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
