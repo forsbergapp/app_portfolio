@@ -73,33 +73,32 @@ const IBAN_validate = iban => {
 const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
-    const {EntityGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
+    const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
-    const {DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
+    const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
-
-    const transactions = await DataGet(app_id, null, 
+    const transactions = await dbModelAppDataResourceDetailData.get(app_id, null, 
         new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&`+ 
                             'resource_name_type=RESOURCE_TYPE&resource_name=ACCOUNT&'+ 
                             'resource_name_master_attribute_type=RESOURCE_TYPE&resource_name_master_attribute=CUSTOMER&'+ 
                             `entity_id=${data.entity_id}`),
         false);
 
-    const Entity            = await EntityGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}`))
+    const Entity            = await dbModelAppDataEntity.get(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}`))
                                         .then(result=>JSON.parse(result[0].json_data));
 
-    const AccountMetaData   = await MasterGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=ACCOUNT`), true)
+    const AccountMetaData   = await dbModelAppDataResourceMaster.get(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=ACCOUNT`), true)
                                     .then(result=>result.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-    const CustomerAccount   = await DetailGet(app_id, null, new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=ACCOUNT`), false)
+    const CustomerAccount   = await dbModelAppDataResourceDetail.get(app_id, null, new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=ACCOUNT`), false)
                                         .then(result=>JSON.parse(result[0].json_data));
-    const currency          = await MasterGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=CURRENCY`), true).then(result=>JSON.parse(result[0].json_data));
+    const currency          = await dbModelAppDataResourceMaster.get(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=CURRENCY`), true).then(result=>JSON.parse(result[0].json_data));
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_DATA json_data content
     const balance = transactions.reduce((balance, current_row)=>balance += 
                                                                     /**@ts-ignore */

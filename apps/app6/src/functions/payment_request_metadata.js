@@ -12,9 +12,9 @@
  */
 const payment_request_metadata = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
-    return await MasterGet(app_id, null, 
+    return await dbModelAppDataResourceMaster.get(app_id, null, 
                     new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=PAYMENT_REQUEST_METADATA`),
                     true);
 };

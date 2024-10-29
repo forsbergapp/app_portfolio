@@ -14,7 +14,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_get[]>}
  */
-const MasterGet = (app_id, resource_id, query, user_null=false) => 
+const get = (app_id, resource_id, query, user_null=false) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_MASTER_SELECT, 
@@ -35,7 +35,7 @@ const MasterGet = (app_id, resource_id, query, user_null=false) =>
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_post>}
  */
- const MasterPost = (app_id, data) => 
+ const post = (app_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_MASTER_INSERT, 
@@ -55,7 +55,7 @@ const MasterGet = (app_id, resource_id, query, user_null=false) =>
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_update>}
  */
- const MasterUpdate = (app_id, resource_id, data) => 
+ const update = (app_id, resource_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_MASTER_UPDATE, 
@@ -76,7 +76,7 @@ const MasterGet = (app_id, resource_id, query, user_null=false) =>
  * @param {*}      data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_delete>}
  */
-  const MasterDelete = (app_id, resource_id, data) => 
+  const deleteRecord = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
       dbCommonExecute(app_id, 
                       dbSql.APP_DATA_RESOURCE_MASTER_DELETE, 
@@ -87,4 +87,4 @@ const MasterGet = (app_id, resource_id, query, user_null=false) =>
                       null, 
                       null));
  
-export {MasterGet, MasterPost, MasterUpdate, MasterDelete};
+export {get, post, update, deleteRecord};

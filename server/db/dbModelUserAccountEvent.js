@@ -9,7 +9,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @param {import('../types.js').server_db_sql_parameter_user_account_event_insertUserEvent} data 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_event_insertUserEvent>}
  */
-const insertUserEvent = async (app_id, data) => 
+const post = async (app_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_EVENT_INSERT, 
@@ -48,4 +48,4 @@ const getLastUserEvent = async (app_id, user_account_id, event) =>
                         null, 
                         null));
 
-export {insertUserEvent, getLastUserEvent};
+export {post, getLastUserEvent};

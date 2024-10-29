@@ -13,7 +13,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_entity_resource_get[]>}
  */
-const EntityResourceGet = (app_id, resource_id, query) => import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+const get = (app_id, resource_id, query) => import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_ENTITY_RESOURCE_SELECT, 
                     {   resource_id: resource_id,
@@ -23,4 +23,4 @@ const EntityResourceGet = (app_id, resource_id, query) => import(`file://${proce
                         }, 
                     null, 
                     null));
-export {EntityResourceGet};
+export {get};
