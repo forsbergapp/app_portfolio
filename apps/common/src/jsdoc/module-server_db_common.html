@@ -193,6 +193,10 @@ Oracle message:
 
 
 
+<div class="description">
+    <p>Displays message for error</p>
+</div>
+
 
 
 
@@ -342,7 +346,7 @@ Oracle message:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line67">line 67</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line68">line 68</a>
     </div></div></dd>
     
 
@@ -378,7 +382,7 @@ Oracle message:
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonDatePeriod<span class="signature">(period)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonDatePeriod<span class="signature">(period)</span><span class="type-signature"> &rarr; {string}</span></div>
     
 
     
@@ -386,7 +390,7 @@ Oracle message:
 
 
 <div class="description">
-    <p>Compare date using EXTRACT or STRFTIME depending database
+    <p>Get SQL date string using EXTRACT or STRFTIME depending database
 examples in WHERE clause:
 Database 1,2,3,4:
 EXTRACT(year from date_created) 	= :year
@@ -494,7 +498,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line179">line 179</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line183">line 183</a>
     </div></div></dd>
     
 
@@ -519,6 +523,24 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -536,6 +558,19 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
 
 
+
+<div class="description">
+    <p>Common execute SQL
+Updates SQL before execution:
+sets DB schema
+sets date period syntax depending database used
+sets locale search string
+sets pagination info
+sets limit record
+Modifies SQL result:
+parses json_data column so json_data columns are returned also if any
+returns pagination in ISO20022 format if used</p>
+</div>
 
 
 
@@ -754,7 +789,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line192">line 192</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line206">line 206</a>
     </div></div></dd>
     
 
@@ -935,7 +970,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line120">line 120</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line123">line 123</a>
     </div></div></dd>
     
 
@@ -1000,7 +1035,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
 
 
 <div class="description">
-    <p>Get message for record not found</p>
+    <p>Displays message for record not found</p>
 </div>
 
 
@@ -1134,7 +1169,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line97">line 97</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line99">line 99</a>
     </div></div></dd>
     
 
@@ -1279,7 +1314,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line151">line 151</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line154">line 154</a>
     </div></div></dd>
     
 

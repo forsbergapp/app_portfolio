@@ -18,7 +18,8 @@ const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Get stat
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.&lt;import('../types.js').server_db_sql_result_app_data_stat_get[]>}
@@ -33,12 +34,13 @@ const get = (app_id, query) =>
                         null, 
                         null));
 /**
- * 
+  * Get stat log
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.&lt;import('../types.js').server_db_sql_result_app_data_stat_logGet[]>}
  */
-const logGet = (app_id, query) => 
+const getLog = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.APP_DATA_STAT_SELECT_LOG
@@ -80,7 +82,8 @@ const logGet = (app_id, query) =>
                 return result;
         });
 /**
- * 
+  * Get stat unique visitors
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.&lt;import('../types.js').server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
@@ -151,7 +154,8 @@ const getStatUniqueVisitor = (app_id, query) =>{
     });
 };
 /**
- * 
+ * Create stat record
+ * @function
  * @param {number}      app_id
  * @param {*}           data
  * @returns {Promise.&lt;import('../types.js').server_db_sql_result_app_data_stat_post[]>}
@@ -173,7 +177,7 @@ const post = async (app_id, data) =>
                         null, 
                         null));
 
-export{get, logGet, getStatUniqueVisitor, post};
+export{get, getLog, getStatUniqueVisitor, post};
 </code></pre>
         </div>
     </div>

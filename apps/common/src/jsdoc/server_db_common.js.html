@@ -32,7 +32,7 @@ const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
  *	'duplicate key value violates unique constraint "user_account_username_un"'
  *	Oracle message:
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
- *
+ * @function
  * @param {import('../types.js').server_db_common_result_error} error
  * @returns (string|null)
  * 
@@ -65,7 +65,8 @@ const dbCommonAppCodeGet = error => {
 	}
 };
 /**
- * 
+ * Displays message for error
+ * @function
  * @param {number} app_id 
  * @param {string} lang_code 
  * @param {import('../types.js').server_server_error} err 
@@ -73,13 +74,13 @@ const dbCommonAppCodeGet = error => {
  */
  const dbCommonCheckedError = async (app_id, lang_code, err, res) =>{
 	/**@type{import('./dbModelAppSetting.js')} */
-	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+	const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
 	
     return new Promise((resolve)=>{
 		const app_code = dbCommonAppCodeGet(err);
 		if (app_code != null){
-			getSettingDisplayData( 	app_id,
+			getDisplayData( 	app_id,
 				new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&amp;setting_type=MESSAGE&amp;value=${app_code}`))
 			.then(result_message=>{
 				res.statusCode = 400;
@@ -96,17 +97,18 @@ const dbCommonAppCodeGet = error => {
 };
 
 /**
- * Get message for record not found
+ * Displays message for record not found
+ * @function
  * @param {number} app_id 
  * @param {string} lang_code
  * @param {import('../types.js').server_server_res} res
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getSettingDisplayData }) => {
-			getSettingDisplayData( 	app_id,
+		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getDisplayData }) => {
+			getDisplayData( 	app_id,
 				new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&amp;setting_type=MESSAGE&amp;value=${20400}`))
-			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getDisplayData[]}*/result_message)=>{
 				res.statusCode = 404;
 				res.statusMessage = result_message[0].display_data;
 				resolve(result_message[0].display_data);
@@ -120,6 +122,7 @@ const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
  * 1 = complete lang code
  * 2 = ex zh-hant from zh-hant-cn
  * 3 = ex zh from zh-hant-cn
+ * @function
  * @param {string} lang_code 
  * @param {number} part 
  * @returns {string|null}
@@ -151,7 +154,7 @@ const dbCommonLocaleGet = (lang_code, part) => {
 
 /**
  * Sets pagination using limit and offset or limit records on SQL rows
- * 
+ * @function
  * @param {boolean} pagination
  * @returns {string}
  */
@@ -170,7 +173,7 @@ const dbCommonRowsLimit = (pagination = true) => {
 };
 
 /**
- * Compare date using EXTRACT or STRFTIME depending database
+ * Get SQL date string using EXTRACT or STRFTIME depending database
  * examples in WHERE clause:
  * Database 1,2,3,4:
  * 	EXTRACT(year from date_created) 	= :year
@@ -180,15 +183,26 @@ const dbCommonRowsLimit = (pagination = true) => {
  *  CAST(STRFTIME('%Y', date_created) AS INT) = :year
  *  CAST(STRFTIME('%m', date_created) AS INT) = :month
  *  CAST(STRFTIME('%d', date_created) AS INT) = :day
- * 
+ * @function
  * @param {'YEAR'|'MONTH'|'DAY'} period
+ * @returns {string}
  */
 const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==5?
 								` CAST(STRFTIME('%${period=='YEAR'?'Y':period=='MONTH'?'m':period=='DAY'?'d':''}', date_created) AS INT) `:
 								` EXTRACT(${period} from date_created)`;
 														
 /**
- * 
+ * Common execute SQL
+ * Updates SQL before execution:
+ * sets DB schema
+ * sets date period syntax depending database used
+ * sets locale search string
+ * sets pagination info
+ * sets limit record
+ * Modifies SQL result:
+ * parses json_data column so json_data columns are returned also if any
+ * returns pagination in ISO20022 format if used
+ * @function
  * @param {number|null} app_id 
  * @param {string} sql 
  * @param {*} parameters 
