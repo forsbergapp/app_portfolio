@@ -11,7 +11,8 @@ const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * Get stat
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_get[]>}
@@ -26,7 +27,8 @@ const get = (app_id, query) =>
                         null, 
                         null));
 /**
- * 
+  * Get stat log
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_logGet[]>}
@@ -73,7 +75,8 @@ const getLog = (app_id, query) =>
                 return result;
         });
 /**
- * 
+  * Get stat unique visitors
+ * @function
  * @param {number} app_id 
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
@@ -144,7 +147,8 @@ const getStatUniqueVisitor = (app_id, query) =>{
     });
 };
 /**
- * 
+ * Create stat record
+ * @function
  * @param {number}      app_id
  * @param {*}           data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_post[]>}

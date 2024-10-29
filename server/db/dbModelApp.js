@@ -10,7 +10,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 
 /**
- * 
+ * Get app
+ * @function
  * @param {number} app_id 
  * @param {number|null} id
  * @param {string}  locale
@@ -25,7 +26,8 @@ const get = async (app_id, id, locale) =>
                         null, 
                         locale));
 /**
- * 
+ * Get apps id
+ * @function
  * @param {number} app_id 
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_getAdminId[]>}
  */

@@ -25,7 +25,7 @@ const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
  *	'duplicate key value violates unique constraint "user_account_username_un"'
  *	Oracle message:
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
- *
+ * @function
  * @param {import('../types.js').server_db_common_result_error} error
  * @returns (string|null)
  * 
@@ -58,7 +58,8 @@ const dbCommonAppCodeGet = error => {
 	}
 };
 /**
- * 
+ * Displays message for error
+ * @function
  * @param {number} app_id 
  * @param {string} lang_code 
  * @param {import('../types.js').server_server_error} err 
@@ -89,7 +90,8 @@ const dbCommonAppCodeGet = error => {
 };
 
 /**
- * Get message for record not found
+ * Displays message for record not found
+ * @function
  * @param {number} app_id 
  * @param {string} lang_code
  * @param {import('../types.js').server_server_res} res
@@ -113,6 +115,7 @@ const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
  * 1 = complete lang code
  * 2 = ex zh-hant from zh-hant-cn
  * 3 = ex zh from zh-hant-cn
+ * @function
  * @param {string} lang_code 
  * @param {number} part 
  * @returns {string|null}
@@ -144,7 +147,7 @@ const dbCommonLocaleGet = (lang_code, part) => {
 
 /**
  * Sets pagination using limit and offset or limit records on SQL rows
- * 
+ * @function
  * @param {boolean} pagination
  * @returns {string}
  */
@@ -163,7 +166,7 @@ const dbCommonRowsLimit = (pagination = true) => {
 };
 
 /**
- * Compare date using EXTRACT or STRFTIME depending database
+ * Get SQL date string using EXTRACT or STRFTIME depending database
  * examples in WHERE clause:
  * Database 1,2,3,4:
  * 	EXTRACT(year from date_created) 	= :year
@@ -173,15 +176,26 @@ const dbCommonRowsLimit = (pagination = true) => {
  *  CAST(STRFTIME('%Y', date_created) AS INT) = :year
  *  CAST(STRFTIME('%m', date_created) AS INT) = :month
  *  CAST(STRFTIME('%d', date_created) AS INT) = :day
- * 
+ * @function
  * @param {'YEAR'|'MONTH'|'DAY'} period
+ * @returns {string}
  */
 const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==5?
 								` CAST(STRFTIME('%${period=='YEAR'?'Y':period=='MONTH'?'m':period=='DAY'?'d':''}', date_created) AS INT) `:
 								` EXTRACT(${period} from date_created)`;
 														
 /**
- * 
+ * Common execute SQL
+ * Updates SQL before execution:
+ * sets DB schema
+ * sets date period syntax depending database used
+ * sets locale search string
+ * sets pagination info
+ * sets limit record
+ * Modifies SQL result:
+ * parses json_data column so json_data columns are returned also if any
+ * returns pagination in ISO20022 format if used
+ * @function
  * @param {number|null} app_id 
  * @param {string} sql 
  * @param {*} parameters 
