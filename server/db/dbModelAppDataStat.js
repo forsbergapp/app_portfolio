@@ -1,5 +1,10 @@
 /** @module server/db/dbModelAppDataStat */
 
+/**
+ * @import {server_db_sql_result_app_data_stat_post, server_db_sql_result_app_data_stat_getStatUniqueVisitor, 
+ *          server_db_sql_result_app_data_stat_logGet, server_db_sql_result_app_data_stat_get} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -15,7 +20,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @param {number} app_id 
  * @param {*} query
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_get[]>}
+ * @returns {Promise.<server_db_sql_result_app_data_stat_get[]>}
  */
 const get = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -31,7 +36,7 @@ const get = (app_id, query) =>
  * @function
  * @param {number} app_id 
  * @param {*} query
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_logGet[]>}
+ * @returns {Promise.<server_db_sql_result_app_data_stat_logGet[]>}
  */
 const getLog = (app_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -79,7 +84,7 @@ const getLog = (app_id, query) =>
  * @function
  * @param {number} app_id 
  * @param {*} query
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
+ * @returns {Promise.<server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
  */
 const getStatUniqueVisitor = (app_id, query) =>{
     /**
@@ -151,7 +156,7 @@ const getStatUniqueVisitor = (app_id, query) =>{
  * @function
  * @param {number}      app_id
  * @param {*}           data
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_stat_post[]>}
+ * @returns {Promise.<server_db_sql_result_app_data_stat_post[]>}
  */
 const post = async (app_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

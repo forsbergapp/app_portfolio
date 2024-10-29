@@ -1,5 +1,12 @@
 /** @module server/db/db */
 
+/**
+ * @import {server_server_error, server_db_db_pool, server_db_db_pool_parameters, 
+ *          server_db_db_pool_connection_1_2, server_db_db_pool_connection_1_2_result, 
+ *          server_db_db_pool_connection_3_fields,server_db_db_pool_connection_3_result,
+ *          server_db_db_pool_connection_4_result} from '../types.js'
+*/
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../config.js')} */
@@ -17,7 +24,7 @@ const sqlite              = await import('sqlite');
  * DB_POOL
  * All database pool connections are saved here
  * Oracle uses number to 
- * @type{import('../types.js').server_db_db_pool[]}
+ * @type{server_db_db_pool[]}
  */
 const DB_POOL =[ 
                   [1, null, null], //MySQL pools      [db number, dba pool object, apps pool object]
@@ -80,7 +87,7 @@ const dbPoolDeleteAll = (db)=>{
  *    poolMax:                 pool max
  *    poolIncrement:           pool increment
  * @function
- * @param {import('../types.js').server_db_db_pool_parameters} dbparameters 
+ * @param {server_db_db_pool_parameters} dbparameters 
  * @returns {Promise.<null>}
  */
 const dbPoolStart = async (dbparameters) =>{
@@ -322,7 +329,7 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                if ('DB_CLOB' in parameters)
                   delete parameters.DB_CLOB;
                /**@ts-ignore */
-               dbPoolGet(pool_id, db_use, dba).getConnection((/**@type{import('../types.js').server_server_error}*/err, /**@type{import('../types.js').pool_connection_1_2}*/conn) => {
+               dbPoolGet(pool_id, db_use, dba).getConnection((/**@type{server_server_error}*/err, /**@type{server_db_db_pool_connection_1_2}*/conn) => {
                   if (err)
                      return reject (err);
                   else{
@@ -338,7 +345,7 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                               return txt;
                         });
                      };
-                     conn.query(sql, parameters, (/**@type{import('../types.js').server_server_error}*/err, /**@type{[import('../types.js').server_db_db_pool_connection_1_2_result]}*/result, /**@type{import('../types.js').server_db_db_pool_connection_3_fields}*/fields) => {
+                     conn.query(sql, parameters, (/**@type{server_server_error}*/err, /**@type{[server_db_db_pool_connection_1_2_result]}*/result, /**@type{server_db_db_pool_connection_3_fields}*/fields) => {
                         if (err)
                            return reject (err);
                         else{
@@ -403,9 +410,9 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
             const parsed_result = queryConvert(sql, parameters);
             try {
                /**@ts-ignore */
-               dbPoolGet(pool_id, db_use, dba).connect().then((/**@type{import('../types.js').server_db_db_pool_connection_3}*/pool3)=>{
+               dbPoolGet(pool_id, db_use, dba).connect().then((/**@type{server_db_db_pool_connection_3}*/pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
-                  .then((/**@type{import('../types.js').server_db_db_pool_connection_3_result}*/result) => {
+                  .then((/**@type{server_db_db_pool_connection_3_result}*/result) => {
                      pool3.release();
                      //add common attributes
                      if (result.command == 'INSERT' && result.rows.length>0)
@@ -432,8 +439,8 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                      else
                         return resolve(result);
                   })
-                  .catch((/**@type{import('../types.js').server_server_error}*/err) => reject(err));
-               }).catch((/**@type{import('../types.js').server_server_error}*/err)=> reject(err));
+                  .catch((/**@type{server_server_error}*/err) => reject(err));
+               }).catch((/**@type{server_server_error}*/err)=> reject(err));
             } catch (err) {
                return reject(err);
             }
@@ -460,7 +467,7 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                      Object.assign(parameters, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
                   }
                   /**@ts-ignore */
-                  pool.execute(sql, parameters, (/**@type{import('../types.js').server_server_error}*/err, /**@type{import('../types.js').pool_connection_4_result}*/result) => {
+                  pool.execute(sql, parameters, (/**@type{server_server_error}*/err, /**@type{server_db_db_pool_connection_4_result}*/result) => {
                      if (err)
                         return reject(err);
                      else{

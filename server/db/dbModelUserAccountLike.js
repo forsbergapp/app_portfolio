@@ -1,5 +1,10 @@
 /** @module server/db/dbModelUserAccountLike */
 
+/**
+ * @import {server_db_sql_result_user_account_like_unlike,
+ *          server_db_sql_result_user_account_like_like} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -12,7 +17,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_like_like>}
+ * @returns {Promise.<server_db_sql_result_user_account_like_like>}
  */
 const post = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -30,7 +35,7 @@ const post = (app_id, resource_id, data) =>
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_like_unlike>}
+ * @returns {Promise.<server_db_sql_result_user_account_like_unlike>}
  */
 const deleteRecord = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

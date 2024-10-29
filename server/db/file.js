@@ -9,6 +9,10 @@
  * @module server/db/file 
  */
 
+/**
+ * @import {server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
+ */
+
 const fs = await import('node:fs');
 
 /**@type{string} */
@@ -18,7 +22,7 @@ if (process.platform == 'win32')
 else
     SLASH = '/';
 
-/**@type{import('../types.js').server_db_file_db_record[]} */
+/**@type{server_db_file_db_record[]} */
 const FILE_DB = [   {NAME:'CONFIG_SERVER',                      TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_server.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_IAM_BLOCKIP',                 TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_blockip.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_IAM_POLICY',                  TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
@@ -52,8 +56,8 @@ Object.seal(FILE_DB);
 /**
  * Get file record from file db
  * @function
- * @param {import('../types.js').server_db_file_db_name} filename 
- * @returns {import('../types.js').server_db_file_db_record}
+ * @param {server_db_file_db_name} filename 
+ * @returns {server_db_file_db_record}
  */
 const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
@@ -61,7 +65,7 @@ const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[
  * Start transaction
  * Using race condition, pessmistic lock and database transaction pattern
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @param {object|string} filecontent
  * @returns {Promise.<number>}
  */
@@ -100,7 +104,7 @@ const fileTransactionStart = async (file, filecontent)=>{
 /**
  * Transation commit
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -118,7 +122,7 @@ const fileTransactionCommit = (file, transaction_id)=>{
 /**
  * Transaction rollback
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -170,7 +174,7 @@ const fileTransactionRollback = (file, transaction_id)=>{
 /**
  * Returns file path for given file
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @returns {string}
  */
 const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
@@ -178,7 +182,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
 /**
  * Get file from cache already JSON parsed
  * @function
- * @param {import('../types.js').server_db_file_db_name} file
+ * @param {server_db_file_db_name} file
  * @returns {*}
  */
  const fileCache = file => JSON.parse(JSON.stringify(fileRecord(file).CACHE_CONTENT));
@@ -186,7 +190,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @param {string|null} filesuffix 
  * @param {string|null} sample
  * @returns {Promise.<*>}
@@ -207,7 +211,7 @@ const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH
  * 
  * Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @param {boolean} lock
  * @returns {Promise.<import('../types.js').server_db_file_result_fileFsRead>}
  */
@@ -247,7 +251,7 @@ const fileFsRead = async (file, lock=false) =>{
  * 
  * Updates config files
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  * @param {number|null} transaction_id 
  * @param {object} file_content 
  * @returns {Promise.<string|null>}
@@ -285,7 +289,7 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
 /**
  * Append log to file
  * @function
- * @param {import('../types.js').server_db_file_db_name} file
+ * @param {server_db_file_db_name} file
  * @param {object} file_content 
  * @param {string|null} filesuffix
  * @returns {Promise.<null>}
@@ -343,8 +347,8 @@ const fileFsAccessMkdir = async () => {
  * Write to a file.
  * Should only be used by admin since no transaction is used
  * @function
- * @param {import('../types.js').server_db_file_db_name} file 
- * @param {import('../types.js').server_db_file_config_files} file_content 
+ * @param {server_db_file_db_name} file 
+ * @param {server_db_file_config_files} file_content 
  */
 const fileFsWriteAdmin = async (file, file_content) =>{
     const filepath = fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
@@ -359,10 +363,11 @@ const fileFsWriteAdmin = async (file, file_content) =>{
 
 /**
  * Delete as file
- * @param {import('../types.js').server_db_file_db_name} file 
+ * @param {server_db_file_db_name} file 
  */
 const fileFsDeleteAdmin = async file => {
     const filepath = process.cwd() + fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
     await fs.promises.rm(filepath).catch((error=>{throw error;}));
 };
+
 export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin};

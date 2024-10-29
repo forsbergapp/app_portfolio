@@ -1,5 +1,10 @@
 /** @module server/db/dbModelAppDataResourceMaster */
 
+/**
+ * @import {server_db_sql_result_app_data_resource_master_delete,server_db_sql_result_app_data_resource_master_update, 
+ *          server_db_sql_result_app_data_resource_master_post, server_db_sql_result_app_data_resource_master_get} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -13,7 +18,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {number|null} resource_id
  * @param {*} query
  * @param {boolean|null} user_null
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_get[]>}
+ * @returns {Promise.<server_db_sql_result_app_data_resource_master_get[]>}
  */
 const get = (app_id, resource_id, query, user_null=false) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -35,8 +40,9 @@ const get = (app_id, resource_id, query, user_null=false) =>
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_post>}
+ * @returns {Promise.<server_db_sql_result_app_data_resource_master_post>}
  */
+
  const post = (app_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
@@ -56,7 +62,7 @@ const get = (app_id, resource_id, query, user_null=false) =>
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_update>}
+ * @returns {Promise.<server_db_sql_result_app_data_resource_master_update>}
  */
  const update = (app_id, resource_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -78,7 +84,7 @@ const get = (app_id, resource_id, query, user_null=false) =>
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*}      data
- * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_master_delete>}
+ * @returns {Promise.<server_db_sql_result_app_data_resource_master_delete>}
  */
   const deleteRecord = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

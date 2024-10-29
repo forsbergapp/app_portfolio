@@ -1,5 +1,18 @@
 /** @module server/db/dbModelDatabase */
 
+/**
+ * @import {server_db_file_app_secret,
+ *          server_db_sql_parameter_user_account_view_insertUserAccountView,
+ *          server_db_sql_parameter_user_account_app_data_post_createUserPost, server_server_error, 
+ *          server_db_sql_parameter_user_account_create, server_db_database_demo_user,
+ *          server_db_database_uninstall_database_script,server_db_database_uninstall_database_app_script,
+ *          server_db_database_install_uninstall_result, server_db_database_install_db_check,
+ *          server_db_database_install_database_app_user_script, server_db_db_pool_parameters,
+ *          server_db_database_install_database_app_script, server_db_database_install_database_script, 
+ *          server_db_database_install_result, server_db_database_script_files, 
+ *          server_db_sql_result_admin_DBInfoSpaceSum, server_db_sql_result_admin_DBInfoSpace, server_db_sql_result_admin_DBInfo} from '../types.js'
+ */
+
 /**@type{import('./dbSqlDatabase.js')} */
 const dbSqlDatabase = await import(`file://${process.cwd()}/server/db/dbSqlDatabase.js`);
 
@@ -29,7 +42,7 @@ const DB_APP_UNINSTALL          = 'uninstall_database.json';
  * Database info
  * @function
  * @param {number} app_id
- * @returns {Promise.<import('../types.js').server_db_sql_result_admin_DBInfo[]>}
+ * @returns {Promise.<server_db_sql_result_admin_DBInfo[]>}
  */
 const dbInfo = app_id => import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
                             dbCommonExecute(app_id, 
@@ -43,7 +56,7 @@ const dbInfo = app_id => import(`file://${process.cwd()}/server/db/common.js`).t
  * Database info space
  * @function
  * @param {number} app_id
- * @returns {Promise.<import('../types.js').server_db_sql_result_admin_DBInfoSpace[]>}
+ * @returns {Promise.<server_db_sql_result_admin_DBInfoSpace[]>}
  */
 const dbInfoSpace = app_id =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
                                 dbCommonExecute(app_id, 
@@ -57,7 +70,7 @@ const dbInfoSpace = app_id =>import(`file://${process.cwd()}/server/db/common.js
  * Dataabse info space sum
  * @function
  * @param {number} app_id
- * @returns {Promise.<import('../types.js').server_db_sql_result_admin_DBInfoSpaceSum[]>}
+ * @returns {Promise.<server_db_sql_result_admin_DBInfoSpaceSum[]>}
  */
 const dbInfoSpaceSum = (app_id) =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
                                     dbCommonExecute(app_id, 
@@ -72,12 +85,12 @@ const dbInfoSpaceSum = (app_id) =>import(`file://${process.cwd()}/server/db/comm
   * Database install get files
   * @function
   * @param {'install'|'uninstall'} install_type 
-  * @returns {Promise.<import('../types.js').server_db_database_script_files>}
+  * @returns {Promise.<server_db_database_script_files>}
   */
 const dbInstallGetFiles = async (install_type) =>{
     const fs = await import('node:fs');
     let app_id = 1;
-    /**@type{import('../types.js').server_db_database_script_files} */
+    /**@type{server_db_database_script_files} */
     const files = [
        //add main script with id 0 and without app_id
        [0, install_type=='install'?(DB_INSTALL_PATH + DB_INSTALL):(DB_INSTALL_PATH + DB_UNINSTALL), null],
@@ -120,7 +133,7 @@ const dbInstallGetFiles = async (install_type) =>{
     const fs = await import('node:fs');
 
     let count_statements = 0;
-    /**@type{import('../types.js').server_db_database_install_result} */
+    /**@type{server_db_database_install_result} */
     const install_result = [];
     const password_tag = '<APP_PASSWORD/>';
     let change_DBA_pool=true;
@@ -169,7 +182,7 @@ const dbInstallGetFiles = async (install_type) =>{
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
         //filter for current database or for all databases
-        install_obj.install = install_obj.install.filter((/**@type{import('../types.js').server_db_database_install_database_script|import('../types.js').server_db_database_install_database_app_script}*/row) =>  
+        install_obj.install = install_obj.install.filter((/**@type{server_db_database_install_database_script|server_db_database_install_database_app_script}*/row) =>  
             row.db == db_use || row.db == null);
         
         for (const install_row of install_obj.install){
@@ -216,7 +229,7 @@ const dbInstallGetFiles = async (install_type) =>{
                         if (sql.toUpperCase().includes('CREATE DATABASE')){
                             //remove database name in dba pool
                             await dbPoolClose(null, db_use, DBA);
-                            /**@type{import('../types.js').server_db_db_pool_parameters} */
+                            /**@type{server_db_db_pool_parameters} */
                             const json_data = {
                                     use:                       db_use,
                                     pool_id:                   null,
@@ -245,7 +258,7 @@ const dbInstallGetFiles = async (install_type) =>{
                             if (change_DBA_pool == true){
                             //add database name in dba pool
                             await dbPoolClose(null, db_use, DBA);
-                            /**@type{import('../types.js').server_db_db_pool_parameters} */
+                            /**@type{server_db_db_pool_parameters} */
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
@@ -280,7 +293,7 @@ const dbInstallGetFiles = async (install_type) =>{
         }
         if (install_obj.users){
             let sql_and_pw = null;
-            for (const users_row of install_obj.users.filter((/**@type{import('../types.js').server_db_database_install_database_app_user_script}*/row) => row.db == db_use || row.db == null)){
+            for (const users_row of install_obj.users.filter((/**@type{server_db_database_install_database_app_user_script}*/row) => row.db == db_use || row.db == null)){
                 switch (file[0]){
                     case 1:{
                         //do not install any database user for admin app, admin app uses database dba user
@@ -316,7 +329,7 @@ const dbInstallGetFiles = async (install_type) =>{
   * Checks if database is installed
   * @function
   * @param {number|null} app_id
-  * @returns {Promise.<import('../types.js').server_db_database_install_db_check>}
+  * @returns {Promise.<server_db_database_install_db_check>}
   */
  const dbInstalledCheck = async app_id =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
                                         dbCommonExecute(app_id, 
@@ -333,7 +346,7 @@ const dbInstallGetFiles = async (install_type) =>{
   * @function
   * @param {number} app_id
   * @param {*} query
-  * @returns {Promise.<import('../types.js').server_db_database_install_uninstall_result>} 
+  * @returns {Promise.<server_db_database_install_uninstall_result>} 
   */
  const dbUninstall = async (app_id, query)=> {
     /**@type{import('../../apps/common/src/common.js')} */
@@ -372,12 +385,12 @@ const dbInstallGetFiles = async (install_type) =>{
             socketAdminSend(app_id, { client_id:serverUtilNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
             install_count++;
             const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-            const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{import('../types.js').server_db_database_uninstall_database_script|import('../types.js').server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
+            const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
             for (const sql_row of uninstall_sql){
                 if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                     //add database name in dba pool
                     await dbPoolClose(null, db_use, DBA);
-                    /**@type{import('../types.js').server_db_db_pool_parameters} */
+                    /**@type{server_db_db_pool_parameters} */
                     const json_data = {
                         use:                       db_use,
                         pool_id:                   null,
@@ -472,11 +485,11 @@ const dbInstallGetFiles = async (install_type) =>{
     const {commonRegistryAppSecretUpdate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     const fs = await import('node:fs');
-    /**@type{import('../types.js').server_db_database_install_result} */
+    /**@type{server_db_database_install_result} */
     const install_result = [];
     install_result.push({'start': new Date().toISOString()});
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
-    /**@type{[import('../types.js').server_db_database_demo_user]}*/
+    /**@type{[server_db_database_demo_user]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
     //create social records
     const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
@@ -492,17 +505,17 @@ const dbInstallGetFiles = async (install_type) =>{
     install_count++;
     /**
      * Create demo users
-     * @param {[import('../types.js').server_db_database_demo_user]} demo_users 
+     * @param {[server_db_database_demo_user]} demo_users 
      * @returns {Promise.<void>}
      */
     const create_users = async (demo_users) =>{
             /**
              * 
-             * @param {import('../types.js').server_db_database_demo_user} demo_user
+             * @param {server_db_database_demo_user} demo_user
              * @returns 
              */
             const create_update_id = async demo_user=>{
-            /**@type{import('../types.js').server_db_sql_parameter_user_account_create}*/
+            /**@type{server_db_sql_parameter_user_account_create}*/
                 const data_create = {   username:               demo_user.username,
                                         bio:                    demo_user.bio,
                                         avatar:                 demo_user.avatar,
@@ -525,7 +538,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                         admin:                  1
                                     };
                 return await userPost(app_id, data_create)
-                                .catch((/**@type{import('../types.js').server_server_error}*/err)=> {
+                                .catch((/**@type{server_server_error}*/err)=> {
                                     throw err;
                                 });
             };
@@ -548,7 +561,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_app++;
                 resolve(null);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -556,7 +569,7 @@ const dbInstallGetFiles = async (install_type) =>{
     /**
      * Create user post
      * @param {number} user_account_post_app_id 
-     * @param {import('../types.js').server_db_sql_parameter_user_account_app_data_post_createUserPost} data 
+     * @param {server_db_sql_parameter_user_account_app_data_post_createUserPost} data 
      * @returns {Promise.<null>}
      */
     const create_user_post = async (user_account_post_app_id, data) => {
@@ -567,7 +580,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_app_data_post++;
                 resolve(null);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -587,7 +600,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_resource_master++;
                 resolve(result.insertId);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -606,7 +619,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_resource_detail++;
                 resolve(result.insertId);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -626,7 +639,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_resource_detail_data++;
                 resolve(result.insertId);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -807,7 +820,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_like++;
                 resolve(null);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -815,7 +828,7 @@ const dbInstallGetFiles = async (install_type) =>{
     /**
      * Create user account view
      * @param {number} app_id 
-     * @param {import('../types.js').server_db_sql_parameter_user_account_view_insertUserAccountView} data 
+     * @param {server_db_sql_parameter_user_account_view_insertUserAccountView} data 
      * @returns {Promise.<null>}
      */
     const create_user_account_view = async (app_id, data ) =>{
@@ -826,7 +839,7 @@ const dbInstallGetFiles = async (install_type) =>{
                         records_user_account_view++;
                 resolve(null);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -846,7 +859,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     records_user_account_follow++;
                 resolve(null);
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -869,11 +882,11 @@ const dbInstallGetFiles = async (install_type) =>{
                         records_user_account_app_data_post_like++;
                     resolve(null);
                 })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                .catch((/**@type{server_server_error}*/error)=>{
                     reject(error);
                 });
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -909,11 +922,11 @@ const dbInstallGetFiles = async (install_type) =>{
                                 records_user_account_app_data_post_view++;
                             resolve(null);
                     })
-                    .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                    .catch((/**@type{server_server_error}*/error)=>{
                         reject(error);
                     });
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+            .catch((/**@type{server_server_error}*/error)=>{
                 reject(error);
             });
         });
@@ -1050,7 +1063,7 @@ const dbDemoUninstall = async (app_id, query)=> {
                             if (deleted_user == result_demo_users.length)
                                 return null;
                         })
-                        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                        .catch((/**@type{server_server_error}*/error)=>{
                             throw error;
                         });
                     }
@@ -1060,7 +1073,7 @@ const dbDemoUninstall = async (app_id, query)=> {
                     logServerI(`Demo uninstall count: ${deleted_user}`);
                     resolve({info: [{'count': deleted_user}]});
                 })
-                .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+                .catch((/**@type{server_server_error}*/error)=>{
                     reject(error);
                 });
             }
@@ -1069,7 +1082,7 @@ const dbDemoUninstall = async (app_id, query)=> {
                 resolve({info: [{'count': result_demo_users.length}]});
             }
         })
-        .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+        .catch((/**@type{server_server_error}*/error)=>{
             reject(error);
         });
     });
@@ -1093,7 +1106,7 @@ const dbDemoUninstall = async (app_id, query)=> {
     const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     
     return new Promise ((resolve, reject)=>{
-       /**@type{import('../types.js').server_db_db_pool_parameters} */
+       /**@type{server_db_db_pool_parameters} */
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
@@ -1121,7 +1134,7 @@ const dbDemoUninstall = async (app_id, query)=> {
           logServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
           resolve(result);
        })
-       .catch((/**@type{import('../types.js').server_server_error}*/error)=>{
+       .catch((/**@type{server_server_error}*/error)=>{
           logServerE('Starting pool error: ' + error);
           reject(error);
        });
@@ -1153,7 +1166,7 @@ const dbStart = async () => {
                 }
                 dba = 0;
                 for (const app  of fileCache('APP')){
-                    const app_secret = fileCache('APP_SECRET').filter((/**@type{import('../types.js').server_db_file_app_secret}*/app)=> app.APP_ID == common_app_id)[0];
+                    const app_secret = fileCache('APP_SECRET').filter((/**@type{server_db_file_app_secret}*/app)=> app.APP_ID == common_app_id)[0];
                     if (app_secret[`SERVICE_DB_DB${db_use}_APP_USER`])
                         await DB_POOL(  db_use, 
                                         dba, 

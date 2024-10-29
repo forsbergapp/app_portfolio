@@ -1,5 +1,24 @@
 /** @module apps/common/src/common/service */
 
+/**
+ * @import {server_db_file_app_secret,
+ *          server_db_file_app_parameter,
+ *          server_db_file_app_module,
+ *          server_apps_result_getAppsAdmin,
+ *          server_config_apps_with_db_columns,
+ *          server_db_file_app,
+ *          server_apps_report_create_parameters,
+ *          server_db_file_app_parameter_common,
+ *          server_apps_app_service_parameters,
+ *          server_server_routesparameters,
+ *          server_server_res,
+ *          server_bff_endpoint_type,
+ *          server_bff_parameters,
+ *          server_server_error,
+ *          server_config_server_server,
+ *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
+ */
+
 /**@type{import('../../../server/log.js')} */
 const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 
@@ -18,13 +37,13 @@ const fs = await import('node:fs');
  * Creates email
  * @async
  * @param {number} app_id                       - Application id
- * @param {import('../../../server/types.js').server_apps_email_param_data} data         - Email param data
- * @returns {Promise<import('../../../server/types.js').server_apps_email_return_createMail>}  - Email return data
+ * @param {server_apps_email_param_data} data         - Email param data
+ * @returns {Promise<server_apps_email_return_createMail>}  - Email return data
  */
 const commonMailCreate = async (app_id, data) =>{
     const {default:ComponentCreate} = await import('./component/common_mail.js');
     const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
-    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{import('../../../server/types.js').server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID)??0;
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID)??0;
     const secrets       = commonRegistryAppSecret(common_app_id);
     //email type 1-4 implemented are emails with verification code
     if (parseInt(data.emailtype)==1 || 
@@ -92,9 +111,9 @@ const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language
                                         verificationCode: verification_code,
                                         to:               email,
                                     })
-                                    .catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
+                                    .catch((/**@type{server_server_error}*/error)=>{throw error;});
         
-    /**@type{import('../../../server/types.js').server_bff_parameters}*/
+    /**@type{server_bff_parameters}*/
     const parameters = {endpoint:'SERVER_MAIL',
                         host:null,
                         url:'/mail/sendemail',
@@ -166,7 +185,7 @@ const commonClientLocale = accept_language =>{
 };
 /**
  * @param {{app_id:number,
- *          endpoint:import('../../../server/types.js').server_bff_endpoint_type,
+ *          endpoint:server_bff_endpoint_type,
  *          ip:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
@@ -176,7 +195,7 @@ const commonGeodata = async parameters =>{
     /**@type{import('../../../server/bff.service.js')} */
     const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    /**@type{import('../../../server/types.js').server_bff_parameters}*/
+    /**@type{server_bff_parameters}*/
     const parametersBFF = { endpoint:parameters.endpoint,
                             host:null,
                             url:'/geolocation/ip',
@@ -203,7 +222,7 @@ const commonGeodata = async parameters =>{
         result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
-        /**@type{import('../../../server/types.js').server_bff_parameters}*/
+        /**@type{server_bff_parameters}*/
         const parametersBFF = { endpoint:parameters.endpoint,
                                 host:null,
                                 url:'/worldcities/city-random',
@@ -217,7 +236,7 @@ const commonGeodata = async parameters =>{
                                 accept_language:parameters.accept_language,
                                 /**@ts-ignore */
                                 res:null};
-        const result_city = await bffServer(parameters.app_id, parametersBFF).catch((/**@type{import('../../../server/types.js').server_server_error}*/error)=>{throw error;});
+        const result_city = await bffServer(parameters.app_id, parametersBFF).catch((/**@type{server_server_error}*/error)=>{throw error;});
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -311,7 +330,7 @@ const commonBFE = async parameters =>{
  * @param {{app_id:Number,
  *          url:String,
  *          basepath:string,
- *          res:import('../../../server/types.js').server_server_res}} parameters
+ *          res:server_server_res}} parameters
  */
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
@@ -460,8 +479,8 @@ const commonAssetfile = parameters =>{
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
- *          endpoint:import('../../../server/types.js').server_server_routesparameters['endpoint'],
- *          res:import('../../../server/types.js').server_server_res|null}} parameters
+ *          endpoint:server_server_routesparameters['endpoint'],
+ *          res:server_server_res|null}} parameters
  * @returns {Promise.<void>}
  */
 const commonFunctionRun = async parameters => {
@@ -486,7 +505,7 @@ const commonFunctionRun = async parameters => {
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
- *          res:import('../../../server/types.js').server_server_res|null}} parameters
+ *          res:server_server_res|null}} parameters
  * @returns {Promise.<*>}
  */
 const commonModuleGet = async parameters => {
@@ -547,7 +566,7 @@ const commonComponentCreate = async parameters =>{
     
     switch (parameters.type){
         case 'APP':{
-            /**@type{import('../../../server/types.js').server_apps_app_service_parameters} */
+            /**@type{server_apps_app_service_parameters} */
             const app_service_parameters = {   
                 app_id:                 parameters.app_id,
                 app_logo:               commonRegistryApp(parameters.app_id).LOGO,
@@ -562,7 +581,7 @@ const commonComponentCreate = async parameters =>{
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
                 first_time:             admin_only==1?(fileCache('IAM_USER').length==0?1:0):0
             };
-            /**@type{import('../../../server/types.js').server_db_file_app_parameter_common} */
+            /**@type{server_db_file_app_parameter_common} */
             const common_parameter = commonRegistryAppParameter(common_app_id);
             //return only used parameters
             delete common_parameter.APP_COPYRIGHT;
@@ -595,7 +614,7 @@ const commonComponentCreate = async parameters =>{
             const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:''});
             const {default:RunReport} = await import(`file://${process.cwd()}${report.COMMON_PATH}`);
 
-            /**@type{import('../../../server/types.js').server_apps_report_create_parameters} */
+            /**@type{server_apps_report_create_parameters} */
             const data = {  app_id:         parameters.app_id,
                             reportid:       parameters.componentParameters.reportid ?? '',
                             ip:             parameters.componentParameters.ip,
@@ -659,11 +678,11 @@ const commonAppHost = host =>{
         case 'localhost':
         case 'www':{
             //localhost
-            return fileCache('APP').filter((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>app.SUBDOMAIN == 'www')[0].ID;
+            return fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.SUBDOMAIN == 'www')[0].ID;
         }
         default:{
             try {
-                return fileCache('APP').filter((/**@type{import('../../../server//types.js').server_db_file_app}*/app)=>host.toString().split('.')[0] == app.SUBDOMAIN)[0].ID;    
+                return fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.SUBDOMAIN)[0].ID;    
             } catch (error) {
                 //request can be called from unkown hosts
                 return null;
@@ -679,7 +698,7 @@ const commonAppHost = host =>{
  *          accept_language:string,
  *          url:string,
  *          query:*,
- *          res:import('../../../server/types.js').server_server_res|null}} parameters
+ *          res:server_server_res|null}} parameters
  */
 const commonApp = async parameters =>{
     const reportid = parameters.query?parameters.query.get('reportid'):null;
@@ -761,7 +780,7 @@ const commonApp = async parameters =>{
                                             parameters.res.statusCode = 301;
                                     return app;
                                 })
-                                .catch((/**@type{import('../../../server/types.js').server_server_error}*/err)=>{
+                                .catch((/**@type{server_server_error}*/err)=>{
                                     logAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
                                     .then(()=>{
                                         if (parameters.res){
@@ -783,14 +802,14 @@ const commonApp = async parameters =>{
  * @param {number} app_id 
  * @param {number|null} resource_id 
  * @param {string} locale
- * @returns {Promise.<import('../../../server/types.js').server_config_apps_with_db_columns[]>}
+ * @returns {Promise.<server_config_apps_with_db_columns[]>}
  */
 const commonAppsGet = async (app_id, resource_id, locale) =>{
     /**@type{import('../../../server/db/dbModelApp.js')} */
     const dbModelApp = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
     const apps_db =  await dbModelApp.get(app_id, resource_id, locale);
     
-    /**@type{import('../../../server/types.js').server_db_file_app[]}*/
+    /**@type{server_db_file_app[]}*/
     const apps = fileCache('APP');
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.PATH + app.LOGO}`);
@@ -818,7 +837,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
 
 /**
  * Get all apps from app registry
- * @returns {Promise.<import('../../../server/types.js').server_apps_result_getAppsAdmin[]>}
+ * @returns {Promise.<server_apps_result_getAppsAdmin[]>}
  */
  const commonAppsAdminGet = async () =>fileCache('APP');
 
@@ -826,7 +845,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
  * App registry APP MODULE addmin
  * returns all modules for given app id
  * @param {number} app_id
-* @returns {import('../../../server/types.js').server_db_file_app_module}
+* @returns {server_db_file_app_module}
 */
 const commonRegistryAppModuleAll = app_id => fileCache('APP_MODULE').filter((/**@type{*}*/app)=>app.APP_ID == app_id );
 
@@ -834,16 +853,16 @@ const commonRegistryAppModuleAll = app_id => fileCache('APP_MODULE').filter((/**
 /**
  * App registry APP
  * @param {number} app_id
- * @returns {import('../../../server/types.js').server_db_file_app}
+ * @returns {server_db_file_app}
  */
-const commonRegistryApp = app_id => fileCache('APP').filter((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>app.ID == app_id)[0];
+const commonRegistryApp = app_id => fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.ID == app_id)[0];
 
 /**
  * App registry get apps
  * @param {number|null} app_id
- * @returns {import('../../../server/types.js').server_db_file_app[]}
+ * @returns {server_db_file_app[]}
  */
-const commonRegistryAppsGet = app_id => fileCache('APP').filter((/**@type{import('../../../server/types.js').server_db_file_app}*/app)=>app.ID == (app_id ?? app.ID));
+const commonRegistryAppsGet = app_id => fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.ID == (app_id ?? app.ID));
 
 /**
  * App registry APP MODULE
@@ -852,7 +871,7 @@ const commonRegistryAppsGet = app_id => fileCache('APP').filter((/**@type{import
  * @param {{type:string,
  *          name:string,
  *          role:string|null}} parameters
- * @returns {import('../../../server/types.js').server_db_file_app_module}
+ * @returns {server_db_file_app_module}
  */
 const commonRegistryAppModule = (app_id, parameters) => fileCache('APP_MODULE')
                                                             .filter((/**@type{*}*/app)=>
@@ -861,27 +880,27 @@ const commonRegistryAppModule = (app_id, parameters) => fileCache('APP_MODULE')
 /**
  * App registry APP PARAMETER
  * @param {number} app_id
- * @returns {import('../../../server/types.js').server_db_file_app_parameter}
+ * @returns {server_db_file_app_parameter}
  */
 const commonRegistryAppParameter = app_id => fileCache('APP_PARAMETER')
-                                                .filter((/**@type{import('../../../server/types.js').server_db_file_app_parameter}*/row)=> row.APP_ID == app_id )[0];
+                                                .filter((/**@type{server_db_file_app_parameter}*/row)=> row.APP_ID == app_id )[0];
 
 /**
  * App registry APP SECRET
  * @param {number} app_id
- * @returns {import('../../../server/types.js').server_db_file_app_secret}
+ * @returns {server_db_file_app_secret}
  */
 const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
-                                            .filter((/**@type{import('../../../server/types.js').server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0];
+                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0];
 
 /**
  * App registry APP SECRET from file
  * @param {number} app_id
- * @returns {Promise.<import('../../../server/types.js').server_db_file_app_secret>}
+ * @returns {Promise.<server_db_file_app_secret>}
  */
 const commonRegistryAppSecretFile= async app_id => fileFsRead('APP_SECRET').then(result=>
                                                             result.file_content
-                                                            .filter((/**@type{import('../../../server/types.js').server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0]);
+                                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.APP_ID == app_id)[0]);
 
 
 /**
@@ -894,7 +913,7 @@ const commonRegistryAppSecretDBReset = async () => {
     /**@type{import('../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const file = await fileFsRead('APP_SECRET', true);
-    /**@type{import('../../../server/types.js').server_db_file_app[]}*/
+    /**@type{server_db_file_app[]}*/
     const APPS = file.file_content;
     const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
     for (const app of APPS){
@@ -917,7 +936,7 @@ const commonRegistryAppSecretDBReset = async () => {
  * App Registry APP update an app
  * @param {number} app_id
  * @param {number} resource_id
- * @param {import('../../../server/types.js').server_db_file_app} data
+ * @param {server_db_file_app} data
 * @returns {Promise.<void>}
 */
 const commonRegistryAppUpdate = async (app_id, resource_id, data) => {
@@ -936,7 +955,7 @@ const commonRegistryAppUpdate = async (app_id, resource_id, data) => {
  * App Registry APP MODULE update a module
  * @param {number} app_id
  * @param {number} resource_id
- * @param {import('../../../server/types.js').server_db_file_app_module} data
+ * @param {server_db_file_app_module} data
 * @returns {Promise.<void>}
 */
 const commonRegistryAppModuleUpdate = async (app_id, resource_id, data) => {

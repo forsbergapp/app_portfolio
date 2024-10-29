@@ -1,5 +1,19 @@
 /** @module server/db/dbModelUserAccountAppDataPost */
 
+/**
+ * @import {server_db_sql_result_user_account_app_data_post_deleteUserPost,
+ *          server_db_sql_result_user_account_app_data_post_updateUserPost,
+ *          server_db_sql_result_user_account_app_data_post_createUserPost,
+ *          server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail,
+ *          server_db_sql_result_user_account_app_data_post_getProfileStatPost,
+ *          server_db_sql_result_user_account_data_post_getProfileStatLike,
+ *          server_db_sql_result_user_account_app_data_post_getProfileUserPosts,
+ *          server_server_res,
+ *          server_db_sql_result_user_account_app_data_post_getUserPostsByUserId,
+ *          server_server_error,
+ *          server_db_sql_result_user_account_app_data_post_getUserPost} from '../types.js'
+ */
+
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -12,7 +26,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]>}
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getUserPost[]>}
  */
 const getUserPost = async (app_id, id) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -27,8 +41,8 @@ const getUserPost = async (app_id, id) =>
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} query 
- * @param {import('../types.js').server_server_error|null} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]>}
+ * @param {server_server_error|null} res
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]>}
  */
 const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -61,8 +75,8 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query
- * @param {import('../types.js').server_server_res} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getProfileUserPosts[]>}
+ * @param {server_server_res} res
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileUserPosts[]>}
  */
 const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -93,8 +107,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} query
- * @param {import('../types.js').server_server_res} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_data_post_getProfileStatLike[]>}
+ * @param {server_server_res} res
+ * @returns {Promise.<server_db_sql_result_user_account_data_post_getProfileStatLike[]>}
  */
  const getProfileStatLike = (app_id, resource_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -123,8 +137,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
  * @function
  * @param {number} app_id 
  * @param {*} query
- * @param {import('../types.js').server_server_res} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getProfileStatPost[]>}
+ * @param {server_server_res} res
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileStatPost[]>}
  */
 const getProfileStatPost = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
@@ -155,7 +169,7 @@ const getProfileStatPost = (app_id, query, res) =>{
  * @param {number} resource_id
  * @param {*} query 
  * @param {*} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[]>}
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[]>}
  */
 const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
     return new Promise((resolve, reject)=>{
@@ -187,7 +201,7 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
  * @param {*} query
  * @param {*} data
  * @returns {Promise.<{ id:number|null,
- *                      data: import('../types.js').server_db_sql_result_user_account_app_data_post_createUserPost|null}>}
+ *                      data: server_db_sql_result_user_account_app_data_post_createUserPost|null}>}
  */
 const createUserPost = (app_id, query, data) => {
     return new Promise((resolve, reject)=>{
@@ -211,7 +225,7 @@ const createUserPost = (app_id, query, data) => {
                     data: result
                 });
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+            .catch((/**@type{server_server_error}*/error)=>reject(error));
         };
         //Check if first time
         if (serverUtilNumberValue(query.get('initial'))==1){
@@ -227,7 +241,7 @@ const createUserPost = (app_id, query, data) => {
                         data: null
                     });
             })
-            .catch((/**@type{import('../types.js').server_server_error}*/error)=>reject(error));
+            .catch((/**@type{server_server_error}*/error)=>reject(error));
         }
         else
             create();
@@ -241,8 +255,8 @@ const createUserPost = (app_id, query, data) => {
  * @param {*} resource_id
  * @param {*} query 
  * @param {*} data 
- * @param {import('../types.js').server_server_res} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_updateUserPost>}
+ * @param {server_server_res} res
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_updateUserPost>}
  */
 const updateUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
@@ -277,8 +291,8 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
  * @param {number} resource_id
  * @param {*} data
  * @param {*} query 
- * @param {import('../types.js').server_server_res} res
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_data_post_deleteUserPost>}
+ * @param {server_server_res} res
+ * @returns {Promise.<server_db_sql_result_user_account_app_data_post_deleteUserPost>}
  */
 const deleteUserPost = (app_id, resource_id, query, data, res) => {
     return new Promise((resolve, reject)=>{

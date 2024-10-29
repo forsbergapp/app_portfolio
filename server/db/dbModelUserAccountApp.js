@@ -1,5 +1,14 @@
 /** @module server/db/dbModelUserAccountApp */
 
+/**
+ * @import {server_db_sql_result_user_account_app_deleteUserAccountApp,
+ *          server_db_sql_result_user_account_app_getUserAccountApps,
+ *          server_config_apps_with_db_columns,
+ *          server_db_sql_result_user_account_app_getUserAccountApp,
+ *          server_db_sql_result_user_account_app_updateUserAccountApp,
+ *          server_db_sql_parameter_user_account_app_updateUserAccountApp,
+ *          server_db_sql_result_user_account_app_createUserAccountApp} from '../types.js'
+ */
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
@@ -10,7 +19,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_createUserAccountApp>}
+ * @returns {Promise.<server_db_sql_result_user_account_app_createUserAccountApp>}
  */
 const post = async (app_id, user_account_id) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -26,8 +35,8 @@ const post = async (app_id, user_account_id) =>
  * 
  * @param {number} app_id
  * @param {number} resource_id
- * @param {import('../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_updateUserAccountApp>}
+ * @param {server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
+ * @returns {Promise.<server_db_sql_result_user_account_app_updateUserAccountApp>}
  */
 const update = (app_id, resource_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -47,7 +56,7 @@ const update = (app_id, resource_id, data) =>
  * 
  * @param {number} app_id 
  * @param {number} resource_id
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_getUserAccountApp[]>}
+ * @returns {Promise.<server_db_sql_result_user_account_app_getUserAccountApp[]>}
  */
 const get = (app_id, resource_id) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -65,15 +74,14 @@ const get = (app_id, resource_id) =>
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {string} locale
- * @returns {Promise.<import('../../server/types.js').server_config_apps_with_db_columns[]>}
+ * @returns {Promise.<server_config_apps_with_db_columns[]>}
  */
 const getApps = async (app_id, resource_id, locale) => {
-    // @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps[]>}
-   
+
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppsGet} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    /**@type{import('../types.js').server_db_sql_result_user_account_app_getUserAccountApps[]} */
+    /**@type{server_db_sql_result_user_account_app_getUserAccountApps[]} */
     const apps_db = await import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_SELECT_USER_APPS,
@@ -93,7 +101,7 @@ const getApps = async (app_id, resource_id, locale) => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
- * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_deleteUserAccountApp>}
+ * @returns {Promise.<server_db_sql_result_user_account_app_deleteUserAccountApp>}
  */
 const deleteRecord = (app_id, resource_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
