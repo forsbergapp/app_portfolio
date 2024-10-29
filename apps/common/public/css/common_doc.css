@@ -125,7 +125,7 @@ body {
     padding-top: 6px;
 }
 .markdown{
-    white-space: preserve;
+    white-space: pre-wrap;
     font-size: 0.8em;
 }
 .source{
