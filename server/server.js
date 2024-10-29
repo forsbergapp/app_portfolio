@@ -117,22 +117,22 @@ const serverUtilAppLine = () =>{
  *	
  *  2.Routes	
  *	path	                            method	middleware                                  controller          comment
- *	*	                                all	                                                bffInit	        logs EventSource and response when closed, 
+ *	*	                                all	                                                bffInit	            logs EventSource and response when closed, 
  *                                                                                                              authenticates request and will end request if not passing controls,
  *                                                                                                              sets headers, 
  *                                                                                                              returns disallow for robots.txt and empty favicon.ico
  *	*	                                get	                                                bffStart	        redirects naked domain, http to https if enabled 
  *							                                                                                    and to admin subdomain if first time, 
  *							                                                                                    responds to SSL verification if enabled
- *  /bff/app_data/v1*                   all     iam.iamIdTokenAuthenticate                  bffAppData
- *  /bff/app_signup/v1*                 post    iam.iamIdTokenAuthenticateRegistration      bffAppSignup
- *  /bff/app_access/v1*                 all     iam.iamAccessTokenAuthenticate              bffAppAccess
- *  /bff/app_external/v1/app-function*  post    iam.iamExternalAuthenticate                 bffAppExternal
- *  /bff/admin/v1*                      all     iam.iamAccessTokenAuthenticateAdmin         bffAdmin
- *  /bff/socket/v1*                     get     iam.iamSocketAuthenticate                   bffSocket
- *  /bff/iam_admin/v1*                  post    iam.iamAdminAuthenticate                    bffIAMAdmin
- *  /bff/iam_user/v1*                   post    iam.iamUserAuthenticate                     bffIAMUser
- *  /bff/iam_provider/v1*               post    iam.iamProviderAuthenticate                 bffIAMProvider
+ *  /bff/app_data/v1*                   all     iam.iamAuthenticateIdToken                  bffAppData
+ *  /bff/app_signup/v1*                 post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
+ *  /bff/app_access/v1*                 all     iam.iamAuthenticateAccessToken              bffAppAccess
+ *  /bff/app_external/v1/app-function*  post    iam.iamAuthenticateExternal                 bffAppExternal
+ *  /bff/admin/v1*                      all     iam.iamAuthenticateAdminAccessToken         bffAdmin
+ *  /bff/socket/v1*                     get     iam.iamAuthenticateSocket                   bffSocket
+ *  /bff/iam_admin/v1*                  post    iam.iamAuthenticateAdmin                    bffIAMAdmin
+ *  /bff/iam_user/v1*                   post    iam.iamAuthenticateUser                     bffIAMUser
+ *  /bff/iam_provider/v1*               post    iam.iamAuthenticateProvider                 bffIAMProvider
  *	*	                                get	                                                bffApp		        app asset
  *							                                                                                    common asset
  *							                                                                                    info page
@@ -192,15 +192,15 @@ const serverUtilAppLine = () =>{
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all                      (iam.iamIdTokenAuthenticate,                bffAppData);
-    app.route('/bff/app_signup/v1*').post                   (iam.iamIdTokenAuthenticateRegistration,    bffAppSignup);
-    app.route('/bff/app_access/v1*').all                    (iam.iamAccessTokenAuthenticate,            bffAppAccess);
-    app.route('/bff/app_external/v1/app-function*').post    (iam.iamExternalAuthenticate,               bffAppExternal);
-    app.route('/bff/admin/v1*').all                         (iam.iamAccessTokenAuthenticateAdmin,       bffAdmin);
-    app.route('/bff/socket/v1*').get                        (iam.iamSocketAuthenticate,                 bffSocket);
-    app.route('/bff/iam_admin/v1/server-iam-login').post    (iam.iamAdminAuthenticate,                  bffIAMAdmin);
-    app.route('/bff/iam_user/v1*').post                     (iam.iamUserAuthenticate,                   bffIAMUser);
-    app.route('/bff/iam_provider/v1*').post                 (iam.iamProviderAuthenticate,               bffIAMProvider);
+    app.route('/bff/app_data/v1*').all                      (iam.iamAuthenticateIdToken,                bffAppData);
+    app.route('/bff/app_signup/v1*').post                   (iam.iamAuthenticateIdTokenRegistration,    bffAppSignup);
+    app.route('/bff/app_access/v1*').all                    (iam.iamAuthenticateAccessToken,            bffAppAccess);
+    app.route('/bff/app_external/v1/app-function*').post    (iam.iamAuthenticateExternal,               bffAppExternal);
+    app.route('/bff/admin/v1*').all                         (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
+    app.route('/bff/socket/v1*').get                        (iam.iamAuthenticateSocket,                 bffSocket);
+    app.route('/bff/iam_admin/v1/server-iam-login').post    (iam.iamAuthenticateAdmin,                  bffIAMAdmin);
+    app.route('/bff/iam_user/v1*').post                     (iam.iamAuthenticateUser,                   bffIAMUser);
+    app.route('/bff/iam_provider/v1*').post                 (iam.iamAuthenticateProvider,               bffIAMProvider);
     
     //app asset, common asset, info page, report and app
     app.route('*').get                          (bffApp);
@@ -255,8 +255,17 @@ const serverUtilAppLine = () =>{
     /**@type{import('./db/dbModelAppDataEntity.js')} */
     const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
 
-    /**@type{import('./db/dbModelAppDataResource.js')} */
-    const dbModelAppDataResource = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('./db/dbModelAppDataEntityResource.js')} */
+    const dbModelAppDataEntityResource = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
+
+    /**@type{import('./db/dbModelAppDataResourceMaster.js')} */
+    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('./db/dbModelAppDataResourceDetail.js')} */
+    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+
+    /**@type{import('./db/dbModelAppDataResourceDetailData.js')} */
+    const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
     /**@type{import('./db/dbModelAppDataStat.js')} */
     const dbModelAppDataStat = await import(`file://${process.cwd()}/server/db/dbModelAppDataStat.js`);
@@ -689,74 +698,74 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_entity_resource/${resource_id_string}`, method:'GET'}):{
-                        resolve(dbModelAppDataEntity.EntityResourceGet(routesparameters.app_id, resource_id_get_number(), app_query)
+                        resolve(dbModelAppDataEntityResource.EntityResourceGet(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, method:'GET'}):{
-                        resolve(dbModelAppDataResource.MasterGet(routesparameters.app_id, resource_id_get_number(), app_query)
+                        resolve(dbModelAppDataResourceMaster.MasterGet(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-db/app_data_resource_master', method:'POST'}):{
-                        resolve(dbModelAppDataResource.MasterPost(routesparameters.app_id, routesparameters.body));
+                        resolve(dbModelAppDataResourceMaster.MasterPost(routesparameters.app_id, routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, method:'PUT'}):{
-                        resolve(dbModelAppDataResource.MasterUpdate(routesparameters.app_id, 
+                        resolve(dbModelAppDataResourceMaster.MasterUpdate(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_master/${resource_id_string}`, method:'DELETE', required:true}):{
-                        resolve(dbModelAppDataResource.MasterDelete(routesparameters.app_id, 
+                        resolve(dbModelAppDataResourceMaster.MasterDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(),
                                                             routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, method:'GET'}):{
-                        resolve(dbModelAppDataResource.DetailGet(routesparameters.app_id, resource_id_get_number(), app_query)
+                        resolve(dbModelAppDataResourceDetail.DetailGet(routesparameters.app_id, resource_id_get_number(), app_query)
                                     .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-db/app_data_resource_detail', method:'POST'}):{
-                        resolve(dbModelAppDataResource.DetailPost(routesparameters.app_id, routesparameters.body));
+                        resolve(dbModelAppDataResourceDetail.DetailPost(routesparameters.app_id, routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, method:'PUT', required:true}):{
-                        resolve(dbModelAppDataResource.DetailUpdate(routesparameters.app_id, 
+                        resolve(dbModelAppDataResourceDetail.DetailUpdate(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_string}`, method:'DELETE', required:true}):{
-                        resolve(dbModelAppDataResource.DetailDelete(routesparameters.app_id, 
+                        resolve(dbModelAppDataResourceDetail.DetailDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(),
                                                             routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, method:'GET'}):{
-                        resolve(dbModelAppDataResource.DataGet(routesparameters.app_id, resource_id_get_number(), app_query)
+                        resolve(dbModelAppDataResourceDetailData.DataGet(routesparameters.app_id, resource_id_get_number(), app_query)
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-db/app_data_resource_detail_data', method:'POST'}):{
-                            resolve(dbModelAppDataResource.DataPost(routesparameters.app_id, routesparameters.body));
+                            resolve(dbModelAppDataResourceDetailData.DataPost(routesparameters.app_id, routesparameters.body));
                             break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, method:'PUT', required:true}):{
-                        resolve(dbModelAppDataResource.DataUpdate(routesparameters.app_id, 
+                        resolve(dbModelAppDataResourceDetailData.DataUpdate(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(), 
                                                             routesparameters.body));
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_string}`, method:'DELETE', required:true}):{
-                        resolve(dbModelAppDataResource.DataDelete(routesparameters.app_id, 
+                        resolve(dbModelAppDataResourceDetailData.DataDelete(routesparameters.app_id, 
                                                             /**@ts-ignore */
                                                             resource_id_get_number(),
                                                             routesparameters.body));

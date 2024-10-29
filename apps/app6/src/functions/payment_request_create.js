@@ -32,8 +32,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
 
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);

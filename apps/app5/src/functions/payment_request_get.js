@@ -24,8 +24,11 @@
  *                      countdown:              string}>}
  */
 const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet, DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
+    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     const payment_request = await MasterGet(app_id, null, 
                                     new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=PAYMENT_REQUEST`),

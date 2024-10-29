@@ -12,10 +12,10 @@
  * @returns {Promise.<import('../../../../server/types.js').server_db_sql_result_app_data_resource_master_post>}
  */
 const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
-    const {EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataEntityResource.js')} */
+    const {EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     /**@type{import('./account_create.js')} */
     const {default:createBankAccount} = await import('./account_create.js');
 

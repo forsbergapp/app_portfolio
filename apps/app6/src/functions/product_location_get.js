@@ -14,8 +14,11 @@
  */
 const product_location_get = async (app_id, data, user_agent, ip, locale, res) =>{
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet, DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
+    const {DataGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
     const stock = [];
     const product_variant_location = await DataGet(app_id, null, 

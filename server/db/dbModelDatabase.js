@@ -449,8 +449,14 @@ const install_db_get_files = async (install_type) =>{
     const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostLike.js`);
     /**@type{import('./dbModelUserAccountAppDataPostView.js')} */
     const {insertUserPostView} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
-    /**@type{import('./dbModelAppDataResource.js')} */
-    const {MasterPost, DetailPost, DataPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('./dbModelAppDataResourceMaster.js')} */
+    const {MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('./dbModelAppDataResourceDetail.js')} */
+    const {DetailPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+
+    /**@type{import('./dbModelAppDataResourceDetailData.js')} */
+    const {DataPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
     
     /**@type{import('../security.js')} */
     const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
