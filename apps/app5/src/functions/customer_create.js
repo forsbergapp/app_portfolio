@@ -13,13 +13,13 @@
  */
 const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataEntityResource.js')} */
-    const {EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
+    const dbModelAppDataEntityResource = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const {MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     /**@type{import('./account_create.js')} */
     const {default:createBankAccount} = await import('./account_create.js');
 
-    const resource_customer = await EntityResourceGet(app_id, null, 
+    const resource_customer = await dbModelAppDataEntityResource.get(app_id, null, 
         new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=CUSTOMER`)
     );
     
@@ -38,9 +38,9 @@ const customer_create = async (app_id, data, user_agent, ip, locale, res) =>{
                         app_data_entity_resource_id                 : resource_customer[0].id,
                         };
     //create CUSTOMER    
-    const Customer = await MasterPost(app_id, post_data);
+    const Customer = await dbModelAppDataResourceMaster.post(app_id, post_data);
 
-    const resource_account = await EntityResourceGet(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=ACCOUNT`));
+    const resource_account = await dbModelAppDataEntityResource.get(app_id, null, new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=ACCOUNT`));
     const post_data_account = {
                         user_account_id                             : data.user_account_id,
                         user_account_app_id                         : data.data_app_id,

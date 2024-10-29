@@ -14,7 +14,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {boolean|null} user_null
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_data_get[]>}
  */
-const DataGet = (app_id, resource_id, query, user_null=false) => 
+const get = (app_id, resource_id, query, user_null=false) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DATA_SELECT, 
@@ -40,7 +40,7 @@ const DataGet = (app_id, resource_id, query, user_null=false) =>
  * @param {*}      data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_data_post>}
  */
-const DataPost = (app_id, data) => 
+const post = (app_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DATA_INSERT, 
@@ -61,7 +61,7 @@ const DataPost = (app_id, data) =>
  * @param {*}      data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_data_update>}
  */
- const DataUpdate = (app_id, resource_id, data) => 
+ const update = (app_id, resource_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DATA_UPDATE, 
@@ -83,7 +83,7 @@ const DataPost = (app_id, data) =>
  * @param {*}      data
  * @returns {Promise.<import('../types.js').server_db_sql_result_app_data_resource_detail_data_delete>}
  */
-const DataDelete = (app_id, resource_id, data) => 
+const deleteRecord = (app_id, resource_id, data) => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DATA_DELETE, 
@@ -94,4 +94,4 @@ const DataDelete = (app_id, resource_id, data) =>
                     null, 
                     null));
 
-export{ DataGet,    DataPost,   DataUpdate,     DataDelete};
+export{ get,  post, update, deleteRecord};

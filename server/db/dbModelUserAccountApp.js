@@ -12,7 +12,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {number} user_account_id 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_createUserAccountApp>}
  */
-const createUserAccountApp = async (app_id, user_account_id) => 
+const post = async (app_id, user_account_id) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_INSERT, 
@@ -29,7 +29,7 @@ const createUserAccountApp = async (app_id, user_account_id) =>
  * @param {import('../types.js').server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_updateUserAccountApp>}
  */
-const updateUserAccountApp = (app_id, resource_id, data) =>
+const update = (app_id, resource_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_UPDATE, 
@@ -49,7 +49,7 @@ const updateUserAccountApp = (app_id, resource_id, data) =>
  * @param {number} resource_id
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_getUserAccountApp[]>}
  */
-const getUserAccountApp = (app_id, resource_id) => 
+const get = (app_id, resource_id) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_SELECT_USER_APP,
@@ -67,7 +67,7 @@ const getUserAccountApp = (app_id, resource_id) =>
  * @param {string} locale
  * @returns {Promise.<import('../../server/types.js').server_config_apps_with_db_columns[]>}
  */
-const getUserAccountApps = async (app_id, resource_id, locale) => {
+const getApps = async (app_id, resource_id, locale) => {
     // @returns {Promise.<import('../../types.js').server_db_sql_result_user_account_app_getUserAccountApps[]>}
    
     /**@type{import('../../apps/common/src/common.js')} */
@@ -94,7 +94,7 @@ const getUserAccountApps = async (app_id, resource_id, locale) => {
  * @param {*} query
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_app_deleteUserAccountApp>}
  */
-const deleteUserAccountApp = (app_id, resource_id, query) => 
+const deleteRecord = (app_id, resource_id, query) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DELETE,
@@ -105,4 +105,4 @@ const deleteUserAccountApp = (app_id, resource_id, query) =>
                         null, 
                         null));
 
-export {createUserAccountApp,updateUserAccountApp, getUserAccountApp,getUserAccountApps, deleteUserAccountApp};
+export {post,update, get, getApps, deleteRecord};

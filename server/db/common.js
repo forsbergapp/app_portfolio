@@ -66,13 +66,13 @@ const dbCommonAppCodeGet = error => {
  */
  const dbCommonCheckedError = async (app_id, lang_code, err, res) =>{
 	/**@type{import('./dbModelAppSetting.js')} */
-	const { getSettingDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+	const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
 	
     return new Promise((resolve)=>{
 		const app_code = dbCommonAppCodeGet(err);
 		if (app_code != null){
-			getSettingDisplayData( 	app_id,
+			getDisplayData( 	app_id,
 				new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${app_code}`))
 			.then(result_message=>{
 				res.statusCode = 400;
@@ -96,10 +96,10 @@ const dbCommonAppCodeGet = error => {
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getSettingDisplayData }) => {
-			getSettingDisplayData( 	app_id,
+		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getDisplayData }) => {
+			getDisplayData( 	app_id,
 				new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20400}`))
-			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getSettingDisplayData[]}*/result_message)=>{
+			.then((/**@type{import('../types.js').server_db_sql_result_app_setting_getDisplayData[]}*/result_message)=>{
 				res.statusCode = 404;
 				res.statusMessage = result_message[0].display_data;
 				resolve(result_message[0].display_data);

@@ -12,7 +12,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_follow_follow>}
  */
-const follow = (app_id, resource_id, data) => 
+const post = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_FOLLOW_INSERT, 
@@ -28,7 +28,7 @@ const follow = (app_id, resource_id, data) =>
  * @param {*} data
  * @returns {Promise.<import('../types.js').server_db_sql_result_user_account_follow_unfollow>}
  */
-const unfollow = (app_id, resource_id, data) => 
+const deleteRecord = (app_id, resource_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_FOLLOW_DELETE, 
@@ -38,4 +38,4 @@ const unfollow = (app_id, resource_id, data) =>
                             },
                         null, 
                         null));
-export {follow, unfollow};
+export {post, deleteRecord};
