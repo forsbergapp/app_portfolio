@@ -19,8 +19,14 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet, MasterUpdate, DetailGet, DataGet, DataPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet, MasterUpdate} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
+    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
+    const {DataGet, DataPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
     const customer = await MasterGet(app_id, null, 
                             new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=CUSTOMER`),

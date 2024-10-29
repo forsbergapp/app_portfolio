@@ -12,8 +12,8 @@
  * @returns {Promise.<import('../../../../server/types.js').server_db_sql_result_app_data_resource_master_get[]>}
  */
 const transaction_metadata = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
     return await MasterGet(app_id, null, 
                     new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=TRANSACTION_METADATA`),

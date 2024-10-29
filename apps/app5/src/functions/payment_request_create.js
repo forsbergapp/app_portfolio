@@ -21,13 +21,19 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
-    const {EntityGet, EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
+    const {EntityGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
 
-    /**@type{import('../../../../server/db/dbModelAppDataResource.js')} */
-    const {MasterGet, MasterPost, DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResource.js`);
+    /**@type{import('../../../../server/db/dbModelAppDataEntityResource.js')} */
+    const {EntityResourceGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
+    const {MasterGet, MasterPost} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
+
+    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
+    const {DetailGet} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     /**@type{import('../../../../server/iam.service.js')} */
-    const {iamTokenAuthorize} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const {iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
@@ -92,7 +98,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             if (body_decrypted.currency_code==currency.currency_code){
                 // payment request uses ID Token and SECRET.APP_ID_SECRET  parameter since no user is logged in
                 // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
-                const jwt_data = iamTokenAuthorize(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
+                const jwt_data = iamAuthorizeToken(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
                                                                         name:           '',
                                                                         ip:             ip,
                                                                         /**@ts-ignore */
