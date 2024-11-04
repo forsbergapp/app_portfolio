@@ -29,6 +29,7 @@
 		- ISO20022
 		- CD/CI
 		- batch cron pattern
+		- infrastructure as code (IaC)
 
 	Continuous deployment implemented using batch server with scheduled git pull requests and automatic restart 
 	of Node.js using pm2 managed processes.
@@ -74,6 +75,8 @@
 		
 	
 	UBUNTU SERVER
+
+	see full documentation how to install on a cloud service using Terraform
 
 	git clone https://github.com/forsbergapp/app_portfolio.git app_portfolio
 	sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -

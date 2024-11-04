@@ -4,41 +4,68 @@
     Project supports Ubuntu as deployment of test and production servers and Windows for localhost development.
     Use any Cloud provider.
 
-    Azure
-	1. create Ubuntu Virtual Machine (VM), save public key and note public IP addres of server
-	2. connect to Ubuntu VM from windows for example from command prompt:
-	ssh -i C:\Users\[USERNAME]\.ssh\[PATH]\[KEY_FILE] [azureuser]@[IP ADDRESS]
-
-    Oracle Cloud
-	1. choose compute then instance and choose shape Ubuntu and desired version, save public key and note public IP addres of server
-	2. connect to Ubuntu VM from windows for example from command prompt:
-	ssh -i C:\Users\[USERNAME]\.ssh\[PATH]\[KEY_FILE] ubuntu@[IP ADDRESS]
-
-    Follow installation instruction on Ubuntu for the deployment of test and production servers
     Follow installation instruction on Windows for the localhost development environment
 
-# Install repository
-    Ubuntu
-        cd $HOME
+    Follow installation instruction on Ubuntu or use Terraform for the deployment of test and production servers
 
-        #if git or vi are not installed:
-            sudo apt-get update
-            sudo apt-get upgrade
-            sudo apt-get install git
-            sudo apt-get install vim
-        #reboot if needed
-            sudo shutdown -r now
+# Install using terraform
 
-        git clone https://github.com/forsbergapp/app_portfolio.git app_portfolio
-        This repository will be updated by batch microservice and with git commands this is how the Continuous Deployment solution
-        is implemented.
 
-        alternative installation that copies all branches:
-        cd $HOME
-        git clone --bare https://github.com/forsbergapp/app_portfolio .git
-        git config --bool core.bare false
-        git reset --hard
-        git branch
+    Directory to create network resources and Ubuntu server 20.04 on Oracle Cloud using Terraform:
+
+        /server/install/terraform
+
+            --main configuration for network and server
+            /server/install/terraform/main.tf
+
+            --output variables
+            /server/install/terraform/outputs.tf
+                outputs 
+                public_ip
+                public_ip_server_only
+                key-public-openssh
+                key-private-pem
+
+            --variables for network
+            /server/install/terraform/variables_network.tf
+
+            --variables for oci credentials
+            /server/install/terraform/variables_oci.tf
+
+            --variables for server
+            /server/install/terraform/variables_server.tf
+
+    --copy files to /data to avoid git changes
+    mkdir /data/terraform 
+    --copy files in /server/install/terraform to /data/terraform 
+    cd /data/terraform 
+
+    terraform init
+
+    --edit variables*.tf files wit credentials and adjust any default values if desired
+
+    --both network and server
+
+        terraform plan
+        terraform apply
+        terraform destroy
+
+    --server only
+
+        terraform plan -target=oci_core_instance.ubuntu_instance_only
+        terraform apply -target=oci_core_instance.ubuntu_instance_only
+        terraform destroy -target=oci_core_instance.ubuntu_instance_only
+    
+    --save private key from output to ssh directory:
+    terraform output -raw key-private-pem>[.ssh directory]\servertf_private.key
+    --login to terraform created server:
+    ssh -i [.ssh directory]\servertf_private.key ubuntu@[public_ip]
+
+    --terraform finishes before setup script is finished, wait until script is finished on server
+
+    continue to setup SSL and DNS settings if necessary
+
+# Install software and repository
 
     Windows
         --Install Git: 
@@ -46,6 +73,172 @@
         cd %HOMEPATH%
         git clone https://github.com/forsbergapp/app_portfolio.git
 
+        --configure git in development evnironment
+        git config user.name "[name]"
+        git config user.email "[email]"
+    
+        --(Check version)
+        --Download from https://nodejs.org/
+        --https://nodejs.org/dist/v19.3.0/node-v19.3.0-x64.msi
+
+        cd %HOMEPATH%\app_portfolio
+        
+        npm install
+
+        --process manager
+        npm install -g pm2
+
+        --Install Terraform
+        https://developer.hashicorp.com/terraform/downloads
+        --tested
+        https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_windows_386.zip
+
+    Ubuntu
+        
+        SKIP if using Terrraform
+
+        Azure
+        1. create Ubuntu Virtual Machine (VM), save public key and note public IP addres of server
+	    2. connect to Ubuntu VM from windows for example from command prompt:
+	    ssh -i C:\Users\[USERNAME]\.ssh\[PATH]\[KEY_FILE] [azureuser]@[IP ADDRESS]
+
+        Oracle Cloud
+	    1. choose compute then instance and choose shape Ubuntu and desired version, save public key and note public IP addres of server
+	    2. connect to Ubuntu VM from windows for example from command prompt:
+	    ssh -i C:\Users\[USERNAME]\.ssh\[PATH]\[KEY_FILE] ubuntu@[IP ADDRESS]
+
+        cd $HOME
+
+        sudo apt-get update
+        sudo apt-get upgrade
+        sudo apt-get install git
+        sudo apt-get install vim
+        git clone https://github.com/forsbergapp/app_portfolio.git app_portfolio
+        --This repository will be updated by batch microservice and with git commands this is how the CD/CI solution is implemented.
+
+        --alternative installation that copies all branches:
+        cd $HOME
+        git clone --bare https://github.com/forsbergapp/app_portfolio .git
+        git config --bool core.bare false
+        git reset --hard
+        git branch
+        
+        --(Check version)
+        sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+        sudo apt install nodejs
+        sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
+        
+        --install everything except developer modules
+        cd $HOME/app_portfolio
+
+        npm install --omit=dev
+        
+        --process manager
+        sudo npm install -g pm2
+
+        Network security
+
+        # install ping if needed and if missing
+        sudo apt install inetutils-ping
+        #install netstat if needed and if missing
+        sudo apt-get install net-tools
+        #check ports
+        sudo netstat -ltn
+
+        Azure
+                Network settings
+                    Add inbound rules 
+                    Choose service HTTP (port 80)
+
+                    Add inbound rules 
+                    Choose service HTTPS (port 443)
+                    
+        Oracle Cloud
+                Security list
+                    Add ingress rules 
+                        source              0.0.0.0/0
+                        destination port    80
+                        description         HTTP
+                    Add ingress rules 
+                        source              0.0.0.0/0
+                        destination port    443
+                        description         HTTPS
+                Oracle VM might need ufw:
+                    #install ufw if missing
+                    sudo apt install ufw
+                    sudo ufw allow 22/tcp
+                    sudo ufw allow 80/tcp
+                    sudo ufw allow 443/tcp
+                    sudo ufw enable    
+        
+#Install SSL    
+
+    WINDOWS
+    --Localhost self sign Windows
+
+    mkdir config
+    cd config
+    mkdir ssl
+    cd ssl
+    "c:\Program Files\Git\usr\bin\openssl.exe" req -newkey rsa:2048 -keyout privkey.pem -x509 -days 365 -out fullchain.pem -nodes -sha256 -subj '/CN=localhost'
+
+    UBUNTU
+  
+    Copy existing files to this paths
+    Key
+    $HOME/app_portfolio/data/ssl/privkey.pem
+    Cert
+    $HOME/app_portfolio/data/ssl/fullchain.pem
+
+    Install using Letencrypt
+
+    sudo snap install --classic certbot
+    sudo ln -s /snap/bin/certbot /usr/bin/certbot
+    
+    New SSL
+        cd $HOME/app_portfolio
+        mkdir .well-known
+        cd .well-known
+        mkdir acme-challenge
+
+        --edit or review /data/config_server.json parameters
+        --disable https, enable https back after successful SSL files created
+        --HTTPS_ENABLE = 0
+        --letsencrypt should be able to access with "strange" user agent or accept-language variables:
+        --AUTHENTICATE_REQUEST_USER_AGENT = 0
+        --AUTHENTICATE_REQUEST_USER_AGENT_EXIST = 0
+        --AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE = 0
+
+        --replace [domain] with your domain, [email] with your email:
+
+        sudo certbot certonly --manual --agree-tos --config-dir $HOME/app_portfolio/data/ssl --work-dir $HOME/app_portfolio/data/ssl --logs-dir $HOME/app_portfolio/data/ssl --cert-path $HOME/app_portfolio/data/ssl --key-path $HOME/app_portfolio/data/ssl --fullchain-path $HOME/app_portfolio/data/ssl -m [email] -d *.test.[domain] -d *.[domain] -d [domain]
+
+        --follow Letsencrypt instructions
+        --Configure test.[domain] in DNS on same server or separate server.
+
+        --copy SSL files to correct path
+        sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
+        sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
+
+    Renew SSL
+        sudo HOME=$HOME certbot renew --manual-auth-hook $HOME/app_portfolio/server/install/scripts/SSL_authenticator.sh --manual-cleanup-hook $HOME/app_portfolio/server/install/scripts/SSL_cleanup.sh --config-dir $HOME/app_portfolio/data/ssl --work-dir $HOME/app_portfolio/data/ssl --logs-dir $HOME/app_portfolio/data/ssl --cert-path $HOME/app_portfolio/data/ssl --key-path $HOME/app_portfolio/data/ssl --fullchain-path $HOME/app_portfolio/data/ssl
+
+        --if you get "Certificate not yet due for renewal" add --force-renewal to above statement
+        --copy updated SSL files to correct path
+        sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
+        sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
+
+    Check certbot log
+    sudo vi /var/log/letsencrypt/letsencrypt.log
+
+# Configure DNS records
+    
+    Update DNS records using Ubuntu server IP address as needed
+
+    use wildcard *.[domain] and *.test.[domain] or register each subdomain admin.[domain], app1.[domain] etc.
+    
+
+# About directory app_portfolio
     /apps                   apps files
 
     /data/config_apps.json
@@ -133,175 +326,37 @@
     tsconfig.json           config typescript
     types.js                types used by typescript
 
-# Install NodeJS
+# About NodeJS modules
 
-    NodeJs modules
+    compression         encodes content using gzip for performance, not used by EventSource
+                        check module documentaion about using Cache-Control and compression, 
+                        APP_CACHE_CONTROL and APP_CACHE_CONTROL_FONT parameters can be modified
+                        to adjust performance
+    express             web framework for NodeJs
+    jsonwebtoken        implements the use of JSON web tokens
+    nodemailer          sends email from NodeJs
+    mysql               connects to database MariaDB and MySQL
+    oracledb            connects to database Oracle
+    pg                  connects to database PostgreSQL
+    sqlite              SQLite client
+    sqlite3             SQLite
 
-        compression         encodes content using gzip for performance, not used by EventSource
-                            check module documentaion about using Cache-Control and compression, 
-                            APP_CACHE_CONTROL and APP_CACHE_CONTROL_FONT parameters can be modified
-                            to adjust performance
-        express             web framework for NodeJs
-        jsonwebtoken        implements the use of JSON web tokens
-        nodemailer          sends email from NodeJs
-        mysql               connects to database MariaDB and MySQL
-        oracledb            connects to database Oracle
-        pg                  connects to database PostgreSQL
-        sqlite              SQLite client
-        sqlite3             SQLite
+    developer only modules installed in Windows:
+    @types/compression  types for compression
+    @types/express      types for express
+    @types/jasmine      types for jasmine
+    @types/jsonwebtoken types for jsonwebtoken
+    @types/mysql        types for mysql
+    @types/nodemailer   types for nodemailer
+    @types/oracledb"    types for oracledb
+    @types/pg           types for pg
+    @types/sqlite3      types for sqlite3
+    eslint              identifies and reports patterns found for javascript including jasmine 
+                        and follows latest standards with some basic settings like 
+                        the use of single quotes
+    jasmine             test framework for NodeJs 
+                        (configured for future use, see more in test documentation)
+    jsdoc               used for typescript without build step that checks typing 
+                        (see more in typescript documentation)
 
-        developer only modules installed in Windows:
-        @types/compression  types for compression
-        @types/express      types for express
-        @types/jasmine      types for jasmine
-        @types/jsonwebtoken types for jsonwebtoken
-        @types/mysql        types for mysql
-        @types/nodemailer   types for nodemailer
-        @types/oracledb"    types for oracledb
-        @types/pg           types for pg
-        @types/sqlite3      types for sqlite3
-        eslint              identifies and reports patterns found for javascript including jasmine 
-                            and follows latest standards with some basic settings like 
-                            the use of single quotes
-        jasmine             test framework for NodeJs 
-                            (configured for future use, see more in test documentation)
-        jsdoc               used for typescript without build step that checks typing 
-                            (see more in typescript documentation)
-    Ubuntu
-
-        --(Check version)
-        sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-        sudo apt install nodejs
-        sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
-        
-        --install everything except developer modules
-        cd $HOME/app_portfolio
-
-        npm install --omit=dev
-        
-        --process manager
-        sudo npm install -g pm2
-
-        Network security
-
-        # install ping if needed and if missing
-        sudo apt install inetutils-ping
-        #install netstat if needed and if missing
-        sudo apt-get install net-tools
-        #check ports
-        sudo netstat -ltn
-
-        Azure
-                Network settings
-                    Add inbound rules 
-                    Choose service HTTP (port 80)
-
-                    Add inbound rules 
-                    Choose service HTTPS (port 443)
-                    
-        Oracle Cloud
-                Security list
-                    Add ingress rules 
-                        source              0.0.0.0/0
-                        destination port    80
-                        description         HTTP
-                    Add ingress rules 
-                        source              0.0.0.0/0
-                        destination port    443
-                        description         HTTPS
-                Oracle VM might need ufw:
-                    #install ufw if missing
-                    sudo apt install ufw
-                    sudo ufw allow 22/tcp
-                    sudo ufw allow 80/tcp
-                    sudo ufw allow 443/tcp
-                    sudo ufw enable
-
-        SSL
-                Copy files
-                Key
-                $HOME/app_portfolio/data/ssl/privkey.pem
-                Cert
-                $HOME/app_portfolio/data/ssl/fullchain.pem
-
-            Install using Letencrypt
-                sudo snap install --classic certbot
-                sudo ln -s /snap/bin/certbot /usr/bin/certbot
-                
-                New SSL
-                    cd $HOME/app_portfolio
-                    mkdir .well-known
-                    cd .well-known
-                    mkdir acme-challenge
-
-                    --edit or review /data/config_server.json parameters
-                    --disable https, enable https back after successful SSL files created
-                    --HTTPS_ENABLE = 0
-                    --letsencrypt should be able to access with "strange" user agent or accept-language variables:
-                    --AUTHENTICATE_REQUEST_USER_AGENT = 0
-                    --AUTHENTICATE_REQUEST_USER_AGENT_EXIST = 0
-                    --AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE = 0
-
-                    --replace [domain] with your domain, [email] with your email:
-
-                    sudo certbot certonly --manual --agree-tos --config-dir $HOME/app_portfolio/data/ssl --work-dir $HOME/app_portfolio/data/ssl --logs-dir $HOME/app_portfolio/data/ssl --cert-path $HOME/app_portfolio/data/ssl --key-path $HOME/app_portfolio/data/ssl --fullchain-path $HOME/app_portfolio/data/ssl -m [email] -d *.test.[domain] -d *.[domain] -d [domain]
-
-                    --follow Letsencrypt instructions
-                    --Configure test.[domain] in DNS on same server or separate server.
-
-                    --copy SSL files to correct path
-                    sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
-                    sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
-
-                Renew SSL
-                    sudo HOME=$HOME certbot renew --manual-auth-hook $HOME/app_portfolio/server/install/scripts/SSL_authenticator.sh --manual-cleanup-hook $HOME/app_portfolio/server/install/scripts/SSL_cleanup.sh --config-dir $HOME/app_portfolio/data/ssl --work-dir $HOME/app_portfolio/data/ssl --logs-dir $HOME/app_portfolio/data/ssl --cert-path $HOME/app_portfolio/data/ssl --key-path $HOME/app_portfolio/data/ssl --fullchain-path $HOME/app_portfolio/data/ssl
-
-                    --if you get "Certificate not yet due for renewal" add --force-renewal to above statement
-                    --copy updated SSL files to correct path
-                    sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
-                    sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
-
-                Check certbot log
-                sudo vi /var/log/letsencrypt/letsencrypt.log
-
-    Windows
-
-        --(Check version)
-        --Download from https://nodejs.org/
-        --https://nodejs.org/dist/v19.3.0/node-v19.3.0-x64.msi
-
-        cd %HOMEPATH%\app_portfolio
-        
-        npm install
-
-        --process manager
-        npm install -g pm2
-
-        SSL
-            --Localhost self sign Windows
-
-            mkdir config
-            cd config
-            mkdir ssl
-            cd ssl
-            "c:\Program Files\Git\usr\bin\openssl.exe" req -newkey rsa:2048 -keyout privkey.pem -x509 -days 365 -out fullchain.pem -nodes -sha256 -subj '/CN=localhost'
-
-# Configure DNS records
-    
-    Update DNS records using Ubuntu server IP address as needed
-
-    use wildcard *.[domain] and *.test.[domain] or register each subdomain admin.[domain], app1.[domain] etc.
-    
-    Windows
-        For localhost DNS settings check browser support and update hosts file on Windows if necessary.
-    
-        Example C:\Windows\System32\drivers\etc\hosts:
-        ::1	admin.localhost
-        ::1	app1.localhost
-        ::1	app2.localhost
-        ::1	app3.localhost
-        ::1	app4.localhost
-        ::1	app5.localhost
-        ::1	app6.localhost
-        ::1	app7.localhost
 </div>
