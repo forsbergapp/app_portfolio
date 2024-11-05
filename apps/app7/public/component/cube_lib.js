@@ -3,7 +3,7 @@
  * @module apps/app7/component/cube_lib
  */
 
-const commonPath ='common';
+const commonPath ='/common/js/common.js';
 
 /**
  * @import {CommonModuleCommon}  from '../../../common_types.js'
