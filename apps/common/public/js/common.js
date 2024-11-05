@@ -106,7 +106,22 @@ const COMMON_ICONS = {
     infinite:                 '∞',
 };
 Object.seal(COMMON_ICONS);
-
+/**
+ * Importmap that return file path for given file
+ * to solve importmap not working for some browsers
+ * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
+ * @return {string}
+ */
+const commonImportmap = file =>{
+    return {
+        'easy.qrcode'   : '/common/modules/easy.qrcode/easy.qrcode.js',
+        leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
+        React 		    : '/common/modules/react/react.development.js',
+        ReactDOM 	    : '/common/modules/react/react-dom.development.js',
+        regional  	    : '/common/modules/regional/regional.js',
+        Vue 	        : '/common/modules/vue/vue.esm-browser.js'
+    }[file] ??'';
+};
 /**
  * Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @param {*} element 
@@ -2199,9 +2214,8 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
  * @returns {Promise.<void>}
  */
 const commonModuleEasyQRCODECreate = async (div, url) => {
-    const path_easy_qrcode = 'easy.qrcode';
     /**@type {import('../../../common_types.js').CommonModuleEasyQRCode} */
-    const {QRCode} = await import(path_easy_qrcode);
+    const {QRCode} = await import(commonImportmap('easy.qrcode'));
     COMMON_DOCUMENT.querySelector('#' + div).textContent='';
     new QRCode(COMMON_DOCUMENT.querySelector('#' + div), {
         text: url,
@@ -2238,7 +2252,9 @@ const commonModuleLeafletInit = async parameters => {
                                         latitude:parameters.latitude,
                                         app_eventListeners:COMMON_GLOBAL.app_eventListeners
                                         },
-                            methods:    null,
+                            methods:    {
+                                        commonImportMap:commonImportmap
+                                        },
                             path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
 
@@ -2253,10 +2269,11 @@ const commonModuleLeafletInit = async parameters => {
                     },
         methods:    {
                     function_event_doubleclick: parameters.doubleclick_event,
+                    commonImportMap:commonImportmap,
                     commonComponentRender:commonComponentRender,
                     commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
                     commonElementRow:commonElementRow,
-                   commonFFB:commonFFB,
+                    commonFFB:commonFFB,
                     moduleLeafletContainer:module_leaflet.methods.leafletContainer,
                     moduleLeafletLibrary:module_leaflet.methods.leafletLibrary
                     },
@@ -3271,9 +3288,8 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
     switch (framework){
         case 2:{
             //Vue
-            const path_vue = 'Vue';
             /**@type {import('../../../common_types.js').CommonModuleVue} */
-            const Vue = await import(path_vue);
+            const Vue = await import(commonImportmap('Vue'));
 
             //Use tempmount div to be able to return pure HTML without extra events
             //since event delegation is used
@@ -3298,12 +3314,10 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
         }
         case 3:{
             //React
-            const path_react = 'React';
             /**@type {import('../../../common_types.js').CommonModuleReact} */
-            const React = await import(path_react).then(module=>module.React);
-            const path_reactDOM = 'ReactDOM';
+            const React = await import(commonImportmap('React')).then(module=>module.React);
             /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
-            const ReactDOM = await import(path_reactDOM).then(module=>module.ReactDOM);
+            const ReactDOM = await import(commonImportmap('ReactDOM')).then(module=>module.ReactDOM);
 
             //convert HTML template to React component
             const div_template = COMMON_DOCUMENT.createElement('div');
@@ -3629,6 +3643,7 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, 
        COMMON_ICONS,
        /* MISC */
+       commonImportmap,
        commonElementId, 
        commonElementRow, 
        commonElementListTitle, 
