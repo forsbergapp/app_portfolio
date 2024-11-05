@@ -11,13 +11,12 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='common';
+const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
-const path_regional ='regional';
 /**@type {CommonModuleRegional} */
-const {getTimezone} = await import(path_regional);
+const {getTimezone} = await import(common.commonImportmap('regional'));
 
 const appLibTimetable = '/app-module/MODULE_LIB_TIMETABLE';
 /**@type {CommonModuleLibTimetable} */

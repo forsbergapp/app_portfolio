@@ -10,7 +10,7 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='common';
+const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
