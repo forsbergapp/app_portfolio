@@ -1,7 +1,8 @@
 /** @module server/iam/service */
 
 /**
- * @import {server_iam_authenticate_request, server_iam_app_token_record, server_iam_user_login_record,server_iam_access_token_claim_type,
+ * @import {server_iam_authenticate_request, server_iam_app_token_record, server_iam_user_login_record,
+ *          server_iam_access_token_claim_type,server_iam_access_token_claim_scope_type,
  *          server_config_iam_blockip,server_config_iam_useragent,
  *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_db_file_result_fileFsRead, server_server_error, server_db_file_iam_user, server_db_file_iam_user_new, 
  *          server_server_res} from './types.js'
@@ -1117,7 +1118,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                                                                 row.id == app_id_host && row.ip == ip && row.token == id_token
                                                                                 )[0]);
             if (id_token_decoded.app_id == app_id_host && 
-                id_token_decoded.scope == 'APP' && 
+                (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
                 id_token_decoded.ip == ip &&
                 log_id_token){
                 if (scope=='APP_DATA')
@@ -1459,13 +1460,14 @@ const iamAuthenticateResource = parameters =>  {
  * @function
  * @param {number} app_id
  * @param {string|null} ip
+ * @param {server_iam_access_token_claim_scope_type} scope
  * @returns {Promise.<string>}
  */
- const iamAuthorizeIdToken = async (app_id, ip)=>{
+ const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
     const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', { id: null, 
                                                         ip:ip ?? '', 
                                                         name:'', 
-                                                        scope:'APP'});
+                                                        scope:scope});
 
     /**@type{server_iam_app_token_record} */
     const file_content = {	id:         app_id,
@@ -1486,7 +1488,7 @@ const iamAuthenticateResource = parameters =>  {
  * @param {{id:number|string|null, 
  *          name:string, 
  *          ip:string, 
- *          scope:'USER'|'APP'|'APP_CUSTOM'}} claim
+ *          scope:server_iam_access_token_claim_scope_type}} claim
  * @param {string|null} app_custom_expire
  * @returns {{
  *              token:string, 

@@ -1658,14 +1658,17 @@
  * DB SQL USER ACCOUNT VIEW server_db_sql_result_user_account_view_insertUserAccountView
  * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_view_insertUserAccountView
  */
-
+/**
+ * IAM server_iam_access_token_claim_scope_type
+ * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_CUSTOM'} server_iam_access_token_claim_scope_type
+ */
 /**
  * IAM server_iam_access_token_claim_type
  * @typedef {{  app_id:         number,
  *              id:             number|string|null,
  *              name:           string,
  *              ip:             string,
- *              scope:          'USER'|'APP'|'APP_CUSTOM',
+ *              scope:          server_iam_access_token_claim_scope_type,
  *              tokentimestamp: number}} server_iam_access_token_claim_type
  */
 

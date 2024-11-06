@@ -277,7 +277,7 @@ const bffStart = async (req, res) =>{
                                         }
                                         
                                     };
-                                    if (bff_parameters.method.toUpperCase() == 'POST' && !bff_parameters.route_path.toLowerCase().startsWith('/app-function'))
+                                    if (bff_parameters.method.toUpperCase() == 'POST' && !bff_parameters.route_path.toLowerCase().startsWith('/app-module-function'))
                                         return_result(201,result_service);
                                     else{
                                         bff_parameters.res.statusCode = 200;
