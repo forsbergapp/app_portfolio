@@ -1,6 +1,14 @@
 [
     {
         "APP_ID": 0,
+        "COMMON_TYPE": "REPORT",
+        "COMMON_NAME": "PERFORMANCE_TEST",
+        "COMMON_ROLE": "ADMIN",
+        "COMMON_PATH": "/apps/admin/src/report/performance.js",
+        "COMMON_DESCRIPTION": "Performs performance test and displays result"
+    },
+    {
+        "APP_ID": 0,
         "COMMON_TYPE": "FUNCTION",
         "COMMON_NAME": "COMMON_COUNTRY",
         "COMMON_ROLE": "APP_DATA",

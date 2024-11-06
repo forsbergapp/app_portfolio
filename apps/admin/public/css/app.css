@@ -9,7 +9,7 @@
 #secure_menu_6::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
 #secure_menu_7::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_install)}
 #secure_menu_8::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_database)}
-#secure_menu_9::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_backup) ' ' var(--common_app_icon_restore)}
+#secure_menu_9::before{																content: var(--common_app_icon_print)}
 #secure_menu_10::before{															content: var(--common_app_icon_server)}
 #secure_menu_11::before{															content: var(--common_app_icon_logout)}
 

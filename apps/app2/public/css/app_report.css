@@ -231,10 +231,6 @@
 		position: inherit;
 		margin-top: 10px;
 	}
-	/*iphone fix*/
-	#timetable_month {
-		padding-top:inherit;
-	}
 }
 
 #printbody #paper {
