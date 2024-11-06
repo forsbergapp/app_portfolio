@@ -464,7 +464,7 @@ const commonSelectEventAction = async (event_target_id, target) =>{
                     default_data_value:COMMON_GLOBAL.user_locale,
                     default_value:'',
                     options: await commonFFB({
-                                                path:'/app-function/COMMON_LOCALE', 
+                                                path:'/app-module-function/COMMON_LOCALE', 
                                                 query:`lang_code=${COMMON_GLOBAL.user_locale}`, 
                                                 method:'POST', authorization_type:'APP_DATA',
                                                 body:{data_app_id : COMMON_GLOBAL.common_app_id}

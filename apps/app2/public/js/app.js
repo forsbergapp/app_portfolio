@@ -18,10 +18,8 @@ const common = await import(commonPath);
 /**@type {CommonModuleRegional} */
 const {getTimezone} = await import(common.commonImportmap('regional'));
 
-const appLibTimetable = '/app-module/MODULE_LIB_TIMETABLE';
 /**@type {CommonModuleLibTimetable} */
-const {APP_REPORT_GLOBAL, component} = await import(appLibTimetable);
-
+let appLibTimetable;
 
 /**@type{APP_user_setting} */
 const APP_USER_SETTINGS_EMPTY = {current_id:0,
@@ -281,7 +279,7 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
                 prayer_hijri_date_adjustment : setting.json_data.prayer_hijri_date_adjustment
                 });
             }
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = component({	data:		{
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = appLibTimetable.component({	data:		{
                                                                                         commonMountdiv:null,
                                                                                         button_id:item_id,
                                                                                         timetable:'DAY',
@@ -296,7 +294,7 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
         }
         //1=create timetable month
         case 1:{
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = component({	data:		{
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = appLibTimetable.component({	data:		{
                                                                                         commonMountdiv:null,
                                                                                         button_id:item_id,
                                                                                         timetable:'MONTH',
@@ -311,7 +309,7 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
         }
         //2=create timetable year
         case 2:{
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = component({	data:		{
+            COMMON_DOCUMENT.querySelector('#paper').innerHTML = appLibTimetable.component({	data:		{
                                                                                         commonMountdiv:null,
                                                                                         button_id:item_id,
                                                                                         timetable:'YEAR',
@@ -341,7 +339,6 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
  * @returns {string}
  */
 const appReportUrl = (id, sid, papersize, item, format, profile_display=true) => {
-    const report_module = `module=${APP_GLOBAL.app_report_timetable}`;
     let module_parameters = `&id=${id}&sid=${sid}`;
     if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
         module_parameters += '&type=0';
@@ -356,12 +353,10 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
     }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
     const service_parameter = `&format=${format}&ps=${papersize}`;
-    const encodedurl = common.commonWindowToBase64( report_module +
-                                        module_parameters + 
-                                        language_parameter +
-                                        service_parameter);
+    const encodedurl = common.commonWindowToBase64( module_parameters + language_parameter + service_parameter);
     //url query parameters are decoded in report module and in report service
-    return common.commonWindowHostname() + `/app-reports?reportid=${encodedurl}`;
+    return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-report/${APP_GLOBAL.app_report_timetable}?reportid=${encodedurl}`;
+
 };
 
 /**
@@ -390,7 +385,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
             };
         });
         
-        const result = component({	data:		{
+        const result = appLibTimetable.component({	data:		{
                                                 commonMountdiv:null,
                                                 button_id:null,
                                                 timetable:'DAY',
@@ -414,7 +409,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
             path:       '/component/settings_tab3_theme_thumbnail.js'});
     }
     if (theme?.type =='month' || theme?.type=='year' || theme==null){
-        const result_month = component({	data:		{
+        const result_month = appLibTimetable.component({	data:		{
                                                         commonMountdiv:null,
                                                         button_id:null,
                                                         timetable:'MONTH',
@@ -425,7 +420,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                                         COMMON_DOCUMENT:null
                                                         }
                                             });
-        const result_year = component({	data:		{
+        const result_year = appLibTimetable.component({	data:		{
                                                     commonMountdiv:null,
                                                     button_id:null,
                                                     timetable:'YEAR',
@@ -677,7 +672,7 @@ const SettingShow = async (tab_selected) => {
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data
                             },
                 methods:    {
-                            lib_timetable_APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
+                            lib_timetable_APP_REPORT_GLOBAL:appLibTimetable.APP_REPORT_GLOBAL,
                             appComponentSettingUpdate:appComponentSettingUpdate,
                             getTimezone:getTimezone,
                             commonTimezoneDate:common.commonTimezoneDate,
@@ -733,7 +728,7 @@ const SettingShow = async (tab_selected) => {
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                            methods:APP_REPORT_GLOBAL.CommonModulePrayTimes_methods
+                            methods:appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods
                             },
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate,
@@ -872,7 +867,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
                 appModuleLeafletMapQibblaShow();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone;
-                APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(timezone);
+                appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(timezone);
                 appUserSettingUpdate('GPS');    
                 break;
             }
@@ -1002,16 +997,16 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
 
                 COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = '';
                 COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = '';
-                if (typeof APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
+                if (typeof appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
-                if (typeof APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
+                COMMON_DOCUMENT.querySelector('#setting_method_param_fajr').textContent = 'Fajr:' + appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.fajr + suffix;
+                if (typeof appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = 'Isha:' + APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
+                COMMON_DOCUMENT.querySelector('#setting_method_param_isha').textContent = 'Isha:' + appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods[method].params.isha + suffix;
                 break;
             }
         case 'USER_SETTING':{
@@ -2164,7 +2159,7 @@ const appEventClick = event => {
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
                     appModuleLeafletMapQibblaShow();
-                    APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
+                    appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
                     appUserSettingUpdate('GPS');
                     break;
                 }       
@@ -2361,6 +2356,10 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
+    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE`;
+    /**@type {CommonModuleLibTimetable} */
+    appLibTimetable = await import(appLibTimetable_path);
+
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -2387,16 +2386,16 @@ const appInit = async parameters => {
     //set papersize
     appPaperZoom();
     //set app and report globals
-    APP_REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
+    appLibTimetable.APP_REPORT_GLOBAL.app_copyright = common.COMMON_GLOBAL.app_copyright ?? '';
     APP_GLOBAL.app_default_startup_page = parseInt(parameters.APP.APP_DEFAULT_STARTUP_PAGE.VALUE);
     APP_GLOBAL.app_report_timetable = parameters.APP.APP_REPORT_TIMETABLE.VALUE;
 
-    APP_REPORT_GLOBAL.regional_def_calendar_lang = parameters.APP.APP_REGIONAL_DEFAULT_CALENDAR_LANG.VALUE;
-    APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_EXT_PREFIX.VALUE;
-    APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM.VALUE;
-    APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR.VALUE;
-    APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameters.APP.APP_REGIONAL_DEFAULT_CALENDAR_TYPE_GREG.VALUE;
-    APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameters.APP.APP_REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM.VALUE;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_lang = parameters.APP.APP_REGIONAL_DEFAULT_CALENDAR_LANG.VALUE;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_EXT_PREFIX.VALUE;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM.VALUE;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR.VALUE;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parameters.APP.APP_REGIONAL_DEFAULT_CALENDAR_TYPE_GREG.VALUE;
+    appLibTimetable.APP_REPORT_GLOBAL.regional_def_calendar_number_system = parameters.APP.APP_REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM.VALUE;
 
     APP_GLOBAL.regional_default_direction = parameters.APP.APP_REGIONAL_DEFAULT_DIRECTION.VALUE;
     APP_GLOBAL.regional_default_locale_second = parameters.APP.APP_REGIONAL_DEFAULT_LOCALE_SECOND.VALUE;
@@ -2456,17 +2455,17 @@ const appInit = async parameters => {
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
     if (common.COMMON_GLOBAL.client_timezone)
-        APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(common.COMMON_GLOBAL.client_timezone);
     else
-        APP_REPORT_GLOBAL.session_currentDate = new Date();
-    APP_REPORT_GLOBAL.session_currentHijriDate = [0,0];
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = new Date();
+    appLibTimetable.APP_REPORT_GLOBAL.session_currentHijriDate = [0,0];
     //get Hijri date from initial Gregorian date
-    APP_REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
-        APP_REPORT_GLOBAL.session_currentDate.getMonth(),
-        APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-    APP_REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
-        APP_REPORT_GLOBAL.session_currentDate.getMonth(),
-        APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+    appLibTimetable.APP_REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getMonth(),
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+    appLibTimetable.APP_REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getMonth(),
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 
     //show dialogue about using mobile and scan QR code after 5 seconds
     common.commonWindowSetTimeout(() => {appDialogueShow('SCAN');}, 5000);

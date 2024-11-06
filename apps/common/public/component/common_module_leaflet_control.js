@@ -281,7 +281,7 @@ const component = async props => {
      * @returns {Promise.<{value:string, text:string}[]>}
      */
     const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await props.methods.commonFFB({
-                                                                                                            path:'/app-function/COMMON_COUNTRY', 
+                                                                                                            path:'/app-module-function/COMMON_COUNTRY', 
                                                                                                             query:`lang_code=${lang_code}`, 
                                                                                                             method:'POST', 
                                                                                                             authorization_type:'APP_DATA', 
