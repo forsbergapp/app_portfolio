@@ -1,0 +1,63 @@
+
+#printbody {
+	margin: 0px;
+}
+/* PAPER*/
+#paper {
+	background-color:var(--common_report_color_white);
+	color: var(--common_report_color_black);
+	font-family: var(--common_global_font_arabic_sans);
+	z-index: 0;
+	transform: scale(0.5);
+	transform-origin: top left;
+	margin-top: 10px;
+}
+#paper.A4{
+	width : 210mm;
+	height : 297mm;
+}
+#paper.Letter{
+	width : 8.5in;
+	height : 11in;
+}
+/*CSS for minimum 768px*/
+@media only screen and (min-width: 768px) {
+	#paper {
+		margin: 0 auto;
+		transform: scale(0.7);
+		transform-origin:top;
+		position: inherit;
+		margin-top: 10px;
+	}
+}
+#printbody #paper {
+	box-shadow: none;
+	transform:scale(1) !important;
+	margin: 0 auto;
+	margin-top: 0px;
+}
+.report_title{
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+.report_row{
+	display: inline-block;
+	width: 75%;
+}
+.report_row > div{
+	display: inline-block;
+}
+.report_col1{
+	background-color: var(--common_report_color_darkblue);
+	color: var(--common_report_color_white);
+}
+/*even rows*/
+.report_row:nth-child(2n) {
+	color: var(--common_report_color_black);
+	background-color:var(--common_report_color_white);
+}
+/*odd rows*/
+.report_row:nth-child(2n+1) {
+	color: var(--common_report_color_black);
+  	background-color: var(--common_report_color_lightblue3);
+}

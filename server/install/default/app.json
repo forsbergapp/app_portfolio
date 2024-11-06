@@ -8,8 +8,8 @@
         "SHOWPARAM":0, 
         "MANIFEST": "/common/manifest.json",
         "JS":"/js/app.js",
-        "CSS": "/css/admin.css",
-        "CSS_REPORT": "",
+        "CSS": "/css/app.css",
+        "CSS_REPORT": "/css/app_report.css",
         "FAVICON_32x32":"/images/favicon-32x32.png",
         "FAVICON_192x192":"/images/favicon-192x192.png",
         "STATUS":"ONLINE"
