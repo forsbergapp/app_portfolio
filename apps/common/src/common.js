@@ -474,6 +474,7 @@ const commonAssetfile = parameters =>{
 /**
  * Router function - run fcuntion
  * @param {{app_id:number,
+ *          type:'FUNCTION',
  *          resource_id:string,
  *          data: *,
  *          user_agent:string,
@@ -483,14 +484,14 @@ const commonAssetfile = parameters =>{
  *          res:server_server_res|null}} parameters
  * @returns {Promise.<void>}
  */
-const commonFunctionRun = async parameters => {
-    const module = commonRegistryAppModule(parameters.app_id, {type:'FUNCTION', name:parameters.resource_id,role:parameters.endpoint});
+const commonModuleRun = async parameters => {
+    const module = commonRegistryAppModule(parameters.app_id, {type:parameters.type, name:parameters.resource_id,role:parameters.endpoint});
     if (module){
         const {default:RunFunction} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
     }
     else{
-        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonFunctionRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
+        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -500,19 +501,58 @@ const commonFunctionRun = async parameters => {
 /**
  * Router function - get module
  * @param {{app_id:Number,
+ *          type:'REPORT'|'MODULE',
  *          resource_id:string,
  *          data:*,
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
+ *          endpoint:server_bff_endpoint_type|'',
  *          res:server_server_res|null}} parameters
  * @returns {Promise.<*>}
  */
 const commonModuleGet = async parameters => {
-    const module = commonRegistryAppModule(parameters.app_id, {type:'MODULE', name:parameters.resource_id,role:''});
-    if (module){
-        const {default:RunFunction} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
-        return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+    const module = commonRegistryAppModule(parameters.app_id, {type:parameters.type, name:parameters.resource_id,role:parameters.endpoint});
+    if (module && (parameters.type=='MODULE' ||parameters.type=='REPORT')){
+        if (parameters.type=='MODULE'){
+            const {default:RunFunction} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
+            return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+        }
+        else{
+            //report
+            /**@type{import('../../../server/iam.service.js')} */
+            const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+            //ID token is created but not used in report
+            await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
+            const result_geodata =  await commonGeodata({   app_id:parameters.app_id, 
+                                                            endpoint:'SERVER_APP', 
+                                                            ip:parameters.ip, 
+                                                            user_agent:parameters.user_agent ??'', 
+                                                            accept_language:parameters.locale??''});
+            const {default:ComponentCreate} = await import('./component/common_report.js');
+            
+            const decodedReportparameters = Buffer.from(parameters.data.get('reportid') ?? '', 'base64').toString('utf-8');
+            const papersize = new URLSearchParams(decodedReportparameters).get('ps');
+            const {default:RunReport} = await import(`file://${process.cwd()}${module.COMMON_PATH}`);
+
+            /**@type{server_apps_report_create_parameters} */
+            const data = {  app_id:         parameters.app_id,
+                            reportid:       parameters.data.get('reportid') ?? '',
+                            ip:             parameters.ip,
+                            user_agent:     parameters.user_agent ?? '',
+                            accept_language:parameters.locale ?? '',
+                            latitude:       result_geodata?.latitude,
+                            longitude:      result_geodata?.longitude
+                            };
+            return ComponentCreate({data:   {
+                                            CONFIG_APP:{...commonRegistryApp(parameters.app_id)},
+                                            data:data,
+                                            /**@ts-ignore */
+                                            papersize:papersize
+                                            },
+                                    methods:{function_report:RunReport}});
+        }
+        
     }
     else{
         logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
@@ -542,7 +582,7 @@ const commonModuleGet = async parameters => {
  *                                  locale?:            string,
  *                                  reportid?:          string,
  *                                  host?:              string},
- *          type:'APP'|'REPORT'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
+ *          type:'APP'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
  * @returns {Promise.<string>}
  */
 const commonComponentCreate = async parameters =>{
@@ -550,12 +590,12 @@ const commonComponentCreate = async parameters =>{
     const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
-    //id token for APP, REPORT and MAINTENANCE
-    const idtoken = (parameters.type=='APP' || parameters.type=='REPORT' || parameters.type=='MAINTENANCE')?
-                        await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip):
+    //id token for APP and MAINTENANCE
+    const idtoken = (parameters.type=='APP' ||parameters.type=='MAINTENANCE')?
+                        await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip, parameters.type):
                             null;
-    //geodata for APP and REPORT
-    const result_geodata = (parameters.type=='APP' || parameters.type=='REPORT')?
+    //geodata for APP
+    const result_geodata = parameters.type=='APP'?
                                 await commonGeodata({   app_id:parameters.app_id, 
                                                         endpoint:'SERVER_APP', 
                                                         ip:parameters.componentParameters.ip, 
@@ -604,32 +644,6 @@ const commonComponentCreate = async parameters =>{
 
             const {default:ComponentCreate} = await import('./component/common_app.js');
             return ComponentCreate(componentParameter);
-        }
-        case 'REPORT':{
-            const {default:ComponentCreate} = await import('./component/common_report.js');
-            
-            const decodedReportparameters = Buffer.from(parameters.componentParameters.reportid ?? '', 'base64').toString('utf-8');
-            const module = new URLSearchParams(decodedReportparameters).get('module') ??'';
-            const papersize = new URLSearchParams(decodedReportparameters).get('ps');
-            const report = commonRegistryAppModule(parameters.app_id, {type:'REPORT', name:module, role:''});
-            const {default:RunReport} = await import(`file://${process.cwd()}${report.COMMON_PATH}`);
-
-            /**@type{server_apps_report_create_parameters} */
-            const data = {  app_id:         parameters.app_id,
-                            reportid:       parameters.componentParameters.reportid ?? '',
-                            ip:             parameters.componentParameters.ip,
-                            user_agent:     parameters.componentParameters.user_agent ?? '',
-                            accept_language:parameters.componentParameters.locale ?? '',
-                            latitude:       result_geodata?.latitude,
-                            longitude:      result_geodata?.longitude
-                            };
-            return ComponentCreate({data:   {
-                                            CONFIG_APP:{...commonRegistryApp(parameters.app_id)},
-                                            data:data,
-                                            /**@ts-ignore */
-                                            papersize:papersize
-                                            },
-                                    methods:{function_report:RunReport}});
         }
         case 'MAINTENANCE':{
             //maintenance can be used from all app_id
@@ -701,7 +715,6 @@ const commonAppHost = host =>{
  *          res:server_server_res|null}} parameters
  */
 const commonApp = async parameters =>{
-    const reportid = parameters.query?parameters.query.get('reportid'):null;
     const host_no_port = parameters.host.substring(0,parameters.host.indexOf(':')==-1?parameters.host.length:parameters.host.indexOf(':'));
     const app_id = commonAppHost(host_no_port);
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=> 'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID);
@@ -751,21 +764,6 @@ const commonApp = async parameters =>{
             }
             case (parameters.url.toLowerCase().startsWith('/info/terms')):{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
-            }
-            case (parameters.url.toLowerCase().startsWith('/app-reports')):{
-                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:         parameters.ip,
-                                                                                        user_agent: parameters.user_agent,
-                                                                                        locale:     commonClientLocale(parameters.accept_language),
-                                                                                        reportid:   reportid},type:'REPORT'});
-            }
-            case (parameters.url.toLowerCase().startsWith('/app-module/')):{
-                return await commonModuleGet({  app_id: app_id, 
-                                                resource_id:parameters.url.substring(parameters.url.lastIndexOf('/') + 1), 
-                                                data:null, 
-                                                user_agent:parameters.user_agent, 
-                                                ip:parameters.ip, 
-                                                locale:parameters.accept_language,
-                                                res:parameters.res});
             }
             case (parameters.url == '/'):
             case ((commonRegistryApp(app_id).SHOWPARAM == 1 && parameters.url.substring(1) !== '')):{
@@ -1004,7 +1002,7 @@ const commonRegistryAppSecretUpdate = async (app_id, resource_id, data) => {
 };
 
 export {commonMailCreate, commonMailSend,
-        commonAppStart, commonAppHost, commonAssetfile,commonFunctionRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
+        commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
         commonAppsAdminGet,commonRegistryAppModuleAll,
         commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,commonRegistryAppSecretFile,
         commonRegistryAppsGet,

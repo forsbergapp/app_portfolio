@@ -116,27 +116,29 @@ const serverUtilAppLine = () =>{
  *	1.Middleware	compression and JSON maximum size setting
  *	
  *  2.Routes	
- *	path	                            method	middleware                                  controller          comment
- *	*	                                all	                                                bffInit	            logs EventSource and response when closed, 
- *                                                                                                              authenticates request and will end request if not passing controls,
- *                                                                                                              sets headers, 
- *                                                                                                              returns disallow for robots.txt and empty favicon.ico
- *	*	                                get	                                                bffStart	        redirects naked domain, http to https if enabled 
- *							                                                                                    and to admin subdomain if first time, 
- *							                                                                                    responds to SSL verification if enabled
- *  /bff/app_data/v1*                   all     iam.iamAuthenticateIdToken                  bffAppData
- *  /bff/app_signup/v1*                 post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
- *  /bff/app_access/v1*                 all     iam.iamAuthenticateAccessToken              bffAppAccess
- *  /bff/app_external/v1/app-function*  post    iam.iamAuthenticateExternal                 bffAppExternal
- *  /bff/admin/v1*                      all     iam.iamAuthenticateAdminAccessToken         bffAdmin
- *  /bff/socket/v1*                     get     iam.iamAuthenticateSocket                   bffSocket
- *  /bff/iam_admin/v1*                  post    iam.iamAuthenticateAdmin                    bffIAMAdmin
- *  /bff/iam_user/v1*                   post    iam.iamAuthenticateUser                     bffIAMUser
- *  /bff/iam_provider/v1*               post    iam.iamAuthenticateProvider                 bffIAMProvider
- *	*	                                get	                                                bffApp		        app asset
- *							                                                                                    common asset
- *							                                                                                    info page
- *							                                                                                    report and app
+ *	path	                                    method	middleware                                  controller      comment
+ *  /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
+ *                                                                                                                  used for shared libraries and open report url
+ *	*	                                        all	                                                bffInit	        logs EventSource and response when closed, 
+ *                                                                                                                  authenticates request and will end request if not passing controls,
+ *                                                                                                                  sets headers, 
+ *                                                                                                                  returns disallow for robots.txt and empty favicon.ico
+ *	*	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled 
+ *							                                                                                        and to admin subdomain if first time, 
+ *							                                                                                        responds to SSL verification if enabled
+ *  /bff/app_data/v1*                           all     iam.iamAuthenticateIdToken                  bffAppData
+ *  /bff/app_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
+ *  /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
+ *  /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
+ *  /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
+ *  /bff/socket/v1*                             get     iam.iamAuthenticateSocket                   bffSocket
+ *  /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
+ *  /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
+ *  /bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
+ *	*	                                        get	                                                bffApp		    app asset
+ *							                                                                                        common asset
+ *							                                                                                        info page
+ *							                                                                                        app
  *	
  * 3.Middleware error logging
  * 
@@ -192,18 +194,19 @@ const serverUtilAppLine = () =>{
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_data/v1*').all                      (iam.iamAuthenticateIdToken,                bffAppData);
-    app.route('/bff/app_signup/v1*').post                   (iam.iamAuthenticateIdTokenRegistration,    bffAppSignup);
-    app.route('/bff/app_access/v1*').all                    (iam.iamAuthenticateAccessToken,            bffAppAccess);
-    app.route('/bff/app_external/v1/app-function*').post    (iam.iamAuthenticateExternal,               bffAppExternal);
-    app.route('/bff/admin/v1*').all                         (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
-    app.route('/bff/socket/v1*').get                        (iam.iamAuthenticateSocket,                 bffSocket);
-    app.route('/bff/iam_admin/v1/server-iam-login').post    (iam.iamAuthenticateAdmin,                  bffIAMAdmin);
-    app.route('/bff/iam_user/v1*').post                     (iam.iamAuthenticateUser,                   bffIAMUser);
-    app.route('/bff/iam_provider/v1*').post                 (iam.iamAuthenticateProvider,               bffIAMProvider);
+    app.route('/bff/app/v1/app-module*').get                    (bffApp);
+    app.route('/bff/app_data/v1*').all                          (iam.iamAuthenticateIdToken,                bffAppData);
+    app.route('/bff/app_signup/v1*').post                       (iam.iamAuthenticateIdTokenRegistration,    bffAppSignup);
+    app.route('/bff/app_access/v1*').all                        (iam.iamAuthenticateAccessToken,            bffAppAccess);
+    app.route('/bff/app_external/v1/app-module-function*').post (iam.iamAuthenticateExternal,               bffAppExternal);
+    app.route('/bff/admin/v1*').all                             (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
+    app.route('/bff/socket/v1*').get                            (iam.iamAuthenticateSocket,                 bffSocket);
+    app.route('/bff/iam_admin/v1/server-iam-login').post        (iam.iamAuthenticateAdmin,                  bffIAMAdmin);
+    app.route('/bff/iam_user/v1*').post                         (iam.iamAuthenticateUser,                   bffIAMUser);
+    app.route('/bff/iam_provider/v1*').post                     (iam.iamAuthenticateProvider,               bffIAMProvider);
     
     //app asset, common asset, info page, report and app
-    app.route('*').get                          (bffApp);
+    app.route('*').get                                          (bffApp);
     
     //ERROR LOGGING
     app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res, /**@type{function}*/next) => {
@@ -296,17 +299,15 @@ const serverUtilAppLine = () =>{
 
     return new Promise((resolve, reject)=>{
         try {
-            if (routesparameters.endpoint == 'APP' && routesparameters.method == 'GET'){
-                //App route for app asset, common asset, app info page, app report (using query) and app
-                const URI_query = routesparameters.route_path.startsWith('/app-reports')?routesparameters.url.substring(routesparameters.url.indexOf('?')):null;
-                const app_query = URI_query?new URLSearchParams(URI_query):null;
+            if (routesparameters.endpoint == 'APP' && routesparameters.method == 'GET' && !routesparameters.url.startsWith('/bff')){
+                //App route for app asset, common asset, app info page and app
                 resolve(app_common.commonApp({  
                                                 ip:routesparameters.ip, 
                                                 host:routesparameters.host, 
                                                 user_agent:routesparameters.user_agent, 
                                                 accept_language:routesparameters.accept_language, 
                                                 url:routesparameters.url, 
-                                                query:app_query, 
+                                                query:null, 
                                                 res:routesparameters.res})
                         .catch(()=>ServerError({data:null, methods:null})));
             }
@@ -513,16 +514,46 @@ const serverUtilAppLine = () =>{
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
-                    //server functions for app_data, app_external or app_access
-                    case route({url:`/bff/app_data/v1/app-function/${resource_id_string}`, method:'POST', 
+                    //server module of type REPORT for APP
+                    case route({url:`/bff/admin/v1/app-module-report/${resource_id_string}`, method:'GET', required:true}):
+                    case route({url:`/bff/app/v1/app-module-report/${resource_id_string}`, method:'GET', required:true}):{
+                        resolve(app_common.commonModuleGet({
+                                                            app_id: routesparameters.app_id, 
+                                                            type:'REPORT',
+                                                            resource_id:resource_id_get_string() ?? '', //module id
+                                                            data:new URLSearchParams(routesparameters.url.substring(routesparameters.url.indexOf('?')+1)), 
+                                                            user_agent:routesparameters.user_agent,
+                                                            ip:routesparameters.ip,
+                                                            locale:app_query?.get('lang_code') ??'',
+                                                            endpoint:routesparameters.endpoint,
+                                                            res:routesparameters.res}));
+                        break;
+                    }
+                    //server module of type MODULE for APP
+                    case route({url:`/bff/app/v1/app-module-module/${resource_id_string}`, method:'GET'}):{
+                        resolve(app_common.commonModuleGet({
+                                                            app_id: routesparameters.app_id, 
+                                                            type:'MODULE',
+                                                            resource_id:resource_id_get_string() ?? '', //module id
+                                                            data:null, 
+                                                            user_agent:routesparameters.user_agent,
+                                                            ip:routesparameters.ip,
+                                                            locale:app_query?.get('lang_code') ??'',
+                                                            endpoint:routesparameters.endpoint,
+                                                            res:routesparameters.res}));
+                        break;
+                    }                
+                    //server module of type FUNCTION  for app_data, app_external or app_access
+                    case route({url:`/bff/app_data/v1/app-module-function/${resource_id_string}`, method:'POST', 
                                 resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_DATA'}):
-                    case route({url:`/bff/app_external/v1/app-function/${resource_id_string}`, method:'POST', 
+                    case route({url:`/bff/app_external/v1/app-module-function/${resource_id_string}`, method:'POST', 
                                 validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_EXTERNAL'}):
-                    case route({url:`/bff/app_access/v1/app-function/${resource_id_string}`, method:'POST', 
+                    case route({url:`/bff/app_access/v1/app-module-function/${resource_id_string}`, method:'POST', 
                         resource_validate_app_data_app_id: routesparameters.body.data_app_id, resource_validate_type:'id', resource_validate_value:routesparameters.body.user_account_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_ACCESS'}):{
                         //call COMMON_APP_ID function if requested or call the function registered on the app
-                        resolve(app_common.commonFunctionRun({
+                        resolve(app_common.commonModuleRun({
                                                 app_id:(routesparameters.body.data_app_id == COMMON_APP_ID)?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id, 
+                                                type:'FUNCTION',
                                                 resource_id:resource_id_get_string() ?? '', 
                                                 data:routesparameters.body, 
                                                 user_agent:routesparameters.user_agent,

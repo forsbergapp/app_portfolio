@@ -281,7 +281,7 @@ const component = async props => {
                                 [];
     
     if (props.data.new_resource==false){
-        const master_metadata = await props.methods.commonFFB({   path:`/app-function/${props.data.master_resource}`, 
+        const master_metadata = await props.methods.commonFFB({   path:`/app-module-function/${props.data.master_resource}`, 
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_DATA', body:{data_app_id:props.data.app_id}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
@@ -294,7 +294,7 @@ const component = async props => {
         }
     }
     if (props.data.detail_resource){
-        const detail_metadata = await props.methods.commonFFB({   path:`/app-function/${props.data.detail_resource}`, 
+        const detail_metadata = await props.methods.commonFFB({   path:`/app-module-function/${props.data.detail_resource}`, 
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_DATA', body:{data_app_id:props.data.app_id}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
