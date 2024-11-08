@@ -371,6 +371,7 @@
  *              'DB_FILE'| 
  *              'APP'|
  *              'APP_MODULE'|
+ *              'APP_MODULE_QUEUE'|
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
  *              'IAM_APP_TOKEN'|
@@ -395,7 +396,7 @@
 /** 
  * DB FILE server_db_file_db_record
  * @typedef {{  NAME:server_db_file_db_name, 
- *              TYPE:'JSON'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
+ *              TYPE:'JSON'|'JSON_TABLE'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
  *              LOCK:number, 
  *              TRANSACTION_ID:number|null, 
  *              TRANSACTION_CONTENT: object|string|null, 
@@ -435,6 +436,20 @@
  *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'',
  *              COMMON_PATH:string,
  *              COMMON_DESCRIPTION:string}} server_db_file_app_module
+ */
+/**
+ * DB FILE server_db_file_app_module_queue
+ * @typedef {{  ID:number,
+ *              APP_ID: number,
+ *              TYPE:'REPORT',
+ *              NAME: string,
+ *              PARAMETERS:*,
+ *              USER:string,
+ *              START:string|null,
+ *              END:string|null,
+ *              PROGRESS:string|null,
+ *              STATUS:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
+ *              MESSAGE:string|null}} server_db_file_app_module_queue
  */
 
 /**
