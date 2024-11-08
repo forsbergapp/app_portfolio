@@ -10,7 +10,8 @@
  */
 
 /**
- * @import {server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
+ * @import {server_db_file_result_fileFsRead,
+ *          server_server_error,server_server_res, server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
  */
 
 const fs = await import('node:fs');
@@ -29,14 +30,15 @@ const FILE_DB = [   {NAME:'CONFIG_SERVER',                      TYPE:'JSON',    
                     {NAME:'CONFIG_IAM_USERAGENT',               TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_useragent.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE',                TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE_SERVICES',       TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice_services.json', CACHE_CONTENT:null},
-                    {NAME:'APP',                                TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app.json', CACHE_CONTENT:null},
-                    {NAME:'APP_MODULE',                         TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module.json', CACHE_CONTENT:null},
-                    {NAME:'APP_PARAMETER',                      TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_parameter.json', CACHE_CONTENT:null},
-                    {NAME:'APP_SECRET',                         TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_secret.json', CACHE_CONTENT:null},
+                    {NAME:'APP',                                TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app.json', CACHE_CONTENT:null},
+                    {NAME:'APP_MODULE',                         TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module.json', CACHE_CONTENT:null},
+                    {NAME:'APP_MODULE_QUEUE',                   TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module_queue.json', CACHE_CONTENT:null},
+                    {NAME:'APP_PARAMETER',                      TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_parameter.json', CACHE_CONTENT:null},
+                    {NAME:'APP_SECRET',                         TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_secret.json', CACHE_CONTENT:null},
                     {NAME:'DB_FILE',                            TYPE:'BINARY',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'sqlite.db'},
                     {NAME:'IAM_APP_TOKEN',                      TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_token.log'},
-                    {NAME:'IAM_USER',                           TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_USER_LOGIN',                     TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user_login.log'},
+                    {NAME:'IAM_USER',                           TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_USER_LOGIN',                     TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user_login.log'},
                     {NAME:'LOG_APP_INFO',                       TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_INFO_'},
                     {NAME:'LOG_APP_ERROR',                      TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_ERROR_'},
                     {NAME:'LOG_DB_INFO',                        TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'DB_INFO_'},
@@ -369,5 +371,119 @@ const fileFsDeleteAdmin = async file => {
     const filepath = process.cwd() + fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
     await fs.promises.rm(filepath).catch((error=>{throw error;}));
 };
+/**
+ * Gets a record or records in a JSON_TABLE
+ * for given app id and if resource id if specified
+ * JSON_TABLE should have column id as primary key using this function
+ * @function
+ * @param {number} app_id
+ * @param {server_db_file_db_name} table
+ * @param {number|null} resource_id
+ * @param {server_server_res} res
+ * @returns {*}
+ */
+const fileDBGet = (app_id, table, resource_id, res) =>{
+    const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == app_id);
+    if (records.length>0)
+        return records;
+    else{
+        res.statusCode=404;
+        return [];
+    }
+};
+/**
+ * Creates a record in a JSON_TABLE
+ * and returns the record
+ * @function
+ * @param {number} app_id
+ * @param {server_db_file_db_name} table
+ * @param {*} data
+ * @param {server_server_res} res
+ * @returns {Promise.<*>}
+ */
+const fileDBPost = async (app_id, table, data, res) =>{
+    if (!app_id){
+        res.statusCode = 400;
+        throw '⛔';    
+    }
+    else{
+        /**@type{server_db_file_result_fileFsRead} */
+        const file = await fileFsRead(table, true);
+        await fileFsWrite(table, file.transaction_id, file.file_content.concat(data))
+        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+        return data;
+    }
+};
+/**
+ * Updates a record in a JSON_TABLE
+ * with given values in given columns in data parameter
+ * and returns updated record
+ * JSON_TABLE should have column id as primary key using this function
+ * @function
+ * @param {number} app_id
+ * @param {server_db_file_db_name} table
+ * @param {number} resource_id
+ * @param {*} data
+ * @param {server_server_res} res
+ * @returns {Promise<*>}
+ */
+const fileDBUpdate = async (app_id, table, resource_id, data, res) =>{
+    /**@type{server_db_file_result_fileFsRead} */
+    const file = await fileFsRead(table, true);
+    let record;
+    let update = false;
+    let count = 0;
+    for (const index in file.file_content)
+        if (file.file_content[index].id==resource_id && file.file_content[index].app_id == app_id){
+            count++;
+            for (const key of Object.entries(data)){
+                update = true;
+                file.file_content[index][key[0]] = key[1];
+            }
+            record = file.file_content[index];
+        }
+    if (update && record){
+        await fileFsWrite(table, file.transaction_id, file.file_content)
+        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+        return {affectedRows:count};
+    }
+    else{
+        res.statusCode = 404;
+        throw '⛔';
+    }
+};
+/**
+ * Deletes a record in a JSON_TABLE
+ * for given resource id and app id
+ * JSON_TABLE should have column id as primary key using this function
+ * @function
+ * @param {number} app_id
+ * @param {server_db_file_db_name} table
+ * @param {number} resource_id
+ * @param {server_server_res} res
+ * @returns {Promise<{affectedRows:number}>}
+ */
+const fileDBDelete = async (app_id, table, resource_id, res) =>{
+    /**@type{server_db_file_result_fileFsRead} */
+    const file = await fileFsRead(table, true);
+    if (file.file_content.filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == app_id).length>0){
+        await fileFsWrite(  table, 
+                            file.transaction_id, 
+                            file.file_content
+                            .filter((/**@type{*}*/row)=>row.id!=resource_id && row.app_id != app_id))
+        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+        return {affectedRows:   file.file_content
+                                .filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == app_id).length -
+                                file.file_content
+                                .filter((/**@type{*}*/row)=>row.id!=resource_id && row.app_id != app_id).length
+                };
+    }
+    else{
+        res.statusCode = 404;
+        throw '⛔';    
+    }
+};
 
-export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin};
+
+export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
+        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete};
