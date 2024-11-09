@@ -712,8 +712,8 @@ const dbInstallGetFiles = async (install_type) =>{
              * @returns {string}
              */
             const value_set = key_name =>{
-                if (resource.app_update_secret && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0].toUpperCase() in secret_key)[0])
-                    switch (resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0].toUpperCase() in secret_key)[0][key_name[0].toUpperCase()]){
+                if (resource.app_update_secret && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0] in secret_key)[0])
+                    switch (resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0] in secret_key)[0][key_name[0]]){
                         case 'DATE_NOW':
                             return Date.now().toString();
                         case 'DATE_NOW_PADSTART_16':
@@ -742,11 +742,11 @@ const dbInstallGetFiles = async (install_type) =>{
             //loop json_data keys
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
-                if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
+                if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0] in secret_key).length>0)
                     await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                         resource.app_registry_update_app_id,
                                                         {   
-                                                            parameter_name:     key[0].toLowerCase(),
+                                                            parameter_name:     key[0],
                                                             parameter_value:    value
                                                         },null);
                 resource.json_data[key[0]] = value;
@@ -758,7 +758,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                         resource.app_registry_update_app_id,
                                                         {   
-                                                            parameter_name:     Object.keys(key)[0].toLowerCase(),
+                                                            parameter_name:     Object.keys(key)[0],
                                                             parameter_value:    value
                                                         },null);
                 }

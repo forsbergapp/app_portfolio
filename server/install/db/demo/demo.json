@@ -297,7 +297,7 @@
                                                                 "bank_account_secret":"<BANK_ACCOUNT_SECRET/>",
                                                                 "bank_account_vpa":"<VPA/>"
                                                             },
-                                                "app_update_secret":[{"BANK_ACCOUNT_NUMBER":"DATE_NOW_PADSTART_16"}, {"BANK_ACCOUNT_SECRET":"SECRET"}, {"BANK_ACCOUNT_VPA":"UUID"}],
+                                                "app_update_secret":[{"bank_account_number":"DATE_NOW_PADSTART_16"}, {"bank_account_secret":"SECRET"}, {"bank_account_vpa":"UUID"}],
                                                 "resource_detail_data":[{"app_data_resource_detail_id": "<DETAIL_ID/>",
                                                                          "user_account_id": "<USER_ACCOUNT_ID/>",
                                                                          "user_account_app_id": 5,
@@ -354,7 +354,7 @@
                                             "merchant_vpa":"<DEMO_VPA/>"
                                         },
                             "app_registry_update_app_id":6,
-                            "app_update_secret":[{"MERCHANT_ID":"DATE_NOW"}, {"MERCHANT_NAME":""}, {"merchant_url":""}, {"merchant_api_url_payment_request_create":""}, {"merchant_api_url_payment_request_get_status":""}, {"merchant_api_secret":"SECRET"}, {"merchant_public_key":"PUBLIC_KEY"}, {"merchant_private_key":"PRIVATE_KEY"}, {"merchant_vpa":"UUID"}],
+                            "app_update_secret":[{"merchant_id":"DATE_NOW"}, {"merchant_name":""}, {"merchant_url":""}, {"merchant_api_url_payment_request_create":""}, {"merchant_api_url_payment_request_get_status":""}, {"merchant_api_secret":"SECRET"}, {"merchant_public_key":"PUBLIC_KEY"}, {"merchant_private_key":"PRIVATE_KEY"}, {"merchant_vpa":"UUID"}],
                             "resource_detail":[{"app_data_resource_master_id":"<MASTER_ID/>",
                                                 "app_data_entity_resource_id":5000,
                                                 "user_account_id"                                 : "<USER_ACCOUNT_ID/>",
@@ -366,7 +366,7 @@
                                                                 "bank_account_secret":"<BANK_ACCOUNT_SECRET/>",
                                                                 "bank_account_vpa":"<VPA/>"
                                                             },
-                                                "app_update_secret":[{"BANK_ACCOUNT_NUMBER":"DATE_NOW_PADSTART_16"}, {"BANK_ACCOUNT_SECRET":"SECRET"}, {"BANK_ACCOUNT_VPA":"UUID"}],
+                                                "app_update_secret":[{"bank_account_number":"DATE_NOW_PADSTART_16"}, {"bank_account_secret":"SECRET"}, {"bank_account_vpa":"UUID"}],
                                                 "resource_detail_data":[{"app_data_resource_detail_id": "<DETAIL_ID/>",
                                                                          "user_account_id": "<USER_ACCOUNT_ID/>",
                                                                          "user_account_app_id": 5,
@@ -414,7 +414,7 @@
                                                                 "bank_account_secret":"<BANK_ACCOUNT_SECRET/>",
                                                                 "bank_account_vpa":"<VPA/>"
                                                             },
-                                                "app_update_secret":[{"BANK_ACCOUNT_NUMBER":"DATE_NOW_PADSTART_16"}, {"BANK_ACCOUNT_SECRET":"SECRET"}, {"BANK_ACCOUNT_VPA":"UUID"}],
+                                                "app_update_secret":[{"bank_account_number":"DATE_NOW_PADSTART_16"}, {"bank_account_secret":"SECRET"}, {"bank_account_vpa":"UUID"}],
                                                 "resource_detail_data":[{"app_data_resource_detail_id": "<DETAIL_ID/>",
                                                                          "user_account_id": "<USER_ACCOUNT_ID/>",
                                                                          "user_account_app_id": 5,

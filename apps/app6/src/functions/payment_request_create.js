@@ -71,7 +71,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know
         const body_encrypted = {id:     /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).MERCHANT_ID,
+                                        commonRegistryAppSecret(app_id).merchant_id,
                                 message:securityPublicEncrypt(
                                             /**@ts-ignore*/
                                             commonRegistryAppSecret(app_id).merchant_public_key, 
@@ -107,7 +107,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                         payment_request_message:'Check your bank app to authorize this payment',
                         status:                 body_decrypted.status,
                         merchant_name:          /**@ts-ignore */
-                                                commonRegistryAppSecret(app_id).MERCHANT_NAME,
+                                                commonRegistryAppSecret(app_id).merchant_name,
                         amount:			        body_decrypted.amount,
                         currency_symbol:        currency.currency_symbol,
                         countdown:              ''

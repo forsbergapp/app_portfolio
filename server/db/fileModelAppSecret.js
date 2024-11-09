@@ -36,14 +36,14 @@ const post = async (app_id, resource_id, data, res) => update(app_id, resource_i
  * @returns {Promise.<{affectedRows:number}>}
  */
 const update = async (app_id, resource_id, data, res) => {
-    if  (data.parameter_name=='APP_ID'){
+    if  (data.parameter_name=='app_id'){
         if(res)
             res.statusCode = 400;
         throw '⛔';    
     }
     else{
         //updates only one key in the record
-        return fileDBUpdate(app_id, 'APP_SECRET', null, resource_id, {[data.parameter_name.toLowerCase()]:data.parameter_value}, res);
+        return fileDBUpdate(app_id, 'APP_SECRET', null, resource_id, {[data.parameter_name]:data.parameter_value}, res);
     }
 };
 
