@@ -24,10 +24,10 @@ const template = props => `
                                 ${props.apps.map(row=>
                                     `<div class='common_dialogue_apps_app_link_row common_row'>
                                         <div class='common_dialogue_apps_app_link_col'>
-                                            <div data-url='${row.PROTOCOL}${row.SUBDOMAIN}.${row.HOST}:${row.PORT}'class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='background-image:url("${row.LOGO}");'></div>
+                                            <div data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}'class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='background-image:url("${row.logo}");'></div>
                                         </div>
                                         <div class='common_dialogue_apps_app_link_col'>
-                                            <div class='common_dialogue_apps_app_name'>${row.APP_NAME_TRANSLATION}</div>
+                                            <div class='common_dialogue_apps_app_name'>${row.app_name_translation}</div>
                                         </div>  
                                     </div>`
                                 ).join('')
@@ -84,7 +84,7 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
 
     const apps = await props.methods.commonFFB({path:'/app-common/', method:'GET', authorization_type:'APP_DATA'})
-                        .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.APP_ID != props.data.app_id));
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
 
 
     return {

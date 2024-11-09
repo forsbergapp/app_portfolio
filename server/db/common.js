@@ -232,13 +232,13 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 			pagination = true;
 			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
 			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).COMMON_APP_LIMIT_RECORDS.VALUE);
+				parameters.limit = 	serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).common_app_limit_records.value);
 		}
 		//manage limit records
 		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
 			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).COMMON_APP_LIMIT_RECORDS.VALUE)}};
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).common_app_limit_records.value)}};
 		}
 
 		dbSQL(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, dba)

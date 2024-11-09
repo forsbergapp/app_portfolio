@@ -44,7 +44,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
             //exp, iat, tokentimestamp on token
             try {
                 /**@ts-ignore*/
-                return ((jwt.verify(token, commonRegistryAppSecret(app_id).COMMON_APP_ACCESS_SECRET).exp ?? 0) * 1000) - Date.now()<0;    
+                return ((jwt.verify(token, commonRegistryAppSecret(app_id).common_app_access_secret).exp ?? 0) * 1000) - Date.now()<0;    
             } catch (error) {
                 return true;
             }
@@ -169,7 +169,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
         const username = userpass.split(':')[0];
         const password = userpass.split(':')[1];
         if (fileCache('IAM_USER').length==0)
-            return iamUserCreate({
+            return iamUserCreate(app_id,{
                             username:username, 
                             password:password, 
                             type: 'ADMIN', 
@@ -278,7 +278,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                    .then(()=>{
                                        //send email UNVERIFIED
                                        commonMailSend(  app_id, 
-                                                       commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_UNVERIFIED, 
+                                                       commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_unverified, 
                                                        ip, 
                                                        user_agent,
                                                        accept_language,
@@ -581,7 +581,7 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
                //send email for local users only
                //send email SIGNUP
                commonMailSend(  app_id, 
-                               commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_SIGNUP, 
+                               commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_signup, 
                                ip, 
                                user_agent,
                                accept_language,
@@ -797,7 +797,7 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
                                 .then(()=>{
                                     //send email PASSWORD_RESET
                                     commonMailSend(  app_id, 
-                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_PASSWORD_RESET, 
+                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_password_reset, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -918,7 +918,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     commonMailSend(  app_id, 
-                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).SERVICE_MAIL_TYPE_CHANGE_EMAIL, 
+                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_change_email, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -1112,7 +1112,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const id_token_decoded = jwt.verify(id_token, commonRegistryAppSecret(app_id_host).COMMON_APP_ID_SECRET);
+            const id_token_decoded = jwt.verify(id_token, commonRegistryAppSecret(app_id_host).common_app_id_secret);
             /**@type{server_iam_app_token_record}*/
             const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '').then(result=>result.filter((/**@type{server_iam_app_token_record}*/row)=> 
                                                                                 row.id == app_id_host && row.ip == ip && row.token == id_token
@@ -1176,7 +1176,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, commonRegistryAppSecret(app_id_host).COMMON_APP_ACCESS_SECRET ?? '');
+                            const access_token_decoded = jwt.verify(access_token, commonRegistryAppSecret(app_id_host).common_app_access_secret ?? '');
                             const user_id = serverUtilNumberValue(iamUtilDecode(iam).get('user_id'));
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
@@ -1416,8 +1416,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
         return false;
     else{
         const app_secret = await commonRegistryAppSecretFile(app_id);
-        const CLIENT_ID = app_secret.COMMON_CLIENT_ID;
-        const CLIENT_SECRET = app_secret.COMMON_CLIENT_SECRET;
+        const CLIENT_ID = app_secret.common_client_id;
+        const CLIENT_SECRET = app_secret.common_client_secret;
         const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
         if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
             return true;
@@ -1443,7 +1443,7 @@ const iamAuthenticateResource = parameters =>  {
             return false;
         else{
             /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], commonRegistryAppSecret(parameters.app_id).COMMON_APP_ACCESS_SECRET);
+            const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], commonRegistryAppSecret(parameters.app_id).common_app_access_secret);
             return  parameters.resource_id!=null && 
                     access_token_decoded[parameters.claim_key] == parameters.resource_id &&
                     access_token_decoded.app_id == parameters.app_id &&
@@ -1503,14 +1503,14 @@ const iamAuthenticateResource = parameters =>  {
     switch (endpoint){
         //APP ID Token
         case 'APP_ID':{
-            secret = commonRegistryAppSecret(app_id).COMMON_APP_ID_SECRET;
-            expiresin = commonRegistryAppSecret(app_id).COMMON_APP_ID_EXPIRE;
+            secret = commonRegistryAppSecret(app_id).common_app_id_secret;
+            expiresin = commonRegistryAppSecret(app_id).common_app_id_expire;
             break;
         }
         //USER Access token
         case 'APP_ACCESS':{
-            secret = commonRegistryAppSecret(app_id).COMMON_APP_ACCESS_SECRET;
-            expiresin = commonRegistryAppSecret(app_id).COMMON_APP_ACCESS_EXPIRE;
+            secret = commonRegistryAppSecret(app_id).common_app_access_secret;
+            expiresin = commonRegistryAppSecret(app_id).common_app_access_expire;
             break;
         }
         //Admin Access token
@@ -1521,7 +1521,7 @@ const iamAuthenticateResource = parameters =>  {
         }
         //APP custom token
         case 'APP_CUSTOM':{
-            secret = commonRegistryAppSecret(app_id).COMMON_APP_ID_SECRET;
+            secret = commonRegistryAppSecret(app_id).common_app_id_secret;
             expiresin = app_custom_expire ?? '';
             break;
         }
@@ -1566,49 +1566,29 @@ const iamUserLoginGet = async (app_id, query) => {const rows = await fileFsReadL
 /**
  * User create
  * @function
+ * @param {number} app_id
  * @param {server_db_file_iam_user_new} data
  * @param {server_server_res} res
  * @returns {Promise.<{id:number}>}
  */
-const iamUserCreate = async (data, res) => {
-    //check required attributes
-    if (!data.username || !data.password ||
-        //check not allowed attributes when creating a user
-        data.id||data.user_level ||data.verification_code||data.status||data.created||data.modified){
-        res.statusCode = 400;
-        throw '⛔';    
-    }
-    else{
-        /**@type{import('./db/file.js')} */
-        const {fileFsWrite, fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
-        /**@type{import('./security.js')} */
-        const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+const iamUserCreate = async (app_id, data, res) => {
 
-        /**@type{server_db_file_result_fileFsRead} */
-        const file = await fileFsRead('IAM_USER', true);
-        const id = Date.now();
-        /**@type{server_db_file_iam_user_new} */
-        const user =     {
-                            id:id,
-                            username:data.username, 
-                            //save encrypted password
-                            password:await securityPasswordCreate(data.password), 
-                            type: data.type, 
-                            bio:data.bio, 
-                            private:data.private, 
-                            email:data.email, 
-                            email_unverified:data.email_unverified, 
-                            avatar:data.avatar,
-                            user_level:null, 
-                            verification_code: null, 
-                            status:null, 
-                            created:new Date().toISOString(), 
-                            modified:new Date().toISOString()
-                        };
-        await fileFsWrite('IAM_USER', file.transaction_id, file.file_content.concat(user))
-        .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        return {id:id}; 
-    }
+    /**@type{import('./db/fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    
+    return fileModelIamUser.post(app_id, {
+                                    username:data.username, 
+                                    password:data.password, 
+                                    type: data.type, 
+                                    bio:data.bio, 
+                                    private:data.private, 
+                                    email:data.email, 
+                                    email_unverified:data.email_unverified, 
+                                    avatar:data.avatar,
+                                    user_level:null, 
+                                    verification_code: null, 
+                                    status:null
+                                }, res);
 };
 /**
  * User get
@@ -1619,23 +1599,22 @@ const iamUserCreate = async (data, res) => {
  * @returns {Promise.<server_db_file_iam_user_get>}
  */
 const iamUserGet = async (app_id, id, res) =>{
+    /**@type{import('./db/fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     /**@type{server_db_file_iam_user_get}*/
-    const user = fileCache('IAM_USER')
-                .map((/**@type{server_db_file_iam_user} */row)=>{return { id: row.id,
-                                    username: row.username,
-                                    password: row.password,
-                                    type: row.type,
-                                    bio: row.bio,
-                                    private: row.private,
-                                    email: row.email,
-                                    email_unverified: row.email_unverified,
-                                    avatar: row.avatar,
-                                    user_level: row.user_level,
-                                    status: row.status,
-                                    created: row.created,
-                                    modified: row.modified};})
-                .filter((/**@type{server_db_file_iam_user_get}*/row)=>row.id==id)[0];
-                
+    const user = fileModelIamUser.get(app_id, id, res).map((/**@type{server_db_file_iam_user} */row)=>{return { id: row.id,
+        username: row.username,
+        password: row.password,
+        type: row.type,
+        bio: row.bio,
+        private: row.private,
+        email: row.email,
+        email_unverified: row.email_unverified,
+        avatar: row.avatar,
+        user_level: row.user_level,
+        status: row.status,
+        created: row.created,
+        modified: row.modified};})[0];
     if (user)
         //add last login time
         return {...user, ...{last_logintime:await iamUserGetLastLogin(app_id, id)}};
@@ -1662,56 +1641,29 @@ const iamUserGetLastLogin = async (app_id, id) =>fileFsReadLog('IAM_USER_LOGIN',
 /**
  * User udpate
  * @function
+ * @param {number} app_id
  * @param {number} id
  * @param {server_db_file_iam_user_update} data
  * @param {server_server_res} res
  * @returns {Promise.<void>}
  */
 
-const iamUserUpdate = async (id, data, res) =>{
-    /**@type{import('./db/file.js')} */
-    const {fileFsWrite, fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
-    /**@type{import('./security.js')} */
-    const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+const iamUserUpdate = async (app_id, id, data, res) =>{
+    
+    /**@type{import('./db/fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    
+    fileModelIamUser.update(app_id, id, {username:data.username, 
+                                        //save encrypted password
+                                        password:data.password, 
+                                        password_new:data.password_new, 
+                                        bio:data.bio, 
+                                        private:data.private, 
+                                        email:data.email, 
+                                        email_unverified:data.email_unverified, 
+                                        avatar:data.avatar}, res);
 
-    /**@type{server_db_file_result_fileFsRead} */
-    const file = await fileFsRead('IAM_USER', true);
-
-    /**@type{server_db_file_iam_user_get}*/
-    const user = fileCache('IAM_USER')
-                .filter((/**@type{server_db_file_iam_user_get}*/row)=>row.id==id)[0];
-    if (user){
-        if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
-            for (const index in file.file_content)
-                if (file.file_content[index].id==id)
-                    file.file_content[index] =  {
-                                                    id:id,
-                                                    username:data.username, 
-                                                    //save encrypted password
-                                                    password:await securityPasswordCreate(data.password_new ?? data.password), 
-                                                    type: user.type, 
-                                                    bio:data.bio, 
-                                                    private:data.private, 
-                                                    email:data.email, 
-                                                    email_unverified:data.email_unverified, 
-                                                    avatar:data.avatar,
-                                                    user_level:user.user_level, 
-                                                    status:user.status, 
-                                                    created:user.created, 
-                                                    modified:new Date().toISOString()
-                                                };
-            await fileFsWrite('IAM_USER', file.transaction_id, file.file_content)
-            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        }
-        else{
-            res.statusCode = 400;
-            throw '⛔';        
-        }
-    }
-    else{
-        res.statusCode = 404;
-        throw '⛔';    
-    }
+    
 };
 export{ iamUtilDecode,
         iamUtilTokenExpired,
