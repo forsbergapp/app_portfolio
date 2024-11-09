@@ -435,7 +435,7 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) 
     let update = false;
     let count = 0;
     for (const index in file.file_content)
-        if (file.file_content[index].id==resource_id || file.file_content[index].app_id == (data_app_id ?? file.file_content[index].app_id)){
+        if ((file.file_content[index].id==resource_id && resource_id!=null)|| (file.file_content[index].app_id == data_app_id && data_app_id != null)){
             count++;
             //update columns requested
             for (const key of Object.entries(data)){
@@ -469,7 +469,7 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) 
 const fileDBDelete = async (app_id, table, resource_id, data_app_id, res) =>{
     /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead(table, true);
-    if (file.file_content.filter((/**@type{*}*/row)=>row.id==resource_id || row.app_id == (data_app_id ?? row.app_id)).length>0){
+    if (file.file_content.filter((/**@type{*}*/row)=>(row.id==resource_id && resource_id!=null)|| (row.app_id == data_app_id && data_app_id != null)).length>0){
         await fileFsWrite(  table, 
                             file.transaction_id, 
                             file.file_content
