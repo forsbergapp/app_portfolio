@@ -134,27 +134,29 @@ REST API is implemented following ISO20022 with additional resource authenticati
 <pre><code>1.Middleware	compression and JSON maximum size setting
 </code></pre>
 <p>2.Routes	
-path	                            method	middleware                                  controller          comment
-*	                                all	                                                bffInit	            logs EventSource and response when closed,
+path	                                    method	middleware                                  controller      comment
+/bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
+used for shared libraries and open report url
+*	                                        all	                                                bffInit	        logs EventSource and response when closed,
 authenticates request and will end request if not passing controls,
 sets headers,
 returns disallow for robots.txt and empty favicon.ico
-*	                                get	                                                bffStart	        redirects naked domain, http to https if enabled
+*	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled
 and to admin subdomain if first time,
 responds to SSL verification if enabled
-/bff/app_data/v1*                   all     iam.iamAuthenticateIdToken                  bffAppData
-/bff/app_signup/v1*                 post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
-/bff/app_access/v1*                 all     iam.iamAuthenticateAccessToken              bffAppAccess
-/bff/app_external/v1/app-function*  post    iam.iamAuthenticateExternal                 bffAppExternal
-/bff/admin/v1*                      all     iam.iamAuthenticateAdminAccessToken         bffAdmin
-/bff/socket/v1*                     get     iam.iamAuthenticateSocket                   bffSocket
-/bff/iam_admin/v1*                  post    iam.iamAuthenticateAdmin                    bffIAMAdmin
-/bff/iam_user/v1*                   post    iam.iamAuthenticateUser                     bffIAMUser
-/bff/iam_provider/v1*               post    iam.iamAuthenticateProvider                 bffIAMProvider
-*	                                get	                                                bffApp		        app asset
+/bff/app_data/v1*                           all     iam.iamAuthenticateIdToken                  bffAppData
+/bff/app_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
+/bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
+/bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
+/bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
+/bff/socket/v1*                             get     iam.iamAuthenticateSocket                   bffSocket
+/bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
+/bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
+/bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
+*	                                        get	                                                bffApp		    app asset
 common asset
 info page
-report and app</p>
+app</p>
 <p>3.Middleware error logging</p>
 </div>
 
@@ -199,7 +201,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line146">line 146</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line148">line 148</a>
     </div></div></dd>
     
 
@@ -637,7 +639,7 @@ report and app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line222">line 222</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line225">line 225</a>
     </div></div></dd>
     
 
@@ -745,7 +747,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1101">line 1101</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1138">line 1138</a>
     </div></div></dd>
     
 
