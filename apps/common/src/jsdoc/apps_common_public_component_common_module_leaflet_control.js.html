@@ -12,6 +12,7 @@
 
 /**
  * @import {CommonModuleRegional, CommonAppEvent, CommonModuleLeafletEvent, CommonModuleLeafletMapLayer, CommonGlobal, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @typedef {CommonModuleCommon['commonImportmap']} commonImportmap
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  * @typedef {CommonModuleCommon['commonMicroserviceGeolocationPlace']} commonMicroserviceGeolocationPlace
@@ -66,6 +67,7 @@ const template = props =>` &lt;div id='common_module_leaflet_control_search' cla
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event_doubleclick:function,
+ *                      commonImportMap:commonImportmap,
  *                      commonComponentRender:commonComponentRender,
  *                      commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
  *                      commonElementRow:commonElementRow,
@@ -286,7 +288,7 @@ const component = async props => {
      * @returns {Promise.&lt;{value:string, text:string}[]>}
      */
     const map_country = async lang_code =>  [{value:'', text:'...'}].concat(await props.methods.commonFFB({
-                                                                                                            path:'/app-function/COMMON_COUNTRY', 
+                                                                                                            path:'/app-module-function/COMMON_COUNTRY', 
                                                                                                             query:`lang_code=${lang_code}`, 
                                                                                                             method:'POST', 
                                                                                                             authorization_type:'APP_DATA', 
@@ -496,9 +498,8 @@ const component = async props => {
      * @returns {Promise.&lt;string|null>}
      */
     const map_update = async (parameters) => {
-        const path_regional ='regional';
         /**@type {CommonModuleRegional} */
-        const {getTimezone} = await import(path_regional);
+        const {getTimezone} = await import(props.methods.commonImportMap('regional'));
         return new Promise((resolve)=> {
             /**
              * Map update GPS

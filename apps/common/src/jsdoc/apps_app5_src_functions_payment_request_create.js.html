@@ -109,7 +109,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                                         name:           '',
                                                                         ip:             ip,
                                                                         /**@ts-ignore */
-                                                                        scope:          'APP_CUSTOM'}, commonRegistryAppSecret(app_id).APP_PAYMENT_REQUEST_EXPIRE);
+                                                                        scope:          'APP_CUSTOM'}, commonRegistryAppSecret(app_id).app_payment_request_expire);
     
                 const payment_request_id = securityUUIDCreate();
                 const data_payment_request = {

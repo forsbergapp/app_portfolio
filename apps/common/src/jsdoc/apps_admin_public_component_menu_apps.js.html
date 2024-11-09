@@ -25,35 +25,35 @@ const template = props => ` &lt;div id='menu_apps_content_widget1' class='widget
                                 &lt;div id='menu_apps_title' class='common_icon'>&lt;/div>
                                 &lt;div id='menu_apps' class='common_list_scrollbar'>
                                     &lt;div id='menu_apps_row_title' class='menu_apps_row'>
-                                        &lt;div id='menu_apps_col_title1' data-column='ID' class='menu_apps_col list_title'>ID&lt;/div>
-                                        &lt;div id='menu_apps_col_title2' data-column='NAME' class='menu_apps_col list_title'>NAME&lt;/div>
-                                        &lt;div id='menu_apps_col_title3' data-column='SUBDOMAIN' class='menu_apps_col list_title'>SUBDOMAIN&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='PATH' class='menu_apps_col list_title'>PATH&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='LOGO' class='menu_apps_col list_title'>LOGO&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='SHOWPARAM' class='menu_apps_col list_title'>SHOWPARAM&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='MANIFEST' class='menu_apps_col list_title'>MANIFEST&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='JS' class='menu_apps_col list_title'>JS&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='CSS' class='menu_apps_col list_title'>CSS&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='CSS_REPORT' class='menu_apps_col list_title'>CSS_REPORT&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='FAVICON_32x32' class='menu_apps_col list_title'>FAVICON_32x32&lt;/div>
-                                        &lt;div id='menu_apps_col_title4' data-column='FAVICON_192x192' class='menu_apps_col list_title'>FAVICON_192x192&lt;/div>
-                                        &lt;div id='menu_apps_col_title5' data-column='STATUS' class='menu_apps_col list_title'>STATUS&lt;/div>
+                                        &lt;div id='menu_apps_col_title1' data-column='id' class='menu_apps_col list_title'>ID&lt;/div>
+                                        &lt;div id='menu_apps_col_title2' data-column='name' class='menu_apps_col list_title'>NAME&lt;/div>
+                                        &lt;div id='menu_apps_col_title3' data-column='subdomain' class='menu_apps_col list_title'>subdomain&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='path' class='menu_apps_col list_title'>PATH&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='logo' class='menu_apps_col list_title'>LOGO&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='showparam' class='menu_apps_col list_title'>SHOWPARAM&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='manifest' class='menu_apps_col list_title'>MANIFEST&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='js' class='menu_apps_col list_title'>JS&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='css' class='menu_apps_col list_title'>CSS&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='css_reprot' class='menu_apps_col list_title'>CSS_REPORT&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='favicon_32x32' class='menu_apps_col list_title'>FAVICON_32x32&lt;/div>
+                                        &lt;div id='menu_apps_col_title4' data-column='favicon_192x192' class='menu_apps_col list_title'>FAVICON_192x192&lt;/div>
+                                        &lt;div id='menu_apps_col_title5' data-column='status' class='menu_apps_col list_title'>STATUS&lt;/div>
                                     &lt;/div>
                                     ${props.apps.map(app=>
-                                        `&lt;div data-changed-record='0' data-app_id = '${app.ID}' class='menu_apps_row common_row' >
-                                            &lt;div class='menu_apps_col list_readonly' data-column='ID' >${app.ID}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='NAME' contentEditable='true' >${app.NAME}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='SUBDOMAIN' contentEditable='true' >${app.SUBDOMAIN}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='PATH' contentEditable='true' >${app.PATH}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='LOGO' contentEditable='true' >${app.LOGO}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='SHOWPARAM' contentEditable='true' >${app.SHOWPARAM}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='MANIFEST' contentEditable='true' >${app.MANIFEST}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='JS' contentEditable='true' >${app.JS}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='CSS' contentEditable='true' >${app.CSS}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='CSS_REPORT' contentEditable='true' >${app.CSS_REPORT}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='FAVICON_32x32' contentEditable='true' >${app.FAVICON_32x32}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='FAVICON_192x192' contentEditable='true' >${app.FAVICON_192x192}&lt;/div>
-                                            &lt;div class='menu_apps_col common_input list_edit' data-column='STATUS' contentEditable='true' >${app.STATUS}&lt;/div>
+                                        `&lt;div data-changed-record='0' data-app_id = '${app.id}' class='menu_apps_row common_row' >
+                                            &lt;div class='menu_apps_col list_readonly' data-column='id' >${app.id}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='name' contentEditable='true' >${app.name}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='subdomain' contentEditable='true' >${app.subdomain}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='path' contentEditable='true' >${app.path}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='logo' contentEditable='true' >${app.logo}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='showparam' contentEditable='true' >${app.showparam}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='manifest' contentEditable='true' >${app.manifest}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='js' contentEditable='true' >${app.js}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='css' contentEditable='true' >${app.css}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='css_report' contentEditable='true' >${app.css_report}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='favicon_32x32' contentEditable='true' >${app.favicon_32x32}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='favicon_192x192' contentEditable='true' >${app.favicon_192x192}&lt;/div>
+                                            &lt;div class='menu_apps_col common_input list_edit' data-column='status' contentEditable='true' >${app.status}&lt;/div>
                                         &lt;/div>`
                                     ).join('')}
                                 &lt;/div>

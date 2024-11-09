@@ -814,7 +814,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                 else{
                     import(`file://${process.cwd()}/server/db/common.js`)
                     .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(app_id, query.get('lang_code') ?? 'en', res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonRecordNotFound(app_id, query?.get('lang_code') ?? 'en', res).then((/**@type{string}*/message)=>reject(message));
                     });
                 }
             })

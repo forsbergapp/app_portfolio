@@ -155,7 +155,7 @@ const method = async props => {
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
-                                                    path:'/app-function/COMMON_LOCALE', 
+                                                    path:'/app-module-function/COMMON_LOCALE', 
                                                     query:`lang_code=${props.data.user_locale}`, 
                                                     method:'POST', authorization_type:'APP_DATA',
                                                     body:{data_app_id : props.data.common_app_id}

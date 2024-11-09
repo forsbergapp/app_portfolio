@@ -16,7 +16,7 @@
 /**@type{COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-const commonPath ='common';
+const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
@@ -390,21 +390,21 @@ const appSecureCommonButtonSave = async (item) => {
                 await appSecureCommonRecordUpdate(  'app',
                                                     record,
                                                     item,
-                                                    record.querySelector('[data-column=\'ID\']').textContent,
+                                                    record.querySelector('[data-column=\'id\']').textContent,
                                                     {
-                                                        ID:             record.querySelector('[data-column=\'ID\']').textContent,
-                                                        NAME:           record.querySelector('[data-column=\'NAME\']').textContent,
-                                                        SUBDOMAIN:      record.querySelector('[data-column=\'SUBDOMAIN\']').textContent,
-                                                        PATH:           record.querySelector('[data-column=\'PATH\']').textContent,
-                                                        LOGO:           record.querySelector('[data-column=\'LOGO\']').textContent,
-                                                        SHOWPARAM:      record.querySelector('[data-column=\'SHOWPARAM\']').textContent,
-                                                        MANIFEST:       record.querySelector('[data-column=\'MANIFEST\']').textContent,
-                                                        JS:             record.querySelector('[data-column=\'JS\']').textContent,
-                                                        CSS:            record.querySelector('[data-column=\'CSS\']').textContent,
-                                                        CSS_REPORT:     record.querySelector('[data-column=\'CSS_REPORT\']').textContent,
-                                                        FAVICON_32x32:  record.querySelector('[data-column=\'FAVICON_32x32\']').textContent,
-                                                        FAVICON_192x192:record.querySelector('[data-column=\'FAVICON_192x192\']').textContent,
-                                                        STATUS:         record.querySelector('[data-column=\'STATUS\']').textContent
+                                                        id:             record.querySelector('[data-column=\'id\']').textContent,
+                                                        name:           record.querySelector('[data-column=\'name\']').textContent,
+                                                        subdomain:      record.querySelector('[data-column=\'subdomain\']').textContent,
+                                                        path:           record.querySelector('[data-column=\'path\']').textContent,
+                                                        logo:           record.querySelector('[data-column=\'logo\']').textContent,
+                                                        showparam:      record.querySelector('[data-column=\'showparam\']').textContent,
+                                                        manifest:       record.querySelector('[data-column=\'manifest\']').textContent,
+                                                        js:             record.querySelector('[data-column=\'js\']').textContent,
+                                                        css:            record.querySelector('[data-column=\'css\']').textContent,
+                                                        css_report:     record.querySelector('[data-column=\'css_report\']').textContent,
+                                                        favicon_32x32:  record.querySelector('[data-column=\'favicon_32x32\']').textContent,
+                                                        favicon_192x192:record.querySelector('[data-column=\'favicon_192x192\']').textContent,
+                                                        status:         record.querySelector('[data-column=\'status\']').textContent
                                                     });
             }
             
@@ -414,36 +414,36 @@ const appSecureCommonButtonSave = async (item) => {
                     await appSecureCommonRecordUpdate(  'app_parameter',
                                                         record,
                                                         item,
-                                                        record.querySelector('[data-column=\'APP_ID\']').textContent,
-                                                        {   parameter_name:     record.querySelector('[data-column=\'NAME\']').textContent,
-                                                            parameter_value:    record.querySelector('[data-column=\'VALUE\']').textContent,
-                                                            parameter_comment:  record.querySelector('[data-column=\'COMMENT\']').textContent
+                                                        record.querySelector('[data-column=\'app_id\']').textContent,
+                                                        {   parameter_name:     record.querySelector('[data-column=\'name\']').textContent,
+                                                            parameter_value:    record.querySelector('[data-column=\'value\']').textContent,
+                                                            parameter_comment:  record.querySelector('[data-column=\'comment\']').textContent
                                                         });
                 }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_secret.list_nav_selected_tab'))
-                //save changes in menu_apps_parameters
+                //save changes in menu_apps_secret
                 for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
                     await appSecureCommonRecordUpdate(  'app_secret',
                                                         record,
                                                         item,
-                                                        record.querySelector('[data-column=\'APP_ID\']').textContent,
-                                                        {   parameter_name:     record.querySelector('[data-column=\'NAME\']').textContent,
-                                                            parameter_value:    record.querySelector('[data-column=\'VALUE\']').textContent
+                                                        record.querySelector('[data-column=\'app_id\']').textContent,
+                                                        {   parameter_name:     record.querySelector('[data-column=\'name\']').textContent,
+                                                            parameter_value:    record.querySelector('[data-column=\'value\']').textContent
                                                         });
                 }
             if (COMMON_DOCUMENT.querySelector('#menu_apps_detail_module.list_nav_selected_tab'))
-                //save changes in menu_apps_parameters
+                //save changes in menu_apps_module
                 for (const record of COMMON_DOCUMENT.querySelectorAll('.menu_apps_detail_row[data-changed-record=\'1\']')){
                     await appSecureCommonRecordUpdate(  'app_module',
                                                         record,
                                                         item,
-                                                        record.querySelector('[data-column=\'APP_ID\']').textContent,
-                                                        {   APP_ID:             record.querySelector('[data-column=\'APP_ID\']').textContent,
-                                                            COMMON_TYPE:        record.querySelector('[data-column=\'COMMON_TYPE\']').textContent,
-                                                            COMMON_NAME:        record.querySelector('[data-column=\'COMMON_NAME\']').textContent,
-                                                            COMMON_ROLE:        record.querySelector('[data-column=\'COMMON_ROLE\']').textContent,
-                                                            COMMON_PATH:        record.querySelector('[data-column=\'COMMON_PATH\']').textContent,
-                                                            COMMON_DESCRIPTION: record.querySelector('[data-column=\'COMMON_DESCRIPTION\']').textContent
+                                                        record.querySelector('[data-column=\'id\']').textContent,
+                                                        {   app_id:             record.querySelector('[data-column=\'app_id\']').textContent,
+                                                            common_type:        record.querySelector('[data-column=\'common_type\']').textContent,
+                                                            common_name:        record.querySelector('[data-column=\'common_name\']').textContent,
+                                                            common_role:        record.querySelector('[data-column=\'common_role\']').textContent,
+                                                            common_path:        record.querySelector('[data-column=\'common_path\']').textContent,
+                                                            common_description: record.querySelector('[data-column=\'common_description\']').textContent
                                                         });
                 }
             break;
