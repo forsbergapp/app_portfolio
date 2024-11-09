@@ -130,10 +130,10 @@ const configDefault = async () => {
 
     //generate hash for app secrets
     config_obj[10][1].map((/**@type{server_db_file_app_secret}*/row)=>{
-        row.COMMON_CLIENT_ID = securitySecretCreate();
-        row.COMMON_CLIENT_SECRET = securitySecretCreate();
-        row.COMMON_APP_ID_SECRET = securitySecretCreate();
-        row.COMMON_APP_ACCESS_SECRET = securitySecretCreate();
+        row.common_client_id = securitySecretCreate();
+        row.common_client_secret = securitySecretCreate();
+        row.common_app_id_secret = securitySecretCreate();
+        row.common_app_access_secret = securitySecretCreate();
     });        
     //set paths in microservice config
     /**@type{microservice_config} */

@@ -13,7 +13,7 @@ const template = async props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <meta charset='UTF-8'>
-                                <link rel='stylesheet' type='text/css' href='${props.config.CSS_REPORT}'/>
+                                <link rel='stylesheet' type='text/css' href='${props.config.css_report}'/>
                                 <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
                                 <!--Default font
                                 Noto Sans + Noto Sans Mono

@@ -379,15 +379,17 @@ const fileFsDeleteAdmin = async file => {
  * @param {number} app_id
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
- * @param {server_server_res} res
+ * @param {number|null} data_app_id
+ * @param {server_server_res|null} res
  * @returns {*}
  */
-const fileDBGet = (app_id, table, resource_id, res) =>{
-    const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == app_id);
+const fileDBGet = (app_id, table, resource_id, data_app_id, res=null) =>{
+    const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
     if (records.length>0)
         return records;
     else{
-        res.statusCode=404;
+        if (res)
+            res.statusCode=404;
         return [];
     }
 };
@@ -399,7 +401,7 @@ const fileDBGet = (app_id, table, resource_id, res) =>{
  * @param {server_db_file_db_name} table
  * @param {*} data
  * @param {server_server_res} res
- * @returns {Promise.<*>}
+ * @returns {Promise.<void>}
  */
 const fileDBPost = async (app_id, table, data, res) =>{
     if (!app_id){
@@ -411,7 +413,6 @@ const fileDBPost = async (app_id, table, data, res) =>{
         const file = await fileFsRead(table, true);
         await fileFsWrite(table, file.transaction_id, file.file_content.concat(data))
         .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        return data;
     }
 };
 /**
@@ -422,33 +423,35 @@ const fileDBPost = async (app_id, table, data, res) =>{
  * @function
  * @param {number} app_id
  * @param {server_db_file_db_name} table
- * @param {number} resource_id
+ * @param {number|null} resource_id
+ * @param {number|null} data_app_id
  * @param {*} data
- * @param {server_server_res} res
+ * @param {server_server_res|null} res
  * @returns {Promise<*>}
  */
-const fileDBUpdate = async (app_id, table, resource_id, data, res) =>{
+const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) =>{
     /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead(table, true);
-    let record;
     let update = false;
     let count = 0;
     for (const index in file.file_content)
-        if (file.file_content[index].id==resource_id && file.file_content[index].app_id == app_id){
+        if (file.file_content[index].id==resource_id && resource_id != null && 
+            file.file_content[index].app_id == (data_app_id ?? file.file_content[index].app_id)){
             count++;
+            //update columns requested
             for (const key of Object.entries(data)){
                 update = true;
                 file.file_content[index][key[0]] = key[1];
             }
-            record = file.file_content[index];
         }
-    if (update && record){
+    if (update){
         await fileFsWrite(table, file.transaction_id, file.file_content)
         .catch((/**@type{server_server_error}*/error)=>{throw error;});
         return {affectedRows:count};
     }
     else{
-        res.statusCode = 404;
+        if(res)
+            res.statusCode = 404;
         throw '⛔';
     }
 };
@@ -459,23 +462,29 @@ const fileDBUpdate = async (app_id, table, resource_id, data, res) =>{
  * @function
  * @param {number} app_id
  * @param {server_db_file_db_name} table
- * @param {number} resource_id
+ * @param {number|null} resource_id
+ * @param {number|null} data_app_id
  * @param {server_server_res} res
  * @returns {Promise<{affectedRows:number}>}
  */
-const fileDBDelete = async (app_id, table, resource_id, res) =>{
+const fileDBDelete = async (app_id, table, resource_id, data_app_id, res) =>{
     /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead(table, true);
-    if (file.file_content.filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == app_id).length>0){
+    //check required unique id column and optional app_id to validate record belongs to given app_id if logic requires this
+    if (file.file_content.filter((/**@type{*}*/row)=>row.id==resource_id && resource_id != null && 
+        row.app_id == (data_app_id ?? row.app_id)).length>0){
         await fileFsWrite(  table, 
                             file.transaction_id, 
                             file.file_content
-                            .filter((/**@type{*}*/row)=>row.id!=resource_id && row.app_id != app_id))
+                            //filter unique id
+                            .filter((/**@type{*}*/row)=>row.id!=resource_id))
         .catch((/**@type{server_server_error}*/error)=>{throw error;});
+        //should return 1 record deleted or wrong data is saved in file
         return {affectedRows:   file.file_content
-                                .filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == app_id).length -
+                                .filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == (data_app_id ?? row.app_id)).length -
                                 file.file_content
-                                .filter((/**@type{*}*/row)=>row.id!=resource_id && row.app_id != app_id).length
+                                //filter unique id
+                                .filter((/**@type{*}*/row)=>row.id!=resource_id).length
                 };
     }
     else{

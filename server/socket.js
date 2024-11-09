@@ -431,7 +431,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  const socketIntervalCheck = () => {
     //start interval if apps are started
     const app_id = serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0;
-    if (commonRegistryAppParameter(app_id).COMMON_APP_START.VALUE =='1'){
+    if (commonRegistryAppParameter(app_id).common_app_start.value =='1'){
         setInterval(() => {
             if (serverUtilNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
                 socketAdminSend(null, { client_id:null,
