@@ -68,19 +68,25 @@ const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[
  * Using race condition, pessmistic lock and database transaction pattern
  * @function
  * @param {server_db_file_db_name} file 
- * @param {object|string} filecontent
+ * @param {string} filepath
  * @returns {Promise.<number>}
  */
-const fileTransactionStart = async (file, filecontent)=>{
+const fileTransactionStart = async (file, filepath)=>{
+    const transaction = async ()=>{
+        const transaction_id = Date.now();
+        fileRecord(file).TRANSACTION_ID = transaction_id;
+        const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8').catch(()=>'');
+        //parse JSON_TABLE and JSON, others are binary or json log files
+        fileRecord(file).TRANSACTION_CONTENT = (fileRecord(file).TYPE=='JSON_TABLE' || fileRecord(file).TYPE=='JSON')?JSON.parse(file_content.toString()):file_content;
+        return transaction_id;
+    };
     return new Promise((resolve, reject)=>{
         if  (fileRecord(file).LOCK==0){
             fileRecord(file).LOCK = 1;
             //add 1ms wait so transaction_id will be guaranteed unique on a fast server
             setTimeout(()=>{
-                const transaction_id = Date.now();
-                fileRecord(file).TRANSACTION_ID = transaction_id;
-                fileRecord(file).TRANSACTION_CONTENT = filecontent;
-                resolve(transaction_id);}, 1);
+                resolve(transaction()); 
+                }, 1);
         }
         else{
             let tries = 0;
@@ -91,10 +97,7 @@ const fileTransactionStart = async (file, filecontent)=>{
                 else
                     if (fileRecord(file).LOCK==0){
                         fileRecord(file).LOCK = 1;
-                        const transaction_id = Date.now();
-                        fileRecord(file).TRANSACTION_ID = transaction_id;
-                        fileRecord(file).TRANSACTION_CONTENT = filecontent;
-                        resolve(transaction_id);
+                        resolve(transaction());
                     }
                     else
                         setTimeout(()=>{lock(), 1;});
@@ -219,15 +222,14 @@ const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH
  */
 const fileFsRead = async (file, lock=false) =>{
     const filepath = fileRecord(file).PATH + fileRecord(file).FILENAME;
-    const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');    
     if (lock){
-        const transaction_id = await fileTransactionStart(file, JSON.parse(fileBuffer.toString()));
-        return {   file_content:    JSON.parse(fileBuffer.toString()),
+        const transaction_id = await fileTransactionStart(file, filepath);
+        return {   file_content:    fileRecord(file).TRANSACTION_CONTENT,
                     lock:           lock,
                     transaction_id: transaction_id};
     }
     else{
-        return {   file_content:    JSON.parse(fileBuffer.toString()),
+        return {   file_content:    await fs.promises.readFile(process.cwd() + filepath, 'utf8').then((file)=>JSON.parse(file.toString())),
                     lock:           lock,
                     transaction_id: null};
     }
@@ -298,9 +300,7 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
  */
 const fileFsAppend = async (file, file_content, filesuffix = null) =>{
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
-    const old_file = await fs.promises.readFile(`${process.cwd()}${filepath}`, 'utf8')
-    .catch(()=>null);
-    const transaction_id = await fileTransactionStart(file, old_file ?? '');
+    const transaction_id = await fileTransactionStart(file, filepath);
     
     return await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
     .then(()=>{
@@ -435,8 +435,7 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) 
     let update = false;
     let count = 0;
     for (const index in file.file_content)
-        if (file.file_content[index].id==resource_id && resource_id != null && 
-            file.file_content[index].app_id == (data_app_id ?? file.file_content[index].app_id)){
+        if (file.file_content[index].id==resource_id || file.file_content[index].app_id == (data_app_id ?? file.file_content[index].app_id)){
             count++;
             //update columns requested
             for (const key of Object.entries(data)){
@@ -470,9 +469,7 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) 
 const fileDBDelete = async (app_id, table, resource_id, data_app_id, res) =>{
     /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead(table, true);
-    //check required unique id column and optional app_id to validate record belongs to given app_id if logic requires this
-    if (file.file_content.filter((/**@type{*}*/row)=>row.id==resource_id && resource_id != null && 
-        row.app_id == (data_app_id ?? row.app_id)).length>0){
+    if (file.file_content.filter((/**@type{*}*/row)=>row.id==resource_id || row.app_id == (data_app_id ?? row.app_id)).length>0){
         await fileFsWrite(  table, 
                             file.transaction_id, 
                             file.file_content
