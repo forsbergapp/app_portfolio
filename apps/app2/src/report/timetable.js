@@ -146,14 +146,14 @@ const timetable = async (timetable_parameters) => {
 	/**@type{import('../types.js').APP_PARAMETERS}*/
 	const parametersApp = commonRegistryAppParameter(timetable_parameters.app_id);
 	return await new Promise((resolve) => {
-		APP_REPORT_GLOBAL.app_copyright = parametersApp.APP_COPYRIGHT.VALUE;
+		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.VALUE;
 		
-		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.APP_REGIONAL_DEFAULT_CALENDAR_LANG.VALUE;
-		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.APP_REGIONAL_DEFAULT_LOCALE_EXT_PREFIX.VALUE;
-		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.APP_REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM.VALUE;
-		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.APP_REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR.VALUE;
-		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.APP_REGIONAL_DEFAULT_CALENDAR_TYPE_GREG.VALUE;
-		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.APP_REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM.VALUE;
+		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang.VALUE;
+		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.app_regional_default_locale_ext_prefix.VALUE;
+		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.app_regional_default_locale_ext_number_system.VALUE;
+		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.app_regional_default_locale_ext_calendar.VALUE;
+		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.app_regional_default_calendar_type_greg.VALUE;
+		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system.VALUE;
 		
 		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,

@@ -91,28 +91,16 @@
 /**
  * APP server_config_apps_with_db_columns
  * @typedef  {object} server_config_apps_with_db_columns
- * @property {number} APP_ID
- * @property {string} NAME
- * @property {string} APP_NAME_TRANSLATION
- * @property {string} SUBDOMAIN
- * @property {string} LOGO
- * @property {string} PROTOCOL
- * @property {string|null} HOST
- * @property {number|null} PORT
+ * @property {number} app_id
+ * @property {string} name
+ * @property {string} app_name_translation
+ * @property {string} subdomain
+ * @property {string} logo
+ * @property {string} protocol
+ * @property {string|null} host
+ * @property {number|null} port
  */
 
-/** 
- * APP server_apps_result_getAppsAdmin
- * @typedef  {object} server_apps_result_getAppsAdmin
- * @property {number} ID
- * @property {string} NAME
- * @property {string} SUBDOMAIN
- * @property {string} LOGO
- * @property {server_config_apps_status} STATUS
- * @property {string} PROTOCOL
- * @property {string|null} HOST
- * @property {number|null} PORT
- */
 
 /**
  * APP serverComponentLifecycle
@@ -159,7 +147,7 @@
  *               HTTPS_SSL_VERIFICATION:string,
  *               HTTPS_SSL_VERIFICATION_PATH:string,
  *               JSON_LIMIT:string,
- *               TEST_SUBDOMAIN:string,
+ *               TEST_subdomain:string,
  *               APP_LOG:string,
  *               APP_START:string,
  *               APP_COMMON_APP_ID:string,
@@ -414,114 +402,115 @@
 /**
  * DB FILE server_db_file_app
  * @typedef {{
- *              ID: number,
- *              NAME: string,
- *              SUBDOMAIN: string,
- *              PATH: string,
- *              LOGO:string,
- *              SHOWPARAM:number,
- *              MANIFEST: string,
- *              JS:string,
- *              CSS: string,
- *              CSS_REPORT: string,
- *              FAVICON_32x32:string,
- *              FAVICON_192x192:string,
- *              STATUS:'ONLINE'|'OFFLINE'}} server_db_file_app
+ *              id: number,
+ *              name: string,
+ *              subdomain: string,
+ *              path: string,
+ *              logo:string,
+ *              showparam:number,
+ *              manifest: string,
+ *              js:string,
+ *              css: string,
+ *              css_report: string,
+ *              favicon_32x32:string,
+ *              favicon_192x192:string,
+ *              status:'ONLINE'|'OFFLINE'}} server_db_file_app
  */
 /**
  * DB FILE server_db_file_app_module
- * @typedef {{  APP_ID: number,
- *              COMMON_TYPE: 'FUNCTION'|'MODULE'|'REPORT',
- *              COMMON_NAME:string,
- *              COMMON_ROLE:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'',
- *              COMMON_PATH:string,
- *              COMMON_DESCRIPTION:string}} server_db_file_app_module
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
+ *              common_name:string,
+ *              common_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'',
+ *              common_path:string,
+ *              common_description:string}} server_db_file_app_module
  */
 /**
  * DB FILE server_db_file_app_module_queue
- * @typedef {{  ID:number,
- *              APP_ID: number,
- *              TYPE:'REPORT',
- *              NAME: string,
- *              PARAMETERS:*,
- *              USER:string,
- *              START:string|null,
- *              END:string|null,
- *              PROGRESS:string|null,
- *              STATUS:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
- *              MESSAGE:string|null}} server_db_file_app_module_queue
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              type:'REPORT',
+ *              name: string,
+ *              parameters:*,
+ *              user:string,
+ *              start:string|null,
+ *              end:string|null,
+ *              progress:string|null,
+ *              status:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
+ *              message:string|null}} server_db_file_app_module_queue
  */
 
 /**
  * DB FILE server_db_file_app_parameter
  * apps should use their own types if adding new parameters
- * @typedef {{  APP_ID:                             number,
- *              APP_TEXT_EDIT:                      {VALUE:string, COMMENT:string},
- *              APP_COPYRIGHT:                      {VALUE:string, COMMENT:string},
- *              APP_EMAIL:                          {VALUE:string, COMMENT:string},
- *              APP_LINK_TITLE:                     {VALUE:string, COMMENT:string},
- *              APP_LINK_URL:                       {VALUE:string, COMMENT:string},
- *              COMMON_APP_START:                   {VALUE:string, COMMENT: string},
- *              COMMON_APP_LOG:                     {VALUE:string, COMMENT: string},
- *              COMMON_APP_CACHE_CONTROL:           {VALUE:string, COMMENT: string},
- *              COMMON_APP_CACHE_CONTROL_FONT:      {VALUE:string, COMMENT: string},
- *              COMMON_APP_FRAMEWORK:               {VALUE:string, COMMENT: string},
- *              COMMON_APP_FRAMEWORK_MESSAGES:      {VALUE:string, COMMENT: string},
- *              COMMON_APP_REST_API_VERSION:        {VALUE:string, COMMENT: string},
- *              COMMON_APP_LIMIT_RECORDS:           {VALUE:string, COMMENT: string},
- *              COMMON_INFO_LINK_POLICY_NAME:       {VALUE:string},
- *              COMMON_INFO_LINK_POLICY_URL:        {VALUE:string},
- *              COMMON_INFO_LINK_DISCLAIMER_NAME:   {VALUE:string},
- *              COMMON_INFO_LINK_DISCLAIMER_URL:    {VALUE:string},
- *              COMMON_INFO_LINK_TERMS_NAME:        {VALUE:string},
- *              COMMON_INFO_LINK_TERMS_URL:         {VALUE:string},
- *              COMMON_INFO_LINK_ABOUT_NAME:        {VALUE:string},
- *              COMMON_INFO_LINK_ABOUT_URL:         {VALUE:string},
- *              COMMON_IMAGE_FILE_ALLOWED_TYPE1:    {VALUE:string},
- *              COMMON_IMAGE_FILE_ALLOWED_TYPE2:    {VALUE:string},
- *              COMMON_IMAGE_FILE_ALLOWED_TYPE3:    {VALUE:string},
- *              COMMON_IMAGE_FILE_ALLOWED_TYPE4:    {VALUE:string},
- *              COMMON_IMAGE_FILE_ALLOWED_TYPE5:    {VALUE:string},
- *              COMMON_IMAGE_FILE_MAX_SIZE:         {VALUE:string},
- *              COMMON_IMAGE_FILE_MIME_TYPE:        {VALUE:string, COMMENT: string},
- *              COMMON_IMAGE_AVATAR_HEIGHT:         {VALUE:string, COMMENT: string},
- *              COMMON_IMAGE_AVATAR_WIDTH:          {VALUE:string, COMMENT: string}}} server_db_file_app_parameter
+ * @typedef {{  app_id:                             number,
+ *              app_text_edit:                      {value:string, comment:string},
+ *              app_coypright:                      {value:string, comment:string},
+ *              app_email:                          {value:string, comment:string},
+ *              app_link_title:                     {value:string, comment:string},
+ *              app_link_url:                       {value:string, comment:string},
+ *              common_app_start:                   {value:string, comment:string},
+ *              common_app_id:                      {value:string, comment:string},
+ *              common_app_cache_control:           {value:string, comment:string},
+ *              common_app_cache_control_font:      {value:string, comment:string},
+ *              common_app_framework:               {value:string, comment:string},
+ *              common_app_framework_messages:      {value:string, comment:string},
+ *              common_app_rest_api_version:        {value:string, comment:string},
+ *              common_app_limit_records:           {value:string, comment:string},
+ *              common_info_link_policy_name:       {value:string},
+ *              common_info_link_policy_url:        {value:string},
+ *              common_info_link_disclaimer_name:   {value:string},
+ *              common_info_link_disclaimer_url:    {value:string},
+ *              common_info_link_terms_name:        {value:string},
+ *              common_info_link_terms_url:         {value:string},
+ *              common_info_link_about_name:        {value:string},
+ *              common_info_link_about_url:         {value:string},
+ *              common_image_file_allowed_type1:    {value:string},
+ *              common_image_file_allowed_type2:    {value:string},
+ *              common_image_file_allowed_type3:    {value:string},
+ *              common_image_file_allowed_type4:    {value:string},
+ *              common_image_file_allowed_type5:    {value:string},
+ *              common_image_file_max_size:         {value:string},
+ *              common_image_file_mime_type:        {value:string, comment:string},
+ *              common_image_avatar_height:         {value:string, comment:string},
+ *              common_image_avatar_width:          {value:string, comment:string}}} server_db_file_app_parameter
  */
 
 /**
  * DB FILE server_db_file_app_parameter
  * apps should use their own types if adding new parameters
- * @typedef {{ APP_ID?:                             number,
- *             APP_TEXT_EDIT?:                      {VALUE:string, COMMENT:string},
- *             APP_COPYRIGHT?:                      {VALUE:string, COMMENT:string},
- *             APP_EMAIL?:                          {VALUE:string, COMMENT:string},
- *             APP_LINK_TITLE?:                     {VALUE:string, COMMENT:string},
- *             APP_LINK_URL?:                       {VALUE:string, COMMENT:string},
- *             COMMON_APP_START?:                   {VALUE:string, COMMENT: string},
- *             COMMON_APP_LOG?:                     {VALUE:string, COMMENT: string},
- *             COMMON_APP_CACHE_CONTROL:            {VALUE:string, COMMENT: string},
- *             COMMON_APP_CACHE_CONTROL_FONT:       {VALUE:string, COMMENT: string},
- *             COMMON_APP_FRAMEWORK:                {VALUE:string, COMMENT: string},
- *             COMMON_APP_FRAMEWORK_MESSAGES:       {VALUE:string, COMMENT: string},
- *             COMMON_APP_REST_API_VERSION:         {VALUE:string, COMMENT: string},
- *             COMMON_APP_LIMIT_RECORDS:            {VALUE:string, COMMENT: string},
- *             COMMON_INFO_LINK_POLICY_NAME:        {VALUE:string},
- *             COMMON_INFO_LINK_POLICY_URL:         {VALUE:string},
- *             COMMON_INFO_LINK_DISCLAIMER_NAME:    {VALUE:string},
- *             COMMON_INFO_LINK_DISCLAIMER_URL:     {VALUE:string},
- *             COMMON_INFO_LINK_TERMS_NAME:         {VALUE:string},
- *             COMMON_INFO_LINK_TERMS_URL:          {VALUE:string},
- *             COMMON_INFO_LINK_ABOUT_NAME:         {VALUE:string},
- *             COMMON_INFO_LINK_ABOUT_URL:          {VALUE:string},
- *             COMMON_IMAGE_FILE_ALLOWED_TYPE1:     {VALUE:string},
- *             COMMON_IMAGE_FILE_ALLOWED_TYPE2:     {VALUE:string},
- *             COMMON_IMAGE_FILE_ALLOWED_TYPE3:     {VALUE:string},
- *             COMMON_IMAGE_FILE_ALLOWED_TYPE4:     {VALUE:string},
- *             COMMON_IMAGE_FILE_ALLOWED_TYPE5:     {VALUE:string},
- *             COMMON_IMAGE_FILE_MAX_SIZE:          {VALUE:string},
- *             COMMON_IMAGE_FILE_MIME_TYPE:         {VALUE:string, COMMENT: string},
- *             COMMON_IMAGE_AVATAR_HEIGHT:          {VALUE:string, COMMENT: string},
- *             COMMON_IMAGE_AVATAR_WIDTH:           {VALUE:string, COMMENT: string}}} server_db_file_app_parameter_common
+ * @typedef {{ app_id?:                             number,
+ *             app_text_edit?:                      {value:string, comment:string},
+ *             app_copyright?:                      {value:string, comment:string},
+ *             app_email?:                          {value:string, comment:string},
+ *             app_link_title?:                     {value:string, comment:string},
+ *             app_link_url?:                       {value:string, comment:string},
+ *             common_app_start?:                   {value:string, comment:string},
+ *             common_app_log?:                     {value:string, comment:string},
+ *             common_app_cache_control:            {value:string, comment:string},
+ *             common_app_cache_control_font:       {value:string, comment:string},
+ *             common_app_framework:                {value:string, comment:string},
+ *             common_app_framework_messages:       {value:string, comment:string},
+ *             common_app_rest_api_version:         {value:string, comment:string},
+ *             common_app_limit_records:            {value:string, comment:string},
+ *             common_info_link_policy_name:        {value:string},
+ *             common_info_link_policy_url:         {value:string},
+ *             common_info_link_disclaimer_name:    {value:string},
+ *             common_info_link_disclaimer_url:     {value:string},
+ *             common_info_link_terms_name:         {value:string},
+ *             common_info_link_terms_url:          {value:string},
+ *             common_info_link_about_name:         {value:string},
+ *             common_info_link_about_url:          {value:string},
+ *             common_image_file_allowed_type1:     {value:string},
+ *             common_image_file_allowed_type2:     {value:string},
+ *             common_image_file_allowed_type3:     {value:string},
+ *             common_image_file_allowed_type4:     {value:string},
+ *             common_image_file_allowed_type5:     {value:string},
+ *             common_image_file_max_size:          {value:string},
+ *             common_image_file_mime_type:         {value:string, comment:string},
+ *             common_image_avatar_height:          {value:string, comment:string},
+ *             common_image_avatar_width:           {value:string, comment:string}}} server_db_file_app_parameter_common
  */
 
 /**
@@ -529,34 +518,34 @@
  * apps should use their own types if adding new secrets
  * SERVICE_DB* not used by admin app
  * SERVICE_MAIL* only used by admin app
- * @typedef {{  APP_ID:number,
- *              SERVICE_DB_DB1_APP_USER: string,
- *              SERVICE_DB_DB1_APP_PASSWORD: string,
- *              SERVICE_DB_DB2_APP_USER: string,
- *              SERVICE_DB_DB2_APP_PASSWORD: string,
- *              SERVICE_DB_DB3_APP_USER: string,
- *              SERVICE_DB_DB3_APP_PASSWORD: string,
- *              SERVICE_DB_DB4_APP_USER: string,
- *              SERVICE_DB_DB4_APP_PASSWORD: string,
- *              SERVICE_MAIL_HOST: string,
- *              SERVICE_MAIL_PORT: string,
- *              SERVICE_MAIL_SECURE: string,
- *              SERVICE_MAIL_USERNAME: string,
- *              SERVICE_MAIL_PASSWORD: string,
- *              SERVICE_MAIL_TYPE_SIGNUP: string,
- *              SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED: string,
- *              SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET: string,
- *              SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL: string,
- *              SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME: string,
- *              COMMON_CLIENT_ID: string, 
- *              COMMON_CLIENT_SECRET:string, 
- *              COMMON_APP_ID_SECRET:string, 
- *              COMMON_APP_ID_EXPIRE:string, 
- *              COMMON_APP_ACCESS_SECRET:string, 
- *              COMMON_APP_ACCESS_EXPIRE:string}} server_db_file_app_secret
+ * @typedef {{  app_id:number,
+ *              service_db_db1_app_user: string,
+ *              service_db_db1_app_password: string,
+ *              service_db_db2_app_user: string,
+ *              service_db_db2_app_password: string,
+ *              service_db_db3_app_user: string,
+ *              service_db_db3_app_password: string,
+ *              service_db_db4_app_user: string,
+ *              service_db_db4_app_password: string,
+ *              service_mail_host: string,
+ *              service_mail_port: string,
+ *              service_mail_secure: string,
+ *              service_mail_username: string,
+ *              service_mail_password: string,
+ *              service_mail_type_signup: string,
+ *              service_mail_type_signup_from_name: string,
+ *              service_mail_type_unverified: string,
+ *              service_mail_type_unverified_from_name: string,
+ *              service_mail_type_password_reset: string,
+ *              service_mail_type_password_reset_from_name: string,
+ *              service_mail_type_change_email: string,
+ *              service_mail_type_change_email_from_name: string,
+ *              common_client_id: string, 
+ *              common_client_secret:string, 
+ *              common_app_id_secret:string, 
+ *              common_app_id_expire:string, 
+ *              common_app_access_secret:string, 
+ *              common_app_access_expire:string}} server_db_file_app_secret
  */
 /** 
  * DB FILE server_iam_app_token_record
@@ -1441,19 +1430,6 @@
  * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps
  * @typedef {{  app_id:number,
  *              date_created:string}} server_db_sql_result_user_account_app_getUserAccountApps
- */
-
-/**
- * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry
- * @typedef {{  app_id:number,
- *              APP_ID:number,
- *              NAME:string,
- *              PROTOCOL:string,
- *              SUBDOMAIN:string,
- *              HOST:string|null,
- *              PORT:number|null,
- *              LOGO:string,
- *              date_created:string}} server_db_sql_result_user_account_app_getUserAccountApps_with_app_registry
  */
 
 /**

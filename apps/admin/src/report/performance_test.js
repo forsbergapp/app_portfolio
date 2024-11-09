@@ -407,7 +407,7 @@ const component = async props => {
     const report = new Benchmark(test_function, {
                                                     concurrency: props.data.concurrency,
                                                     requests: props.data.requests,
-                                                    name:commonRegistryAppModule(common_app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).COMMON_NAME
+                                                    name:commonRegistryAppModule(common_app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
                                                     }).run();
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=old;

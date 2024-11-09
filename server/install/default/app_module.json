@@ -1,226 +1,254 @@
 [
     {
-        "APP_ID": 0,
-        "COMMON_TYPE": "REPORT",
-        "COMMON_NAME": "PERFORMANCE_TEST",
-        "COMMON_ROLE": "ADMIN",
-        "COMMON_PATH": "/apps/admin/src/report/performance.js",
-        "COMMON_DESCRIPTION": "Performs performance test and displays result"
+        "id":1,
+        "app_id": 0,
+        "common_type": "REPORT",
+        "common_name": "PERFORMANCE_TEST",
+        "common_role": "ADMIN",
+        "common_path": "/apps/admin/src/report/performance.js",
+        "common_description": "Performs performance test and displays result"
     },
     {
-        "APP_ID": 0,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "COMMON_COUNTRY",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/common/src/functions/common_country.js",
-        "COMMON_DESCRIPTION": "Get countries for given locale"
+        "id":2,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_COUNTRY",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/common/src/functions/common_country.js",
+        "common_description": "Get countries for given locale"
     },
     {
-        "APP_ID": 0,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "COMMON_LOCALE",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/common/src/functions/common_locale.js",
-        "COMMON_DESCRIPTION": "Get locales for given locale"
+        "id":3,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_LOCALE",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/common/src/functions/common_locale.js",
+        "common_description": "Get locales for given locale"
     },
     {
-        "APP_ID": 2,
-        "COMMON_TYPE": "REPORT",
-        "COMMON_NAME": "TIMETABLE",
-        "COMMON_ROLE": "APP",
-        "COMMON_PATH": "/apps/app2/src/report/timetable.js",
-        "COMMON_DESCRIPTION": "Timetable day, month and year"
+        "id":4,
+        "app_id": 2,
+        "common_type": "REPORT",
+        "common_name": "TIMETABLE",
+        "common_role": "APP",
+        "common_path": "/apps/app2/src/report/timetable.js",
+        "common_description": "Timetable day, month and year"
     },
     {
-        "APP_ID": 2,
-        "COMMON_TYPE": "MODULE",
-        "COMMON_NAME": "MODULE_LIB_TIMETABLE",
-        "COMMON_ROLE": "APP",
-        "COMMON_PATH": "/apps/app2/src/modules/module_lib_timetable.js",
-        "COMMON_DESCRIPTION": "Timetable module"
+        "id":5,
+        "app_id": 2,
+        "common_type": "MODULE",
+        "common_name": "MODULE_LIB_TIMETABLE",
+        "common_role": "APP",
+        "common_path": "/apps/app2/src/modules/module_lib_timetable.js",
+        "common_description": "Timetable module"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "ACCOUNT_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app5/src/functions/account_metadata.js",
-        "COMMON_DESCRIPTION": "ACCOUNT metadata"
+        "id":6,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "ACCOUNT_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app5/src/functions/account_metadata.js",
+        "common_description": "ACCOUNT metadata"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "CUSTOMER_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app5/src/functions/customer_metadata.js",
-        "COMMON_DESCRIPTION": "CUSTOMER metadata"
+        "id":7,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "CUSTOMER_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app5/src/functions/customer_metadata.js",
+        "common_description": "CUSTOMER metadata"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "TRANSACTION_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app5/src/functions/transaction_metadata.js",
-        "COMMON_DESCRIPTION": "TRANSACTION metadata"
+        "id":8,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "TRANSACTION_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app5/src/functions/transaction_metadata.js",
+        "common_description": "TRANSACTION metadata"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "ACCOUNT_CREATE",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/account_create.js",
-        "COMMON_DESCRIPTION": "ACCOUNT create"
+        "id":9,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "ACCOUNT_CREATE",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/account_create.js",
+        "common_description": "ACCOUNT create"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "ACCOUNT_GET",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/account_get.js",
-        "COMMON_DESCRIPTION": "ACCOUNT get"
+        "id":10,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "ACCOUNT_GET",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/account_get.js",
+        "common_description": "ACCOUNT get"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "ACCOUNT_STATEMENT",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/account_statement.js",
-        "COMMON_DESCRIPTION": "ACCOUNT get statement"
+        "id":11,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "ACCOUNT_STATEMENT",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/account_statement.js",
+        "common_description": "ACCOUNT get statement"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "ACCOUNT_TRANSACTIONS",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/account_transactions.js",
-        "COMMON_DESCRIPTION": "ACCOUNT get transactions"
+        "id":12,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "ACCOUNT_TRANSACTIONS",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/account_transactions.js",
+        "common_description": "ACCOUNT get transactions"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "CUSTOMER_CREATE",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/customer_create.js",
-        "COMMON_DESCRIPTION": "CUSTOMER create"
+        "id":13,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "CUSTOMER_CREATE",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/customer_create.js",
+        "common_description": "CUSTOMER create"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "CUSTOMER_GET",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/customer_get.js",
-        "COMMON_DESCRIPTION": "CUSTOMER get"
+        "id":14,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "CUSTOMER_GET",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/customer_get.js",
+        "common_description": "CUSTOMER get"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_UPDATE",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/payment_request_update.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST update"
+        "id":15,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_UPDATE",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/payment_request_update.js",
+        "common_description": "PAYMENT REQUEST update"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_CREATE",
-        "COMMON_ROLE": "APP_EXTERNAL",
-        "COMMON_PATH": "/apps/app5/src/functions/payment_request_create.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST create"
+        "id":16,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_CREATE",
+        "common_role": "APP_EXTERNAL",
+        "common_path": "/apps/app5/src/functions/payment_request_create.js",
+        "common_description": "PAYMENT REQUEST create"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_GET_STATUS",
-        "COMMON_ROLE": "APP_EXTERNAL",
-        "COMMON_PATH": "/apps/app5/src/functions/payment_request_get_status.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST get status"
+        "id":17,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_GET_STATUS",
+        "common_role": "APP_EXTERNAL",
+        "common_path": "/apps/app5/src/functions/payment_request_get_status.js",
+        "common_description": "PAYMENT REQUEST get status"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_GET",
-        "COMMON_ROLE": "APP_ACCESS",
-        "COMMON_PATH": "/apps/app5/src/functions/payment_request_get.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST get"
+        "id":18,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_GET",
+        "common_role": "APP_ACCESS",
+        "common_path": "/apps/app5/src/functions/payment_request_get.js",
+        "common_description": "PAYMENT REQUEST get"
     },
     {
-        "APP_ID": 5,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app5/src/functions/payment_request_metadata.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST metadata"
+        "id":19,
+        "app_id": 5,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app5/src/functions/payment_request_metadata.js",
+        "common_description": "PAYMENT REQUEST metadata"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PRODUCT_GET",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/product_get.js",
-        "COMMON_DESCRIPTION": "PRODUCT get"
+        "id":20,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PRODUCT_GET",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/product_get.js",
+        "common_description": "PRODUCT get"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PRODUCT_LOCATION_GET",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/product_location_get.js",
-        "COMMON_DESCRIPTION": "PRODUCT location get"
+        "id":21,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PRODUCT_LOCATION_GET",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/product_location_get.js",
+        "common_description": "PRODUCT location get"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PRODUCT_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/product_metadata.js",
-        "COMMON_DESCRIPTION": "PRODUCT metadata"
+        "id":22,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PRODUCT_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/product_metadata.js",
+        "common_description": "PRODUCT metadata"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PRODUCT_VARIANT_LOCATION_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/product_variant_location_metadata.js",
-        "COMMON_DESCRIPTION": "PRODUCT variant location metadata"
+        "id":23,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PRODUCT_VARIANT_LOCATION_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/product_variant_location_metadata.js",
+        "common_description": "PRODUCT variant location metadata"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/payment_metadata.js",
-        "COMMON_DESCRIPTION": "PAYMENT metadata"
+        "id":24,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/payment_metadata.js",
+        "common_description": "PAYMENT metadata"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_METADATA",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/payment_request_metadata.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST metadata"
+        "id":25,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_METADATA",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/payment_request_metadata.js",
+        "common_description": "PAYMENT REQUEST metadata"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_CREATE",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/payment_request_create.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST create"
+        "id":26,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_CREATE",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/payment_request_create.js",
+        "common_description": "PAYMENT REQUEST create"
     },
     {
-        "APP_ID": 6,
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "PAYMENT_REQUEST_GET_STATUS",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app6/src/functions/payment_request_get_status.js",
-        "COMMON_DESCRIPTION": "PAYMENT REQUEST get status"
+        "id":27,
+        "app_id": 6,
+        "common_type": "FUNCTION",
+        "common_name": "PAYMENT_REQUEST_GET_STATUS",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app6/src/functions/payment_request_get_status.js",
+        "common_description": "PAYMENT REQUEST get status"
     },
     {
-        "APP_ID": 7, 
-        "COMMON_TYPE": "FUNCTION",
-        "COMMON_NAME": "CUBE_SOLVE",
-        "COMMON_ROLE": "APP_DATA",
-        "COMMON_PATH": "/apps/app7/src/functions/solve.js",
-        "COMMON_DESCRIPTION": "Cube solve"
+        "id":28,
+        "app_id": 7, 
+        "common_type": "FUNCTION",
+        "common_name": "CUBE_SOLVE",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/app7/src/functions/solve.js",
+        "common_description": "Cube solve"
     }
 ]

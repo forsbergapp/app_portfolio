@@ -23,7 +23,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL_PAYMENT_REQUEST_GET_STATUS;
+    const url = commonRegistryAppSecret(app_id).merchant_api_url_payment_request_get_status;
    
     /** 
      * @type {{ api_secret:             string,
@@ -31,7 +31,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
      *          origin:                 string}}
      */
     const body = {	api_secret:     /**@ts-ignore */
-                                    commonRegistryAppSecret(app_id).MERCHANT_API_SECRET,
+                                    commonRegistryAppSecret(app_id).merchant_api_secret,
                     payment_request_id: data.payment_request_id,
                     origin:         res.req.protocol + '://' + res.req.hostname
     };
@@ -41,7 +41,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                                     commonRegistryAppSecret(app_id).MERCHANT_ID,
                             message:securityPublicEncrypt(
                                         /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).MERCHANT_PUBLIC_KEY, 
+                                        commonRegistryAppSecret(app_id).merchant_public_key, 
                                         JSON.stringify(body))};
     
     const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
@@ -55,7 +55,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
          */
         const body_decrypted = JSON.parse(securityPrivateDecrypt(
                                                 /**@ts-ignore */
-                                                commonRegistryAppSecret(app_id).MERCHANT_PRIVATE_KEY, 
+                                                commonRegistryAppSecret(app_id).merchant_private_key, 
                                                 result_commonBFE.rows[0].message));
 
         return [{   

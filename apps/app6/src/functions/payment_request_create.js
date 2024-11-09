@@ -41,7 +41,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).MERCHANT_API_URL_PAYMENT_REQUEST_CREATE;
+    const url = commonRegistryAppSecret(app_id).merchant_api_url_payment_request_create;
     const currency = await dbModelAppDataResourceMaster.get(app_id, null, 
                             new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=CURRENCY`),
                             true).then(result=>JSON.parse(result[0].json_data));
@@ -58,10 +58,10 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         *          origin:         string}}
         */
         const body = {	api_secret:     /**@ts-ignore*/
-                                        commonRegistryAppSecret(app_id).MERCHANT_API_SECRET,
+                                        commonRegistryAppSecret(app_id).merchant_api_secret,
                         reference:      data.reference.substring(0,30),
                         payeeid:        /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).MERCHANT_VPA, 
+                                        commonRegistryAppSecret(app_id).merchant_vpa, 
                         payerid:        data.payerid,
                         currency_code:  currency.currency_code,
                         amount:         serverUtilNumberValue(data.amount) ?? 0, 
@@ -74,7 +74,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                         commonRegistryAppSecret(app_id).MERCHANT_ID,
                                 message:securityPublicEncrypt(
                                             /**@ts-ignore*/
-                                            commonRegistryAppSecret(app_id).MERCHANT_PUBLIC_KEY, 
+                                            commonRegistryAppSecret(app_id).merchant_public_key, 
                                             JSON.stringify(body))};
         
         const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
@@ -96,7 +96,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             */
             const body_decrypted = JSON.parse(securityPrivateDecrypt(
                                                     /**@ts-ignore */
-                                                    commonRegistryAppSecret(app_id).MERCHANT_PRIVATE_KEY, 
+                                                    commonRegistryAppSecret(app_id).merchant_private_key, 
                                                     result_commonBFE.rows[0].message));
 
             return [{   token:                  body_decrypted.token,

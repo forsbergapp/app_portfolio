@@ -13,14 +13,14 @@
  *          user_account_id_profile:number,
  *          detailchoice:number,
  *          list:[{ id:number|null, 
- *                  APP_ID:number, 
- *                  PROTOCOL:string, 
- *                  SUBDOMAIN:string, 
- *                  HOST:string, 
- *                  PORT:string,
- *                  LOGO:string,
- *                  NAME:string,
- *                  APP_NAME_TRANSLATION:string,
+ *                  app_id:number, 
+ *                  protocol:string, 
+ *                  subdomain:string, 
+ *                  host:string, 
+ *                  port:string,
+ *                  logo:string,
+ *                  name:string,
+ *                  app_name_translation:string,
  *                  date_created:string,
  *                  avatar:string,
  *                  provider_image:string,
@@ -29,16 +29,16 @@
  */
 const template = props => `     ${props.list.map(row=>
                                     `${props.detailchoice==5 && typeof row.id =='undefined'?
-                                        `<div data-app_id='${row.APP_ID}' data-url='${row.PROTOCOL}${row.SUBDOMAIN}.${row.HOST}:${row.PORT}' class='common_profile_detail_list_row common_row'>
+                                        `<div data-app_id='${row.app_id}' data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}' class='common_profile_detail_list_row common_row'>
                                             <div class='common_profile_detail_list_col'>
-                                                <div class='common_profile_detail_list_app_id'>${row.APP_ID}</div>
+                                                <div class='common_profile_detail_list_app_id'>${row.app_id}</div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
-                                                <div class='common_image common_image_avatar_list' style='background-image:url("${row.LOGO}");'></div>
+                                                <div class='common_image common_image_avatar_list' style='background-image:url("${row.logo}");'></div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                                    ${row.APP_NAME_TRANSLATION}
+                                                    ${row.app_name_translation}
                                                 </div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>

@@ -17,42 +17,43 @@
  * @returns {string}
  */
 const template = props => ` <div class='menu_apps_detail_row'>
-                                    <div class='menu_apps_detail_col list_title' data-column='APP_ID'>APP_ID</div>
+                                    <div class='menu_apps_detail_col list_title' data-column='app_id'>app_id</div>
                                     ${props.detail=='menu_apps_detail_module'?
-                                        `<div class='menu_apps_detail_col list_title' data-column='COMMON_TYPE'>TYPE</div>
-                                        <div class='menu_apps_detail_col list_title' data-column='COMMON_NAME'>NAME</div>
-                                        <div class='menu_apps_detail_col list_title' data-column='COMMON_ROLE'>ROLE</div>
-                                        <div class='menu_apps_detail_col list_title' data-column='COMMON_PATH'>PATH</div>
-                                        <div class='menu_apps_detail_col list_title' data-column='COMMON_DESCRIPTION'>DESCRIPTION</div>`:
+                                        `<div class='menu_apps_detail_col list_title' data-column='common_type'>TYPE</div>
+                                        <div class='menu_apps_detail_col list_title' data-column='common_name'>NAME</div>
+                                        <div class='menu_apps_detail_col list_title' data-column='common_role'>ROLE</div>
+                                        <div class='menu_apps_detail_col list_title' data-column='common_path'>PATH</div>
+                                        <div class='menu_apps_detail_col list_title' data-column='common_description'>DESCRIPTION</div>`:
 
-                                        `<div class='menu_apps_detail_col list_title' data-column='NAME'>NAME</div>
-                                        <div class='menu_apps_detail_col list_title' data-column='VALUE'>VALUE</div>`
+                                        `<div class='menu_apps_detail_col list_title' data-column='name'>NAME</div>
+                                        <div class='menu_apps_detail_col list_title' data-column='value'>VALUE</div>`
                                     }
                                     ${props.detail=='menu_apps_detail_parameter'?
-                                        '<div class=\'menu_apps_detail_col list_title\' data-column=\'COMMENT\'>COMMENT</div>':''
+                                        '<div class=\'menu_apps_detail_col list_title\' data-column=\'comment\'>COMMENT</div>':''
                                     }
                             </div>
                             ${props.detail=='menu_apps_detail_module'?
                                 `${props.app_detail.map((/**@type{import('../../../common_types.js').CommonAppModulesRecord}*/row)=>
                                         `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
-                                            <div class='menu_apps_detail_col list_readonly' data-column='APP_ID'>${row.APP_ID}</div>
-                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_TYPE'>${row.COMMON_TYPE}</div>
-                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_NAME'>${row.COMMON_NAME}</div>
-                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_ROLE'>${row.COMMON_ROLE}</div>
-                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_PATH'>${row.COMMON_PATH}</div>
-                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMON_DESCRIPTION'>${row.COMMON_DESCRIPTION}</div>
+                                            <div class='menu_apps_detail_col list_readonly' data-column='id'>${row.id}</div>
+                                            <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${row.app_id}</div>
+                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='common_type'>${row.common_type}</div>
+                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='common_name'>${row.common_name}</div>
+                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='common_role'>${row.common_role}</div>
+                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='common_path'>${row.common_path}</div>
+                                            <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='common_description'>${row.common_description}</div>
                                         </div>`).join('')
                                 }`:
                                 `${Object.entries(props.app_detail).map(row=>
-                                    `<div data-changed-record='0' class='menu_apps_detail_row common_row' data-fk='${row[0]=='APP_ID'?1:0}'>
-                                        <div class='menu_apps_detail_col list_readonly' data-column='APP_ID'>${props.app_id}</div>
-                                        <div class='menu_apps_detail_col list_edit' data-column='NAME'>${row[0]}</div>
+                                    `<div data-changed-record='0' class='menu_apps_detail_row common_row' data-fk='${row[0]=='app_id'?1:0}'>
+                                        <div class='menu_apps_detail_col list_readonly' data-column='app_id'>${props.app_id}</div>
+                                        <div class='menu_apps_detail_col list_edit' data-column='name'>${row[0]}</div>
                                         ${props.detail=='menu_apps_detail_secret'?
-                                            `<div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='VALUE'>${row[1]}</div>`:''
+                                            `<div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='value'>${row[1]}</div>`:''
                                         }
                                         ${props.detail=='menu_apps_detail_parameter'?
-                                            `<div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='VALUE'>${row[1].VALUE ?? row[1]}</div>
-                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='COMMENT'>${row[1].COMMENT ?? ''}</div>`:''
+                                            `<div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='value'>${row[1].value ?? row[1]}</div>
+                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='comment'>${row[1].comment ?? ''}</div>`:''
                                         }
                                     </div>`
                                     ).join('')

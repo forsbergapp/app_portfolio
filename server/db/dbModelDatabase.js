@@ -305,10 +305,10 @@ const dbInstallGetFiles = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await commonRegistryAppSecretUpdate(file[2], file[2],{  parameter_name:     `SERVICE_DB_DB${db_use}_APP_USER`,
-                                                                                    parameter_value:    app_username});
-                            await commonRegistryAppSecretUpdate(file[2], file[2],{  parameter_name:     `SERVICE_DB_DB${db_use}_APP_PASSWORD`,
-                                                                                    parameter_value:    sql_and_pw[1]});
+                            await commonRegistryAppSecretUpdate(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_user`,
+                                                                                    parameter_value:    app_username}, null);
+                            await commonRegistryAppSecretUpdate(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_password`,
+                                                                                    parameter_value:    sql_and_pw[1]}, null);
                         }
                         users_row.sql = users_row.sql.replaceAll('<APP_ID/>', file[2]);
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
@@ -743,24 +743,24 @@ const dbInstallGetFiles = async (install_type) =>{
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0].toUpperCase() in secret_key).length>0)
-                    await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                         resource.app_registry_update_app_id,
                                                         {   
-                                                            parameter_name:     key[0].toUpperCase(),
+                                                            parameter_name:     key[0].toLowerCase(),
                                                             parameter_value:    value
-                                                        });
+                                                        },null);
                 resource.json_data[key[0]] = value;
             }
             //loop custom secret keys containing USER_ACCOUNT_ID not in json_data
             if (resource.app_update_secret)
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                    await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                         resource.app_registry_update_app_id,
                                                         {   
-                                                            parameter_name:     Object.keys(key)[0].toUpperCase(),
+                                                            parameter_name:     Object.keys(key)[0].toLowerCase(),
                                                             parameter_value:    value
-                                                        });
+                                                        },null);
                 }
             return resource.json_data;
         };
@@ -1166,13 +1166,13 @@ const dbStart = async () => {
                 }
                 dba = 0;
                 for (const app  of fileCache('APP')){
-                    const app_secret = fileCache('APP_SECRET').filter((/**@type{server_db_file_app_secret}*/app)=> app.APP_ID == common_app_id)[0];
-                    if (app_secret[`SERVICE_DB_DB${db_use}_APP_USER`])
+                    const app_secret = fileCache('APP_SECRET').filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
+                    if (app_secret[`service_db_db${db_use}_app_user`])
                         await DB_POOL(  db_use, 
                                         dba, 
-                                        app_secret[`SERVICE_DB_DB${db_use}_APP_USER`],
-                                        app_secret[`SERVICE_DB_DB${db_use}_APP_PASSWORD`],
-                                        app.APP_ID);
+                                        app_secret[`service_db_db${db_use}_app_user`],
+                                        app_secret[`service_db_db${db_use}_app_password`],
+                                        app.app_id);
             }  
         }
     }

@@ -92,7 +92,7 @@ const getApps = async (app_id, resource_id, locale) => {
                         null));
 
 
-    return (await commonAppsGet(app_id, app_id, locale)).filter(app=>app.APP_ID == apps_db.filter(app_db=>app_db.app_id==app.APP_ID)[0].app_id);
+    return (await commonAppsGet(app_id, app_id, locale)).filter(app=>app.app_id == apps_db.filter(app_db=>app_db.app_id==app.app_id)[0].app_id);
 };
 
 /**

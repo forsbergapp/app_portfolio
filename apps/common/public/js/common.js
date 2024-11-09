@@ -67,16 +67,6 @@ const COMMON_GLOBAL = {
     user_timezone:'',
     user_direction:'',
     user_arabic_script:'',
-    translate_items:{   USERNAME:'Username',
-                        EMAIL:'Email',
-                        NEW_EMAIL:'New email',
-                        BIO:'Bio',
-                        PASSWORD:'Password',
-                        PASSWORD_CONFIRM:'Password confirm',
-                        PASSWORD_REMINDER:'Password reminder',
-                        NEW_PASSWORD_CONFIRM:'New password confirm',
-                        NEW_PASSWORD:'New password',
-                        CONFIRM_QUESTION:''},
     moduleLeaflet:{methods:{eventClickCountry:          ()=>null, 
                             eventClickCity:             ()=>null,
                             eventClickMapLayer:         ()=>null,
@@ -3241,34 +3231,34 @@ const commonEventCommonRemove = () => {
  * @returns {void}
  */
 const commonInitParametersAppSet = (app_parameters, common_parameters) => {
-    COMMON_GLOBAL.app_framework = parseInt(common_parameters.COMMON_APP_FRAMEWORK.VALUE);
-    COMMON_GLOBAL.app_framework_messages = parseInt(common_parameters.COMMON_APP_FRAMEWORK_MESSAGES.VALUE);
-    COMMON_GLOBAL.app_rest_api_version = parseInt(common_parameters.COMMON_APP_REST_API_VERSION.VALUE);
+    COMMON_GLOBAL.app_framework = parseInt(common_parameters.common_app_framework.value);
+    COMMON_GLOBAL.app_framework_messages = parseInt(common_parameters.common_app_framework_messages.value);
+    COMMON_GLOBAL.app_rest_api_version = parseInt(common_parameters.common_app_rest_api_version.value);
 
-    COMMON_GLOBAL.info_link_policy_name = common_parameters.COMMON_INFO_LINK_POLICY_NAME.VALUE;
-    COMMON_GLOBAL.info_link_policy_url = common_parameters.COMMON_INFO_LINK_POLICY_URL.VALUE;
-    COMMON_GLOBAL.info_link_disclaimer_name = common_parameters.COMMON_INFO_LINK_DISCLAIMER_NAME.VALUE;
-    COMMON_GLOBAL.info_link_disclaimer_url = common_parameters.COMMON_INFO_LINK_DISCLAIMER_URL.VALUE;
-    COMMON_GLOBAL.info_link_terms_name = common_parameters.COMMON_INFO_LINK_TERMS_NAME.VALUE;
-    COMMON_GLOBAL.info_link_terms_url = common_parameters.COMMON_INFO_LINK_TERMS_URL.VALUE;
-    COMMON_GLOBAL.info_link_about_name = common_parameters.COMMON_INFO_LINK_ABOUT_NAME.VALUE;
-    COMMON_GLOBAL.info_link_about_url = common_parameters.COMMON_INFO_LINK_ABOUT_URL.VALUE;
+    COMMON_GLOBAL.info_link_policy_name = common_parameters.common_info_link_policy_name.value;
+    COMMON_GLOBAL.info_link_policy_url = common_parameters.common_info_link_policy_url.value;
+    COMMON_GLOBAL.info_link_disclaimer_name = common_parameters.common_info_link_disclaimer_name.value;
+    COMMON_GLOBAL.info_link_disclaimer_url = common_parameters.common_info_link_disclaimer_url.value;
+    COMMON_GLOBAL.info_link_terms_name = common_parameters.common_info_link_terms_name.value;
+    COMMON_GLOBAL.info_link_terms_url = common_parameters.common_info_link_terms_url.value;
+    COMMON_GLOBAL.info_link_about_name = common_parameters.common_info_link_about_name.value;
+    COMMON_GLOBAL.info_link_about_url = common_parameters.common_info_link_about_url.value;
 
-    COMMON_GLOBAL.image_file_allowed_type1 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE1.VALUE;
-    COMMON_GLOBAL.image_file_allowed_type2 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE2.VALUE;
-    COMMON_GLOBAL.image_file_allowed_type3 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE3.VALUE;
-    COMMON_GLOBAL.image_file_allowed_type4 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE4.VALUE;
-    COMMON_GLOBAL.image_file_allowed_type5 = common_parameters.COMMON_IMAGE_FILE_ALLOWED_TYPE5.VALUE;
-    COMMON_GLOBAL.image_file_mime_type = common_parameters.COMMON_IMAGE_FILE_MIME_TYPE.VALUE;
-    COMMON_GLOBAL.image_file_max_size = parseInt(common_parameters.COMMON_IMAGE_FILE_MAX_SIZE.VALUE);
-    COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.COMMON_IMAGE_AVATAR_WIDTH.VALUE);
-    COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.COMMON_IMAGE_AVATAR_HEIGHT.VALUE);
+    COMMON_GLOBAL.image_file_allowed_type1 = common_parameters.common_image_file_allowed_type1.value;
+    COMMON_GLOBAL.image_file_allowed_type2 = common_parameters.common_image_file_allowed_type2.value;
+    COMMON_GLOBAL.image_file_allowed_type3 = common_parameters.common_image_file_allowed_type3.value;
+    COMMON_GLOBAL.image_file_allowed_type4 = common_parameters.common_image_file_allowed_type4.value;
+    COMMON_GLOBAL.image_file_allowed_type5 = common_parameters.common_image_file_allowed_type5.value;
+    COMMON_GLOBAL.image_file_mime_type = common_parameters.common_image_file_mime_type.value;
+    COMMON_GLOBAL.image_file_max_size = parseInt(common_parameters.common_image_file_max_size.value);
+    COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.common_image_avatar_width.value);
+    COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.common_image_avatar_height.value);
     
-    COMMON_GLOBAL.app_email = app_parameters.APP_EMAIL.VALUE;
-    COMMON_GLOBAL.app_copyright = app_parameters.APP_COPYRIGHT.VALUE;
-    COMMON_GLOBAL.app_link_url = app_parameters.APP_LINK_URL.VALUE;
-    COMMON_GLOBAL.app_link_title = app_parameters.APP_LINK_TITLE.VALUE;
-    COMMON_GLOBAL.app_text_edit = app_parameters.APP_TEXT_EDIT.VALUE;
+    COMMON_GLOBAL.app_email = app_parameters.app_email.value;
+    COMMON_GLOBAL.app_copyright = app_parameters.app_copyright.value;
+    COMMON_GLOBAL.app_link_url = app_parameters.app_link_url.value;
+    COMMON_GLOBAL.app_link_title = app_parameters.app_link_title.value;
+    COMMON_GLOBAL.app_text_edit = app_parameters.app_text_edit.value;
 };
 /**
  * Mount app using Vue or React framework

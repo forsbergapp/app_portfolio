@@ -1,8 +1,7 @@
 /** @module server/db/fileModelAppModuleQueue */
 
 /**
- * @import {server_server_res,server_server_error,
- *          server_db_file_result_fileFsRead,
+ * @import {server_server_res,
  *          server_db_file_app_module_queue} from '../types.js'
  */
 
@@ -15,7 +14,7 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * @param {server_server_res} res
  * @returns {server_db_file_app_module_queue[]}
  */
-const get = (app_id, res) => fileDBGet(app_id, 'APP_MODULE_QUEUE',null, res);
+const get = (app_id, res) => fileDBGet(app_id, 'APP_MODULE_QUEUE',null, app_id, res);
 
 /**
  * Add record
@@ -34,19 +33,19 @@ const post = async (app_id, data, res) => {
     else{
         /**@type{server_db_file_app_module_queue} */
         const job =     {
-                            ID:Date.now(),
-                            APP_ID:app_id,                            
-                            TYPE: data.type, 
-                            NAME:data.name,
-                            PARAMETERS:data.parameters,
-                            USER: data.user,
-                            START:null,
-                            END:null,
-                            PROGRESS:null,
-                            STATUS:'PENDING',
-                            MESSAGE:null
+                            id:Date.now(),
+                            app_id:app_id,                            
+                            type: data.type, 
+                            name:data.name,
+                            parameters:data.parameters,
+                            user: data.user,
+                            start:null,
+                            end:null,
+                            progress:null,
+                            status:'PENDING',
+                            message:null
                         };
-        return fileDBPost(app_id, 'APP_MODULE_QUEUE', job, res);
+        return fileDBPost(app_id, 'APP_MODULE_QUEUE', job, res).then(()=>job);
     }
 };
 /**
@@ -70,7 +69,7 @@ const update = async (app_id, resource_id, data, res) => {
     if (data.message)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
-        return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, data_update, res);
+        return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, app_id, data_update, res);
     else{
         res.statusCode = 404;
         throw '⛔';    
@@ -87,7 +86,7 @@ const update = async (app_id, resource_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const deleteRecord = async (app_id, resource_id, res) => {
-    return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, res);
+    return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, app_id, res);
 };
                    
 export {get, post, update, deleteRecord};
