@@ -17,7 +17,10 @@ const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/
 const {fileFsReadLog, fileFsAppend, fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
-const {commonAppHost, commonRegistryAppSecret, commonRegistryAppSecretFile}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
+const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
+
+/**@type{import('./db/fileModelAppSecret.js')} */
+const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
 
@@ -44,7 +47,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
             //exp, iat, tokentimestamp on token
             try {
                 /**@ts-ignore*/
-                return ((jwt.verify(token, commonRegistryAppSecret(app_id).common_app_access_secret).exp ?? 0) * 1000) - Date.now()<0;    
+                return ((jwt.verify(token, fileModelAppSecret.get(app_id, null).common_app_access_secret).exp ?? 0) * 1000) - Date.now()<0;    
             } catch (error) {
                 return true;
             }
@@ -278,13 +281,13 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                    .then(()=>{
                                        //send email UNVERIFIED
                                        commonMailSend(  app_id, 
-                                                       commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_unverified, 
-                                                       ip, 
-                                                       user_agent,
-                                                       accept_language,
-                                                       result_login[0].id, 
-                                                       new_code, 
-                                                       result_login[0].email)
+                                                        fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_unverified, 
+                                                        ip, 
+                                                        user_agent,
+                                                        accept_language,
+                                                        result_login[0].id, 
+                                                        new_code, 
+                                                        result_login[0].email)
                                        .then(()=>{
                                            socketConnectedUpdate(app_id, 
                                                {   iam:iam,
@@ -581,13 +584,13 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
                //send email for local users only
                //send email SIGNUP
                commonMailSend(  app_id, 
-                               commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_signup, 
-                               ip, 
-                               user_agent,
-                               accept_language,
-                               result_create.insertId, 
-                               data_body.verification_code, 
-                               data_body.email ?? '')
+                                fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_signup, 
+                                ip, 
+                                user_agent,
+                                accept_language,
+                                result_create.insertId, 
+                                data_body.verification_code, 
+                                data_body.email ?? '')
                .then(()=>{
                    const jwt_data = iamAuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
                    resolve({
@@ -796,8 +799,8 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
                                 updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
                                 .then(()=>{
                                     //send email PASSWORD_RESET
-                                    commonMailSend(  app_id, 
-                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_password_reset, 
+                                    commonMailSend( app_id, 
+                                                    fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].service_mail_type_password_reset, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -917,8 +920,8 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                                 dbModelUserAccountEvent.post(app_id, eventData)
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                    commonMailSend(  app_id, 
-                                                    commonRegistryAppSecret(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).service_mail_type_change_email, 
+                                    commonMailSend( app_id, 
+                                                    fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_change_email, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -1112,7 +1115,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const id_token_decoded = jwt.verify(id_token, commonRegistryAppSecret(app_id_host).common_app_id_secret);
+            const id_token_decoded = jwt.verify(id_token, fileModelAppSecret.get(app_id_host, res)[0].common_app_id_secret);
             /**@type{server_iam_app_token_record}*/
             const log_id_token = await fileFsReadLog('IAM_APP_TOKEN', '').then(result=>result.filter((/**@type{server_iam_app_token_record}*/row)=> 
                                                                                 row.id == app_id_host && row.ip == ip && row.token == id_token
@@ -1176,7 +1179,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, commonRegistryAppSecret(app_id_host).common_app_access_secret ?? '');
+                            const access_token_decoded = jwt.verify(access_token, fileModelAppSecret.get(app_id_host, res)[0].common_app_access_secret ?? '');
                             const user_id = serverUtilNumberValue(iamUtilDecode(iam).get('user_id'));
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
@@ -1415,7 +1418,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
     if (app_id == null)
         return false;
     else{
-        const app_secret = await commonRegistryAppSecretFile(app_id);
+        const app_secret = await fileModelAppSecret.getFile(app_id);
         const CLIENT_ID = app_secret.common_client_id;
         const CLIENT_SECRET = app_secret.common_client_secret;
         const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
@@ -1443,7 +1446,7 @@ const iamAuthenticateResource = parameters =>  {
             return false;
         else{
             /**@type{{app_id:number, id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], commonRegistryAppSecret(parameters.app_id).common_app_access_secret);
+            const access_token_decoded = jwt.verify(parameters.authorization.split(' ')[1], fileModelAppSecret.get(parameters.app_id, null)[0].common_app_access_secret);
             return  parameters.resource_id!=null && 
                     access_token_decoded[parameters.claim_key] == parameters.resource_id &&
                     access_token_decoded.app_id == parameters.app_id &&
@@ -1503,14 +1506,14 @@ const iamAuthenticateResource = parameters =>  {
     switch (endpoint){
         //APP ID Token
         case 'APP_ID':{
-            secret = commonRegistryAppSecret(app_id).common_app_id_secret;
-            expiresin = commonRegistryAppSecret(app_id).common_app_id_expire;
+            secret = fileModelAppSecret.get(app_id, null)[0].common_app_id_secret;
+            expiresin = fileModelAppSecret.get(app_id, null)[0].common_app_id_expire;
             break;
         }
         //USER Access token
         case 'APP_ACCESS':{
-            secret = commonRegistryAppSecret(app_id).common_app_access_secret;
-            expiresin = commonRegistryAppSecret(app_id).common_app_access_expire;
+            secret = fileModelAppSecret.get(app_id, null)[0].common_app_access_secret;
+            expiresin = fileModelAppSecret.get(app_id, null)[0].common_app_access_expire;
             break;
         }
         //Admin Access token
@@ -1521,7 +1524,7 @@ const iamAuthenticateResource = parameters =>  {
         }
         //APP custom token
         case 'APP_CUSTOM':{
-            secret = commonRegistryAppSecret(app_id).common_app_id_secret;
+            secret = fileModelAppSecret.get(app_id, null)[0].common_app_id_secret;
             expiresin = app_custom_expire ?? '';
             break;
         }
