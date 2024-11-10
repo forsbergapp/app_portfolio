@@ -894,4 +894,4 @@ const commonRegistryAppSecretDBReset = async app_id => {
 export {commonMailCreate, commonMailSend,
         commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
         commonRegistryAppModule,
-        commonRegistryAppSecretDBReset,};
+        commonRegistryAppSecretDBReset};

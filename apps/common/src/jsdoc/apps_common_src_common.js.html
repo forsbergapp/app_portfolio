@@ -37,6 +37,9 @@ const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fi
 /**@type{import('../../../server/db/fileModelAppSecret.js')} */
 const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
+/**@type{import('../../../server/db/fileModelIamUser.js')} */
+const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+
 /**@type{import('../../../server/log.js')} */
 const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 
@@ -47,7 +50,7 @@ const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await 
 const dbModelDatabase = await await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
 
 /**@type{import('../../../server/db/file.js')} */
-const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 const fs = await import('node:fs');
 
@@ -62,7 +65,7 @@ const commonMailCreate = async (app_id, data) =>{
     const {default:ComponentCreate} = await import('./component/common_mail.js');
     const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{server_config_server_server}*/key)=>'APP_COMMON_APP_ID' in key)[0].APP_COMMON_APP_ID)??0;
-    const secrets       = commonRegistryAppSecret(common_app_id);
+    const secrets       = fileModelAppSecret.get(common_app_id, null)[0];
     //email type 1-4 implemented are emails with verification code
     if (parseInt(data.emailtype)==1 || 
         parseInt(data.emailtype)==2 || 
@@ -158,15 +161,15 @@ const commonAppStart = async (app_id=null) =>{
     const NO_MAINTENANCE = fileCache('CONFIG_SERVER').METADATA.MAINTENANCE==0;
     const DB_START = fileCache('CONFIG_SERVER').SERVICE_DB
                         .filter((/**@type{*}*/key)=>'START' in key  )[0].START=='1';
-    const APP_START = commonRegistryAppParameter(common_app_id).common_app_start.value=='1';
+    const APP_START = fileModelAppParameter.get(common_app_id, null)[0].common_app_start.value=='1';
     /**@ts-ignore */
-    const DBOTHER_USER_INSTALLED = commonRegistryAppSecret(app_id ?? common_app_id)[`service_db_db${db_use}_app_user`];
+    const DBOTHER_USER_INSTALLED = fileModelAppSecret.get(app_id ?? common_app_id, null)[0][`service_db_db${db_use}_app_user`];
     const DB5_USE_AND_INSTALLED = db_use==5 &amp;&amp; await dbModelDatabase.dbInstalledCheck(app_id).then(result=>app_id?result[0].installed:true).catch(()=>false);
     if (NO_MAINTENANCE &amp;&amp; DB_START &amp;&amp; APP_START &amp;&amp; (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
         if (app_id == null)
             return true;
         else{
-            if (commonRegistryApp(app_id).status =='ONLINE')
+            if (fileModelApp.get(app_id, app_id, null)[0].status =='ONLINE')
                 return true;
             else
                 return false;
@@ -353,8 +356,8 @@ const commonBFE = async parameters =>{
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
         const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
-        const app_cache_control = commonRegistryAppParameter(common_app_id).common_app_cache_control.value;
-        const app_cache_control_font = commonRegistryAppParameter(common_app_id).common_app_cache_control_font.value;
+        const app_cache_control = fileModelAppParameter.get(common_app_id, null)[0].common_app_cache_control.value;
+        const app_cache_control_font = fileModelAppParameter.get(common_app_id, null)[0].common_app_cache_control_font.value;
         switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
             case '.css':{
                 parameters.res.type('text/css');
@@ -563,7 +566,7 @@ const commonModuleGet = async parameters => {
                             longitude:      result_geodata?.longitude
                             };
             return ComponentCreate({data:   {
-                                            CONFIG_APP:{...commonRegistryApp(parameters.app_id)},
+                                            CONFIG_APP:{...fileModelApp.get(parameters.app_id, parameters.app_id, null)[0]},
                                             data:data,
                                             /**@ts-ignore */
                                             papersize:papersize
@@ -627,7 +630,7 @@ const commonComponentCreate = async parameters =>{
             /**@type{server_apps_app_service_parameters} */
             const app_service_parameters = {   
                 app_id:                 parameters.app_id,
-                app_logo:               commonRegistryApp(parameters.app_id).logo,
+                app_logo:               fileModelApp.get(parameters.app_id, parameters.app_id, null)[0].logo,
                 app_idtoken:            idtoken ?? '',
                 locale:                 parameters.componentParameters.locale ?? '',
                 admin_only:             admin_only,
@@ -637,10 +640,10 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
-                first_time:             admin_only==1?(fileCache('IAM_USER').length==0?1:0):0
+                first_time:             admin_only==1?(fileModelIamUser.get(parameters.app_id, null, null).length==0?1:0):0
             };
             /**@type{server_db_file_app_parameter_common} */
-            const common_parameter = commonRegistryAppParameter(common_app_id);
+            const common_parameter = fileModelAppParameter.get(common_app_id, null)[0];
             //return only used parameters
             delete common_parameter.app_copyright;
             delete common_parameter.app_email;
@@ -651,11 +654,11 @@ const commonComponentCreate = async parameters =>{
             delete common_parameter.common_app_log;
             delete common_parameter.common_app_start;
 
-            const APP_PARAMETERS  = {   APP:        commonRegistryAppParameter(parameters.app_id), 
+            const APP_PARAMETERS  = {   APP:        fileModelAppParameter.get(parameters.app_id, null)[0], 
                                         COMMON:     common_parameter,
                                         INFO:       app_service_parameters};
             const componentParameter = {data:   {
-                                                    APP:            commonRegistryApp(parameters.app_id),
+                                                    APP:            fileModelApp.get(parameters.app_id, parameters.app_id, null)[0],
                                                     APP_PARAMETERS: Buffer.from(JSON.stringify(APP_PARAMETERS)).toString('base64')
                                                 },
                                         methods:null};
@@ -674,24 +677,24 @@ const commonComponentCreate = async parameters =>{
 
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
             return ComponentCreate({data:   {
-                                            CONFIG_APP:             {...commonRegistryApp(parameters.app_id)},
+                                            CONFIG_APP:             {...fileModelApp.get(parameters.app_id, parameters.app_id, null)[0]},
                                             ITEM_COMMON_PARAMETERS: Buffer.from(data).toString('base64')},
                                     methods:null
                                     });
         }
         case 'INFO_DISCLAIMER':{
             const {default:ComponentCreate} = await import('./component/common_info_disclaimer.js');
-            return ComponentCreate({data: {app_name:commonRegistryApp(parameters.app_id).name},
+            return ComponentCreate({data: {app_name:fileModelApp.get(parameters.app_id, parameters.app_id, null)[0].name},
                                     methods:null});
         }
         case 'INFO_PRIVACY_POLICY':{
             const {default:ComponentCreate} = await import('./component/common_info_privacy_policy.js');
-            return ComponentCreate({data: {app_name:commonRegistryApp(parameters.app_id).name},
+            return ComponentCreate({data: {app_name:fileModelApp.get(parameters.app_id, parameters.app_id, null)[0].name},
                                     methods:null});
         }
         case 'INFO_TERMS':{
             const {default:ComponentCreate} = await import('./component/common_info_terms.js');
-            return ComponentCreate({data: {app_name:commonRegistryApp(parameters.app_id).name},
+            return ComponentCreate({data: {app_name:fileModelApp.get(parameters.app_id, parameters.app_id, null)[0].name},
                                     methods:null});
         }
         default:{
@@ -710,11 +713,11 @@ const commonAppHost = host =>{
         case 'localhost':
         case 'www':{
             //localhost
-            return fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
+            return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
+                return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 //request can be called from unkown hosts
                 return null;
@@ -762,7 +765,7 @@ const commonApp = async parameters =>{
             case (parameters.url.toLowerCase().startsWith('/images')):
             case (parameters.url.toLowerCase().startsWith('/js')):
             case (parameters.url == '/apps/common_types.js'): {
-                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:commonRegistryApp(app_id).path, res:parameters.res}).catch(()=>null);
+                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:fileModelApp.get(app_id, app_id, null)[0].path, res:parameters.res}).catch(()=>null);
             }
             case (parameters.url == '/info/doc'):{
                 return await commonAssetfile({app_id:app_id, url:'/info/doc/index.html'.substring('/info/doc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
@@ -784,7 +787,7 @@ const commonApp = async parameters =>{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
             }
             case (parameters.url == '/'):
-            case ((commonRegistryApp(app_id).showparam == 1 &amp;&amp; parameters.url.substring(1) !== '')):{
+            case ((fileModelApp.get(app_id, app_id, null)[0].showparam == 1 &amp;&amp; parameters.url.substring(1) !== '')):{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.substring(1)==''?null:parameters.url.substring(1),
                                                                                         ip:             parameters.ip, 
                                                                                         user_agent:     parameters.user_agent,
@@ -826,7 +829,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
     const apps_db =  await dbModelApp.get(app_id, resource_id, locale);
     
     /**@type{server_db_file_app[]}*/
-    const apps = fileCache('APP');
+    const apps = fileModelApp.get(app_id, null, null);
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
@@ -852,37 +855,6 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
 };
 
 /**
- * Get all apps from app registry
- * @param {number} app_id
- * @param {server_server_res} res
- * @returns {Promise.&lt;server_db_file_app[]>}
- */
- const commonAppsAdminGet = async (app_id, res) =>fileModelApp.get(app_id, null, res);
- 
-/**
- * App registry APP
- * @param {number} app_id
- * @returns {server_db_file_app}
- */
-const commonRegistryApp = (app_id) =>fileModelApp.get(app_id, app_id, null)[0];
-
-/**
- * App registry get apps
- * @param {number|null} app_id
- * @returns {server_db_file_app[]}
- */
-const commonRegistryAppsGet = app_id => fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.id == (app_id ?? app.id));
-
-/**
- * App registry APP MODULE addmin
- * returns all modules for given app id
- * @param {number} app_id
- * @param {server_server_res} res
-* @returns {server_db_file_app_module[]}
-*/
-const commonRegistryAppModuleAll = (app_id, res) =>fileModelAppModule.get(app_id, res);
-
-/**
  * App registry APP MODULE
  * Modules that are shared by apps and server
  * @param {number} app_id
@@ -892,127 +864,44 @@ const commonRegistryAppModuleAll = (app_id, res) =>fileModelAppModule.get(app_id
  * @returns {server_db_file_app_module}
  */
 const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(app_id, null)
-                                                            .filter((/**@type{server_db_file_app_module}*/app)=>
-                                                                app.common_type==parameters.type &amp;&amp; 
-                                                                app.common_name==parameters.name &amp;&amp; 
-                                                                app.common_role == parameters.role)[0];
-
-/**
- * App registry APP PARAMETER
- * @param {number} app_id
- * @returns {server_db_file_app_parameter}
- */
-const commonRegistryAppParameter = app_id => fileModelAppParameter.get(app_id, null)[0];
-
-/**
- * App registry APP SECRET
- * @param {number} app_id
- * @returns {server_db_file_app_secret}
- */
-const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
-                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0];
-
-/**
- * App registry APP SECRET from file
- * @param {number} app_id
- * @returns {Promise.&lt;server_db_file_app_secret>}
- */
-const commonRegistryAppSecretFile= async app_id => fileFsRead('APP_SECRET').then(result=>
-                                                            result.file_content
-                                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0]);
-
+                                                           .filter((/**@type{server_db_file_app_module}*/app)=>
+                                                               app.common_type==parameters.type &amp;&amp; 
+                                                               app.common_name==parameters.name &amp;&amp; 
+                                                               app.common_role == parameters.role)[0];
 
 /**
  * App Registry APP SECRET reset db username and passwords for database in use
+ * @param {number}  app_id
  * @returns {Promise.&lt;void>}
  */
-const commonRegistryAppSecretDBReset = async () => {
+const commonRegistryAppSecretDBReset = async app_id => {
     /**@type{import('../../../server/config.js')} */
     const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const file = await fileFsRead('APP_SECRET', true);
-    /**@type{server_db_file_app[]}*/
-    const APPS = file.file_content;
+
+    /**@type{server_db_file_app_secret[]}*/
+    const APP_SECRETS = fileModelAppSecret.get(app_id, null);
+    
     const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
-    for (const app of APPS){
+    for (const app_secret of APP_SECRETS){
         /**@ts-ignore */
-        if (app[`service_db_db${db_use}_app_user`]){
-            /**@ts-ignore */
-            app[`service_db_db${db_use}_app_user`] = '';
+        if (app_secret[`service_db_db${db_use}_app_user`]){
+            fileModelAppSecret.update(app_id, app_secret.app_id, {  parameter_name:`service_db_db${db_use}_app_user`,
+                                                                        parameter_value:''}, null);
+            
         }
         /**@ts-ignore */
-        if (app[`service_db_db${db_use}_app_password`]){
-            /**@ts-ignore */
-            app[`service_db_db${db_use}_app_password`] = '';
+        if (app_secret[`service_db_db${db_use}_app_password`]){
+            fileModelAppSecret.update(app_id, app_secret.app_id, {  parameter_name:`service_db_db${db_use}_app_password`,
+                                                                        parameter_value:''}, null);
         }   
     }
-    file.file_content = APPS;
-    await fileFsWrite('APP_SECRET', file.transaction_id, file.file_content);
-    await fileFsCacheSet();
 };
-/**
- * App Registry APP update an app
- * @param {number} app_id
- * @param {number} resource_id
- * @param {server_db_file_app} data
- * @param {server_server_res} res
-* @returns {Promise.&lt;void>}
-*/
-const commonRegistryAppUpdate = async (app_id, resource_id, data, res) => {
-    fileModelApp.update(app_id,resource_id, data, res);
-    await fileFsCacheSet();
-};
-/**
- * App Registry APP MODULE update a module
- * @param {number} app_id
- * @param {number} resource_id
- * @param {server_db_file_app_module} data
- * @param {server_server_res} res
- * @returns {Promise.&lt;void>}
- */
-const commonRegistryAppModuleUpdate = async (app_id, resource_id, data, res) => {
-    fileModelAppModule.update(app_id, resource_id, data, res);
-    await fileFsCacheSet();
- };
-/**
- * App Registry APP PARAMETER update a parameter
- * @param {number} app_id
- * @param {number} resource_id
- * @param {{parameter_name:     string,
- *          parameter_value:    string,
- *          parameter_comment:  string|null}} data
- * @param {server_server_res} res
- * @returns {Promise.&lt;void>}
- */
-const commonRegistryAppParameterUpdate = async (app_id, resource_id, data, res) => {
-    
-    fileModelAppParameter.update(app_id, resource_id, data, res);
-    await fileFsCacheSet();
-};
-/**
- * App registry APP SECRET update a secret
- * @param {number} app_id
- * @param {number} resource_id
- * @param {{parameter_name:     string,
- *          parameter_value:    string}} data
- * @param {server_server_res|null} res
- * @returns {Promise.&lt;void>}
- */
-const commonRegistryAppSecretUpdate = async (app_id, resource_id, data, res) => {
-    fileModelAppSecret.update(app_id, resource_id, data, res);
-};
-
 export {commonMailCreate, commonMailSend,
         commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
-        commonAppsAdminGet,commonRegistryAppModuleAll,
-        commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,commonRegistryAppSecretFile,
-        commonRegistryAppsGet,
-        commonRegistryAppSecretDBReset,
-        commonRegistryAppUpdate,
-        commonRegistryAppModuleUpdate,
-        commonRegistryAppParameterUpdate,
-        commonRegistryAppSecretUpdate,};</code></pre>
+        commonRegistryAppModule,
+        commonRegistryAppSecretDBReset};</code></pre>
         </div>
     </div>
 
