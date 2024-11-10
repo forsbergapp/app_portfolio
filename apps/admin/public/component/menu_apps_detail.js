@@ -87,7 +87,7 @@ const component = async props => {
         }
     }
     const app_detail = await props.methods.commonFFB({path:path, method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>JSON.parse(result));
+                            .then((/**@type{string}*/result)=>props.data.detail=='menu_apps_detail_module'?JSON.parse(result):JSON.parse(result)[0]);
     return {
        lifecycle:   null,
        data:        null,

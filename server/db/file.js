@@ -411,7 +411,7 @@ const fileFsDeleteAdmin = async file => {
  * for given app id and if resource id if specified
  * JSON_TABLE should have column id as primary key using this function
  * @function
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id

@@ -10,7 +10,7 @@ const {fileFsRead, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file:/
 /**
  * Get records for given appid
  * @function
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {server_server_res|null} res
  * @returns {server_db_file_app_secret[]}
  */

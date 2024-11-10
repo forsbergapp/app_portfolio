@@ -10,8 +10,8 @@ const {serverUtilResponseTime, serverResponseErrorSend, serverUtilNumberValue, s
 /**@type{import('./config.js')} */
 const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/config.js`);
 
-/**@type{import('./db/file.js')} */
-const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('./db/fileModelIamUser.js')} */
+const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
 /**@type{import('./log.js')} */
 const {logRequestI, logServiceI, logServiceE} = await import(`file://${process.cwd()}/server/log.js`);
@@ -169,7 +169,7 @@ const bffStart = async (req, res) =>{
         }
     };
     //if first time, when no user exists, then redirect everything to admin
-    if (fileCache('IAM_USER').length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+    if (fileModelIamUser.get(commonAppHost(req.headers.host ?? '')??0, null, null).length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
         return {reason:'REDIRECT', redirect:`http://admin.${configGet('SERVER','HOST')}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains

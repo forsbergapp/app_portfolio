@@ -30,6 +30,9 @@ const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fi
 /**@type{import('../../../server/db/fileModelAppSecret.js')} */
 const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
+/**@type{import('../../../server/db/fileModelIamUser.js')} */
+const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+
 /**@type{import('../../../server/log.js')} */
 const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
 
@@ -630,7 +633,7 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 rest_resource_bff:      fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'REST_RESOURCE_BFF' in key)[0].REST_RESOURCE_BFF ?? '/bff',
-                first_time:             admin_only==1?(fileCache('IAM_USER').length==0?1:0):0
+                first_time:             admin_only==1?(fileModelIamUser.get(parameters.app_id, null, null).length==0?1:0):0
             };
             /**@type{server_db_file_app_parameter_common} */
             const common_parameter = fileModelAppParameter.get(common_app_id, null)[0];
@@ -703,11 +706,11 @@ const commonAppHost = host =>{
         case 'localhost':
         case 'www':{
             //localhost
-            return fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
+            return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
+                return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 //request can be called from unkown hosts
                 return null;
@@ -819,7 +822,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
     const apps_db =  await dbModelApp.get(app_id, resource_id, locale);
     
     /**@type{server_db_file_app[]}*/
-    const apps = fileCache('APP');
+    const apps = fileModelApp.get(app_id, null, null);
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */

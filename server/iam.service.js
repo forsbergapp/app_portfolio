@@ -22,6 +22,10 @@ const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/com
 /**@type{import('./db/fileModelAppSecret.js')} */
 const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
+/**@type{import('./db/fileModelIamUser.js')} */
+const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+
+
 const {default:jwt} = await import('jsonwebtoken');
 
 /**
@@ -155,7 +159,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             .then(()=>{
                 return  {   iam_user_id: id,
                             iam_user_name:username,
-                            avatar: fileCache('IAM_USER').filter((/**@type{server_db_file_iam_user}*/user)=>user.id == id)[0].avatar,
+                            avatar: fileModelIamUser.get(app_id, id, res)[0].avatar,
                             token_at: jwt_data.token,
                             exp:jwt_data.exp,
                             iat:jwt_data.iat,
@@ -171,7 +175,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
         const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
         const username = userpass.split(':')[0];
         const password = userpass.split(':')[1];
-        if (fileCache('IAM_USER').length==0)
+        if (fileModelIamUser.get(app_id, null, null).length==0)
             return iamUserCreate(app_id,{
                             username:username, 
                             password:password, 
@@ -187,7 +191,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
 
             /**@type{server_db_file_iam_user}*/
-            const user =  fileCache('IAM_USER').filter((/**@type{server_db_file_iam_user}*/user)=>user.username == username)[0];
+            const user =  fileModelIamUser.get(app_id, null, null).filter((/**@type{server_db_file_iam_user}*/user)=>user.username == username)[0];
 
             if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
                 return check_user(1, user.id, username); 
@@ -1105,7 +1109,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
  * @returns {Promise.<void>}
  */
  const iamAuthenticateUserCommon = async (iam, scope, authorization, host, ip, res, next) =>{
-    const app_id_host = serverUtilNumberValue(commonAppHost(host));
+    const app_id_host = commonAppHost(host);
     //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
     if (iam && scope && authorization && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID'));
