@@ -17,7 +17,7 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
 /**
  * Get records for given appid
  * @function
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {number|null} resource_id //if empty then fetch all apps
  * @param {server_server_res|null} res
  * @returns {server_db_file_app[]}

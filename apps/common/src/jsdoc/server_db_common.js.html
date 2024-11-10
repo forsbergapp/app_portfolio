@@ -18,8 +18,8 @@ const {logDBI, logDBE} = await import(`file://${process.cwd()}/server/log.js`);
 /**@type{import('../config.js')} */
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 
-/**@type{import('../../apps/common/src/common.js')} */
-const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+/**@type{import('./fileModelAppParameter.js')} */
+const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
 
 /**@type{import('./db.js')} */
 const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
@@ -239,13 +239,13 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 			pagination = true;
 			sql = sql.replaceAll('&lt;APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
 			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).common_app_limit_records.value);
+				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].common_app_limit_records.value);
 		}
 		//manage limit records
 		if (sql.indexOf('&lt;APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
 			sql = sql.replaceAll('&lt;APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(commonRegistryAppParameter(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0).common_app_limit_records.value)}};
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].common_app_limit_records.value)}};
 		}
 
 		dbSQL(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, dba)

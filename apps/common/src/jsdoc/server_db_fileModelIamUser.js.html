@@ -19,7 +19,7 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @param {server_server_res} res
+ * @param {server_server_res|null} res
  * @returns {server_db_file_iam_user[]}
  */
 const get = (app_id, resource_id, res) => fileDBGet(app_id, 'IAM_USER',resource_id, null, res);
@@ -78,12 +78,8 @@ const update = async (app_id, resource_id, data, res) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
     
-    /**@type{import('./file.js')} */
-    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
-
     /**@type{server_db_file_iam_user}*/
-    const user = fileCache('IAM_USER')
-                .filter((/**@type{server_db_file_iam_user}*/row)=>row.id==resource_id)[0];
+    const user = get(app_id, resource_id, null)[0];
     if (user){
         if (user.username == data.username &amp;&amp; data.password &amp;&amp; await securityPasswordCompare(data.password, user.password)){
             /**@type{server_db_file_iam_user} */

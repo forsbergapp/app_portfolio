@@ -6,12 +6,38 @@
     <div class='section'>
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/** 
- * File database using race condition, pessmistic lock and database transaction pattern
- * File types supported
+ *  File database using race condition, pessimistic lock and database transaction pattern
+ *  File types supported
  *  JSON            json
+ *                  uses fileFsRead and fileFsWrite by admin and config files
+ *  JSON_TABLE      json that can be managed as table and implemented using object mapping relation (ORM) pattern
+ *                  so each table is mapped to one fileModel*.js
+ *                  consists of 3 layers
+ *                  *.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.service.js
+ *                  fileModel*.js   data model API with constraints, ex fileModelIamUser() in /server/db/fileModelIamUser.js
+ *                  file.js         file management API, ex fileDBGet() in /server/db/file.js
+ *                                  fileDBGet               reads file content from CACHE_CONTENT and should be used by default for performance
+ *                                                          so a synchronous function can be used and to avoid disk read
+ *                                                          since JSON_TABLE files stores new content in CACHE_CONTENT after each change
+ *                                  fileFsRead              reads file content from file, 
+ *                                                          used at transaction start,in microservice that does not read CACHE_CONTENT
+ *                                                          from other server process and at server start
+ *                                  fileDBPost              saves file content to file and updates CACHE_CONTENT
+ *                                  fileDBUpdate            saves file content to file and updates CACHE_CONTENT
+ *                                  fileDBDelete            saves file content to file and updates CACHE_CONTENT
+ *                                  fileTransactionStart    reads and sets TRANSACTION_ID and LOCK key in FILE_DB and 
+ *                                                          uses setTimeout loop until LOCK is available,
+ *                                                          waits maximum 10 seconds for LOCK,
+ *                                                          saves file content in TRANSACTION_CONTENT that is used to rollback info if
+ *                                                          something goes wrong and can also be used for debugging purpose
+ *                                  fileTransactionCommit   empties TRANSACTION_ID, TRANSACTION_CONTENT and sets LOCK =0
+ *                                  fileTransactionRollback empties TRANSACTION_ID, TRANSACTION_CONTENT and sets LOCK =0
  *  JSON_LOG        json records, comma separated
+ *                  uses fileFsReadLog and fileFsAppend
  *  JSON_LOG_DATE   json record, comma separateed with file name suffixes
+ *                  uses fileFsReadLog, fileFsAppend and fileSuffix
  *  BINARY          used by sqLite database
+ *  Admin can also use fileFsWriteAdmin and fileFsDeleteAdmin without transaction if needed
  * 
  * @module server/db/file 
  */
@@ -222,6 +248,10 @@ const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH
 /**
  * 
  * Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
+ * Specify lock=true when updating a file to get transaction id 
+ * when file is available to update.
+ * Function returns file content after a lock of file and transaction id is given, lock info and transaction id.
+ * This transaction id must be provided when updating file in fileFsWrite()
  * @function
  * @param {server_db_file_db_name} file 
  * @param {boolean} lock
@@ -261,6 +291,9 @@ const fileFsRead = async (file, lock=false) =>{
 /**
  * 
  * Updates config files
+ * Must specify valid transaction id given from fileFsRead()
+ * to be able to update a file
+ * Backup of old file will be written to backup directory
  * @function
  * @param {server_db_file_db_name} file 
  * @param {number|null} transaction_id 
@@ -371,7 +404,7 @@ const fileFsWriteAdmin = async (file, file_content) =>{
 };
 
 /**
- * Delete as file
+ * Delete a file
  * @param {server_db_file_db_name} file 
  */
 const fileFsDeleteAdmin = async file => {
@@ -383,7 +416,7 @@ const fileFsDeleteAdmin = async file => {
  * for given app id and if resource id if specified
  * JSON_TABLE should have column id as primary key using this function
  * @function
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id

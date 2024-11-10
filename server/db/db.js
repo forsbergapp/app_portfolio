@@ -1,4 +1,18 @@
-/** @module server/db/db */
+/** 
+ * Tables implemented using object mapping relation (ORM) pattern
+ * each table has dbModel*.js file with methods
+ * not implemented for tables:
+ *       app_setting_type
+ *       app_data_translation
+ *       app_translation
+ *       event
+ *       event_status
+ *       event_type
+ *       language
+ * since dml logic not implemented and some SQL use select from these tables using joins
+ * 
+ * @module server/db/db 
+ */
 
 /**
  * @import {server_server_error, server_db_db_pool, server_db_db_pool_parameters, 

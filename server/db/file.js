@@ -1,11 +1,10 @@
 /** 
- *  File database using race condition, pessmistic lock and database transaction pattern
+ *  File database using race condition, pessimistic lock and database transaction pattern
  *  File types supported
  *  JSON            json
  *                  uses fileFsRead and fileFsWrite by admin and config files
  *  JSON_TABLE      json that can be managed as table and implemented using object mapping relation (ORM) pattern
  *                  so each table is mapped to one fileModel*.js
- *                  
  *                  consists of 3 layers
  *                  *.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.service.js
  *                  fileModel*.js   data model API with constraints, ex fileModelIamUser() in /server/db/fileModelIamUser.js
@@ -31,7 +30,6 @@
  *  JSON_LOG_DATE   json record, comma separateed with file name suffixes
  *                  uses fileFsReadLog, fileFsAppend and fileSuffix
  *  BINARY          used by sqLite database
- * 
  *  Admin can also use fileFsWriteAdmin and fileFsDeleteAdmin without transaction if needed
  * 
  * @module server/db/file 
