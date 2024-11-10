@@ -23,8 +23,8 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
      
     const {default:jwt} = await import('jsonwebtoken');
 
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    /**@type{import('../../../../server/db/file.js')} */
+    const {fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
@@ -56,7 +56,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
                                             .then(result=>result.map(payment_request=>JSON.parse(payment_request.json_data)));
             const payment_request = payment_requests.filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0];
             /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const token_decoded = jwt.verify(payment_request.token, commonRegistryAppSecret(app_id).common_app_id_secret);
+            const token_decoded = jwt.verify(payment_request.token, fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].common_app_id_secret);
             
             if (payment_request &amp;&amp; (((payment_request.exp ?? 0) * 1000) - Date.now())>0 &amp;&amp;
                 token_decoded.id == payment_request.payerid &amp;&amp; 
