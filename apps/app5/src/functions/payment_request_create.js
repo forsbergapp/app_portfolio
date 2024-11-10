@@ -17,8 +17,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    /**@type{import('../../../../server/db/file.js')} */
+    const {fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
     const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
@@ -102,7 +102,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                                         name:           '',
                                                                         ip:             ip,
                                                                         /**@ts-ignore */
-                                                                        scope:          'APP_CUSTOM'}, commonRegistryAppSecret(app_id).app_payment_request_expire);
+                                                                        scope:          'APP_CUSTOM'}, fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].app_payment_request_expire);
     
                 const payment_request_id = securityUUIDCreate();
                 const data_payment_request = {
