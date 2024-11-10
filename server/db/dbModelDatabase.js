@@ -1149,6 +1149,13 @@ const dbDemoUninstall = async (app_id, query)=> {
 const dbStart = async () => {
     /**@type{import('./file.js')} */
     const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
+
+    /**@type{import('./fileModelApp.js')} */
+    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+
+    /**@type{import('./fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+
     const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     if (configGet('SERVICE_DB', 'START')=='1'){    
         let user;
@@ -1166,14 +1173,17 @@ const dbStart = async () => {
                 await DB_POOL(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of fileCache('APP')){
-                    const app_secret = fileCache('APP_SECRET').filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
+                for (const app  of fileModelApp.get(null, null, null)){
+                    const app_secret = fileModelAppSecret.get(null, null).filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
+                    /**@ts-ignore */
                     if (app_secret[`service_db_db${db_use}_app_user`])
                         await DB_POOL(  db_use, 
                                         dba, 
+                                        /**@ts-ignore */
                                         app_secret[`service_db_db${db_use}_app_user`],
+                                        /**@ts-ignore */
                                         app_secret[`service_db_db${db_use}_app_password`],
-                                        app.app_id);
+                                        app.id);
             }  
         }
     }
