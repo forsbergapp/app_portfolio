@@ -40,7 +40,7 @@ const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await 
 const dbModelDatabase = await await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
 
 /**@type{import('../../../server/db/file.js')} */
-const {fileCache, fileFsRead, fileFsWrite, fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCache, fileFsRead, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 const fs = await import('node:fs');
 
@@ -867,13 +867,16 @@ const commonRegistryApp = (app_id) =>fileModelApp.get(app_id, app_id, null)[0];
 const commonRegistryAppsGet = app_id => fileCache('APP').filter((/**@type{server_db_file_app}*/app)=>app.id == (app_id ?? app.id));
 
 /**
- * App registry APP MODULE addmin
- * returns all modules for given app id
+ * App Registry APP update an app
  * @param {number} app_id
+ * @param {number} resource_id
+ * @param {server_db_file_app} data
  * @param {server_server_res} res
-* @returns {server_db_file_app_module[]}
-*/
-const commonRegistryAppModuleAll = (app_id, res) =>fileModelAppModule.get(app_id, res);
+ * @returns {Promise.<void>}
+ */
+const commonRegistryAppUpdate = async (app_id, resource_id, data, res) => {
+    fileModelApp.update(app_id,resource_id, data, res);
+};
 
 /**
  * App registry APP MODULE
@@ -885,77 +888,20 @@ const commonRegistryAppModuleAll = (app_id, res) =>fileModelAppModule.get(app_id
  * @returns {server_db_file_app_module}
  */
 const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(app_id, null)
-                                                            .filter((/**@type{server_db_file_app_module}*/app)=>
-                                                                app.common_type==parameters.type && 
-                                                                app.common_name==parameters.name && 
-                                                                app.common_role == parameters.role)[0];
+                                                           .filter((/**@type{server_db_file_app_module}*/app)=>
+                                                               app.common_type==parameters.type && 
+                                                               app.common_name==parameters.name && 
+                                                               app.common_role == parameters.role)[0];
 
 /**
- * App registry APP PARAMETER
+ * App registry APP MODULE addmin
+ * returns all modules for given app id
  * @param {number} app_id
- * @returns {server_db_file_app_parameter}
- */
-const commonRegistryAppParameter = app_id => fileModelAppParameter.get(app_id, null)[0];
-
-/**
- * App registry APP SECRET
- * @param {number} app_id
- * @returns {server_db_file_app_secret}
- */
-const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
-                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0];
-
-/**
- * App registry APP SECRET from file
- * @param {number} app_id
- * @returns {Promise.<server_db_file_app_secret>}
- */
-const commonRegistryAppSecretFile= async app_id => fileFsRead('APP_SECRET').then(result=>
-                                                            result.file_content
-                                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0]);
-
-
-/**
- * App Registry APP SECRET reset db username and passwords for database in use
- * @returns {Promise.<void>}
- */
-const commonRegistryAppSecretDBReset = async () => {
-    /**@type{import('../../../server/config.js')} */
-    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-    /**@type{import('../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const file = await fileFsRead('APP_SECRET', true);
-    /**@type{server_db_file_app[]}*/
-    const APPS = file.file_content;
-    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
-    for (const app of APPS){
-        /**@ts-ignore */
-        if (app[`service_db_db${db_use}_app_user`]){
-            /**@ts-ignore */
-            app[`service_db_db${db_use}_app_user`] = '';
-        }
-        /**@ts-ignore */
-        if (app[`service_db_db${db_use}_app_password`]){
-            /**@ts-ignore */
-            app[`service_db_db${db_use}_app_password`] = '';
-        }   
-    }
-    file.file_content = APPS;
-    await fileFsWrite('APP_SECRET', file.transaction_id, file.file_content);
-    await fileFsCacheSet();
-};
-/**
- * App Registry APP update an app
- * @param {number} app_id
- * @param {number} resource_id
- * @param {server_db_file_app} data
  * @param {server_server_res} res
-* @returns {Promise.<void>}
-*/
-const commonRegistryAppUpdate = async (app_id, resource_id, data, res) => {
-    fileModelApp.update(app_id,resource_id, data, res);
-    await fileFsCacheSet();
-};
+ * @returns {server_db_file_app_module[]}
+ */
+const commonRegistryAppModuleAll = (app_id, res) =>fileModelAppModule.get(app_id, res);
+
 /**
  * App Registry APP MODULE update a module
  * @param {number} app_id
@@ -966,8 +912,15 @@ const commonRegistryAppUpdate = async (app_id, resource_id, data, res) => {
  */
 const commonRegistryAppModuleUpdate = async (app_id, resource_id, data, res) => {
     fileModelAppModule.update(app_id, resource_id, data, res);
-    await fileFsCacheSet();
  };
+
+/**
+ * App registry APP PARAMETER
+ * @param {number} app_id
+ * @returns {server_db_file_app_parameter}
+ */
+const commonRegistryAppParameter = app_id => fileModelAppParameter.get(app_id, null)[0];
+
 /**
  * App Registry APP PARAMETER update a parameter
  * @param {number} app_id
@@ -979,10 +932,17 @@ const commonRegistryAppModuleUpdate = async (app_id, resource_id, data, res) => 
  * @returns {Promise.<void>}
  */
 const commonRegistryAppParameterUpdate = async (app_id, resource_id, data, res) => {
-    
     fileModelAppParameter.update(app_id, resource_id, data, res);
-    await fileFsCacheSet();
 };
+
+/**
+ * App registry APP SECRET
+ * @param {number} app_id
+ * @returns {server_db_file_app_secret}
+ */
+const commonRegistryAppSecret= app_id => fileCache('APP_SECRET')
+                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0];
+
 /**
  * App registry APP SECRET update a secret
  * @param {number} app_id
@@ -996,13 +956,56 @@ const commonRegistryAppSecretUpdate = async (app_id, resource_id, data, res) => 
     fileModelAppSecret.update(app_id, resource_id, data, res);
 };
 
+/**
+ * App registry APP SECRET from file
+ * @param {number} app_id
+ * @returns {Promise.<server_db_file_app_secret>}
+ */
+const commonRegistryAppSecretFile= async app_id => fileFsRead('APP_SECRET').then(result=>
+                                                            result.file_content
+                                                            .filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0]);
+
+
+/**
+ * App Registry APP SECRET reset db username and passwords for database in use
+ * @param {number}  app_id
+ * @returns {Promise.<void>}
+ */
+const commonRegistryAppSecretDBReset = async app_id => {
+    /**@type{import('../../../server/config.js')} */
+    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+
+    /**@type{server_db_file_app[]}*/
+    const APP_SECRETS = await fileDBGet(app_id, 'APP_SECRET', null, null, null);
+    
+    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    for (const app_secret of APP_SECRETS){
+        /**@ts-ignore */
+        if (app_secret[`service_db_db${db_use}_app_user`]){
+            commonRegistryAppSecretUpdate(app_id, app_secret.id, {  parameter_name:`service_db_db${db_use}_app_user`,
+                                                                    parameter_value:''}, null);
+            
+        }
+        /**@ts-ignore */
+        if (app_secret[`service_db_db${db_use}_app_password`]){
+            commonRegistryAppSecretUpdate(app_id, app_secret.id, {  parameter_name:`service_db_db${db_use}_app_password`,
+                                                                    parameter_value:''}, null);
+        }   
+    }
+};
 export {commonMailCreate, commonMailSend,
         commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
         commonAppsAdminGet,commonRegistryAppModuleAll,
-        commonRegistryApp, commonRegistryAppModule,commonRegistryAppParameter,commonRegistryAppSecret,commonRegistryAppSecretFile,
+        commonRegistryApp, 
         commonRegistryAppsGet,
-        commonRegistryAppSecretDBReset,
         commonRegistryAppUpdate,
+        commonRegistryAppModule,
         commonRegistryAppModuleUpdate,
+        commonRegistryAppParameter,
         commonRegistryAppParameterUpdate,
-        commonRegistryAppSecretUpdate,};
+        commonRegistryAppSecret,
+        commonRegistryAppSecretUpdate,
+        commonRegistryAppSecretFile,
+        commonRegistryAppSecretDBReset,};

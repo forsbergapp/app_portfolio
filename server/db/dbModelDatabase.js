@@ -427,7 +427,7 @@ const dbInstallGetFiles = async (install_type) =>{
             }      
         }
         //remove db users and password
-        commonRegistryAppSecretDBReset();
+        commonRegistryAppSecretDBReset(app_id);
     }
     logServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
