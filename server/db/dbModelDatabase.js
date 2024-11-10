@@ -117,8 +117,8 @@ const dbInstallGetFiles = async (install_type) =>{
  * @returns {Promise.<{info: {}[]}>}
  */
  const dbInstall = async (app_id, query)=> {
-    /**@type{import('../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecretUpdate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    /**@type{import('./fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     /**@type{import('../log.js')} */
@@ -305,9 +305,9 @@ const dbInstallGetFiles = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await commonRegistryAppSecretUpdate(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_user`,
+                            await fileModelAppSecret.update(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_user`,
                                                                                     parameter_value:    app_username}, null);
-                            await commonRegistryAppSecretUpdate(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_password`,
+                            await fileModelAppSecret.update(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_password`,
                                                                                     parameter_value:    sql_and_pw[1]}, null);
                         }
                         users_row.sql = users_row.sql.replaceAll('<APP_ID/>', file[2]);
@@ -479,11 +479,12 @@ const dbInstallGetFiles = async (install_type) =>{
     /**@type{import('./dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
     
+    /**@type{import('./fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+
     /**@type{import('../security.js')} */
     const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
-    /**@type{import('../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecretUpdate} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-
+    
     const fs = await import('node:fs');
     /**@type{server_db_database_install_result} */
     const install_result = [];
@@ -743,7 +744,7 @@ const dbInstallGetFiles = async (install_type) =>{
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0] in secret_key).length>0)
-                    await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
+                    await fileModelAppSecret.update(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                         resource.app_registry_update_app_id,
                                                         {   
                                                             parameter_name:     key[0],
@@ -755,7 +756,7 @@ const dbInstallGetFiles = async (install_type) =>{
             if (resource.app_update_secret)
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                    await commonRegistryAppSecretUpdate(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
+                    await fileModelAppSecret.update(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                         resource.app_registry_update_app_id,
                                                         {   
                                                             parameter_name:     Object.keys(key)[0],

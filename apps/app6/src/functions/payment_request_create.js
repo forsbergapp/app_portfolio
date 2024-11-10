@@ -29,8 +29,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('../../../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecret} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    /**@type{import('../../../../server/db/file.js')} */
+    const {fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
@@ -41,7 +41,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
-    const url = commonRegistryAppSecret(app_id).merchant_api_url_payment_request_create;
+    const url = fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_api_url_payment_request_create;
     const currency = await dbModelAppDataResourceMaster.get(app_id, null, 
                             new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=CURRENCY`),
                             true).then(result=>JSON.parse(result[0].json_data));
@@ -57,11 +57,9 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         *          message:        string,
         *          origin:         string}}
         */
-        const body = {	api_secret:     /**@ts-ignore*/
-                                        commonRegistryAppSecret(app_id).merchant_api_secret,
+        const body = {	api_secret:     fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_api_secret,
                         reference:      data.reference.substring(0,30),
-                        payeeid:        /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).merchant_vpa, 
+                        payeeid:        fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_vpa, 
                         payerid:        data.payerid,
                         currency_code:  currency.currency_code,
                         amount:         serverUtilNumberValue(data.amount) ?? 0, 
@@ -70,12 +68,10 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         };
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-        const body_encrypted = {id:     /**@ts-ignore */
-                                        commonRegistryAppSecret(app_id).merchant_id,
+        const body_encrypted = {id:     fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_id,
                                 message:securityPublicEncrypt(
-                                            /**@ts-ignore*/
-                                            commonRegistryAppSecret(app_id).merchant_public_key, 
-                                            JSON.stringify(body))};
+                                                                fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_public_key, 
+                                                                JSON.stringify(body))};
         
         const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
         if (result_commonBFE.error){
@@ -95,8 +91,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             *          currency_symbol:string}}
             */
             const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                    /**@ts-ignore */
-                                                    commonRegistryAppSecret(app_id).merchant_private_key, 
+                                                    fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_private_key, 
                                                     result_commonBFE.rows[0].message));
 
             return [{   token:                  body_decrypted.token,
@@ -106,8 +101,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                         payment_request_id:     body_decrypted.payment_request_id,
                         payment_request_message:'Check your bank app to authorize this payment',
                         status:                 body_decrypted.status,
-                        merchant_name:          /**@ts-ignore */
-                                                commonRegistryAppSecret(app_id).merchant_name,
+                        merchant_name:          fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_name,
                         amount:			        body_decrypted.amount,
                         currency_symbol:        currency.currency_symbol,
                         countdown:              ''

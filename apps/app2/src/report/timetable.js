@@ -130,7 +130,9 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	const {commonRegistryAppParameter} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+	/**@type{import('../../../../server/db/fileModelAppParameter.js')} */
+	const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodedReportparameters);
@@ -143,16 +145,21 @@ const timetable = async (timetable_parameters) => {
 	 * @param {string} decodedReportparameters 
 	 * @returns 
 	 */
-	/**@type{import('../types.js').APP_PARAMETERS}*/
-	const parametersApp = commonRegistryAppParameter(timetable_parameters.app_id);
+	
+	const parametersApp = fileModelAppParameter.get(timetable_parameters.app_id, null)[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.value;
-		
+		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_lang = parametersApp.app_regional_default_calendar_lang.value;
+		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix = parametersApp.app_regional_default_locale_ext_prefix.value;
+		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_locale_ext_number_system = parametersApp.app_regional_default_locale_ext_number_system.value;
+		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_locale_ext_calendar = parametersApp.app_regional_default_locale_ext_calendar.value;
+		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_type_greg = parametersApp.app_regional_default_calendar_type_greg.value;
+		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system.value;
 		
 		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */

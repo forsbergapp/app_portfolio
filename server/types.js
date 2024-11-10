@@ -446,7 +446,7 @@
  * apps should use their own types if adding new parameters
  * @typedef {{  app_id:                             number,
  *              app_text_edit:                      {value:string, comment:string},
- *              app_coypright:                      {value:string, comment:string},
+ *              app_copyright:                      {value:string, comment:string},
  *              app_email:                          {value:string, comment:string},
  *              app_link_title:                     {value:string, comment:string},
  *              app_link_url:                       {value:string, comment:string},
