@@ -81,6 +81,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id1" id="4E0C3D27-F19C-A23E-869B-399EFB0DC32A">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>C9CFC0C7-8B78-8A42-A43B-8636797484B2</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="05FFB0F2-BC72-A23D-DEC8-E86D6C93612D" name="APP_MODULE PK">

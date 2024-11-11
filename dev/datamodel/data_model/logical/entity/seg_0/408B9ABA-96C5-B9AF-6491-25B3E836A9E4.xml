@@ -59,6 +59,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id" id="19D63DD5-A5AC-0766-8C12-9455AD98CCED">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>3A2D2A1F-81F8-5EED-E885-B393157FF2E2</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="A16F60A3-4956-E974-A7F7-7189FD9A9B66" name="SERVICE_ERROR_YYYYMMDD PK">

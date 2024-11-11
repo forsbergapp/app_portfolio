@@ -19,6 +19,11 @@ const {fileFsReadLog, fileFsAppend} = await import(`file://${process.cwd()}/serv
 const messageQueue = async (service, message_type, message, message_id) => {
     /**@type{import('../microservice/mail/service.js')} */
     const {sendEmail} = await import(`file://${process.cwd()}/microservice/mail/service.js`);
+    /**@type{import('../server/db/file.js')} */
+    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     return new Promise((resolve, reject) =>{
         /**
          * 
@@ -51,7 +56,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    fileFsReadLog('MICROSERVICE_MESSAGE_QUEUE_PUBLISH')
+                    fileFsReadLog(common_app_id,'MICROSERVICE_MESSAGE_QUEUE_PUBLISH')
                     .then((/**@type{import('./types.js').microservice_message_queue_publish[]}*/message_queue)=>{
                         /**@type{import('./types.js').microservice_message_queue_consume} */
                         let message_consume = { message_id: null,

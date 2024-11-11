@@ -987,7 +987,7 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log-stat', method:'GET'}):{
-                        resolve(log.logStatGet(app_query)
+                        resolve(log.logStatGet(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
