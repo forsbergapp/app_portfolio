@@ -269,17 +269,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Attribute_25" id="A38EDF0E-BF8E-C545-3B70-883275965F8A">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:26:31 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="common_app_id_secret" id="635CF8D7-42DD-2525-58FF-BBCA16441A9F">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:26:36 UTC</createdTime>
@@ -313,9 +302,9 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="Attribute_29" id="6C389BF6-3FC5-3472-04A3-C8789C8F0F99">
+<Attribute name="common_app_access_expire" id="B1F8CF00-C581-CC00-11F9-DF0D6F1A60D1">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:26:54 UTC</createdTime>
+<createdTime>2024-11-11 12:08:08 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
