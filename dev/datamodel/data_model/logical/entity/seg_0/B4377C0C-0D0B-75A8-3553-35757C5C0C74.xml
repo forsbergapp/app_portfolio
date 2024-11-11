@@ -126,6 +126,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id" id="ACE1DEB4-EE8A-FE15-3FB7-5AF8B35BCFD5">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>B3856FA3-BEB7-4F4C-CECE-4EA24E689B2C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="D2BDE752-A7BD-22DD-2086-AEE13C6820CC" name="IAM_USER_LOGIN PK">

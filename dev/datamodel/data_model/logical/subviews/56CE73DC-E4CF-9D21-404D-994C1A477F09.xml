@@ -1937,6 +1937,11 @@
 <colorRGB>-1</colorRGB>
 <foTypeID>10</foTypeID>
 </FontObject>
+<FontObject>
+<foType>PK Element</foType>
+<colorRGB>-16776961</colorRGB>
+<foTypeID>7</foTypeID>
+</FontObject>
 </fonts>
 </OView>
 </objectViews>
@@ -2337,15 +2342,6 @@
 <points>
 <point x="404" y="738"/>
 <point x="404" y="1079"/>
-</points>
-</Connector>
-<Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="B20DB158-88BC-0803-C15D-3F4257BF324C" otype="Relation" vid_source="D96D0121-9F39-D053-18AF-9E5320EC469B" vid_target="6B359E20-A89D-B0D9-9854-74844E518CEF">
-<hideElementsInCurrentOnly>false</hideElementsInCurrentOnly>
-<backgroundColor>-16777216</backgroundColor>
-<lineWidth>1</lineWidth>
-<points>
-<point x="2012" y="1264"/>
-<point x="2043" y="1264"/>
 </points>
 </Connector>
 <Connector class="oracle.dbtools.crest.swingui.logical.TVRelation" oid="B3856FA3-BEB7-4F4C-CECE-4EA24E689B2C" otype="Relation" vid_source="CB5A1519-90C4-3A6C-351C-E58C7339CD22" vid_target="F82514CC-B0AD-3582-1039-544F9A33536D">

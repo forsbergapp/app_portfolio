@@ -313,5 +313,31 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id" id="C53DDF5D-23B8-C0C4-4EA3-DBEF138534F6">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>CACCD4CA-8354-1EDB-CE1F-D2704718A406</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="40614B2D-EFC2-6F05-E7AC-62514D6404C2" name="APP_SECRET PK">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:19 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C53DDF5D-23B8-C0C4-4EA3-DBEF138534F6</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

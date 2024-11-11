@@ -221,12 +221,13 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
  * @function
+ * @param {number} app_id
  * @param {server_db_file_db_name} file 
  * @param {string|null} filesuffix 
  * @param {string|null} sample
  * @returns {Promise.<*>}
  */
- const fileFsReadLog = async (file, filesuffix=null, sample=null) =>{
+ const fileFsReadLog = async (app_id, file, filesuffix=null, sample=null) =>{
     
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, sample)}`;
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');

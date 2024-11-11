@@ -444,7 +444,7 @@ const logGet = async (app_id, query) => {
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         /**@ts-ignore*/
-        fileFsReadLog(file, null, sample)
+        fileFsReadLog(app_id, file, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
@@ -556,10 +556,11 @@ const logStatusCodesGet = async () =>{
 /**
  * Get log stat
  * @function
+ * @param {number} app_id
  * @param {*} query
  * @returns{Promise.<server_log_result_logStatGet[]|[]>}
  */
-const logStatGet = async query => {
+const logStatGet = async (app_id, query) => {
     /**@type{import('./server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
@@ -597,7 +598,7 @@ const logStatGet = async query => {
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await fileFsReadLog(file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
+            await fileFsReadLog(app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
             .then((logs)=>{
                 logs.forEach((/**@type{server_log_request_record|''}*/record) => {
                     if (record != ''){
