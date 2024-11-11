@@ -548,30 +548,30 @@
  *              common_app_access_expire:string}} server_db_file_app_secret
  */
 /** 
- * DB FILE server_iam_app_token_record
- * @typedef {{	id:			number,
+ * DB FILE server_iam_app_token
+ * @typedef {{	app_id: 	number,
  *		        res:		0|1,
  *   	        token:   	string,
  *		        ip:         string,
  *		        ua:         string|null,
  *		        long:       string|null,
  *		        lat:        string|null,
- *		        created:    string}} server_iam_app_token_record
+ *		        created:    string}} server_iam_app_token
  */
 
 /**
- * DB FILE server_iam_user_login_record
- * @typedef {{	id:		number|null,
- *              app_id: number,
- *              user:   string,
- *              db:     number|null,
- *              res:	0|1,
- *   	        token:  string|null,
- *		        ip:     string,
- *		        ua:     string|null,
- *		        long:   string|null,
- *		        lat:    string|null,
- *		        created:string}} server_iam_user_login_record
+ * DB FILE server_iam_user_login
+ * @typedef {{	iam_user_id:    number,
+ *              app_id:         number,
+ *              user:           string,
+ *              db:             number|null,
+ *              res:	        0|1,
+ *   	        token:          string|null,
+ *		        ip:             string,
+ *		        ua:             string|null,
+ *		        long:           string|null,
+ *		        lat:            string|null,
+ *		        created:        string}} server_iam_user_login
  */
 
 /**

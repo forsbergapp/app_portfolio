@@ -70,6 +70,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="id" id="70D48B3D-0877-67F8-DCC0-1AA8EB1A954A">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>A512F9F5-B453-04F3-B302-F119B9C85B59</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="C8848FF3-7797-1302-117A-669820A0F1E2" name="DB_INFO_YYYYMMDD PK">
