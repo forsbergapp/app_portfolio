@@ -1,0 +1,88 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C4D60A24-6C0E-5915-CB1C-5227E1BED0EB" name="DB_ERROR_YYYYMMDD">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:53:24 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="logdate" id="F71B1D3C-1C90-0E66-3DA9-8EAAB662E3F5">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:35:53 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="db" id="959A3CA3-79E8-6342-B092-B44D4DE8F118">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:36:02 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="sql" id="70528613-120C-5528-B0DB-7605EB247113">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:36:04 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="parameters" id="3E51E4E6-7DE9-231C-AEF2-5DBE7A5844CC">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:36:09 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="logtext" id="BF8C23A1-CA60-EED2-15A1-16B41BA3C34D">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:36:14 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="CD8D0A30-BFEC-92C8-AA8E-3E1AD902038E" name="DB_ERROR_YYYYMMDD PK">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 10:35:57 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>F71B1D3C-1C90-0E66-3DA9-8EAAB662E3F5</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

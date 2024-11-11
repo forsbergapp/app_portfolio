@@ -1,0 +1,144 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="IAM_USER_LOGIN">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:35:47 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="created" id="F81F0D69-FA45-F0CB-55AA-EF29DB54F22E">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:47 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="user" id="A4720BC1-49BC-0F9E-C729-EC6C74A6622C">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:15 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="db" id="7386DCAF-88F0-0B77-ECD0-76BA6A898737">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:22 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="res" id="DD38E64E-AD6E-ACA4-23F8-44B69F056358">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:25 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="token" id="054A6EA7-E03C-5B90-0794-C7EF442B9663">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:29 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ip" id="4EC8C68A-AD2F-FC37-A200-DD950F8E04DB">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:31 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ua" id="0BB5A587-5B67-7A4F-D149-2EA5BE501FFC">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:36 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="long" id="F1E5B8ED-155D-542D-D943-07F1BFDAE76C">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:39 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="lat" id="DC8C20C7-11D6-C432-055C-587FEB7BAEB7">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:36:44 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id1" id="74620D2A-DCDB-ED3A-5701-F6C24A9E628B">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:48:37 UTC</createdTime>
+<generatorID>1A793808-6D21-50E1-F3EF-9D8240554128</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>D0D873C1-E83E-4DB8-964C-B4EFCA59A1DE</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="D2BDE752-A7BD-22DD-2086-AEE13C6820CC" name="IAM_USER_LOGIN PK">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 09:39:20 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>F81F0D69-FA45-F0CB-55AA-EF29DB54F22E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
