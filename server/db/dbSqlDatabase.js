@@ -7,8 +7,9 @@
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../config.js')} */
-const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+/**@type{import('./fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
 
 /**
  * Database info select
@@ -43,7 +44,7 @@ const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
  * @returns {string}
  */
 const DATABASE_INFO_SELECT = () => {
-    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
     switch (db_use){
         case 1:
         case 2:{
@@ -110,7 +111,7 @@ const DATABASE_INFO_SELECT = () => {
                            'SQLite (' || file || ')' "database_name", 
                            sqlite_version() "version", 
                            :database_schema "database_schema",
-                           '${configGet('SERVER', 'HOST')}' "hostname", 
+                           '${fileModelConfig.get('SERVER', 'HOST')}' "hostname", 
                            '-' "connections",
                            '-' "started"
                       FROM pragma_database_list
@@ -125,7 +126,7 @@ const DATABASE_INFO_SELECT = () => {
  * @returns {string}
  */
 const DATABASE_INFO_SELECT_SPACE = () => {
-    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
     switch (db_use){
         case 1:
         case 2:{
@@ -187,7 +188,7 @@ const DATABASE_INFO_SELECT_SPACE = () => {
 };
 
 const DATABASE_INFO_SELECT_SPACE_SUM = () => {
-    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
     switch (db_use){
         case 1:
         case 2:{

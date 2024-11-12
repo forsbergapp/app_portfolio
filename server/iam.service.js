@@ -4,17 +4,14 @@
  * @import {server_iam_authenticate_request, server_iam_app_token, server_iam_user_login,
  *          server_iam_access_token_claim_type,server_iam_access_token_claim_scope_type,
  *          server_config_iam_blockip,server_config_iam_useragent,
- *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_db_file_result_fileFsRead, server_server_error, server_db_file_iam_user, server_db_file_iam_user_new, 
+ *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_server_error, server_db_file_iam_user, server_db_file_iam_user_new, 
  *          server_server_res} from './types.js'
 */
 
 /**@type{import('./server.js')} */
 const {serverResponseErrorSend, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./config.js')} */
-const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/config.js`);
-
-/**@type{import('./db/file.js')} */
-const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('./db/fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
 const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -66,7 +63,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
             //exp, iat, tokentimestamp on token
             try {
                 /**@ts-ignore*/
-                return ((jwt.verify(token, configGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET')).exp ?? 0) * 1000) - Date.now()<0;    
+                return ((jwt.verify(token, fileModelConfig.get('SERVICE_IAM', 'ADMIN_TOKEN_SECRET')).exp ?? 0) * 1000) - Date.now()<0;    
             } catch (error) {
                 return true;
             }
@@ -141,7 +138,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
         const file_content = {	iam_user_id:id,
                                 app_id:     app_id,
                                 user:		username,
-                                db:         fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                                db:         serverUtilNumberValue(fileModelConfig.get('SERVICE_DB','USE')),
                                 res:		result,
                                 token:      jwt_data.token,
                                 ip:         ip,
@@ -198,7 +195,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             /**@type{server_db_file_iam_user}*/
             const user =  fileModelIamUser.get(app_id, null, null).filter((/**@type{server_db_file_iam_user}*/user)=>user.username == username)[0];
 
-            if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID')))
+            if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(fileModelConfig.get('SERVER','APP_COMMON_APP_ID')))
                 return check_user(1, user.id, username); 
             else
                 return check_user(0, user.id, username);
@@ -250,7 +247,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
          */
         const login_error = async (app_id) =>{
             return getDisplayData(   app_id,
-                new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20300}`))
+                new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20300}`))
             .then(result_message=>result_message[0].display_data)
             .catch((/**@type{import('./types.js').server_server_error}*/error)=>{throw error;});
         };
@@ -263,7 +260,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
            const data_body = { iam_user_id: result_login[0].id,
                                app_id:      app_id,
                                user:        data.username,
-                               db:          fileCache('CONFIG_SERVER').SERVICE_DB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                               db:          serverUtilNumberValue(fileModelConfig.get('SERVICE_DB','USE')),
                                res:         0,
                                token:       null,
                                ip:          ip,
@@ -289,7 +286,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                    .then(()=>{
                                        //send email UNVERIFIED
                                        commonMailSend(  app_id, 
-                                                        fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_unverified, 
+                                                        fileModelAppSecret.get(serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_unverified, 
                                                         ip, 
                                                         user_agent,
                                                         accept_language,
@@ -436,7 +433,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                     iam_user_id:    result_signin[0].id,
                     app_id:         app_id,
                     user:           result_signin[0].username,
-                    db:             fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                    db:             serverUtilNumberValue(fileModelConfig.get('SERVICE_DB','USE')),
                     res:            1,
                     token:          jwt_data_exists.token,
                     ip:             ip,
@@ -497,7 +494,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                         iam_user_id:result_create.insertId,
                         app_id:     app_id,
                         user:       data_user.username ?? '',
-                        db:         fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                        db:         serverUtilNumberValue(fileModelConfig.get('SERVICE_DB','USE')),
                         res:        1,
                         token:      jwt_data_new.token,
                         ip:         ip,
@@ -602,7 +599,7 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
                 //send email for local users only
                 //send email SIGNUP
                 commonMailSend( app_id, 
-                                fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_signup, 
+                                fileModelAppSecret.get(serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_signup, 
                                 ip, 
                                 user_agent,
                                 accept_language,
@@ -732,7 +729,7 @@ const iamAuthenticateUserActivate = async (app_id, resource_id, ip, user_agent, 
                     iam_user_id:resource_id,
                     app_id:     app_id,
                     user:       '',
-                    db:         fileCache('CONFIG_SERVER').SERVICEDB.filter((/**@type{*}*/row)=>'USE' in row)[0].USE,
+                    db:         serverUtilNumberValue(fileModelConfig.get('SERVICE_DB','USE')),
                     res:        1,
                     token:      jwt_data.token,
                     ip:         ip,
@@ -818,7 +815,7 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
                                 .then(()=>{
                                     //send email PASSWORD_RESET
                                     commonMailSend( app_id, 
-                                                    fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].service_mail_type_password_reset, 
+                                                    fileModelAppSecret.get(serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].service_mail_type_password_reset, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -939,7 +936,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                                 .then(()=>{
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     commonMailSend( app_id, 
-                                                    fileModelAppSecret.get(serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_change_email, 
+                                                    fileModelAppSecret.get(serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0, res)[0].service_mail_type_change_email, 
                                                     ip, 
                                                     user_agent,
                                                     accept_language,
@@ -972,7 +969,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                     //invalid password
                     getDisplayData(  app_id,
-                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
+                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
                     .then(result_message=>{
                         reject(result_message[0].display_data);
                     })
@@ -984,7 +981,7 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
             //user not found
             res.statusCode=404;
             getDisplayData(  app_id,
-                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
+                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
             .then(result_message=>{
                 reject(result_message[0].display_data);
             })
@@ -1055,7 +1052,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                                     res.statusCode = 400;
                                     //invalid password
                                     getDisplayData(  app_id,
-                                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
+                                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
                                     .then(result_message=>{
                                         reject(result_message[0].display_data);
                                     })
@@ -1068,7 +1065,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                             //user not found
                             res.statusCode = 404;
                             getDisplayData(  app_id,
-                                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
+                                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
                             .then(result_message=>{
                                 reject(result_message[0].display_data);
                             })
@@ -1082,7 +1079,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                 //user not found
                 res.statusCode = 404;
                 getDisplayData(  app_id,
-                                        new URLSearchParams(`data_app_id=${serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
+                                        new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
                 .then(result_message=>{
                     reject(result_message[0].display_data);
                 });
@@ -1126,7 +1123,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
     const app_id_host = commonAppHost(host);
     //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
     if (iam && scope && authorization && app_id_host !=null){
-        const app_id_admin = serverUtilNumberValue(configGet('SERVER','APP_COMMON_APP_ID'));
+        const app_id_admin = serverUtilNumberValue(fileModelConfig.get('SERVER','APP_COMMON_APP_ID'));
         // APP_DATA uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
         // other requests uses BASIC or BEARER access token in req.headers.authorization and ID token in iam.authorization_bearer
         const id_token = scope=='APP_DATA'?authorization?.split(' ')[1] ?? '':iamUtilDecode(iam).get('authorization_bearer')?.split(' ')[1] ?? '';
@@ -1152,7 +1149,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             break;
                         }
                         case (scope=='AUTH_USER' || scope=='AUTH_PROVIDER') && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BASIC'):{
-                            if (serverUtilNumberValue(configGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
+                            if (serverUtilNumberValue(fileModelConfig.get('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1){
                                 next();
                             }
                             else
@@ -1163,7 +1160,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, configGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
+                            const access_token_decoded = jwt.verify(access_token, fileModelConfig.get('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
                             /**@type{server_iam_user_login[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
@@ -1189,11 +1186,11 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case scope=='APP_DATA_REGISTRATION' && serverUtilNumberValue(configGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='APP_DATA_REGISTRATION' && serverUtilNumberValue(fileModelConfig.get('SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
                             next();
                             break;
                         }
-                        case scope=='APP_ACCESS' && serverUtilNumberValue(configGet('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
@@ -1303,9 +1300,9 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
      * @returns {Promise.<server_iam_authenticate_request|null>}
      */
     const block_ip_control = async (ip_v4) => {
-        if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
+        if (fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
             /**@type{server_config_iam_blockip} */
-            const ranges = await configFileGet('CONFIG_IAM_BLOCKIP');
+            const ranges = await fileModelConfig.getFile('CONFIG_IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
                 for (const element of ranges) {
@@ -1329,9 +1326,9 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
      * @returns {Promise.<boolean>}
      */
     const safe_user_agents = async (client_user_agent) => {
-        if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
+        if (fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
             /**@type{server_config_iam_useragent} */
-            const {user_agents} = await configFileGet('CONFIG_IAM_USERAGENT');
+            const {user_agents} = await fileModelConfig.getFile('CONFIG_IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
                     return true;
@@ -1342,7 +1339,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
             return false;
     };
     return new Promise((resolve)=>{
-        if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
+        if (fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
             const ip_v4 = ip.replace('::ffff:','');
             block_ip_control(ip_v4).then((/**@type{server_iam_authenticate_request}*/result_range)=>{
                 if (result_range){
@@ -1351,7 +1348,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                 }
                 else{
                     //check if host exists
-                    if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_HOST_EXIST')=='1' &&
+                    if (fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_HOST_EXIST')=='1' &&
                         typeof host=='undefined'){
                         //406 Not Acceptable
                         resolve({   statusCode: 406, 
@@ -1360,7 +1357,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                     else{
                         //check if accessed from domain and not os hostname
                         import('node:os').then(({hostname}) =>{
-                            if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCESS_FROM')=='1' &&
+                            if (fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCESS_FROM')=='1' &&
                                 host==hostname()){
                                 //406 Not Acceptable
                                 resolve({   statusCode: 406, 
@@ -1372,7 +1369,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                                         resolve(null);
                                     else{
                                         //check if user-agent exists
-                                        if(configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT_EXIST')=='1' &&
+                                        if(fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT_EXIST')=='1' &&
                                             typeof user_agent=='undefined'){
                                             //406 Not Acceptable
                                             resolve({   statusCode: 406, 
@@ -1380,7 +1377,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                                         }
                                         else{
                                             //check if accept-language exists
-                                            if (configGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE')=='1' &&
+                                            if (fileModelConfig.get('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE')=='1' &&
                                                 typeof accept_language=='undefined'){
                                                 //406 Not Acceptable
                                                 resolve({   statusCode: 406, 
@@ -1536,8 +1533,8 @@ const iamAuthenticateResource = parameters =>  {
         }
         //Admin Access token
         case 'ADMIN':{
-            secret = configGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
-            expiresin = configGet('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';
+            secret = fileModelConfig.get('SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '';
+            expiresin = fileModelConfig.get('SERVICE_IAM', 'ADMIN_TOKEN_EXPIRE_ACCESS') ?? '';
             break;
         }
         //APP custom token

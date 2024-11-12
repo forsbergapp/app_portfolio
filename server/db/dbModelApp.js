@@ -10,9 +10,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../../server/config.js')} */
-const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-
+/**@type{import('./fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 /**
  * Get app
  * @function
@@ -25,7 +24,7 @@ const get = async (app_id, id, locale) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.APP_SELECT, 
-                        {   common_app_id: serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')),
+                        {   common_app_id: serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID')),
 							id: id},
                         null, 
                         locale));

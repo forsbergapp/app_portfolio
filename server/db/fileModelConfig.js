@@ -4,13 +4,13 @@
  * @import {server_db_file_db_name, server_config_server_group, server_server_error, 
  *          server_config_server,server_config_iam_blockip, server_config_iam_policy, server_config_iam_useragent,
  *          server_config_server_server, server_config_server_service_iam,
- *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret} from './types.js'
- * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../microservice/types.js'
+ *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret} from '../types.js'
+ * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
  */
 
-/**@type{import('./db/file.js')} */
+/**@type{import('./file.js')} */
 const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('./server.js')} */
+/**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 const APP_PORTFOLIO_TITLE = 'App Portfolio';
@@ -21,9 +21,9 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
  * @function
  * @param {server_config_server_group} config_group
  * @param {string} parameter
- * @returns {string|null}
+ * @returns {string}
  */
-const configGet = (config_group, parameter) => {
+const get = (config_group, parameter) => {
     if (config_group=='METADATA')
         return parameter?fileCache('CONFIG_SERVER')[config_group][parameter]:fileCache('CONFIG_SERVER')[config_group];
     else{
@@ -34,7 +34,7 @@ const configGet = (config_group, parameter) => {
                 }
             }
         }                
-        return null;
+        return '';
     }
 };
 /**
@@ -65,7 +65,7 @@ const configExists = async () => {
  */
 const configDefault = async () => {
     const fs = await import('node:fs');
-    /**@type{import('./security.js')} */
+    /**@type{import('../security.js')} */
     const {securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
     await fileFsAccessMkdir()
     .catch((/**@type{server_server_error}*/err) => {
@@ -184,7 +184,7 @@ const configInit = async () => {
  * @param {*} query
  * @returns {Promise.<*>}
  */
-const configFileGet = async (file, query=null) => {
+const getFile = async (file, query=null) => {
     const saved = query?serverUtilNumberValue(query.get('saved'))==1:false;
     const config_group = query?query.get('config_group'):null;
     const parameter = query?query.get('parameter'):null;
@@ -208,7 +208,7 @@ const configFileGet = async (file, query=null) => {
  * @param { *} data
  * @returns {Promise.<void>}
  */
-const configFileSave = async (resource_id, data) => {
+const update = async (resource_id, data) => {
     /**@type{server_config_server|
              server_db_file_app[]|
              server_config_iam_blockip|
@@ -241,4 +241,4 @@ const configFileSave = async (resource_id, data) => {
     }
     await fileFsWrite(resource_id, file_config.transaction_id, file_config.file_content);
 };
-export{ configFileGet, configFileSave, configGet, configInit};
+export{ getFile, update, get, configInit};
