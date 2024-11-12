@@ -146,10 +146,10 @@ const serverUtilAppLine = () =>{
  * @returns {Promise<server_server_express>} app
  */
  const serverExpress = async () => {
-    /**@type{import('./config.js')} */
-    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('./db/fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
     const {default:express} = await import('express');
     const {default:compression} = await import('compression');
@@ -171,7 +171,7 @@ const serverUtilAppLine = () =>{
     /**@ts-ignore */
     app.use(compression({ filter: shouldCompress }));
     // set JSON maximum size
-    app.use(express.json({ limit: configGet('SERVER', 'JSON_LIMIT') ?? ''}));
+    app.use(express.json({ limit: fileModelConfig.get('SERVER', 'JSON_LIMIT') ?? ''}));
     
     //ROUTES MIDDLEWARE
     //apps
@@ -228,23 +228,15 @@ const serverUtilAppLine = () =>{
     /**@type{import('../microservice/registry.js')} */
     const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/microservice/registry.js`);
 
-    //server app common
     /**@type{import('../apps/common/src/common.js')} */
     const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-    //server iam service
     /**@type{import('./iam.service.js')} */
     const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    //server config service
-    /**@type{import('./config.js')} */
-    const config = await import(`file://${process.cwd()}/server/config.js`);
-
-    //server info
     /**@type{import('./info.js')} */
     const info = await import(`file://${process.cwd()}/server/info.js`);
     
-    //server socket
     /**@type{import('./socket.js')} */
     const socket = await import(`file://${process.cwd()}/server/socket.js`);
 
@@ -308,6 +300,9 @@ const serverUtilAppLine = () =>{
     /**@type{import('./db/fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
     return new Promise((resolve, reject)=>{
         try {
             if (routesparameters.endpoint == 'APP' && routesparameters.method == 'GET' && !routesparameters.url.startsWith('/bff')){
@@ -328,7 +323,7 @@ const serverUtilAppLine = () =>{
                 const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
                 const app_query = URI_query?new URLSearchParams(URI_query):null;
 
-                const COMMON_APP_ID = serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID'));
+                const COMMON_APP_ID = serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'));
                 let resource_id_iamUtilResponseNotAuthorized = false;
                 /**
                  * Returns resource id number from URI path
@@ -422,7 +417,7 @@ const serverUtilAppLine = () =>{
                     //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                     const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get(app_id, null)[0].common_client_id + ':' + 
                                                                     fileModelAppSecret.get(app_id, null)[0].common_client_secret,'utf-8').toString('base64')}`;
-                    return microserviceRequest(app_id == serverUtilNumberValue(config.configGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
+                    return microserviceRequest(app_id == serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
                                                 microservice_path, 
                                                 Buffer.from(microservice_query + `&app_id=${app_id}`).toString('base64'), 
                                                 routesparameters.method,
@@ -928,7 +923,7 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'GET', required:true}):{
-                        resolve(config.configFileGet(
+                        resolve(fileModelConfig.getFile(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
                                                         app_query)
@@ -936,7 +931,7 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:`/bff/admin/v1/server-config/config/${resource_id_string}`, method:'PUT', required:true}):{
-                        resolve(config.configFileSave(
+                        resolve(fileModelConfig.update(
                                                         /**@ts-ignore */
                                                         resource_id_get_string(), 
                                                         routesparameters.body));
@@ -1068,7 +1063,7 @@ const serverUtilAppLine = () =>{
                     //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
                     case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
                         (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
-                        if (serverUtilNumberValue(config.configGet('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
+                        if (serverUtilNumberValue(fileModelConfig.get('SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
                             const params = URI_query.split('&');
                             //set ip from client in case ip query parameter is missing
                             //if ip parameter does not exist
@@ -1142,12 +1137,12 @@ const serverUtilAppLine = () =>{
 const serverStart = async () =>{
     /**@type{import('./db/dbModelDatabase.js')} */
     const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
-    /**@type{import('./config.js')} */
-    const {configInit, configGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('./socket.js')} */
     const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('./db/fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -1163,7 +1158,7 @@ const serverStart = async () =>{
         fileModelLog.postServerE('Process unhandledRejection: ' + reason);
     });
     try {
-        await configInit();
+        await fileModelConfig.configInit();
         await dbModelDatabase.dbStart();
         //Get express app with all configurations
         /**@type{server_server_express}*/
@@ -1171,23 +1166,23 @@ const serverStart = async () =>{
         socketIntervalCheck();
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(app).listen(configGet('SERVER', 'HTTP_PORT'), () => {
-            fileModelLog.postServerI('HTTP Server up and running on PORT: ' + configGet('SERVER', 'HTTP_PORT')).then(() => {
+        http.createServer(app).listen(fileModelConfig.get('SERVER', 'HTTP_PORT'), () => {
+            fileModelLog.postServerI('HTTP Server up and running on PORT: ' + fileModelConfig.get('SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
         });
-        if (configGet('SERVER', 'HTTPS_ENABLE')=='1'){
+        if (fileModelConfig.get('SERVER', 'HTTPS_ENABLE')=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + configGet('SERVER', 'HTTPS_KEY'), 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + configGet('SERVER', 'HTTPS_CERT'), 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + fileModelConfig.get('SERVER', 'HTTPS_KEY'), 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + fileModelConfig.get('SERVER', 'HTTPS_CERT'), 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
             /**@ts-ignore*/
-            https.createServer(options,  app).listen(configGet('SERVER', 'HTTPS_PORT'), () => {
-                fileModelLog.postServerI('HTTPS Server up and running on PORT: ' + configGet('SERVER', 'HTTPS_PORT')).then(() => {
+            https.createServer(options,  app).listen(fileModelConfig.get('SERVER', 'HTTPS_PORT'), () => {
+                fileModelLog.postServerI('HTTPS Server up and running on PORT: ' + fileModelConfig.get('SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
             });            
