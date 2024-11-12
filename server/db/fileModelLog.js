@@ -4,9 +4,9 @@
  * @import {server_log_result_logFilesGet, server_log_request_record, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
  *          server_server_error, server_server_req, server_server_req_verbose, server_db_common_result, server_db_common_result_error} from '../types.js'
 */
+/**@type{import('./fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-/**@type{import('../config.js')} */
-const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 /**@type{import('./file.js')} */
 const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.js`);
 
@@ -27,7 +27,7 @@ const logDate = () => new Date().toISOString();
  */
  const post = async (logscope, loglevel, log) => {
     return await new Promise((resolve) => {
-        const config_file_interval = configGet('SERVICE_LOG', 'FILE_INTERVAL');
+        const config_file_interval = fileModelConfig.get('SERVICE_LOG', 'FILE_INTERVAL');
         fileFsAppend(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
         .catch((/**@type{server_server_error}*/error)=>{
@@ -65,7 +65,7 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
                                     logtext:            err.status + '-' + err.message
                                 };
         /**@ts-ignore */
-        resolve(post(configGet('SERVICE_LOG', 'SCOPE_REQUEST'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
+        resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_REQUEST'), fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
     });
 };
 /**
@@ -81,9 +81,9 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     return await new Promise((resolve) => {
         let log_level;
         let log_json_server = {};
-        switch (configGet('SERVICE_LOG', 'REQUEST_LEVEL')){
+        switch (fileModelConfig.get('SERVICE_LOG', 'REQUEST_LEVEL')){
             case '1':{
-                log_level = configGet('SERVICE_LOG', 'LEVEL_INFO');
+                log_level = fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO');
                 log_json_server = { logdate:            logDate(),
                                     host:               req.headers.host,
                                     ip:                 req.ip,
@@ -105,7 +105,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
                 break;
             }
             case '2':{
-                log_level = configGet('SERVICE_LOG', 'LEVEL_VERBOSE');
+                log_level = fileModelConfig.get('SERVICE_LOG', 'LEVEL_VERBOSE');
                 /**@type{server_server_req_verbose} */
                 const logtext_req = Object.assign({}, req);
                 const getCircularReplacer = () => {
@@ -154,7 +154,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
             }
         }   
         /**@ts-ignore */
-        return resolve(post(configGet('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
+        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
     });
 };
 /**
@@ -171,7 +171,7 @@ const postServer = async (log_level, logtext) =>{
                                 logtext: logtext
                               };
         /**@ts-ignore */
-        resolve(post(configGet('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
+        resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
     });
 };
 /**
@@ -183,7 +183,7 @@ const postServer = async (log_level, logtext) =>{
 const postServerI = async (logtext)=>{
     return await new Promise((resolve) => {
         /**@ts-ignore */
-        resolve(postServer(configGet('SERVICE_LOG', 'LEVEL_INFO'), logtext));
+        resolve(postServer(fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO'), logtext));
     });
 };
 /**
@@ -195,7 +195,7 @@ const postServerI = async (logtext)=>{
 const postServerE = async (logtext)=>{
     return await new Promise((resolve) => {
         /**@ts-ignore */
-        resolve(postServer(configGet('SERVICE_LOG', 'LEVEL_ERROR'), logtext));
+        resolve(postServer(fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), logtext));
     });
 };
 /**
@@ -212,9 +212,9 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
     return await new Promise((resolve) => {
         let log_json_db;
         let level_info;
-        switch (configGet('SERVICE_LOG', 'DB_LEVEL')){
+        switch (fileModelConfig.get('SERVICE_LOG', 'DB_LEVEL')){
             case '1':{
-                level_info = configGet('SERVICE_LOG', 'LEVEL_INFO');
+                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO');
                 log_json_db = {
                                 logdate:        logDate(),
                                 app_id:         app_id,
@@ -226,7 +226,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
                 break;
             }
             case '2':{
-                level_info = configGet('SERVICE_LOG', 'LEVEL_VERBOSE');
+                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_VERBOSE');
                 log_json_db = {
                                 logdate:        logDate(),
                                 app_id:         app_id,
@@ -243,7 +243,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
             }
         }
         /**@ts-ignore */
-        return resolve(post(configGet('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
+        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
     });
 };
 /**
@@ -267,7 +267,7 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
             logtext:        result
             };
         /**@ts-ignore */
-        resolve(post(configGet('SERVICE_LOG', 'SCOPE_DB'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
+        resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_DB'), fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
     });
 };
 /**
@@ -283,9 +283,9 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
     return await new Promise((resolve) => {         
         let log_json;
         let level_info;
-        switch (configGet('SERVICE_LOG', 'SERVICE_LEVEL')){
+        switch (fileModelConfig.get('SERVICE_LOG', 'SERVICE_LEVEL')){
             case '1':{
-                level_info = configGet('SERVICE_LOG', 'LEVEL_INFO');
+                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO');
                 log_json = {logdate:    logDate(),
                             app_id:     app_id,
                             service:    service,
@@ -295,7 +295,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
                 break;
             }
             case '2':{
-                level_info = configGet('SERVICE_LOG', 'LEVEL_VERBOSE');
+                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_VERBOSE');
                 log_json = {logdate:    logDate(),
                             app_id:     app_id,
                             service:    service,
@@ -310,7 +310,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
             }
         }
         /**@ts-ignore */
-        return resolve(post(configGet('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
+        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
     });
 };
 /**
@@ -332,7 +332,7 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
                         logtext:    logtext
                        };
         /**@ts-ignore */
-        return resolve(post(configGet('SERVICE_LOG', 'SCOPE_SERVICE'), configGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
+        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_SERVICE'), fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
     });
 };
 /**
@@ -357,7 +357,7 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
                     logtext:            logtext
                     };
     /**@ts-ignore */
-    resolve(post(configGet('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
+    resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
     });
 };
 /**
@@ -373,9 +373,9 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
 const postAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
         //log if INFO or VERBOSE level
-        if (configGet('SERVICE_LOG', 'APP_LEVEL')=='1' || configGet('SERVICE_LOG', 'APP_LEVEL')=='2')
+        if (fileModelConfig.get('SERVICE_LOG', 'APP_LEVEL')=='1' || fileModelConfig.get('SERVICE_LOG', 'APP_LEVEL')=='2')
             /**@ts-ignore */
-            resolve(postApp(app_id, configGet('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
+            resolve(postApp(app_id, fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
         else
             resolve(null);
     });
@@ -393,7 +393,7 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
 const postAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
         /**@ts-ignore */
-        resolve(postApp(app_id, configGet('SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
+        resolve(postApp(app_id, fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
     });
 };
 
@@ -592,7 +592,7 @@ const getStat = async (app_id, query) => {
         if (file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`) ||
             file.startsWith(`REQUEST_VERBOSE_${data.year}${data.month.toString().padStart(2,'0')}`)){
             //filename format: REQUEST_INFO_YYYMMDD.log
-            if (configGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
+            if (fileModelConfig.get('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
                 day = file.slice(-6).substring(0,2);
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;

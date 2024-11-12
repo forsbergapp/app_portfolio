@@ -23,8 +23,9 @@
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../config.js')} */
-const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+/**@type{import('./fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
 /**@type{import('./file.js')} */
 const {filePath} = await import(`file://${process.cwd()}/server/db/file.js`);
 
@@ -48,7 +49,7 @@ const DB_POOL =[
                   [5, null, null]  //SQLite           [db number, db object, null]
                ];                     
 
-if (serverUtilNumberValue(configGet('SERVICE_DB', 'USE'))==4){
+if (serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'))==4){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;

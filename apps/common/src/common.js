@@ -114,13 +114,13 @@ const commonMailCreate = async (app_id, data) =>{
 const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
     /**@type{import('../../../server/bff.service.js')} */
     const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
-    /**@type{import('../../../server/config.js')} */
-    const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
     const email_rendered = await commonMailCreate( app_id, 
                                     {
                                         emailtype:        emailtype,
-                                        host:             configGet('SERVER', 'HOST'),
+                                        host:             fileModelConfig.get('SERVER', 'HOST'),
                                         app_user_id:      userid,
                                         verificationCode: verification_code,
                                         to:               email,
@@ -868,15 +868,15 @@ const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(a
  * @returns {Promise.<void>}
  */
 const commonRegistryAppSecretDBReset = async app_id => {
-    /**@type{import('../../../server/config.js')} */
-    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{server_db_file_app_secret[]}*/
     const APP_SECRETS = fileModelAppSecret.get(app_id, null);
     
-    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
     for (const app_secret of APP_SECRETS){
         /**@ts-ignore */
         if (app_secret[`service_db_db${db_use}_app_user`]){

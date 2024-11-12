@@ -7,8 +7,8 @@
 /**@type{import('./server.js')} */
 const {serverUtilResponseTime, serverResponseErrorSend, serverUtilNumberValue, serverRoutes} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('./config.js')} */
-const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/config.js`);
+/**@type{import('./db/fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
@@ -105,9 +105,9 @@ const bffInit = async (req, res) =>{
         res.setHeader('Access-Control-Max-Age','5');
         res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-        if (configGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
+        if (fileModelConfig.get('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
             /**@type{server_config_iam_policy}*/
-            const iam_policy = await configFileGet('CONFIG_IAM_POLICY', false);
+            const iam_policy = await fileModelConfig.getFile('CONFIG_IAM_POLICY', false);
             res.setHeader('content-security-policy', iam_policy['content-security-policy']);
         }
         res.setHeader('cross-origin-opener-policy','same-origin');
@@ -155,14 +155,14 @@ const bffInit = async (req, res) =>{
 const bffStart = async (req, res) =>{
     const check_redirect = () =>{
         //redirect naked domain to www except for localhost
-        if (req.headers.host.startsWith(configGet('SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
-            if (configGet('SERVER', 'HTTPS_ENABLE')=='1')
+        if (req.headers.host.startsWith(fileModelConfig.get('SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
+            if (fileModelConfig.get('SERVER', 'HTTPS_ENABLE')=='1')
                 return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
             else
                 return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
         else{
             //redirect from http to https if https is enabled
-            if (req.protocol=='http' && configGet('SERVER', 'HTTPS_ENABLE')=='1')
+            if (req.protocol=='http' && fileModelConfig.get('SERVER', 'HTTPS_ENABLE')=='1')
                 return {reason:'REDIRECT', redirect:`https://${req.headers.host}${req.originalUrl}`};
             else
                 return {reason:null, redirect:null};
@@ -170,11 +170,11 @@ const bffStart = async (req, res) =>{
     };
     //if first time, when no user exists, then redirect everything to admin
     if (fileModelIamUser.get(commonAppHost(req.headers.host ?? '')??0, null, null).length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-        return {reason:'REDIRECT', redirect:`http://admin.${configGet('SERVER','HOST')}`};
+        return {reason:'REDIRECT', redirect:`http://admin.${fileModelConfig.get('SERVER','HOST')}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
-        if (configGet('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
-            if (req.originalUrl.startsWith(configGet('SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
+        if (fileModelConfig.get('SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
+            if (req.originalUrl.startsWith(fileModelConfig.get('SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
                 res.type('text/plain');
                 res.write(await fs.promises.readFile(`${process.cwd()}${req.originalUrl}`, 'utf8'));
                 return {reason:'SEND', redirect:null};
@@ -229,7 +229,7 @@ const bffStart = async (req, res) =>{
                     bff_parameters.res?bff_parameters.res.status(200).send(result_service.SENDCONTENT):null;
             }
             else{
-                const log_result = serverUtilNumberValue(configGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
+                const log_result = serverUtilNumberValue(fileModelConfig.get('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
                 fileModelLog.postServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
                     if (bff_parameters.endpoint=='SOCKET'){
                         //This endpoint only allowed for EventSource so no more update of response
@@ -242,10 +242,10 @@ const bffStart = async (req, res) =>{
                                 bff_parameters.res.redirect('/');
                             else 
                                 if (bff_parameters.endpoint=='APP' && bff_parameters.res.statusCode==404){
-                                    if (configGet('SERVER', 'HTTPS_ENABLE')=='1')
-                                        bff_parameters.res.redirect(`https://${configGet('SERVER', 'HOST')}`);
+                                    if (fileModelConfig.get('SERVER', 'HTTPS_ENABLE')=='1')
+                                        bff_parameters.res.redirect(`https://${fileModelConfig.get('SERVER', 'HOST')}`);
                                     else
-                                        bff_parameters.res.redirect(`http://${configGet('SERVER', 'HOST')}`);
+                                        bff_parameters.res.redirect(`http://${fileModelConfig.get('SERVER', 'HOST')}`);
                                 }
                                 else{
                                     /**
@@ -329,10 +329,10 @@ const bffStart = async (req, res) =>{
     }
     else{
         //unknown appid, domain or subdomain, redirect to hostname
-        if (configGet('SERVER', 'HTTPS_ENABLE')=='1')
-            bff_parameters.res?bff_parameters.res.redirect(`https://${configGet('SERVER', 'HOST')}`):null;
+        if (fileModelConfig.get('SERVER', 'HTTPS_ENABLE')=='1')
+            bff_parameters.res?bff_parameters.res.redirect(`https://${fileModelConfig.get('SERVER', 'HOST')}`):null;
         else
-            bff_parameters.res?bff_parameters.res.redirect(`http://${configGet('SERVER', 'HOST')}`):null;
+            bff_parameters.res?bff_parameters.res.redirect(`http://${fileModelConfig.get('SERVER', 'HOST')}`):null;
     }
 };
 /**

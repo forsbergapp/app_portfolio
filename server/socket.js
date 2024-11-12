@@ -9,8 +9,7 @@
 
 /**@type{import('./server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./config.js')} */
-const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+
 /**@type{import('./db/file.js')} */
 const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('./iam.service.js')} */
@@ -18,6 +17,8 @@ const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.s
 
 /**@type{import('./db/fileModelAppParameter.js')} */
 const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+/**@type{import('./db/fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 /**@type{server_socket_connected_list[]} */
 let SOCKET_CONNECTED_CLIENTS = [];
@@ -203,7 +204,7 @@ const socketClientAdd = (newClient) => {
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.id != data.client_id_current)
-                if (data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID')))
+                if (data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID')))
                     null;
                 else
                     if (client.app_id == app_id || app_id == null){
@@ -430,7 +431,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  */
  const socketIntervalCheck = () => {
     //start interval if apps are started
-    const app_id = serverUtilNumberValue(configGet('SERVER', 'APP_COMMON_APP_ID'))??0;
+    const app_id = serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0;
     if (fileModelAppParameter.get(app_id, null)[0].common_app_start.value =='1'){
         setInterval(() => {
             if (serverUtilNumberValue(fileCache('CONFIG_SERVER').METADATA.MAINTENANCE)==1){
@@ -441,7 +442,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
             }
             socketExpiredTokensUpdate();
         //set default interval to 5 seconds if no parameter is set
-        }, serverUtilNumberValue(configGet('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
+        }, serverUtilNumberValue(fileModelConfig.get('SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
     }
 };
 /**
