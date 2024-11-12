@@ -665,6 +665,10 @@ const component = async props => {
             if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input'),100]]})==false)
                 return;
         }
+        if(offset==0){
+            page =1;
+            page_last=1;
+        }
         search=search?encodeURI(search):search;
         props.methods.commonComponentRender(
                 {   mountDiv:'menu_monitor_detail_server_log',
