@@ -6,8 +6,8 @@
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../log.js')} */
-const {logDBI, logDBE} = await import(`file://${process.cwd()}/server/log.js`);
+/**@type{import('./fileModelLog.js')} */
+const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 /**@type{import('../config.js')} */
 const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
 
@@ -243,7 +243,7 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 
 		dbSQL(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{server_db_common_result}*/result)=> {
-			logDBI(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, result)
+			fileModelLog.postDBI(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				try {
@@ -276,7 +276,7 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(configGet('SERVICE_DB',
 			//add db_message key since message is not saved for SQLite
 			if (error.message)
 				error.db_message = error.message;
-			logDBE(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, error)
+			fileModelLog.postDBE(app_id, serverUtilNumberValue(configGet('SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
 				const app_code = dbCommonAppCodeGet(error);
 				if (app_code != null)

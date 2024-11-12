@@ -33,8 +33,8 @@ const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileM
 /**@type{import('../../../server/db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
-/**@type{import('../../../server/log.js')} */
-const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
+/**@type{import('../../../server/db/fileModelLog.js')} */
+const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
 /**@type{import('../../../server/server.js')} */
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -474,7 +474,7 @@ const commonAssetfile = parameters =>{
                 break;
             }
             default:{
-                logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
+                fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
                 .then(()=>{
                     parameters.res.statusCode = 403;
                     parameters.res.statusMessage = null;
@@ -505,7 +505,7 @@ const commonModuleRun = async parameters => {
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
     }
     else{
-        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
+        fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -569,7 +569,7 @@ const commonModuleGet = async parameters => {
         
     }
     else{
-        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
+        fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -793,7 +793,7 @@ const commonApp = async parameters =>{
                                     return app;
                                 })
                                 .catch((/**@type{server_server_error}*/err)=>{
-                                    logAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
+                                    fileModelLog.postAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
                                     .then(()=>{
                                         if (parameters.res){
                                             parameters.res.statusCode = 500;

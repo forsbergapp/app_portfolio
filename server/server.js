@@ -148,8 +148,8 @@ const serverUtilAppLine = () =>{
  const serverExpress = async () => {
     /**@type{import('./config.js')} */
     const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
-    /**@type{import('./log.js')} */
-    const {logRequestE} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./db/fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
     const {default:express} = await import('express');
     const {default:compression} = await import('compression');
@@ -210,7 +210,7 @@ const serverUtilAppLine = () =>{
     
     //ERROR LOGGING
     app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res, /**@type{function}*/next) => {
-        logRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
+        fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
             next();
         });
     });
@@ -244,10 +244,6 @@ const serverUtilAppLine = () =>{
     /**@type{import('./info.js')} */
     const info = await import(`file://${process.cwd()}/server/info.js`);
     
-    //server log
-    /**@type{import('./log.js')} */
-    const log = await import(`file://${process.cwd()}/server/log.js`);
-
     //server socket
     /**@type{import('./socket.js')} */
     const socket = await import(`file://${process.cwd()}/server/socket.js`);
@@ -308,7 +304,10 @@ const serverUtilAppLine = () =>{
 
     /**@type{import('./db/fileModelAppSecret.js')} */
     const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
-    
+
+    /**@type{import('./db/fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+
     return new Promise((resolve, reject)=>{
         try {
             if (routesparameters.endpoint == 'APP' && routesparameters.method == 'GET' && !routesparameters.url.startsWith('/bff')){
@@ -977,22 +976,22 @@ const serverUtilAppLine = () =>{
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log', method:'GET'}):{
-                        resolve(log.logGet(routesparameters.app_id, app_query)
+                        resolve(fileModelLog.get(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server/info-statuscode', method:'GET'}):{
-                        resolve(log.logStatusCodesGet()
+                        resolve(fileModelLog.getStatusCodes()
                                     .then(result=>iso_return_message(result, true)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log-stat', method:'GET'}):{
-                        resolve(log.logStatGet(routesparameters.app_id, app_query)
+                        resolve(fileModelLog.getStat(routesparameters.app_id, app_query)
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
                     case route({url:'/bff/admin/v1/server-log/log-files', method:'GET'}):{
-                        resolve(log.logFilesGet()
+                        resolve(fileModelLog.getFiles()
                                     .then(result=>iso_return_message(result, false)));
                         break;
                     }
@@ -1147,8 +1146,8 @@ const serverStart = async () =>{
     const {configInit, configGet} = await import(`file://${process.cwd()}/server/config.js`);
     /**@type{import('./socket.js')} */
     const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('./log.js')} */
-    const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./db/fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -1157,11 +1156,11 @@ const serverStart = async () =>{
     process.env.TZ = 'UTC';
     process.on('uncaughtException', (err) =>{
         console.log(err);
-        logServerE('Process uncaughtException: ' + err.stack);
+        fileModelLog.postServerE('Process uncaughtException: ' + err.stack);
     });
     process.on('unhandledRejection', (reason) =>{
         console.log(reason);
-        logServerE('Process unhandledRejection: ' + reason);
+        fileModelLog.postServerE('Process unhandledRejection: ' + reason);
     });
     try {
         await configInit();
@@ -1173,7 +1172,7 @@ const serverStart = async () =>{
         //START HTTP SERVER
         /**@ts-ignore*/
         http.createServer(app).listen(configGet('SERVER', 'HTTP_PORT'), () => {
-            logServerI('HTTP Server up and running on PORT: ' + configGet('SERVER', 'HTTP_PORT')).then(() => {
+            fileModelLog.postServerI('HTTP Server up and running on PORT: ' + configGet('SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
         });
@@ -1188,13 +1187,13 @@ const serverStart = async () =>{
             };
             /**@ts-ignore*/
             https.createServer(options,  app).listen(configGet('SERVER', 'HTTPS_PORT'), () => {
-                logServerI('HTTPS Server up and running on PORT: ' + configGet('SERVER', 'HTTPS_PORT')).then(() => {
+                fileModelLog.postServerI('HTTPS Server up and running on PORT: ' + configGet('SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
             });            
         }
     } catch (/**@type{server_server_error}*/error) {
-        logServerE('serverStart: ' + error.stack);
+        fileModelLog.postServerE('serverStart: ' + error.stack);
     }
     
 };
