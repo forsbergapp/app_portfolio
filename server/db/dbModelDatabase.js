@@ -121,8 +121,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
-    /**@type{import('../log.js')} */
-    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
@@ -322,7 +322,7 @@ const dbInstallGetFiles = async (install_type) =>{
     }
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
-    logServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    fileModelLog.postServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
  };
  /**
@@ -357,8 +357,8 @@ const dbInstallGetFiles = async (install_type) =>{
 
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
-    /**@type{import('../log.js')} */
-    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
@@ -429,7 +429,7 @@ const dbInstallGetFiles = async (install_type) =>{
         //remove db users and password
         commonRegistryAppSecretDBReset(app_id);
     }
-    logServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
+    fileModelLog.postServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
                     {count_fail: count_statements_fail}
                 ]};
@@ -449,8 +449,8 @@ const dbInstallGetFiles = async (install_type) =>{
  const dbDemoInstall = async (app_id, query, data)=> {
     /**@type{import('../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../log.js')} */
-    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
     /**@type{import('./dbModelApp.js')} */
     const {getAdminId} = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
@@ -1029,7 +1029,7 @@ const dbInstallGetFiles = async (install_type) =>{
     install_result.push({'user_account_app_data_post_like': records_user_account_app_data_post_like});
     install_result.push({'user_account_app_data_post_view': records_user_account_app_data_post_view});
     install_result.push({'finished': new Date().toISOString()});
-    logServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    fileModelLog.postServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {info: install_result};
 };
 /**
@@ -1043,8 +1043,8 @@ const dbInstallGetFiles = async (install_type) =>{
 const dbDemoUninstall = async (app_id, query)=> {
     /**@type{import('../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('../log.js')} */
-    const {logServerI} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./dbModelUserAccount.js')} */
 	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     return new Promise((resolve, reject)=>{
@@ -1071,7 +1071,7 @@ const dbDemoUninstall = async (app_id, query)=> {
                 };
                 delete_users()
                 .then(()=>{
-                    logServerI(`Demo uninstall count: ${deleted_user}`);
+                    fileModelLog.postServerI(`Demo uninstall count: ${deleted_user}`);
                     resolve({info: [{'count': deleted_user}]});
                 })
                 .catch((/**@type{server_server_error}*/error)=>{
@@ -1079,7 +1079,7 @@ const dbDemoUninstall = async (app_id, query)=> {
                 });
             }
             else{
-                logServerI(`Demo uninstall count: ${result_demo_users.length}`);
+                fileModelLog.postServerI(`Demo uninstall count: ${result_demo_users.length}`);
                 resolve({info: [{'count': result_demo_users.length}]});
             }
         })
@@ -1101,8 +1101,8 @@ const dbDemoUninstall = async (app_id, query)=> {
  * @returns {Promise.<null>}
  */
  const DB_POOL = async (db_use, dba, user, password, pool_id) =>{
-    /**@type{import('../log.js')} */
-    const {logServerI, logServerE} = await import(`file://${process.cwd()}/server/log.js`);
+    /**@type{import('./fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('../db/db.js')} */
     const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     
@@ -1132,11 +1132,11 @@ const dbDemoUninstall = async (app_id, query)=> {
        };
        dbPoolStart(dbparameters)
        .then((/**@type{null}*/result)=>{
-          logServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
+        fileModelLog.postServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
           resolve(result);
        })
        .catch((/**@type{server_server_error}*/error)=>{
-          logServerE('Starting pool error: ' + error);
+        fileModelLog.postServerE('Starting pool error: ' + error);
           reject(error);
        });
     });
