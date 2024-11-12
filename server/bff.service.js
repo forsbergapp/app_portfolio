@@ -13,8 +13,8 @@ const {configGet, configFileGet} = await import(`file://${process.cwd()}/server/
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
-/**@type{import('./log.js')} */
-const {logRequestI, logServiceI, logServiceE} = await import(`file://${process.cwd()}/server/log.js`);
+/**@type{import('./db/fileModelLog.js')} */
+const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 /**@type{import('./iam.service.js')} */
 const {iamAuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**@type{import('./security.js')} */
@@ -36,7 +36,7 @@ const fs = await import('node:fs');
  * @returns {*}
  */
 const bffErrorLog = (app_id, bff_parameters, service, error) =>{
-    logServiceE(app_id, service, bff_parameters.query, error).then(() => {
+    fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
         if (bff_parameters.res){
             const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
             if (error.error && error.error.code=='MICROSERVICE')
@@ -74,11 +74,11 @@ const bffErrorLog = (app_id, bff_parameters, service, error) =>{
 const bffInit = async (req, res) =>{
     if (req.headers.accept == 'text/event-stream'){
         //Eventsource, log since response is open and log again when closing
-        logRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res));
+        fileModelLog.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res));
     }
     res.on('close',()=>{	
         //eventsource response time will be time connected until disconnected
-        logRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res)).then(() => {
+        fileModelLog.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res)).then(() => {
             // do not return any StatusMessage to client, this is only used for logging purpose
             res.statusMessage = '';
             res.end();
@@ -230,7 +230,7 @@ const bffStart = async (req, res) =>{
             }
             else{
                 const log_result = serverUtilNumberValue(configGet('SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-                logServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
+                fileModelLog.postServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
                     if (bff_parameters.endpoint=='SOCKET'){
                         //This endpoint only allowed for EventSource so no more update of response
                         null;
@@ -361,7 +361,7 @@ const bffStart = async (req, res) =>{
                             res:bff_parameters.res})
             .then((/**@type{string}*/result)=>resolve(result))
             .catch((/**@type{server_server_error}*/error)=>{
-                logServiceE(app_id, service, bff_parameters.query, error).then(() => {
+                fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
                     reject(error);
                 });
             });
