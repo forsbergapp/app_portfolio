@@ -658,7 +658,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                                 case 'menu_monitor_server_log':{
                                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                                     COMMON_DOCUMENT.querySelector('#menu_monitor_server_log').classList.add('list_nav_selected_tab');
-                                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
+                                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog(0,'logdate', 'desc');
                                     break;
                                 }
                                 case 'menu_monitor_connected':{
@@ -675,7 +675,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                             }
                         }
                     if( event_target_id == 'menu_monitor_detail_select_logscope')
-                        APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate', 'desc');
+                        APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog(0,'logdate', 'desc');
                     break;
                 }
                 case 'menu_start_broadcast_button':{
@@ -720,7 +720,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                 }
                 case 'menu_monitor_detail_server_log_search_icon':{
                     COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input').focus();
-                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog('logdate','desc');
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog(0, 'logdate','desc');
                     break;
                 }
                 case 'menu_monitor_connected':{
@@ -870,7 +870,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 'logdate', 'desc');
+                        common.commonTypewatch(APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 0, 'logdate', 'desc');
                     break;
                 }
             }

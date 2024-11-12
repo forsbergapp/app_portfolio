@@ -89,10 +89,11 @@ const component = async props => {
     let monitorDetailPageDetail = item =>{item;};
     /**
      * Display server logs
+     * @param {number} offset
      * @param {string} sort
      * @param {string} order_by
      */
-    let monitorDetailShowServerLogDetail = (sort, order_by) => {sort;order_by;};
+    let monitorDetailShowServerLogDetail = (offset, sort, order_by) => {offset;sort;order_by;};
     /**
      * Show existing logfiles
      * @returns {void}
@@ -118,7 +119,7 @@ const component = async props => {
     let monitorDetailClickItemDetail = (item_type, data) => {item_type;data;};
 
     const LIMIT = await props.methods.commonFFB({path:`/app-common-app-parameter/${props.data.app_id}`, method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].common_app_limit_records.VALUE)); 
+                            .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].common_app_limit_records.value)); 
         
     /**
      * Get log parameters
@@ -239,10 +240,11 @@ const component = async props => {
     const monitorDetailPage = item => monitorDetailPageDetail(item);
     /**
      * Display server logs
+     * @param {number} offset
      * @param {string} sort
      * @param {string} order_by
      */
-    const monitorDetailShowServerLog = (sort, order_by) => monitorDetailShowServerLogDetail(sort, order_by);
+    const monitorDetailShowServerLog = (offset, sort, order_by) => monitorDetailShowServerLogDetail(offset, sort, order_by);
 
     /**
      * Show existing logfiles
