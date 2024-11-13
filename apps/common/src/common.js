@@ -1,14 +1,15 @@
 /** @module apps/common/src/common/service */
 
 /**
- * @import {server_db_file_app_secret,
- *          server_db_file_app_parameter,
+ * @import {server_db_file_app,
+ *          server_db_file_app_secret,
  *          server_db_file_app_module,
- *          server_config_apps_with_db_columns,
- *          server_db_file_app,
- *          server_apps_report_create_parameters,
  *          server_db_file_app_parameter_common,
+ *          server_config_apps_with_db_columns,
+ *          server_apps_report_create_parameters,
  *          server_apps_app_service_parameters,
+ *          server_apps_module_with_metadata,
+ *          server_apps_module_metadata,
  *          server_server_routesparameters,
  *          server_server_res,
  *          server_bff_endpoint_type,
@@ -577,7 +578,27 @@ const commonModuleGet = async parameters => {
         });
     }
 };
-
+/**
+ * Returns all modules with metadata
+ * @param {{app_id:Number,
+ *          type:'REPORT'|'MODULE'|'FUNCTION',
+ *          resource_id:number,
+ *          res:server_server_res|null}} parameters
+ * @returns {Promise.<server_apps_module_with_metadata[]>}
+ */
+const commonModuleMetaDataGet = async parameters =>{
+    /**@type{*[]} */
+    const modules = fileModelAppModule.get(parameters.app_id, parameters.resource_id,parameters.app_id, parameters.res)
+    .filter(row=>row.common_type==parameters.type);
+    
+    for (const row of modules){
+        const module = await import(`file://${process.cwd()}${row.common_path}`);
+        /**@type{server_apps_module_metadata[]}*/
+        const metadata = module.metadata;
+        row.common_metadata = metadata;
+    }
+    return modules;
+}; 
 /**
  * Creates server component and returns to client
  * app
@@ -856,7 +877,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
  *          role:string|null}} parameters
  * @returns {server_db_file_app_module}
  */
-const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(app_id, null)
+const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(app_id, null, app_id, null)
                                                            .filter((/**@type{server_db_file_app_module}*/app)=>
                                                                app.common_type==parameters.type && 
                                                                app.common_name==parameters.name && 
@@ -892,6 +913,6 @@ const commonRegistryAppSecretDBReset = async app_id => {
     }
 };
 export {commonMailCreate, commonMailSend,
-        commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
+        commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonModuleMetaDataGet, commonApp, commonBFE, commonAppsGet, 
         commonRegistryAppModule,
         commonRegistryAppSecretDBReset};

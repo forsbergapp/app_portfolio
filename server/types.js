@@ -81,12 +81,24 @@
  * @property {string}       latitude
  * @property {string}       longitude
  */
-
+/**
+ * APP server_apps_module_metadata
+ * @typedef {{param:{name:string, text:string, default:string|number}}} server_apps_module_metadata
+ */
+/**
+ * APP server_apps_module_with_metadata
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
+ *              common_name:string,
+ *              common_path:string,
+ *              common_metadata:server_apps_module_metadata[],
+ *              common_description:string}} server_apps_module_with_metadata
+ */
 /**
  * APP server_config_apps_status
  * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
-
 
 /**
  * APP server_config_apps_with_db_columns
@@ -426,6 +438,7 @@
  *              common_path:string,
  *              common_description:string}} server_db_file_app_module
  */
+ 
 /**
  * DB FILE server_db_file_app_module_queue
  * @typedef {{  id:number,
@@ -438,7 +451,8 @@
  *              end:string|null,
  *              progress:string|null,
  *              status:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
- *              message:string|null}} server_db_file_app_module_queue
+ *              message:string|null,
+ *              result:string|null}} server_db_file_app_module_queue
  */
 
 /**

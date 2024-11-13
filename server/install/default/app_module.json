@@ -5,7 +5,7 @@
         "common_type": "REPORT",
         "common_name": "PERFORMANCE_TEST",
         "common_role": "ADMIN",
-        "common_path": "/apps/admin/src/report/performance.js",
+        "common_path": "/apps/admin/src/report/performance_test.js",
         "common_description": "Performs performance test and displays result"
     },
     {

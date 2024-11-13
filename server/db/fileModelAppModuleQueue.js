@@ -11,10 +11,11 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * Get records for given appid
  * @function
  * @param {number} app_id
+ * @param {number} resource_id
  * @param {server_server_res} res
  * @returns {server_db_file_app_module_queue[]}
  */
-const get = (app_id, res) => fileDBGet(app_id, 'APP_MODULE_QUEUE',null, app_id, res);
+const get = (app_id, resource_id, res) => fileDBGet(app_id, 'APP_MODULE_QUEUE',resource_id, app_id, res);
 
 /**
  * Add record
@@ -43,7 +44,8 @@ const post = async (app_id, data, res) => {
                             end:null,
                             progress:null,
                             status:'PENDING',
-                            message:null
+                            message:null,
+                            result:null
                         };
         return fileDBPost(app_id, 'APP_MODULE_QUEUE', job, res).then(()=>job);
     }

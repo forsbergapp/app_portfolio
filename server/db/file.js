@@ -418,14 +418,21 @@ const fileFsDeleteAdmin = async file => {
  * @returns {*}
  */
 const fileDBGet = (app_id, table, resource_id, data_app_id, res=null) =>{
-    const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
-    if (records.length>0)
-        return records;
-    else{
+    try {
+        const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
+        if (records.length>0)
+            return records;
+        else{
+            if (res)
+                res.statusCode=404;
+            return [];
+        }    
+    } catch (error) {
         if (res)
             res.statusCode=404;
         return [];
     }
+    
 };
 /**
  * Creates a record in a JSON_TABLE

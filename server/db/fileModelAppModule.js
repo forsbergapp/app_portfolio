@@ -11,10 +11,12 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * Get records for given appid
  * @function
  * @param {number} app_id
+ * @param {number|null} resource_id
+ * @param {number|null} data_app_id
  * @param {server_server_res|null} res
  * @returns {server_db_file_app_module[]}
  */
-const get = (app_id, res) => fileDBGet(app_id, 'APP_MODULE',null, app_id, res);
+const get = (app_id, resource_id, data_app_id, res) => fileDBGet(app_id, 'APP_MODULE',resource_id, data_app_id, res);
 
 /**
  * Add record

@@ -172,8 +172,16 @@ const appSecureMenuShow = menu => {
                 path:       '/component/menu_db_info.js'});
             break;
         }
-        //BACKUP/RESTORE
+        //REPORT
         case 9:{
+            common.commonComponentRender({
+                mountDiv:   'secure_menu_content',
+                data:       null,
+                methods:    {
+                            commonComponentRender:common.commonComponentRender,
+                            commonFFB:common.commonFFB
+                            },
+                path:       '/component/menu_report.js'});
             break;
         }
         //SERVER
