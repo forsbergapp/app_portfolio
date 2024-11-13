@@ -395,6 +395,35 @@
  *              common_description:string}}CommonAppModulesRecord
  */
 /**
+ * APP CommonAppModuleMetadata
+ * @typedef {{param:{name:string, text:string, default:string|number}}} CommonAppModuleMetadata
+ */
+/**
+ * Type CommonAppModuleMetadata
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
+ *              common_name:string,
+ *              common_path:string,
+ *              common_metadata:CommonAppModuleMetadata[],
+ *              common_description:string}} CommonAppModuleWithMetadata
+ */
+/**
+ * CommonAppModuleQueue
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              type:'REPORT',
+ *              name: string,
+ *              parameters:*,
+ *              user:string,
+ *              start:string|null,
+ *              end:string|null,
+ *              progress:string|null,
+ *              status:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
+ *              message:string|null,
+ *              result:string|null}} CommonAppModuleQueue
+ */
+/**
  * Type CommonProfileUser
  * @typedef {{  id:number|null,
  *              bio:string|null,
