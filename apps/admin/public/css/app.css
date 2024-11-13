@@ -1044,6 +1044,17 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	width:250px;
 	text-align: start;
 }
+/*MENU REPORT*/
+#menu_report_content_widget1{
+	height: calc(50% - 10px);
+	display: flex;
+	flex-direction: column;
+}
+#menu_report_content_widget2{
+	height: calc(50% - 10px);
+	display: flex;
+	flex-direction: column;
+}
 /*MENU SERVER*/
 #menu_server_content_widget1{
 	height:300px;

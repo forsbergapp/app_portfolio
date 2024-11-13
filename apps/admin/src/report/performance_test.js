@@ -18,7 +18,9 @@
  *    types
  * @module apps/admin/src/report/performance_test
  */
-
+/**
+ * @import {server_apps_module_metadata} from '../../../../server/types.js'
+ */
 /**
  * @typedef {{  summary: [string, string|number][], 
  *              rt_ranges:[string,string,number,number][], //[start interval [ms],end interval [ms], count, rate %]
@@ -414,4 +416,8 @@ const component = async props => {
 
     return template(report);
 };
+/**@type{server_apps_module_metadata[]}*/
+const metadata = [{param:{name:'concurrency',text:'Concurrency', default:100}},
+                    {param:{name:'requests',text:'Roncurrency', default:1000}}];
+export {metadata};
 export default component;
