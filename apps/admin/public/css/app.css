@@ -128,6 +128,9 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 #menu_db_info_info_space_db_sum::before{											content:var(--common_app_icon_sum)}
 
 #menu_report_run::before{															content:var(--common_app_icon_run)}
+#menu_report_queue_reload::before{													content:var(--common_app_icon_reload)}
+.menu_report_queue_row .report_queue_result::before{								content:var(--common_app_icon_preview)}
+
 #menu_server_os_title::before{														content:var(--common_app_icon_server)}
 #menu_server_process_title::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
 

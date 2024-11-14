@@ -555,6 +555,27 @@ const serverUtilAppLine = () =>{
                                                             routesparameters.res));
                         break;
                     }
+                    case route({url:`/bff/admin/v1/app-module-report-queue-result/${resource_id_string}`, method:'GET'}):{
+                        resolve(fileModelAppModuleQueue.getResult(  routesparameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    resource_id_get_number(), 
+                                                                    routesparameters.res));
+                        break;
+                    }
+                    case route({url:`/bff/admin/v1/app-module-report-queue/${resource_id_string}`, method:'POST', required:true}):{
+                        resolve(app_common.commonAppReportQueue({
+                            app_id: routesparameters.app_id, 
+                            type:'REPORT',
+                            resource_id:resource_id_get_string() ?? '', //module id
+                            iam:routesparameters.res.req.query.iam,
+                            data:new URLSearchParams(routesparameters.url.substring(routesparameters.url.indexOf('?')+1)), 
+                            user_agent:routesparameters.user_agent,
+                            ip:routesparameters.ip,
+                            locale:app_query?.get('lang_code') ??'',
+                            endpoint:routesparameters.endpoint,
+                            res:routesparameters.res}));
+                        break;
+                    }
                     //server module of type MODULE for APP
                     case route({url:`/bff/app/v1/app-module-module/${resource_id_string}`, method:'GET'}):{
                         resolve(app_common.commonModuleGet({

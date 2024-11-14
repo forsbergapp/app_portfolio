@@ -1165,7 +1165,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.name == iamUtilDecode(iam).get('admin'))
+                                access_token_decoded.id == iamUtilDecode(iam).get('iam_user_id'))
                                 await fileModelIamUserLogin.get(app_id_host)
                                 .then(result=>{
                                     /**@type{server_iam_user_login}*/
@@ -1195,18 +1195,18 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
                             const access_token_decoded = jwt.verify(access_token, fileModelAppSecret.get(app_id_host, res)[0].common_app_access_secret ?? '');
-                            const user_id = serverUtilNumberValue(iamUtilDecode(iam).get('user_id'));
+                            const iam_user_id = serverUtilNumberValue(iamUtilDecode(iam).get('iam_user_id'));
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.id == user_id )
+                                access_token_decoded.id == iam_user_id )
                                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                                 //and if app_id=0 then check user is admin
                                 await fileModelIamUserLogin.get(app_id_host)
                                 .then(result=>{
                                     /**@type{server_iam_user_login}*/
                                     const iam_user_login = result.filter((/**@type{server_iam_user_login}*/row)=>
-                                                                            row.iam_user_id == user_id && 
+                                                                            row.iam_user_id == iam_user_id && 
                                                                             row.res         == 1 &&
                                                                             row.app_id      == app_id_host &&
                                                                             row.token       == access_token &&

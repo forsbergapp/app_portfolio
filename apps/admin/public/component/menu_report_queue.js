@@ -22,6 +22,7 @@ const template = props => ` <div class='menu_report_queue_row'>
                                 <div data-column='user' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('user')}'></div>
                                 <div data-column='start' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('start')}'></div>
                                 <div data-column='end' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('end')}'></div>
+                                <div data-column='progress' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('progress')}'></div>
                                 <div data-column='status' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('status')}'></div>
                                 <div data-column='message' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('message')}'></div>
                                 <div data-column='result' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('result')}'></div>
@@ -35,9 +36,10 @@ const template = props => ` <div class='menu_report_queue_row'>
                                     <div data-column='user' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.user ??''}</div>
                                     <div data-column='start' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.start ??''}</div>
                                     <div data-column='end' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.end ??''}</div>
+                                    <div data-column='progress' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${(report_queue.progress ?? 0) * 100}%</div>
                                     <div data-column='status' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.status}</div>
                                     <div data-column='message' class='menu_report_queue_col common_input list_edit contentEditable='true'>${report_queue.message ??''}</div>
-                                    <div data-column='result' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.result ?? ''}</div>
+                                    <div data-id='${report_queue.id}' class='menu_report_queue_col report_queue_result common_input list_edit' contentEditable='true'></div>
                                 </div>`
                             ).join('')
                             }`;

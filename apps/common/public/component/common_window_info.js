@@ -8,7 +8,7 @@
  * @module apps/common/component/common_window_info
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
  */
@@ -44,6 +44,12 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
                             ${(props.info_type==1 ||props.info_type==2 ||props.info_type==3)?
                                 `<iframe id='common_window_info_content' scrolling='auto' class='${props.iframe_class}' src='${props.content}' ></iframe>`:
                                 ''
+                            }
+                            ${props.info_type==4?
+                                `<div id='common_window_info_info' class='${props.iframe_class}'>
+                                    ${props.content}
+                                </div>`:
+                                ''
                             }`
 ;
 /**
@@ -54,10 +60,15 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  *                      content_type:string,
  *                      frame:COMMON_DOCUMENT|null,
  *                      iframe_content:string,
+ *                      path:string,
+ *                      method:CommonRESTAPIMethod,
+ *                      body:*,
+ *                      authorization_type:CommonRESTAPIAuthorizationType,
  *                      iframe_class:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonWindowSetTimeout:commonWindowSetTimeout
+ *                      commonWindowSetTimeout:commonWindowSetTimeout,
+ *                      commonFFB:commonFFB
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -69,12 +80,12 @@ const component = async props => {
     /**
      * 
      * @param {{}} info_type
-     * @returns {{  INFO:string,
+     * @returns {Promise.<{  INFO:string,
      *              CONTENT:string,
      *              STYLE_INFO_OVERFLOWY:string,
-     *              IFRAME_CLASS:string}}
+     *              IFRAME_CLASS:string}>}
      */
-    const get_variables = info_type => {
+    const get_variables = async info_type => {
         switch(info_type){
             case 0:{
                 //show image
@@ -111,6 +122,16 @@ const component = async props => {
                         IFRAME_CLASS:''
                         };
             }
+            case 4:{
+                const html = await props.methods.commonFFB({path:props.data.path, method:props.data.method, authorization_type:props.data.authorization_type, body:props.data.body})
+                                .then((/**@type{string}*/result)=>JSON.parse(result));
+                return {
+                    INFO:'',
+                    CONTENT:html,
+                    STYLE_INFO_OVERFLOWY:'auto',
+                    IFRAME_CLASS:props.data.iframe_class
+                    };
+            }
             default:
                 return {
                     INFO:'',
@@ -120,7 +141,7 @@ const component = async props => {
                     };
         }
     };
-    const variables = get_variables(props.data.info);
+    const variables = await get_variables(props.data.info);
     const onMounted = async () =>{
         if (props.data.info==3){
             //print content only
