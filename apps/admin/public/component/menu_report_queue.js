@@ -27,7 +27,7 @@ const template = props => ` <div class='menu_report_queue_row'>
                                 <div data-column='result' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('result')}'></div>
                             </div>
                             ${props.report_queue.map(report_queue=>
-                                `<div data-changed-record='0' data-user_account_id='${report_queue.id}' class='menu_report_queue_row common_row' >
+                                `<div class='menu_report_queue_row common_row' >
                                     <div data-column='id' class='menu_report_queue_col list_readonly'>${report_queue.id}</div>
                                     <div data-column='type' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.type}</div>
                                     <div data-column='name' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.name}</div>

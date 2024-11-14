@@ -127,6 +127,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 #menu_db_info_space_title::before{													content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_calc)}
 #menu_db_info_info_space_db_sum::before{											content:var(--common_app_icon_sum)}
 
+#menu_report_run::before{															content:var(--common_app_icon_run)}
 #menu_server_os_title::before{														content:var(--common_app_icon_server)}
 #menu_server_process_title::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
 
@@ -1047,8 +1048,32 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 /*MENU REPORT*/
 #menu_report_content_widget1{
 	height: calc(50% - 10px);
-	display: flex;
-	flex-direction: column;
+	display: block;
+}
+#menu_report_select_report{
+	display: inline-block;
+	width: 250px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+#menu_report_metadata{
+	width: 100%;
+  	display: inline-block;
+	height: calc(100% - 120px);
+}
+.menu_report_metadata_row{
+	margin: 0.5em	;
+}
+.menu_report_metadata_col1{
+	width: 200px !important;
+	text-align: start;
+}
+.menu_report_metadata_col2{
+	width: 100px !important;
+	text-align: start;
+}
+#menu_report_run{
+  	width: calc(100% - 20px);
 }
 #menu_report_content_widget2{
 	height: calc(50% - 10px);
