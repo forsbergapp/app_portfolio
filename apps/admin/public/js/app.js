@@ -21,7 +21,8 @@ const common = await import(commonPath);
  *                                     monitorDetailPage:          function,
  *                                     monitorDetailClickSort:     function,
  *                                     monitorDetailClickItem:     function
- *                                  }
+ *                                  },
+ *                      MENU_REPORT:{updateMetadata:function, reportRun:function}
  *                      },
  *          previous_row:{}}}
  */
@@ -32,7 +33,10 @@ const APP_SECURE_GLOBAL = {
                                 monitorDetailPage:          ()=>null,
                                 monitorDetailClickSort:     ()=>null,
                                 monitorDetailClickItem:     ()=>null
-                            }
+                            },
+                MENU_REPORT : { updateMetadata:            ()=>null,
+                                reportRun:                  ()=>null
+                }
                 },
     previous_row:{}
 };
@@ -44,13 +48,16 @@ Object.seal(APP_SECURE_GLOBAL);
  * @returns {void}
  */
 const appSecureGlobalDelete = () => {
-    APP_SECURE_GLOBAL.component = {MENU_MONITOR : { monitorShow:                ()=>null,
+    APP_SECURE_GLOBAL.component = { MENU_MONITOR: { monitorShow:                ()=>null,
                                                     monitorDetailShowLogDir:    ()=>null,
                                                     monitorDetailShowServerLog: ()=>null,
                                                     monitorDetailPage:          ()=>null,
                                                     monitorDetailClickSort:     ()=>null,
                                                     monitorDetailClickItem:     ()=>null
-                                                }
+                                                },
+                                    MENU_REPORT: {  updateMetadata:             ()=>null,
+                                                    reportRun:                  ()=>null
+                                    }
                             };
     APP_SECURE_GLOBAL.previous_row = {};
 };
@@ -181,7 +188,10 @@ const appSecureMenuShow = menu => {
                             commonComponentRender:common.commonComponentRender,
                             commonFFB:common.commonFFB
                             },
-                path:       '/component/menu_report.js'});
+                path:       '/component/menu_report.js'})
+                .then(result=>{
+                    APP_SECURE_GLOBAL.component.MENU_REPORT  = result.methods;
+                });
             break;
         }
         //SERVER
@@ -684,6 +694,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         }
                     if( event_target_id == 'menu_monitor_detail_select_logscope')
                         APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog(0,'logdate', 'desc');
+                    if( event_target_id == 'menu_report_select_report')
+                        APP_SECURE_GLOBAL.component.MENU_REPORT.updateMetadata();
                     break;
                 }
                 case 'menu_start_broadcast_button':{
@@ -787,6 +799,10 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                 }
                 case 'menu_installation_demo_button_uninstall':{
                     appSecureMenuInstallationDemoUninstall();
+                    break;
+                }
+                case 'menu_report_run':{
+                    APP_SECURE_GLOBAL.component.MENU_REPORT.reportRun();
                     break;
                 }
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{

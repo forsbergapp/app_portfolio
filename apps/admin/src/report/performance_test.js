@@ -418,6 +418,6 @@ const component = async props => {
 };
 /**@type{server_apps_module_metadata[]}*/
 const metadata = [{param:{name:'concurrency',text:'Concurrency', default:100}},
-                    {param:{name:'requests',text:'Roncurrency', default:1000}}];
+                    {param:{name:'requests',text:'Requests', default:1000}}];
 export {metadata};
 export default component;
