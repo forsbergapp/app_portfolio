@@ -8,14 +8,15 @@
             <pre class="prettyprint source linenums"><code>/** @module apps/common/src/common/service */
 
 /**
- * @import {server_db_file_app_secret,
- *          server_db_file_app_parameter,
+ * @import {server_db_file_app,
+ *          server_db_file_app_secret,
  *          server_db_file_app_module,
- *          server_config_apps_with_db_columns,
- *          server_db_file_app,
- *          server_apps_report_create_parameters,
  *          server_db_file_app_parameter_common,
+ *          server_config_apps_with_db_columns,
+ *          server_apps_report_create_parameters,
  *          server_apps_app_service_parameters,
+ *          server_apps_module_with_metadata,
+ *          server_apps_module_metadata,
  *          server_server_routesparameters,
  *          server_server_res,
  *          server_bff_endpoint_type,
@@ -40,8 +41,8 @@ const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileM
 /**@type{import('../../../server/db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
-/**@type{import('../../../server/log.js')} */
-const { logAppE } = await import(`file://${process.cwd()}/server/log.js`);
+/**@type{import('../../../server/db/fileModelLog.js')} */
+const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
 /**@type{import('../../../server/server.js')} */
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -56,7 +57,7 @@ const fs = await import('node:fs');
 
 /**
  * Creates email
- * @async
+ * @function
  * @param {number} app_id                       - Application id
  * @param {server_apps_email_param_data} data         - Email param data
  * @returns {Promise&lt;server_apps_email_return_createMail>}  - Email return data
@@ -108,7 +109,8 @@ const commonMailCreate = async (app_id, data) =>{
         throw '';
 };
 /**
- * 
+ * Creates and sends email
+ * @function
  * @param {number} app_id 
  * @param {string} emailtype 
  * @param {string} ip
@@ -117,17 +119,18 @@ const commonMailCreate = async (app_id, data) =>{
  * @param {number} userid 
  * @param {string|null} verification_code 
  * @param {string} email 
+ * @returns {Promise.&lt;*>}
  */
 const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
     /**@type{import('../../../server/bff.service.js')} */
     const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
-    /**@type{import('../../../server/config.js')} */
-    const { configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
     const email_rendered = await commonMailCreate( app_id, 
                                     {
                                         emailtype:        emailtype,
-                                        host:             configGet('SERVER', 'HOST'),
+                                        host:             fileModelConfig.get('SERVER', 'HOST'),
                                         app_user_id:      userid,
                                         verificationCode: verification_code,
                                         to:               email,
@@ -152,6 +155,7 @@ const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language
 };
 /**
  * Checks if ok to start app
+ * @function
  * @param {number|null} app_id
  * @returns {Promise.&lt;boolean>}
  */
@@ -180,7 +184,7 @@ const commonAppStart = async (app_id=null) =>{
 
 /**
  * Get client locale from accept language from request
- * 
+ * @function
  * @param {string} accept_language  - Accept language from request
  * @returns {string}                - lowercase locale, can be default 'en' or with syntax 'en-us' or 'zh-hant-cn'
  */
@@ -205,12 +209,14 @@ const commonClientLocale = accept_language =>{
     return locale;
 };
 /**
+ * Returns geodata
+ * @function
  * @param {{app_id:number,
  *          endpoint:server_bff_endpoint_type,
  *          ip:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns 
+ * @returns {Promise.&lt;*>}
  */
 const commonGeodata = async parameters =>{
     /**@type{import('../../../server/bff.service.js')} */
@@ -268,6 +274,7 @@ const commonGeodata = async parameters =>{
 
 /**
  * External request
+ * @function
  * @param {{host:string,
  *          method:string,
  *          body:*,
@@ -348,10 +355,12 @@ const commonBFE = async parameters =>{
  *  .woff2 files
  *  .ttf files
  *  .json
+ * @function
  * @param {{app_id:Number,
  *          url:String,
  *          basepath:string,
  *          res:server_server_res}} parameters
+ * @returns {Promise.&lt;{STATIC:Boolean, SENDFILE:string|null, SENDCONTENT?:string}>}
  */
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
@@ -481,7 +490,7 @@ const commonAssetfile = parameters =>{
                 break;
             }
             default:{
-                logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
+                fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
                 .then(()=>{
                     parameters.res.statusCode = 403;
                     parameters.res.statusMessage = null;
@@ -493,7 +502,8 @@ const commonAssetfile = parameters =>{
 };
 
 /**
- * Router function - run fcuntion
+ * Router function - run function
+ * @function
  * @param {{app_id:number,
  *          type:'FUNCTION',
  *          resource_id:string,
@@ -512,7 +522,7 @@ const commonModuleRun = async parameters => {
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
     }
     else{
-        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
+        fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -521,8 +531,10 @@ const commonModuleRun = async parameters => {
 };
 /**
  * Router function - get module
+ * @function
  * @param {{app_id:Number,
  *          type:'REPORT'|'MODULE',
+ *          queue_parameters?:{},
  *          resource_id:string,
  *          data:*,
  *          user_agent:string,
@@ -558,6 +570,7 @@ const commonModuleGet = async parameters => {
 
             /**@type{server_apps_report_create_parameters} */
             const data = {  app_id:         parameters.app_id,
+                            queue_parameters:parameters.queue_parameters,
                             reportid:       parameters.data.get('reportid') ?? '',
                             ip:             parameters.ip,
                             user_agent:     parameters.user_agent ?? '',
@@ -576,7 +589,7 @@ const commonModuleGet = async parameters => {
         
     }
     else{
-        logAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
+        fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
         .then(()=>{
             if (parameters.res)
                 parameters.res.statusCode = 404;
@@ -584,7 +597,86 @@ const commonModuleGet = async parameters => {
         });
     }
 };
+/**
+ * Runs report in queue
+ * @function
+ * @param {{app_id:Number,
+ *          type:'REPORT'|'MODULE',
+ *          resource_id:string,
+ *          iam:string,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          locale:string,
+ *          endpoint:server_bff_endpoint_type|'',
+ *          res:server_server_res}} parameters
+ * @returns {Promise.&lt;void>}
+ */
+const commonAppReportQueue = async parameters =>{
+    /**@type{import('../../../server/db/fileModelAppModuleQueue.js')} */
+    const fileModelAppModuleQueue = await import(`file://${process.cwd()}/server/db/fileModelAppModuleQueue.js`);
 
+    /**@type{import('../../../server/db/fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+
+    /**@type{import('../../../server/iam.service.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+    const iam_user_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'));
+
+    const report_parameters = atob(parameters.data.get('parameters'));
+                                    
+    const report_parameters_obj = Object.fromEntries(Array.from(new URLSearchParams(report_parameters)).map(param=>[param[0],param[1]]));
+    const {id} = await fileModelAppModuleQueue.post(parameters.app_id, 
+                                                    {
+                                                    type:'REPORT',
+                                                    name:parameters.resource_id,
+                                                    parameters:report_parameters,
+                                                    user:fileModelIamUser.get(parameters.app_id, iam_user_id, parameters.res)[0].username
+                                                    }, 
+                                                    parameters.res);
+    await fileModelAppModuleQueue.update(parameters.app_id, id, { start:new Date().toISOString(),
+                                                            progress:0, 
+                                                            status:'RUNNING'}, null);
+    //report can update progress and only progress if necessary
+    //add queue id
+    const result = await commonModuleGet({...parameters, ...{queue_parameters:{...{appModuleQueueId:id}, ...report_parameters_obj}}})
+                        .catch(error=>{
+                            fileModelAppModuleQueue.update(parameters.app_id, id, { end:new Date().toISOString(), 
+                                                                                    progress:1, 
+                                                                                    status:'FAIL',
+                                                                                    message:error.message ?? error}, null);
+                            return null;
+                        });
+
+    if (result){
+        await fileModelAppModuleQueue.postResult(parameters.app_id, id, result);
+        await fileModelAppModuleQueue.update(parameters.app_id, id, {end:new Date().toISOString(), progress:1, status:'SUCCESS'}, null);
+    }
+};
+
+/**
+ * Returns all modules with metadata
+ * @function
+ * @param {{app_id:Number,
+ *          type:'REPORT'|'MODULE'|'FUNCTION',
+ *          resource_id:number,
+ *          res:server_server_res|null}} parameters
+ * @returns {Promise.&lt;server_apps_module_with_metadata[]>}
+ */
+const commonModuleMetaDataGet = async parameters =>{
+    /**@type{*[]} */
+    const modules = fileModelAppModule.get(parameters.app_id, parameters.resource_id,parameters.app_id, parameters.res)
+    .filter(row=>row.common_type==parameters.type);
+    
+    for (const row of modules){
+        const module = await import(`file://${process.cwd()}${row.common_path}`);
+        /**@type{server_apps_module_metadata[]}*/
+        const metadata = module.metadata;
+        row.common_metadata = metadata;
+    }
+    return modules;
+}; 
 /**
  * Creates server component and returns to client
  * app
@@ -595,7 +687,7 @@ const commonModuleGet = async parameters => {
  * info privacy policy
  * info terms
  * server error
- * 
+ * @function
  * @param {{app_id:number, 
  *          componentParameters:{   param?:             string|null,
  *                                  ip:                 string, 
@@ -727,6 +819,7 @@ const commonAppHost = host =>{
  };
 /**
  * Router function - App: get app asset, common asset, app info page, app report, app module or app
+ * @function
  * @param {{ip:string,
  *          host:string,
  *          user_agent:string,
@@ -734,6 +827,7 @@ const commonAppHost = host =>{
  *          url:string,
  *          query:*,
  *          res:server_server_res|null}} parameters
+ * @returns {Promise.&lt;*>}
  */
 const commonApp = async parameters =>{
     const host_no_port = parameters.host.substring(0,parameters.host.indexOf(':')==-1?parameters.host.length:parameters.host.indexOf(':'));
@@ -800,7 +894,7 @@ const commonApp = async parameters =>{
                                     return app;
                                 })
                                 .catch((/**@type{server_server_error}*/err)=>{
-                                    logAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
+                                    fileModelLog.postAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
                                     .then(()=>{
                                         if (parameters.res){
                                             parameters.res.statusCode = 500;
@@ -818,6 +912,7 @@ const commonApp = async parameters =>{
 };
 /**
  * Get all aps from app registry and translated names and add info to create url links
+ * @function
  * @param {number} app_id 
  * @param {number|null} resource_id 
  * @param {string} locale
@@ -857,13 +952,14 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
 /**
  * App registry APP MODULE
  * Modules that are shared by apps and server
+ * @function
  * @param {number} app_id
  * @param {{type:string,
  *          name:string,
  *          role:string|null}} parameters
  * @returns {server_db_file_app_module}
  */
-const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(app_id, null)
+const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(app_id, null, app_id, null)
                                                            .filter((/**@type{server_db_file_app_module}*/app)=>
                                                                app.common_type==parameters.type &amp;&amp; 
                                                                app.common_name==parameters.name &amp;&amp; 
@@ -871,19 +967,20 @@ const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(a
 
 /**
  * App Registry APP SECRET reset db username and passwords for database in use
+ * @function
  * @param {number}  app_id
  * @returns {Promise.&lt;void>}
  */
 const commonRegistryAppSecretDBReset = async app_id => {
-    /**@type{import('../../../server/config.js')} */
-    const {configGet} = await import(`file://${process.cwd()}/server/config.js`);
+    /**@type{import('../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{server_db_file_app_secret[]}*/
     const APP_SECRETS = fileModelAppSecret.get(app_id, null);
     
-    const db_use = serverUtilNumberValue(configGet('SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
     for (const app_secret of APP_SECRETS){
         /**@ts-ignore */
         if (app_secret[`service_db_db${db_use}_app_user`]){
@@ -899,7 +996,7 @@ const commonRegistryAppSecretDBReset = async app_id => {
     }
 };
 export {commonMailCreate, commonMailSend,
-        commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonApp, commonBFE, commonAppsGet, 
+        commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonModuleGet,commonAppReportQueue, commonModuleMetaDataGet, commonApp, commonBFE, commonAppsGet, 
         commonRegistryAppModule,
         commonRegistryAppSecretDBReset};</code></pre>
         </div>
