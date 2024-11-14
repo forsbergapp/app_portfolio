@@ -123,8 +123,7 @@ const component = async props => {
                         };
             }
             case 4:{
-                const html = await props.methods.commonFFB({path:props.data.path, method:props.data.method, authorization_type:props.data.authorization_type, body:props.data.body})
-                                .then((/**@type{string}*/result)=>JSON.parse(result));
+                const html = await props.methods.commonFFB({path:props.data.path, method:props.data.method, authorization_type:props.data.authorization_type, body:props.data.body});
                 return {
                     INFO:'',
                     CONTENT:html,

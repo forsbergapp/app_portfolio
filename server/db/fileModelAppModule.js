@@ -28,22 +28,22 @@ const get = (app_id, resource_id, data_app_id, res) => fileDBGet(app_id, 'APP_MO
  */
 const post = async (app_id, data, res) => {
     //check required attributes
-    if (!app_id || !data.app_id || !data.common_type || !data.common_name || !data.common_role || !data.common_path){
-        res.statusCode = 400;
-        throw '⛔';    
-    }
-    else{
+    if (app_id!=null && data.app_id!=null && data.common_type!=null && data.common_name!=null && data.common_role!=null && data.common_path!=null){
         /**@type{server_db_file_app_module} */
         const data_new ={
-                            id:                 Date.now(),
-                            app_id:             data.app_id,
-                            common_type:        data.common_type,
-                            common_name:        data.common_name,
-                            common_role:        data.common_role,
-                            common_path:        data.common_path,
-                            common_description: data.common_description
-                        };
+            id:                 Date.now(),
+            app_id:             data.app_id,
+            common_type:        data.common_type,
+            common_name:        data.common_name,
+            common_role:        data.common_role,
+            common_path:        data.common_path,
+            common_description: data.common_description
+        };
         return fileDBPost(app_id, 'APP_MODULE', data_new, res).then(()=>{return {id:data_new.id};});
+    }
+    else{
+        res.statusCode = 400;
+        throw '⛔';    
     }
 };
 /**

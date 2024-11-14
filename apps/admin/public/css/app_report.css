@@ -42,10 +42,23 @@
 }
 .report_row{
 	display: inline-block;
-	width: 75%;
+	width: 90%;
 }
 .report_row > div{
 	display: inline-block;
+}
+.report_row_2col .report_col1,
+.report_row_4col .report_col1 {
+	width: 300px;
+}
+.report_row_2col .report_col2 {
+	width: calc(100% - 310px);
+}
+
+.report_row_4col .report_col2,
+.report_row_4col .report_col3,
+.report_row_4col .report_col4 {
+	width: calc(100/3% - 300px);
 }
 .report_col1{
 	background-color: var(--common_report_color_darkblue);
