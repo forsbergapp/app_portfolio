@@ -15,31 +15,31 @@
  * @returns {string}
  */
 const template = props => ` <div class='menu_report_queue_row'>
-                                <div data-column='id' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
-                                <div data-column='type' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('type')}'></div>
-                                <div data-column='name' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('name')}'></div>
-                                <div data-column='parameters' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('parameters')}'></div>
-                                <div data-column='user' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('user')}'></div>
-                                <div data-column='start' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('start')}'></div>
-                                <div data-column='end' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('end')}'></div>
-                                <div data-column='progress' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('progress')}'></div>
-                                <div data-column='status' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('status')}'></div>
-                                <div data-column='message' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('message')}'></div>
-                                <div data-column='result' class='menu_report_queue_col list_sort_click list_title common_icon ${props.function_get_order_by('result')}'></div>
+                                <div data-column='id' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('id')}'>ID</div>
+                                <div data-column='type' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('type')}'>TYPE</div>
+                                <div data-column='name' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('name')}'>NAME</div>
+                                <div data-column='parameters' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('parameters')}'>PARAMETERS</div>
+                                <div data-column='user' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('user')}'>USER</div>
+                                <div data-column='start' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('start')}'>START</div>
+                                <div data-column='end' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('end')}'>END</div>
+                                <div data-column='progress' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('progress')}'>PROGRESS</div>
+                                <div data-column='status' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('status')}'>STATUS</div>
+                                <div data-column='message' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('message')}'>MESSAGE</div>
+                                <div data-column='result' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('result')}'>RESULT</div>
                             </div>
                             ${props.report_queue.map(report_queue=>
                                 `<div class='menu_report_queue_row common_row' >
                                     <div data-column='id' class='menu_report_queue_col list_readonly'>${report_queue.id}</div>
-                                    <div data-column='type' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.type}</div>
-                                    <div data-column='name' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.name}</div>
-                                    <div data-column='parameters' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.parameters ??''}</div>
-                                    <div data-column='user' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.user ??''}</div>
-                                    <div data-column='start' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.start ??''}</div>
-                                    <div data-column='end' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.end ??''}</div>
-                                    <div data-column='progress' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${(report_queue.progress ?? 0) * 100}%</div>
-                                    <div data-column='status' class='menu_report_queue_col common_input list_edit' contentEditable='true'>${report_queue.status}</div>
-                                    <div data-column='message' class='menu_report_queue_col common_input list_edit contentEditable='true'>${report_queue.message ??''}</div>
-                                    <div data-id='${report_queue.id}' class='menu_report_queue_col report_queue_result common_input list_edit' contentEditable='true'></div>
+                                    <div data-column='type' class='menu_report_queue_col list_readonly'>${report_queue.type}</div>
+                                    <div data-column='name' class='menu_report_queue_col list_readonly'>${report_queue.name}</div>
+                                    <div data-column='parameters' class='menu_report_queue_col list_readonly'>${report_queue.parameters ??''}</div>
+                                    <div data-column='user' class='menu_report_queue_col list_readonly'>${report_queue.user ??''}</div>
+                                    <div data-column='start' class='menu_report_queue_col list_readonly'>${report_queue.start ??''}</div>
+                                    <div data-column='end' class='menu_report_queue_col list_readonly'>${report_queue.end ??''}</div>
+                                    <div data-column='progress' class='menu_report_queue_col list_readonly'>${(report_queue.progress ?? 0) * 100}%</div>
+                                    <div data-column='status' class='menu_report_queue_col list_readonly'>${report_queue.status}</div>
+                                    <div data-column='message' class='menu_report_queue_col list_readonly'>${report_queue.message ??''}</div>
+                                    <div data-id='${report_queue.id}' class='menu_report_queue_col report_queue_result list_readonly common_icon'></div>
                                 </div>`
                             ).join('')
                             }`;

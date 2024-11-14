@@ -527,6 +527,7 @@ const commonModuleRun = async parameters => {
  * @function
  * @param {{app_id:Number,
  *          type:'REPORT'|'MODULE',
+ *          queue_parameters?:{},
  *          resource_id:string,
  *          data:*,
  *          user_agent:string,
@@ -562,6 +563,7 @@ const commonModuleGet = async parameters => {
 
             /**@type{server_apps_report_create_parameters} */
             const data = {  app_id:         parameters.app_id,
+                            queue_parameters:parameters.queue_parameters,
                             reportid:       parameters.data.get('reportid') ?? '',
                             ip:             parameters.ip,
                             user_agent:     parameters.user_agent ?? '',
@@ -615,34 +617,35 @@ const commonAppReportQueue = async parameters =>{
 
     const iam_user_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'));
 
+    const report_parameters = atob(parameters.data.get('parameters'));
+                                    
+    const report_parameters_obj = Object.fromEntries(Array.from(new URLSearchParams(report_parameters)).map(param=>[param[0],param[1]]));
     const {id} = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                     {
                                                     type:'REPORT',
                                                     name:parameters.resource_id,
-                                                    parameters:atob(parameters.data.get('parameters')),
+                                                    parameters:report_parameters,
                                                     user:fileModelIamUser.get(parameters.app_id, iam_user_id, parameters.res)[0].username
                                                     }, 
                                                     parameters.res);
-    //set queue parameters in data key used by reports using URLSearchParam syntax
-    parameters.data.append('appModuleQueueId',id);
-    parameters.data.append('app_id',parameters.app_id);
-    fileModelAppModuleQueue.update(parameters.app_id, id, { start:new Date().toISOString(),
+    await fileModelAppModuleQueue.update(parameters.app_id, id, { start:new Date().toISOString(),
                                                             progress:0, 
                                                             status:'RUNNING'}, null);
     //report can update progress and only progress if necessary
-    commonModuleGet(parameters)
-    .then(result=>{
-        fileModelAppModuleQueue.postResult(parameters.app_id, id, result);
-        fileModelAppModuleQueue.update(parameters.app_id, id, {end:new Date().toISOString(), progress:1, status:'SUCCESS'}, null);
+    //add queue id
+    const result = await commonModuleGet({...parameters, ...{queue_parameters:{...{appModuleQueueId:id}, ...report_parameters_obj}}})
+                        .catch(error=>{
+                            fileModelAppModuleQueue.update(parameters.app_id, id, { end:new Date().toISOString(), 
+                                                                                    progress:1, 
+                                                                                    status:'FAIL',
+                                                                                    message:error.message ?? error}, null);
+                            return null;
+                        });
 
-    })
-    .catch(error=>{
-        fileModelAppModuleQueue.update(parameters.app_id, id, { end:new Date().toISOString(), 
-                                                                progress:1, 
-                                                                status:'FAIL',
-                                                                message:(typeof error =='string')?error:JSON.stringify(error)}, null);
-    });
-
+    if (result){
+        await fileModelAppModuleQueue.postResult(parameters.app_id, id, result);
+        await fileModelAppModuleQueue.update(parameters.app_id, id, {end:new Date().toISOString(), progress:1, status:'SUCCESS'}, null);
+    }
 };
 
 /**
