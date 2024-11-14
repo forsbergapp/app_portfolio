@@ -22,8 +22,12 @@ const common = await import(commonPath);
  *                                     monitorDetailClickSort:     function,
  *                                     monitorDetailClickItem:     function
  *                                  },
- *                      MENU_REPORT:{updateMetadata:function, reportRun:function}
- *                      },
+ *                      MENU_REPORT:{  updateMetadata:             function, 
+ *                                     reportRun:                  function, 
+ *                                     reportQueueUpdate:          function,
+ *                                     reportPreview:              function
+ *                                  }
+ *                     },
  *          previous_row:{}}}
  */
 const APP_SECURE_GLOBAL = {
@@ -34,8 +38,10 @@ const APP_SECURE_GLOBAL = {
                                 monitorDetailClickSort:     ()=>null,
                                 monitorDetailClickItem:     ()=>null
                             },
-                MENU_REPORT : { updateMetadata:            ()=>null,
-                                reportRun:                  ()=>null
+                MENU_REPORT : { updateMetadata:             ()=>null,
+                                reportRun:                  ()=>null,
+                                reportQueueUpdate:          ()=>null,
+                                reportPreview:              ()=>null
                 }
                 },
     previous_row:{}
@@ -56,7 +62,9 @@ const appSecureGlobalDelete = () => {
                                                     monitorDetailClickItem:     ()=>null
                                                 },
                                     MENU_REPORT: {  updateMetadata:             ()=>null,
-                                                    reportRun:                  ()=>null
+                                                    reportRun:                  ()=>null,
+                                                    reportQueueUpdate:          ()=>null,
+                                                    reportPreview:              ()=>null
                                     }
                             };
     APP_SECURE_GLOBAL.previous_row = {};
@@ -805,6 +813,13 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     APP_SECURE_GLOBAL.component.MENU_REPORT.reportRun();
                     break;
                 }
+                case 'menu_report_queue_reload':{
+                    APP_SECURE_GLOBAL.component.MENU_REPORT.reportQueueUpdate();
+                    break;
+                }
+                case event.target?.classList.contains('report_queue_result')?event_target_id:'':
+                    APP_SECURE_GLOBAL.component.MENU_REPORT.reportPreview(event.target.getAttribute('data-id'));
+                    break;
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
                     if (event_target_id == 'menu_users_list')
                         appSecureMenuUsers(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
