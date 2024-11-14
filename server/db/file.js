@@ -103,7 +103,7 @@ const fileTransactionStart = async (file, filepath)=>{
         fileRecord(file).TRANSACTION_ID = transaction_id;
         const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8').catch(()=>'');
         //parse JSON_TABLE and JSON, others are binary or json log files
-        fileRecord(file).TRANSACTION_CONTENT = (fileRecord(file).TYPE=='JSON_TABLE' || fileRecord(file).TYPE=='JSON')?JSON.parse(file_content.toString()):file_content;
+        fileRecord(file).TRANSACTION_CONTENT = (fileRecord(file).TYPE=='JSON_TABLE' || fileRecord(file).TYPE=='JSON')?JSON.parse(file_content==''?'[]':file_content):file_content;
         return transaction_id;
     };
     return new Promise((resolve, reject)=>{
@@ -446,15 +446,16 @@ const fileDBGet = (app_id, table, resource_id, data_app_id, res=null) =>{
  * @returns {Promise.<void>}
  */
 const fileDBPost = async (app_id, table, data, res) =>{
-    if (!app_id){
-        res.statusCode = 400;
-        throw '⛔';    
-    }
-    else{
+    if (app_id!=null){
         /**@type{server_db_file_result_fileFsRead} */
         const file = await fileFsRead(table, true);
         await fileFsWrite(table, file.transaction_id, file.file_content.concat(data))
         .catch((/**@type{server_server_error}*/error)=>{throw error;});
+        
+    }
+    else{
+        res.statusCode = 400;
+        throw '⛔';    
     }
 };
 /**

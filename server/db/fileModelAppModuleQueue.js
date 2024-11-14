@@ -47,7 +47,7 @@ const getResult = async (app_id, resource_id, res) => {
  */
 const post = async (app_id, data, res) => {
     //check required attributes
-    if (app_id!=null || data.type!=null || data.name!=null || data.parameters!=null || data.user!=null){
+    if (app_id!=null && data.type!=null && data.name!=null && data.parameters!=null && data.user!=null){
         /**@type{server_db_file_app_module_queue} */
         const job =     {
                             id:Date.now(),
@@ -104,10 +104,12 @@ const update = async (app_id, resource_id, data, res) => {
         data_update.end = data.end;
     if (data.progress)
         data_update.progress = data.progress;
+    if (data.status)
+        data_update.status = data.status;
     if (data.message)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
-        return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, app_id, data_update, res);
+        return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, null, data_update, res);
     else{
         if (res)
             res.statusCode = 404;
@@ -124,7 +126,7 @@ const update = async (app_id, resource_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const deleteRecord = async (app_id, resource_id, res) => {
-    return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, app_id, res);
+    return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, null, res);
 };
                    
 export {get, getResult, post, postResult, update, deleteRecord};

@@ -74,6 +74,7 @@
  * APP server_apps_report_create_parameters
  * @typedef {object}        server_apps_report_create_parameters
  * @property {number}       app_id
+ * @property {Object}       [queue_parameters]
  * @property {string}       reportid
  * @property {string}       ip
  * @property {string}       user_agent
