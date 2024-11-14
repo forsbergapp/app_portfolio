@@ -2351,7 +2351,7 @@ const commonFFB = async parameter => {
     const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
-    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&user_id=${COMMON_GLOBAL.user_account_id ?? ''}&admin=${COMMON_GLOBAL.iam_user_name ?? ''}` + 
+    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&iam_user_id=${COMMON_GLOBAL.user_account_id ?? COMMON_GLOBAL.iam_user_id}` + 
                                     `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                                     `&app_id=${COMMON_GLOBAL.app_id??''}`);
 

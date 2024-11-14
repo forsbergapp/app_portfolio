@@ -409,19 +409,22 @@
  *              common_description:string}} CommonAppModuleWithMetadata
  */
 /**
+ * DB FILE CommonAppModuleQueueStatus
+ * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} CommonAppModuleQueueStatus
+ */
+/**
  * CommonAppModuleQueue
  * @typedef {{  id:number,
  *              app_id: number,
  *              type:'REPORT',
  *              name: string,
- *              parameters:*,
+ *              parameters:string,
  *              user:string,
  *              start:string|null,
  *              end:string|null,
- *              progress:string|null,
- *              status:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
- *              message:string|null,
- *              result:string|null}} CommonAppModuleQueue
+ *              progress:number|null,
+ *              status:CommonAppModuleQueueStatus,
+ *              message:string|null}} CommonAppModuleQueue
  */
 /**
  * Type CommonProfileUser

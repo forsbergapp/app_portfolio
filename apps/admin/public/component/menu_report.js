@@ -15,9 +15,10 @@
 const template = () => ` <div id='menu_report_content_widget1' class='widget'>
                                 <div id='menu_report_select_report'></div>
                                 <div id='menu_report_metadata' class='common_list_scrollbar'></div>
-                                <div id='menu_report_run' class='common_dialogue_button button_save common_icon' ></div>
+                                <div id='menu_report_run' class='common_dialogue_button common_icon' ></div>
                             </div>
                             <div id='menu_report_content_widget2' class='widget'>
+                                <div id='menu_report_queue_reload' class='common_dialogue_button common_icon' ></div>
                                 <div id='menu_report_queue' class='common_list_scrollbar'></div>
                             </div>`;
 /**
@@ -31,7 +32,10 @@ const template = () => ` <div id='menu_report_content_widget1' class='widget'>
 *          lifecycle:   null}} props 
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
 *                      data:null, 
-*                      methods:{updateMetadata:function, reportRun:function},
+*                      methods:{    updateMetadata:function, 
+*                                   reportRun:function,
+*                                   reportQueueUpdate:function,
+*                                   reportPreview:function},
 *                      template:string}>}
 */
 const component = async props => {
@@ -50,10 +54,47 @@ const component = async props => {
             methods:null,
             path:'/component/menu_report_metadata.js'});
     };
-    const reportRun =()=>{
-        null;
-        //create record in queue
-        //run report
+    /**
+     * Submits report that runs in the queue
+     */
+    const reportRun =async ()=>{
+        const parameters = Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('.menu_report_metadata_row')).map((/**@type{HTMLElement}*/element) => {
+            return element.getAttribute('data-parameter') + '=' + element.querySelector('.menu_report_metadata_col2')?.textContent;
+        }).join('&');
+        const report = JSON.parse(props.methods.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).common_name;
+        await props.methods.commonFFB({path:`/app-module-report-queue/${report}`, query:`ps=A4&${parameters}`,method:'POST', authorization_type:'ADMIN'});
+        reportQueueUpdate();        
+    };
+    /**
+     * Updates report queue
+     */
+    const reportQueueUpdate = ()=>{
+        props.methods.commonComponentRender({mountDiv:'menu_report_queue',
+            data:{
+                sort:null,
+                order_by:null},
+            methods:{commonFFB:props.methods.commonFFB},
+            path:'/component/menu_report_queue.js'});
+    };
+    /**
+     * Previews result from selected report queue id
+     * @param {number} id
+     */
+    const reportPreview = id =>{
+        props.methods.commonComponentRender({
+            mountDiv:   'common_window_info',
+            data:       {
+                        info:4,
+                        url:null,
+                        content_type:'HTML', 
+                        path:`/app-module-report-queue-result/${id}`,
+                        method:'GET',
+                        body:null,
+                        authorization_type:'ADMIN',
+                        class:'A4'
+                        },
+            methods:    {commonFFB:props.methods.commonFFB},
+            path:       '/common/component/common_window_info.js'});
     };
     const onMounted = async () =>{
         //mount select
@@ -72,17 +113,16 @@ const component = async props => {
             methods:null,
             path:'/common/component/common_select.js'});
         updateMetadata();
-        await props.methods.commonComponentRender({mountDiv:'menu_report_queue',
-            data:{
-                sort:null,
-                ordeR_by:null},
-            methods:{commonFFB:props.methods.commonFFB},
-            path:'/component/menu_report_queue.js'});
+        reportQueueUpdate();
+        
     };                                                            
     return {
             lifecycle:   {onMounted:onMounted},
             data:        null,
-            methods:     {updateMetadata:updateMetadata,reportRun:reportRun},
+            methods:     {  updateMetadata:updateMetadata,
+                            reportRun:reportRun,
+                            reportQueueUpdate:reportQueueUpdate,
+                            reportPreview:reportPreview},
             template:    template()
    };
 };

@@ -71,6 +71,8 @@ const template = props => ` <div>
                             </div>`;
 /**
  * @param {{data:       {
+ *                      appModuleQueueId:number|null,
+ *                      app_id:number,
  *                      concurrency:number,
  * 						requests:number
  * 						}}} props
@@ -81,9 +83,10 @@ const component = async props => {
     const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const common_app_id = serverUtilNumberValue(fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/key)=>'APP_COMMON_APP_ID'in key)[0].APP_COMMON_APP_ID) ?? 0;
     /**@type{import('../../../common/src/common.js')} */
     const {commonRegistryAppModule} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    /**@type{import('../../../../server/db/fileModelAppModuleQueue.js')} */
+    const fileModelAppModuleQueue = await import(`file://${process.cwd()}/server/db/fileModelAppModuleQueue.js`);
 
     class Benchmark {
     /**
@@ -147,7 +150,6 @@ const component = async props => {
      * @returns {report_data|void}
      */
     done = (id, startTime) =>{
-        //console.log('#%d done', id);
         if (this._finished !== this.requests) {
             return;
         }
@@ -353,8 +355,11 @@ const component = async props => {
                 }
             }
             if (this._finished % this._stageCount === 0) {
-                const totalUse = Date.now() - this._startTime;
+                //const totalUse = Date.now() - this._startTime;
         
+                if (props.data.appModuleQueueId)
+                    fileModelAppModuleQueue.update(props.data.app_id, props.data.appModuleQueueId, {progress:(this._finished / this.requests)}, null);
+                /*
                 console.log('%sCompleted %s%, %d requests, qps: %s, rt: %s ms, speed: %s (%s / %s) [Kbytes/sec]',
                 this._name ? (this._name + ': ') : '',
                 (this._finished / this.requests * 100).toFixed(0),
@@ -364,12 +369,10 @@ const component = async props => {
                 (this._reqSize / totalUse).toFixed(2),
                 (this._resSize / totalUse).toFixed(2)
                 );
+                */
             }})
         .catch((/**@type{Error}*/err)=>{
             this._errors++;
-            console.log('ERROR', err);
-            console.log('finished', this._finished);
-            
             throw err;
         });      
         this.next(id, startTime);
@@ -409,7 +412,7 @@ const component = async props => {
     const report = new Benchmark(test_function, {
                                                     concurrency: props.data.concurrency,
                                                     requests: props.data.requests,
-                                                    name:commonRegistryAppModule(common_app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
+                                                    name:commonRegistryAppModule(props.data.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
                                                     }).run();
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=old;

@@ -440,19 +440,22 @@
  */
  
 /**
+ * DB FILE server_db_file_app_module_queue_status
+ * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} server_db_file_app_module_queue_status
+ */
+/**
  * DB FILE server_db_file_app_module_queue
  * @typedef {{  id:number,
  *              app_id: number,
  *              type:'REPORT',
  *              name: string,
- *              parameters:*,
+ *              parameters:string,
  *              user:string,
  *              start:string|null,
  *              end:string|null,
- *              progress:string|null,
- *              status:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
- *              message:string|null,
- *              result:string|null}} server_db_file_app_module_queue
+ *              progress:number|null,
+ *              status:server_db_file_app_module_queue_status,
+ *              message:string|null}} server_db_file_app_module_queue
  */
 
 /**

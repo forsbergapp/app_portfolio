@@ -365,6 +365,7 @@ const fileFsAccessMkdir = async () => {
     for (const dir of [ `${SLASH}data`,
                         `${SLASH}data${SLASH}backup`,
                         `${SLASH}data${SLASH}db`,
+                        `${SLASH}data${SLASH}db${SLASH}jobs`,
                         `${SLASH}data${SLASH}db${SLASH}backup`,
                         `${SLASH}data${SLASH}iam`,
                         `${SLASH}data${SLASH}iam${SLASH}backup`,
@@ -532,5 +533,5 @@ const fileDBDelete = async (app_id, table, resource_id, data_app_id, res) =>{
 };
 
 
-export {SLASH, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
+export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
         fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete};
