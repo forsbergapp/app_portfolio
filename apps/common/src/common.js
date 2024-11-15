@@ -631,20 +631,20 @@ const commonAppReportQueue = async parameters =>{
                                                             progress:0, 
                                                             status:'RUNNING'}, null);
     //report can update progress and only progress if necessary
-    //add queue id
-    const result = await commonModuleGet({...parameters, ...{queue_parameters:{...{appModuleQueueId:id}, ...report_parameters_obj}}})
-                        .catch(error=>{
-                            fileModelAppModuleQueue.update(parameters.app_id, id, { end:new Date().toISOString(), 
-                                                                                    progress:1, 
-                                                                                    status:'FAIL',
-                                                                                    message:error.message ?? error}, null);
-                            return null;
-                        });
-
-    if (result){
-        await fileModelAppModuleQueue.postResult(parameters.app_id, id, result);
-        await fileModelAppModuleQueue.update(parameters.app_id, id, {end:new Date().toISOString(), progress:1, status:'SUCCESS'}, null);
-    }
+    //add queue id and parameters from parameter form origin
+    commonModuleGet({...parameters, ...{queue_parameters:{...{appModuleQueueId:id}, ...report_parameters_obj}}})
+    .then(result=>{
+        if (result){
+            fileModelAppModuleQueue.postResult(parameters.app_id, id, result)
+            .then(()=>fileModelAppModuleQueue.update(parameters.app_id, id, {end:new Date().toISOString(), progress:1, status:'SUCCESS'}, null));
+        }
+    })
+    .catch(error=>{
+        fileModelAppModuleQueue.update(parameters.app_id, id, { end:new Date().toISOString(), 
+                                                                progress:1, 
+                                                                status:'FAIL',
+                                                                message:error.message ?? error}, null);
+    });
 };
 
 /**
