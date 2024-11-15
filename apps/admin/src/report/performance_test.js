@@ -2,6 +2,20 @@
  * Report performance test
  * Tests performance of requests to servers main host using configured protocol and port
  * Runs in report queue where progress is updated
+ * 
+ * Different test pattern can be used using this report
+ * Data analysis        Report is submitted to a queue where result is saved so reports can be compared
+ * Hardware             Test on different servers
+ * Software             Test use different installation on server
+ * Function scenario    Test changing server, iam, microservice or apps parameters
+ * 
+ * Steady load          Run report once
+ * Ramp up              Submit this report to queue increasingly
+ * Spike load           Increase concurrency and requests parameter values
+ * 
+ * Load test            Modify concurrency and requests parameter values
+ * Performance test     See result in report
+ * 
  * @module apps/admin/src/report/performance_test
  */
 /**
