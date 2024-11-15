@@ -1077,6 +1077,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 #menu_report_run{
   	width: calc(100% - 20px);
+	top: unset !important;
 }
 #menu_report_content_widget2{
 	height: calc(50% - 10px);

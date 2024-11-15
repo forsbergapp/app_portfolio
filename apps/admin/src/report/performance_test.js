@@ -1,29 +1,17 @@
 /**
- *  Report performance test
- *   Tests performance of requests to servers main host using configured protocol and port
- *  removed 
- *    EventEmitter
- *    debug
- *    dependencies to third party modules
- *    fs file management
- *  replaced
- *    microtime with performance.now()
- *    function prototypes with one class with methods
- *    callback with async promise function
- *    synchronous fs.readFileSync with fs.promises.readFile
- *    test function returns result, status, reqSize, resSize
- *    var with const or let
- *    return text report with component and html report with result in array
- *  added 
- *    types
+ * Report performance test
+ * Tests performance of requests to servers main host using configured protocol and port
+ * Runs in report queue where progress is updated
  * @module apps/admin/src/report/performance_test
  */
 /**
  * @import {server_apps_module_metadata} from '../../../../server/types.js'
  */
 /**
- * @typedef {{  summary: [string, string|number][], 
- *              rt_ranges:[string,string,number,number][], //[start interval [ms],end interval [ms], count, rate %]
+ * @typedef {{  title:string,
+ *              date:string,
+ *              summary: [string, string|number|null, string][], 
+ *              rt_ranges:[string,string,number,string][], //[start interval [ms],end interval [ms], count, rate %]
  *              rt_percent:[string,number][]}} report_data  //[percent %, time ms]
  */
 /**
@@ -35,35 +23,44 @@
 /**
  * @param {report_data} props
  */
-const template = props => ` <div>
+const template = props => ` <div id='report'>
+                                <div id='report_title'>${props.title}</div>
+                                <div id='report_date'>${props.date}</div>
                                 ${props.summary.map(row=>
-                                    `<div class='report_row report_row_2col'>
+                                    `<div class='report_row report_row_3col'>
                                         <div class='report_col1'>${row[0]}</div>
-                                        <div class='report_col2'>${row[1]}</div>
+                                        <div class='report_col2'>
+                                            <div class='report_col2_1'>${row[1]}</div>
+                                            <div class='report_col2_2'>${row[2]}</div>
+                                        </div>
                                     </div>`
                                 ).join('')
                                 }
+                                <div class='report_row report_row_4col report_row_title'>
+                                    <div class='report_col1'>RT ranges [ms]</div>
+                                    <div class='report_col2'>
+                                    </div>
+                                </div>
                                 ${props.rt_ranges.map(row=>
-                                    `<div class='report_row report_row_4col report_title'>
-                                        <div class='report_col1'>RT ranges [ms]</div>
-                                        <div class='report_col2'></div>
-                                        <div class='report_col3'></div>
-                                        <div class='report_col4'></div>
-                                     </div>
-                                     <div class='report_row report_row_4col'>
-                                        <div class='report_col1'>${row[0]} - </div>
-                                        <div class='report_col2'>${row[1]}</div>
-                                        <div class='report_col3'>${row[2]}</div>
-                                        <div class='report_col4'>(${row[3]}%)</div>
+                                    `<div class='report_row report_row_4col'>
+                                        <div class='report_col1'>
+                                            <div class='report_col1_1'>${row[0]} - </div>
+                                            <div class='report_col1_2'>${row[1]}</div>
+                                        </div>
+                                        <div class='report_col2'>
+                                            <div class='report_col2_1'>${row[2]}</div>
+                                            <div class='report_col2_2'>(${row[3]}%)</div>
+                                        </div>
+                                        
                                      </div>`
                                 ).join('')
                                 }
+                                <div class='report_row report_row_2col report_row_title'>
+                                    <div class='report_col1'>Percent</div>
+                                    <div class='report_col2'></div>
+                                </div>
                                 ${props.rt_percent.map(row=>
-                                    `<div class='report_row report_row_2col report_title'>
-                                        <div class='report_col1'>Percent</div>
-                                        <div class='report_col2'></div>
-                                     </div>
-                                     <div class='report_row report_row_2col'>
+                                    `<div class='report_row report_row_2col'>
                                         <div class='report_col1'>${row[0]} <= </div>
                                         <div class='report_col2'>${row[1]} ms</div>
                                     </div>`
@@ -146,7 +143,7 @@ const component = async props => {
         }
         /**
          * @param {number} startTime
-         * @returns {report_data|void}
+         * @returns {report_data}
          */
         done = (startTime) =>{
             const totalUse = Date.now() - startTime;
@@ -244,56 +241,53 @@ const component = async props => {
                 }
             }
 
-            for (const t in rates) {
-                rates[t] = rates[t].toFixed(1);
-            }
-
             const totalSize = this._reqSize + this._resSize;
             const totalSizeRate = (totalSize / totalUse).toFixed(2);
             const reqSizeRate= (this._reqSize / totalUse).toFixed(2);
             const resSizeRate = (this._resSize / totalUse).toFixed(2);
 
-            return {summary:                   [
-                                                ['Finished requests',      total],
-                                                ['Date',                   Date()],
-                                                ['Concurrency Level',      this.concurrency],
-                                                ['Time taken for tests',   (totalUse / 1000).toFixed(3) + 'seconds'],
-                                                ['Complete requests',      total],
-                                                ['Failed requests',        this._fail],
-                                                ['Errors',                 this._errors],
-                                                ['Total transferred',      this.formatSize(totalSize)       + ', ' + totalSizeRate+ '[Kbytes/sec]'],
-                                                ['Sent transferred',       this.formatSize(this._reqSize)   + ', ' + reqSizeRate + '[Kbytes/sec]'],
-                                                ['Receive transferred',    this.formatSize(this._resSize)   + ', ' + resSizeRate + '[Kbytes/sec]'],
-                                                ['Requests per second',    qps + '[#/sec]'],
-                                                ['Average RT',             avgRT + '[ms]'],
-                                                ['Min RT',                 minRT + '[ms]'],
-                                                ['Max RT',                 maxRT + '[ms]']
-                                                ],
+            return {title:this._name,
+                    date:Date(),
+                    summary:                   [
+                                                ['Finished requests',      total, ''],
+                                                ['Concurrency Level',      this.concurrency, ''],
+                                                ['Time taken for tests',   (totalUse / 1000).toFixed(3), 'seconds'],
+                                                ['Complete requests',      total, ''],
+                                                ['Failed requests',        this._fail, ''],
+                                                ['Errors',                 this._errors,''],
+                                                ['Total transferred',      this.formatSize(totalSize)       + ', ' + totalSizeRate,'[Kbytes/sec]'],
+                                                ['Sent transferred',       this.formatSize(this._reqSize)   + ', ' + reqSizeRate,'[Kbytes/sec]'],
+                                                ['Receive transferred',    this.formatSize(this._resSize)   + ', ' + resSizeRate,'[Kbytes/sec]'],
+                                                ['Requests per second',    qps,'[#/sec]'],
+                                                ['Average RT',             avgRT,'[ms]'],
+                                                ['Min RT',                 minRT,'[ms]'],
+                                                ['Max RT',                 maxRT,'[ms]']
+                                               ],
                     rt_ranges:                  [
                                                 //[start interval [ms],end interval [ms], count, rate %]
-                                                ['0',   '0.5',  rtCounts['0.5'],rates['0.5']],
-                                                ['0.5', '1',    rtCounts['1'],  rates['1']],
-                                                ['1',   '1.5',  rtCounts['1.5'],rates['1.5']],
-                                                ['1.5', '2',    rtCounts['2'],  rates['2']],
-                                                ['2',   '2.5',  rtCounts['2.5'],rates['2.5']],
-                                                ['2.5', '3',    rtCounts['3'],  rates['3']],
-                                                ['3',   '3.5',  rtCounts['3.5'],rates['3.5']],
-                                                ['3.5', '4',    rtCounts['4'], rates['4']],
-                                                ['4',   '5',    rtCounts['5'], rates['5']],
-                                                ['5',   '6',    rtCounts['6'], rates['6']],
-                                                ['6',   '7',    rtCounts['7'], rates['7']],
-                                                ['7',   '8',    rtCounts['8'], rates['8']],
-                                                ['8',   '9',    rtCounts['9'], rates['9']],
-                                                ['9',   '10',   rtCounts['10'], rates['10']],
-                                                ['10', '15',    rtCounts['15'], rates['15']],
-                                                ['15', '20',    rtCounts['20'], rates['20']],
-                                                ['20', '30',    rtCounts['30'], rates['30']],
-                                                ['30', '50',    rtCounts['50'], rates['50']],
-                                                ['50', '100',   rtCounts['100'], rates['100']],
-                                                ['100', '200',  rtCounts['200'], rates['200']],
-                                                ['200', '500',  rtCounts['500'], rates['500']],
-                                                ['500', '1000', rtCounts['1000'], rates['1000']],
-                                                ['1000+', '',   rtCounts['1000+'], rates['1000+']]
+                                                ['0',   '0.5',  rtCounts['0.5'],rates['0.5'].toFixed(1)],
+                                                ['0.5', '1',    rtCounts['1'],  rates['1'].toFixed(1)],
+                                                ['1',   '1.5',  rtCounts['1.5'],rates['1.5'].toFixed(1)],
+                                                ['1.5', '2',    rtCounts['2'],  rates['2'].toFixed(1)],
+                                                ['2',   '2.5',  rtCounts['2.5'],rates['2.5'].toFixed(1)],
+                                                ['2.5', '3',    rtCounts['3'],  rates['3'].toFixed(1)],
+                                                ['3',   '3.5',  rtCounts['3.5'],rates['3.5'].toFixed(1)],
+                                                ['3.5', '4',    rtCounts['4'], rates['4'].toFixed(1)],
+                                                ['4',   '5',    rtCounts['5'], rates['5'].toFixed(1)],
+                                                ['5',   '6',    rtCounts['6'], rates['6'].toFixed(1)],
+                                                ['6',   '7',    rtCounts['7'], rates['7'].toFixed(1)],
+                                                ['7',   '8',    rtCounts['8'], rates['8'].toFixed(1)],
+                                                ['8',   '9',    rtCounts['9'], rates['9'].toFixed(1)],
+                                                ['9',   '10',   rtCounts['10'], rates['10'].toFixed(1)],
+                                                ['10', '15',    rtCounts['15'], rates['15'].toFixed(1)],
+                                                ['15', '20',    rtCounts['20'], rates['20'].toFixed(1)],
+                                                ['20', '30',    rtCounts['30'], rates['30'].toFixed(1)],
+                                                ['30', '50',    rtCounts['50'], rates['50'].toFixed(1)],
+                                                ['50', '100',   rtCounts['100'], rates['100'].toFixed(1)],
+                                                ['100', '200',  rtCounts['200'], rates['200'].toFixed(1)],
+                                                ['200', '500',  rtCounts['500'], rates['500'].toFixed(1)],
+                                                ['500', '1000', rtCounts['1000'], rates['1000'].toFixed(1)],
+                                                ['1000+', '',   rtCounts['1000+'], rates['1000+'].toFixed(1)]
                                                 ],
                                                 
                     rt_percent:                 [
@@ -350,21 +344,8 @@ const component = async props => {
                     }
                 }
                 if (this._finished % this._stageCount === 0) {
-                    //const totalUse = Date.now() - this._startTime;
-            
                     if (props.queue_parameters.appModuleQueueId)
                         fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / this.requests)}, null);
-                    /*
-                    console.log('%sCompleted %s%, %d requests, qps: %s, rt: %s ms, speed: %s (%s / %s) [Kbytes/sec]',
-                    this._name ? (this._name + ': ') : '',
-                    (this._finished / this.requests * 100).toFixed(0),
-                    this._finished, (this._finished / totalUse * 1000).toFixed(3),
-                    (this._totalRT / this._finished / 1000).toFixed(3),
-                    ((this._reqSize + this._resSize) / totalUse).toFixed(2),
-                    (this._reqSize / totalUse).toFixed(2),
-                    (this._resSize / totalUse).toFixed(2)
-                    );
-                    */
                 }})
             .catch((/**@type{Error}*/err)=>{
                 this._errors++;
