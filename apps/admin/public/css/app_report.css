@@ -8,8 +8,6 @@
 	color: var(--common_report_color_black);
 	font-family: var(--common_global_font_arabic_sans);
 	z-index: 0;
-	transform: scale(0.5);
-	transform-origin: top left;
 	margin-top: 10px;
 }
 #paper.A4{
@@ -20,25 +18,40 @@
 	width : 8.5in;
 	height : 11in;
 }
+#report{
+	font-size: 0.5em;
+}
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	#paper {
 		margin: 0 auto;
-		transform: scale(0.7);
-		transform-origin:top;
 		position: inherit;
 		margin-top: 10px;
+	}
+	#report{
+		font-size: 1em;
 	}
 }
 #printbody #paper {
 	box-shadow: none;
-	transform:scale(1) !important;
 	margin: 0 auto;
 	margin-top: 0px;
 }
+
+#report_title{
+	font-size: 2em;
+	width: 100%;
+	margin-bottom: 1em;
+}
+#report_date{
+	font-size: 1em;
+	width: 100%;
+	margin-bottom: 1em;
+}
 .report_title{
 	font-weight: bold;
-	margin-bottom: 1em;
+	margin-top: 1em;
+	margin-bottom: 0em;
 }
 .report_row{
 	display: inline-block;
@@ -47,18 +60,39 @@
 .report_row > div{
 	display: inline-block;
 }
-.report_row_2col .report_col1,
-.report_row_4col .report_col1 {
-	width: 300px;
+.report_col1 {
+	width: calc(50% - 5px);
 }
-.report_row_2col .report_col2 {
-	width: calc(100% - 310px);
+.report_col2 {
+	width: calc(50% - 5px);
 }
-
-.report_row_4col .report_col2,
-.report_row_4col .report_col3,
-.report_row_4col .report_col4 {
-	width: calc(100/3% - 300px);
+.report_row_title{
+	margin-top:1em;
+}
+.report_row_3col .report_col2_1{
+	text-align: end;
+	display: inline-block;
+	width: calc(50% - 5px);
+}
+.report_row_3col .report_col2_2{
+	text-align: start;
+	display: inline-block;
+	width: calc(50% - 5px);
+}
+.report_row_4col .report_col1_1,
+.report_row_4col .report_col1_2,
+.report_row_4col .report_col2_1,
+.report_row_4col .report_col2_2 {
+	width: calc(50% - 5px);
+	display: inline-block;
+}
+.report_row_4col .report_col1_1,
+.report_row_4col .report_col2_1{
+	text-align: end;
+}
+.report_row_4col .report_col1_2,
+.report_row_4col .report_col2_2{
+	text-align: start;
 }
 .report_col1{
 	background-color: var(--common_report_color_darkblue);
