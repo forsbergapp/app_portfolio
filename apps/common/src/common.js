@@ -557,10 +557,9 @@ const commonModuleGet = async parameters => {
                                                             accept_language:parameters.locale??''});
             const {default:ComponentCreate} = await import('./component/common_report.js');
             
-            const decodedReportparameters = Buffer.from(parameters.data.get('reportid') ?? '', 'base64').toString('utf-8');
-            const papersize = new URLSearchParams(decodedReportparameters).get('ps');
             const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
 
+            const pagesize = parameters.data.get('ps') ?? new URLSearchParams(Buffer.from(parameters.data.get('reportid') ?? '', 'base64').toString('utf-8')).get('ps');
             /**@type{server_apps_report_create_parameters} */
             const data = {  app_id:         parameters.app_id,
                             queue_parameters:parameters.queue_parameters,
@@ -572,10 +571,10 @@ const commonModuleGet = async parameters => {
                             longitude:      result_geodata?.longitude
                             };
             return ComponentCreate({data:   {
-                                            CONFIG_APP:{...fileModelApp.get(parameters.app_id, parameters.app_id, null)[0]},
-                                            data:data,
+                                            CONFIG_APP: {...fileModelApp.get(parameters.app_id, parameters.app_id, null)[0]},
+                                            data:       data,
                                             /**@ts-ignore */
-                                            papersize:papersize
+                                            papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
                                             },
                                     methods:{function_report:RunReport}});
         }
