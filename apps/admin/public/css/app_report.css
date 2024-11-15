@@ -61,10 +61,10 @@
 	display: inline-block;
 }
 .report_col1 {
-	width: calc(50% - 5px);
+	width: calc(40% - 5px);
 }
 .report_col2 {
-	width: calc(50% - 5px);
+	width: calc(60% - 5px);
 }
 .report_row_title{
 	margin-top:1em;
