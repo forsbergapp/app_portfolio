@@ -14,21 +14,17 @@
         
             <div class="description"><p>Report performance test
 Tests performance of requests to servers main host using configured protocol and port
-removed
-EventEmitter
-debug
-dependencies to third party modules
-fs file management
-replaced
-microtime with performance.now()
-function prototypes with one class with methods
-callback with async promise function
-synchronous fs.readFileSync with fs.promises.readFile
-test function returns result, status, reqSize, resSize
-var with const or let
-return text report with component and html report with result in array
-added
-types</p></div>
+Runs in report queue where progress is updated</p>
+<p>Different test pattern can be used using this report
+Data analysis        Report is submitted to a queue where result is saved so reports can be compared
+Hardware             Test on different servers
+Software             Test use different installation on server
+Function scenario    Test changing server, iam, microservice or apps parameters</p>
+<p>Steady load          Run report once
+Ramp up              Submit this report to queue increasingly
+Spike load           Increase concurrency and requests parameter values</p>
+<p>Load test            Modify concurrency and requests parameter values
+Performance test     See result in report</p></div>
         
 
         
@@ -175,7 +171,7 @@ types</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line418">line 418</a>
+        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line413">line 413</a>
     </div></div></dd>
     
 
@@ -291,7 +287,7 @@ types</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line83">line 83</a>
+        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line94">line 94</a>
     </div></div></dd>
     
 
@@ -442,7 +438,7 @@ types</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line38">line 38</a>
+        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line40">line 40</a>
     </div></div></dd>
     
 
@@ -530,7 +526,7 @@ types</p></div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line29">line 29</a>
+        <a href="apps_admin_src_report_performance_test.js.html">apps/admin/src/report/performance_test.js</a>, <a href="apps_admin_src_report_performance_test.js.html#line31">line 31</a>
     </div></div></dd>
     
 
