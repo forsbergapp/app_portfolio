@@ -50,35 +50,35 @@ else
     SLASH = '/';
 
 /**@type{server_db_file_db_record[]} */
-const FILE_DB = [   {NAME:'CONFIG_SERVER',                      TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_server.json', CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_BLOCKIP',                 TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_blockip.json', CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_POLICY',                  TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
-                    {NAME:'CONFIG_IAM_USERAGENT',               TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_useragent.json', CACHE_CONTENT:null},
-                    {NAME:'CONFIG_MICROSERVICE',                TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice.json', CACHE_CONTENT:null},
-                    {NAME:'CONFIG_MICROSERVICE_SERVICES',       TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice_services.json', CACHE_CONTENT:null},
-                    {NAME:'APP',                                TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app.json', CACHE_CONTENT:null},
-                    {NAME:'APP_MODULE',                         TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module.json', CACHE_CONTENT:null},
-                    {NAME:'APP_MODULE_QUEUE',                   TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module_queue.json', CACHE_CONTENT:null},
-                    {NAME:'APP_PARAMETER',                      TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_parameter.json', CACHE_CONTENT:null},
-                    {NAME:'APP_SECRET',                         TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_secret.json', CACHE_CONTENT:null},
-                    {NAME:'DB_FILE',                            TYPE:'BINARY',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'sqlite.db'},
-                    {NAME:'IAM_APP_TOKEN',                      TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_token.log'},
-                    {NAME:'IAM_USER',                           TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_USER_LOGIN',                     TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user_login.log'},
-                    {NAME:'LOG_APP_INFO',                       TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_INFO_'},
-                    {NAME:'LOG_APP_ERROR',                      TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_ERROR_'},
-                    {NAME:'LOG_DB_INFO',                        TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'DB_INFO_'},
-                    {NAME:'LOG_DB_ERROR',                       TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'DB_ERROR_'},
-                    {NAME:'LOG_REQUEST_INFO',                   TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'REQUEST_INFO_'},
-                    {NAME:'LOG_REQUEST_VERBOSE',                TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'REQUEST_VERBOSE_'},
-                    {NAME:'LOG_REQUEST_ERROR',                  TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'REQUEST_ERROR_'},
-                    {NAME:'LOG_SERVER_INFO',                    TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVER_INFO_'},
-                    {NAME:'LOG_SERVER_ERROR',                   TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVER_ERROR_'},
-                    {NAME:'LOG_SERVICE_INFO',                   TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVICE_INFO_'},
-                    {NAME:'LOG_SERVICE_ERROR',                  TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVICE_ERROR_'},
-                    {NAME:'MICROSERVICE_MESSAGE_QUEUE_PUBLISH', TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}`, FILENAME:'message_queue_publish.log'},
-                    {NAME:'MICROSERVICE_MESSAGE_QUEUE_CONSUME', TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}`, FILENAME:'message_queue_consume.log'},
-                    {NAME:'MICROSERVICE_MESSAGE_QUEUE_ERROR',   TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}`, FILENAME:'message_queue_error.log'}];
+const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_server.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_BLOCKIP',             TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_blockip.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_POLICY',              TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_IAM_USERAGENT',           TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_useragent.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_MICROSERVICE',            TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_MICROSERVICE_SERVICES',   TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice_services.json', CACHE_CONTENT:null},
+                    {NAME:'APP',                            TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app.json', CACHE_CONTENT:null},
+                    {NAME:'APP_MODULE',                     TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module.json', CACHE_CONTENT:null},
+                    {NAME:'APP_MODULE_QUEUE',               TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module_queue.json', CACHE_CONTENT:null},
+                    {NAME:'APP_PARAMETER',                  TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_parameter.json', CACHE_CONTENT:null},
+                    {NAME:'APP_SECRET',                     TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_secret.json', CACHE_CONTENT:null},
+                    {NAME:'DB_FILE',                        TYPE:'BINARY',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'sqlite.db'},
+                    {NAME:'IAM_APP_TOKEN',                  TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_token.log'},
+                    {NAME:'IAM_USER',                       TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_USER_LOGIN',                 TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user_login.log'},
+                    {NAME:'LOG_APP_INFO',                   TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_INFO_'},
+                    {NAME:'LOG_APP_ERROR',                  TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_ERROR_'},
+                    {NAME:'LOG_DB_INFO',                    TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'DB_INFO_'},
+                    {NAME:'LOG_DB_ERROR',                   TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'DB_ERROR_'},
+                    {NAME:'LOG_REQUEST_INFO',               TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'REQUEST_INFO_'},
+                    {NAME:'LOG_REQUEST_VERBOSE',            TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'REQUEST_VERBOSE_'},
+                    {NAME:'LOG_REQUEST_ERROR',              TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'REQUEST_ERROR_'},
+                    {NAME:'LOG_SERVER_INFO',                TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVER_INFO_'},
+                    {NAME:'LOG_SERVER_ERROR',               TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVER_ERROR_'},
+                    {NAME:'LOG_SERVICE_INFO',               TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVICE_INFO_'},
+                    {NAME:'LOG_SERVICE_ERROR',              TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'SERVICE_ERROR_'},
+                    {NAME:'MESSAGE_QUEUE_PUBLISH',          TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}`, FILENAME:'message_queue_publish.log'},
+                    {NAME:'MESSAGE_QUEUE_CONSUME',          TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}`, FILENAME:'message_queue_consume.log'},
+                    {NAME:'MESSAGE_QUEUE_ERROR',            TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}microservice${SLASH}`, FILENAME:'message_queue_error.log'}];
 Object.seal(FILE_DB);
 
 /**
@@ -221,7 +221,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * Get log file with given suffix or none or use sample to get specific suffix
  * for statistics
  * @function
- * @param {number} app_id
+ * @param {number|null} app_id
  * @param {server_db_file_db_name} file 
  * @param {string|null} filesuffix 
  * @param {string|null} sample

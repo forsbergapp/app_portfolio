@@ -14,4 +14,30 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="message_id" id="BA81C731-CCC9-0986-03E9-4ACFAC93450C">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-16 21:15:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="6197D463-7619-6B37-BE99-7DB671316A9F" name="MESSAGE_QUEUE PK">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-16 21:15:49 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>BA81C731-CCC9-0986-03E9-4ACFAC93450C</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>
