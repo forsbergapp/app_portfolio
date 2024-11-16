@@ -8,7 +8,9 @@
             <pre class="prettyprint source linenums"><code>/** @module server/db/fileModelLog */
 
 /**
- * @import {server_log_result_logFilesGet, server_log_request_record, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
+ * @import {server_db_file_log_request, server_db_file_log_server,server_db_file_log_db,server_db_file_log_service,server_db_file_db_name_log,server_db_file_log_app,
+ *          server_log_scope, server_log_level,
+ *          server_log_result_logFilesGet, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
  *          server_server_error, server_server_req, server_server_req_verbose, server_db_common_result, server_db_common_result_error} from '../types.js'
 */
 /**@type{import('./fileModelConfig.js')} */
@@ -27,14 +29,14 @@ const logDate = () => new Date().toISOString();
 /**
  * Write log
  * @function
- * @param {'APP'|'DB'|'REQUEST'|'SERVER'|'SERVICE'} logscope 
- * @param {'INFO'|'ERROR'} loglevel 
+ * @param {server_log_scope} logscope 
+ * @param {server_log_level} loglevel 
  * @param {object} log 
  * @returns {Promise.&lt;null>}
  */
  const post = async (logscope, loglevel, log) => {
-    return await new Promise((resolve) => {
-        const config_file_interval = fileModelConfig.get('SERVICE_LOG', 'FILE_INTERVAL');
+    return await new Promise(resolve => {
+        const config_file_interval = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL');
         fileFsAppend(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
         .catch((/**@type{server_server_error}*/error)=>{
@@ -53,16 +55,18 @@ const logDate = () => new Date().toISOString();
  * @returns 
  */
 const postRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
+        /**@type{server_db_file_log_request}*/
         const log_json_server = {   logdate:            logDate(),
                                     host:               req.headers.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
                                     correlationid:      req.headers['X-Correlation-Id'],
                                     url:                req.originalUrl,
+                                    http_info:          req.protocol + '/' + req.httpVersion,
                                     method:             req.method,
                                     statusCode:         statusCode,
-                                    statusMessage:      statusMessage,
+                                    statusMessage:      typeof statusMessage=='object'?JSON.stringify(statusMessage):statusMessage?.toString(),
                                     ['user-agent']:     req.headers['user-agent'], 
                                     ['accept-language']:req.headers['accept-language'], 
                                     referer:            req.headers.referer,
@@ -71,8 +75,7 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
                                     responsetime:       responsetime,
                                     logtext:            err.status + '-' + err.message
                                 };
-        /**@ts-ignore */
-        resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_REQUEST'), fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
+        resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_REQUEST'), fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
     });
 };
 /**
@@ -85,12 +88,13 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
  * @returns {Promise.&lt;null>}
  */
 const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
         let log_level;
+        /**@type{server_db_file_log_request|{}}*/
         let log_json_server = {};
-        switch (fileModelConfig.get('SERVICE_LOG', 'REQUEST_LEVEL')){
+        switch (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL')){
             case '1':{
-                log_level = fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO');
+                log_level = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO');
                 log_json_server = { logdate:            logDate(),
                                     host:               req.headers.host,
                                     ip:                 req.ip,
@@ -112,7 +116,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
                 break;
             }
             case '2':{
-                log_level = fileModelConfig.get('SERVICE_LOG', 'LEVEL_VERBOSE');
+                log_level = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_VERBOSE');
                 /**@type{server_server_req_verbose} */
                 const logtext_req = Object.assign({}, req);
                 const getCircularReplacer = () => {
@@ -160,49 +164,46 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
                 return resolve(null);
             }
         }   
-        /**@ts-ignore */
-        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
+        return resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
     });
 };
 /**
  * Log server
  * @function
- * @param {string} log_level 
+ * @param {server_log_level} log_level 
  * @param {string} logtext 
  * @returns {Promise.&lt;null>}
  */
 const postServer = async (log_level, logtext) =>{
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
+        /**@type{server_db_file_log_server} */
         const log_json_server = {
                                 logdate: logDate(),
                                 logtext: logtext
                               };
-        /**@ts-ignore */
-        resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
+        resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
     });
 };
 /**
  * Log server Info
  * @function
- * @param {*} logtext 
+ * @param {string} logtext 
  * @returns {Promise.&lt;null>}
  */
 const postServerI = async (logtext)=>{
-    return await new Promise((resolve) => {
-        /**@ts-ignore */
-        resolve(postServer(fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO'), logtext));
+    return await new Promise(resolve => {
+        resolve(postServer(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO'), logtext));
     });
 };
 /**
  * Log server error
  * @function
- * @param {*} logtext 
+ * @param {string} logtext 
  * @returns {Promise.&lt;null>}
  */
 const postServerE = async (logtext)=>{
-    return await new Promise((resolve) => {
-        /**@ts-ignore */
-        resolve(postServer(fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), logtext));
+    return await new Promise(resolve => {
+        resolve(postServer(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), logtext));
     });
 };
 /**
@@ -216,12 +217,13 @@ const postServerE = async (logtext)=>{
  * @returns {Promise.&lt;null>}
  */
 const postDBI = async (app_id, db, sql, parameters, result) => {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
+        /**@type{server_db_file_log_db} */
         let log_json_db;
         let level_info;
-        switch (fileModelConfig.get('SERVICE_LOG', 'DB_LEVEL')){
+        switch (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'DB_LEVEL')){
             case '1':{
-                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO');
+                level_info = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO');
                 log_json_db = {
                                 logdate:        logDate(),
                                 app_id:         app_id,
@@ -233,14 +235,14 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
                 break;
             }
             case '2':{
-                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_VERBOSE');
+                level_info = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_VERBOSE');
                 log_json_db = {
                                 logdate:        logDate(),
                                 app_id:         app_id,
                                 db:             db,
                                 sql:            sql,
                                 parameters:     JSON.stringify(parameters),
-                                logtext:        result
+                                logtext:        typeof result=='object'?JSON.stringify(result):result
                                 };
                 break;
             }
@@ -249,8 +251,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
                 return resolve(null);
             }
         }
-        /**@ts-ignore */
-        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
+        return resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
     });
 };
 /**
@@ -264,17 +265,17 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
  * @returns {Promise.&lt;null>}
  */
 const postDBE = async (app_id, db, sql, parameters, result) => {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
+        /**@type{server_db_file_log_db} */
         const log_json_db = {
             logdate:        logDate(),
             app_id:         app_id,
             db:             db,
             sql:            sql,
             parameters:     JSON.stringify(parameters),
-            logtext:        result
+            logtext:        typeof result=='object'?JSON.stringify(result):result
             };
-        /**@ts-ignore */
-        resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_DB'), fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
+        resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_DB'), fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
     });
 };
 /**
@@ -287,12 +288,13 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
  * @returns {Promise.&lt;null>}
  */
 const postServiceI = async (app_id, service, parameters, logtext) => {
-    return await new Promise((resolve) => {         
+    return await new Promise(resolve => {         
+        /**@type{server_db_file_log_service}*/
         let log_json;
         let level_info;
-        switch (fileModelConfig.get('SERVICE_LOG', 'SERVICE_LEVEL')){
+        switch (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SERVICE_LEVEL')){
             case '1':{
-                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO');
+                level_info = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO');
                 log_json = {logdate:    logDate(),
                             app_id:     app_id,
                             service:    service,
@@ -302,7 +304,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
                 break;
             }
             case '2':{
-                level_info = fileModelConfig.get('SERVICE_LOG', 'LEVEL_VERBOSE');
+                level_info = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_VERBOSE');
                 log_json = {logdate:    logDate(),
                             app_id:     app_id,
                             service:    service,
@@ -316,8 +318,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
                 return resolve(null);
             }
         }
-        /**@ts-ignore */
-        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
+        return resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
     });
 };
 /**
@@ -330,7 +331,8 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
  * @returns {Promise.&lt;null>}
  */
 const postServiceE = async (app_id, service, parameters, logtext) => {
-    return await new Promise((resolve) => {    
+    return await new Promise(resolve => { 
+        /**@type{server_db_file_log_service}*/   
         const log_json = {
                         logdate:    logDate(),
                         app_id:     app_id,
@@ -338,15 +340,14 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
                         parameters: parameters,
                         logtext:    logtext
                        };
-        /**@ts-ignore */
-        return resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_SERVICE'), fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
+        return resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVICE'), fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json));
     });
 };
 /**
  * Log App
  * @function
  * @param {number} app_id 
- * @param {string} level_info 
+ * @param {'INFO'|'ERROR'} level_info 
  * @param {string} app_filename 
  * @param {string} app_function_name 
  * @param {number} app_line 
@@ -354,7 +355,8 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
  * @returns {Promise.&lt;null>}
  */
 const postApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
+    /**@type{server_db_file_log_app} */
     const log_json ={
                     logdate:            logDate(),
                     app_id:             app_id,
@@ -363,8 +365,8 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
                     app_app_line:       app_line,
                     logtext:            logtext
                     };
-    /**@ts-ignore */
-    resolve(post(fileModelConfig.get('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
+    
+    resolve(post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
     });
 };
 /**
@@ -378,11 +380,10 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
  * @returns {Promise.&lt;null>}
  */
 const postAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
-    return await new Promise((resolve) => {
+    return await new Promise(resolve => {
         //log if INFO or VERBOSE level
-        if (fileModelConfig.get('SERVICE_LOG', 'APP_LEVEL')=='1' || fileModelConfig.get('SERVICE_LOG', 'APP_LEVEL')=='2')
-            /**@ts-ignore */
-            resolve(postApp(app_id, fileModelConfig.get('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
+        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'APP_LEVEL')=='1' || fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'APP_LEVEL')=='2')
+            resolve(postApp(app_id, fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
         else
             resolve(null);
     });
@@ -398,9 +399,8 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
  * @returns {Promise.&lt;null>}
  */
 const postAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => {
-    return await new Promise((resolve) => {
-        /**@ts-ignore */
-        resolve(postApp(app_id, fileModelConfig.get('SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
+    return await new Promise(resolve => {
+        resolve(postApp(app_id, fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
     });
 };
 
@@ -418,19 +418,19 @@ const get = async (app_id, query) => {
 
     /**@type{server_log_data_parameter_logGet} */
     const data = {  app_id:			app_id,
-        select_app_id:	serverUtilNumberValue(query.get('select_app_id')),
-        logscope:		query.get('logscope'),
-        loglevel:		query.get('loglevel'),
-        search:			query.get('search'),
-        sort:			query.get('sort'),
-        order_by:		query.get('order_by'),
-        year: 			query.get('year').toString(),
-        month:			query.get('month').toString(),
-        day:			query.get('day'),
-        limit:			serverUtilNumberValue(query.get('limit')) ?? 0,
-        offset:			serverUtilNumberValue(query.get('offset')) ?? 0
+                    select_app_id:	serverUtilNumberValue(query.get('select_app_id')),
+                    logscope:		query.get('logscope'),
+                    loglevel:		query.get('loglevel'),
+                    search:			query.get('search'),
+                    sort:			query.get('sort'),
+                    order_by:		query.get('order_by'),
+                    year: 			query.get('year').toString(),
+                    month:			query.get('month').toString(),
+                    day:			query.get('day'),
+                    limit:			serverUtilNumberValue(query.get('limit')) ?? 0,
+                    offset:			serverUtilNumberValue(query.get('offset')) ?? 0
     };
-    return new Promise ((resolve)=>{
+    return new Promise (resolve=>{
         /**
          * 
          * @param {object} record 
@@ -449,14 +449,15 @@ const get = async (app_id, query) => {
             }
             return false;
         };
+        /**@type{server_db_file_db_name_log} */
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
-        /**@ts-ignore*/
+        
         fileFsReadLog(app_id, file, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
-            if (data.logscope!='APP' &amp;&amp; data.logscope!='SERVICE' &amp;&amp; data.logscope!='SERVER-DB')
+            if (data.logscope!='APP' &amp;&amp; data.logscope!='SERVICE' &amp;&amp; data.logscope!='DB')
                 data.select_app_id = null;
             //filter records
             log_rows_array_obj = log_rows_array_obj.filter((/**@type{*}*/record) => {
@@ -599,7 +600,7 @@ const getStat = async (app_id, query) => {
         if (file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`) ||
             file.startsWith(`REQUEST_VERBOSE_${data.year}${data.month.toString().padStart(2,'0')}`)){
             //filename format: REQUEST_INFO_YYYMMDD.log
-            if (fileModelConfig.get('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
+            if (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
                 day = file.slice(-6).substring(0,2);
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
@@ -608,7 +609,7 @@ const getStat = async (app_id, query) => {
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
             await fileFsReadLog(app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
             .then((logs)=>{
-                logs.forEach((/**@type{server_log_request_record|''}*/record) => {
+                logs.forEach((/**@type{server_db_file_log_request|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
                             const domain_app_id = record.host?commonAppHost(record.host):null;

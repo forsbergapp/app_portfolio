@@ -369,13 +369,7 @@
 /**
  * DB FILE server_db_file_db_name
  * 
- * @typedef {   'CONFIG_APPS'|
- *              'CONFIG_SERVER'|
- *              'CONFIG_IAM_BLOCKIP'|
- *              'CONFIG_IAM_POLICY'|
- *              'CONFIG_IAM_USERAGENT'|
- *              'CONFIG_MICROSERVICE'|
- *              'CONFIG_MICROSERVICE_SERVICES'| 
+ * @typedef {   server_db_file_db_name_config| 
  *              'DB_FILE'| 
  *              'APP'|
  *              'APP_MODULE'|
@@ -385,20 +379,43 @@
  *              'IAM_APP_TOKEN'|
  *              'IAM_USER'|
  *              'IAM_USER_LOGIN'|
- *              'LOG_APP_INFO'|
- *              'LOG_APP_ERROR'|
- *              'LOG_DB_INFO'|
- *              'LOG_DB_ERROR'|
- *              'LOG_REQUEST_INFO'|
- *              'LOG_REQUEST_VERBOSE'|
- *              'LOG_REQUEST_ERROR'|
- *              'LOG_SERVER_INFO'|
- *              'LOG_SERVER_ERROR'|
- *              'LOG_SERVICE_INFO'|
- *              'LOG_SERVICE_ERROR'|
- *              'MICROSERVICE_MESSAGE_QUEUE_PUBLISH'|
- *              'MICROSERVICE_MESSAGE_QUEUE_CONSUME'|
- *              'MICROSERVICE_MESSAGE_QUEUE_ERROR'} server_db_file_db_name
+ *              server_db_file_db_name_log|
+ *              server_db_file_db_name_message_queue} server_db_file_db_name
+ */
+
+/**
+ * DB FILE server_db_file_db_name_config
+ * 
+ * @typedef {  'CONFIG_APPS'|
+ *              'CONFIG_SERVER'|
+ *              'CONFIG_IAM_BLOCKIP'|
+ *              'CONFIG_IAM_POLICY'|
+ *              'CONFIG_IAM_USERAGENT'|
+ *              'CONFIG_MICROSERVICE'|
+ *              'CONFIG_MICROSERVICE_SERVICES'} server_db_file_db_name_config
+ */
+/**
+ * DB FILE server_db_file_db_name_log
+ * 
+ * @typedef {  'LOG_APP_INFO'|
+ *             'LOG_APP_ERROR'|
+ *             'LOG_DB_INFO'|
+ *             'LOG_DB_ERROR'|
+ *             'LOG_REQUEST_INFO'|
+ *             'LOG_REQUEST_VERBOSE'|
+ *             'LOG_REQUEST_ERROR'|
+ *             'LOG_SERVER_INFO'|
+ *             'LOG_SERVER_ERROR'|
+ *             'LOG_SERVICE_INFO'|
+ *             'LOG_SERVICE_ERROR'} server_db_file_db_name_log
+ */
+
+/**
+ * DB FILE server_db_file_db_name_message_queue
+ * 
+ * @typedef {  'MESSAGE_QUEUE_PUBLISH'|
+ *             'MESSAGE_QUEUE_CONSUME'|
+ *             'MESSAGE_QUEUE_ERROR'} server_db_file_db_name_message_queue
  */
 
 /** 
@@ -598,6 +615,161 @@
  *		        lat:            string|null,
  *		        created:        string}} server_iam_user_login
  */
+
+ /** 
+ * DB FILE server_log_data_parameter_logGet
+ * @typedef{object}             server_log_data_parameter_logGet
+ * @property {number}           app_id
+ * @property {number|null}      select_app_id
+ * @property {server_log_scope} logscope
+ * @property {server_log_level} loglevel
+ * @property {string}           search
+ * @property {string|null}      sort
+ * @property {string}           order_by
+ * @property {string}           year
+ * @property {string}           month
+ * @property {string}           day
+ * @property {number}           limit
+ * @property {number}           offset
+ */
+
+/**
+ * DB FILE server_log_request_record_keys
+ * @typedef {   'logdate'|
+*              'host'|
+*              'ip'|
+*              'requestid'|
+*              'correlationid'|
+*              'url'|
+*              'http_info'|
+*              'method'|
+*              'statusCode'|
+*              'statusMessage'|
+*              'user-agent'|
+*              'accept-language'|
+*              'referer'|
+*              'size_received'|
+*              'size_sent'|
+*              'responsetime'|
+*              'logtext'} server_log_request_record_keys
+*/
+
+/**
+* DB FILE server_db_file_log_request
+* @typedef {{  logdate:string,
+*              host:string,
+*              ip:string,
+*              requestid:string,
+*              correlationid:string,
+*              url:string,
+*              http_info:string,
+*              method:string,
+*              statusCode:number,
+*              statusMessage:string,
+*              'user-agent':string,
+*              'accept-language':string,
+*              referer:string,
+*              size_received:number,
+*              size_sent:number,
+*              responsetime:number,
+*              logtext:string}} server_db_file_log_request
+*/
+
+/**
+* DB FILE server_db_file_log_server
+* @typedef {{  logdate:string,
+*              logtext:string}} server_db_file_log_server
+*/
+
+/**
+* DB FILE server_db_file_log_db
+* @typedef {{   logdate:string,
+*               app_id:number|null,
+*               db:number|null,
+*               sql:string,
+*               parameters:string,
+*               logtext:string}} server_db_file_log_db
+*/
+    
+/**
+ * DB FILE server_db_file_log_service
+ * @typedef {{   logdate:string,
+ *               app_id:number|null,
+ *               service:string,
+ *               parameters:string,
+ *               logtext:string}} server_db_file_log_service
+ */
+
+/**
+ * DB FILE server_db_file_log_app
+ * @typedef {{   logdate:string,
+ *               app_id:number|null,
+ *               app_filename:string,
+ *               app_function_name:string,
+ *               app_app_line:number,
+ *               logtext:string}} server_db_file_log_app
+ */
+
+/**
+ * DB FILE server_log_scope
+ * @typedef {'APP'|'DB'|'REQUEST'|'SERVER'|'SERVICE'} server_log_scope
+ */
+
+/**
+ * DB FILE server_db_file_message_queue_publish
+ * @typedef {{  message_id:number,
+ *              created:string,
+ *              service:string,
+ *              message:object|null}} server_db_file_message_queue_publish
+ */
+/**
+ * DB FILE server_db_file_message_queue_consume
+ * @typedef {{  message_id:number|null,
+ *              service:string|null,
+ *              message:*,
+ *              start:string|null,
+ *              finished:string|null,
+ *              result:*}} server_db_file_message_queue_consume
+ */
+/**
+ * DB FILE server_db_file_message_queue_error
+ * @typedef {{  message_id:number,
+ *              message:*,
+ *              result:*}} server_db_file_message_queue_error
+ */
+
+/**
+ * DB FILE server_log_level
+ * @typedef {'INFO'|'ERROR'} server_log_level
+*/
+
+/** 
+* DB FILE server_log_data_parameter_getLogStats
+* @typedef {object}                server_log_data_parameter_getLogStats
+* @property {number|null}          app_id
+* @property {server_log_request_record_keys} statGroup
+* @property {number|null}          unique
+* @property {string|number|null}   statValue
+* @property {number}               year
+* @property {number}               month
+*/
+
+/** 
+* DB FILE server_log_result_logStatGet
+* @typedef {object}                server_log_result_logStatGet
+* @property {number|null}          chart
+* @property {string|number|null}   statValue
+* @property {number}               year
+* @property {number}               month
+* @property {number|null}          day
+* @property {number|null}          amount
+*/
+
+/** 
+* DB_FILE server_log_result_logFilesGet
+* @typedef {{id:number, filename:string}} server_log_result_logFilesGet
+*/
+
 
 /**
  * DB POOL server_db_db_pool
@@ -1736,91 +1908,6 @@
  *                  }}} server_info_result_Info
  */
 
-/** 
- * LOG server_log_data_parameter_logGet
- * @typedef{object}         server_log_data_parameter_logGet
- * @property {number}       app_id
- * @property {number|null}  select_app_id
- * @property {string}       logscope
- * @property {string}       loglevel
- * @property {string}       search
- * @property {string|null}  sort
- * @property {string}       order_by
- * @property {string}       year
- * @property {string}       month
- * @property {string}       day
- * @property {number}       limit
- * @property {number}       offset
- */
-
-/**
- * LOG server_log_request_record_keys
- * @typedef {   'logdate'|
- *              'host'|
- *              'ip'|
- *              'requestid'|
- *              'correlationid'|
- *              'url'|
- *              'http_info'|
- *              'method'|
- *              'statusCode'|
- *              'statusMessage'|
- *              'user-agent'|
- *              'accept-language'|
- *              'referer'|
- *              'size_received'|
- *              'size_sent'|
- *              'responsetime'|
- *              'logtext'} server_log_request_record_keys
- */
-
-/**
- * LOG server_log_request_record
- * @typedef {{  logdate:string,
- *              host:string,
- *              ip:string,
- *              requestid:string,
- *              correlationid:string,
- *              url:string,
- *              http_info:string,
- *              method:string,
- *              statusCode:number,
- *              statusMessage:string,
- *              'user-agent':string,
- *              'accept-language':string,
- *              referer:string,
- *              size_received:number,
- *              size_sent:number,
- *              responsetime:number,
- *              logtext:string}} server_log_request_record
- */
-
-/** 
- * LOG server_log_data_parameter_getLogStats
- * @typedef {object}                server_log_data_parameter_getLogStats
- * @property {number|null}          app_id
- * @property {server_log_request_record_keys} statGroup
- * @property {number|null}          unique
- * @property {string|number|null}   statValue
- * @property {number}               year
- * @property {number}               month
- */
-
-/** 
- * LOG server_log_result_logStatGet
- * @typedef {object}                server_log_result_logStatGet
- * @property {number|null}          chart
- * @property {string|number|null}   statValue
- * @property {number}               year
- * @property {number}               month
- * @property {number|null}          day
- * @property {number|null}          amount
- */
-
-/** 
- * LOG server_log_result_logFilesGet
- * @typedef {{id:number, filename:string}} server_log_result_logFilesGet
- */
 
 /**
  * SERVER server_server_routesparameters
@@ -1940,8 +2027,8 @@
  * @property {string} query.order_by                                - Admin parameter
  * @property {server_socket_connected_list_sort} query.sort                               - Admin parameter
  * @property {string} query.count_logged_in                         - Admin parameter
- * @property {string} query.logscope                                - Admin log parameter
- * @property {string} query.loglevel                                - Admin log parameter
+ * @property {server_log_scope} query.logscope                      - Admin log parameter
+ * @property {server_log_level} query.loglevel                      - Admin log parameter
  * @property {string} query.offset                                  - Admin log parameter
  * @property {string} query.search                                  - Admin log parameter
  * @property {string} query.code                                    - Admin log parameter
@@ -1985,8 +2072,8 @@
  *              'X-Correlation-Id':string}} headers
  * socket
  * @property {object} socket
- * @property {string} socket.bytesRead
- * @property {string} socket.bytesWritten
+ * @property {number} socket.bytesRead
+ * @property {number} socket.bytesWritten
  *
  */
 

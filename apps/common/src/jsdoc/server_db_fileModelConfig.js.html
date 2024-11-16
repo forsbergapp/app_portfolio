@@ -8,7 +8,7 @@
             <pre class="prettyprint source linenums"><code>/** @module server/config */
 
 /**
- * @import {server_db_file_db_name, server_config_server_group, server_server_error, 
+ * @import {server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
  *          server_config_server,server_config_iam_blockip, server_config_iam_policy, server_config_iam_useragent,
  *          server_config_server_server, server_config_server_service_iam,
  *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret} from '../types.js'
@@ -17,6 +17,7 @@
 
 /**@type{import('./file.js')} */
 const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.js`);
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
@@ -26,23 +27,32 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
 /**
  * Config get
  * @function
- * @param {server_config_server_group} config_group
- * @param {string} parameter
- * @returns {string}
+ * @param {server_db_file_db_name_config} file
+ * @param {string|null} [config_group]
+ * @param {string|null} [parameter]
+ * @returns {*}
  */
-const get = (config_group, parameter) => {
-    if (config_group=='METADATA')
-        return parameter?fileCache('CONFIG_SERVER')[config_group][parameter]:fileCache('CONFIG_SERVER')[config_group];
-    else{
-        for (const config_parameter_row of fileCache('CONFIG_SERVER')[config_group]){
-            for (const key of Object.keys(config_parameter_row)){
-                if (key==parameter){
-                    return config_parameter_row[key];
-                }
+const get = (file, config_group, parameter) => {
+    try {
+        if (config_group &amp;&amp; parameter){
+            if (fileCache('CONFIG_SERVER')[config_group].length>0){
+                //return parameter in array
+                return fileCache(file)[config_group].filter((/**@type{*}*/row)=>parameter in row)[0][parameter];
             }
-        }                
-        return '';
+            else{
+                //return key
+                return fileCache(file)[config_group][parameter];
+            }
+        }
+        else
+            if (config_group)
+                return fileCache(file)[config_group];
+            else
+                return fileCache(file);    
+    } catch (error) {
+        return null;
     }
+    
 };
 /**
  * Config exists

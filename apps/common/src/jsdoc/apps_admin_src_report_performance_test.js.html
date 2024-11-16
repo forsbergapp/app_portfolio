@@ -99,15 +99,15 @@ const template = props => ` &lt;div id='report'>
  * @returns {Promise.&lt;string>}
  */
 const component = async props => {
-    /**@type{import('../../../../server/db/file.js')} */
-    const {fileCache} = await import(`file://${process.cwd()}/server/db/file.js`);
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../common/src/common.js')} */
     const {commonRegistryAppModule} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     /**@type{import('../../../../server/db/fileModelAppModuleQueue.js')} */
     const fileModelAppModuleQueue = await import(`file://${process.cwd()}/server/db/fileModelAppModuleQueue.js`);
-
+    /**@type{import('../../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    
     class Benchmark {
         /**
          * @param {{concurrency: number,
@@ -384,12 +384,12 @@ const component = async props => {
     const test_function = async () => {
         /**@type{number} */
         let status;
-        const HTTPS_ENABLE = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_ENABLE' in row)[0].HTTPS_ENABLE;
+        const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
         const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HOST' in row)[0].HOST;
+        const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTPS_PORT' in row)[0].HTTPS_PORT:
-                            fileCache('CONFIG_SERVER').SERVER.filter((/**@type{*}*/row)=>'HTTP_PORT' in row)[0].HTTP_PORT);
+                        fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
         return await fetch(PROTOCOL + HOST + ':' + PORT)
                     .then((response=>{
                             status = response.status;

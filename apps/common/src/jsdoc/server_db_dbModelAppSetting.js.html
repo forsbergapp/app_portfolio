@@ -33,7 +33,7 @@ const get = (app_id, query) =>
                         dbSql.APP_SETTING_SELECT, 
                         {
                             app_id : app_id,
-                            common_app_id: serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID')),
+                            common_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
                             app_setting_type_name: query.get('setting_type') ?? (query.get('setting_type')==''?null:query.get('setting_type'))
                             },
                         null, 
