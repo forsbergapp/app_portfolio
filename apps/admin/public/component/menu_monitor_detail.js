@@ -404,7 +404,7 @@ const component = async props => {
                 const logscope = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
                 const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
-                if (logscope=='APP' || logscope=='SERVICE' || logscope=='SERVER-DB'){
+                if (logscope=='APP' || logscope=='SERVICE' || logscope=='DB'){
                     //show app filter and use it
                     props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                     app_id_filter = `select_app_id=${app_id}&`;

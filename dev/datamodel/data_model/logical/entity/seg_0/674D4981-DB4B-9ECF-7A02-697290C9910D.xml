@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="674D4981-DB4B-9ECF-7A02-697290C9910D" name="MICROSERVICE_MESSAGE_QUEUE_PUBLISH">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="674D4981-DB4B-9ECF-7A02-697290C9910D" name="MESSAGE_QUEUE_PUBLISH">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:56:45 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -16,9 +16,9 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="message_id" id="43866815-D116-4DBB-CFF9-84B5E111EAFC">
+<Attribute name="created" id="4E716B22-3729-0AFE-A08F-88028EAB7B02">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:03:30 UTC</createdTime>
+<createdTime>2024-11-16 21:07:48 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

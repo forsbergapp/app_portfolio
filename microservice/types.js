@@ -58,29 +58,4 @@
 * @property {string}   headers.location
 */
 
-/**
-* MicroService - message queue publish
-* @typedef {{  message_id:string,
-*              service:string,
-*              message:object|null}}  microservice_message_queue_publish
-*/
-
-/**
-* MicroService - message queue consume
-* @typedef {{  message_id:string|null,
-*              service:string|null,
-*              message:*|null,
-*              start:string|null,
-*              finished:string|null,
-*              result:*}}  microservice_message_queue_consume
-*/
-
-/**
-* MicroService - message queue error
-* @typedef {{  message_id:string,
-*              service:string,
-*              message:object,
-*              start:string,
-*              result:*}}  microservice_message_queue_error
-*/
 export {};
