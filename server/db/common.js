@@ -36,7 +36,7 @@ const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
  * 
  */
 const dbCommonAppCodeGet = error => {
-	const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
+	const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
 	if (
 		((db_use ==1 ||db_use ==2)&& error.code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
 		(db_use ==3 && error.code=='23505')|| //PostgreSQL
@@ -79,7 +79,7 @@ const dbCommonAppCodeGet = error => {
 		const app_code = dbCommonAppCodeGet(err);
 		if (app_code != null){
 			getDisplayData( 	app_id,
-				new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${app_code}`))
+				new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${app_code}`))
 			.then(result_message=>{
 				res.statusCode = 400;
 				res.statusMessage = result_message[0].display_data;
@@ -105,7 +105,7 @@ const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getDisplayData }) => {
 			getDisplayData( 	app_id,
-				new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20400}`))
+				new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20400}`))
 			.then((/**@type{server_db_sql_result_app_setting_getDisplayData[]}*/result_message)=>{
 				res.statusCode = 404;
 				res.statusMessage = result_message[0].display_data;
@@ -157,7 +157,7 @@ const dbCommonLocaleGet = (lang_code, part) => {
  * @returns {string}
  */
 const dbCommonRowsLimit = (pagination = true) => {
-	const db_use = serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'));
+	const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
 	if (db_use == 4)
 		if (pagination)
 			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
@@ -185,7 +185,7 @@ const dbCommonRowsLimit = (pagination = true) => {
  * @param {'YEAR'|'MONTH'|'DAY'} period
  * @returns {string}
  */
-const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE'))==5?
+const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
 								` CAST(STRFTIME('%${period=='YEAR'?'Y':period=='MONTH'?'m':period=='DAY'?'d':''}', date_created) AS INT) `:
 								` EXTRACT(${period} from date_created)`;
 														
@@ -212,7 +212,7 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('SE
 	return new Promise ((resolve, reject)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
-		sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('SERVICE_DB', `DB${fileModelConfig.get('SERVICE_DB', 'USE')}_NAME`) ?? '');
+		sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '');
 		//manage different syntax
 		//syntax in SQL: WHERE '<DATE_PERIOD_YEAR/>' = [bind variable] etc
 		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod('YEAR'));
@@ -233,18 +233,18 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('SE
 			pagination = true;
 			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
 			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get(serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].common_app_limit_records.value);
+				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get(serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].common_app_limit_records.value);
 		}
 		//manage limit records
 		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
 			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get(serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].common_app_limit_records.value)}};
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get(serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, null)[0].common_app_limit_records.value)}};
 		}
 
-		dbSQL(app_id, serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE')), sql, parameters, dba)
+		dbSQL(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{server_db_common_result}*/result)=> {
-			fileModelLog.postDBI(app_id, serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE')), sql, parameters, result)
+			fileModelLog.postDBI(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				try {
@@ -277,14 +277,14 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('SE
 			//add db_message key since message is not saved for SQLite
 			if (error.message)
 				error.db_message = error.message;
-			fileModelLog.postDBE(app_id, serverUtilNumberValue(fileModelConfig.get('SERVICE_DB', 'USE')), sql, parameters, error)
+			fileModelLog.postDBE(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
 				const app_code = dbCommonAppCodeGet(error);
 				if (app_code != null)
 					return reject(error);
 				else{
 					//return full error to admin
-					if (app_id==serverUtilNumberValue(fileModelConfig.get('SERVER', 'APP_COMMON_APP_ID'))){
+					if (app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))){
 						//SQLite does not display sql in error
 						if (!error.sql)
 							error.sql = sql;
