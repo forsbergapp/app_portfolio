@@ -2,8 +2,11 @@
  * Common test not belonging to any module
  * @module test 
  */
-describe('FILE_DB cache test', ()=> {
-    it('should return values', async () =>{
+/**
+ * @import {server_bff_parameters, server_db_file_app} from '../server/types.js'
+ */
+describe('Integration test, setting FILE_DB cache', ()=> {
+    it('should return values when using ORM pattern for fileModelConfig', async () =>{
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
         /**@type{import('../server/db/fileModelConfig.js')} */
@@ -18,13 +21,92 @@ describe('FILE_DB cache test', ()=> {
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
                         fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
                             fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+        console.log('Integration test FILE_DB cache HTTPS_ENABLE:', HTTPS_ENABLE);
+        console.log('Integration test FILE_DB cache HOST:', HOST);
+        console.log('Integration test FILE_DB cache POR:', PORT);
         expect(HTTPS_ENABLE).not.toBe(null);
         expect(HOST).not.toBe(null);
         expect(PORT).not.toBe(null);
     });
 });
+describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps', ()=> {
+    it('should return values ', async () =>{
+        /**@type{import('../server/db/fileModelApp.js')} */
+        const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
 
-describe('Performance test', ()=> {
+        /**@type{server_db_file_app[]}*/
+        const apps = fileModelApp.get(null, null, null);
+
+        for (const app of apps){
+            /**@type{import('../server/bff.service.js')} */
+            const bff = await import(`file://${process.cwd()}/server/bff.service.js`);
+            /**@type{server_bff_parameters}*/
+            const parametersBFF = { endpoint:'SERVER_APP',
+                host:null,
+                url:'/geolocation/ip',
+                route_path:'/geolocation/ip',
+                method:'GET', 
+                query:'',
+                body:{},
+                authorization:null,
+                ip:'::1', 
+                user_agent:'*', 
+                accept_language:'',
+                /**@ts-ignore */
+                res:null};
+            const result = await bff.bffServer(app.id, parametersBFF)
+                                .then((result=> JSON.parse(result)))
+                                    .catch(()=>{return {};});
+            console.log('Integration test geolocation app id:', app.id);
+            console.log('Integration test geolocation geoplugin_latitude:', result.geoplugin_latitude);
+            console.log('Integration test geolocation geoplugin_longitude:', result.geoplugin_longitude);
+            expect(result.geoplugin_latitude).not.toBe(null);
+            expect(result.geoplugin_longitude).not.toBe(null);
+        }
+    });
+});
+describe('Integration test, microservice worldcities random city called from BFF and from all apps', ()=> {    
+    it('should return values ', async () =>{
+        /**@type{import('../server/db/fileModelApp.js')} */
+        const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+
+        /**@type{server_db_file_app[]}*/
+        const apps = fileModelApp.get(null, null, null);
+        for (const app of apps){
+            /**@type{import('../server/bff.service.js')} */
+            const bff = await import(`file://${process.cwd()}/server/bff.service.js`);
+            /**@type{server_bff_parameters}*/
+            const parametersBFF = { endpoint:'SERVER_APP',
+                host:null,
+                url:'/worldcities/city-random',
+                route_path:'/worldcities/city-random',
+                method:'GET', 
+                query:'',
+                body:{},
+                authorization:null,
+                ip:':1', 
+                user_agent:'*', 
+                accept_language:'',
+                /**@ts-ignore */
+                res:null};
+            const result = await bff.bffServer(app.id, parametersBFF)
+                                .then((result=> JSON.parse(result)))
+                                    .catch(()=>{return {};});
+            console.log('Integration test worldcities app id:', app.id);
+            console.log('Integration test worldcities lat:', result.lat);
+            console.log('Integration test worldcities lng:', result.lng);
+            console.log('Integration test worldcities city:', result.city);
+            console.log('Integration test worldcities admin_name:', result.admin_name);
+            console.log('Integration test worldcities country:', result.country);
+            expect(result.lat).not.toBe(null);
+            expect(result.lng).not.toBe(null);
+            expect(result.city).not.toBe(null);
+            expect(result.admin_name).not.toBe(null);
+            expect(result.country).not.toBe(null);
+        }
+    });
+});
+describe('Performance test, calling main server url according to configured values', ()=> {
     beforeAll(()=>{
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
     });
@@ -51,7 +133,6 @@ describe('Performance test', ()=> {
         //set parameter to avoid certificate errors
         const old = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
         process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
-        console.log('Test url', PROTOCOL + HOST + ':' + PORT);
         let err=0;
         for (let i=0; i<totalRequests; i++){
             requests.push(new Promise(resolve=>{
@@ -70,8 +151,14 @@ describe('Performance test', ()=> {
         const start = Date.now();
         await Promise.all(requests).catch(fail);
         process.env.NODE_TLS_REJECT_UNAUTHORIZED=old;
+        const total_time = (Date.now() -start)/1000;
+        const total_time_display = `${total_time.toFixed(3)} seconds`;
+        console.log('Performance test url:',PROTOCOL + HOST + ':' + PORT);
+        console.log('Performance test requests:',totalRequests);
+        console.log('Performance test errors:',err);
+        console.log('Performance test time:',total_time_display);
         expect(err).toBe(0);
-        expect(Date.now() -start).toBeLessThan(1000*10); //less than 10 seconds
+        expect(total_time).toBeLessThan(1000*10); //less than 10 seconds
     });
     afterAll(()=>{
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
