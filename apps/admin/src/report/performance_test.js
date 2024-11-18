@@ -361,9 +361,8 @@ const component = async props => {
                     if (props.queue_parameters.appModuleQueueId)
                         fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / this.requests)}, null);
                 }})
-            .catch((/**@type{Error}*/err)=>{
+            .catch(()=>{
                 this._errors++;
-                throw err;
             });      
             this.next(id, startTime);
         };

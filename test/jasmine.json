@@ -7,7 +7,9 @@
     "helpers/**/*.?(m)js"
   ],
   "env": {
+    "failSpecWithNoExpectations": false,
     "stopSpecOnExpectationFailure": false,
-    "random": true
+    "stopOnSpecFailure": false,
+    "random": false
   }
 }
