@@ -1532,6 +1532,9 @@ body.rtl{
 .leaflet-popup-content{
 	width:200px !important;
 }
+#common_module_leaflet_control_search .common_select_option{
+	display: inline-block;;
+}
 .common_module_leaflet_control_button {
 	text-align: center;
 	height: 30px;
