@@ -3530,11 +3530,17 @@ const custom_framework = () => {
     /**
      * Custom common event to keep track of framework events so they can be removed when necessary
      * No event is created for React
+     * Disables test of passive listener that tries to create test event on windows objects that
+     * affects touch events on mobile and on scroll divs inside third party divs
+     * Leaflet tries to create 'testPassiveEventSupport' on window object
+     * React tries to create 'test' on windows object
      * @param {string} scope
      * @param {*} object
      * @param {*[]} eventParameters
      */
     const customEventCommon = (scope, object, eventParameters) => {
+        if (eventParameters[1].indexOf('test')>-1)
+            throw 'test of passive listeners not allowed';
         const eventmodule = module(Error().stack);
         COMMON_GLOBAL.app_eventListeners[eventmodule]
             /**@ts-ignore */
