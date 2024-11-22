@@ -1586,8 +1586,9 @@ body.rtl{
 	margin-inline-start: 10px;
 	overflow-y: auto;
     overflow-x: hidden;
-	max-height: calc(5 * 3em);
+	max-height: calc(10 * 3em);
 	display:inline-block;
+	line-height: unset !important;
 }
 #common_module_leaflet_search_list .common_link {
 	width: unset;
@@ -1595,8 +1596,10 @@ body.rtl{
 	background-color:unset;
 }
 .common_module_leaflet_search_list_row{
-	height: 3em;
 	text-align: start;
+	display: inline-block;
+  	width: 100%;
+}
 }
 .common_module_leaflet_search_list_col{
 	display:block;
@@ -1634,7 +1637,7 @@ body.rtl{
 		width: 500px;
 	}	
 	#common_module_leaflet_search_list{
-		max-height: calc(3 * 3em);
+		max-height: calc(8 * 3em);
 	}
 	.common_toolbar_button{
 		width: 60px;
