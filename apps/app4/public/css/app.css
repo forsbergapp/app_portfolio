@@ -130,6 +130,7 @@ body{
 	background-color: var(--app_theme_dialogue_background_color) !important;
 	color: var(--app_theme_text_color) !important;
 }
-.common_module_leaflet_search_list_row:hover {
+.common_module_leaflet_search_list_row:hover,
+.common_module_leaflet_search_list_row:active {
 	background-color: var(--common_app_color_white3);
 }
