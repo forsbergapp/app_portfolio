@@ -299,5 +299,5 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CO
 };
 
 export{
-		dbCommonCheckedError, dbCommonAppCodeGet, dbCommonRecordNotFound, dbCommonRowsLimit, dbCommonExecute
+		dbCommonCheckedError, dbCommonAppCodeGet, dbCommonRecordNotFound, dbCommonLocaleGet, dbCommonRowsLimit, dbCommonExecute
 };

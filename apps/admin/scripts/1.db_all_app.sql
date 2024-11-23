@@ -563,10 +563,10 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 --
 -- app_data_entity
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (0, 0, '{"description":"Entity info: Common", "name":"COMMON"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (1, 0, '{"description":"Entity info: Common", "name":"COMMON"}');
 
 --
 -- app_data_entity_resource
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (0, <APP_ID/>, 0, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'LOG'), '{"description":"Log"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (1, <APP_ID/>, 0, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PROFILE_SEARCH'), '{"description":"Profile search"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (0, <APP_ID/>, 1, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'LOG'), '{"description":"Log"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (1, <APP_ID/>, 1, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PROFILE_SEARCH'), '{"description":"Profile search"}');
