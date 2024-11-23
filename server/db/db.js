@@ -301,19 +301,26 @@ const dbPoolGet = (pool_id, db_use, dba) => {
    }  
 };
 /**
- * Converts parameter and SQL syntax
+ * Converts SQL syntax and parameters depending what database is used
  * 
- * common syntax and also used by Oracle:       
+ * common syntax used and also used by Oracle that should be converted:
  *                      SQL:        UPDATE [table] SET [column] = :title" 
  *                      parameters: { title: "value" }
  * 
- * postgreSql syntax:   UPDATE [table] SET [column] = $1",     [0, "value"]
+ * postgreSql syntax:   SQL:        UPDATE [table] SET [column] = $1"
+ *                      parameters: [0, "value"]
  * uses unique index with $1, $2 etc, parameter can be used several times
  * example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
  * use indexorder received from parameters
  * 
+ * MariaDB + 
  * mySql syntax:        SQL:        UPDATE [table] SET [column] = ?"
  *                      parameters: ["value"]
+ *                      solution implemented here is to set values in the sql
+ *                      using connection?.escape(params[key]) syntax
+ *                      to avoid SQL injection and without having to use ? syntax
+ *                      that requires specific parameter order but a parameter key
+ *                      is only allowed to occur once in this implementation
  * 
  * SQLite syntax:       SQL:        UPDATE [table] SET [column] = $title"
  *                      parameters: [$title, "value"]
@@ -321,31 +328,10 @@ const dbPoolGet = (pool_id, db_use, dba) => {
  * @param {number} db
  * @param {server_db_db_pool_connection_1_2|null} connection
  * @param {string} parameterizedSql
- * @param {object} params
- * @returns {*}
+ * @param {{[key:string]:any}} params
+ * @returns {{sql:*, parameters:*}}
  */
 const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
-   if(db==4){
-      //Oracle 
-      //Fix CLOB column syntax to avoid ORA-01461 for these columns:
-      if ('DB_CLOB' in params){
-         /**@ts-ignore */
-         params.DB_CLOB.forEach((/**@type{string}*/column) => {
-            /**@ts-ignore */
-            params[column] = {  dir: ORACLEDB.BIND_IN, val: params[column], 
-                                    type: ORACLEDB.CLOB };
-         });
-         delete params.DB_CLOB;
-      }
-      // add RETURNING statement to get insertId
-      if ('DB_RETURN_ID' in params){
-         parameterizedSql += ` RETURNING ${params.DB_RETURN_ID} INTO :insertId` ;
-         delete params.DB_RETURN_ID;
-         Object.assign(params, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
-      }
-      return {parameterizedSql, params};
-   }
-   else
    switch (db){
       //MariaDB + mySQL
       case 1:
@@ -358,18 +344,40 @@ const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
             delete params.DB_CLOB;
 
          if (!params) 
-            return parameterizedSql;
-         return parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
-            if (key in params)
-               return connection?.escape(params[key]);
-            else
-               return txt;
-         });
+            return {sql:parameterizedSql, 
+                     parameters:params};
+         return { sql:parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
+                        if (key in params)
+                           return connection?.escape(params[key]);
+                        else
+                           return txt;
+                     }), 
+                  parameters:params};
+      }
+      case 4:{
+         //Oracle 
+         //Fix CLOB column syntax to avoid ORA-01461 for these columns:
+         if ('DB_CLOB' in params){
+            /**@ts-ignore */
+            params.DB_CLOB.forEach((/**@type{string}*/column) => {
+               /**@ts-ignore */
+               params[column] = {  dir: ORACLEDB.BIND_IN, val: params[column], 
+                                       type: ORACLEDB.CLOB };
+            });
+            delete params.DB_CLOB;
+         }
+         // add RETURNING statement to get insertId
+         if ('DB_RETURN_ID' in params){
+            parameterizedSql += ` RETURNING ${params.DB_RETURN_ID} INTO :insertId` ;
+            delete params.DB_RETURN_ID;
+            Object.assign(params, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
+         }
+         return {sql:parameterizedSql, parameters:params};
       }
       //PostgreSQL + SQLite
       case 3:
       case 5:{
-         // add RETURNING statement to get insertId
+         // add RETURNING statement to get column with id that was inserted, updated or deleted
          if ('DB_RETURN_ID' in params){
             if (db==3)
                parameterizedSql += ` RETURNING ${params.DB_RETURN_ID}` ;
@@ -414,7 +422,6 @@ const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
          return { sql:parameterizedSql, parameters:params};
       }
    }
-   
 };	
 /**
  * Sets common attributes for SQL execution result:
@@ -486,7 +493,7 @@ const dbSQLResultConvert = (db, result, fields=[{type:0, name:''}]) =>{
          if (result.lastID)
             result.insertId = result.lastID;
          if (result.changes)
-               result.affectedRows = result.changes;
+            result.affectedRows = result.changes;
          return result;
       }
    }
@@ -533,7 +540,7 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                   if (err)
                      return reject (err);
                   else{
-                     conn.config.queryFormat = dbSQLParamConvert(db_use, conn, sql, parameters); 
+                     conn.config.queryFormat = dbSQLParamConvert(db_use, conn, sql, parameters).sql; 
                      conn.query(sql, parameters, (/**@type{server_server_error}*/err, /**@type{[server_db_db_pool_connection_1_2_result]}*/result, /**@type{server_db_db_pool_connection_3_fields}*/fields) => {
                         if (err)
                            return reject (err);
@@ -617,4 +624,5 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
 
 export{dbPoolDeleteAll, 
        dbPoolStart, dbPoolClose, dbPoolGet,
+       dbSQLParamConvert, dbSQLResultConvert,
        dbSQL};
