@@ -125,13 +125,14 @@ const component = async props => {
         await props.methods.commonComponentRender({mountDiv:'menu_start_select_app',
                 data:{
                     default_value:'∞',
-                    options:[{APP_ID:'', NAME:'∞'}],
+                    default_data_value:'',
+                    options:[{id:'', name:'∞'}],
                     path:'/app-common',
-                    query:'key=NAME',
+                    query:'key=name',
                     method:'GET',
                     authorization_type:'ADMIN',
-                    column_value:'APP_ID',
-                    column_text:'NAME'
+                    column_value:'id',
+                    column_text:'name'
                    },
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
