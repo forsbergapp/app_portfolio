@@ -58,13 +58,14 @@ const component = async props => {
             {   mountDiv:'dialogue_send_broadcast_select_app_broadcast',
                 data:{
                     default_value:'∞',
-                    options:[{APP_ID:'', NAME:'∞'}],
+                    default_data_value:'',
+                    options:[{id:'', name:'∞'}],
                     path:'/app-common',
-                    query:'key=NAME',
+                    query:'key=name',
                     method:'GET',
                     authorization_type:'ADMIN',
-                    column_value:'APP_ID',
-                    column_text:'NAME'
+                    column_value:'id',
+                    column_text:'name'
                   },
                 methods:{commonFFB:props.methods.commonFFB},
                 path:'/common/component/common_select.js'});
