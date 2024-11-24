@@ -376,8 +376,10 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  const socketConnect = async (  app_id, parameters) =>{
     /**@type{import('./iam.service.js')} */
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./db/fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
-    const admin = iamUtilDecode(parameters.iam).get('admin');
+    const admin = fileModelIamUser.get(app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), parameters.response)[0].username;
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.response.req.headers['sec-fetch-mode']!='cors'){
