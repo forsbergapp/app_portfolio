@@ -221,6 +221,12 @@ const serverUtilAppLine = () =>{
  * Validates calls to circuitbreaker controlled microservices using client_id and client_secret defined for given app
  * Uses paths defined in app.route() in serverExpress() function
  * Returns single resource result format or ISO20022 format with either list header format or page header metadata
+ * Returns HTML or  {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
+ *  /app-module-report-queue-result
+ *  /bff/admin/v1/app-module-report
+ *  /bff/app/v1/app-module-report
+ *  /bff/app/v1/app-module-module
+ * 
  * Returns status 401 if user has not accessed to given resource
  * Returns status 404 if route is not found
  * @function
@@ -524,7 +530,8 @@ const serverUtilAppLine = () =>{
                                                                 type:app_query?.get('type'),
                                                                 /**@ts-ignore */
                                                                 resource_id:resource_id_get_number(),
-                                                                res:routesparameters.res}));
+                                                                res:routesparameters.res})
+                            .then((result=>iso_return_message(result, resource_id_get_number()!=null)))); 
                     break;
                 }
                 //server module of type REPORT for APP
@@ -539,21 +546,24 @@ const serverUtilAppLine = () =>{
                                                         ip:routesparameters.ip,
                                                         locale:app_query?.get('lang_code') ??'',
                                                         endpoint:routesparameters.endpoint,
-                                                        res:routesparameters.res}));
+                                                        res:routesparameters.res})
+                            .then((result=>iso_return_message(result, true)))); 
                     break;
                 }
                 case route({url:`/bff/admin/v1/app-module-report-queue/${resource_id_string}`, method:'GET'}):{
-                    resolve(fileModelAppModuleQueue.get(routesparameters.app_id, 
+                    resolve(iso_return_message(fileModelAppModuleQueue.get(routesparameters.app_id, 
                                                         /**@ts-ignore */
                                                         resource_id_get_number(), 
-                                                        routesparameters.res));
+                                                        routesparameters.res),
+                                                resource_id_get_number()!=null));
                     break;
                 }
                 case route({url:`/bff/admin/v1/app-module-report-queue-result/${resource_id_string}`, method:'GET'}):{
                     resolve(fileModelAppModuleQueue.getResult(  routesparameters.app_id, 
                                                                 /**@ts-ignore */
                                                                 resource_id_get_number(), 
-                                                                routesparameters.res));
+                                                                routesparameters.res)
+                            .then((result=>iso_return_message(result, resource_id_get_number()!=null)))); 
                     break;
                 }
                 case route({url:`/bff/admin/v1/app-module-report-queue/${resource_id_string}`, method:'POST', required:true}):{
@@ -581,7 +591,8 @@ const serverUtilAppLine = () =>{
                                                         ip:routesparameters.ip,
                                                         locale:app_query?.get('lang_code') ??'',
                                                         endpoint:routesparameters.endpoint,
-                                                        res:routesparameters.res}));
+                                                        res:routesparameters.res})
+                            .then((result=>iso_return_message(result, resource_id_get_number()!=null)))); 
                     break;
                 }                
                 //server module of type FUNCTION  for app_data, app_external or app_access
@@ -1030,7 +1041,8 @@ const serverUtilAppLine = () =>{
                     resolve(iam_service.iamUserGet(routesparameters.app_id,
                                                     /**@ts-ignore */
                                                     resource_id_get_number(), 
-                                                    routesparameters.res));
+                                                    routesparameters.res)
+                            .then((result=>iso_return_message(result, resource_id_get_number()!=null)))); 
                     break;
                 }
                 case route({url:`/bff/admin/v1/server-iam/user/${resource_id_string}`, method:'PATCH'}):{
