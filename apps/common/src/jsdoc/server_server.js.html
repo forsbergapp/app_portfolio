@@ -437,6 +437,7 @@ const serverUtilAppLine = () =>{
                                             routesparameters.accept_language, 
                                             routesparameters.body?routesparameters.body:null,
                                             routesparameters.endpoint == 'SERVER_APP')
+                        .then(result=>JSON.parse(result))
                         .catch((/**@type{server_server_error}*/error)=>{throw error;});
             };
 
@@ -1119,7 +1120,7 @@ const serverUtilAppLine = () =>{
                 case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
                     (routesparameters.endpoint.startsWith('SERVER') &amp;&amp; routesparameters.route_path=='/geolocation/ip'):{
                     if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
-                        const params = URI_query.split('&amp;');
+                        const params = URI_query.split('&amp;');                        
                         //set ip from client in case ip query parameter is missing
                         //if ip parameter does not exist
                         if (params.filter(parm=>parm.includes('ip=')).length==0 )
@@ -1129,31 +1130,37 @@ const serverUtilAppLine = () =>{
                             if (params.filter(parm=>parm == 'ip=').length==1)
                                 params.map(parm=>parm = parm.replace('ip=', `ip=${routesparameters.ip}`));
                         }
+                        console.log('route: geolocation/ip');
                         resolve(call_microservice(  routesparameters.app_id,
                                             `/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, 
-                                            `${params.reduce((param_sum,param)=>param_sum += '&amp;' + param)}`));
+                                            `${params.reduce((param_sum,param)=>param_sum += '&amp;' + param)}`)
+                                .then(result=>iso_return_message(result, true)));
                     }   
                     else
                         return resolve('');
                     break;
                 }
                 case route({url:'/bff/app_data/v1/geolocation/place', method:'GET'}):{
-                    resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, URI_query));
+                    resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, URI_query)        
+                            .then(result=>iso_return_message(result, true)));
                     break;
                 }
                 case route({url:'/bff/app_data/v1/worldcities/city', method:'GET'}):{
                     resolve(call_microservice(  routesparameters.app_id,
                                                 `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, 
-                                                URI_query + `&amp;limit=${serverUtilNumberValue(fileModelAppParameter.get(COMMON_APP_ID??0, routesparameters.res)[0].common_app_limit_records.value)}`));
+                                                URI_query + `&amp;limit=${serverUtilNumberValue(fileModelAppParameter.get(COMMON_APP_ID??0, routesparameters.res)[0].common_app_limit_records.value)}`)
+                            .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case route({url:'/bff/app_data/v1/worldcities/city-random', method:'GET'})||
                     (routesparameters.endpoint.startsWith('SERVER') &amp;&amp; routesparameters.route_path=='/worldcities/city-random'):{
-                    resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                    resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query)
+                            .then(result=>iso_return_message(result, true)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/worldcities/country/${resource_id_string}`, method:'GET'}):{
-                    resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query));
+                case route({url:`/bff/app_data/v1/worldcities/country/${resource_id_string}`, method:'GET', required:true}):{
+                    resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query)
+                            .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case routesparameters.route_path=='/mail/sendemail' &amp;&amp; routesparameters.endpoint.startsWith('SERVER'):{

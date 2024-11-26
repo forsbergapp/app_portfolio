@@ -291,16 +291,9 @@ const bffStart = async (req, res) =>{
                                     if (result==null)
                                         bff_parameters.res.write('');
                                     else{
-                                        if (typeof result=='string'){
-                                            //microservices return strings with JSON
-                                            bff_parameters.res.write(result, 'utf8');
-                                        }
-                                        else{
-                                            //al REST API should return object or numerical value
-                                            bff_parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
-                                            bff_parameters.res.write(JSON.stringify(result), 'utf8');
-                                        }
-                                        
+                                        //al REST API should return object or numerical value
+                                        bff_parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
+                                        bff_parameters.res.write(JSON.stringify(result), 'utf8');
                                     } 
                                     bff_parameters.res.end();
                                 }

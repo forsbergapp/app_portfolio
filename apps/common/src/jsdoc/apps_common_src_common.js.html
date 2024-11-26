@@ -164,7 +164,6 @@ const commonAppStart = async (app_id=null) =>{
         const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
         const NO_MAINTENANCE = fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE')==0;
         const DB_START = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
-        
         const APP_START = fileModelAppParameter.get(common_app_id, null)[0].common_app_start.value=='1';
         /**@ts-ignore */
         const DBOTHER_USER_INSTALLED = fileModelAppSecret.get(app_id ?? common_app_id, null)[0][`service_db_db${db_use}_app_user`];
@@ -247,12 +246,12 @@ const commonGeodata = async parameters =>{
     .catch(()=>null);
     const result_geodata = {};
     if (result_gps){
-        result_geodata.latitude =   JSON.parse(result_gps).geoplugin_latitude;
-        result_geodata.longitude=   JSON.parse(result_gps).geoplugin_longitude;
-        result_geodata.place    =   JSON.parse(result_gps).geoplugin_city + ', ' +
-                                    JSON.parse(result_gps).geoplugin_regionName + ', ' +
-                                    JSON.parse(result_gps).geoplugin_countryName;
-        result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
+        result_geodata.latitude =   result_gps.geoplugin_latitude;
+        result_geodata.longitude=   result_gps.geoplugin_longitude;
+        result_geodata.place    =   result_gps.geoplugin_city + ', ' +
+                                    result_gps.geoplugin_regionName + ', ' +
+                                    result_gps.geoplugin_countryName;
+        result_geodata.timezone =   result_gps.geoplugin_timezone;
     }
     else{
         /**@type{server_bff_parameters}*/
@@ -270,9 +269,9 @@ const commonGeodata = async parameters =>{
                                 /**@ts-ignore */
                                 res:null};
         const result_city = await bffServer(parameters.app_id, parametersBFF).catch((/**@type{server_server_error}*/error)=>{throw error;});
-        result_geodata.latitude =   JSON.parse(result_city).lat;
-        result_geodata.longitude=   JSON.parse(result_city).lng;
-        result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
+        result_geodata.latitude =   result_city.lat;
+        result_geodata.longitude=   result_city.lng;
+        result_geodata.place    =   result_city.city + ', ' + result_city.admin_name + ', ' + result_city.country;
         result_geodata.timezone =   null;
     }
     return result_geodata;

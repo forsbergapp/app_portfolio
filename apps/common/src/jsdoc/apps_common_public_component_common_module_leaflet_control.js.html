@@ -258,29 +258,6 @@ const component = async props => {
     const eventKeyUpSearch = ()  => {
         return null;
     };
-    /**
-     * Worldcities - Get cities
-     * @param {string} countrycode 
-     * @returns {Promise.&lt;{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]>}
-     */
-    const get_cities = async countrycode => {
-        /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-        const cities = await props.methods.commonFFB({path:`/worldcities/country/${countrycode}`, method:'GET', authorization_type:'APP_DATA'}).then(result=>JSON.parse(result));
-        
-        //sort admin name + city
-        cities.sort((a, b) => {
-            const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-            const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
-            if (x &lt; y) {
-                return -1;
-            }
-            if (x > y) {
-                return 1;
-            }
-            return 0;
-        });
-        return cities;
-    };
 
     /**
      * Map country
@@ -309,12 +286,27 @@ const component = async props => {
      */
     const map_city = async country_code =>{
         if (country_code!=null){
+             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
+            const cities = await props.methods.commonFFB({path:`/worldcities/country/${country_code.toUpperCase()}`, method:'GET', authorization_type:'APP_DATA'}).then(result=>JSON.parse(result).rows);
+            
+            //sort admin name + city
+            cities.sort((a, b) => {
+                const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+                const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+                if (x &lt; y) {
+                    return -1;
+                }
+                if (x > y) {
+                    return 1;
+                }
+                return 0;
+            });
             await props.methods.commonComponentRender({
                 mountDiv:       'common_module_leaflet_select_city',
                 data:           {
                                 default_data_value:'',
                                 default_value:'...',
-                                options:[{value:'', text:''}].concat((await get_cities(country_code.toUpperCase())).map(city=>{
+                                options:[{value:'', text:''}].concat(cities.map(city=>{
                                                                                         return {value:JSON.stringify({  id:city.id,
                                                                                                                         countrycode:city.iso2, 
                                                                                                                         country:city.country, 
