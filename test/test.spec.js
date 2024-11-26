@@ -43,7 +43,7 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
             /**@type{server_bff_parameters}*/
             const parametersBFF = { endpoint:'SERVER_APP',
                 host:null,
-                url:'/geolocation/ip',
+                url:'/bff/app_data/v1/geolocation/ip',
                 route_path:'/geolocation/ip',
                 method:'GET', 
                 query:'',
@@ -55,13 +55,14 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
                 /**@ts-ignore */
                 res:null};
             const result = await bff.bffServer(app.id, parametersBFF)
-                                .then((result=> JSON.parse(result)))
-                                    .catch(()=>{return {};});
+                                .catch(()=>{return {};});
             console.log('Integration test geolocation app id:', app.id);
             console.log('Integration test geolocation geoplugin_latitude:', result.geoplugin_latitude);
             console.log('Integration test geolocation geoplugin_longitude:', result.geoplugin_longitude);
             expect(result.geoplugin_latitude).not.toBe(null);
             expect(result.geoplugin_longitude).not.toBe(null);
+            expect(result.geoplugin_latitude).not.toBeUndefined();
+            expect(result.geoplugin_longitude).not.toBeUndefined();
         }
     });
 });
@@ -78,7 +79,7 @@ describe('Integration test, microservice worldcities random city called from BFF
             /**@type{server_bff_parameters}*/
             const parametersBFF = { endpoint:'SERVER_APP',
                 host:null,
-                url:'/worldcities/city-random',
+                url:'/bff/app_data/v1/worldcities/city-random',
                 route_path:'/worldcities/city-random',
                 method:'GET', 
                 query:'',
@@ -90,8 +91,8 @@ describe('Integration test, microservice worldcities random city called from BFF
                 /**@ts-ignore */
                 res:null};
             const result = await bff.bffServer(app.id, parametersBFF)
-                                .then((result=> JSON.parse(result)))
-                                    .catch(()=>{return {};});
+                                .catch(()=>{return {};});
+                                console.log('worldcites result:',result);
             console.log('Integration test worldcities app id:', app.id);
             console.log('Integration test worldcities lat:', result.lat);
             console.log('Integration test worldcities lng:', result.lng);
@@ -103,6 +104,11 @@ describe('Integration test, microservice worldcities random city called from BFF
             expect(result.city).not.toBe(null);
             expect(result.admin_name).not.toBe(null);
             expect(result.country).not.toBe(null);
+            expect(result.lat).not.toBeUndefined();
+            expect(result.lng).not.toBeUndefined();
+            expect(result.city).not.toBeUndefined();
+            expect(result.admin_name).not.toBeUndefined();
+            expect(result.country).not.toBeUndefined();
         }
     });
 });
