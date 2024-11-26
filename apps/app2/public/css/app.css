@@ -248,7 +248,6 @@
 
 /*SETTINGS, common*/
 #settings .common_select{
-	white-space: nowrap;
 	display: inline-block;
 	width: inherit;
 }
