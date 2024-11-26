@@ -56,7 +56,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                         res:null};
     
     const result_geodata = await bffServer(app_id, parameters)
-                                    .then((/**@type{*}*/result_gps)=>JSON.parse(result_gps))
+                                    .then((/**@type{*}*/result_gps)=>result_gps)
                                     .catch(()=>null);
     const place = result_geodata?
                     (result_geodata.geoplugin_city + ', ' +

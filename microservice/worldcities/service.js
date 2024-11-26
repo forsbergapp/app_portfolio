@@ -45,10 +45,13 @@ const getCityRandom = async () => {
 };
 /**
  * Get searched cities
+ * Filters searched and limit records 
+ * Searches without diacritics and uses lower case
+ * Uses localcompare as collation method when sorting
  * @function
  * @param {string} search 
  * @param {number} limit 
- * @returns Promise.<{list_header:{total_count:number, offset:number, count:number}, rows:type_city[]}>
+ * @returns Promise.<type_city[]}>
  */
 const getCitySearch = async (search, limit) => {
     /**@type{type_city[]} */
@@ -76,8 +79,8 @@ const getCitySearch = async (search, limit) => {
                                     }
                                     else
                                         return false;});
-    //sort
-    cities = cities.sort((first, second)=>{
+    //sort and return
+    return cities.sort((first, second)=>{
         const first_sort = first.country.toLowerCase() +  first.city.toLowerCase() + first.admin_name.toLowerCase();
         const second_sort = second.country.toLowerCase() + second.city.toLowerCase() + second.admin_name.toLowerCase();
         //using localeCompare as collation method
@@ -88,9 +91,5 @@ const getCitySearch = async (search, limit) => {
         else
             return 0;
     });
-    const list_header = {   total_count:	cities.length,
-                            offset: 		0,
-                            count:			cities.length};
-    return {list_header:list_header, rows:cities};
 };
 export{getCities, getCityRandom, getCitySearch};

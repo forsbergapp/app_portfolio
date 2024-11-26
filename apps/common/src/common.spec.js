@@ -1,13 +1,12 @@
 /** 
  * Test
- * @module server/server 
+ * @module apps/common/src/common 
  */
 
-describe('Spy test, serverRoutes', ()=> {
+describe('Spy test, commonApp as called from bff', ()=> {   
     /**
-     * @import {server_server_routesparameters} from './types.js'
+     * @import {server_server_res} from '../../../server/types.js'
      */
-    
     it('should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_TOKEN at least 1 time each when requesting app', async () =>{
         //Solution to test if FILE_DB object is fetching the APP_SECRET or IAM_APP_TOKEN record is to create a custom filter function 
         //that is available in global scope in NodeJS since FILE_DB object uses Object.seal() so no getter can be added 
@@ -16,29 +15,30 @@ describe('Spy test, serverRoutes', ()=> {
         let filterCount_IAM_APP_TOKEN = 0;
         //Save original filter function
         const originalFilter = Array.prototype.filter;
+        const test_id = 'commonApp';
         /**
          * Custom filter function to count and log Error().stack when APP_SECRET is read 
          * @param {(value: any, index: number, array: any[])=>any} callBack
          * @param {*} thisArg
          */
         Array.prototype.filter = function (callBack, thisArg){
-            if (originalFilter.call(this, callBack, thisArg)[0].NAME=='APP_SECRET'){
+            if (test_id== 'commonApp' && originalFilter.call(this, callBack, thisArg)[0]?.NAME=='APP_SECRET'){
                 filterCount_APP_SECRET++;
                 //Review Error().stack if necessary
-                console.log('Spy test serverRoutes reading APP_SECRET using custom filter function');
+                console.log('Spy test commonApp reading APP_SECRET using custom filter function');
             }
-            if (originalFilter.call(this, callBack, thisArg)[0].NAME=='IAM_APP_TOKEN'){
+            if (test_id== 'commonApp' && originalFilter.call(this, callBack, thisArg)[0]?.NAME=='IAM_APP_TOKEN'){
                 filterCount_IAM_APP_TOKEN++;
                 //Review Error().stack if necessary
-                console.log('Spy test serverRoutes reading IAM_APP_TOKEN using custom filter function');
+                console.log('Spy test commonApp reading IAM_APP_TOKEN using custom filter function');
             }
             return originalFilter.call(this, callBack, thisArg);  
         };
         
-        /**@type{import('./server.js')} */
-        const server = await import(`file://${process.cwd()}/server/server.js`);
+        /**@type{import('./common.js')} */
+        const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-        /**@type{import('./db/file.js')} */
+        /**@type{import('../../../server/db/file.js')} */
         const file = await import(`file://${process.cwd()}/server/db/file.js`);
 
         //sets file cache so test can be performed without server started
@@ -46,7 +46,7 @@ describe('Spy test, serverRoutes', ()=> {
 
         
         //expected function calls:
-        //serverRoutes() => app_common.commonApp() => 
+        // app_common.commonApp() => 
         //  app_common.commonAppStart() => fileModelAppSecret.get   1 time =>
         //      file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
         //
@@ -57,22 +57,25 @@ describe('Spy test, serverRoutes', ()=> {
         //          file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
         
 
-        /**@type{server_server_routesparameters} */
-        const parameters = {app_id:1, 
-                            endpoint:'APP',
-                            method:'GET', 
-                            ip:'::1', 
-                            host:'localhost', 
-                            url:'/',
-                            route_path:'/',
-                            user_agent:'Jasmine test', 
-                            accept_language:'*', 
-                            authorization:'', 
-                            parameters:'', 
-                            body:null, 
-                            /**@ts-ignore */
-                            res:{}};
-        await server.serverRoutes(parameters).catch((error)=>error);
+        /**
+         * @type{{ip:string,
+         *          host:string,
+         *          user_agent:string,
+         *          accept_language:string,
+         *          url:string,
+         *          query:*,
+         *          res:server_server_res|null}}
+         */
+        const parameters = {ip:'::1',
+              host:'localhost',
+              user_agent:'Jasmine test',
+              accept_language:'*',
+              url:'/',
+              query:null,
+              /**@ts-ignore */
+              res:{}};
+        await app_common.commonApp(parameters);
+        
         expect (filterCount_APP_SECRET).toBeGreaterThan(0);
         expect (filterCount_IAM_APP_TOKEN).toBeGreaterThan(0);
     });
