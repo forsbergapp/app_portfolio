@@ -225,7 +225,7 @@ const component = async props => {
     
     const user = props.data.app_id == props.data.common_app_id?
                         await props.methods.commonFFB({path:`/server-iam/user/${props.data.iam_user_id ?? ''}`, method:'GET', authorization_type:'ADMIN'})
-                        .then((/**@type{string}*/result)=>JSON.parse(result)):
+                        .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result)):
                             await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
     /**
