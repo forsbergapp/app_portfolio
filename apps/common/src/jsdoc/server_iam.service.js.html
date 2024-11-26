@@ -60,7 +60,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
             //exp, iat, tokentimestamp on token
             try {
                 /**@ts-ignore*/
-                return ((jwt.verify(token, fileModelAppSecret.get(app_id, null).common_app_access_secret).exp ?? 0) * 1000) - Date.now()&lt;0;    
+                return ((jwt.verify(token, fileModelAppSecret.get(app_id, null)[0].common_app_access_secret).exp ?? 0) * 1000) - Date.now()&lt;0;    
             } catch (error) {
                 return true;
             }

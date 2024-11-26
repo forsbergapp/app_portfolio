@@ -49,7 +49,7 @@ const component = async props => {
     
     /**@type{CommonAppModuleWithMetadata[]} */
     const reports = await props.methods.commonFFB({path:'/app-module-metadata/', query:'type=REPORT',method:'GET', authorization_type:'ADMIN'})
-                                .then((/**@type{string}*/result)=>JSON.parse(result));
+                                .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     /**
      * Updates reports metadata
      */

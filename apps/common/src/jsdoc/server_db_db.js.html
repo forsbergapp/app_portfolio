@@ -307,7 +307,205 @@ const dbPoolGet = (pool_id, db_use, dba) => {
       return null;
    }  
 };
+/**
+ * Converts SQL syntax and parameters depending what database is used
+ * 
+ * common syntax used and also used by Oracle that should be converted:
+ *                      SQL:        UPDATE [table] SET [column] = :title" 
+ *                      parameters: { title: "value" }
+ * 
+ * postgreSql syntax:   SQL:        UPDATE [table] SET [column] = $1"
+ *                      parameters: [0, "value"]
+ * uses unique index with $1, $2 etc, parameter can be used several times
+ * example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+ * use indexorder received from parameters
+ * 
+ * MariaDB + 
+ * mySql syntax:        SQL:        UPDATE [table] SET [column] = ?"
+ *                      parameters: ["value"]
+ *                      solution implemented here is to set values in the sql
+ *                      using connection?.escape(params[key]) syntax
+ *                      to avoid SQL injection and without having to use ? syntax
+ *                      that requires specific parameter order but a parameter key
+ *                      is only allowed to occur once in this implementation
+ * 
+ * SQLite syntax:       SQL:        UPDATE [table] SET [column] = $title"
+ *                      parameters: [$title, "value"]
+ * 
+ * @param {number} db
+ * @param {server_db_db_pool_connection_1_2|null} connection
+ * @param {string} parameterizedSql
+ * @param {{[key:string]:any}} params
+ * @returns {{sql:*, parameters:*}}
+ */
+const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
+   switch (db){
+      //MariaDB + mySQL
+      case 1:
+      case 2:{
+         //DB_RETURN_ID not used here
+         if ('DB_RETURN_ID' in params)
+            delete params.DB_RETURN_ID;
+         //DB_CLOB not used here
+         if ('DB_CLOB' in params)
+            delete params.DB_CLOB;
 
+         if (!params) 
+            return {sql:parameterizedSql, 
+                     parameters:params};
+         return { sql:parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
+                        if (key in params)
+                           return connection?.escape(params[key]);
+                        else
+                           return txt;
+                     }), 
+                  parameters:params};
+      }
+      case 4:{
+         //Oracle 
+         //Fix CLOB column syntax to avoid ORA-01461 for these columns:
+         if ('DB_CLOB' in params){
+            /**@ts-ignore */
+            params.DB_CLOB.forEach((/**@type{string}*/column) => {
+               /**@ts-ignore */
+               params[column] = {  dir: ORACLEDB.BIND_IN, val: params[column], 
+                                       type: ORACLEDB.CLOB };
+            });
+            delete params.DB_CLOB;
+         }
+         // add RETURNING statement to get insertId
+         if ('DB_RETURN_ID' in params){
+            parameterizedSql += ` RETURNING ${params.DB_RETURN_ID} INTO :insertId` ;
+            delete params.DB_RETURN_ID;
+            Object.assign(params, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
+         }
+         return {sql:parameterizedSql, parameters:params};
+      }
+      //PostgreSQL + SQLite
+      case 3:
+      case 5:{
+         // add RETURNING statement to get column with id that was inserted, updated or deleted
+         if ('DB_RETURN_ID' in params){
+            if (db==3)
+               parameterizedSql += ` RETURNING ${params.DB_RETURN_ID}` ;
+            delete params.DB_RETURN_ID;
+         }
+         //DB_CLOB not used here
+         if ('DB_CLOB' in params)
+            delete params.DB_CLOB;
+      
+         const [text, values] = Object.entries(params).reduce(
+            /**@ts-ignore */
+            ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
+                                                      if (key in params)
+                                                         //the difference between PostgreSQL and SQLite:
+                                                         return db==3?`$${Object.keys(params).indexOf(key) + 1}`:
+                                                                      `$${key}`;
+                                                      else
+                                                         return txt;
+                                                      }),
+                                             [...array, param[1]], 
+                                             index + 1
+                                             ],
+                                             [parameterizedSql, [], 1]
+            );
+         if (db==3){
+            //PostgreSQL
+            return { sql:text, parameters:values};
+         }
+         else{
+            //SQLite
+            const parameters_convert = {};
+            // change parameter key names to $[parameter name] syntax
+            Object.entries(params).map(parameter=>{
+               parameter[0]= `$${parameter[0]}`;
+               /**@ts-ignore*/
+               parameters_convert[parameter[0]] = parameter[1];
+            });
+            return { sql:text, parameters:parameters_convert};
+         }
+      }
+      default:{
+         return { sql:parameterizedSql, parameters:params};
+      }
+   }
+};	
+/**
+ * Sets common attributes for SQL execution result:
+ * insertId       returns id of inserted row
+ * affectedRows   returns number of updated, inserted or deleted rows
+ * 
+ * @param {number} db
+ * @param {*} result
+ * @param {server_db_db_pool_connection_3_fields} fields
+ */
+const dbSQLResultConvert = (db, result, fields=[{type:0, name:''}]) =>{
+   switch (db){
+      case 1:
+      case 2:{
+         //convert blob buffer to string if any column is a BLOB type
+         if (result.length>0){
+            for (let dbcolumn=0;dbcolumn&lt;fields.length; dbcolumn++){
+               if (fields[dbcolumn].type == 252) { //BLOB
+                  for (let i=0;i&lt;result.length;i++){
+                     if (fields[dbcolumn].name == Object.keys(result[i])[dbcolumn])
+                        if (result[i][Object.keys(result[i])[dbcolumn]]!=null &amp;&amp; result[i][Object.keys(result[i])[dbcolumn]]!='')
+                           result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
+                  }
+               }
+            }
+         }
+         return result;
+      }
+      case 3:{
+         //add common attributes
+         if (result.command == 'INSERT' &amp;&amp; result.rows.length>0)
+            result.insertId = result.rows[0].id;
+         if (result.command == 'INSERT' ||
+            result.command == 'DELETE' ||
+            result.command == 'UPDATE'){
+            result.affectedRows = result.rowCount;
+         }
+         //convert blob buffer to string if any column is a BYTEA type
+         if (result.rows.length>0){
+            for (let dbcolumn=0;dbcolumn&lt;result.fields.length; dbcolumn++){
+               if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+                  for (let i=0;i&lt;result.rows.length;i++){
+                     if (result.fields[dbcolumn].name == Object.keys(result.rows[i])[dbcolumn])
+                        if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null &amp;&amp; result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+                           result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+                  }
+               }
+            }
+         }
+         if (result.command == 'SELECT')
+            return result.rows;
+         else
+            return result;
+      }
+      case 4:{
+         //add common attributes
+         if (result.outBinds)
+            result.insertId = result.outBinds.insertId[0];
+         if (result.rowsAffected){
+            //add custom key using same name as other databases
+            result.affectedRows = result.rowsAffected;
+         }
+         if (result.rows)
+            return result.rows;
+         else
+            return result;
+      }
+      case 5:{
+         if (result.lastID)
+            result.insertId = result.lastID;
+         if (result.changes)
+            result.affectedRows = result.changes;
+         return result;
+      }
+   }
+
+};
 /**
  * Execute query for given database
  * Common optional parameters:
@@ -344,47 +542,18 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
          case 1:
          case 2:{
             try {
-               //DB_RETURN_ID not used here
-               if ('DB_RETURN_ID' in parameters)
-                  delete parameters.DB_RETURN_ID;
-               //DB_CLOB not used here
-               if ('DB_CLOB' in parameters)
-                  delete parameters.DB_CLOB;
                /**@ts-ignore */
                dbPoolGet(pool_id, db_use, dba).getConnection((/**@type{server_server_error}*/err, /**@type{server_db_db_pool_connection_1_2}*/conn) => {
                   if (err)
                      return reject (err);
                   else{
-                     //change parameters to [] syntax with bind variable names
-                     //common syntax:  ... ("UPDATE [table] SET [column] = :title", { title: "value" });
-                     //mysql syntax:   ... ("UPDATE [table] SET [column] = ?", ["value"];
-                     conn.config.queryFormat = (/**@type{string}*/sql, /**@type{[]}*/parameters) => {
-                        if (!parameters) return sql;
-                        return sql.replace(/:(\w+)/g, (txt, key) => {
-                           if (key in parameters)
-                              return conn.escape(parameters[key]);
-                           else
-                              return txt;
-                        });
-                     };
+                     conn.config.queryFormat = dbSQLParamConvert(db_use, conn, sql, parameters).sql; 
                      conn.query(sql, parameters, (/**@type{server_server_error}*/err, /**@type{[server_db_db_pool_connection_1_2_result]}*/result, /**@type{server_db_db_pool_connection_3_fields}*/fields) => {
                         if (err)
                            return reject (err);
                         else{
                            conn.release();
-                           //convert blob buffer to string if any column is a BLOB type
-                           if (result.length>0){
-                              for (let dbcolumn=0;dbcolumn&lt;fields.length; dbcolumn++){
-                                 if (fields[dbcolumn].type == 252) { //BLOB
-                                    for (let i=0;i&lt;result.length;i++){
-                                       if (fields[dbcolumn].name == Object.keys(result[i])[dbcolumn])
-                                          if (result[i][Object.keys(result[i])[dbcolumn]]!=null &amp;&amp; result[i][Object.keys(result[i])[dbcolumn]]!='')
-                                             result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
-                                    }
-                                 }
-                              }
-                           }
-                           return resolve(result);
+                           return resolve(dbSQLResultConvert(db_use, result, fields));
                         }
                      });
                   }
@@ -394,72 +563,15 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
             }
             break;
          }
-         case 3:{
-            // add RETURNING statement to get insertId
-            if ('DB_RETURN_ID' in parameters){
-               sql += ` RETURNING ${parameters.DB_RETURN_ID}` ;
-               delete parameters.DB_RETURN_ID;
-            }
-            //DB_CLOB not used here
-            if ('DB_CLOB' in parameters)
-                  delete parameters.DB_CLOB;
-            /**
-             * change parameters to $ syntax
-             * use unique index with $1, $2 etc, parameter can be used several times
-             * example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
-             * use indexorder received from parameters
-             * common syntax:     ... ("UPDATE [table] SET [column] = :title", { title: "value" });
-             * postgresql syntax: ... ("UPDATE [table] SET [column] = $1", [0, "value"];
-             * @param {string} parameterizedSql
-             * @param {object} params
-             */
-            const queryConvert = (parameterizedSql, params) => {
-                const [text, values] = Object.entries(params).reduce(
-               /**@ts-ignore */
-                    ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
-                                                               if (key in params)
-                                                                  return `$${Object.keys(params).indexOf(key) + 1}`;
-                                                               else
-                                                                  return txt;
-                                                               }),
-                                                      [...array, param[1]], 
-                                                      index + 1
-                                                    ],
-                                                    [parameterizedSql, [], 1]
-                );
-                return { text, values };
-            };	
-            const parsed_result = queryConvert(sql, parameters);
+         case 3:{                  
+            const parsed_result = dbSQLParamConvert(db_use, null, sql, parameters);
             try {
                /**@ts-ignore */
                dbPoolGet(pool_id, db_use, dba).connect().then((/**@type{server_db_db_pool_connection_3}*/pool3)=>{
-                  pool3.query(parsed_result.text, parsed_result.values)
+                  pool3.query(parsed_result.sql, parsed_result.parameters)
                   .then((/**@type{server_db_db_pool_connection_3_result}*/result) => {
                      pool3.release();
-                     //add common attributes
-                     if (result.command == 'INSERT' &amp;&amp; result.rows.length>0)
-                        result.insertId = result.rows[0].id;
-                     if (result.command == 'INSERT' ||
-                        result.command == 'DELETE' ||
-                        result.command == 'UPDATE'){
-                        result.affectedRows = result.rowCount;
-                     }
-                     //convert blob buffer to string if any column is a BYTEA type
-                     if (result.rows.length>0){
-                        for (let dbcolumn=0;dbcolumn&lt;result.fields.length; dbcolumn++){
-                           if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
-                              for (let i=0;i&lt;result.rows.length;i++){
-                                 if (result.fields[dbcolumn].name == Object.keys(result.rows[i])[dbcolumn])
-                                    if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null &amp;&amp; result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
-                                       result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
-                              }
-                           }
-                        }
-                     }
-                     if (result.command == 'SELECT')
-                        return resolve(result.rows);
-                     else
-                        return resolve(result);
+                     resolve(dbSQLResultConvert(db_use, result));
                   })
                   .catch((/**@type{server_server_error}*/err) => reject(err));
                }).catch((/**@type{server_server_error}*/err)=> reject(err));
@@ -474,37 +586,14 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                /**@ts-ignore */
                const pool4 = ORACLEDB.getPool(db_pool_id);
                pool4.getConnection().then((pool)=>{
-                  //Fix CLOB column syntax to avoid ORA-01461 for these columns:
-                  if ('DB_CLOB' in parameters){
-                     parameters.DB_CLOB.forEach((/**@type{string}*/column) => {
-                        parameters[column] = {  dir: ORACLEDB.BIND_IN, val: parameters[column], 
-                                                type: ORACLEDB.CLOB };
-                     });
-                     delete parameters.DB_CLOB;
-                  }
-                  // add RETURNING statement to get insertId
-                  if ('DB_RETURN_ID' in parameters){
-                     sql += ` RETURNING ${parameters.DB_RETURN_ID} INTO :insertId` ;
-                     delete parameters.DB_RETURN_ID;
-                     Object.assign(parameters, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
-                  }
+                  const parsed_result = dbSQLParamConvert(db_use, null, sql, parameters);
                   /**@ts-ignore */
-                  pool.execute(sql, parameters, (/**@type{server_server_error}*/err, /**@type{server_db_db_pool_connection_4_result}*/result) => {
+                  pool.execute(parsed_result.sql, parsed_result.parameters, (/**@type{server_server_error}*/err, /**@type{server_db_db_pool_connection_4_result}*/result) => {
                      if (err)
                         return reject(err);
                      else{
                         pool.close();
-                        //add common attributes
-                        if (result.outBinds)
-                           result.insertId = result.outBinds.insertId[0];
-                        if (result.rowsAffected){
-                           //add custom key using same name as other databases
-                           result.affectedRows = result.rowsAffected;
-                        }
-                        if (result.rows)
-                           return resolve(result.rows);
-                        else
-                           return resolve(result);
+                        resolve(dbSQLResultConvert(db_use, result));
                      }
                   });
                })
@@ -515,54 +604,17 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
             break;
          }
          case 5:{
-            //DB_RETURN_ID not used here
-            if ('DB_RETURN_ID' in parameters)
-                  delete parameters.DB_RETURN_ID;
-            //DB_CLOB not used here
-            if ('DB_CLOB' in parameters)
-               delete parameters.DB_CLOB;
-            /**
-             * change parameters to $[parameter name] syntax
-             * common syntax: ... "UPDATE [table] SET [column] = :title", { title: "value" });
-             * SQLite syntax: ... "UPDATE [table] SET [column] = $title", [$title, "value"];
-             * @param {string} parameterizedSql
-             * @param {*} params
-             */
-            const queryConvert = (parameterizedSql, params) => {
-                const [text] = Object.entries(params).reduce(
-               /**@ts-ignore */
-                    ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
-                                                               if (key in params){
-                                                                  return `$${key}`;
-                                                               }
-                                                               else
-                                                                  return txt;
-                                                               }),
-                                                      [...array, param[1]], 
-                                                      index + 1
-                                                    ],
-                                                    [parameterizedSql, [], 1]
-                );
-                return text;
-            };	
-            // change parameter key names to $[parameter name] syntax
-            const parameters_convert = {};
-            Object.entries(parameters).map(parameter=>{
-               parameter[0]= `$${parameter[0]}`;
-               /**@ts-ignore*/
-               parameters_convert[parameter[0]] = parameter[1];
-            });
-            const sql_convert = queryConvert(sql, parameters);
+            const parsed_result = dbSQLParamConvert(db_use, null, sql, parameters);
             const db = dbPoolGet(pool_id, db_use, dba);
             try {
-               /**@ts-ignore */
-               (sql.trimStart().toUpperCase().startsWith('SELECT')?db.all(sql_convert, parameters_convert):db.run(sql_convert, parameters_convert))
+               
+               (sql.trimStart().toUpperCase().startsWith('SELECT')?
+                     /**@ts-ignore */
+                     db.all(parsed_result.sql, parsed_result.parameters):
+                        /**@ts-ignore */
+                        db.run(parsed_result.sql, parsed_result.parameters))
                .then((/**@type{*}*/result)=>{
-                  if (result.lastID)
-                     result.insertId = result.lastID;
-                  if (result.changes)
-                        result.affectedRows = result.changes;
-                  resolve(result);
+                  resolve(dbSQLResultConvert(db_use, result));
                })
                .catch((/**@type{Error}*/err)=> reject(err));   
             }catch (err) {
@@ -579,6 +631,7 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
 
 export{dbPoolDeleteAll, 
        dbPoolStart, dbPoolClose, dbPoolGet,
+       dbSQLParamConvert, dbSQLResultConvert,
        dbSQL};</code></pre>
         </div>
     </div>
