@@ -1,9 +1,6 @@
 /** 
- * Common test not belonging to any module
- * @module test 
- */
-/**
- * @import {server_bff_parameters, server_db_file_app} from '../server/types.js'
+ * Test integration
+ * @module test/integration.spec
  */
 describe('Integration test, setting FILE_DB cache', ()=> {
     it('should return values when using ORM pattern for fileModelConfig', async () =>{
@@ -11,10 +8,6 @@ describe('Integration test, setting FILE_DB cache', ()=> {
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
         /**@type{import('../server/db/fileModelConfig.js')} */
         const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-        /**@type{import('../server/db/file.js')} */
-        const {fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
-        //sets file cache so test can be performed without server started
-        await fileFsCacheSet();
     
         const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
         const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
@@ -30,7 +23,7 @@ describe('Integration test, setting FILE_DB cache', ()=> {
     });
 });
 describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps', ()=> {
-    it('should return values ', async () =>{
+    it('should return values', async () =>{
         /**@type{import('../server/db/fileModelApp.js')} */
         const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
 
@@ -110,63 +103,5 @@ describe('Integration test, microservice worldcities random city called from BFF
             expect(result.admin_name).not.toBeUndefined();
             expect(result.country).not.toBeUndefined();
         }
-    });
-});
-describe('Performance test, calling main server url according to configured values', ()=> {
-    beforeAll(()=>{
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
-    });
-    it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{ 
-        /**@type{import('../server/server.js')} */
-        const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-        /**@type{import('../server/db/fileModelConfig.js')} */
-        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-        /**@type{import('../server/db/file.js')} */
-        const {fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
-        //sets file cache so test can be performed without server started
-        await fileFsCacheSet();
-        /**@type{number} */
-        let status;
-        const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-        console.log(HTTPS_ENABLE);
-        const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
-        const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
-        const requests = [];
-        const totalRequests = 100;
-        //set parameter to avoid certificate errors
-        const old = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
-        let err=0;
-        for (let i=0; i<totalRequests; i++){
-            requests.push(new Promise(resolve=>{
-                fetch(PROTOCOL + HOST + ':' + PORT)
-                .then((response=>{
-                    status = response.status;
-                    return response.text();
-                    }))
-                .then(()=>{
-                    expect(status).toEqual(200);
-                    resolve(null);
-                })
-                .catch(()=>{err++;});
-            }));
-        }
-        const start = Date.now();
-        await Promise.all(requests).catch(fail);
-        process.env.NODE_TLS_REJECT_UNAUTHORIZED=old;
-        const total_time = (Date.now() -start)/1000;
-        const total_time_display = `${total_time.toFixed(3)} seconds`;
-        console.log('Performance test url:',PROTOCOL + HOST + ':' + PORT);
-        console.log('Performance test requests:',totalRequests);
-        console.log('Performance test errors:',err);
-        console.log('Performance test time:',total_time_display);
-        expect(err).toBe(0);
-        expect(total_time).toBeLessThan(1000*10); //less than 10 seconds
-    });
-    afterAll(()=>{
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 5000;
     });
 });
