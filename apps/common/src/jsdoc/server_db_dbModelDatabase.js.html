@@ -1161,7 +1161,7 @@ const dbStart = async () => {
     /**@type{import('./fileModelAppSecret.js')} */
     const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
-    const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) ?? 0;
+    const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
     if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
