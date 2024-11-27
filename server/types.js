@@ -266,7 +266,6 @@
 /**
  * CONFIG server_db_file_config_files
  * @typedef {   server_config_server|
- *              server_config_iam_blockip|
  *              server_config_iam_policy|
  *              server_config_iam_useragent|
  *              import('../microservice/types.js').microservice_config|
@@ -278,10 +277,6 @@
  *              server_db_file_app_secret[]} server_db_file_config_files
  */
 
-/**
- * DB FILE server_config_iam_blockip
- * @typedef {[string,string][]} server_config_iam_blockip
- */
 
 /**
  * DB FILE server_config_iam_policy
@@ -293,7 +288,10 @@
  * @typedef {{ user_agents:[{Name:string, 
  *                          user_agent:string}]}} server_config_iam_useragent
  */
-
+/**
+ * DB FILE server_db_file_iam_blockip
+ * * @typedef {{from:string, to:string}} server_db_file_iam_blockip
+ */
 /**
  * DB FILE server_db_file_iam_user
  * @typedef {{
@@ -370,6 +368,7 @@
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
  *              'IAM_APP_TOKEN'|
+ *              'IAM_BLOCKIP'|
  *              'IAM_USER'|
  *              'IAM_USER_LOGIN'|
  *              server_db_file_db_name_log|
@@ -381,7 +380,6 @@
  * 
  * @typedef {  'CONFIG_APPS'|
  *              'CONFIG_SERVER'|
- *              'CONFIG_IAM_BLOCKIP'|
  *              'CONFIG_IAM_POLICY'|
  *              'CONFIG_IAM_USERAGENT'|
  *              'CONFIG_MICROSERVICE'|
