@@ -3,21 +3,25 @@
 /**
  * @import {server_iam_authenticate_request, server_iam_app_token, server_iam_user_login,
  *          server_iam_access_token_claim_type,server_iam_access_token_claim_scope_type,
- *          server_config_iam_blockip,server_config_iam_useragent,
+ *          server_db_file_iam_blockip,server_config_iam_useragent,
  *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_server_error, server_db_file_iam_user, server_db_file_iam_user_new, 
  *          server_server_res} from './types.js'
 */
 
 /**@type{import('./server.js')} */
 const {serverResponseErrorSend, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./db/fileModelConfig.js')} */
-const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 /**@type{import('../apps/common/src/common.js')} */
 const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
+/**@type{import('./db/fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
 /**@type{import('./db/fileModelAppSecret.js')} */
 const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+
+/**@type{import('./db/fileModelIamBlockIp.js')} */
+const fileModelIamBlockIp = await import(`file://${process.cwd()}/server/db/fileModelIamBlockip.js`);
 
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
@@ -1301,16 +1305,19 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
      */
     const block_ip_control = async (ip_v4) => {
         if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
-            /**@type{server_config_iam_blockip} */
-            const ranges = await fileModelConfig.get('CONFIG_IAM_BLOCKIP');
+            /**@type{server_db_file_iam_blockip[]} */
+            const ranges = fileModelIamBlockIp.get(
+                                                    /**@ts-ignore */
+                                                    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')), 
+                                                    null, {});
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
                 for (const element of ranges) {
-                    if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
-                        IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                    if (IPtoNum(element.from) <= IPtoNum(ip_v4) &&
+                        IPtoNum(element.to) >= IPtoNum(ip_v4)) {
                             //403 Forbidden
                             return {    statusCode: 403,
-                                        statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`};
+                                        statusMessage: `${IPtoNum(element.from)}-${IPtoNum(element.to)}`};
                     }
                 }
             }
