@@ -21,7 +21,7 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
 /**@type{import('./db/fileModelIamBlockIp.js')} */
-const fileModelIamBlockIp = await import(`file://${process.cwd()}/server/db/fileModelIamBlockip.js`);
+const fileModelIamBlockIp = await import(`file://${process.cwd()}/server/db/fileModelIamBlockIp.js`);
 
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
