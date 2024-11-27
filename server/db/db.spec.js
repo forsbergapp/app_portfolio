@@ -1,12 +1,9 @@
 /** 
  * Test
- * @module server/db/db 
+ * @module server/db/db.spec
  */
 
 describe('Unit test, dbSQLParamConvert', ()=> {
-    /**
-     * @import {server_server_error, server_db_db_pool_parameters, server_db_db_pool_connection_1_2} from '../types.js'
-     */
     it('should return converted sql and parameters in correct format for the database used for SELECT, INSERT, DELETE and UPDATE sql', async () =>{
         /**@type{import('./fileModelConfig.js')} */
         const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -17,13 +14,8 @@ describe('Unit test, dbSQLParamConvert', ()=> {
 
         /**@type{import('./dbSql.js')} */
         const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
-        /**@type{import('./file.js')} */
-        const {fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
         /**@type{import('../server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-        //sets file cache so test can be performed without server started
-        await fileFsCacheSet();
 
         //function for mySQL and MariaDB connection
         /**

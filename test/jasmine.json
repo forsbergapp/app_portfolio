@@ -1,11 +1,10 @@
 {
   "spec_dir": "",
   "spec_files": [
-    "**/*[sS]pec.?(m)js",
-    "!**/node_modules/**/*"
+    "**/specrunner.spec.js"
   ],
   "helpers": [
-    "helpers/**/*.?(m)js"
+    "test/helper.spec.js"
   ],
   "env": {
     "failSpecWithNoExpectations": false,
