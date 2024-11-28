@@ -173,9 +173,6 @@
  *             AUTHENTICATE_REQUEST_IP:string,
  *             AUTHENTICATE_REQUEST_HOST_EXIST:string,
  *             AUTHENTICATE_REQUEST_ACCESS_FROM:string,
- *             AUTHENTICATE_REQUEST_USER_AGENT:string,
- *             AUTHENTICATE_REQUEST_USER_AGENT_EXIST:string,
- *             AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE:string,
  *             ADMIN_TOKEN_EXPIRE_ACCESS:string,
  *             ADMIN_TOKEN_SECRET:string,
  *             ADMIN_PASSWORD_ENCRYPTION_KEY:string,
@@ -267,7 +264,6 @@
  * CONFIG server_db_file_config_files
  * @typedef {   server_config_server|
  *              server_config_iam_policy|
- *              server_config_iam_useragent|
  *              import('../microservice/types.js').microservice_config|
  *              import('../microservice/types.js').microservice_config_service|
  *              server_db_file_iam_user[]|
@@ -284,13 +280,21 @@
  */
 
 /**
- * DB FILE server_config_iam_useragent
- * @typedef {{ user_agents:[{Name:string, 
- *                          user_agent:string}]}} server_config_iam_useragent
+ * DB FILE server_db_file_iam_control_user_agent
+ * @typedef {{  id:number,
+ *              name:string, 
+ *              user_agent:string}} server_db_file_iam_control_user_agent
  */
 /**
- * DB FILE server_db_file_iam_blockip
- * * @typedef {{from:string, to:string}} server_db_file_iam_blockip
+ * DB FILE server_db_file_iam_control_ip
+ * * @typedef {{id:number, 
+ *              from:string, 
+ *              to:string, 
+ *              hour_from:number, 
+ *              hour_to:number, 
+ *              date_from:string, 
+ *              date_to:string, 
+ *              action:string}} server_db_file_iam_control_ip
  */
 /**
  * DB FILE server_db_file_iam_user
@@ -368,7 +372,8 @@
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
  *              'IAM_APP_TOKEN'|
- *              'IAM_BLOCKIP'|
+ *              'IAM_CONTROL_IP'|
+ *              'IAM_CONTROL_USER_AGENT'|
  *              'IAM_USER'|
  *              'IAM_USER_LOGIN'|
  *              server_db_file_db_name_log|
@@ -381,7 +386,6 @@
  * @typedef {  'CONFIG_APPS'|
  *              'CONFIG_SERVER'|
  *              'CONFIG_IAM_POLICY'|
- *              'CONFIG_IAM_USERAGENT'|
  *              'CONFIG_MICROSERVICE'|
  *              'CONFIG_MICROSERVICE_SERVICES'} server_db_file_db_name_config
  */

@@ -105,7 +105,6 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 
 #menu_config_config_server::before{													content:var(--common_app_icon_server)}
 
-#menu_config_config_iam_useragent::before{											content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_browser)}
 #menu_config_config_iam_policy::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_shield) ' ' var(--common_app_icon_misc_book)}
 
 #menu_installation_db_icon::before{													content:var(--common_app_icon_database)}
