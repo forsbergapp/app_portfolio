@@ -170,9 +170,8 @@
 /**
  * CONFIG server_config_server_service_iam
  * @typedef {{ AUTHENTICATE_REQUEST_ENABLE:string,
+ *             AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
  *             AUTHENTICATE_REQUEST_IP:string,
- *             AUTHENTICATE_REQUEST_HOST_EXIST:string,
- *             AUTHENTICATE_REQUEST_ACCESS_FROM:string,
  *             ADMIN_TOKEN_EXPIRE_ACCESS:string,
  *             ADMIN_TOKEN_SECRET:string,
  *             ADMIN_PASSWORD_ENCRYPTION_KEY:string,
