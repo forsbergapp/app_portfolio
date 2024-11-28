@@ -1270,8 +1270,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
  * Authorize request
  * Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
  *  if ip is blocked return 403
- *  if AUTHENTICATE_REQUEST_HOST_EXIST=1 then check if host exists else return 406
- *  if AUTHENTICATE_REQUEST_ACCESS_FROM=1 then check if request accessed from domain and not from os hostname else return 406
+ *  if host does not exist return 406
+ *  if request not accessed from domain or from os hostname return 406
  *  if user agent is blocked return 406
  *  if decodeURIComponent() no error then return null else return 400
  *  if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' return 405
@@ -1339,17 +1339,15 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                 }
                 else{
                     //check if host exists
-                    if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_HOST_EXIST')=='1' &&
-                        typeof host=='undefined'){
+                    if (typeof host=='undefined'){
                         //406 Not Acceptable
                         resolve({   statusCode: 406, 
                                     statusMessage: `ip ${ip_v4} blocked, no host`});
                     }
                     else{
-                        //check if accessed from domain and not os hostname
+                        //check if not accessed from domain or from os hostname
                         import('node:os').then(({hostname}) =>{
-                            if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCESS_FROM')=='1' &&
-                                host==hostname()){
+                            if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST').toUpperCase())<0){
                                 //406 Not Acceptable
                                 resolve({   statusCode: 406, 
                                             statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
