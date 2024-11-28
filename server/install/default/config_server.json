@@ -14,6 +14,7 @@
     ],
     "SERVICE_IAM":[
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
+        {"AUTHENTICATE_REQUEST_OBSERVE_LIMIT": "5", "COMMENT": "If observe limit reached then IP should be blocked"},
         {"AUTHENTICATE_REQUEST_IP": "0", "COMMENT": "0=NO, 1=YES, check IP v4 range to block. Could be integrated with iptables on Linux."},
         {"AUTHENTICATE_REQUEST_HOST_EXIST": "0", "COMMENT": "0=NO, 1=YES"},
         {"AUTHENTICATE_REQUEST_ACCESS_FROM": "0", "COMMENT": "0=NO, 1=YES, check if accessed from domain and not os hostname"},

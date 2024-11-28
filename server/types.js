@@ -297,6 +297,21 @@
  *              action:string}} server_db_file_iam_control_ip
  */
 /**
+ * DB FILE server_db_file_iam_observe
+ * * @typedef {{id:number, 
+ *              ip:string, 
+ *              lat:string, 
+ *              lng:string, 
+ *              user_agent:string 
+ *              host:string, 
+ *              accept_language:string, 
+ *              method:string,
+ *              url:string,
+ *              status:1|0,
+ *              type:string}} server_db_file_iam_observe
+ */
+
+/**
  * DB FILE server_db_file_iam_user
  * @typedef {{
  *          id:number, 
@@ -374,6 +389,7 @@
  *              'IAM_APP_TOKEN'|
  *              'IAM_CONTROL_IP'|
  *              'IAM_CONTROL_USER_AGENT'|
+ *              'IAM_OBSERVE'|
  *              'IAM_USER'|
  *              'IAM_USER_LOGIN'|
  *              server_db_file_db_name_log|
