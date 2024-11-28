@@ -512,7 +512,7 @@ const appSecureCommonButtonSave = async (item) => {
                 return config_server;
             };
             const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].id.substring('menu_config_'.length).toUpperCase();
-            //file:'CONFIG_SERVER', 'CONFIG_IAM_POLICY', 'CONFIG_IAM_USERAGENT', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
+            //file:'CONFIG_SERVER', 'CONFIG_IAM_POLICY', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};
@@ -781,7 +781,6 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     break;
                 }
                 case 'menu_config_config_server' :
-                case 'menu_config_config_iam_useragent':
                 case 'menu_config_config_iam_policy':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab').classList.remove('list_nav_selected_tab');
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');

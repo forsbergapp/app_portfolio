@@ -11,7 +11,7 @@
 
 /**
  * @param {{server_group:number[],
- *          file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT',
+ *          file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY',
  *          config:[]}} props
  * @returns {string}
  */
@@ -52,7 +52,7 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
 /**
 * 
 * @param {{data:{       commonMountdiv:string,
-*                       file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY'|'CONFIG_IAM_USERAGENT'},
+*                       file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY'},
 *          methods:{    COMMON_DOCUMENT:COMMON_DOCUMENT,
 *                       commonFFB:commonFFB},
 *          lifecycle:   null}} props 

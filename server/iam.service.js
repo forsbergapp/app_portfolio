@@ -3,7 +3,7 @@
 /**
  * @import {server_iam_authenticate_request, server_iam_app_token, server_iam_user_login,
  *          server_iam_access_token_claim_type,server_iam_access_token_claim_scope_type,
- *          server_db_file_iam_blockip,server_config_iam_useragent,
+ *          server_db_file_iam_control_ip,
  *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_server_error, server_db_file_iam_user, server_db_file_iam_user_new, 
  *          server_server_res} from './types.js'
 */
@@ -20,8 +20,12 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 /**@type{import('./db/fileModelAppSecret.js')} */
 const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
-/**@type{import('./db/fileModelIamBlockIp.js')} */
-const fileModelIamBlockIp = await import(`file://${process.cwd()}/server/db/fileModelIamBlockIp.js`);
+/**@type{import('./db/fileModelIamControlIp.js')} */
+const fileModelIamControlIp = await import(`file://${process.cwd()}/server/db/fileModelIamControlIp.js`);
+
+/**@type{import('./db/fileModelIamControlUserAgent.js')} */
+const fileModelIamControlUserAgent = await import(`file://${process.cwd()}/server/db/fileModelIamControlUserAgent.js`);
+
 
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
@@ -1268,10 +1272,9 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
  *  if ip is blocked return 403
  *  if AUTHENTICATE_REQUEST_HOST_EXIST=1 then check if host exists else return 406
  *  if AUTHENTICATE_REQUEST_ACCESS_FROM=1 then check if request accessed from domain and not from os hostname else return 406
- *  if user agent is in safe list then return ok else continue checks:
- *  if AUTHENTICATE_REQUEST_USER_AGENT_EXIST=1 then check if user agent exists else return 406
- *  if AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE=1 then check if accept language exists else return 406
+ *  if user agent is blocked return 406
  *  if decodeURIComponent() no error then return null else return 400
+ *  if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' return 405
  * @function
  * @param {string} ip
  * @param {string} host
@@ -1305,8 +1308,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
      */
     const block_ip_control = async (ip_v4) => {
         if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
-            /**@type{server_db_file_iam_blockip[]} */
-            const ranges = fileModelIamBlockIp.get(
+            /**@type{server_db_file_iam_control_ip[]} */
+            const ranges = fileModelIamControlIp.get(
                                                     /**@ts-ignore */
                                                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')), 
                                                     null, {});
@@ -1325,25 +1328,6 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
         }
         else
             return null;
-    };
-    /**
-     * Controls if user agent is safe
-     * @function
-     * @param {string} client_user_agent
-     * @returns {Promise.<boolean>}
-     */
-    const safe_user_agents = async (client_user_agent) => {
-        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
-            /**@type{server_config_iam_useragent} */
-            const {user_agents} = await fileModelConfig.get('CONFIG_IAM_USERAGENT');
-            for (const user_agent of user_agents){
-                if (user_agent.user_agent == client_user_agent)
-                    return true;
-            }
-            return false;
-        }
-        else
-            return false;
     };
     return new Promise((resolve)=>{
         if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
@@ -1371,50 +1355,34 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                                             statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
                             }
                             else{
-                                safe_user_agents(user_agent).then((/**@type{boolean}*/safe)=>{
-                                    if (safe==true)
-                                        resolve(null);
-                                    else{
-                                        //check if user-agent exists
-                                        if(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT_EXIST')=='1' &&
-                                            typeof user_agent=='undefined'){
-                                            //406 Not Acceptable
-                                            resolve({   statusCode: 406, 
-                                                        statusMessage: `ip ${ip_v4} blocked, no user-agent`});
-                                        }
-                                        else{
-                                            //check if accept-language exists
-                                            if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE')=='1' &&
-                                                typeof accept_language=='undefined'){
-                                                //406 Not Acceptable
-                                                resolve({   statusCode: 406, 
-                                                            statusMessage: `ip ${ip_v4} blocked, no accept-language`});
-                                            }
-                                            else{
-                                                //check request
-                                                let err = null;
-                                                try {
-                                                    decodeURIComponent(path);
-                                                }
-                                                catch(e) {
-                                                    err = e;
-                                                }
-                                                if (err){
-                                                    resolve({   statusCode: 400, 
-                                                                statusMessage: 'decodeURIComponent error'});
-                                                }
-                                                else{
-                                                    //check method
-                                                    if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0)
-                                                        resolve({   statusCode: 405, 
-                                                                    statusMessage: 'method error'});
-                                                    else    
-                                                        resolve(null);
-                                                }
-                                            }
-                                        }
+                                //check if user-agent is blocked
+                                if(fileModelIamControlUserAgent.get(null, null, null).filter(row=>row.user_agent== user_agent).length>0){
+                                    //406 Not Acceptable
+                                    resolve({   statusCode: 406, 
+                                                statusMessage: `ip ${ip_v4} blocked, user-agent blocked`});
+                                }
+                                else{
+                                    //check request
+                                    let err = null;
+                                    try {
+                                        decodeURIComponent(path);
                                     }
-                                });
+                                    catch(e) {
+                                        err = e;
+                                    }
+                                    if (err){
+                                        resolve({   statusCode: 400, 
+                                                    statusMessage: 'decodeURIComponent error'});
+                                    }
+                                    else{
+                                        //check method
+                                        if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0)
+                                            resolve({   statusCode: 405, 
+                                                        statusMessage: 'method error'});
+                                        else    
+                                            resolve(null);
+                                    }
+                                }
                             }
                         });
                     }
