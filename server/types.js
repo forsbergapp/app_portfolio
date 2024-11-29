@@ -287,6 +287,7 @@
 /**
  * DB FILE server_db_file_iam_control_ip
  * * @typedef {{id:number, 
+ *              app_id:number|null,
  *              from:string, 
  *              to:string, 
  *              hour_from:number, 
@@ -296,18 +297,23 @@
  *              action:string}} server_db_file_iam_control_ip
  */
 /**
- * DB FILE server_db_file_iam_observe
- * * @typedef {{id:number, 
+ * DB FILE server_db_file_iam_control_observe_type
+ * @typedef {'SUBDOMAIN'|'ROUTE'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_file_iam_control_observe_type
+ */
+/**
+ * DB FILE server_db_file_iam_control_observe
+ * * @typedef {{id?:number,
+ *              app_id:number|null, 
  *              ip:string, 
- *              lat:string, 
- *              lng:string, 
+ *              lat:string|null, 
+ *              lng:string|null, 
  *              user_agent:string 
  *              host:string, 
  *              accept_language:string, 
  *              method:string,
  *              url:string,
  *              status:1|0,
- *              type:string}} server_db_file_iam_observe
+ *              type:server_db_file_iam_control_observe_type}} server_db_file_iam_control_observe
  */
 
 /**
@@ -388,7 +394,7 @@
  *              'IAM_APP_TOKEN'|
  *              'IAM_CONTROL_IP'|
  *              'IAM_CONTROL_USER_AGENT'|
- *              'IAM_OBSERVE'|
+ *              'IAM_CONTROL_OBSERVE'|
  *              'IAM_USER'|
  *              'IAM_USER_LOGIN'|
  *              server_db_file_db_name_log|
@@ -2105,6 +2111,7 @@
  * @property {function} write
  * @property {function} flush           - Used for EventSource
  * @property {function} set
+ * @property {function} writeHead
  * @property {object}   req
  * @property {{'sec-fetch-mode':string}}   req.headers - Used for EventSource
  * @property {string}   req.hostname

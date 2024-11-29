@@ -2473,8 +2473,8 @@ const appInit = async parameters => {
         const show_start = async () => {
             //show default startup
             await appToolbarButton(APP_GLOBAL.app_default_startup_page);
-            const user = common.commonWndowLocationPathname(1);
-            if (user !='') {
+            const user = common.commonWndowLocationPathname(0).split('/profile/')[1];
+            if (user && user !='') {
                 //show profile for user entered in url
                 common.commonProfileShow(null, user);
             }

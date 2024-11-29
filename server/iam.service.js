@@ -26,6 +26,8 @@ const fileModelIamControlIp = await import(`file://${process.cwd()}/server/db/fi
 /**@type{import('./db/fileModelIamControlUserAgent.js')} */
 const fileModelIamControlUserAgent = await import(`file://${process.cwd()}/server/db/fileModelIamControlUserAgent.js`);
 
+/**@type{import('./db/fileModelIamControlObserve.js')} */
+const fileModelIamControlObserve = await import(`file://${process.cwd()}/server/db/fileModelIamControlObserve.js`);
 
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
@@ -1269,12 +1271,21 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
 /**
  * Authorize request
  * Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
- *  if ip is blocked return 403
- *  if host does not exist return 406
- *  if request not accessed from domain or from os hostname return 406
- *  if user agent is blocked return 406
- *  if decodeURIComponent() no error then return null else return 400
- *  if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE' return 405
+ *  if ip is blocked in IAM_CONTROL_OBSERVE or ip range is blocked in IAM_CONTROL_IP 
+ *     end request
+ *  else
+ *     if subdomain is known
+ *     if requested route is valid
+ *     if host does not exist
+ *     if request not accessed from domain or from os hostname
+ *     if user agent is blocked
+ *     if decodeURIComponent() has error 
+ *     if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
+ * 
+ * a record is saved in IAM_CONTROL_OBSERVE for all failed validations
+ * if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
+ *  then a record in IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP is created
+ *  so next time same IP is used it will be blocked and no more validations will be done
  * @function
  * @param {string} ip
  * @param {string} host
@@ -1285,7 +1296,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
  * @returns {Promise.<null|{statusCode:number,
  *                          statusMessage: string}>}
  */
- const iamAuthenticateRequest = (ip, host, method, user_agent, accept_language, path) => {
+ const iamAuthenticateRequest = async (ip, host, method, user_agent, accept_language, path) => {
     /**
      * IP to number
      * @function
@@ -1303,10 +1314,11 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
      * Controls if ip is blocked
      *  if ip is blocked return 403
      * @function
+     * @param {number} app_id
      * @param {string} ip_v4
-     * @returns {Promise.<server_iam_authenticate_request|null>}
+     * @returns {boolean}
      */
-    const block_ip_control = async (ip_v4) => {
+    const block_ip_control = (app_id, ip_v4) => {
         if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
             /**@type{server_db_file_iam_control_ip[]} */
             const ranges = fileModelIamControlIp.get(
@@ -1314,83 +1326,181 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                                                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')), 
                                                     null, {});
             //check if IP is blocked
-            if ((ip_v4.match(/\./g)||[]).length==3){
-                for (const element of ranges) {
-                    if (IPtoNum(element.from) <= IPtoNum(ip_v4) &&
-                        IPtoNum(element.to) >= IPtoNum(ip_v4)) {
-                            //403 Forbidden
-                            return {    statusCode: 403,
-                                        statusMessage: `${IPtoNum(element.from)}-${IPtoNum(element.to)}`};
+            if (fileModelIamControlObserve.get( app_id, 
+                null, 
+                /**@ts-ignore */
+                {}).filter(row=>row.ip==ip && row.app_id == app_id && row.status==1).length>0)
+                //IP is blocked in IAM_CONTROL_OBSERVE
+                return true;
+            else
+                if ((ip_v4.match(/\./g)||[]).length==3){
+                    for (const element of ranges) {
+                        if (IPtoNum(element.from) <= IPtoNum(ip_v4) &&
+                            IPtoNum(element.to) >= IPtoNum(ip_v4)) {
+                                //IP is range blocked in IAM_CONTROL_IP
+                                return true;
+                        }
                     }
+                    return false;
                 }
+                else
+                    return false;
+        }
+        else
+            return false;
+    };
+    if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
+        let fail = 0;
+        const ip_v4 = ip.replace('::ffff:','');
+        const app_id = commonAppHost(host ?? '');
+        const common_app_id = fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID');
+        //set calling app_id using app_id or common app_id if app_id is unknown
+        const calling_app_id = app_id ?? common_app_id;
+        //set record with app_id or empty app_id
+        const record = {    app_id:app_id,
+                            ip:ip, 
+                            lat:null, 
+                            lng:null, 
+                            user_agent:user_agent, 
+                            host:host, 
+                            accept_language:accept_language, 
+                            method:method,
+                            url:path};
+        const result_range = block_ip_control(calling_app_id, ip_v4);
+        if (result_range){
+            return {statusCode: 401, 
+                    statusMessage: ''};
+        }
+        else{
+            //check if host exists
+            if (typeof host=='undefined'){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                                                        {   ...record,
+                                                            status:0, 
+                                                            type:'HOST'}, 
+                                                        /**@ts-ignore*/
+                                                        {});
+                fail ++;
+            }
+            if (app_id == null){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                    {   ...record,
+                        status:0, 
+                        type:'SUBDOMAIN'}, 
+                    /**@ts-ignore*/
+                    {});
+                fail ++;
+            }
+            /**
+             * @param {string} path
+             */
+            const invalid_path = path =>{
+                        //browser and search engine paths
+                return  (path =='/favicon.ico' ||
+                        path == '/robots.txt' ||
+                        //REST API paths
+                        path.startsWith('/bff/app/v1/app-module') ||
+                        path.startsWith('/bff/app_data/v1') ||
+                        path.startsWith('/bff/app_signup/v1') ||
+                        path.startsWith('/bff/app_access/v1') ||
+                        path.startsWith('/bff/app_external/v1/app-module-function') ||
+                        path.startsWith('/bff/admin/v1') ||
+                        path.startsWith('/bff/socket/v1') ||
+                        path.startsWith('/bff/iam_admin/v1') ||
+                        path.startsWith('/bff/iam_user/v1') ||
+                        path.startsWith('/bff/iam_provider/v1') ||
+                        //APP paths
+                        path == '/' ||
+                        path.startsWith('/js/') ||
+                        path.startsWith('/css/') ||
+                        path.startsWith('/images/') ||
+                        path.startsWith('/common/') ||
+                        path.startsWith('/component/') ||
+                        path.startsWith('/info/') ||
+                        path.startsWith('/maintenance/') ||
+                        path == '/apps/common_types.js' ||
+                        path == '/sw.js' ||
+                        //account names should start with /profile/ and not contain any more '/'
+                        (path.startsWith('/profile/') && path.split('/').length==3))==false;
+            };
+            if (invalid_path(path)){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                    {   ...record,
+                        status:0, 
+                        type:'ROUTE'}, 
+                    /**@ts-ignore*/
+                    {});
+                fail ++;
+            }
+            //check if not accessed from domain or from os hostname
+            const {hostname} = await import('node:os');
+            if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST').toUpperCase())<0){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                                                        {   ...record,
+                                                            status:0, 
+                                                            type:'HOST_IP'}, 
+                                                        /**@ts-ignore*/
+                                                        {});
+                fail ++;
+            }
+            //check if user-agent is blocked
+            if(fileModelIamControlUserAgent.get(null, null, null).filter(row=>row.user_agent== user_agent).length>0){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                    {   ...record,
+                        status:0, 
+                        type:'USER_AGENT'}, 
+                    /**@ts-ignore*/
+                    {});
+                fail ++;
+            }
+            //check request
+            let err = null;
+            try {
+                decodeURIComponent(path);
+            }
+            catch(e) {
+                err = e;
+            }
+            if (err){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                    {   ...record,
+                        status:0, 
+                        type:'URI_DECODE'}, 
+                    /**@ts-ignore*/
+                    {});
+                fail ++;
+            }
+            //check method
+            if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0){
+                await fileModelIamControlObserve.post(calling_app_id, 
+                    {   ...record,
+                        status:0, 
+                        type:'METHOD'}, 
+                    /**@ts-ignore*/
+                    {});
+                fail ++;
+            }
+            if (fail>0 && 
+                //check how many observation exists for given app_id or records with unknown app_id
+                fileModelIamControlObserve.get(calling_app_id, 
+                                                null, 
+                                                /**@ts-ignore */
+                                                {}).filter(row=>row.ip==ip && row.app_id == app_id).length>		
+                fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'AUTHENTICATE_REQUEST_OBSERVE_LIMIT')){
+                await fileModelIamControlObserve.post(calling_app_id,
+                                                    {   ...record,
+                                                        status:1, 
+                                                        type:'BLOCK_IP'}, 
+                                                    /**@ts-ignore*/
+                                                    {});
+                return {statusCode: 401, 
+                        statusMessage: ''};
             }
             return null;
         }
-        else
-            return null;
-    };
-    return new Promise((resolve)=>{
-        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
-            const ip_v4 = ip.replace('::ffff:','');
-            block_ip_control(ip_v4).then((/**@type{server_iam_authenticate_request}*/result_range)=>{
-                if (result_range){
-                    resolve({   statusCode:result_range.statusCode,
-                                statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
-                }
-                else{
-                    //check if host exists
-                    if (typeof host=='undefined'){
-                        //406 Not Acceptable
-                        resolve({   statusCode: 406, 
-                                    statusMessage: `ip ${ip_v4} blocked, no host`});
-                    }
-                    else{
-                        //check if not accessed from domain or from os hostname
-                        import('node:os').then(({hostname}) =>{
-                            if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST').toUpperCase())<0){
-                                //406 Not Acceptable
-                                resolve({   statusCode: 406, 
-                                            statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
-                            }
-                            else{
-                                //check if user-agent is blocked
-                                if(fileModelIamControlUserAgent.get(null, null, null).filter(row=>row.user_agent== user_agent).length>0){
-                                    //406 Not Acceptable
-                                    resolve({   statusCode: 406, 
-                                                statusMessage: `ip ${ip_v4} blocked, user-agent blocked`});
-                                }
-                                else{
-                                    //check request
-                                    let err = null;
-                                    try {
-                                        decodeURIComponent(path);
-                                    }
-                                    catch(e) {
-                                        err = e;
-                                    }
-                                    if (err){
-                                        resolve({   statusCode: 400, 
-                                                    statusMessage: 'decodeURIComponent error'});
-                                    }
-                                    else{
-                                        //check method
-                                        if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0)
-                                            resolve({   statusCode: 405, 
-                                                        statusMessage: 'method error'});
-                                        else    
-                                            resolve(null);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-        }
-        else
-            resolve(null);
-    });
-    
+    }
+    else
+        return null;
 };
 
 /**
