@@ -356,8 +356,8 @@ const appInit = async (parameters) => {
 
     appAppsGet();
     
-    const user = common.commonWndowLocationPathname(1);
-    if (user !='') {
+    const user = common.commonWndowLocationPathname(0).split('/profile/')[1];
+    if (user && user !='') {
         //show profile for user entered in url
         common.commonProfileShow(null, user);
     }

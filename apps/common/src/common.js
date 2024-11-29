@@ -887,8 +887,8 @@ const commonApp = async parameters =>{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
             }
             case (parameters.url == '/'):
-            case ((fileModelApp.get(app_id, app_id, null)[0].showparam == 1 && parameters.url.substring(1) !== '')):{
-                return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.substring(1)==''?null:parameters.url.substring(1),
+            case ((fileModelApp.get(app_id, app_id, null)[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
                                                                                         ip:             parameters.ip, 
                                                                                         user_agent:     parameters.user_agent,
                                                                                         locale:         commonClientLocale(parameters.accept_language),

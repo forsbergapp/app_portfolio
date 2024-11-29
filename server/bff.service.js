@@ -90,8 +90,11 @@ const bffInit = async (req, res) =>{
                         .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
     if (result != null){
         res.statusCode = result.statusCode;
-        res.statusMessage = 'access control: ' + result.statusMessage;
-        res.write('⛔');
+        res.statusMessage = ' ';
+        res.writeHead(res.statusCode, {
+            'Content-Type': 'text/plain;charset=utf-8',
+            'Content-length':'⛔'.length
+        });
         return {reason:'REQUEST'};
     }
     else{
@@ -121,6 +124,7 @@ const bffInit = async (req, res) =>{
         res.removeHeader('X-Powered-By');
         //check robots.txt
         if (req.originalUrl=='/robots.txt'){
+            res.statusMessage = ' ';
             res.type('text/plain');
             res.write('User-agent: *\nDisallow: /');
             return {reason:'ROBOT'};
@@ -128,6 +132,7 @@ const bffInit = async (req, res) =>{
         else{
             //browser favorite icon to ignore
             if (req.originalUrl=='/favicon.ico'){
+                res.statusMessage = ' ';
                 res.write('');
                 return {reason:'FAVICON'};
             }
