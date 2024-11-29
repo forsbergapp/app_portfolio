@@ -30,6 +30,7 @@ const post = async (app_id, data, res) => {
     if (data.from && data.to){
         const id = Date.now();
         return fileDBPost(app_id, 'IAM_CONTROL_IP', {   id:id, 
+                                                        app_id:data.app_id,
                                                         from:data.from, 
                                                         to:data.to,
                                                         hour_from:data.hour_from,

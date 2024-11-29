@@ -1,8 +1,8 @@
-/** @module server/db/fileModelIamObserve */
+/** @module server/db/fileModelIamControlObserve */
 
 /**
  * @import {server_server_res,
- *          server_db_file_iam_observe} from '../types.js'
+ *          server_db_file_iam_control_observe} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -13,23 +13,24 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * @param {number} app_id
  * @param {number|null} resource_id
  * @param {server_server_res|null} res
- * @returns {server_db_file_iam_observe[]}
+ * @returns {server_db_file_iam_control_observe[]}
  */
-const get = (app_id, resource_id, res) => fileDBGet(app_id, 'IAM_OBSERVE',resource_id, null, res);
+const get = (app_id, resource_id, res) => fileDBGet(app_id, 'IAM_CONTROL_OBSERVE',resource_id, null, res);
 
 /**
  * Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_observe} data
+ * @param {server_db_file_iam_control_observe} data
  * @param {server_server_res} res
  * @returns {Promise.<{id:number}>}
  */
 const post = async (app_id, data, res) => {
     //check required attributes
-    if (data.status && data.type){
+    if ((data.status==0 ||data.status==1) && data.type){
         const id = Date.now();
-        return fileDBPost(app_id, 'IAM_OBSERVE', {  id:id, 
+        return fileDBPost(app_id, 'IAM_CONTROL_OBSERVE', {  id:id, 
+                                                    app_id:data.app_id,
                                                     ip:data.ip, 
                                                     lat:data.lat,
                                                     lng:data.lng,
@@ -52,17 +53,19 @@ const post = async (app_id, data, res) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_db_file_iam_observe} data
+ * @param {server_db_file_iam_control_observe} data
  * @param {server_server_res} res
  * @returns {Promise.<{affectedRows:number}>}
  */
 const update = async (app_id, resource_id, data, res) => {
    
-    /**@type{server_db_file_iam_observe}*/
+    /**@type{server_db_file_iam_control_observe}*/
     const ip_record = get(app_id, resource_id, null)[0];
     if (ip_record){
-        if (data.status){
+        if ((data.status==0 ||data.status==1)){
             const data_update = {};
+            if (data.app_id)
+                data_update.app_id = data.app_id;
             if (data.ip)
                 data_update.ip = data.ip;
             if (data.lat)
@@ -82,7 +85,7 @@ const update = async (app_id, resource_id, data, res) => {
             data_update.status = data.status;
             //id and type not allowed to update
             if (Object.entries(data_update).length>0)
-                return fileDBUpdate(app_id, 'IAM_OBSERVE', resource_id, null, data_update, res);
+                return fileDBUpdate(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null, data_update, res);
             else{
                 res.statusCode = 404;
                 throw '⛔';    
@@ -108,7 +111,7 @@ const update = async (app_id, resource_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const deleteRecord = async (app_id, resource_id, res) => {
-    return fileDBDelete(app_id, 'IAM_OBSERVE', resource_id, null, res);
+    return fileDBDelete(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null, res);
 };
                    
 export {get, post, update, deleteRecord};
