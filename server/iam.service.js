@@ -1315,21 +1315,23 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
      *  if ip is blocked return 403
      * @function
      * @param {number} app_id
+     * @param {number|null} data_app_id
      * @param {string} ip_v4
      * @returns {boolean}
      */
-    const block_ip_control = (app_id, ip_v4) => {
+    const block_ip_control = (app_id, data_app_id, ip_v4) => {
         if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
             /**@type{server_db_file_iam_control_ip[]} */
             const ranges = fileModelIamControlIp.get(
+                                                    app_id, 
+                                                    null, 
                                                     /**@ts-ignore */
-                                                    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')), 
-                                                    null, {});
+                                                    {});
             //check if IP is blocked
             if (fileModelIamControlObserve.get( app_id, 
-                null, 
-                /**@ts-ignore */
-                {}).filter(row=>row.ip==ip && row.app_id == app_id && row.status==1).length>0)
+                                                null, 
+                                                /**@ts-ignore */
+                                                {}).filter(row=>row.ip==ip_v4 && row.app_id == data_app_id && row.status==1).length>0)
                 //IP is blocked in IAM_CONTROL_OBSERVE
                 return true;
             else
@@ -1354,12 +1356,12 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
         let fail_block = false;
         const ip_v4 = ip.replace('::ffff:','');
         const app_id = commonAppHost(host ?? '');
-        const common_app_id = fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID');
+        const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
         //set calling app_id using app_id or common app_id if app_id is unknown
         const calling_app_id = app_id ?? common_app_id;
         //set record with app_id or empty app_id
         const record = {    app_id:app_id,
-                            ip:ip, 
+                            ip:ip_v4, 
                             lat:null, 
                             lng:null, 
                             user_agent:user_agent, 
@@ -1367,7 +1369,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                             accept_language:accept_language, 
                             method:method,
                             url:path};
-        const result_range = block_ip_control(calling_app_id, ip_v4);
+        const result_range = block_ip_control(calling_app_id, app_id, ip_v4);
         if (result_range){
             return {statusCode: 401, 
                     statusMessage: ''};
@@ -1496,21 +1498,25 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                     {});
                 fail ++;
             }
-            if (fail>0 || fail_block ||
-                //check how many observation exists for given app_id or records with unknown app_id
-                fileModelIamControlObserve.get(calling_app_id, 
-                                                null, 
-                                                /**@ts-ignore */
-                                                {}).filter(row=>row.ip==ip && row.app_id == app_id).length>		
-                fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'AUTHENTICATE_REQUEST_OBSERVE_LIMIT')){
-                await fileModelIamControlObserve.post(calling_app_id,
-                                                    {   ...record,
-                                                        status:1, 
-                                                        type:'BLOCK_IP'}, 
-                                                    /**@ts-ignore*/
-                                                    {});
-                return {statusCode: 401, 
-                        statusMessage: ''};
+            if (fail>0){
+                if (fail_block ||
+                    //check how many observation exists for given app_id or records with unknown app_id
+                    fileModelIamControlObserve.get(calling_app_id, 
+                                                    null, 
+                                                    /**@ts-ignore */
+                                                    {}).filter(row=>row.ip==ip_v4 && row.app_id == app_id).length>		
+                    fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'AUTHENTICATE_REQUEST_OBSERVE_LIMIT')){
+                    await fileModelIamControlObserve.post(calling_app_id,
+                                                        {   ...record,
+                                                            status:1, 
+                                                            type:'BLOCK_IP'}, 
+                                                        /**@ts-ignore*/
+                                                        {});
+                    return {statusCode: 401, 
+                            statusMessage: ''};
+                }
+                else
+                    return null;            
             }
             else
                 return null;
