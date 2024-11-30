@@ -804,12 +804,13 @@ const commonComponentCreate = async parameters =>{
 
 /**
   * Returns app id for given host
+  * Checks if host matches configured host or starts with www or is a valid subdomain
   * @param {string} host 
   * @returns {number|null}
   */
 const commonAppHost = host =>{
     switch (host.toString().split('.')[0]){
-        case 'localhost':
+        case fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST'):
         case 'www':{
             //localhost
             return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
@@ -818,7 +819,6 @@ const commonAppHost = host =>{
             try {
                 return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
-                //request can be called from unkown hosts
                 return null;
             }
         }

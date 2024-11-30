@@ -1351,6 +1351,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
     };
     if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
         let fail = 0;
+        let fail_block = false;
         const ip_v4 = ip.replace('::ffff:','');
         const app_id = commonAppHost(host ?? '');
         const common_app_id = fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID');
@@ -1376,11 +1377,12 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
             if (typeof host=='undefined'){
                 await fileModelIamControlObserve.post(calling_app_id, 
                                                         {   ...record,
-                                                            status:0, 
+                                                            status:1, 
                                                             type:'HOST'}, 
                                                         /**@ts-ignore*/
                                                         {});
                 fail ++;
+                fail_block = true;
             }
             if (app_id == null){
                 await fileModelIamControlObserve.post(calling_app_id, 
@@ -1421,12 +1423,20 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                         path == '/apps/common_types.js' ||
                         path == '/sw.js' ||
                         //account names should start with /profile/ and not contain any more '/'
-                        (path.startsWith('/profile/') && path.split('/').length==3))==false;
+                        (path.startsWith('/profile/') && path.split('/').length==3)||
+                        //SSL verification path
+                        (   path.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH')) &&
+                            serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION'))==1
+                        )
+                    )==false;
             };
             if (invalid_path(path)){
+                //stop if trying to access any SSL path not enabled
+                if (path.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH')))
+                    fail_block = true;
                 await fileModelIamControlObserve.post(calling_app_id, 
                     {   ...record,
-                        status:0, 
+                        status:fail_block==true?1:0, 
                         type:'ROUTE'}, 
                     /**@ts-ignore*/
                     {});
@@ -1435,9 +1445,11 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
             //check if not accessed from domain or from os hostname
             const {hostname} = await import('node:os');
             if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST').toUpperCase())<0){
+                //stop always
+                fail_block = true;
                 await fileModelIamControlObserve.post(calling_app_id, 
                                                         {   ...record,
-                                                            status:0, 
+                                                            status:1,
                                                             type:'HOST_IP'}, 
                                                         /**@ts-ignore*/
                                                         {});
@@ -1445,9 +1457,11 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
             }
             //check if user-agent is blocked
             if(fileModelIamControlUserAgent.get(null, null, null).filter(row=>row.user_agent== user_agent).length>0){
+                //stop always
+                fail_block = true;
                 await fileModelIamControlObserve.post(calling_app_id, 
                     {   ...record,
-                        status:0, 
+                        status:1, 
                         type:'USER_AGENT'}, 
                     /**@ts-ignore*/
                     {});
@@ -1472,6 +1486,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
             }
             //check method
             if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0){
+                //stop always
+                fail_block = true;
                 await fileModelIamControlObserve.post(calling_app_id, 
                     {   ...record,
                         status:0, 
@@ -1480,7 +1496,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                     {});
                 fail ++;
             }
-            if (fail>0 && 
+            if (fail>0 || fail_block ||
                 //check how many observation exists for given app_id or records with unknown app_id
                 fileModelIamControlObserve.get(calling_app_id, 
                                                 null, 
@@ -1496,7 +1512,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                 return {statusCode: 401, 
                         statusMessage: ''};
             }
-            return null;
+            else
+                return null;
         }
     }
     else
