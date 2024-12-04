@@ -16,11 +16,11 @@ const common = await import(commonPath);
 
 const APP_GLOBAL = {
                     'docs':[{'id':1,
-                            'doc_title':'Diagram',
+                            'doc_title':'Arquitecture Diagram',
                             'doc_type':'IMAGE',
-                            'doc_url':'/common/documents/app_portfolio.webp',
-                            'doc_image':'/common/documents/app_portfolio.webp',
-                            'doc_image_small':'/common/documents/app_portfolio_small.webp'},
+                            'doc_url':'/common/documents/arquitecture.webp',
+                            'doc_image':'/common/documents/arquitecture.webp',
+                            'doc_image_small':'/common/documents/arquitecture_small.webp'},
                             {'id':2,
                             'doc_title':'Data Model',
                             'doc_type':'IMAGE',

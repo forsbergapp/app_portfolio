@@ -1,5 +1,10 @@
 /** 
  *  File database using race condition, pessimistic lock and database transaction pattern
+ *  Tables implemented using object mapping relation (ORM) pattern
+ *  each JSON_TABLE has fileModel*.js file with methods
+ *  LOG*, CONFIG* and MESSAGE_QUEUE* tables use subtypes and common fileModel*.js files.
+ *  See ER Model for an overview.
+ *  
  *  File types supported
  *  JSON            json
  *                  uses fileFsRead and fileFsWrite by admin and config files
@@ -29,7 +34,7 @@
  *                  uses fileFsReadLog and fileFsAppend
  *  JSON_LOG_DATE   json record, comma separateed with file name suffixes
  *                  uses fileFsReadLog, fileFsAppend and fileSuffix
- *  BINARY          used by sqLite database
+ *  BINARY          used by sqLite database and fileModel*.js file not implemented
  *  Admin can also use fileFsWriteAdmin and fileFsDeleteAdmin without transaction if needed
  * 
  * @module server/db/file 
