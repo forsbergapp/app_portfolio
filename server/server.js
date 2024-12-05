@@ -11,7 +11,7 @@
  * @import {server_server_error_stack, server_server_error, server_server_req, server_server_res, server_server_req_id_number,
  *          server_server_express} from './types.js'
  */
-
+const zlib = await import('node:zlib');
 /**
  * Sends ISO 20022 error format
  * @function
@@ -28,7 +28,8 @@
     const message = {error:{
                         http:http, 
                         code:code, 
-                        text:text, 
+                        //return SERVER ERROR if status code starts with 5
+                        text:http?.toString().startsWith('5')?'SERVER ERROR':text, 
                         developer_text:developer_text, 
                         more_info:more_info}};
     //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
@@ -47,6 +48,262 @@
  * @returns {number|null}
  */
  const serverUtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
+
+ /**
+  * Compression of response for supported requests
+  * @param {server_server_res['req']} req
+  * @param {server_server_res} res
+  */
+ const serverUtilCompression = (req,res) =>{
+    
+    /**
+     * Execute a listener when a response is about to write headers.
+     * @param {server_server_res} res
+     * @param {function} listener
+     */
+    const onHeaders = (res, listener) => {
+        /**
+         * Create a replacement writeHead method.
+         *
+         * @param {function} prevWriteHead
+         * @param {function} listener
+         */
+        function createWriteHead (prevWriteHead, listener) {
+            let fired = false;
+        
+            // return function with core name and argument list
+            /**
+             * @param {number} statusCode
+             */
+            return function writeHead (statusCode) {
+                // set headers from arguments
+                /**@ts-ignore */
+                const args = setWriteHeadHeaders.apply(res, arguments);
+            
+                // fire listener
+                if (!fired) {
+                    fired = true;
+                    listener.call(res);
+            
+                    // pass-along an updated status code
+                    if (typeof args[0] === 'number' && statusCode !== args[0]) {
+                        args[0] = statusCode;
+                        args.length = 1;
+                    }
+                }
+                
+                return prevWriteHead.apply(res, args);
+            };
+        }
+        /**
+         * Set headers contained in array on the response object.
+         * @param {server_server_res} res
+         * @param {[]} headers
+         * @returns {void}
+         */
+        const setHeadersFromArray = (res, headers) => {
+            for (let i = 0; i < headers.length; i++) {
+                res.setHeader(headers[i][0], headers[i][1]);
+            }
+        };
+        
+        /**
+         * Set headers contained in object on the response object.
+         * @param {server_server_res} res
+         * @param {*} headers
+         * @returns {void}
+         */
+        const setHeadersFromObject = (res, headers) =>{
+            const keys = Object.keys(headers);
+            for (let i = 0; i < keys.length; i++) {
+                const k = keys[i];
+                if (k)
+                     res.setHeader(k, headers[k]);
+            }
+        };
+        
+        /**
+         * Set headers and other properties on the response object.
+         * @param {number} statusCode
+         * @returns {*}
+         */
+        function setWriteHeadHeaders (statusCode) {
+            const length = arguments.length;
+            const headerIndex = length > 1 && typeof arguments[1] === 'string'?2:1;
+        
+            /**@type{[]|{}} */
+            const headers = length >= headerIndex + 1?arguments[headerIndex]:undefined;
+        
+            res.statusCode = statusCode;
+        
+            if (headers?.constructor== Array) {
+                // handle array case
+                setHeadersFromArray(res, headers);
+            } else if (headers) {
+                // handle object case
+                setHeadersFromObject(res, headers);
+            }
+            // copy leading arguments
+            const args = new Array(Math.min(length, headerIndex));
+            for (let i = 0; i < args.length; i++) {
+                args[i] = arguments[i];
+            }
+            return args;
+        }
+        if (!res)
+            throw 'argument res is required';
+        if (typeof listener !== 'function')
+            throw 'argument listener must be a function';
+        res.writeHead = createWriteHead(res.writeHead, listener);
+    };
+
+    let ended = false;
+    /**@type{[]|null} */
+    let listeners = [];
+    /**@type{*} */
+    let stream;
+
+    const _end = res.end;
+    const _on = res.on;
+    const _write = res.write;
+
+    // flush
+    res.flush = function flush () {
+        if (stream)
+            stream.flush();
+    };
+
+    // proxy
+    /**
+     * @param {string} chunk
+     * @param {string} encoding
+     * @returns {*}
+     */
+    res.write = function write (chunk, encoding) {
+        if (ended)
+            return false;
+        else{
+            if (!res._header) {
+                //updates res._header
+                res._implicitHeader();
+            }
+            return stream
+                ? stream.write(toBuffer(chunk, encoding))
+                : _write.call(this, chunk, encoding);
+        }
+    };
+    /**
+     * @param {*} chunk
+     * @param {string} encoding 
+     * @returns {*}
+     */
+    res.end = function end (chunk, encoding) {
+        if (ended)
+            return false;
+        else{
+            if (!res._header) {
+                //updates res._header
+                res._implicitHeader();
+            }
+            if (stream) {
+                ended = true;
+                return chunk
+                    ? stream.end(toBuffer(chunk, encoding))
+                    : stream.end();
+            }
+            else{
+                // mark ended
+                return _end.call(this, chunk, encoding);
+            }
+        }
+    };
+    /**
+     * @param {*} type
+     * @param {*} event
+     * @returns {*}
+     */
+    res.on = function on (type, event) {
+        if (!listeners || type !== 'drain')
+            return _on.call(this, type, event);
+        else
+            if (stream)
+                return stream.on(type, event);
+            else{
+                // buffer listeners for future stream
+                /**@ts-ignore */
+                listeners.push([type, event]);
+                return this;
+            }
+    };
+
+
+    onHeaders(res, function onResponseHeaders () {
+        //compress for:
+        //not broadcast messages using socket
+        //text responses
+        //not identity encoding
+        if (req.headers.accept != 'text/event-stream' &&
+            (res.getHeader('Content-Type')?.startsWith('text') ||
+            res.getHeader('Content-Type')?.startsWith('application/json'))){
+            const method = 'gzip';
+
+            // compression stream
+            stream = method === 'gzip'
+                ? zlib.createGzip()
+                : zlib.createDeflate();
+    
+            // add buffered listeners to stream
+            addListeners(stream, stream.on, listeners);
+    
+            // header fields
+            res.setHeader('Content-Encoding', 'gzip');
+            res.removeHeader('Content-Length');
+    
+            // compression
+            stream.on('data', function onStreamData (/**@type {string}*/chunk) {
+                if (_write.call(res, chunk) === false) {
+                    stream.pause();
+                }
+            });
+    
+            stream.on('end', function onStreamEnd () {
+                _end.call(res);
+            });
+    
+            _on.call(res, 'drain', function onResponseDrain () {
+                stream.resume();
+            });    
+        }
+        else{
+            addListeners(res, _on, listeners);
+            listeners = null;
+        }
+    });
+
+    /**
+     * Add bufferred listeners to stream
+     * @param {*} stream
+     * @param {function} on
+     * @param {*} listeners 
+     */
+
+    function addListeners (stream, on, listeners) {
+        for (let i = 0; i < listeners.length; i++) {
+            on.apply(stream, listeners[i]);
+        }
+    }
+
+    /**
+     * Coerce arguments to Buffer
+     * @param {*} chunk
+     * @param {*} encoding 
+     */
+    function toBuffer (chunk, encoding) {
+        return !Buffer.isBuffer(chunk)
+            ? Buffer.from(chunk, encoding)
+            : chunk;
+    }
+};
 
 
 /**
@@ -111,7 +368,7 @@ const serverUtilAppLine = () =>{
  * 
  *  Gets Express app with following settings in this order
  *
- *	1.Middleware	compression and JSON maximum size setting
+ *	1.Middleware	JSON maximum size setting
  *	
  *  2.Routes	
  *	path	                                    method	middleware                                  controller      comment
@@ -150,26 +407,20 @@ const serverUtilAppLine = () =>{
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
     const {default:express} = await import('express');
-    const {default:compression} = await import('compression');
     
     /**@type{server_server_express} */
     const app = express();
     //
     //MIDDLEWARES
     //
-    //use compression for better performance
-    const shouldCompress = (/**@type{server_server_req}*/req) => {
-        //exclude broadcast messages using socket
-        if (req.headers.accept == 'text/event-stream')
-            return false;
-        else
-            return true;
-        };
+    
     app.set('trust proxy', true);
-    /**@ts-ignore */
-    app.use(compression({ filter: shouldCompress }));
+    
+
     // set JSON maximum size
-    app.use(express.json({ limit: fileModelConfig.get('CONFIG_SERVER','SERVER', 'JSON_LIMIT') ?? ''}));
+    app.use(
+        express.json({ limit: fileModelConfig.get('CONFIG_SERVER','SERVER', 'JSON_LIMIT') ?? ''})
+    );
     
     //ROUTES MIDDLEWARE
     //apps
@@ -207,9 +458,14 @@ const serverUtilAppLine = () =>{
     app.route('*').get                                          (bffApp);
     
     //ERROR LOGGING
-    app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res, /**@type{function}*/next) => {
+    app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res) => {
         fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
-            next();
+            serverResponseErrorSend( res, 
+                err?.name=='PayloadTooLargeError'?400:500,
+                null, 
+                err?.name=='PayloadTooLargeError'?'⛔':'SERVER ERROR', 
+                null, 
+                null);
         });
     });
     return app;
@@ -1246,6 +1502,6 @@ const serverStart = async () =>{
     }
     
 };
-export {serverResponseErrorSend, 
+export {serverResponseErrorSend, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppFunction,serverUtilAppLine , 
         serverREST_API, serverStart };

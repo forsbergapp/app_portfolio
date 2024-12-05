@@ -283,6 +283,7 @@ const commonGeodata = async parameters =>{
  * @returns {Promise.<*>}
  */
 const commonBFE = async parameters =>{
+    const zlib = await import('node:zlib');
     const https = await import('node:https');
     const timeout_message = '🗺⛔?';
     const timeout = 5000;
@@ -309,13 +310,22 @@ const commonBFE = async parameters =>{
         
         const request = https.request(options, res =>{
             let responseBody = '';
-            res.setEncoding('utf8');
-            res.on('data', (chunk) =>{
-                responseBody += chunk;
-            });
-            res.on('end', ()=>{
-                resolve (responseBody);
-            });
+            if (res.headers['content-encoding'] == 'gzip'){
+                const gunzip = zlib.createGunzip();
+                res.pipe(gunzip);
+                gunzip.on('data', (chunk) =>responseBody += chunk);
+                gunzip.on('end', () => resolve (responseBody));
+            }
+            else{
+                res.setEncoding('utf8');
+                res.on('data', (chunk) =>{
+                    responseBody += chunk;
+                });
+                res.on('end', ()=>{
+                    resolve (responseBody);
+                });
+            }
+            
         });
         if (parameters.method !='GET')
             request.write(JSON.stringify(parameters.body));
