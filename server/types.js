@@ -2112,8 +2112,11 @@
  * @property {function} flush           - Used for EventSource
  * @property {function} set
  * @property {function} writeHead
+ * @property {string}   _header         --user for response compression
+ * @property {function} _implicitHeader --used for response compression
  * @property {object}   req
- * @property {{'sec-fetch-mode':string}}   req.headers - Used for EventSource
+ * @property {{'sec-fetch-mode':string,
+ *              accept:string}}   req.headers - Used for EventSource and compression control of EventSource
  * @property {string}   req.hostname
  * @property {string}   req.protocol
  * @property {object}   req.query

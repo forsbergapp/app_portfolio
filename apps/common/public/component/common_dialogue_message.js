@@ -91,6 +91,17 @@ const component = async props => {
         case 'INFO':
         case 'EXCEPTION':
         case 'LOG':{
+            /**
+             * @param {*} message
+             */
+            const format_message = message =>{
+                try {
+                    return (JSON.parse(message).error?JSON.parse(message).error.text:JSON.parse(message));
+                } catch (error) {
+                    return message;
+                }
+            };
+            //return known error or parse error key or message
             display_message = props.data.message_type=='ERROR'?await props.methods.commonFFB(
                                                 {
                                                     path:'/server-db/app_settings_display', 
@@ -99,7 +110,7 @@ const component = async props => {
                                                     authorization_type:'APP_DATA'
                                                 })
                                 .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
-                                .catch((/**@type{Error}*/error)=>error):props.data.message;
+                                .catch((/**@type{Error}*/error)=>error):format_message(props.data.message);
             
             display_message_font_class = props.data.message_type=='LOG'?'common_font_log':'common_font_normal';
             break;

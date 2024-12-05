@@ -265,7 +265,7 @@ const appSecureDialogueSendBroadcastSend = () => {
             if (Number(JSON.parse(result).sent) > 0)
                 common.commonMessageShow('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
             else
-                common.commonMessageShow('INFO', null, null, 'message_fail', null, common.COMMON_GLOBAL.app_id);
+                common.commonMessageShow('INFO', null, null, 'message_fail', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
         })
         .catch(()=>null);
     }
