@@ -290,6 +290,7 @@ const commonGeodata = async parameters =>{
  * @returns {Promise.&lt;*>}
  */
 const commonBFE = async parameters =>{
+    const zlib = await import('node:zlib');
     const https = await import('node:https');
     const timeout_message = '🗺⛔?';
     const timeout = 5000;
@@ -316,13 +317,22 @@ const commonBFE = async parameters =>{
         
         const request = https.request(options, res =>{
             let responseBody = '';
-            res.setEncoding('utf8');
-            res.on('data', (chunk) =>{
-                responseBody += chunk;
-            });
-            res.on('end', ()=>{
-                resolve (responseBody);
-            });
+            if (res.headers['content-encoding'] == 'gzip'){
+                const gunzip = zlib.createGunzip();
+                res.pipe(gunzip);
+                gunzip.on('data', (chunk) =>responseBody += chunk);
+                gunzip.on('end', () => resolve (responseBody));
+            }
+            else{
+                res.setEncoding('utf8');
+                res.on('data', (chunk) =>{
+                    responseBody += chunk;
+                });
+                res.on('end', ()=>{
+                    resolve (responseBody);
+                });
+            }
+            
         });
         if (parameters.method !='GET')
             request.write(JSON.stringify(parameters.body));
@@ -811,12 +821,13 @@ const commonComponentCreate = async parameters =>{
 
 /**
   * Returns app id for given host
+  * Checks if host matches configured host or starts with www or is a valid subdomain
   * @param {string} host 
   * @returns {number|null}
   */
 const commonAppHost = host =>{
     switch (host.toString().split('.')[0]){
-        case 'localhost':
+        case fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST'):
         case 'www':{
             //localhost
             return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
@@ -825,7 +836,6 @@ const commonAppHost = host =>{
             try {
                 return fileModelApp.get(null, null, null).filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
-                //request can be called from unkown hosts
                 return null;
             }
         }
@@ -894,8 +904,8 @@ const commonApp = async parameters =>{
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
             }
             case (parameters.url == '/'):
-            case ((fileModelApp.get(app_id, app_id, null)[0].showparam == 1 &amp;&amp; parameters.url.substring(1) !== '')):{
-                return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.substring(1)==''?null:parameters.url.substring(1),
+            case ((fileModelApp.get(app_id, app_id, null)[0].showparam == 1 &amp;&amp; parameters.url.split('/profile/')[1]?.length>1)):{
+                return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
                                                                                         ip:             parameters.ip, 
                                                                                         user_agent:     parameters.user_agent,
                                                                                         locale:         commonClientLocale(parameters.accept_language),
