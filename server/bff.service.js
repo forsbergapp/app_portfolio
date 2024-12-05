@@ -5,7 +5,7 @@
  */
 
 /**@type{import('./server.js')} */
-const {serverUtilResponseTime, serverResponseErrorSend, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilResponseTime, serverResponseErrorSend, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('./db/fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -25,7 +25,6 @@ const app_common= await import(`file://${process.cwd()}/apps/common/src/common.j
 const {default:serverError} = await import('../apps/common/src/component/common_server_error.js');
 
 const fs = await import('node:fs');
-
 /**
  * Logs error and returns error
  * @function
@@ -98,6 +97,7 @@ const bffInit = async (req, res) =>{
         return {reason:'REQUEST'};
     }
     else{
+
         //set headers
         res.setHeader('X-Response-Time', process.hrtime());
         req.headers['X-Request-Id'] =  securityUUIDCreate().replaceAll('-','');
@@ -202,6 +202,7 @@ const bffStart = async (req, res) =>{
     const app_id = app_common.commonAppHost(bff_parameters.host ?? '');
     
     if (app_id !=null){
+        serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
         if (bff_parameters.endpoint == 'APP' && bff_parameters.method.toUpperCase() == 'GET' && !bff_parameters.url?.startsWith('/bff')){
             //App route for app asset, common asset, app info page and app
             app_common.commonApp({  
