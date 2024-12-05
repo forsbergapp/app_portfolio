@@ -47,4 +47,10 @@
 
         --MAIL default http port 3004 OR https port 4004 if https is enabled
         pm2 start $HOME/app_portfolio/microservice/mail/server.js --cwd $HOME/app_portfolio --name mail --watch="microservice" --ignore-watch="microservice/batch microservice/geolocation microservice/worldcities"
+
+    --save configuration
+    pm2 save
+    --restore after reboot
+    pm2 resurrect
+
 </div>

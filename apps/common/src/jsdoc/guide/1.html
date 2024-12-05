@@ -62,8 +62,12 @@
     ssh -i [.ssh directory]\servertf_private.key ubuntu@[public_ip]
 
     --terraform finishes before setup script is finished, wait until script is finished on server
+    --check progress
+    htop
+    --when ready check if servers have started:
+    pm2 list
 
-    continue to setup SSL and DNS settings if necessary
+    --continue to setup SSL and DNS settings if necessary
 
 # Install software and repository
 
@@ -163,7 +167,7 @@
                         source              0.0.0.0/0
                         destination port    443
                         description         HTTPS
-                Oracle VM might need ufw:
+                Oracle VM might need ufw (included in Terraform setup):
                     #install ufw if missing
                     sudo apt install ufw
                     sudo ufw allow 22/tcp
@@ -219,11 +223,34 @@
         --copy SSL files to correct path
         sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
         sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
+        sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/microservice/ssl/privkey.pem
+        sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/microservice/ssl/fullchain.pem
+
+        --disable SSL parameter in /data/config_server.json for security reason so path in HTTPS_SSL_VERIFICATION_PATH is not available 
+        --HTTPS_SSL_VERIFICATION=0
 
     Renew SSL
+        --make SSL scripts executable if not already:
+        sudo chmod +x $HOME//app_portfolio/server/install/scripts/SSL_*.sh
+
+        --set parameter /data/config_server.json 
+        --HTTPS_SSL_VERIFICATION=1
+
         sudo HOME=$HOME certbot renew --manual-auth-hook $HOME/app_portfolio/server/install/scripts/SSL_authenticator.sh --manual-cleanup-hook $HOME/app_portfolio/server/install/scripts/SSL_cleanup.sh --config-dir $HOME/app_portfolio/data/ssl --work-dir $HOME/app_portfolio/data/ssl --logs-dir $HOME/app_portfolio/data/ssl --cert-path $HOME/app_portfolio/data/ssl --key-path $HOME/app_portfolio/data/ssl --fullchain-path $HOME/app_portfolio/data/ssl
 
         --if you get "Certificate not yet due for renewal" add --force-renewal to above statement
+
+        --if error try this without email, use defauilt paths
+        sudo certbot certonly --manual --register-unsafely-without-email --preferred-challenges dns --d *.test.[domain] -d *.[domain] -d [domain]
+        sudo cp /etc/letsencrypt/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
+        sudo cp /etc/letsencrypt/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
+        sudo cp /etc/letsencrypt/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/microservice/ssl/privkey.pem
+        sudo cp /etc/letsencrypt/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/microservice/ssl/fullchain.pem
+        
+
+        //check TXT records in Ubuntu
+        dig -t TXT _acme-challenge.[domain]
+
         --copy updated SSL files to correct path
         sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/privkey.pem $HOME/app_portfolio/data/ssl/privkey.pem
         sudo cp $HOME/app_portfolio/data/ssl/live/test.[domain]/fullchain.pem $HOME/app_portfolio/data/ssl/fullchain.pem
