@@ -97,7 +97,7 @@ resource "oci_core_security_list" "security-list" {
 
 }
 #Compute instance
-resource "oci_core_instance" "ubuntu_instance" {
+resource "oci_core_instance" "compute_instance_network" {
   availability_domain = var.vcn_availability_domain
   compartment_id      = var.oci_tenency_ocid
   
@@ -121,7 +121,7 @@ resource "oci_core_instance" "ubuntu_instance" {
     ssh_authorized_keys     = tls_private_key.AppPortfolioKey.public_key_openssh
  }
 }
-resource "oci_core_instance" "ubuntu_instance_only" {
+resource "oci_core_instance" "compute_instance_only" {
   availability_domain = var.vcn_availability_domain
   compartment_id      = var.oci_tenency_ocid
   

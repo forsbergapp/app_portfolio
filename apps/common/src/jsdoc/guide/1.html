@@ -42,19 +42,19 @@
 
     terraform init
 
-    --edit variables*.tf files wit credentials and adjust any default values if desired
+    --edit variables*.tf files with credentials and adjust any default values if desired
 
     --both network and server
 
-        terraform plan
-        terraform apply
-        terraform destroy
+        terraform plan -target=oci_core_instance.compute_instance_network
+        terraform apply -target=oci_core_instance.compute_instance_network
+        terraform destroy -target=oci_core_instance.compute_instance_network
 
     --server only
 
-        terraform plan -target=oci_core_instance.ubuntu_instance_only
-        terraform apply -target=oci_core_instance.ubuntu_instance_only
-        terraform destroy -target=oci_core_instance.ubuntu_instance_only
+        terraform plan -target=oci_core_instance.compute_instance_only
+        terraform apply -target=oci_core_instance.compute_instance_only
+        terraform destroy -target=oci_core_instance.compute_instance_only
     
     --save private key from output to ssh directory:
     terraform output -raw key-private-pem>[.ssh directory]\servertf_private.key
