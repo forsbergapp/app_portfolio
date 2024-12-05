@@ -193,7 +193,8 @@ const socketClientAdd = (newClient) => {
  * Socket client send as admin
  * @function
  * @param {number|null} app_id
- * @param {{client_id:number|null,
+ * @param {{app_id:number|null,
+ *          client_id:number|null,
  *          client_id_current:number|null,
  *          broadcast_type:server_socket_broadcast_type_all,
  *          broadcast_message:string}} data
@@ -212,7 +213,7 @@ const socketClientAdd = (newClient) => {
                 if (data.broadcast_type=='MAINTENANCE' &amp;&amp; client.app_id ==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')))
                     null;
                 else
-                    if (client.app_id == app_id || app_id == null){
+                    if (client.app_id == data.app_id || data.app_id == null){
                         socketClientSend(client.response, data.broadcast_message, data.broadcast_type);
                         sent++;
                     }
@@ -387,7 +388,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
     const admin = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))?
-                    fileModelIamUser.get(app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), parameters.response)[0].username:
+                    fileModelIamUser.get(app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), parameters.response)[0]?.username:
                         null;
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
@@ -444,7 +445,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     if (fileModelAppParameter.get(app_id, null)[0].common_app_start.value =='1'){
         setInterval(() => {
             if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
-                socketAdminSend(null, { client_id:null,
+                socketAdminSend(null, { app_id:null,
+                                        client_id:null,
                                         client_id_current:null,
                                         broadcast_type:'MAINTENANCE',
                                         broadcast_message:''});

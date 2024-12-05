@@ -181,7 +181,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const DB_SCHEMA = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '';
     let install_count = 0;
     for (const file of files){
-        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+        socketAdminSend(app_id, {   app_id:null,
+                                    client_id:serverUtilNumberValue(query.get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
@@ -389,7 +390,7 @@ const dbInstallGetFiles = async (install_type) =>{
         let install_count=0;
         const files = await dbInstallGetFiles('uninstall');
         for (const file of  files){
-            socketAdminSend(app_id, { client_id:serverUtilNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
+            socketAdminSend(app_id, { app_id:null, client_id:serverUtilNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
             install_count++;
             const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
             const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
@@ -659,7 +660,8 @@ const dbInstallGetFiles = async (install_type) =>{
     
     //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
-    socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+    socketAdminSend(app_id, {   app_id:null,
+                                client_id:serverUtilNumberValue(query.get('client_id')),
                                 client_id_current:null,
                                 broadcast_type:'PROGRESS',
                                 broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))});
@@ -668,7 +670,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const demo_private_key = privateKey;
     //create user posts
     for (const demo_user of demo_users){
-        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+        socketAdminSend(app_id, {   app_id:null,
+                                    client_id:serverUtilNumberValue(query.get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))});
@@ -940,7 +943,8 @@ const dbInstallGetFiles = async (install_type) =>{
         });
     };
     for (const social_type of social_types){
-        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+        socketAdminSend(app_id, {   app_id:null,
+                                    client_id:serverUtilNumberValue(query.get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))});
@@ -1061,7 +1065,8 @@ const dbDemoUninstall = async (app_id, query)=> {
             if (result_demo_users.length>0){
                 const delete_users = async () => {
                     for (const user of result_demo_users){
-                        socketAdminSend(app_id, {   client_id:serverUtilNumberValue(query.get('client_id')),
+                        socketAdminSend(app_id, {   app_id:null,
+                                                    client_id:serverUtilNumberValue(query.get('client_id')),
                                                     client_id_current:null,
                                                     broadcast_type:'PROGRESS',
                                                     broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))});

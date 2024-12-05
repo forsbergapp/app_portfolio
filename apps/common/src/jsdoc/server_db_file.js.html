@@ -7,6 +7,11 @@
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/** 
  *  File database using race condition, pessimistic lock and database transaction pattern
+ *  Tables implemented using object mapping relation (ORM) pattern
+ *  each JSON_TABLE has fileModel*.js file with methods
+ *  LOG*, CONFIG* and MESSAGE_QUEUE* tables use subtypes and common fileModel*.js files.
+ *  See ER Model for an overview.
+ *  
  *  File types supported
  *  JSON            json
  *                  uses fileFsRead and fileFsWrite by admin and config files
@@ -36,7 +41,7 @@
  *                  uses fileFsReadLog and fileFsAppend
  *  JSON_LOG_DATE   json record, comma separateed with file name suffixes
  *                  uses fileFsReadLog, fileFsAppend and fileSuffix
- *  BINARY          used by sqLite database
+ *  BINARY          used by sqLite database and fileModel*.js file not implemented
  *  Admin can also use fileFsWriteAdmin and fileFsDeleteAdmin without transaction if needed
  * 
  * @module server/db/file 
@@ -70,6 +75,7 @@ const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',        
                     {NAME:'IAM_APP_TOKEN',                  TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_token.log'},
                     {NAME:'IAM_CONTROL_IP',                 TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_ip.json', CACHE_CONTENT:null},
                     {NAME:'IAM_CONTROL_USER_AGENT',         TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_user_agent.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_CONTROL_OBSERVE',            TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_observe.json', CACHE_CONTENT:null},
                     {NAME:'IAM_USER',                       TYPE:'JSON_TABLE',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},
                     {NAME:'IAM_USER_LOGIN',                 TYPE:'JSON_LOG',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user_login.log'},
                     {NAME:'LOG_APP_INFO',                   TYPE:'JSON_LOG_DATE',   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_INFO_'},
