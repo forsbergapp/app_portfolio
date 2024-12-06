@@ -11,7 +11,7 @@
  */
 const template = props => ` ${props.docs.map(doc=>
                                 `<div class='doc_list_item common_row'>
-                                    <div id='doc_${doc.id}' data-type='${doc.doc_type}' data-url='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_image_small}")'></div>
+                                    <div id='doc_${doc.id}' data-type='${doc.doc_type}' data-url='${doc.doc_url}' class='doc_list_item_image' ${doc.doc_image_small?`style='background-image:url("${doc.doc_image_small}")'`:''}></div>
                                     <div class='doc_list_item_title'>${doc.doc_title}</div>
                                 </div>`
                             ).join('')
