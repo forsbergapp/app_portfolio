@@ -4,6 +4,12 @@
 
 /**
  * Converts locale format
+ * Locales are saved in locale.json using this case sensitive structure:
+ * locale-list\data\[language]\language.json
+ * locale-list\data\[language_Script_COUNTRYCODE]\locale.json
+ * locale-list\data\[language_Script]\locale.json
+ * locale-list\data\[language_COUNTRYCODE]\locale.json
+ * {"de":"German", [code]:[Text], [code]:[Text], ...}
  * @param {string} locale
  * @returns {string}
  */
@@ -18,8 +24,15 @@ const formatLocale = locale =>{
         case 2:{
                     //language
             return  locale.split(SPLIT_IN)[0].toLowerCase() + SPLIT_OUT + 
-                    //country
-                    locale.split(SPLIT_IN)[1].toUpperCase();
+                    //country or region without country
+                    ((locale.split(SPLIT_IN)[1].toLowerCase()=='cyrl'||
+                    locale.split(SPLIT_IN)[1].toLowerCase()=='latn'||
+                    locale.split(SPLIT_IN)[1].toLowerCase()=='arab'||
+                    locale.split(SPLIT_IN)[1].toLowerCase()=='guru'||
+                    locale.split(SPLIT_IN)[1].toLowerCase()=='hans'||
+                    locale.split(SPLIT_IN)[1].toLowerCase()=='hant')?
+                        locale.split(SPLIT_IN)[1][0].toUpperCase() + locale.split(SPLIT_IN)[1].substring(1).toLowerCase():
+                            locale.split(SPLIT_IN)[1].toUpperCase());
         }
         case 3:{
                     //language
@@ -47,21 +60,20 @@ const formatLocale = locale =>{
  * @returns {Promise.<{locale: string, text:string}[]>}
  */
 const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
+    const fs = await import('node:fs');
     res;
     /**
-     *  Get locale from locale.json and this structure:
-     *  locale-list\data\[language]\language.json
-	 *  locale-list\data\[language_Region_COUNTRYCODE]\locale.json
-	 *  locale-list\data\[language_COUNTRYCODE]\locale.json
-	 *	{"de":"German", [code]:[Text], [code]:[Text], ...}
+     *  Get locale from locale.json 
+     * @param {string} locale
+     * @returns {Promise.<[key:string]>}
      */
-    /**@ts-ignore */
-    const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/locale-list/data/`;
-    const FILE = 'locales.json';
-    const fs = await import('node:fs');
-    /**@type {[key:string]} */
-    const locales = await fs.promises.readFile(`${PATH}${formatLocale(locale)}/${FILE}`, 'utf8')
-                                 .then(file=>JSON.parse(file.toString()));
+    const getFile = async (locale) =>{
+        /**@ts-ignore */
+        const PATH = `${import.meta.dirname.replaceAll('\\', '/')}/locale-list/data/`;
+        const FILE = 'locales.json';
+        return fs.promises.readFile(`${PATH}${formatLocale(locale)}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
+    };
+    const locales = await getFile(locale).catch(()=>getFile('en'));
     //format result and order by text
     return Object.entries(locales)
             .map(locale => {
