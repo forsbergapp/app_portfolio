@@ -42,7 +42,7 @@
 
 /**
  * @import {server_db_file_result_fileFsRead,
- *          server_server_error,server_server_res, server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
+ *          server_server_error, server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
  */
 
 const fs = await import('node:fs');
@@ -421,22 +421,17 @@ const fileFsDeleteAdmin = async file => {
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
- * @param {server_server_res|null} res
  * @returns {*}
  */
-const fileDBGet = (app_id, table, resource_id, data_app_id, res=null) =>{
+const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
     try {
         const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
         if (records.length>0)
             return records;
         else{
-            if (res)
-                res.statusCode=404;
             return [];
         }    
     } catch (error) {
-        if (res)
-            res.statusCode=404;
         return [];
     }
     
@@ -448,20 +443,18 @@ const fileDBGet = (app_id, table, resource_id, data_app_id, res=null) =>{
  * @param {number} app_id
  * @param {server_db_file_db_name} table
  * @param {*} data
- * @param {server_server_res} res
- * @returns {Promise.<void>}
+ * @returns {Promise.<{affectedRows:number}>}
  */
-const fileDBPost = async (app_id, table, data, res) =>{
+const fileDBPost = async (app_id, table, data) =>{
     if (app_id!=null){
         /**@type{server_db_file_result_fileFsRead} */
         const file = await fileFsRead(table, true);
         await fileFsWrite(table, file.transaction_id, file.file_content.concat(data))
         .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        
+        return {affectedRows:1};
     }
     else{
-        res.statusCode = 400;
-        throw '⛔';    
+        return {affectedRows:0};
     }
 };
 /**
@@ -475,10 +468,9 @@ const fileDBPost = async (app_id, table, data, res) =>{
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
  * @param {*} data
- * @param {server_server_res|null} res
  * @returns {Promise<*>}
  */
-const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) =>{
+const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
     /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead(table, true);
     let update = false;
@@ -497,11 +489,8 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) 
         .catch((/**@type{server_server_error}*/error)=>{throw error;});
         return {affectedRows:count};
     }
-    else{
-        if(res)
-            res.statusCode = 404;
-        throw '⛔';
-    }
+    else
+        return {affectedRows:0};
 };
 /**
  * Deletes a record in a JSON_TABLE
@@ -512,10 +501,9 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data, res) 
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
- * @param {server_server_res} res
  * @returns {Promise<{affectedRows:number}>}
  */
-const fileDBDelete = async (app_id, table, resource_id, data_app_id, res) =>{
+const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
     /**@type{server_db_file_result_fileFsRead} */
     const file = await fileFsRead(table, true);
     if (file.file_content.filter((/**@type{*}*/row)=>(row.id==resource_id && resource_id!=null)|| (row.app_id == data_app_id && data_app_id != null)).length>0){
@@ -533,12 +521,25 @@ const fileDBDelete = async (app_id, table, resource_id, data_app_id, res) =>{
                                 .filter((/**@type{*}*/row)=>row.id!=resource_id).length
                 };
     }
-    else{
+    else
+        return {affectedRows:0};    
+};
+/**
+ * Displays FILE message for record not found for single resource
+ * @function
+ * @param {server_server_res|null} res
+ * @returns {string}
+ */
+const fileCommonRecordNotFound = (res) => {
+    const message = '?!';
+    if (res){
         res.statusCode = 404;
-        throw '⛔';    
+        res.statusMessage = message;
     }
+    return message;
 };
 
 
 export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
-        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete};
+        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete,
+        fileCommonRecordNotFound};
