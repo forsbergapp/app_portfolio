@@ -6,7 +6,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
  * Get user 
  * @function
@@ -15,8 +15,13 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * @param {server_server_res|null} res
  * @returns {server_db_file_iam_control_observe[]}
  */
-const get = (app_id, resource_id, res) => fileDBGet(app_id, 'IAM_CONTROL_OBSERVE',resource_id, null, res);
-
+const get = (app_id, resource_id, res) =>{
+    const result = fileDBGet(app_id, 'IAM_CONTROL_OBSERVE',resource_id, null);
+    if (result.length>0 || resource_id==null)
+        return result;
+    else
+        throw fileCommonRecordNotFound(res);
+};
 /**
  * Add record
  * @function
@@ -30,17 +35,22 @@ const post = async (app_id, data, res) => {
     if ((data.status==0 ||data.status==1) && data.type){
         const id = Date.now();
         return fileDBPost(app_id, 'IAM_CONTROL_OBSERVE', {  id:id, 
-                                                    app_id:data.app_id,
-                                                    ip:data.ip, 
-                                                    lat:data.lat,
-                                                    lng:data.lng,
-                                                    user_agent:data.user_agent,
-                                                    host:data.host,
-                                                    accept_language:data.accept_language,
-                                                    method:data.method,
-                                                    url:data.url,
-                                                    status:data.status,
-                                                    type:data.type}, res).then(()=>{return {id:id};});
+                                                            app_id:data.app_id,
+                                                            ip:data.ip, 
+                                                            lat:data.lat,
+                                                            lng:data.lng,
+                                                            user_agent:data.user_agent,
+                                                            host:data.host,
+                                                            accept_language:data.accept_language,
+                                                            method:data.method,
+                                                            url:data.url,
+                                                            status:data.status,
+                                                            type:data.type}).then((result)=>{
+            if (result.affectedRows>0)
+                return {id:id};
+            else
+                throw fileCommonRecordNotFound(res);
+        });
     }
     else{
         res.statusCode = 400;
@@ -85,7 +95,12 @@ const update = async (app_id, resource_id, data, res) => {
             data_update.status = data.status;
             //id and type not allowed to update
             if (Object.entries(data_update).length>0)
-                return fileDBUpdate(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null, data_update, res);
+                return fileDBUpdate(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null, data_update).then((result)=>{
+                    if (result.affectedRows>0)
+                        return result;
+                    else
+                        throw fileCommonRecordNotFound(res);
+                });
             else{
                 res.statusCode = 404;
                 throw '⛔';    
@@ -111,7 +126,12 @@ const update = async (app_id, resource_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const deleteRecord = async (app_id, resource_id, res) => {
-    return fileDBDelete(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null, res);
+    return fileDBDelete(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null).then((result)=>{
+        if (result.affectedRows>0)
+            return result;
+        else
+            throw fileCommonRecordNotFound(res);
+    });
 };
                    
 export {get, post, update, deleteRecord};

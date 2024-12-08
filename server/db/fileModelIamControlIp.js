@@ -6,7 +6,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
  * Get user 
  * @function
@@ -15,7 +15,14 @@ const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file:/
  * @param {server_server_res|null} res
  * @returns {server_db_file_iam_control_ip[]}
  */
-const get = (app_id, resource_id, res) => fileDBGet(app_id, 'IAM_CONTROL_IP',resource_id, null, res);
+const get = (app_id, resource_id, res) =>{
+    const result = fileDBGet(app_id, 'IAM_CONTROL_IP',resource_id, null);
+    if (result.length>0 || resource_id==null)
+        return result;
+    else
+        throw fileCommonRecordNotFound(res);
+
+};
 
 /**
  * Add record
@@ -37,7 +44,12 @@ const post = async (app_id, data, res) => {
                                                         hour_to:data.hour_to,
                                                         date_from:data.date_from,
                                                         date_to:data.date_to,
-                                                        action:data.action}, res).then(()=>{return {id:id};});
+                                                        action:data.action}).then((result)=>{
+            if (result.affectedRows>0)
+                return {id:id};
+            else
+                throw fileCommonRecordNotFound(res);
+        });
     }
     else{
         res.statusCode = 400;
@@ -77,7 +89,12 @@ const update = async (app_id, resource_id, data, res) => {
                 data_update.action = data.action;
 
             if (Object.entries(data_update).length==2)
-                return fileDBUpdate(app_id, 'IAM_CONTROL_IP', resource_id, null, data_update, res);
+                return fileDBUpdate(app_id, 'IAM_CONTROL_IP', resource_id, null, data_update).then((result)=>{
+                    if (result.affectedRows>0)
+                        return result;
+                    else
+                        throw fileCommonRecordNotFound(res);
+                });
             else{
                 res.statusCode = 404;
                 throw '⛔';    
@@ -103,7 +120,12 @@ const update = async (app_id, resource_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const deleteRecord = async (app_id, resource_id, res) => {
-    return fileDBDelete(app_id, 'IAM_CONTROL_IP', resource_id, null, res);
+    return fileDBDelete(app_id, 'IAM_CONTROL_IP', resource_id, null).then((result)=>{
+        if (result.affectedRows>0)
+            return result;
+        else
+            throw fileCommonRecordNotFound(res);
+    });
 };
                    
 export {get, post, update, deleteRecord};
