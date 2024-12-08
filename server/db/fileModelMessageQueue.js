@@ -6,22 +6,22 @@
 
 
 /**@type{import('./file.js')} */
-const {fileFsAppend, fileFsReadLog} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileFsDBLogPost, fileFsDBLogGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
  * Get user 
  * @function
  * @param {server_db_file_db_name_message_queue} file
  * @returns {Promise.<*>}
  */
-const get = async file => fileFsReadLog(null, file, null,'');
+const get = async file => fileFsDBLogGet(null, file, null, null,'');
 
 /**
  * Add record
  * @function
  * @param {server_db_file_db_name_message_queue} file
  * @param {*} data
- * @returns {Promise.<null>}
+ * @returns {Promise.<{affectedRows:number}>}
  */
-const post = async (file,data) => fileFsAppend(file,data, '');
+const post = async (file,data) => fileFsDBLogPost(null, file,data, '');
 
 export {get, post};
