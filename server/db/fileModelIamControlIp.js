@@ -73,19 +73,19 @@ const update = async (app_id, resource_id, data, res) => {
     if (ip_record){
         if (data.from && data.to){
             const data_update = {};
-            if (data.from)
+            if (data.from!=null)
                 data_update.from = data.from;
-            if (data.to)
+            if (data.to!=null)
                 data_update.to = data.to;
-            if (data.hour_from)
+            if (data.hour_from!=null)
                 data_update.hour_from = data.hour_from;
-            if (data.hour_to)
+            if (data.hour_to!=null)
                 data_update.hour_to = data.hour_to;
-            if (data.date_from)
+            if (data.date_from!=null)
                 data_update.date_from = data.date_from;
-            if (data.date_to)
+            if (data.date_to!=null)
                 data_update.date_to = data.date_to;
-            if (data.action)
+            if (data.action!=null)
                 data_update.action = data.action;
 
             if (Object.entries(data_update).length==2)

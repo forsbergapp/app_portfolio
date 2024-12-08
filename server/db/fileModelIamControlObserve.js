@@ -74,23 +74,23 @@ const update = async (app_id, resource_id, data, res) => {
     if (ip_record){
         if ((data.status==0 ||data.status==1)){
             const data_update = {};
-            if (data.app_id)
+            if (data.app_id!=null)
                 data_update.app_id = data.app_id;
-            if (data.ip)
+            if (data.ip!=null)
                 data_update.ip = data.ip;
-            if (data.lat)
+            if (data.lat!=null)
                 data_update.lat = data.lat;
-            if (data.lng)
+            if (data.lng!=null)
                 data_update.lng = data.lng;
-            if (data.user_agent)
+            if (data.user_agent!=null)
                 data_update.user_agent = data.user_agent;
-            if (data.host)
+            if (data.host!=null)
                 data_update.host = data.host;
-            if (data.accept_language)
+            if (data.accept_language!=null)
                 data_update.accept_language = data.accept_language;
-            if (data.method)
+            if (data.method!=null)
                 data_update.method = data.method;
-            if (data.url)
+            if (data.url!=null)
                 data_update.url = data.url;
             data_update.status = data.status;
             //id and type not allowed to update

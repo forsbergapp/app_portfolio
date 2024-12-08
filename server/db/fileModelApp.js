@@ -39,17 +39,17 @@ const post = async (app_id, data, res) => {
         const app =     {
             //fetch max app id + 1
             id:Math.max(...fileDBGet(app_id, 'APP',null, null).map((/**@type{server_db_file_app}*/app)=>app.id)) +1,
-            name: data.NAME,
+            name: data.name,
             subdomain: data.subdomain,
-            path: data.PATH,
-            logo: data.LOGO,
-            showparam: data.SHOWPARAM,
-            manifest: data.MANIFEST,
-            js: data.JS,
-            css: data.CSS,
-            css_report: data.CSS_REPORT,
-            favicon_32x32: data.FAVICON_32x32,
-            favicon_192x192: data.FAVICON_192x192,
+            path: data.path,
+            logo: data.logo,
+            showparam: data.showparam,
+            manifest: data.manifest,
+            js: data.js,
+            css: data.css,
+            css_report: data.css_report,
+            favicon_32x32: data.favicon_32x32,
+            favicon_192x192: data.favicon_192x192,
             status: 'ONLINE'
         };
         return fileDBPost(app_id, 'APP', app).then((result)=>{
@@ -78,30 +78,30 @@ const update = async (app_id, resource_id, data, res) => {
         /**@type{server_db_file_app} */
         const data_update = {};
         //allowed parameters to update:
-        if (data.NAME)
-            data_update.name = data.NAME;
-        if (data.subdomain)
+        if (data.name!=null)
+            data_update.name = data.name;
+        if (data.subdomain!=null)
             data_update.subdomain = data.subdomain;
-        if (data.PATH)
-            data_update.path = data.PATH;
-        if (data.LOGO)
-            data_update.logo = data.LOGO;
-        if (data.SHOWPARAM)
-            data_update.showparam = data.SHOWPARAM;
-        if (data.MANIFEST)
-            data_update.manifest = data.MANIFEST;
-        if (data.JS)
-            data_update.js = data.JS;
-        if (data.CSS)
-            data_update.css = data.CSS;
-        if (data.CSS_REPORT)
-            data_update.css_report = data.CSS_REPORT;
-        if (data.FAVICON_32x32)
-            data_update.favicon_32x32 = data.FAVICON_32x32;
-        if (data.FAVICON_192x192)
-            data_update.favicon_192x192 = data.FAVICON_192x192;
-        if (data.STATUS)
-            data_update.status = data.STATUS;
+        if (data.path!=null)
+            data_update.path = data.path;
+        if (data.logo!=null)
+            data_update.logo = data.logo;
+        if (data.showparam!=null)
+            data_update.showparam = data.showparam;
+        if (data.manifest!=null)
+            data_update.manifest = data.manifest;
+        if (data.js!=null)
+            data_update.js = data.js;
+        if (data.css!=null)
+            data_update.css = data.css;
+        if (data.css_report!=null)
+            data_update.css_report = data.css_report;
+        if (data.favicon_32x32!=null)
+            data_update.favicon_32x32 = data.favicon_32x32;
+        if (data.favicon_192x192!=null)
+            data_update.favicon_192x192 = data.favicon_192x192;
+        if (data.status!=null)
+            data_update.status = data.status;
         if (Object.entries(data_update).length>0)
             return fileDBUpdate(app_id, 'APP', resource_id, null, data_update).then((result)=>{
                 if (result.affectedRows>0)

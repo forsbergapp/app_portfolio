@@ -109,15 +109,15 @@ const postResult = async (app_id, id, result) =>{
 const update = async (app_id, resource_id, data, res) => {
     const data_update = {};
     //allowed parameters to update:
-    if (data.start)
+    if (data.start!=null)
         data_update.start = data.start;
-    if (data.end)
+    if (data.end!=null)
         data_update.end = data.end;
-    if (data.progress)
+    if (data.progress!=null)
         data_update.progress = data.progress;
-    if (data.status)
+    if (data.status!=null)
         data_update.status = data.status;
-    if (data.message)
+    if (data.message!=null)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
         return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, null, data_update).then((result)=>{

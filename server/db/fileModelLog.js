@@ -10,7 +10,7 @@
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 /**@type{import('./file.js')} */
-const {fileFsReadLog, fileFsDir, fileFsAppend} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileFsDBLogGet, fileFsDir, fileFsDBLogPost} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**
  * Log date format
@@ -30,7 +30,7 @@ const logDate = () => new Date().toISOString();
  const post = async (logscope, loglevel, log) => {
     return await new Promise(resolve => {
         const config_file_interval = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL');
-        fileFsAppend(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
+        fileFsDBLogPost(null, `LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
         .catch((/**@type{server_server_error}*/error)=>{
             console.log(error);
@@ -446,7 +446,7 @@ const get = async (app_id, query) => {
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         
-        fileFsReadLog(app_id, file, null, sample)
+        fileFsDBLogGet(app_id, file, null, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
@@ -600,7 +600,7 @@ const getStat = async (app_id, query) => {
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await fileFsReadLog(app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, sample)
+            await fileFsDBLogGet(app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
             .then((logs)=>{
                 logs.forEach((/**@type{server_db_file_log_request|''}*/record) => {
                     if (record != ''){
