@@ -33,7 +33,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -44,7 +43,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -55,7 +53,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -116,6 +113,18 @@
 <pk>true</pk>
 <usedAttributes>
 <attributeRef>D6D5957D-46E8-EE76-EE43-CFC769D2009A</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="C0F8519C-EE21-296B-7975-8F2DD63F79EB" name="IAM_APP_TOKEN_UK">
+<createdBy>admin</createdBy>
+<createdTime>2024-12-08 22:56:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>5FBFE8F1-3A05-414A-44BB-6F2B0F881E0D</newElementsIDs>
+<usedAttributes>
+<attributeRef>5FBFE8F1-3A05-414A-44BB-6F2B0F881E0D</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

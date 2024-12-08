@@ -340,6 +340,11 @@
 <colorRGB>-16776961</colorRGB>
 <foTypeID>7</foTypeID>
 </FontObject>
+<FontObject>
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+<foTypeID>9</foTypeID>
+</FontObject>
 </fonts>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.TVNote" oid="28D2EC76-ABDD-5B30-6058-2C2AB16A0ACD" otype="Note" vid="9901FCDD-4E20-E16D-6A81-5A262000824C">
@@ -1528,6 +1533,11 @@
 <foType>PK Element</foType>
 <colorRGB>-16776961</colorRGB>
 <foTypeID>7</foTypeID>
+</FontObject>
+<FontObject>
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+<foTypeID>9</foTypeID>
 </FontObject>
 </fonts>
 </OView>

@@ -640,7 +640,8 @@
  *		        ua:             string|null,
  *		        long:           string|null,
  *		        lat:            string|null,
- *		        created:        string}} server_db_file_iam_user_login
+ *		        created:        string,
+ *              modified?:      string}} server_db_file_iam_user_login
  */
 
  /**
