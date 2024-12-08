@@ -71,7 +71,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id" id="55241260-742A-9E3C-32BD-106E969AB732">
+<Attribute name="app_id" id="55241260-742A-9E3C-32BD-106E969AB732">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 23:08:40 UTC</createdTime>
 <generatorID>95556E49-8138-A9B2-881C-BC345FEC67CB</generatorID>
