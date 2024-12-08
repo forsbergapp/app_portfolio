@@ -6,7 +6,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCommonRecordNotFound, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
  * Get records for given appid
  * @function
@@ -14,7 +14,13 @@ const {fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.c
  * @param {server_server_res|null} res
  * @returns {server_db_file_app_parameter[]}
  */
-const get = (app_id, res) => fileDBGet(app_id, 'APP_PARAMETER',null, app_id, res);
+const get = (app_id, res) =>{
+    const result = fileDBGet(app_id, 'APP_PARAMETER',null, app_id);
+    if (result.length>0)
+        return result;
+    else
+        throw fileCommonRecordNotFound(res);
+};
 
 /**
  * Add record
@@ -45,8 +51,13 @@ const update = async (app_id, resource_id, data, res) => {
     }
     else{
         //updates only one key in the record
-        return fileDBUpdate(app_id, 'APP_PARAMETER', null, resource_id, {[data.parameter_name]:{    value:data.parameter_value, 
-                                                                                                    comment:data.parameter_comment}}, res);
+        return fileDBUpdate(app_id, 'APP_PARAMETER', null, resource_id, {[data.parameter_name]:{value:data.parameter_value, 
+                                                                                                comment:data.parameter_comment}}).then((result)=>{
+            if (result.affectedRows>0)
+                return result;
+            else
+                throw fileCommonRecordNotFound(res);
+        });
     }
 };
 
@@ -59,7 +70,12 @@ const update = async (app_id, resource_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const deleteRecord = async (app_id, resource_id, res) => {
-    return fileDBDelete(app_id, 'APP_PARAMETER', null, resource_id, res);
+    return fileDBDelete(app_id, 'APP_PARAMETER', null, resource_id).then((result)=>{
+        if (result.affectedRows>0)
+            return result;
+        else
+            throw fileCommonRecordNotFound(res);
+    });
 };
                    
 export {get, post, update, deleteRecord};

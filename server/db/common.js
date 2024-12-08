@@ -94,12 +94,13 @@ const dbCommonAppCodeGet = error => {
 	});
 };
 
-/**
- * Displays message for record not found
+/** 
+ * Displays DB message for record not found for single resource DB
  * @function
  * @param {number} app_id 
  * @param {string} lang_code
  * @param {server_server_res} res
+ * @returns {Promise.<string>}
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
@@ -113,7 +114,6 @@ const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 			});
 		});
 	});
-	
 };
 /**
  * Get locale part
