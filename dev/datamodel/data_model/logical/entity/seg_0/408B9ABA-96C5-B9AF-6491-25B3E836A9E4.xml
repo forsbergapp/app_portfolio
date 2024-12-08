@@ -60,7 +60,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="id" id="19D63DD5-A5AC-0766-8C12-9455AD98CCED">
+<Attribute name="app_id" id="19D63DD5-A5AC-0766-8C12-9455AD98CCED">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 23:08:40 UTC</createdTime>
 <generatorID>3A2D2A1F-81F8-5EED-E885-B393157FF2E2</generatorID>
