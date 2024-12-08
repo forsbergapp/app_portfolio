@@ -69,15 +69,15 @@ const update = async (app_id, resource_id, data, res) => {
     /**@type{server_db_file_app_module} */
     const data_update = {};
     //allowed parameters to update:
-    if (data.common_type)
+    if (data.common_type!=null)
         data_update.common_type = data.common_type;
-    if (data.common_name)
+    if (data.common_name!=null)
         data_update.common_name = data.common_name;
-    if (data.common_role)
+    if (data.common_role!=null)
         data_update.common_role = data.common_role;
-    if (data.common_path)
+    if (data.common_path!=null)
         data_update.common_path = data.common_path;
-    if (data.common_description)
+    if (data.common_description!=null)
         data_update.common_description = data.common_description;
     if (Object.entries(data_update).length>0)
         return fileDBUpdate(app_id, 'APP_MODULE', resource_id, null, data_update).then((result)=>{

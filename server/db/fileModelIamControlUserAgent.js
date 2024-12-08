@@ -33,7 +33,7 @@ const get = (app_id, resource_id, res) =>{
  */
 const post = async (app_id, data, res) => {
     //check required attributes
-    if (data.name && data.user_agent){
+    if (data.name!=null && data.user_agent!=null){
         const id = Date.now();
         return fileDBPost(app_id, 'IAM_CONTROL_USER_AGENT', {id:id, name:data.name, user_agent:data.user_agent}).then((result)=>{
             if (result.affectedRows>0)
@@ -62,7 +62,7 @@ const update = async (app_id, resource_id, data, res) => {
     /**@type{server_db_file_iam_control_user_agent}*/
     const record = get(app_id, resource_id, null)[0];
     if (record){
-        if (data.name && data.user_agent){
+        if (data.name!=null && data.user_agent!=null){
             const data_update = {};
             data_update.name = data.name;
             data_update.user_agent = data.user_agent;

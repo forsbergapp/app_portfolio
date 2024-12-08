@@ -88,18 +88,18 @@ const update = async (app_id, resource_id, data, res) => {
             /**@type{server_db_file_iam_user} */
             const data_update = {};
             //allowed parameters to update:
-            if (data.username)
+            if (data.username!=null)
                 data_update.username = data.username;
-            if (data.password){
+            if (data.password!=null){
                 data_update.password = await securityPasswordCreate(data.password_new ?? data.password);
             }
-            if (data.bio)
+            if (data.bio!=null)
                 data_update.bio = data.bio;
-            if (data.email)
+            if (data.email!=null)
                 data_update.email = data.email;
-            if (data.email_unverified)
+            if (data.email_unverified!=null)
                 data_update.email_unverified = data.email_unverified;
-            if (data.avatar)
+            if (data.avatar!=null)
                 data_update.avatar = data.avatar;
             data_update.modified = new Date().toISOString();
 

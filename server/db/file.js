@@ -31,9 +31,9 @@
  *                                  fileTransactionCommit   empties TRANSACTION_ID, TRANSACTION_CONTENT and sets LOCK =0
  *                                  fileTransactionRollback empties TRANSACTION_ID, TRANSACTION_CONTENT and sets LOCK =0
  *  JSON_LOG        json records, comma separated
- *                  uses fileFsReadLog and fileFsAppend
+ *                  uses fileFsDBLogGet and fileFsDBLogPost
  *  JSON_LOG_DATE   json record, comma separateed with file name suffixes
- *                  uses fileFsReadLog, fileFsAppend and fileSuffix
+ *                  uses fileFsLogGet, fileFsDBLogPost and fileSuffix
  *  BINARY          used by sqLite database and fileModel*.js file not implemented
  *  Admin can also use fileFsWriteAdmin and fileFsDeleteAdmin without transaction if needed
  * 
@@ -223,22 +223,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * @returns {*}
  */
  const fileCache = file => JSON.parse(JSON.stringify(fileRecord(file).CACHE_CONTENT));
- /**
- * Get log file with given suffix or none or use sample to get specific suffix
- * for statistics
- * @function
- * @param {number|null} app_id
- * @param {server_db_file_db_name} file 
- * @param {string|null} filesuffix 
- * @param {string|null} sample
- * @returns {Promise.<*>}
- */
- const fileFsReadLog = async (app_id, file, filesuffix=null, sample=null) =>{
-    
-    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, sample)}`;
-    const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');
-    return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row));
-};
+
 /**
  * Get files from directory
  * @function
@@ -290,7 +275,7 @@ const fileFsRead = async (file, lock=false) =>{
  };
 /**
  * 
- * Updates config files
+ * Writes file
  * Must specify valid transaction id given from fileFsRead()
  * to be able to update a file
  * Backup of old file will be written to backup directory
@@ -330,32 +315,6 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
     }
 };
 
-/**
- * Append log to file
- * @function
- * @param {server_db_file_db_name} file
- * @param {object} file_content 
- * @param {string|null} filesuffix
- * @returns {Promise.<null>}
- */
-const fileFsAppend = async (file, file_content, filesuffix = null) =>{
-    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
-    const transaction_id = await fileTransactionStart(file, filepath);
-    
-    return await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
-    .then(()=>{
-        if (fileTransactionCommit(file, transaction_id))
-            return null;
-        else
-            throw ('⛔');
-    })
-    .catch((error)=>{
-        if (fileTransactionRollback(file, transaction_id))
-            throw(error);
-        else
-            throw('⛔ ' + error);
-    });
-};
 /**
  * Created directories and should be used only when server is started first time
  * @function
@@ -412,6 +371,92 @@ const fileFsDeleteAdmin = async file => {
     const filepath = process.cwd() + fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
     await fs.promises.rm(filepath).catch((error=>{throw error;}));
 };
+
+ /**
+ * Get log file with given suffix or none or use sample to get specific suffix
+ * for statistics
+ * Filters for given resource_id if requested
+ * @function
+ * @param {number|null} app_id
+ * @param {server_db_file_db_name} file
+ * @param {number|null} resource_id
+ * @param {string|null} filesuffix 
+ * @param {string|null} sample
+ * @returns {Promise.<*>}
+ */
+ const fileFsDBLogGet = async (app_id, file, resource_id, filesuffix=null, sample=null) =>{
+    
+    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, sample)}`;
+    const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');
+    return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id));
+};
+/**
+ * Create log record with given suffix or none
+ * @function
+ * @param {number|null} app_id
+ * @param {server_db_file_db_name} file
+ * @param {object} file_content 
+ * @param {string|null} filesuffix
+ * @returns {Promise.<{affectedRows:number}>}
+ */
+const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>{
+    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
+    const transaction_id = await fileTransactionStart(file, filepath);
+    
+    return await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+    .then(()=>{
+        if (fileTransactionCommit(file, transaction_id))
+            return {affectedRows:1};
+        else
+            throw ('⛔');
+    })
+    .catch((error)=>{
+        if (fileTransactionRollback(file, transaction_id))
+            throw(error);
+        else
+            throw('⛔ ' + error);
+    });
+};
+/**
+ * Update log record with given suffix or none
+ * @function
+ * @param {number} app_id
+ * @param {server_db_file_db_name} file
+ * @param {number|null} resource_id
+ * @param {*} data
+ * @param {string|null} filesuffix
+ * @returns {Promise.<{affectedRows:number}>}
+ */
+const fileFsDBLogUpdate = async (app_id, file, resource_id, data, filesuffix = null) =>{
+    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
+    const transaction_id = await fileTransactionStart(file, filepath);
+    const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8')
+                                .then((result=>
+                                            result.toString()
+                                            .split('\r\n')
+                                            .filter(row=>row !='')
+                                            .map(row=>row = JSON.parse(row))));
+
+    let update = false;
+    let count = 0;
+    for (const index in file_content)
+        if (file_content[index].id==resource_id && resource_id!=null){
+            count++;
+            //update columns requested
+            for (const key of Object.entries(data)){
+                update = true;
+                file_content[index][key[0]] = key[1];
+            }
+        }    
+    if (update){
+        await fileFsWrite(file, transaction_id, file_content)
+            .catch((/**@type{server_server_error}*/error)=>{throw error;});
+            return {affectedRows:count};
+    }
+    else
+        return {affectedRows:0};
+};
+
 /**
  * Gets a record or records in a JSON_TABLE
  * for given app id and if resource id if specified
@@ -540,6 +585,7 @@ const fileCommonRecordNotFound = (res) => {
 };
 
 
-export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsReadLog, fileFsCacheSet, fileFsWrite, fileFsAppend, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
+export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsCacheSet, fileFsWrite, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
+        fileFsDBLogGet, fileFsDBLogPost, fileFsDBLogUpdate,
         fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete,
         fileCommonRecordNotFound};
