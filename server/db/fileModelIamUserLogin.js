@@ -86,7 +86,8 @@ const update = async (app_id, resource_id, data) =>{
         //check allowed attributes to update
         if (data.res!=null)
             data_update.res = data.res;
-        if (Object.entries(data_update).length>0){
+        data_update.modified = data.modified;
+        if (Object.entries(data_update).length>1){
             const result = await fileFsDBLogUpdate(app_id, 'IAM_USER_LOGIN',resource_id, data);
             if (result.affectedRows>0)
                 return result;
