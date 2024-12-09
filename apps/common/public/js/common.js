@@ -975,7 +975,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                                 commonMessageShow:commonMessageShow,
                                 commonFormatJsonDate:commonFormatJsonDate
                                 },
-                    path:'/common/component/common_dialogue_iam_password.js'});
+                    path:'/common/component/common_dialogue_iam_password_new.js'});
                 break;
             }
         case 'VERIFY':
@@ -2132,7 +2132,7 @@ const commonUserForgot = async () => {
  * @returns {void}
  */
 const commonUserUpdatePassword = () => {
-    const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new').textContent;
+    const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_password').textContent;
     const user_password_new_auth = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_auth').textContent;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
@@ -2140,7 +2140,7 @@ const commonUserUpdatePassword = () => {
                      };
     if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                      {
-                     password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new'),
+                     password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_password'),
                      password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_confirm'),
                      
                      })==true){

@@ -282,7 +282,7 @@ const fileFsRead = async (file, lock=false) =>{
  * @function
  * @param {server_db_file_db_name} file 
  * @param {number|null} transaction_id 
- * @param {object} file_content 
+ * @param {[]} file_content 
  * @returns {Promise.<string|null>}
  */
 const fileFsWrite = async (file, transaction_id, file_content) =>{
@@ -293,12 +293,13 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
         const filepath_backup = fileRecord(file).PATH + 'backup/' + fileRecord(file).FILENAME;
         //write backup of old config file
         await fs.promises.writeFile(process.cwd() + `${filepath_backup}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                    JSON.stringify(fileRecord(file).TRANSACTION_CONTENT, undefined, 2),  
+                                    JSON.stringify(fileRecord(file).TRANSACTION_CONTENT),  
                                     'utf8');
         //write new file content
-        return await fs.promises.writeFile(process.cwd() + filepath, 
-                                    JSON.stringify(file_content, undefined, 2),  
-                                    'utf8')
+        return await fs.promises.writeFile( process.cwd() + filepath, 
+                                            //save records in new row and compact format
+                                            '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]',  
+                                            'utf8')
         .then(()=>{
             fileRecord(file).CACHE_CONTENT = file_content;
             if (fileTransactionCommit(file, transaction_id))
@@ -417,46 +418,6 @@ const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>
             throw('⛔ ' + error);
     });
 };
-/**
- * Update log record with given suffix or none
- * @function
- * @param {number} app_id
- * @param {server_db_file_db_name} file
- * @param {number|null} resource_id
- * @param {*} data
- * @param {string|null} filesuffix
- * @returns {Promise.<{affectedRows:number}>}
- */
-const fileFsDBLogUpdate = async (app_id, file, resource_id, data, filesuffix = null) =>{
-    const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
-    const transaction_id = await fileTransactionStart(file, filepath);
-    const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8')
-                                .then((result=>
-                                            result.toString()
-                                            .split('\r\n')
-                                            .filter(row=>row !='')
-                                            .map(row=>row = JSON.parse(row))));
-
-    let update = false;
-    let count = 0;
-    for (const index in file_content)
-        if (file_content[index].id==resource_id && resource_id!=null){
-            count++;
-            //update columns requested
-            for (const key of Object.entries(data)){
-                update = true;
-                file_content[index][key[0]] = key[1];
-            }
-        }    
-    if (update){
-        await fileFsWrite(file, transaction_id, file_content)
-            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-            return {affectedRows:count};
-    }
-    else
-        return {affectedRows:0};
-};
-
 /**
  * Gets a record or records in a JSON_TABLE
  * for given app id and if resource id if specified
@@ -586,6 +547,6 @@ const fileCommonRecordNotFound = (res) => {
 
 
 export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsCacheSet, fileFsWrite, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
-        fileFsDBLogGet, fileFsDBLogPost, fileFsDBLogUpdate,
+        fileFsDBLogGet, fileFsDBLogPost,
         fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete,
         fileCommonRecordNotFound};
