@@ -14,8 +14,8 @@
 const template = props =>`  <div id='common_dialogue_iam_password_new_icon' class='common_icon'></div>
                             <div id='common_dialogue_iam_password_new_auth'>${props.auth}</div>
                             <div class='common_password_container'>
-                                <div id='common_dialogue_iam_password_new' contentEditable='true' class='common_password_new_input common_input common_password common_placeholder'></div>
-                                <div id='common_dialogue_iam_password_new_mask' class='common_input common_password_mask'/></div>
+                                <div id='common_dialogue_iam_password_new_password' contentEditable='true' class='common_password_new_input common_input common_password common_placeholder'></div>
+                                <div id='common_dialogue_iam_password_new_password_mask' class='common_input common_password_mask'/></div>
                             </div>
                             <div class='common_password_container'>
                                 <div id='common_dialogue_iam_password_new_confirm' contentEditable='true' class='common_password_new_input common_input common_password common_placeholder'></div>

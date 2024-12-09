@@ -816,8 +816,8 @@ body.rtl{
 #common_dialogue_iam_password_new_auth{
 	display: none;
 }
-#common_dialogue_iam_password_new,
-#common_dialogue_iam_password_new_mask,
+#common_dialogue_iam_password_new_password,
+#common_dialogue_iam_password_new_password_mask,
 #common_dialogue_iam_password_new_confirm,
 #common_dialogue_iam_password_new_confirm_mask{
 	margin-top: 10px;
@@ -1599,7 +1599,6 @@ body.rtl{
 	text-align: start;
 	display: inline-block;
   	width: 100%;
-}
 }
 .common_module_leaflet_search_list_col{
 	display:block;
