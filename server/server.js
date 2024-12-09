@@ -1350,17 +1350,9 @@ const serverUtilAppLine = () =>{
                                                             routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/server-iam-logout', method:'POST'}):{
-                    resolve(socket.socketConnectedUpdate(routesparameters.app_id, 
-                            {   iam:routesparameters.res.req.query.iam,
-                                user_account_id:null,
-                                admin:null,
-                                token_access:null,
-                                token_admin:null,
-                                ip:routesparameters.ip,
-                                headers_user_agent:routesparameters.user_agent,
-                                headers_accept_language:routesparameters.accept_language,
-                                res: routesparameters.res}));
+                case route({url:'/bff/app_access/v1/server-iam-logout', method:'DELETE'}):
+                case route({url:'/bff/admin/v1/server-iam-logout', method:'DELETE'}):{
+                    resolve(iam_service.iamUserLogout(routesparameters.app_id, routesparameters.authorization, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.res));
                     break;
                 }
                 //microservice routes
