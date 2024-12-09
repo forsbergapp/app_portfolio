@@ -29,7 +29,6 @@ const post = async (app_id, data) =>{
         data.app_id != null &&
         data.user != null &&
         data.res != null &&
-        data.token != null &&
         data.ip != null){
         //security check that token is not used already
         if (fileDBGet(app_id, 'IAM_USER_LOGIN', null, null).filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token).length==0){
@@ -41,9 +40,10 @@ const post = async (app_id, data) =>{
             data_new.app_id = data.app_id;
             data_new.user = data.user;
             data_new.res = data.res;
-            data_new.token = data.token;
             data_new.ip = data.ip;
             //optional
+            if (data.token!=null)
+                data_new.token = data.token;
             if (data.db!=null)
                 data_new.db = data.db;    
             if (data.ua!=null)
