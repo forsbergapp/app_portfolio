@@ -93,6 +93,27 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
             return false;
     }
 };
+
+/**
+ * IAM util token expired set
+ * @function
+ * @param {number} app_id
+ * @param {string} authorization
+ * @param {string} ip
+ * @param {server_server_res} res
+ * @returns {Promise.<void>}
+ */
+const iamUtilTokenExpiredSet = async (app_id, authorization, ip, res ) =>{
+    const token = authorization?.split(' ')[1] ?? '';
+    const iam_user_login_row = await fileModelIamUserLogin.get(app_id,null).then(result=>result.filter(row=>row.token==token &&row.ip == ip)[0]);
+    if (iam_user_login_row){
+        //set token expired
+        await fileModelIamUserLogin.update(app_id, iam_user_login_row.id, {res:2});
+    }
+    else
+        throw iamUtilResponseNotAuthorized(res, 401, 'iamUtilTokenExpiredSet', true);
+};
+
 /**
  * IAM util response not authorized
  * @function
@@ -1169,14 +1190,17 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 next();
                             }
                             else
-                                iamUtilResponseNotAuthorized(res, 403, 'iamAuthenticateUserCommon, user login disabled');
+                                iamUtilResponseNotAuthorized(res, 403, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
+                        case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '');
+                            const access_token_decoded = jwt.verify(access_token, scope=='ADMIN'?
+                                                                                    fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '':
+                                                                                    fileModelAppSecret.get(app_id_host, res)[0].common_app_access_secret ?? '');
                             /**@type{server_db_file_iam_user_login[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
@@ -1185,7 +1209,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 await fileModelIamUserLogin.get(app_id_host, null)
                                 .then(result=>{
                                     /**@type{server_db_file_iam_user_login}*/
-                                    const iam_admin_login = result.filter((/**@type{server_db_file_iam_user_login}*/row)=>
+                                    const iam_user_login = result.filter((/**@type{server_db_file_iam_user_login}*/row)=>
                                                                             row.iam_user_id == access_token_decoded.id && 
                                                                             row.app_id      == app_id_host &&
                                                                             row.user        == access_token_decoded.name && 
@@ -1193,7 +1217,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                                                             row.ip          == ip &&
                                                                             row.token       == access_token
                                                                         )[0];
-                                    if (iam_admin_login)
+                                    if (iam_user_login)
                                         next();
                                     else
                                     iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
@@ -1206,52 +1230,21 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             next();
                             break;
                         }
-                        case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
-                            //authenticate access token
-                            const access_token = authorization?.split(' ')[1] ?? '';
-                            /**@type{{app_id:number, id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, fileModelAppSecret.get(app_id_host, res)[0].common_app_access_secret ?? '');
-                            const iam_user_id = serverUtilNumberValue(iamUtilDecode(iam).get('iam_user_id'));
-                            if (access_token_decoded.app_id == app_id_host && 
-                                access_token_decoded.scope == 'USER' && 
-                                access_token_decoded.ip == ip &&
-                                access_token_decoded.id == iam_user_id )
-                                //check access token belongs to user_account.id, app_id and ip saved when logged in
-                                //and if app_id=0 then check user is admin
-                                await fileModelIamUserLogin.get(app_id_host, null)
-                                .then(result=>{
-                                    /**@type{server_db_file_iam_user_login}*/
-                                    const iam_user_login = result.filter((/**@type{server_db_file_iam_user_login}*/row)=>
-                                                                            row.iam_user_id == iam_user_id && 
-                                                                            row.res         == 1 &&
-                                                                            row.app_id      == app_id_host &&
-                                                                            row.token       == access_token &&
-                                                                            row.ip          == ip
-                                                                        )[0];
-                                    if (iam_user_login)
-                                        next();
-                                    else
-                                        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, no record APP_ACCESS');
-                                });
-                            else
-                                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, token claim error');
-                            break;
-                        }
                         default:{
-                            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, scope error or wrong app or wrong header authorization');
+                            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
                     }
                 }
             }
             else
-                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, not IAM or no authorization');
+                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
         } catch (error) {
-            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, token error');
+            iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
         }
     }
     else
-        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon, not IAM or no authorization');
+        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
 };
 
 /**
@@ -1768,7 +1761,7 @@ const iamUserGetLastLogin = async (app_id, id) =>fileModelIamUserLogin.get(app_i
                                                     .catch(()=>null);
 
 /**
- * User udpate
+ * User update
  * @function
  * @param {number} app_id
  * @param {number} id
@@ -1794,6 +1787,39 @@ const iamUserUpdate = async (app_id, id, data, res) =>{
 
     
 };
+
+/**
+ * User logout
+ * @function
+ * @param {number} app_id
+ * @param {string} authorization
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {server_server_res} res
+ * @returns {Promise.<void>}
+ */
+
+const iamUserLogout = async (app_id, authorization, ip, user_agent, accept_language, res) =>{
+    /**@type{import('./socket.js')} */
+    const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+    
+    //set token expired
+    await iamUtilTokenExpiredSet(app_id, authorization, ip, res);
+    
+    //remove token
+    socketConnectedUpdate(app_id, 
+        {   iam:res.req.query.iam,
+            user_account_id:null,
+            admin:null,
+            token_access:null,
+            token_admin:null,
+            ip:ip,
+            headers_user_agent:user_agent,
+            headers_accept_language:accept_language,
+            res: res});
+};
+
 export{ iamUtilDecode,
         iamUtilTokenExpired,
         iamUtilResponseNotAuthorized,
@@ -1817,4 +1843,5 @@ export{ iamUtilDecode,
         iamUserCreate,
         iamUserGet,
         iamUserGetLastLogin,
-        iamUserUpdate}; 
+        iamUserUpdate,
+        iamUserLogout}; 

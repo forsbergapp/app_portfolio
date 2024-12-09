@@ -5,7 +5,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileCommonRecordNotFound, fileFsDBLogPost, fileFsDBLogGet, fileFsDBLogUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCommonRecordNotFound, fileDBPost, fileDBGet, fileDBUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
  * Get user 
  * @function
@@ -13,7 +13,7 @@ const {fileCommonRecordNotFound, fileFsDBLogPost, fileFsDBLogGet, fileFsDBLogUpd
  * @param {number|null} resource_id
  * @returns {Promise.<server_db_file_iam_user_login[]>}
  */
-const get = async (app_id, resource_id) => fileFsDBLogGet(app_id, 'IAM_USER_LOGIN', resource_id, null,'');
+const get = async (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resource_id, null);
 
 /**
  * Add record
@@ -32,7 +32,7 @@ const post = async (app_id, data) =>{
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (await fileFsDBLogGet(app_id, 'IAM_USER_LOGIN', null, null,'').then(result=>result.filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token).length==0)){
+        if (fileDBGet(app_id, 'IAM_USER_LOGIN', null, null).filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token).length==0){
             /**@type{server_db_file_iam_user_login} */
             const data_new = {};
             data_new.id =  Date.now();
@@ -53,7 +53,7 @@ const post = async (app_id, data) =>{
             if (data.lat!=null)
                 data_new.lat = data.lat;
             data_new.created = new Date().toISOString();
-            return fileFsDBLogPost(app_id, 'IAM_USER_LOGIN',data_new, '').then((result)=>{
+            return fileDBPost(app_id, 'IAM_USER_LOGIN',data_new).then((result)=>{
                 if (result.affectedRows>0)
                     return result;
                 else
@@ -88,7 +88,7 @@ const update = async (app_id, resource_id, data) =>{
             data_update.res = data.res;
         data_update.modified = data.modified;
         if (Object.entries(data_update).length>1){
-            const result = await fileFsDBLogUpdate(app_id, 'IAM_USER_LOGIN',resource_id, data);
+            const result = await fileDBUpdate(app_id, 'IAM_USER_LOGIN',resource_id, null, data);
             if (result.affectedRows>0)
                 return result;
             else

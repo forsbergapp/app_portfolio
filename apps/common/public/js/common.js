@@ -1720,7 +1720,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
  */
 const commonUserLogout = async () => {
     commonComponentRemove('common_dialogue_user_menu');
-    await commonFFB({path:'/server-iam-logout', method:'POST', authorization_type:'APP_DATA'})
+    await commonFFB({path:'/server-iam-logout', method:'DELETE', authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?'ADMIN':'APP_ACCESS'})
     .then(()=>{
         if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
