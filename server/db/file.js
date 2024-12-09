@@ -297,8 +297,12 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
                                     'utf8');
         //write new file content
         return await fs.promises.writeFile( process.cwd() + filepath, 
+                                            fileRecord(file).TYPE=='JSON_TABLE'?
                                             //save records in new row and compact format
-                                            '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]',  
+                                            '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
+                                                //JSON, convert to string
+                                                JSON.stringify(file_content, undefined, 2)
+                                            ,  
                                             'utf8')
         .then(()=>{
             fileRecord(file).CACHE_CONTENT = file_content;
