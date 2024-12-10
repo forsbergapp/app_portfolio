@@ -22,25 +22,31 @@ const commonPath ='/common/js/common.js';
 const common = await import(commonPath);
 
 const APP_GLOBAL = {
-                    'docs':[{'id':1,
-                            'doc_title':'Arquitecture Diagram',
-                            'doc_type':'IMAGE',
-                            'doc_url':'/common/documents/arquitecture.webp',
-                            'doc_image':'/common/documents/arquitecture.webp',
-                            'doc_image_small':'/common/documents/arquitecture_small.webp'},
-                            {'id':2,
-                            'doc_title':'Data Model',
-                            'doc_type':'IMAGE',
-                            'doc_url':'/common/documents/data_model.webp',
-                            'doc_image':'/common/documents/data_model.webp',
-                            'doc_image_small':'/common/documents/data_model_small.webp'},
-                            {'id':3,
-                            'doc_title':'Documentation',
-                            'doc_type':'URL',
-                            'doc_url':'/info/doc',
-                            'doc_image':null,
-                            'doc_image_small':null}
-                            ]
+    'docs':[{'id':1,
+            'doc_title':'Arquitecture Diagram',
+            'doc_type':'IMAGE',
+            'doc_url':'/common/documents/arquitecture.webp',
+            'doc_image':'/common/documents/arquitecture.webp',
+            'doc_image_small':'/common/documents/arquitecture_small.webp'},
+            {'id':2,
+                'doc_title':'Infrastructure as Code Diagram',
+                'doc_type':'IMAGE',
+                'doc_url':'/common/documents/iac.webp',
+                'doc_image':'/common/documents/iac.webp',
+                'doc_image_small':'/common/documents/iac_small.webp'},
+            {'id':3,
+            'doc_title':'Data Model',
+            'doc_type':'IMAGE',
+            'doc_url':'/common/documents/data_model.webp',
+            'doc_image':'/common/documents/data_model.webp',
+            'doc_image_small':'/common/documents/data_model_small.webp'},
+            {'id':4,
+            'doc_title':'Documentation',
+            'doc_type':'URL',
+            'doc_url':'/info/doc',
+            'doc_image':null,
+            'doc_image_small':null}
+            ]
 };
 Object.seal(APP_GLOBAL);
 /**
