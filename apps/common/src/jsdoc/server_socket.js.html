@@ -98,7 +98,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
  * Socket client connect
  * Used by EventSource and leaves connection open
  * @function
- * @param {server_server_res} res
+  * @param {server_server_res} res
  * @returns {void}
  */
  const socketClientConnect = (res) => {
@@ -135,7 +135,9 @@ const socketClientAdd = (newClient) => {
  * @param {number} app_id,
  * @param {{iam:string,
  *          user_account_id:number|null,
- *          admin:string|null,
+ *          iam_user_id:number|null,
+ *          iam_user_username:string|null,
+ *          iam_user_type:'ADMIN'|'USER'|null,
  *          token_access:string|null,
  *          token_admin:string|null,
  *          ip:string,
@@ -163,7 +165,9 @@ const socketClientAdd = (newClient) => {
                 connected.user_account_id = parameters.user_account_id;
                 connected.token_access = parameters.token_access;
                 connected.identity_provider_id = connectUserData.identity_provider_id;
-                connected.admin = parameters.admin ?? '';
+                connected.iam_user_id = parameters.iam_user_id;
+                connected.iam_user_username = parameters.iam_user_username;
+                connected.iam_user_type = parameters.iam_user_type;
                 connected.token_admin = parameters.token_admin;
                 connected.gps_latitude = connectUserData.latitude;
                 connected.gps_longitude = connectUserData.longitude;
@@ -269,9 +273,11 @@ const socketClientAdd = (newClient) => {
             return {id:                     client.id,
                     app_id:                 client.app_id, 
                     authorization_bearer:   client.authorization_bearer,
+                    iam_user_id:            client.iam_user_id,
+                    iam_user_username:      client.iam_user_username,
+                    iam_user_type:          client.iam_user_type,
                     user_account_id:        client.user_account_id,
                     identity_provider_id:   client.identity_provider_id,
-                    admin:                  client.admin,
                     connection_date:        client.connection_date,
                     gps_latitude:           client.gps_latitude ?? '',
                     gps_longitude:          client.gps_longitude ?? '',
@@ -361,12 +367,12 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
                                                         connected.user_account_id != null)||
                                                         (identity_provider_id ==null &amp;&amp;
                                                         connected.identity_provider_id ==null &amp;&amp;
-                                                        (connected.user_account_id != null ||connected.admin != ''))).length};
+                                                        (connected.user_account_id != null ||connected.iam_user_id != null))).length};
     else
         return {count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &amp;&amp;
                                                     connected.identity_provider_id ==null &amp;&amp;
                                                     connected.user_account_id ==null &amp;&amp;
-                                                    connected.admin == '').length};
+                                                    connected.iam_user_id == null).length};
 };
 
 /**
@@ -387,8 +393,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
-    const admin = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))?
-                    fileModelIamUser.get(app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), parameters.response)[0]?.username:
+    const iam_user = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))?
+                    fileModelIamUser.get(app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), parameters.response)[0]:
                         null;
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
@@ -406,14 +412,16 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
+                            connection_date:        new Date().toISOString(),
                             app_id:                 app_id,
                             authorization_bearer:   authorization_bearer,
                             user_account_id:        user_account_id,
                             token_access:           null,
                             identity_provider_id:   connectUserData.identity_provider_id,
-                            admin:                  admin,
+                            iam_user_id:            iam_user?iam_user.id:null,
+                            iam_user_username:      iam_user?iam_user.username:null,
+                            iam_user_type:          iam_user?iam_user.type:null,
                             token_admin:            null,
-                            connection_date:        new Date().toISOString(),
                             gps_latitude:           connectUserData.latitude,
                             gps_longitude:          connectUserData.longitude,
                             place:                  connectUserData.place,
@@ -426,11 +434,11 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         socketClientAdd(newClient);
         //send message to client with data
         
-        socketClientSend(parameters.response, btoa(JSON.stringify({   client_id: client_id, 
-                                                                latitude: connectUserData.latitude,
-                                                                longitude: connectUserData.longitude,
-                                                                place: connectUserData.place,
-                                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
+        socketClientSend(parameters.response, btoa(JSON.stringify({ client_id: client_id, 
+                                                                    latitude: connectUserData.latitude,
+                                                                    longitude: connectUserData.longitude,
+                                                                    place: connectUserData.place,
+                                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
     }
 };
 

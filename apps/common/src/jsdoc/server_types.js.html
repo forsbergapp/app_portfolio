@@ -2195,10 +2195,12 @@
  * @property {string} connection_date
  * @property {number} app_id
  * @property {string|null} authorization_bearer
+ * @property {number|null} iam_user_id
+ * @property {string|null} iam_user_username
+ * @property {'ADMIN'|'USER'|null} iam_user_type
  * @property {number|null} user_account_id
- * @property {string|null} token_access
  * @property {number|null} identity_provider_id
- * @property {string|null} admin
+ * @property {string|null} token_access
  * @property {string|null} token_admin
  * @property {string} gps_latitude
  * @property {string} gps_longitude
@@ -2212,12 +2214,14 @@
 /**
  * SOCKET server_socket_connected_list_no_res
  * @typedef {{  id:number,
+ *              connection_date:string,
  *              app_id:number,
  *              authorization_bearer:string|null,
+ *              iam_user_id:number|null,
+ *              iam_user_username:string|null,
+ *              iam_user_type:'ADMIN'|'USER'|null,
  *              user_account_id:number|null,
  *              identity_provider_id:number|null,
- *              admin:string|null,
- *              connection_date:string,
  *              gps_latitude:string,
  *              gps_longitude:string,
  *              place:string,
@@ -2244,15 +2248,17 @@
 /**
  * SOCKET server_socket_connected_list_sort
  * @typedef {   'id'|
+ *              'connection_date'| 
  *              'app_id'|
  *              'user_account_id'|
  *              'identity_provider_id'|
- *              'admin'|
- *              'connection_date'|
+ *              'iam_user_id'|
+ *              'iam_user_username'|
+ *              'iam_user_type'|
  *              'gps_latitude'|
  *              'gps_longitude'|
  *              'ip'|
- *               'user_agent'|
+ *              'user_agent'|
  *              null} server_socket_connected_list_sort
  */
 
