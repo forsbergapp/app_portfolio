@@ -38,7 +38,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>get<span class="signature">(app_id)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;server_iam_user_login>>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>get<span class="signature">(app_id, resource_id)</span><span class="type-signature"> &rarr; {Promise.&lt;Array.&lt;server_db_file_iam_user_login>>}</span></div>
     
 
     
@@ -102,6 +102,32 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>resource_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -139,7 +165,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_fileModelIamUserLogin.js.html">server/db/fileModelIamUserLogin.js</a>, <a href="server_db_fileModelIamUserLogin.js.html#line15">line 15</a>
+        <a href="server_db_fileModelIamUserLogin.js.html">server/db/fileModelIamUserLogin.js</a>, <a href="server_db_fileModelIamUserLogin.js.html#line16">line 16</a>
     </div></div></dd>
     
 
@@ -175,7 +201,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;Array.&lt;server_iam_user_login>></span>
+<span class="param-type">Promise.&lt;Array.&lt;server_db_file_iam_user_login>></span>
 
 
     </dd>
@@ -193,7 +219,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>post<span class="signature">(app_id, data)</span><span class="type-signature"> &rarr; {Promise.&lt;null>}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>post<span class="signature">(app_id, data)</span><span class="type-signature"> &rarr; {Promise.&lt;{affectedRows:number}>}</span></div>
     
 
     
@@ -317,7 +343,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_fileModelIamUserLogin.js.html">server/db/fileModelIamUserLogin.js</a>, <a href="server_db_fileModelIamUserLogin.js.html#line24">line 24</a>
+        <a href="server_db_fileModelIamUserLogin.js.html">server/db/fileModelIamUserLogin.js</a>, <a href="server_db_fileModelIamUserLogin.js.html#line25">line 25</a>
     </div></div></dd>
     
 
@@ -353,7 +379,211 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;null></span>
+<span class="param-type">Promise.&lt;{affectedRows:number}></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>update<span class="signature">(app_id, resource_id, data)</span><span class="type-signature"> &rarr; {Promise.&lt;{affectedRows:number}>}</span></div>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Update record</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <div class='title_h5'>Parameters:</div>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>app_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resource_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="server_db_fileModelIamUserLogin.js.html">server/db/fileModelIamUserLogin.js</a>, <a href="server_db_fileModelIamUserLogin.js.html#line81">line 81</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;{affectedRows:number}></span>
 
 
     </dd>
