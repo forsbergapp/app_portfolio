@@ -63,10 +63,16 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 APP ID
                                             </div>
                                             <div data-column='user_account_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('user_account_id')}'>
-                                                USER ID
+                                                DB USER ID
                                             </div>
-                                            <div data-column='admin' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('admin')}'>
-                                                ADMIN
+                                            <div data-column='iam_user_id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_id')}'>
+                                                IAM ID
+                                            </div>
+                                            <div data-column='iam_user_username' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_username')}'>
+                                                IAM USERNAME
+                                            </div>
+                                            <div data-column='iam_user_type' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('iam_user_type')}'>
+                                                IAM TYPE
                                             </div>
                                             <div data-column='ip' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('ip')}'>
                                                 IP
@@ -93,7 +99,9 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                         ${props.logs.map((/**@type{{id:number,
                                                                     connection_date:string,
                                                                     app_id:number,
-                                                                    admin:string,
+                                                                    iam_user_id:number|null,
+                                                                    iam_user_username:string|null,
+                                                                    iam_user_type:'ADMIN'|'USER'|null,
                                                                     ip:string,
                                                                     user_account_id:number,
                                                                     gps_latitude:string,
@@ -116,7 +124,13 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                     ${log.user_account_id ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.admin}
+                                                    ${log.iam_user_id ?? ''}
+                                                </div>
+                                                <div class='menu_monitor_detail_connected_col'>
+                                                    ${log.iam_user_username ?? ''}
+                                                </div>
+                                                <div class='menu_monitor_detail_connected_col'>
+                                                    ${log.iam_user_type ?? ''}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.ip.replace('::ffff:','')}

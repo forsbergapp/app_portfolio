@@ -166,6 +166,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
      * @param {1|0} result
      * @param {number} id
      * @param {string} username
+     * @param {'ADMIN'|'USER'} type
      * @returns {Promise.<{
      *                  iam_user_id:number,
      *                  iam_user_name:string,
@@ -174,7 +175,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
      *                  iat:number,
      *                  tokentimestamp:number}>}
      */
-    const check_user = async (result, id, username) => {       
+    const check_user = async (result, id, username, type) => {       
         const jwt_data = iamAuthorizeToken(app_id, 'ADMIN', {id:id, name:username, ip:ip, scope:'USER'});
         /**@type{server_db_file_iam_user_login_insert} */
         const file_content = {	iam_user_id:id,
@@ -192,7 +193,9 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             return await socketConnectedUpdate(app_id, 
                 {   iam:iam,
                     user_account_id:null,
-                    admin:username,
+                    iam_user_id:id,
+                    iam_user_username:username,
+                    iam_user_type:type,
                     token_access:null,
                     token_admin:jwt_data.token,
                     ip:ip,
@@ -218,17 +221,18 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
         const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
         const username = userpass.split(':')[0];
         const password = userpass.split(':')[1];
+        const type = 'ADMIN';
         if (fileModelIamUser.get(app_id, null, null).length==0)
             return iamUserCreate(app_id,{
                             username:username, 
                             password:password, 
-                            type: 'ADMIN', 
+                            type: type, 
                             bio:null, 
                             private:1, 
                             email:'admin@localhost', 
                             email_unverified:null, 
                             avatar:null}, res)
-            .then(result=>check_user(1, result.id, username));
+            .then(result=>check_user(1, result.id, username, type));
         else{
             /**@type{import('./security.js')} */
             const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
@@ -237,9 +241,9 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             const user =  fileModelIamUser.get(app_id, null, null).filter((/**@type{server_db_file_iam_user}*/user)=>user.username == username)[0];
 
             if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')))
-                return check_user(1, user.id, username); 
+                return check_user(1, user.id, username, type); 
             else
-                return check_user(0, user.id, username);
+                return check_user(0, user.id, username, type);
         }
     }
     else{
@@ -330,14 +334,16 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                                         ip, 
                                                         user_agent,
                                                         accept_language,
-                                                        result_login[0].id, 
+                                                        result_login[0].id,
                                                         new_code, 
                                                         result_login[0].email)
                                        .then(()=>{
                                            socketConnectedUpdate(app_id, 
                                                {   iam:iam,
                                                    user_account_id:result_login[0].id,
-                                                   admin:null,
+                                                   iam_user_id:null,
+                                                   iam_user_username:null,
+                                                   iam_user_type:null,
                                                    token_access:jwt_data.token,
                                                    token_admin:null,
                                                    ip:ip,
@@ -362,7 +368,9 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                    socketConnectedUpdate(app_id, 
                                        {   iam:iam,
                                            user_account_id:result_login[0].id,
-                                           admin:null,
+                                           iam_user_id:null,
+                                           iam_user_username:null,
+                                           iam_user_type:null,
                                            token_access:jwt_data.token,
                                            token_admin:null,
                                            ip:ip,
@@ -490,7 +498,9 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                             socketConnectedUpdate(app_id, 
                                 {   iam:iam,
                                     user_account_id:result_signin[0].id,
-                                    admin:null,
+                                    iam_user_id:null,
+                                    iam_user_username:null,
+                                    iam_user_type:null,
                                     token_access:jwt_data_exists.token,
                                     token_admin:null,
                                     ip:ip,
@@ -550,7 +560,9 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                                 socketConnectedUpdate(app_id, 
                                    {   iam:iam,
                                        user_account_id:result_create.insertId,
-                                       admin:null,
+                                       iam_user_id:null,
+                                       iam_user_username:null,
+                                       iam_user_type:null,
                                        token_access:jwt_data_new.token,
                                        token_admin:null,
                                        ip:ip,
@@ -1805,7 +1817,9 @@ const iamUserLogout = async (app_id, authorization, ip, user_agent, accept_langu
     socketConnectedUpdate(app_id, 
         {   iam:res.req.query.iam,
             user_account_id:null,
-            admin:null,
+            iam_user_id:null,
+            iam_user_username:null,
+            iam_user_type:null,
             token_access:null,
             token_admin:null,
             ip:ip,
