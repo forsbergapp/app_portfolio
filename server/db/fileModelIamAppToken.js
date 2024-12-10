@@ -10,9 +10,9 @@ const {fileCommonRecordNotFound, fileDBPost, fileDBGet} = await import(`file://$
  * Get user 
  * @function
  * @param {number} app_id
- * @returns {Promise.<server_db_file_iam_app_token[]>}
+ * @returns {server_db_file_iam_app_token[]}
  */
-const get = async app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
+const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
 
 /**
  * Add record
