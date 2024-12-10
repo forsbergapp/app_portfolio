@@ -5,14 +5,14 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileCommonRecordNotFound, fileFsDBLogPost, fileFsDBLogGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileCommonRecordNotFound, fileDBPost, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
  * Get user 
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_file_iam_app_token[]>}
  */
-const get = async app_id => fileFsDBLogGet(app_id, 'IAM_APP_TOKEN', null, null,'');
+const get = async app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
 
 /**
  * Add record
@@ -29,7 +29,7 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (await fileFsDBLogGet(app_id, 'IAM_APP_TOKEN', null, null,'').then(result=>result.filter((/**@type{server_db_file_iam_app_token} */row)=>row.token==data.token).length==0)){
+        if (fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).filter((/**@type{server_db_file_iam_app_token} */row)=>row.token==data.token).length==0){
             /**@type{server_db_file_iam_app_token} */
             const data_new = {};
             //required
@@ -45,7 +45,7 @@ const post = async (app_id, data) => {
             if (data.lat!=null)
                 data_new.lat = data.lat;
             data_new.created = new Date().toISOString();
-            return fileFsDBLogPost(app_id, 'IAM_APP_TOKEN',data_new, '').then((result)=>{
+            return fileDBPost(app_id, 'IAM_APP_TOKEN',data_new).then((result)=>{
                 if (result.affectedRows>0)
                     return result;
                 else

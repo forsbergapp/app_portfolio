@@ -123,7 +123,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="verification_name" id="2D636ABA-8AB9-2BDB-ABEC-EE87B4303220">
+<Attribute name="verification_code" id="2D636ABA-8AB9-2BDB-ABEC-EE87B4303220">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:30:24 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
