@@ -1311,8 +1311,7 @@ const serverUtilAppLine = () =>{
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
-                    resolve(iam_service.iamUserLoginGet(routesparameters.app_id, app_query)
-                                .then(result=>iso_return_message(result, true)));
+                    resolve(iso_return_message(iam_service.iamUserLoginGet(routesparameters.app_id, app_query), true));
                     break;
                 }
                 //socket using EventSource route
