@@ -800,9 +800,7 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
                             null))
             .then(result=>{
                 if (result[0]){
-                    iamUserGetLastLogin(app_id, resource_id)
-                    .then(last_logintime=>
-                            resolve({...result[0], ...{last_logintime:last_logintime}}));
+                    resolve({...result[0], ...{last_logintime:iamUserGetLastLogin(app_id, resource_id)}});
                 }
                 else{
                     import(`file://${process.cwd()}/server/db/common.js`)

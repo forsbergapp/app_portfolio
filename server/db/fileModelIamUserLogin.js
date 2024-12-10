@@ -11,9 +11,9 @@ const {fileCommonRecordNotFound, fileDBPost, fileDBGet, fileDBUpdate} = await im
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {Promise.<server_db_file_iam_user_login[]>}
+ * @returns {server_db_file_iam_user_login[]}
  */
-const get = async (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resource_id, null);
+const get = (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resource_id, null);
 
 /**
  * Add record

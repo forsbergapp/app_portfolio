@@ -105,7 +105,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
  */
 const iamUtilTokenExpiredSet = async (app_id, authorization, ip, res ) =>{
     const token = authorization?.split(' ')[1] ?? '';
-    const iam_user_login_row = await fileModelIamUserLogin.get(app_id,null).then(result=>result.filter(row=>row.token==token &&row.ip == ip)[0]);
+    const iam_user_login_row = fileModelIamUserLogin.get(app_id,null).filter(row=>row.token==token &&row.ip == ip)[0];
     if (iam_user_login_row){
         //set token expired
         await fileModelIamUserLogin.update(app_id, iam_user_login_row.id, {res:2});
@@ -1169,9 +1169,9 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const id_token_decoded = jwt.verify(id_token, fileModelAppSecret.get(app_id_host, res)[0].common_app_id_secret);
             /**@type{server_db_file_iam_app_token}*/
-            const log_id_token = await fileModelIamAppToken.get(app_id_host).then(result=>result.filter((/**@type{server_db_file_iam_app_token}*/row)=> 
-                                                                                row.app_id == app_id_host && row.ip == ip && row.token == id_token
-                                                                                )[0]);
+            const log_id_token = fileModelIamAppToken.get(app_id_host).filter((/**@type{server_db_file_iam_app_token}*/row)=> 
+                                                                                    row.app_id == app_id_host && row.ip == ip && row.token == id_token
+                                                                                    )[0];
             if (id_token_decoded.app_id == app_id_host && 
                 (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
                 id_token_decoded.ip == ip &&
@@ -1205,23 +1205,22 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.id == iamUtilDecode(iam).get('iam_user_id'))
-                                await fileModelIamUserLogin.get(app_id_host, null)
-                                .then(result=>{
-                                    /**@type{server_db_file_iam_user_login}*/
-                                    const iam_user_login = result.filter((/**@type{server_db_file_iam_user_login}*/row)=>
-                                                                            row.iam_user_id == access_token_decoded.id && 
-                                                                            row.app_id      == app_id_host &&
-                                                                            row.user        == access_token_decoded.name && 
-                                                                            row.res         == 1 &&
-                                                                            row.ip          == ip &&
-                                                                            row.token       == access_token
-                                                                        )[0];
-                                    if (iam_user_login)
-                                        next();
-                                    else
+                                access_token_decoded.id == iamUtilDecode(iam).get('iam_user_id')){
+                                /**@type{server_db_file_iam_user_login}*/
+                                const iam_user_login = fileModelIamUserLogin.get(app_id_host, null)
+                                                        .filter((/**@type{server_db_file_iam_user_login}*/row)=>
+                                                                                                row.iam_user_id == access_token_decoded.id && 
+                                                                                                row.app_id      == app_id_host &&
+                                                                                                row.user        == access_token_decoded.name && 
+                                                                                                row.res         == 1 &&
+                                                                                                row.ip          == ip &&
+                                                                                                row.token       == access_token
+                                                                                            )[0];
+                                if (iam_user_login)
+                                    next();
+                                else
                                     iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
-                                });
+                            }
                             else
                                 iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
@@ -1670,21 +1669,18 @@ const iamAuthenticateResource = parameters =>  {
  * @function
  * @param {number} app_id
  * @param {*} query
- * @returns {Promise.<server_db_file_iam_user_login[]>}
+ * @returns {server_db_file_iam_user_login[]}
  */
-const iamUserLoginGet = async (app_id, query) => {const rows = await fileModelIamUserLogin.get(app_id, null)
-                                                    .then(result=>result
-                                                    .filter((/**@type{server_db_file_iam_user_login}*/row)=>
-                                                        row.iam_user_id==serverUtilNumberValue(query.get('data_user_account_id')) &&  
-                                                        row.app_id==(serverUtilNumberValue(query.get('data_app_id')==''?null:query.get('data_app_id')) ?? row.app_id)))
-                                                    .catch(()=>
-                                                        null
-                                                    );
-                                                return rows?rows.sort(( /**@type{server_db_file_iam_user_login}*/a,
-                                                    /**@type{server_db_file_iam_user_login}*/b)=> 
-                                                        //sort descending on created
-                                                        a.created.localeCompare(b.created)==1?-1:1):[];
-                                            };
+const iamUserLoginGet = (app_id, query) => {const rows = fileModelIamUserLogin.get(app_id, null)
+                                                                .filter((/**@type{server_db_file_iam_user_login}*/row)=>
+                                                                    row.iam_user_id==serverUtilNumberValue(query.get('data_user_account_id')) &&  
+                                                                    row.app_id==(serverUtilNumberValue(query.get('data_app_id')==''?null:query.get('data_app_id')) ?? row.app_id));
+                                                    
+                                                    return rows.length>0?rows.sort(( /**@type{server_db_file_iam_user_login}*/a,
+                                                        /**@type{server_db_file_iam_user_login}*/b)=> 
+                                                            //sort descending on created
+                                                            a.created.localeCompare(b.created)==1?-1:1):[];
+                                                };
 /**
  * User create
  * @function
@@ -1739,7 +1735,7 @@ const iamUserGet = async (app_id, id, res) =>{
         modified: row.modified};})[0];
     if (user)
         //add last login time
-        return {...user, ...{last_logintime:await iamUserGetLastLogin(app_id, id)}};
+        return {...user, ...{last_logintime:iamUserGetLastLogin(app_id, id)}};
     else{
         res.statusCode = 404;
         throw '⛔';    
@@ -1750,15 +1746,13 @@ const iamUserGet = async (app_id, id, res) =>{
  * @function
  * @param {number} app_id
  * @param {number} id
- * @returns {Promise.<string|null>}
+ * @returns {string|null}
  */
-const iamUserGetLastLogin = async (app_id, id) =>fileModelIamUserLogin.get(app_id, null)
-                                                    .then(result=>result
-                                                                    .filter((/**@type{server_db_file_iam_user_login}*/row)=>
-                                                                        row.iam_user_id==id &&  row.app_id==app_id && row.res==1)
-                                                                    .sort((/**@type{server_db_file_iam_user_login}*/a,
-                                                                            /**@type{server_db_file_iam_user_login}*/b)=>a.created < b.created?1:-1)[0].created)
-                                                    .catch(()=>null);
+const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserLogin.get(app_id, null)
+                                                .filter((/**@type{server_db_file_iam_user_login}*/row)=>
+                                                    row.iam_user_id==id &&  row.app_id==app_id && row.res==1)
+                                                .sort((/**@type{server_db_file_iam_user_login}*/a,
+                                                        /**@type{server_db_file_iam_user_login}*/b)=>a.created < b.created?1:-1)[0]?.created;
 
 /**
  * User update
