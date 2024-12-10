@@ -695,27 +695,21 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 #menu_monitor_detail_server_log_form.css_spinner{
 	display: inline-block;
 }
-/*CONNECTED*/
-.menu_monitor_detail_connected_col{
-	width:70px;
+#menu_monitor_pagination{
+	display: block;
+	height: 40px;
 }
-.menu_monitor_detail_connected_col:nth-child(2){
-	width:120px;
+#menu_monitor_pagination div{
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 10px;
+	cursor:pointer;
 }
-.menu_monitor_detail_connected_col:nth-child(3){
-	width:40px;
+/*CONNECTED + APP LOG*/
+.menu_monitor_detail_connected_row{
+	display:grid;
+	grid-template-columns: 9em 14em 4em 7em 9em 10em 8em 10em 7em 7em 15em 15em 12em 8em !important
 }
-.menu_monitor_detail_connected_col:nth-child(4){
-	width:30px;
-}
-.menu_monitor_detail_connected_col:nth-child(10){
-	width:175px;
-	overflow-x: auto;
-}
-.menu_monitor_detail_connected_col:nth-child(10){
-	width:140px;
-}
-/*APP LOG*/
 #menu_monitor_detail_app_log, #menu_monitor_detail_connected{
 	border-radius: 4px;
 }
@@ -732,16 +726,6 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 .menu_monitor_detail_app_log_col, .menu_monitor_detail_connected_col{
 	display:inline-block;
 	margin-inline-end: 10px;
-}
-#menu_monitor_pagination{
-	display: block;
-	height: 40px;
-}
-#menu_monitor_pagination div{
-	display: inline-block;
-	margin-left: 10px;
-	margin-right: 10px;
-	cursor:pointer;
 }
 /* SERVER LOG*/
 #menu_monitor_detail_select_logscope{
