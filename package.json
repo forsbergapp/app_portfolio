@@ -22,7 +22,6 @@
   "type": "module",
   "description": "",
   "devDependencies": {
-    "@types/compression": "^1.7.3",
     "@types/express": "^4.17.18",
     "@types/jasmine": "^5.1.0",
     "@types/jsonwebtoken": "^9.0.3",
