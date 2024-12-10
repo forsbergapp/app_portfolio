@@ -345,6 +345,7 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.&lt;void>}
  */
 const appCustomerCreate = async () => {
+    
     await common.commonFFB({  path:'/app-module-function/CUSTOMER_CREATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
@@ -484,6 +485,20 @@ const appSecureInit = () => {
  */
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
+    appFrameworkSet();
+    //common app component
+    await common.commonComponentRender({mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      common.COMMON_GLOBAL.app_framework,
+                                                    font_default:   true,
+                                                    font_arabic:    true,
+                                                    font_asian:     true,
+                                                    font_prio1:     true,
+                                                    font_prio2:     true,
+                                                    font_prio3:     true
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
@@ -501,7 +516,6 @@ const appInit = async () => {
             data:       null,
             methods:    null,
             path:       '/component/page_start.js'}));
-   appFrameworkSet();
 };
 /**
  * Init common
