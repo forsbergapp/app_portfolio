@@ -2359,7 +2359,20 @@ const appInit = async parameters => {
     const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE`;
     /**@type {CommonModuleLibTimetable} */
     appLibTimetable = await import(appLibTimetable_path);
-
+    appFrameworkSet();
+    //common app component
+    await common.commonComponentRender({mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      common.COMMON_GLOBAL.app_framework,
+                                                    font_default:   true,
+                                                    font_arabic:    true,
+                                                    font_asian:     true,
+                                                    font_prio1:     true,
+                                                    font_prio2:     true,
+                                                    font_prio3:     true
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -2479,9 +2492,7 @@ const appInit = async parameters => {
                 common.commonProfileShow(null, user);
             }
         };
-        show_start().then(() => {
-            appFrameworkSet();
-        });
+        show_start();
     });
 };
 /**

@@ -9,7 +9,8 @@
 
 /**
  * 
- * @param {{font_default:boolean|null,
+ * @param {{framework:number,
+ *          font_default:boolean|null,
  *          font_arabic:boolean|null,
  *          font_asian:boolean|null,
  *          font_prio1:boolean|null,
@@ -17,8 +18,8 @@
  *          font_prio3:boolean|null}} props 
  * @returns {string}
  */
-const template = props =>`  <div id='common_toolbar_framework'>
-                                <div id='common_toolbar_framework_js' class='common_icon common_toolbar_button'></div>
+const template = props =>`  <div id='common_toolbar_framework' ${props.framework==0?'class=\'show\'':''}>
+                                <div id='common_toolbar_framework_js' class='common_icon common_toolbar_button ${props.framework==0?'common_toolbar_selected':''}'></div>
                                 <div id='common_toolbar_framework_vue' class='common_icon common_toolbar_button'></div>
                                 <div id='common_toolbar_framework_react' class='common_icon common_toolbar_button'></div>
                             </div>
@@ -233,6 +234,7 @@ const template = props =>`  <div id='common_toolbar_framework'>
 /**
  * @param {{data:       {
  *                      commonMountdiv:string,
+ *                      framework: number,
  *                      font_default:boolean|null,
  *                      font_arabic:boolean|null,
  *                      font_asian:boolean|null,
@@ -252,6 +254,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({
+                        framework:      props.data.framework,
                         font_default:   props.data.font_default,
                         font_arabic:    props.data.font_arabic,
                         font_asian:     props.data.font_asian,

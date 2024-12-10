@@ -1244,11 +1244,7 @@ const appFrameworkSet = async (framework=null) => {
                         KeyDown: appEventKeyDown,
                         KeyUp: appEventKeyUp,
                         Focus: appEventFocus,
-                        Input:appEventInput})
-    .then(()=>{
-        if (common.COMMON_GLOBAL.user_account_id ==null && common.COMMON_GLOBAL.iam_user_id==null)
-            common.commonDialogueShow('LOGIN_ADMIN');
-    });                        
+                        Input:appEventInput});
 };
 /**
  * App init
@@ -1258,8 +1254,22 @@ const appFrameworkSet = async (framework=null) => {
  */
 const appInit = async (parameters) => {
     parameters;
-   appFrameworkSet();
-};
+    appFrameworkSet();
+    //common app component
+    await common.commonComponentRender({mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      common.COMMON_GLOBAL.app_framework,
+                                                    font_default:   true,
+                                                    font_arabic:    true,
+                                                    font_asian:     true,
+                                                    font_prio1:     true,
+                                                    font_prio2:     true,
+                                                    font_prio3:     true
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
+    await common.commonDialogueShow('LOGIN_ADMIN');
+};    
 /**
  * Init common
  * @function
