@@ -440,7 +440,7 @@
  *              TYPE:'JSON'|'JSON_TABLE'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
  *              LOCK:number, 
  *              TRANSACTION_ID:number|null, 
- *              TRANSACTION_CONTENT: object|string|null, 
+ *              TRANSACTION_CONTENT: object|string|[]|null, 
  *              PATH:string, 
  *              FILENAME:string,
  *              CACHE_CONTENT?:* }} server_db_file_db_record
