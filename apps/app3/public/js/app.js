@@ -127,6 +127,20 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
+    appFrameworkSet();
+    //common app component
+    await common.commonComponentRender({mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      common.COMMON_GLOBAL.app_framework,
+                                                    font_default:   true,
+                                                    font_arabic:    true,
+                                                    font_asian:     true,
+                                                    font_prio1:     true,
+                                                    font_prio2:     true,
+                                                    font_prio3:     true
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -138,7 +152,7 @@ const appInit = async () => {
         methods:    null,
         path:       '/component/docs.js'});
     COMMON_DOCUMENT.querySelector('#dialogue_documents').style.visibility = 'visible';
-   appFrameworkSet();
+   
 };
 /**
  * Init common

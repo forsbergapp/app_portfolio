@@ -327,6 +327,20 @@ const appPay = async () =>{
  */
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
+    appFrameworkSet();
+    //common app component
+    await common.commonComponentRender({mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      common.COMMON_GLOBAL.app_framework,
+                                                    font_default:   true,
+                                                    font_arabic:    false,
+                                                    font_asian:     false,
+                                                    font_prio1:     false,
+                                                    font_prio2:     false,
+                                                    font_prio3:     false
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div, 
         data:       null,
@@ -347,7 +361,6 @@ const appInit = async () => {
                     },
         path:'/component/page_start.js'});
     appProductUpdate();
-    appFrameworkSet();
 };
 /**
  * Init common

@@ -138,6 +138,20 @@ const appEventClick = event =>{
  * @returns {Promise.<void>}
  */
 const appModuleLeafletInit = async ()=>{
+    appFrameworkSet();
+    //common app component
+    await common.commonComponentRender({mountDiv:   'common_app',
+                                        data:       {
+                                                    framework:      common.COMMON_GLOBAL.app_framework,
+                                                    font_default:   true,
+                                                    font_arabic:    true,
+                                                    font_asian:     true,
+                                                    font_prio1:     true,
+                                                    font_prio2:     true,
+                                                    font_prio3:     true
+                                                    },
+                                        methods:    null,
+                                        path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -148,9 +162,7 @@ const appModuleLeafletInit = async ()=>{
                     longitude:common.COMMON_GLOBAL.client_longitude,
                     place:common.COMMON_GLOBAL.client_place,
                     doubleclick_event:null, 
-                    update_map:true})
-    .then(()=>  
-       appFrameworkSet());
+                    update_map:true});
 };
 /**
  * Init app

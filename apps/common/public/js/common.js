@@ -3611,25 +3611,10 @@ const commonInit = async (parameters) => {
     const decoded_parameters = JSON.parse(commonWindowFromBase64(parameters));
     setUserAgentAttributes();
     custom_framework();
-    await commonComponentRender({   mountDiv:   'common_app',
-                                    data:       {
-                                                font_default:   true,
-                                                font_arabic:    true,
-                                                font_asian:     true,
-                                                font_prio1:     true,
-                                                font_prio2:     true,
-                                                font_prio3:     true
-                                                },
-                                    methods:    null,
-                                    path:       '/common/component/common_app.js'});
     if (COMMON_GLOBAL.app_id ==null){
         commonInitParametersInfoSet(decoded_parameters.INFO);
         commonInitParametersAppSet(decoded_parameters.APP, decoded_parameters.COMMON);
         commonEventCommonAdd();
-    }
-    if (COMMON_GLOBAL.app_framework==0){
-        COMMON_DOCUMENT.querySelector('#common_toolbar_framework').classList.add('show');
-        COMMON_DOCUMENT.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
     }
     await commonSocketConnectOnline();
     commonWindowServiceWorker();
