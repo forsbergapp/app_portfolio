@@ -338,7 +338,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                                {   iam:iam,
                                                    user_account_id:result_login[0].id,
                                                    admin:null,
-                                                   token_access:data_body.token,
+                                                   token_access:jwt_data.token,
                                                    token_admin:null,
                                                    ip:ip,
                                                    headers_user_agent:user_agent,
@@ -346,7 +346,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                                    res: res})
                                            .then(()=>{
                                                resolve({
-                                                   accessToken: data_body.token,
+                                                   accessToken: jwt_data.token,
                                                    exp:jwt_data.exp,
                                                    iat:jwt_data.iat,
                                                    tokentimestamp:jwt_data.tokentimestamp,
@@ -363,7 +363,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                        {   iam:iam,
                                            user_account_id:result_login[0].id,
                                            admin:null,
-                                           token_access:data_body.token,
+                                           token_access:jwt_data.token,
                                            token_admin:null,
                                            ip:ip,
                                            headers_user_agent:user_agent,
@@ -371,7 +371,7 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                                            res: res})
                                    .then(()=>{
                                        resolve({
-                                           accessToken: data_body.token,
+                                           accessToken: jwt_data.token,
                                            exp:jwt_data.exp,
                                            iat:jwt_data.iat,
                                            tokentimestamp:jwt_data.tokentimestamp,
@@ -491,7 +491,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                                 {   iam:iam,
                                     user_account_id:result_signin[0].id,
                                     admin:null,
-                                    token_access:data_login.token,
+                                    token_access:jwt_data_exists.token,
                                     token_admin:null,
                                     ip:ip,
                                     headers_user_agent:user_agent,
@@ -499,7 +499,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                                     res: res})
                             .then(()=>{
                                 resolve({
-                                    accessToken: data_login.token,
+                                    accessToken: jwt_data_exists.token,
                                     exp:jwt_data_exists.exp,
                                     iat:jwt_data_exists.iat,
                                     tokentimestamp:jwt_data_exists.tokentimestamp,
@@ -551,7 +551,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                                    {   iam:iam,
                                        user_account_id:result_create.insertId,
                                        admin:null,
-                                       token_access:data_login.token,
+                                       token_access:jwt_data_new.token,
                                        token_admin:null,
                                        ip:ip,
                                        headers_user_agent:user_agent,
@@ -559,7 +559,7 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
                                        res: res})
                                 .then(()=>{
                                     resolve({
-                                       accessToken: data_login.token,
+                                       accessToken: jwt_data_new.token,
                                        exp:jwt_data_new.exp,
                                        iat:jwt_data_new.iat,
                                        tokentimestamp:jwt_data_new.tokentimestamp,
@@ -779,7 +779,7 @@ const iamAuthenticateUserActivate = async (app_id, resource_id, ip, user_agent, 
                     resolve({
                        count: result_activate.affectedRows,
                        auth: auth_password_new,
-                       accessToken: data_body.token,
+                       accessToken: jwt_data.token,
                        exp:jwt_data.exp,
                        iat:jwt_data.iat,
                        tokentimestamp:jwt_data.tokentimestamp,
