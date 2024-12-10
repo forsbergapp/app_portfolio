@@ -241,7 +241,6 @@ const zlib = await import('node:zlib');
         //compress for:
         //not broadcast messages using socket
         //text responses
-        //not identity encoding
         if (req.headers.accept != 'text/event-stream' &&
             (res.getHeader('Content-Type')?.startsWith('text') ||
             res.getHeader('Content-Type')?.startsWith('application/json'))){
