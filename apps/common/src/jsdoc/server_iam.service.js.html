@@ -58,6 +58,10 @@ const fileModelIamAppToken = await import(`file://${process.cwd()}/server/db/fil
 
 const {default:jwt} = await import('jsonwebtoken');
 
+//Rate limiter 
+/**@type{Object.&lt;string,{count:number, firstRequestTime:number}>} */
+const iamRequestRateLimiterCount = {};
+
 /**
  * IAM util decode base64 in query
  * @function
@@ -1289,20 +1293,24 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
  * Authorize request
  * Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
  *  if ip is blocked in IAM_CONTROL_OBSERVE or ip range is blocked in IAM_CONTROL_IP 
- *     end request
+ *     return 401
  *  else
- *     if subdomain is known
- *     if requested route is valid
- *     if host does not exist
- *     if request not accessed from domain or from os hostname
- *     if user agent is blocked
- *     if decodeURIComponent() has error 
- *     if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
+ *     if request count > rate limit (anonymous, user or admin)
+ *       if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
+ *          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
+ *       return status 429
+ *     else
+ *       if subdomain is known
+ *       if requested route is valid
+ *       if host does not exist
+ *       if request not accessed from domain or from os hostname
+ *       if user agent is blocked
+ *       if decodeURIComponent() has error 
+ *       if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
+ *       if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
+ *          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
+ *          return 401
  * 
- * a record is saved in IAM_CONTROL_OBSERVE for all failed validations
- * if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *  then a record in IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP is created
- *  so next time same IP is used it will be blocked and no more validations will be done
  * @function
  * @param {string} ip
  * @param {string} host
@@ -1368,6 +1376,46 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
         else
             return false;
     };
+    /**
+     * Controls requests and rate limiter
+     * Checks parameters 
+     *  RATE_LIMIT_WINDOW_MS                            milliseconds
+     *  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER         all REST API paths starting with /bff/app_access
+     *  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN        all REST API paths starting with /bff/admin
+     *  RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS    all other paths
+     * @param {string} ip
+     * @returns {boolean}
+     */
+    const rateLimiter = ip =>{		
+        const RATE_LIMIT_WINDOW_MS = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'RATE_LIMIT_WINDOW_MS');
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS');
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER');
+        const RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN');
+  
+        const currentTime = Date.now();
+        if (!iamRequestRateLimiterCount[ip])
+            iamRequestRateLimiterCount[ip] = {count:0, firstRequestTime:currentTime};
+          
+        const {count, firstRequestTime} = iamRequestRateLimiterCount[ip];
+        const USER = path?.toLowerCase().startsWith('/bff/app_access')?1:null;                                                                              
+        const ADMIN = path?.toLowerCase().startsWith('/bff/admin')?1:null;    
+                                                                              
+        if (currentTime - firstRequestTime > RATE_LIMIT_WINDOW_MS){
+            iamRequestRateLimiterCount[ip] = {count:1, firstRequestTime:currentTime};
+            return false;
+        }
+        else
+            if (count &lt; (   (USER &amp;&amp; RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER) ||
+                            (ADMIN &amp;&amp; RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN)||
+                            (USER==null &amp;&amp; ADMIN==null &amp;&amp; RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS)
+                        )){
+                iamRequestRateLimiterCount[ip].count += 1;
+                return false;
+            }
+            else
+                return true;
+    };
+  
     if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
         let fail = 0;
         let fail_block = false;
@@ -1392,151 +1440,158 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                     statusMessage: ''};
         }
         else{
-            //check if host exists
-            if (typeof host=='undefined'){
-                await fileModelIamControlObserve.post(calling_app_id, 
-                                                        {   ...record,
-                                                            status:1, 
-                                                            type:'HOST'}, 
-                                                        /**@ts-ignore*/
-                                                        {});
-                fail ++;
-                fail_block = true;
+            if (rateLimiter(ip_v4)){
+                return {statusCode: 429, 
+                        statusMessage: ''};
             }
-            if (app_id == null){
-                await fileModelIamControlObserve.post(calling_app_id, 
-                    {   ...record,
-                        status:0, 
-                        type:'SUBDOMAIN'}, 
-                    /**@ts-ignore*/
-                    {});
-                fail ++;
-            }
-            /**
-             * @param {string} path
-             */
-            const invalid_path = path =>{
-                        //browser and search engine paths
-                return  (path =='/favicon.ico' ||
-                        path == '/robots.txt' ||
-                        //REST API paths
-                        path.startsWith('/bff/app/v1/app-module') ||
-                        path.startsWith('/bff/app_data/v1') ||
-                        path.startsWith('/bff/app_signup/v1') ||
-                        path.startsWith('/bff/app_access/v1') ||
-                        path.startsWith('/bff/app_external/v1/app-module-function') ||
-                        path.startsWith('/bff/admin/v1') ||
-                        path.startsWith('/bff/socket/v1') ||
-                        path.startsWith('/bff/iam_admin/v1') ||
-                        path.startsWith('/bff/iam_user/v1') ||
-                        path.startsWith('/bff/iam_provider/v1') ||
-                        //APP paths
-                        path == '/' ||
-                        path.startsWith('/js/') ||
-                        path.startsWith('/css/') ||
-                        path.startsWith('/images/') ||
-                        path.startsWith('/common/') ||
-                        path.startsWith('/component/') ||
-                        path.startsWith('/info/') ||
-                        path.startsWith('/maintenance/') ||
-                        path == '/apps/common_types.js' ||
-                        path == '/sw.js' ||
-                        //account names should start with /profile/ and not contain any more '/'
-                        (path.startsWith('/profile/') &amp;&amp; path.split('/').length==3)||
-                        //SSL verification path
-                        (   path.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH')) &amp;&amp;
-                            serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION'))==1
-                        )
-                    )==false;
-            };
-            if (invalid_path(path)){
-                //stop if trying to access any SSL path not enabled
-                if (path.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH')))
+            else{
+                //check if host exists
+                if (typeof host=='undefined'){
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                                                            {   ...record,
+                                                                status:1, 
+                                                                type:'HOST'}, 
+                                                            /**@ts-ignore*/
+                                                            {});
+                    fail ++;
                     fail_block = true;
-                await fileModelIamControlObserve.post(calling_app_id, 
-                    {   ...record,
-                        status:fail_block==true?1:0, 
-                        type:'ROUTE'}, 
-                    /**@ts-ignore*/
-                    {});
-                fail ++;
-            }
-            //check if not accessed from domain or from os hostname
-            const {hostname} = await import('node:os');
-            if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST').toUpperCase())&lt;0){
-                //stop always
-                fail_block = true;
-                await fileModelIamControlObserve.post(calling_app_id, 
-                                                        {   ...record,
-                                                            status:1,
-                                                            type:'HOST_IP'}, 
-                                                        /**@ts-ignore*/
-                                                        {});
-                fail ++;
-            }
-            //check if user-agent is blocked
-            if(fileModelIamControlUserAgent.get(null, null, null).filter(row=>row.user_agent== user_agent).length>0){
-                //stop always
-                fail_block = true;
-                await fileModelIamControlObserve.post(calling_app_id, 
-                    {   ...record,
-                        status:1, 
-                        type:'USER_AGENT'}, 
-                    /**@ts-ignore*/
-                    {});
-                fail ++;
-            }
-            //check request
-            let err = null;
-            try {
-                decodeURIComponent(path);
-            }
-            catch(e) {
-                err = e;
-            }
-            if (err){
-                await fileModelIamControlObserve.post(calling_app_id, 
-                    {   ...record,
-                        status:0, 
-                        type:'URI_DECODE'}, 
-                    /**@ts-ignore*/
-                    {});
-                fail ++;
-            }
-            //check method
-            if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0){
-                //stop always
-                fail_block = true;
-                await fileModelIamControlObserve.post(calling_app_id, 
-                    {   ...record,
-                        status:0, 
-                        type:'METHOD'}, 
-                    /**@ts-ignore*/
-                    {});
-                fail ++;
-            }
-            if (fail>0){
-                if (fail_block ||
-                    //check how many observation exists for given app_id or records with unknown app_id
-                    fileModelIamControlObserve.get(calling_app_id, 
-                                                    null, 
-                                                    /**@ts-ignore */
-                                                    {}).filter(row=>row.ip==ip_v4 &amp;&amp; row.app_id == app_id).length>		
-                    fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'AUTHENTICATE_REQUEST_OBSERVE_LIMIT')){
-                    await fileModelIamControlObserve.post(calling_app_id,
-                                                        {   ...record,
-                                                            status:1, 
-                                                            type:'BLOCK_IP'}, 
-                                                        /**@ts-ignore*/
-                                                        {});
-                    return {statusCode: 401, 
-                            statusMessage: ''};
+                }
+                if (app_id == null){
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                        {   ...record,
+                            status:0, 
+                            type:'SUBDOMAIN'}, 
+                        /**@ts-ignore*/
+                        {});
+                    fail ++;
+                }
+                /**
+                 * @param {string} path
+                 */
+                const invalid_path = path =>{
+                            //browser and search engine paths
+                    return  (path =='/favicon.ico' ||
+                            path == '/robots.txt' ||
+                            //REST API paths
+                            path.startsWith('/bff/app/v1/app-module') ||
+                            path.startsWith('/bff/app_data/v1') ||
+                            path.startsWith('/bff/app_signup/v1') ||
+                            path.startsWith('/bff/app_access/v1') ||
+                            path.startsWith('/bff/app_external/v1/app-module-function') ||
+                            path.startsWith('/bff/admin/v1') ||
+                            path.startsWith('/bff/socket/v1') ||
+                            path.startsWith('/bff/iam_admin/v1') ||
+                            path.startsWith('/bff/iam_user/v1') ||
+                            path.startsWith('/bff/iam_provider/v1') ||
+                            //APP paths
+                            path == '/' ||
+                            path.startsWith('/js/') ||
+                            path.startsWith('/css/') ||
+                            path.startsWith('/images/') ||
+                            path.startsWith('/common/') ||
+                            path.startsWith('/component/') ||
+                            path.startsWith('/info/') ||
+                            path.startsWith('/maintenance/') ||
+                            path == '/apps/common_types.js' ||
+                            path == '/sw.js' ||
+                            //account names should start with /profile/ and not contain any more '/'
+                            (path.startsWith('/profile/') &amp;&amp; path.split('/').length==3)||
+                            //SSL verification path
+                            (   path.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH')) &amp;&amp;
+                                serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION'))==1
+                            )
+                        )==false;
+                };
+                if (invalid_path(path)){
+                    //stop if trying to access any SSL path not enabled
+                    if (path.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH')))
+                        fail_block = true;
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                        {   ...record,
+                            status:fail_block==true?1:0, 
+                            type:'ROUTE'}, 
+                        /**@ts-ignore*/
+                        {});
+                    fail ++;
+                }
+                //check if not accessed from domain or from os hostname
+                const {hostname} = await import('node:os');
+                if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST').toUpperCase())&lt;0){
+                    //stop always
+                    fail_block = true;
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                                                            {   ...record,
+                                                                status:1,
+                                                                type:'HOST_IP'}, 
+                                                            /**@ts-ignore*/
+                                                            {});
+                    fail ++;
+                }
+                //check if user-agent is blocked
+                if(fileModelIamControlUserAgent.get(null, null, null).filter(row=>row.user_agent== user_agent).length>0){
+                    //stop always
+                    fail_block = true;
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                        {   ...record,
+                            status:1, 
+                            type:'USER_AGENT'}, 
+                        /**@ts-ignore*/
+                        {});
+                    fail ++;
+                }
+                //check request
+                let err = null;
+                try {
+                    decodeURIComponent(path);
+                }
+                catch(e) {
+                    err = e;
+                }
+                if (err){
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                        {   ...record,
+                            status:0, 
+                            type:'URI_DECODE'}, 
+                        /**@ts-ignore*/
+                        {});
+                    fail ++;
+                }
+                //check method
+                if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0){
+                    //stop always
+                    fail_block = true;
+                    await fileModelIamControlObserve.post(calling_app_id, 
+                        {   ...record,
+                            status:0, 
+                            type:'METHOD'}, 
+                        /**@ts-ignore*/
+                        {});
+                    fail ++;
+                }
+                if (fail>0){
+                    if (fail_block ||
+                        //check how many observation exists for given app_id or records with unknown app_id
+                        fileModelIamControlObserve.get(calling_app_id, 
+                                                        null, 
+                                                        /**@ts-ignore */
+                                                        {}).filter(row=>row.ip==ip_v4 &amp;&amp; row.app_id == app_id).length>		
+                        fileModelConfig.get('CONFIG_SERVER', 'SERVICE_IAM', 'AUTHENTICATE_REQUEST_OBSERVE_LIMIT')){
+                        await fileModelIamControlObserve.post(calling_app_id,
+                                                            {   ...record,
+                                                                status:1, 
+                                                                type:'BLOCK_IP'}, 
+                                                            /**@ts-ignore*/
+                                                            {});
+                        return {statusCode: 401, 
+                                statusMessage: ''};
+                    }
+                    else
+                        return null;            
                 }
                 else
-                    return null;            
+                    return null;
             }
-            else
-                return null;
+            
         }
     }
     else
