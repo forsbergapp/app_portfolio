@@ -7,7 +7,7 @@
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/**
  * Displays app
- * @module apps/app2/component/app
+ * @module apps/app1/component/app
  */
 
 /**
@@ -16,43 +16,49 @@
 /**
  * @returns {string}
  */
-const template = ()=>`  &lt;div id='toolbar_top'>
-                            &lt;div id='app_user_account'>&lt;/div>
-                            &lt;div id='toolbar_btn_zoomout' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_zoomin' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_left' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_right' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_search' class='common_toolbar_button common_icon'>&lt;/div>
-                        &lt;/div>
-                        &lt;div id='app_profile_search'>&lt;/div>
-                        &lt;div id='paper'>&lt;/div>
-                        &lt;div id='settings'>
-                            &lt;div id='settings_tab_navigation'>
-                                &lt;div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_icon'>&lt;/div>
-                                &lt;div id='settings_tab_nav_2' class='settings_tab_nav common_icon'>&lt;/div>
-                                &lt;div id='settings_tab_nav_3' class='settings_tab_nav common_icon'>&lt;/div>
-                                &lt;div id='settings_tab_nav_4' class='settings_tab_nav common_icon'>&lt;/div>
-                                &lt;div id='settings_tab_nav_5' class='settings_tab_nav common_icon'>&lt;/div>
-                                &lt;div id='settings_tab_nav_6' class='settings_tab_nav common_icon'>&lt;/div>
-                                &lt;div id='settings_tab_nav_7' class='settings_tab_nav common_icon'>&lt;/div>
+const template = () =>` &lt;div id="theme_background">
+                            &lt;div class="moon">
+                                &lt;div class="crater crater-1">&lt;/div>
+                                &lt;div class="crater crater-2">&lt;/div>
+                                &lt;div class="crater crater-3">&lt;/div>   
+                                &lt;div class="crater crater-4">&lt;/div>
+                                &lt;div class="crater crater-5">&lt;/div>
+                                &lt;div class="crater crater-6">&lt;/div>
+                                &lt;div class="crater crater-7">&lt;/div>
                             &lt;/div>
-                            &lt;div id='settings_content' class='settings_tab_content'>&lt;/div>
-                            &lt;div id='settings_close' class='common_dialogue_button common_icon' >&lt;/div>
+                            &lt;div class="sunholder">
+                                &lt;div class="sun">&lt;/div>
+                                &lt;div class="raybase ray1">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray2">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray3">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray4">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray5">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray6">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray7">&lt;div class="ray">&lt;/div>&lt;/div>
+                                &lt;div class="raybase ray8">&lt;div class="ray">&lt;/div>&lt;/div>
+                            &lt;/div>
+                            &lt;div class="x1">
+                                &lt;div class="cloud">
+                                &lt;/div>
+                            &lt;/div>
+                            &lt;div class="x2">
+                                &lt;div class="cloud">
+                                &lt;/div>
+                            &lt;/div>
+                            &lt;div class="x3">
+                                &lt;div class="cloud">
+                                &lt;/div>
+                            &lt;/div>
+                            &lt;div class="x4">
+                                &lt;div class="cloud">
+                                &lt;/div>
+                            &lt;/div>
+                            &lt;div class="x5">
+                                &lt;div class="cloud">
+                                &lt;/div>
+                            &lt;/div>
                         &lt;/div>
-                        &lt;div id='dialogues'>
-                            &lt;div id='dialogue_loading'>&lt;/div>
-                            &lt;div id='dialogue_info' class='common_dialogue_content'>&lt;/div>
-                            &lt;div id='dialogue_scan_open_mobile' class='common_dialogue_content'>&lt;/div>
-                        &lt;/div>
-                        &lt;div id='toolbar_bottom'>
-                            &lt;div id='toolbar_btn_about' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_print' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_day' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='app_profile_toolbar'>&lt;/div>
-                            &lt;div id='toolbar_btn_month' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_year' class='common_toolbar_button common_icon' >&lt;/div>
-                            &lt;div id='toolbar_btn_settings' class='common_toolbar_button common_icon'>&lt;/div>
-                        &lt;/div>`;
+                        &lt;div id='app_profile_toolbar'>&lt;/div>`;
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
