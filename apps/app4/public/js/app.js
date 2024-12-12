@@ -133,11 +133,11 @@ const appEventClick = event =>{
 };
 
 /**
- * Leaflet init
+ * Init app
  * @function
  * @returns {Promise.<void>}
  */
-const appModuleLeafletInit = async ()=>{
+const appInit = async () =>{
     appFrameworkSet();
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
@@ -157,25 +157,18 @@ const appModuleLeafletInit = async ()=>{
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
-    common.commonModuleLeafletInit({mount_div:'mapid',
-                    latitude:common.COMMON_GLOBAL.client_latitude,
-                    longitude:common.COMMON_GLOBAL.client_longitude,
-                    place:common.COMMON_GLOBAL.client_place,
-                    doubleclick_event:null, 
-                    update_map:true});
-};
-/**
- * Init app
- * @function
- * @returns {Promise.<void>}
- */
-const appInit = async () =>{
     await common.commonComponentRender({
         mountDiv:   'common_user_account',
         data:       null,
         methods:    null,
         path:       '/common/component/common_iam_avatar.js'});
-    appModuleLeafletInit();
+    common.commonModuleLeafletInit({mount_div:'mapid',
+                                    latitude:common.COMMON_GLOBAL.client_latitude,
+                                    longitude:common.COMMON_GLOBAL.client_longitude,
+                                    place:common.COMMON_GLOBAL.client_place,
+                                    doubleclick_event:null, 
+                                    update_map:true});
+
 };
 /**
  * Init common
