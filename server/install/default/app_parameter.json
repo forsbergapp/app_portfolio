@@ -41,7 +41,15 @@
         "app_link_url":     {"value":"",  "comment":""}
     },
     {
-        "app_id": 2,
+        "app_id": 2, 
+        "app_text_edit":    {"value":"1", "comment":""},
+        "app_copyright":    {"value":"©", "comment":""},
+        "app_email":        {"value":"",  "comment":""},
+        "app_link_title":   {"value":"",  "comment":""},
+        "app_link_url":     {"value":"",  "comment":""}
+    },
+    {
+        "app_id": 3,
         "app_text_edit":                                    {"value": "1"},
         "app_copyright":                                    {"value": "©"},
         "app_email":                                        {"value": ""},
@@ -109,14 +117,6 @@
         "app_prayer_default_show_midnight":                 {"value":false,                                             "comment":"Column midnight, default false"},
         "app_prayer_default_show_sunset":                   {"value":false,                                             "comment":"Column sunset, default false"},
         "app_prayer_default_timeformat":                    {"value":"12hNS",                                           "comment":"Timeformat: 12h with no suffix"}
-    },
-    {
-        "app_id": 3, 
-        "app_text_edit":    {"value":"1", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
     },
     {
         "app_id": 4, 
