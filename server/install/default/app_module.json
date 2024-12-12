@@ -28,20 +28,20 @@
     },
     {
         "id":4,
-        "app_id": 2,
+        "app_id": 3,
         "common_type": "REPORT",
         "common_name": "TIMETABLE",
         "common_role": "APP",
-        "common_path": "/apps/app2/src/report/timetable.js",
+        "common_path": "/apps/app3/src/report/timetable.js",
         "common_description": "Timetable day, month and year"
     },
     {
         "id":5,
-        "app_id": 2,
+        "app_id": 3,
         "common_type": "MODULE",
         "common_name": "MODULE_LIB_TIMETABLE",
         "common_role": "APP",
-        "common_path": "/apps/app2/src/modules/module_lib_timetable.js",
+        "common_path": "/apps/app3/src/modules/module_lib_timetable.js",
         "common_description": "Timetable module"
     },
     {

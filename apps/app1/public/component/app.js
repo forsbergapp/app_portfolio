@@ -1,57 +1,18 @@
 /**
  * Displays app
- * @module apps/app1/component/app
+ * @module apps/app3/component/app
  */
-
 /**
  * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
  * @returns {string}
  */
-const template = () =>` <div id="theme_background">
-                            <div class="moon">
-                                <div class="crater crater-1"></div>
-                                <div class="crater crater-2"></div>
-                                <div class="crater crater-3"></div>   
-                                <div class="crater crater-4"></div>
-                                <div class="crater crater-5"></div>
-                                <div class="crater crater-6"></div>
-                                <div class="crater crater-7"></div>
+const template = () =>` <div id='dialogue_documents' class='dialogue'>
+                            <div id='dialogue_documents_content' class='dialogue_content'>
+                                <div id='doc_list'></div>
                             </div>
-                            <div class="sunholder">
-                                <div class="sun"></div>
-                                <div class="raybase ray1"><div class="ray"></div></div>
-                                <div class="raybase ray2"><div class="ray"></div></div>
-                                <div class="raybase ray3"><div class="ray"></div></div>
-                                <div class="raybase ray4"><div class="ray"></div></div>
-                                <div class="raybase ray5"><div class="ray"></div></div>
-                                <div class="raybase ray6"><div class="ray"></div></div>
-                                <div class="raybase ray7"><div class="ray"></div></div>
-                                <div class="raybase ray8"><div class="ray"></div></div>
-                            </div>
-                            <div class="x1">
-                                <div class="cloud">
-                                </div>
-                            </div>
-                            <div class="x2">
-                                <div class="cloud">
-                                </div>
-                            </div>
-                            <div class="x3">
-                                <div class="cloud">
-                                </div>
-                            </div>
-                            <div class="x4">
-                                <div class="cloud">
-                                </div>
-                            </div>
-                            <div class="x5">
-                                <div class="cloud">
-                                </div>
-                            </div>
-                        </div>
-                        <div id='app_profile_toolbar'></div>`;
+                        </div>`;
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
@@ -62,7 +23,7 @@ const template = () =>` <div id="theme_background">
  *                      template:string}>}
  */
 const component = async props => {
-    props;
+    props; 
     return {
         lifecycle:  null,
         data:       null,
