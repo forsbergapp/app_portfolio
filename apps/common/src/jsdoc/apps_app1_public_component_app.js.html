@@ -7,58 +7,19 @@
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/**
  * Displays app
- * @module apps/app1/component/app
+ * @module apps/app3/component/app
  */
-
 /**
  * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
  * @returns {string}
  */
-const template = () =>` &lt;div id="theme_background">
-                            &lt;div class="moon">
-                                &lt;div class="crater crater-1">&lt;/div>
-                                &lt;div class="crater crater-2">&lt;/div>
-                                &lt;div class="crater crater-3">&lt;/div>   
-                                &lt;div class="crater crater-4">&lt;/div>
-                                &lt;div class="crater crater-5">&lt;/div>
-                                &lt;div class="crater crater-6">&lt;/div>
-                                &lt;div class="crater crater-7">&lt;/div>
+const template = () =>` &lt;div id='dialogue_documents' class='dialogue'>
+                            &lt;div id='dialogue_documents_content' class='dialogue_content'>
+                                &lt;div id='doc_list'>&lt;/div>
                             &lt;/div>
-                            &lt;div class="sunholder">
-                                &lt;div class="sun">&lt;/div>
-                                &lt;div class="raybase ray1">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray2">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray3">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray4">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray5">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray6">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray7">&lt;div class="ray">&lt;/div>&lt;/div>
-                                &lt;div class="raybase ray8">&lt;div class="ray">&lt;/div>&lt;/div>
-                            &lt;/div>
-                            &lt;div class="x1">
-                                &lt;div class="cloud">
-                                &lt;/div>
-                            &lt;/div>
-                            &lt;div class="x2">
-                                &lt;div class="cloud">
-                                &lt;/div>
-                            &lt;/div>
-                            &lt;div class="x3">
-                                &lt;div class="cloud">
-                                &lt;/div>
-                            &lt;/div>
-                            &lt;div class="x4">
-                                &lt;div class="cloud">
-                                &lt;/div>
-                            &lt;/div>
-                            &lt;div class="x5">
-                                &lt;div class="cloud">
-                                &lt;/div>
-                            &lt;/div>
-                        &lt;/div>
-                        &lt;div id='app_profile_toolbar'>&lt;/div>`;
+                        &lt;/div>`;
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
@@ -69,7 +30,7 @@ const template = () =>` &lt;div id="theme_background">
  *                      template:string}>}
  */
 const component = async props => {
-    props;
+    props; 
     return {
         lifecycle:  null,
         data:       null,
