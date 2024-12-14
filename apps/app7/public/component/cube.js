@@ -4,7 +4,7 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
+ * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
  * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
  * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
  * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
@@ -115,7 +115,7 @@ const template = props =>`  <div id='cube'>
  *                      common_app_id:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonElementRow:commonElementRow,
+ *                      commonMiscElementRow:commonMiscElementRow,
  *                      commonLovShow:commonLovShow,
  *                      commonLovClose:commonLovClose,
  *                      commonMessageShow:commonMessageShow,
@@ -182,7 +182,7 @@ const component = async props => {
             * @returns {void}
             */
             const function_event = event => {
-                const solution = atob(props.methods.commonElementRow(event.target).getAttribute('data-id') ?? '');
+                const solution = atob(props.methods.commonMiscElementRow(event.target).getAttribute('data-id') ?? '');
                 if (button_id=='button_solve' || button_id=='button_solve_cubestate')
                     cube.makeMoves(solution);
                 else

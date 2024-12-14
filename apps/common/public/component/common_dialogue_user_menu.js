@@ -7,7 +7,7 @@
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
  * @typedef {CommonModuleCommon['commonUserSessionCountdown']} commonUserSessionCountdown
  * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
  */
@@ -90,7 +90,7 @@ const template = props =>`  ${props.app_id == props.common_app_id?
  *                      user_arabic_script:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
  *                      commonFFB:commonFFB,
  *                      commonComponentRender:commonComponentRender,
  *                      commonUserSessionCountdown:commonUserSessionCountdown,
@@ -202,11 +202,11 @@ const component = async props => {
                 path:       '/common/component/common_select.js'});
         }
         //set current value on all the selects
-        props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
+        props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', props.data.user_locale);
         if ((props.data.admin_only == 1)==false){
-            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_timezone_select', props.data.user_timezone);
-            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
-            props.methods.commonSelectCurrentValueSet('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
+            props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_user_timezone_select', props.data.user_timezone);
+            props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_user_direction_select', props.data.user_direction ?? '');
+            props.methods.commonMiscSelectCurrentValueSet('common_dialogue_user_menu_user_arabic_script_select', props.data.user_arabic_script ?? '');
         }
         if (props.data.token_exp && props.data.token_iat){
             const element_id = 'common_dialogue_user_menu_token_countdown_time';

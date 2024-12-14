@@ -6,7 +6,7 @@
 /**
  * @import {CommonProfileSearchRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonInputControl']} commonInputControl
+ * @typedef {CommonModuleCommon['commonMiscInputControl']} commonMiscInputControl
  */
 
 /**
@@ -41,7 +41,7 @@ const template = props =>`  ${props.records.length>0?
  *                      client_longitude:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonInputControl:commonInputControl,
+ *                      commonMiscInputControl:commonMiscInputControl,
  *                      function_click_function:function,
  *                      commonFFB:commonFFB}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
@@ -54,14 +54,14 @@ const component = async props => {
 
     //check search text
     const searched_username = props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent;
-    const commonInputControl =   props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input'),null]]}) &&
+    const commonMiscInputControl =   props.methods.commonMiscInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input'),null]]}) &&
                             props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').textContent!='' &&
                             searched_username.length>1;
-    if (!commonInputControl){
+    if (!commonMiscInputControl){
         props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         props.methods.COMMON_DOCUMENT.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
-    const records = commonInputControl?await props.methods.commonFFB(
+    const records = commonMiscInputControl?await props.methods.commonFFB(
                                                 {
                                                     path:   '/server-db/user_account-profile/', 
                                                     query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
@@ -78,7 +78,7 @@ const component = async props => {
         }
     };
     return {
-        lifecycle:  {onMounted:commonInputControl?onMounted:null},
+        lifecycle:  {onMounted:commonMiscInputControl?onMounted:null},
         data:       null,
         methods:    null,
         template:   template({records:records})

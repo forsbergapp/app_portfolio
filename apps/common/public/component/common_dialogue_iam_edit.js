@@ -5,7 +5,7 @@
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonFormatJsonDate']} commonFormatJsonDate
+ * @typedef {CommonModuleCommon['commonMiscFormatJsonDate']} commonMiscFormatJsonDate
  * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
  */
 
@@ -203,7 +203,7 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFormatJsonDate:commonFormatJsonDate,
+ *                      commonMiscFormatJsonDate:commonMiscFormatJsonDate,
  *                      commonMessageShow:commonMessageShow,
  *                      commonFFB:commonFFB
  *                      }}} props
@@ -268,9 +268,9 @@ const component = async props => {
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img').style.backgroundImage= user.provider_image?`url('${user.provider_image}')`:'url()';
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img').setAttribute('data-image',user.provider_image);
                 } 
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_last_logintime').textContent = props.methods.commonFormatJsonDate(user.last_logintime, null);
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_created').textContent = props.methods.commonFormatJsonDate(user.date_created ?? user.created, null);
-            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_modified').textContent = props.methods.commonFormatJsonDate(user.date_modified ?? user.modified, null);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_last_logintime').textContent = props.methods.commonMiscFormatJsonDate(user.last_logintime, null);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_created').textContent = props.methods.commonMiscFormatJsonDate(user.date_created ?? user.created, null);
+            props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_label_data_account_modified').textContent = props.methods.commonMiscFormatJsonDate(user.date_modified ?? user.modified, null);
             props.methods.COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (user.avatar ?? user.provider_image)?
                                                                                                             `url('${user.avatar ?? user.provider_image}')`:
                                                                                                             'url()';

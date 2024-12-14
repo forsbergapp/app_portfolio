@@ -43,7 +43,7 @@ const appEventClick = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
@@ -102,7 +102,7 @@ const appEventClick = event => {
                                         user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
                                         },
                             methods:    {
-                                        commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                        commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                                         commonFFB:common.commonFFB,
                                         commonComponentRender:common.commonComponentRender,
                                         commonUserSessionCountdown:common.commonUserSessionCountdown,
@@ -135,7 +135,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'common_dialogue_iam_start_identity_provider_login':{
-                    const target_row = common.commonElementRow(event.target);
+                    const target_row = common.commonMiscElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
                         appUserLogin(null, null, null, parseInt(provider_element.textContent));
@@ -173,7 +173,7 @@ const appEventKeyUp = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('keyup',event)
         .then(()=>{
             switch (event_target_id){
@@ -226,7 +226,7 @@ const appThemeUpdate = (toggle_theme=false) => {
         }
     }    
     COMMON_DOCUMENT.body.className = theme;
-    common.commonPreferencesUpdateBodyClassFromPreferences();
+    common.commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
 /**
  * App theme get
@@ -249,7 +249,7 @@ const appThemeUpdate = (toggle_theme=false) => {
         COMMON_DOCUMENT.body.className = 'app_theme_sun';
     else
         COMMON_DOCUMENT.body.className = 'app_theme_moon';
-    common.commonPreferencesUpdateBodyClassFromPreferences();
+    common.commonMiscPreferencesUpdateBodyClassFromPreferences();
     appThemeUpdateFromBody();
 };
 
@@ -370,7 +370,7 @@ const appInit = async (parameters) => {
 
     appAppsGet();
     
-    const user = common.commonWndowLocationPathname(0).split('/profile/')[1];
+    const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
     if (user && user !='') {
         //show profile for user entered in url
         common.commonProfileShow(null, user);

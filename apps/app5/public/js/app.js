@@ -35,7 +35,7 @@ const appEventClick = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
@@ -204,7 +204,7 @@ const appEventClick = event => {
                                     user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
                                     },
                         methods:    {
-                                    commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                    commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                                    commonFFB:common.commonFFB,
                                     commonComponentRender:common.commonComponentRender,
                                     commonUserSessionCountdown:common.commonUserSessionCountdown,
@@ -216,9 +216,9 @@ const appEventClick = event => {
                             mountDiv:   'common_dialogue_user_menu_app_theme', 
                             data:       null,
                             methods:    {
-                                        commonThemeDefaultList:common.commonThemeDefaultList,
+                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
                                         commonComponentRender:common.commonComponentRender, 
-                                        app_theme_update:common.commonPreferencesPostMount
+                                        app_theme_update:common.commonMiscPreferencesPostMount
                                         },
                             path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
@@ -233,7 +233,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'common_dialogue_iam_start_identity_provider_login':{
-                    const target_row = common.commonElementRow(event.target);
+                    const target_row = common.commonMiscElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
                         common.commonUserLogin(null, null, null, parseInt(provider_element.textContent))
@@ -274,7 +274,7 @@ const appEventKeyUp = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('keyup',event)
         .then(()=>{
             switch(event_target_id){

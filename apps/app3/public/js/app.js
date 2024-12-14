@@ -16,7 +16,7 @@ const commonPath ='/common/js/common.js';
 const common = await import(commonPath);
 
 /**@type {CommonModuleRegional} */
-const {getTimezone} = await import(common.commonImportmap('regional'));
+const {getTimezone} = await import(common.commonMiscImportmap('regional'));
 
 /**@type {CommonModuleLibTimetable} */
 let appLibTimetable;
@@ -576,7 +576,7 @@ const appToolbarButton = async (choice) => {
         //print
         case 1:
             {
-                if (common.commonMobile())
+                if (common.commonMiscMobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 appReportTimetablePrint();
@@ -586,7 +586,7 @@ const appToolbarButton = async (choice) => {
         case 3:
         case 4:
             {
-                if (common.commonMobile())
+                if (common.commonMiscMobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 COMMON_DOCUMENT.querySelector('#toolbar_btn_day').classList.remove('toolbar_bottom_selected');
@@ -602,7 +602,7 @@ const appToolbarButton = async (choice) => {
         case 5:
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
-                if (common.commonMobile())
+                if (common.commonMiscMobile())
                     paper.style.display = 'none';
                 settings.style.visibility = 'visible';
                 SettingShow(1);
@@ -656,8 +656,8 @@ const SettingShow = async (tab_selected) => {
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonDbAppSettingsGet:common.commonDbAppSettingsGet,
-                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
                             commonFFB:common.commonFFB
                             },
@@ -675,11 +675,11 @@ const SettingShow = async (tab_selected) => {
                             lib_timetable_APP_REPORT_GLOBAL:appLibTimetable.APP_REPORT_GLOBAL,
                             appComponentSettingUpdate:appComponentSettingUpdate,
                             getTimezone:getTimezone,
-                            commonTimezoneDate:common.commonTimezoneDate,
+                            commonMiscTimezoneDate:common.commonMiscTimezoneDate,
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
-                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonDbAppSettingsGet:common.commonDbAppSettingsGet
+                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -693,9 +693,9 @@ const SettingShow = async (tab_selected) => {
                             themes:APP_GLOBAL.themes},
                 methods:    {
                             appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
-                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonDbAppSettingsGet:common.commonDbAppSettingsGet
+                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -732,9 +732,9 @@ const SettingShow = async (tab_selected) => {
                             },
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonDbAppSettingsGet:common.commonDbAppSettingsGet
+                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet
                             },
                 path:`/component/settings_tab${tab_selected}.js`});
             break;
@@ -779,7 +779,7 @@ const appPaperZoom = (zoomvalue = null) => {
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == null) {
-        if (common.commonMobile())
+        if (common.commonMiscMobile())
             div.style.transform = 'scale(0.5)';
         else
             div.style.transform = 'scale(0.7)';
@@ -797,7 +797,7 @@ const appPaperZoom = (zoomvalue = null) => {
  * @returns {void}
  */
 const appDialogueShow = (dialogue) => {
-    if (dialogue == 'SCAN' && common.commonMobile()==false){
+    if (dialogue == 'SCAN' && common.commonMiscMobile()==false){
         common.commonComponentRender({mountDiv:   'dialogue_scan_open_mobile',
                                 data:       null,
                                 methods:    {
@@ -864,10 +864,10 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                     COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = city + ', ' + country;
                 }
                 //display empty popular place select
-                common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+                common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
                 appModuleLeafletMapQibblaShow();
                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = timezone;
-                appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(timezone);
+                appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(timezone);
                 appUserSettingUpdate('GPS');    
                 break;
             }
@@ -908,7 +908,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
                 const gps_lat_input = COMMON_DOCUMENT.querySelector('#setting_input_lat');
                 const gps_long_input = COMMON_DOCUMENT.querySelector('#setting_input_long');
                 
-                common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+                common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
 
                 common.commonMicroserviceGeolocationPlace(gps_long_input.textContent, gps_lat_input.textContent).then((/**@type{string}*/gps_place) => {
                     //Update map
@@ -951,7 +951,7 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
         case 'IMAGE_HEADER_LOAD':
         case 'IMAGE_FOOTER_LOAD':
             {
-                await common.commonImageShow( COMMON_DOCUMENT.querySelector(`#setting_report${setting_type=='HEADER_LOAD'?'header':'footer'}_img`), 
+                await common.commonMiscImageShow( COMMON_DOCUMENT.querySelector(`#setting_report${setting_type=='HEADER_LOAD'?'header':'footer'}_img`), 
                                         item_id, 
                                         APP_GLOBAL.image_header_footer_width, 
                                         APP_GLOBAL.image_header_footer_height);
@@ -1261,7 +1261,7 @@ const appUserSettingLink = (item) => {
  */
 const appUserSettingFunction = async (function_name, initial_user_setting, add_settings=true) => {
    
-    if (common.commonInputControl(null,{
+    if (common.commonMiscInputControl(null,{
                                     check_valid_list_values:[
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,null],
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.gps_lat_text?.toString()??'',null],
@@ -1651,7 +1651,7 @@ const appEventClick = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
@@ -1882,7 +1882,7 @@ const appEventClick = event => {
                 //settings
                 case 'settings_close':{
                     common.commonComponentRemove('settings_content');
-                    if (common.commonMobile())
+                    if (common.commonMiscMobile())
                         COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
                     COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
                     const timetable_type = COMMON_DOCUMENT.querySelector('#toolbar_bottom .toolbar_bottom_selected').id
@@ -2061,7 +2061,7 @@ const appEventClick = event => {
                                         user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
                                         },
                             methods:    {
-                                        commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                        commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                                        commonFFB:common.commonFFB,
                                         commonComponentRender:common.commonComponentRender,
                                         commonUserSessionCountdown:common.commonUserSessionCountdown,
@@ -2073,9 +2073,9 @@ const appEventClick = event => {
                                 mountDiv:   'common_dialogue_user_menu_app_theme',
                                 data:       null,
                                 methods:    {
-                                            commonThemeDefaultList:common.commonThemeDefaultList,
+                                            commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
                                             commonComponentRender:common.commonComponentRender, 
-                                            app_theme_update:common.commonPreferencesPostMount
+                                            app_theme_update:common.commonMiscPreferencesPostMount
                                             },
                                 path:       '/common/component/common_dialogue_user_menu_app_theme.js'}));
                         break;
@@ -2099,7 +2099,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'common_dialogue_iam_start_identity_provider_login':{
-                    const target_row = common.commonElementRow(event.target);
+                    const target_row = common.commonMiscElementRow(event.target);
                     const provider_element = target_row.querySelector('.common_login_provider_id');
                     if (provider_element && provider_element.textContent)
                         appUserLoginProvider(parseInt(provider_element.textContent));
@@ -2127,7 +2127,7 @@ const appEventClick = event => {
                             mountDiv:   'common_profile_main_stat_row2',
                             data:       {   
                                         user_account_id:common.COMMON_GLOBAL.user_account_id,
-                                        profile_id:common.commonElementRow(event.target).getAttribute('data-user_account_id')},
+                                        profile_id:common.commonMiscElementRow(event.target).getAttribute('data-user_account_id')},
                             methods:    {
                                         commonComponentRender:common.commonComponentRender,
                                        commonFFB:common.commonFFB
@@ -2151,7 +2151,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'common_module_leaflet_control_my_location_id':{
-                    common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+                    common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
                     COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = common.COMMON_GLOBAL.client_place;
                     COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = common.COMMON_GLOBAL.client_longitude;
                     COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = common.COMMON_GLOBAL.client_latitude;
@@ -2159,7 +2159,7 @@ const appEventClick = event => {
                     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                     //set qibbla
                     appModuleLeafletMapQibblaShow();
-                    appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
+                    appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.regional_timezone);
                     appUserSettingUpdate('GPS');
                     break;
                 }       
@@ -2180,7 +2180,7 @@ const appEventChange = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('change',event)
         .then(()=>{
             switch (event_target_id){
@@ -2212,20 +2212,20 @@ const appEventKeyUp = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('keyup',event)
         .then(()=>{
             switch(event_target_id){
                 //settings gps
                 case 'setting_input_place':{
-                    common.commonSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
+                    common.commonMiscSelectCurrentValueSet('setting_select_popular_place', null, 'id', null);
                     appUserSettingUpdate('GPS');
                     break;
                 }
                 case 'setting_input_long':
                 case 'setting_input_lat':{
                     appUserSettingUpdate('GPS');
-                    common.commonTypewatch(appComponentSettingUpdate, 'GPS', 'POSITION');
+                    common.commonMiscTypewatch(appComponentSettingUpdate, 'GPS', 'POSITION');
                     break;
                 }
                 //settings text
@@ -2468,7 +2468,7 @@ const appInit = async parameters => {
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
     if (common.COMMON_GLOBAL.client_timezone)
-        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+        appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(common.COMMON_GLOBAL.client_timezone);
     else
         appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = new Date();
     appLibTimetable.APP_REPORT_GLOBAL.session_currentHijriDate = [0,0];
@@ -2486,7 +2486,7 @@ const appInit = async parameters => {
         const show_start = async () => {
             //show default startup
             await appToolbarButton(APP_GLOBAL.app_default_startup_page);
-            const user = common.commonWndowLocationPathname(0).split('/profile/')[1];
+            const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
             if (user && user !='') {
                 //show profile for user entered in url
                 common.commonProfileShow(null, user);
