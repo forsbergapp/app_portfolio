@@ -14,12 +14,12 @@
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
+ * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
  * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
  * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
- * @typedef {CommonModuleCommon['commonInputControl']} commonInputControl
+ * @typedef {CommonModuleCommon['commonMiscInputControl']} commonMiscInputControl
  * @typedef {CommonModuleCommon['commonWindowUserAgentPlatform']} commonWindowUserAgentPlatform
- * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
+ * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
  * @typedef {CommonModuleCommon['commonModuleLeafletInit']} commonModuleLeafletInit
  * @typedef {CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update']} map_update
  * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
@@ -69,11 +69,11 @@ const template = () => `&lt;div id='menu_monitor_content_widget1' class='widget'
  *                      appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow, 
  *                      map_update:map_update,
  *                      commonModuleLeafletInit:commonModuleLeafletInit,
- *                      commonElementRow:commonElementRow,
- *                      commonInputControl:commonInputControl,
+ *                      commonMiscElementRow:commonMiscElementRow,
+ *                      commonMiscInputControl:commonMiscInputControl,
  *                      commonComponentRender:commonComponentRender,
  *                      commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
- *                      commonRoundOff:commonRoundOff,
+ *                      commonMiscRoundOff:commonMiscRoundOff,
  *                      commonLovClose:commonLovClose,
  *                      commonLovShow:commonLovShow,
  *                      commonFFB:commonFFB}}} props 
@@ -219,13 +219,13 @@ const component = async props => {
                         monitorShow:monitorShow,
                         map_update:props.methods.map_update,
                         appSecureDialogueSendBroadcastShow:props.methods.appSecureDialogueSendBroadcastShow,
-                        commonElementRow:props.methods.commonElementRow,
+                        commonMiscElementRow:props.methods.commonMiscElementRow,
                         commonLovClose:props.methods.commonLovClose,
                         commonLovShow:props.methods.commonLovShow,
-                        commonInputControl:props.methods.commonInputControl,
+                        commonMiscInputControl:props.methods.commonMiscInputControl,
                         commonComponentRender:props.methods.commonComponentRender,
                         commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
-                        commonRoundOff:props.methods.commonRoundOff,
+                        commonMiscRoundOff:props.methods.commonMiscRoundOff,
                         commonFFB:props.methods.commonFFB
                         },
             path:       '/component/menu_monitor_detail.js'})

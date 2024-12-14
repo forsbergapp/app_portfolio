@@ -72,7 +72,7 @@ const appEventClick = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
@@ -94,7 +94,7 @@ const appEventClick = event => {
                 }
                 case 'doc_list':
                 case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
-                    const target_row = common.commonElementRow(event.target);
+                    const target_row = common.commonMiscElementRow(event.target);
                     if (target_row.querySelector('.doc_list_item_image')?.getAttribute('data-type'))
                         common.commonComponentRender({
                             mountDiv:   'common_window_info',
