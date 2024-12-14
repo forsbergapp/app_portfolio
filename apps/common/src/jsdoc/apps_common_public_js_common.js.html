@@ -103,120 +103,44 @@ const COMMON_ICONS = {
     infinite:                 '∞',
 };
 Object.seal(COMMON_ICONS);
+
 /**
- * Importmap that return file path for given file
- * to solve importmap not working for some browsers
- * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
- * @return {string}
- */
-const commonImportmap = file =>{
-    return {
-        'easy.qrcode'   : '/common/modules/easy.qrcode/easy.qrcode.js',
-        leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
-        React 		    : '/common/modules/react/react.development.js',
-        ReactDOM 	    : '/common/modules/react/react-dom.development.js',
-        regional  	    : '/common/modules/regional/regional.js',
-        Vue 	        : '/common/modules/vue/vue.esm-browser.js'
-    }[file] ??'';
-};
+ * @returns {Promise&lt;{  id:number,
+*                      app_id:number,
+*                      value:string,
+*                      text:string,
+*                      app_setting_type_name:string,
+*                      data2:string,
+*                      data3:string,
+*                      data4:string,
+*                      data5:string}[]>}
+*/
+const commonMiscDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_DATA'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 /**
  * Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @param {*} element 
  * @returns {string} 
  */
-const commonElementId = element => element.id==''?commonElementId(element.parentNode):element.id;
+const commonMiscElementId = element => element.id==''?commonMiscElementId(element.parentNode):element.id;
 /**
  * Finds recursive parent row with class common_row. Use when clicking in a list of records
  * @param {*} element 
  * @returns {HTMLElement} 
  */
-const commonElementRow = element => element.classList.contains('common_row')?element:commonElementRow(element.parentNode);
+const commonMiscElementRow = element => element.classList.contains('common_row')?element:commonMiscElementRow(element.parentNode);
 /**
  * Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
  * @param {*} element 
  * @returns {HTMLElement} 
  */
-const commonElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
-/**
- * Length without diacrites
- * @param {string} str 
- * @returns {number}
- */
-const commonLengthWithoutDiacrites = (str) =>{
-    return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
-};
-/**
- * Get timezone offset
- * @param {string} local_timezone 
- * @returns {number}
- */
-const commonTimezoneOffset = (local_timezone) =>{
-    const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
-                            Number(Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}))),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'}))).valueOf();
-    const local = new Date(	Number(new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'}))-1,
-                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false})),
-                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
-    return (local-utc) / 1000 / 60 / 60;
-};
-/**
- * Get timezone date
- * @param {string} timezone 
- * @returns {Date}
- */
-const commonTimezoneDate = timezone =>{
-    const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})));
-    return new Date(utc.setHours(  utc.getHours() + commonTimezoneOffset(timezone)));
-};
-
-/**
- * Delay API calls when typing to avoid too many calls 
- * ES6 spread operator, arrow function without function keyword 
- * @param {*} function_name 
- * @param  {...any} parameter 
- */
-const commonTypewatch = (function_name, ...parameter) =>{
-    let type_delay=250;
-    if (parameter.length>0 &amp;&amp; parameter[0] !=null)
-        switch (parameter[0].code){
-            case 'ArrowLeft':
-            case 'ArrowRight':
-            case 'ArrowUp':
-            case 'ArrowDown':{
-                //immediate response when navigating
-                type_delay = 0;
-                break;
-            }
-        }
-    commonWindowSetTimeout(() => {
-        function_name(...parameter);
-    }, type_delay);
-};
-/**
- * Rounds a number with 2 decimals
- * @param {number} num 
- * @returns number
- */
-const commonRoundOff = num => {
-    const x = Math.pow(10,2);
-    return Math.round(num * x) / x;
-  };
-
+const commonMiscElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
 /**
  * Format JSON date with user timezone
  * @param {string} db_date 
  * @param {boolean|null} short 
  * @returns {string|null}
  */
-const commonFormatJsonDate = (db_date, short) => {
+const commonMiscFormatJsonDate = (db_date, short) => {
     if (db_date == null)
         return null;
     else {
@@ -257,22 +181,13 @@ const commonFormatJsonDate = (db_date, short) => {
     }
 };
 /**
- * 
- * Check if mobile
- * @returns {boolean}
- */
-const commonMobile = () =>{
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(COMMON_WINDOW.navigator.userAgent));
-};
-
-/**
  * Converts image
  * @param {string} image_url 
  * @param {number} image_width 
  * @param {number} image_height 
  * @returns {Promise.&lt;string>}
  */
-const commonImageConvert = async (image_url, image_width, image_height) => {
+const commonMiscImageConvert = async (image_url, image_width, image_height) => {
     //function to convert images to specified size and mime type according to parameters
     return new Promise((resolve) => {
         if (image_url=='')
@@ -302,7 +217,7 @@ const commonImageConvert = async (image_url, image_width, image_height) => {
  * @param {number} image_height 
  * @returns {Promise.&lt;null>}
  */
-const commonImageShow = async (item_img, item_input, image_width, image_height) => {
+const commonMiscImageShow = async (item_img, item_input, image_width, image_height) => {
     return new Promise((resolve)=>{
         const file = COMMON_DOCUMENT.querySelector('#' + item_input).files[0];
         const reader = new FileReader();
@@ -329,7 +244,7 @@ const commonImageShow = async (item_img, item_input, image_width, image_height) 
             else {
                 reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
                     if (event.target)
-                        commonImageConvert(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
+                        commonMiscImageConvert(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
                             item_img.style.backgroundImage= srcEncoded?`url('${srcEncoded}')`:'url()';
                             item_img.setAttribute('data-image', srcEncoded);
                             resolve(null);
@@ -347,24 +262,356 @@ const commonImageShow = async (item_img, item_input, image_width, image_height) 
     
 };
 /**
- * Default app themes 
- */
-const commonThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
+ * Input control
+ * @param {HTMLElement|null} dialogue 
+ * @param {{
+*			check_valid_list_elements?:[HTMLElement,number|null][],
+*			check_valid_list_values?:[string,number|null][],
+*			username?:HTMLElement,
+*			password?:*,
+*          password_confirm?:HTMLElement,
+*          password_confirm_reminder?:HTMLElement,
+*			password_reminder?:HTMLElement,
+*			password_new?:HTMLElement,
+*			password_new_confirm?:*,
+*			email?:HTMLElement,
+*			bio?:HTMLElement
+*		}} validate_items 
+* @returns {boolean}
+*/
+const commonMiscInputControl = (dialogue, validate_items) =>{
+  let result = true;
+  /**
+   * Valid text element or value
+   * @param {HTMLElement|string} validate
+   * @returns {boolean}
+   */
+  const valid_text = validate =>{
+      let div;
+      if (typeof validate=='object')
+          div = validate;
+      else{
+          div = COMMON_DOCUMENT.createElement('div');
+          div.textContent = validate;
+      }
+      if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
+          return false;
+      else
+          try {
+              JSON.parse(JSON.stringify(div.textContent));
+              return true;
+              
+          } catch (error) {
+              return false;
+          }
+  };
+  /**
+   * Set error
+   * @param {HTMLElement} element 
+   * @param {HTMLElement|null} element2 
+   */
+  const set_error = (element, element2=null) => {
+      element.classList.add('common_input_error');
+      element2?element.classList.add('common_input_error'):null;
+      result = false;
+  };
+  if (dialogue)
+      dialogue.querySelectorAll('.common_input_error')
+          .forEach(element=>element.classList.remove('common_input_error'));
 
+  if (validate_items.check_valid_list_elements)
+      for (const element of validate_items.check_valid_list_elements){
+          element[0].classList.remove('common_input_error');
+      }
+      
+  //validate text content
+  if (validate_items.username &amp;&amp; valid_text(validate_items.username) == false){
+      set_error(validate_items.username);
+  }
+  if (validate_items.password &amp;&amp; valid_text(validate_items.password)== false){
+      set_error(validate_items.password);
+  }
+  if (validate_items.password_reminder &amp;&amp; valid_text(validate_items.password_reminder)== false){
+      set_error(validate_items.password);
+  }
+  if (validate_items.password_new &amp;&amp; valid_text(validate_items.password_new)== false){
+      set_error(validate_items.password);
+  }
+  if (validate_items.password_new_confirm &amp;&amp; valid_text(validate_items.password_new_confirm)== false){
+      set_error(validate_items.password);
+  }
+  if (validate_items.email &amp;&amp; valid_text(validate_items.email)== false){
+      set_error(validate_items.email);
+  }
+  if (validate_items.bio &amp;&amp; valid_text(validate_items.bio)== false){
+      set_error(validate_items.bio);
+  }
+  if (validate_items.check_valid_list_elements){
+      for (const element of validate_items.check_valid_list_elements){
+          if (valid_text(element[0])==false)
+              set_error(element[0]);
+      }
+  }
+  if (validate_items.check_valid_list_values){
+      for (const element of validate_items.check_valid_list_values){
+          if (valid_text(element[0])==false){
+              result = false;
+              break;
+          }
+      }
+  }
+  //validate text length
+  if (validate_items.username &amp;&amp; validate_items.username.textContent &amp;&amp; validate_items.username.textContent.length > 100){
+      set_error(validate_items.username);
+  }
+  if (validate_items.password &amp;&amp; validate_items.password.textContent.length > 100){
+      set_error(validate_items.password);
+  }
+  if (validate_items.password_reminder &amp;&amp; validate_items.password_reminder.textContent &amp;&amp; validate_items.password_reminder.textContent.length > 100){
+      set_error(validate_items.password_reminder);
+  }
+  if (validate_items.password_new &amp;&amp; validate_items.password_new.textContent &amp;&amp; validate_items.password_new.textContent.length > 100){
+      set_error(validate_items.password_new);
+  }
+  if (validate_items.bio &amp;&amp; validate_items.bio.textContent &amp;&amp; validate_items.bio.textContent.length > 150){
+      set_error(validate_items.bio);
+  }
+  if (validate_items.check_valid_list_elements){
+      for (const element of validate_items.check_valid_list_elements){
+          if (element[0] &amp;&amp; element[1] &amp;&amp; element[0].textContent &amp;&amp; element[0].textContent.length > element[1])
+              set_error(element[0]);
+      }
+  }
+  if (validate_items.check_valid_list_values){
+      for (const element of validate_items.check_valid_list_values){
+          if (element[0] &amp;&amp; element[1] &amp;&amp; element[0].length > element[1]){
+              result = false;
+              break;
+          }
+      }
+  }
+  //validate not empty
+  if (validate_items.username &amp;&amp; validate_items.username.textContent == '') {
+      set_error(validate_items.username);
+  }
+  if (validate_items.password &amp;&amp; validate_items.password.textContent == '') {
+      set_error(validate_items.password);
+  }
+  if (validate_items.email &amp;&amp; validate_items.email.textContent == '') {
+      set_error(validate_items.email);
+  }
+  if (validate_items.password &amp;&amp; validate_items.password_confirm &amp;&amp; validate_items.password_confirm.textContent ==''){
+      set_error(validate_items.password_confirm);
+  }
+  //validate same password
+  if (validate_items.password &amp;&amp; validate_items.password_confirm &amp;&amp; (validate_items.password.textContent != validate_items.password_confirm.textContent)){
+      set_error(validate_items.password, validate_items.password_confirm);
+  }
+  if (validate_items.password_new &amp;&amp; validate_items.password_new.textContent &amp;&amp; validate_items.password_new.textContent.length > 0 &amp;&amp; (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
+      set_error(validate_items.password_new, validate_items.password_new_confirm);
+  }
+  if (result==false){
+      commonMessageShow('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
+      return false;
+  }
+  else
+      return true;
+};
 /**
- * Common theme get
+ * Importmap that return file path for given file
+ * to solve importmap not working for some browsers
+ * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
+ * @return {string}
+ */
+const commonMiscImportmap = file =>{
+    return {
+        'easy.qrcode'   : '/common/modules/easy.qrcode/easy.qrcode.js',
+        leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
+        React 		    : '/common/modules/react/react.development.js',
+        ReactDOM 	    : '/common/modules/react/react-dom.development.js',
+        regional  	    : '/common/modules/regional/regional.js',
+        Vue 	        : '/common/modules/vue/vue.esm-browser.js'
+    }[file] ??'';
+};
+/**
+ * List key event
+ * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @param {string} module 
+ * @param {function|null} event_function 
  * @returns {void}
  */
- const commonThemeUpdateFromBody = () => {    
-    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').textContent = 
-        commonThemeDefaultList().filter(theme=>theme.VALUE.toString()==COMMON_DOCUMENT.body.className[9])[0].TEXT;
-    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', COMMON_DOCUMENT.body.className[9]);
+const commonMiscListKeyEvent = (event, module, event_function=null) => {
+    const list_name = module=='lov'?'list_' + 'lov':module + '_search';
+    const search_input = module + '_search';
+    switch (event.code){
+        case 'ArrowLeft':
+        case 'ArrowRight':{
+            break;
+        }
+        case 'ArrowUp':
+        case 'ArrowDown':{
+            const rows = module=='lov'? COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
+                                        COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
+            /**
+             * Focus item
+             * @param {HTMLElement} element 
+             */
+            const focus_item = (element) =>{
+                element.focus();
+                COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).focus();
+            };
+            if (Object.entries(rows).filter(row=>row[1].classList.contains('common_list_row_selected')).length>0){
+                let i=0;
+                for (const row of rows) {
+                    if (row.classList.contains('common_list_row_selected'))
+                        //if up and first or
+                        //if down and last
+                        if ((event.code=='ArrowUp' &amp;&amp; i == 0)||
+                            (event.code=='ArrowDown' &amp;&amp; i == rows.length -1)){
+                            if(event.code=='ArrowUp'){
+                                //if the first, set the last
+                                row.classList.remove ('common_list_row_selected');
+                                rows[rows.length -1].classList.add ('common_list_row_selected');
+                                focus_item(rows[rows.length -1]);
+                            }
+                            else{
+                                //down
+                                //if the last, set the first
+                                row.classList.remove ('common_list_row_selected');
+                                rows[0].classList.add ('common_list_row_selected');
+                                focus_item(rows[0]);
+                            }
+                            break;
+                        }
+                        else{
+                            if(event.code=='ArrowUp'){
+                                //remove highlight, highlight previous
+                                row.classList.remove ('common_list_row_selected');
+                                rows[i-1].classList.add ('common_list_row_selected');
+                                focus_item(rows[i-1]);
+                            }
+                            else{
+                                //down
+                                //remove highlight, highlight next
+                                row.classList.remove ('common_list_row_selected');
+                                rows[i+1].classList.add ('common_list_row_selected');
+                                focus_item(rows[i+1]);
+                            }
+                            break;
+                        }
+                    i++;
+                }
+            }
+            else{
+                //no highlight found, highlight first
+                rows[0].classList.add ('common_list_row_selected');
+                focus_item(rows[0]);
+            }
+            break;
+        }
+        case 'Enter':{
+            //enter
+            if (module == 'lov'){
+                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row`);
+                for (const row of rows) {
+                    if (row.classList.contains('common_list_row_selected')){
+                        //event on row is set in app when calling lov, dispatch it!
+                        row.click();
+                        row.classList.remove ('common_list_row_selected');
+                    }
+                }   
+            }
+            else{
+                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
+                for (let i = 0; i &lt;= rows.length -1; i++) {
+                    if (rows[i].classList.contains('common_list_row_selected')){
+                        if (module=='profile'){
+                            //dispatch same event as clicked
+                            rows[i].querySelectorAll('.common_profile_search_list_username')[0].click();
+                        }
+                        else{
+                            rows[i].querySelectorAll('.common_module_leaflet_search_list_city')[0].click();
+                        }   
+                        rows[i].classList.remove ('common_list_row_selected');
+                    }
+                }
+            }
+            break;
+        }
+        default:{
+            if (module=='lov'){
+                //if db call will be implemented, add delay
+                //commonMiscTypewatch(commonLovFilter, COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
+                commonLovFilter(COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
+            }
+            else
+                if (module=='profile')
+                    commonMiscTypewatch(commonProfileSearch, event_function==null?null:event_function); 
+                else{
+                    commonMiscTypewatch(commonMicroserviceWorldcitiesSearch, event_function==null?null:event_function); 
+                }
+            break;
+        }            
+    }
+};
+/**
+ * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
+ * Converts only heading and image tags
+ * Images should be clickable and displayed in windows info using event delegation
+ * headings
+ *                                  div class       comment
+ * #                                title_h1
+ * ##                               title_h2
+ * ###                              title_h3
+ * [![](small img)](full size img)  markdown_image  no alt text or hover text supported
+ *                                                  all images should have text displayed below
+ * not supported:
+ * ![alt text ](img "hover text")
+ *                  
+ * @param {string} div
+ * @param {string} markdown_file
+ * @returns {Promise.&lt;void>}
+ */
+const commonMiscMarkdownParse = async (div, markdown_file) =>{
+    let file = await fetch(markdown_file)
+                        .then(response=>response.text())
+                        .then(result=>result)
+                        .catch((err)=>{throw err;});
+    //convert headings #, ## and ##
+    //correct syntax 
+    //#[1 space character] []text,   ex # heading 1
+    //##[1 space character] []text,  ex ## heading 2
+    //###[1 space character] []text, ex ### heading 3
+    //# must be first character in the row or it is not part of markdown parsing
+    file = file.split('\n').map(row=>row.indexOf('###')==0?`&lt;div class='title_h3'>${row.replace('###','')}&lt;/div>`:row).join('');
+    file = file.split('\n').map(row=>row.indexOf('##')==0?`&lt;div class='title_h2'>${row.replace('##','')}&lt;/div>`:row).join('');
+    file = file.split('\n').map(row=>row.indexOf('#')==0?`&lt;div class='title_h1'>${row.replace('#','')}&lt;/div>`:row).join('');
+                                
+    //convert image tags
+    //regexp for [![](small img)](full size img)
+    const regexp =   /\[!\[\s*\]\(([^)]+)\)\]\(([^)]+)\)/g;
+    let match;
+    while ((match = regexp.exec(file)) !==null){
+        file.replace(match[0], 
+                        `&lt;div 	class='markdown_image' 
+                                style='background-image:url("${match[1]}")' 
+                                data-url='${match[2]}'>&lt;/div>`);
+    }
+    COMMON_DOCUMENT.querySelector(div).innerHTML = file;
+};
+/**
+ * 
+ * Check if mobile
+ * @returns {boolean}
+ */
+const commonMiscMobile = () =>{
+    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(COMMON_WINDOW.navigator.userAgent));
 };
 /**
  * Common theme update body class from preferences
  * @returns {void}
  */
- const commonPreferencesUpdateBodyClassFromPreferences = () => {
+const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
     const class_app_theme = COMMON_DOCUMENT.body.className.split(' ')[0] ?? '';
     const class_direction = COMMON_GLOBAL.user_direction;
     const class_arabic_script = COMMON_GLOBAL.user_arabic_script;
@@ -376,26 +623,31 @@ const commonThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Da
         COMMON_DOCUMENT.body.classList.add(class_arabic_script);
 };
 /**
- * @returns {Promise&lt;{  id:number,
- *                      app_id:number,
- *                      value:string,
- *                      text:string,
- *                      app_setting_type_name:string,
- *                      data2:string,
- *                      data3:string,
- *                      data4:string,
- *                      data5:string}[]>}
+ * Common preference post mount
+ * @returns {void}
  */
-const commonDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_DATA'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+const commonMiscPreferencesPostMount = () => {
+    commonMiscPreferencesUpdateBodyClassFromPreferences();
+    commonMiscThemeUpdateFromBody();
+};
 /**
- * Sets current value for select div
- * Get json data for given key and value is found or matches value if not json
- * @param {string} div
- * @param {string|number|null} value
- * @param {string|null} json_key
- * @param {string|number|null} json_value
+ * Rounds a number with 2 decimals
+ * @param {number} num 
+ * @returns number
  */
-const commonSelectCurrentValueSet= (div, value, json_key=null, json_value=null) =>{
+const commonMiscRoundOff = num => {
+    const x = Math.pow(10,2);
+    return Math.round(num * x) / x;
+};
+/**
+* Sets current value for select div
+* Get json data for given key and value is found or matches value if not json
+* @param {string} div
+* @param {string|number|null} value
+* @param {string|null} json_key
+* @param {string|number|null} json_value
+*/
+const commonMiscSelectCurrentValueSet= (div, value, json_key=null, json_value=null) =>{
     COMMON_DOCUMENT.querySelector(`#${div} .common_select_dropdown_value`).textContent = Array.from(COMMON_DOCUMENT.querySelectorAll(`#${div} .common_select_option`))
                                                                                             .filter(option=>(json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:
                                                                                                                 option.getAttribute('data-value'))==(json_value ?? value))[0].textContent;
@@ -407,6 +659,81 @@ const commonSelectCurrentValueSet= (div, value, json_key=null, json_value=null) 
       
 };
 /**
+ * Default app themes 
+ */
+const commonMiscThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
+/**
+ * Common theme get
+ * @returns {void}
+ */
+ const commonMiscThemeUpdateFromBody = () => {    
+    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').textContent = 
+        commonMiscThemeDefaultList().filter(theme=>theme.VALUE.toString()==COMMON_DOCUMENT.body.className[9])[0].TEXT;
+    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', COMMON_DOCUMENT.body.className[9]);
+};
+/**
+ * Get timezone date
+ * @param {string} timezone 
+ * @returns {Date}
+ */
+const commonMiscTimezoneDate = timezone =>{
+    const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})));
+    return new Date(utc.setHours(  utc.getHours() + commonMiscTimezoneOffset(timezone)));
+};
+/**
+ * Delay API calls when typing to avoid too many calls 
+ * ES6 spread operator, arrow function without function keyword 
+ * @param {*} function_name 
+ * @param  {...any} parameter 
+ */
+const commonMiscTypewatch = (function_name, ...parameter) =>{
+    let type_delay=250;
+    if (parameter.length>0 &amp;&amp; parameter[0] !=null)
+        switch (parameter[0].code){
+            case 'ArrowLeft':
+            case 'ArrowRight':
+            case 'ArrowUp':
+            case 'ArrowDown':{
+                //immediate response when navigating
+                type_delay = 0;
+                break;
+            }
+        }
+    commonWindowSetTimeout(() => {
+        function_name(...parameter);
+    }, type_delay);
+};
+/**
+ * Length without diacrites
+ * @param {string} str 
+ * @returns {number}
+ */
+const commonMiscLengthWithoutDiacrites = (str) =>{
+    return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
+};
+/**
+ * Get timezone offset
+ * @param {string} local_timezone 
+ * @returns {number}
+ */
+const commonMiscTimezoneOffset = (local_timezone) =>{
+    const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
+                            Number(Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}))),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
+                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'}))).valueOf();
+    const local = new Date(	Number(new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'}))-1,
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'})),
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false})),
+                            Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
+    return (local-utc) / 1000 / 60 / 60;
+};
+/**
  * Get user variables
  * @returns {{  user_language:string,
 *              user_timezone:string,
@@ -416,7 +743,7 @@ const commonSelectCurrentValueSet= (div, value, json_key=null, json_value=null) 
 *              client_longitude:string,
 *              client_place:string}}
 */
-const commonUservariables = () => {
+const commonMiscUservariables = () => {
    return {    user_language:      commonWindowNavigatorLocale(),
                user_timezone:      COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone,
                user_number_system: COMMON_WINDOW.Intl.NumberFormat().resolvedOptions().numberingSystem,
@@ -425,265 +752,6 @@ const commonUservariables = () => {
                client_longitude:   COMMON_GLOBAL.client_longitude,
                client_place:       COMMON_GLOBAL.client_place
            };
-};
-
-
-/**
-* @param {string} event_target_id
-* @param { import('../../../common_types.js').CommonAppEvent['target']|
-*          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
-*/
-const commonSelectEventAction = async (event_target_id, target) =>{
-   //module leaflet events
-   if(event_target_id== 'common_module_leaflet_select_country')
-       COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
-   if (event_target_id== 'common_module_leaflet_select_city')
-       await COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
-   if(event_target_id == 'common_module_leaflet_select_mapstyle')
-       COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
-
-   //dialogue user menu events
-   if (event_target_id == 'common_dialogue_user_menu_app_theme'){
-       COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
-       commonPreferencesUpdateBodyClassFromPreferences();
-   }
-   if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
-       COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
-       /**
-        * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
-        *       commented at the moment
-        *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-        */
-       await commonUserPreferenceSave();
-       await commonComponentRender({
-        mountDiv:   'common_dialogue_user_menu_user_locale_select', 
-        data:       {
-                    default_data_value:COMMON_GLOBAL.user_locale,
-                    default_value:'',
-                    options: await commonFFB({
-                                                path:'/app-module-function/COMMON_LOCALE', 
-                                                query:`lang_code=${COMMON_GLOBAL.user_locale}`, 
-                                                method:'POST', authorization_type:'APP_DATA',
-                                                body:{data_app_id : COMMON_GLOBAL.common_app_id}
-                                            })
-                                            .then((/**@type{string}*/result)=>JSON.parse(result).rows),
-                    path:null,
-                    query:null,
-                    method:null,
-                    authorization_type:null,
-                    column_value:'locale',
-                    column_text:'text'
-                    },
-        methods:    {commonFFB:commonFFB},
-        path:       '/common/component/common_select.js'});
-        commonSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', COMMON_GLOBAL.user_locale);
-   }
-   if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
-       COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
-       await commonUserPreferenceSave().then(()=>{
-           if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit').textContent !='') {
-               commonComponentRender({
-                   mountDiv:   'common_dialogue_iam_edit',
-                   data:       {
-                                app_id:COMMON_GLOBAL.app_id,
-                                iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                user_account_id:COMMON_GLOBAL.user_account_id,
-                                common_app_id:COMMON_GLOBAL.common_app_id
-                               },
-                   methods:    {
-                              commonFFB:commonFFB,
-                               commonMessageShow:commonMessageShow,
-                               commonFormatJsonDate:commonFormatJsonDate
-                               },
-                   path:       '/common/component/common_dialogue_iam_edit.js'})
-               .then(()=>{
-                   commonComponentRemove('common_dialogue_user_menu');
-               });
-           }
-       });
-   }
-   if(event_target_id =='common_dialogue_user_menu_user_direction_select'){
-       if(target?.getAttribute('data-value')=='rtl')
-           COMMON_DOCUMENT.body.classList.add('rtl');
-       else
-           COMMON_DOCUMENT.body.classList.remove('rtl');
-       COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
-       await commonUserPreferenceSave();
-   }
-   if(event_target_id == 'common_dialogue_user_menu_user_arabic_script_select'){
-       COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
-       //check if app theme div is using default theme with common select div
-       if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className?
-           COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
-           COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
-           commonPreferencesUpdateBodyClassFromPreferences();
-       }
-       await commonUserPreferenceSave();
-   }
-};
-/**
- * Common preference post mount
- * @returns {void}
- */
-const commonPreferencesPostMount = () => {
-   commonPreferencesUpdateBodyClassFromPreferences();
-   commonThemeUpdateFromBody();
-};
-/**
- * Input control
- * @param {HTMLElement|null} dialogue 
- * @param {{
- *			check_valid_list_elements?:[HTMLElement,number|null][],
- *			check_valid_list_values?:[string,number|null][],
- *			username?:HTMLElement,
- *			password?:*,
- *          password_confirm?:HTMLElement,
- *          password_confirm_reminder?:HTMLElement,
- *			password_reminder?:HTMLElement,
- *			password_new?:HTMLElement,
- *			password_new_confirm?:*,
- *			email?:HTMLElement,
- *			bio?:HTMLElement
- *		}} validate_items 
- * @returns {boolean}
- */
-const commonInputControl = (dialogue, validate_items) =>{
-   let result = true;
-   /**
-    * Valid text element or value
-    * @param {HTMLElement|string} validate
-    * @returns {boolean}
-    */
-   const valid_text = validate =>{
-       let div;
-       if (typeof validate=='object')
-           div = validate;
-       else{
-           div = COMMON_DOCUMENT.createElement('div');
-           div.textContent = validate;
-       }
-       if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
-           return false;
-       else
-           try {
-               JSON.parse(JSON.stringify(div.textContent));
-               return true;
-               
-           } catch (error) {
-               return false;
-           }
-   };
-   /**
-    * Set error
-    * @param {HTMLElement} element 
-    * @param {HTMLElement|null} element2 
-    */
-   const set_error = (element, element2=null) => {
-       element.classList.add('common_input_error');
-       element2?element.classList.add('common_input_error'):null;
-       result = false;
-   };
-   if (dialogue)
-       dialogue.querySelectorAll('.common_input_error')
-           .forEach(element=>element.classList.remove('common_input_error'));
-
-   if (validate_items.check_valid_list_elements)
-       for (const element of validate_items.check_valid_list_elements){
-           element[0].classList.remove('common_input_error');
-       }
-       
-   //validate text content
-   if (validate_items.username &amp;&amp; valid_text(validate_items.username) == false){
-       set_error(validate_items.username);
-   }
-   if (validate_items.password &amp;&amp; valid_text(validate_items.password)== false){
-       set_error(validate_items.password);
-   }
-   if (validate_items.password_reminder &amp;&amp; valid_text(validate_items.password_reminder)== false){
-       set_error(validate_items.password);
-   }
-   if (validate_items.password_new &amp;&amp; valid_text(validate_items.password_new)== false){
-       set_error(validate_items.password);
-   }
-   if (validate_items.password_new_confirm &amp;&amp; valid_text(validate_items.password_new_confirm)== false){
-       set_error(validate_items.password);
-   }
-   if (validate_items.email &amp;&amp; valid_text(validate_items.email)== false){
-       set_error(validate_items.email);
-   }
-   if (validate_items.bio &amp;&amp; valid_text(validate_items.bio)== false){
-       set_error(validate_items.bio);
-   }
-   if (validate_items.check_valid_list_elements){
-       for (const element of validate_items.check_valid_list_elements){
-           if (valid_text(element[0])==false)
-               set_error(element[0]);
-       }
-   }
-   if (validate_items.check_valid_list_values){
-       for (const element of validate_items.check_valid_list_values){
-           if (valid_text(element[0])==false){
-               result = false;
-               break;
-           }
-       }
-   }
-   //validate text length
-   if (validate_items.username &amp;&amp; validate_items.username.textContent &amp;&amp; validate_items.username.textContent.length > 100){
-       set_error(validate_items.username);
-   }
-   if (validate_items.password &amp;&amp; validate_items.password.textContent.length > 100){
-       set_error(validate_items.password);
-   }
-   if (validate_items.password_reminder &amp;&amp; validate_items.password_reminder.textContent &amp;&amp; validate_items.password_reminder.textContent.length > 100){
-       set_error(validate_items.password_reminder);
-   }
-   if (validate_items.password_new &amp;&amp; validate_items.password_new.textContent &amp;&amp; validate_items.password_new.textContent.length > 100){
-       set_error(validate_items.password_new);
-   }
-   if (validate_items.bio &amp;&amp; validate_items.bio.textContent &amp;&amp; validate_items.bio.textContent.length > 150){
-       set_error(validate_items.bio);
-   }
-   if (validate_items.check_valid_list_elements){
-       for (const element of validate_items.check_valid_list_elements){
-           if (element[0] &amp;&amp; element[1] &amp;&amp; element[0].textContent &amp;&amp; element[0].textContent.length > element[1])
-               set_error(element[0]);
-       }
-   }
-   if (validate_items.check_valid_list_values){
-       for (const element of validate_items.check_valid_list_values){
-           if (element[0] &amp;&amp; element[1] &amp;&amp; element[0].length > element[1]){
-               result = false;
-               break;
-           }
-       }
-   }
-   //validate not empty
-   if (validate_items.username &amp;&amp; validate_items.username.textContent == '') {
-       set_error(validate_items.username);
-   }
-   if (validate_items.password &amp;&amp; validate_items.password.textContent == '') {
-       set_error(validate_items.password);
-   }
-   if (validate_items.email &amp;&amp; validate_items.email.textContent == '') {
-       set_error(validate_items.email);
-   }
-   if (validate_items.password &amp;&amp; validate_items.password_confirm &amp;&amp; validate_items.password_confirm.textContent ==''){
-       set_error(validate_items.password_confirm);
-   }
-   //validate same password
-   if (validate_items.password &amp;&amp; validate_items.password_confirm &amp;&amp; (validate_items.password.textContent != validate_items.password_confirm.textContent)){
-       set_error(validate_items.password, validate_items.password_confirm);
-   }
-   if (validate_items.password_new &amp;&amp; validate_items.password_new.textContent &amp;&amp; validate_items.password_new.textContent.length > 0 &amp;&amp; (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
-       set_error(validate_items.password_new, validate_items.password_new_confirm);
-   }
-   if (result==false){
-       commonMessageShow('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
-       return false;
-   }
-   else
-       return true;
 };
 /**
  * Get hostname with protocol and port
@@ -768,7 +836,7 @@ const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
  * Returns info about location pathname for given argument number
  * @param {number} argumentNumber
  */
-const commonWndowLocationPathname = argumentNumber => COMMON_WINDOW.location.pathname.substring(argumentNumber);
+const commonWindowLocationPathname = argumentNumber => COMMON_WINDOW.location.pathname.substring(argumentNumber);
 
 /**
  * Reloads window
@@ -980,7 +1048,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                     methods:    {
                                 commonFFB:commonFFB,
                                 commonMessageShow:commonMessageShow,
-                                commonFormatJsonDate:commonFormatJsonDate
+                                commonMiscFormatJsonDate:commonMiscFormatJsonDate
                                 },
                     path:'/common/component/common_dialogue_iam_password_new.js'});
                 break;
@@ -1087,8 +1155,8 @@ const commonLovEvent = (event, lov) => {
      */
     const commonLovEvent_function = event_lov => {
         //setting values from LOV
-        const row = commonElementRow(event.target);
-        const row_lov = commonElementRow(event_lov.target);
+        const row = commonMiscElementRow(event.target);
+        const row_lov = commonMiscElementRow(event_lov.target);
         /**@type{HTMLElement|null} */
         const common_input_lov = row.querySelector('.common_input_lov');
         /**@type{HTMLElement|null} */
@@ -1330,7 +1398,7 @@ const commonProfileSearch = click_function => {
                     client_longitude:COMMON_GLOBAL.client_longitude
                     },
         methods:    {
-                    commonInputControl:commonInputControl,
+                    commonMiscInputControl:commonMiscInputControl,
                     function_click_function:click_function,
                    commonFFB:commonFFB
                     },
@@ -1376,7 +1444,7 @@ const commonProfileShow = async (user_account_id_other = null, username = null) 
                    commonFFB:commonFFB,
                     commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
                     commonWindowHostname:commonWindowHostname,
-                    commonFormatJsonDate:commonFormatJsonDate,
+                    commonMiscFormatJsonDate:commonMiscFormatJsonDate,
                     commonDialogueShow:commonDialogueShow,
                     commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck
                     },
@@ -1406,127 +1474,7 @@ const commonProfileUpdateStat = async () => {
         .catch(err=>reject(err));
     });
 };
-/**
- * List key event
- * @param {import('../../../common_types.js').CommonAppEvent} event 
- * @param {string} module 
- * @param {function|null} event_function 
- * @returns {void}
- */
-const commonListKeyEvent = (event, module, event_function=null) => {
-    const list_name = module=='lov'?'list_' + 'lov':module + '_search';
-    const search_input = module + '_search';
-    switch (event.code){
-        case 'ArrowLeft':
-        case 'ArrowRight':{
-            break;
-        }
-        case 'ArrowUp':
-        case 'ArrowDown':{
-            const rows = module=='lov'? COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row:not(.common_${list_name}_row_hide)`):
-                                        COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
-            /**
-             * Focus item
-             * @param {HTMLElement} element 
-             */
-            const focus_item = (element) =>{
-                element.focus();
-                COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).focus();
-            };
-            if (Object.entries(rows).filter(row=>row[1].classList.contains('common_list_row_selected')).length>0){
-                let i=0;
-                for (const row of rows) {
-                    if (row.classList.contains('common_list_row_selected'))
-                        //if up and first or
-                        //if down and last
-                        if ((event.code=='ArrowUp' &amp;&amp; i == 0)||
-                            (event.code=='ArrowDown' &amp;&amp; i == rows.length -1)){
-                            if(event.code=='ArrowUp'){
-                                //if the first, set the last
-                                row.classList.remove ('common_list_row_selected');
-                                rows[rows.length -1].classList.add ('common_list_row_selected');
-                                focus_item(rows[rows.length -1]);
-                            }
-                            else{
-                                //down
-                                //if the last, set the first
-                                row.classList.remove ('common_list_row_selected');
-                                rows[0].classList.add ('common_list_row_selected');
-                                focus_item(rows[0]);
-                            }
-                            break;
-                        }
-                        else{
-                            if(event.code=='ArrowUp'){
-                                //remove highlight, highlight previous
-                                row.classList.remove ('common_list_row_selected');
-                                rows[i-1].classList.add ('common_list_row_selected');
-                                focus_item(rows[i-1]);
-                            }
-                            else{
-                                //down
-                                //remove highlight, highlight next
-                                row.classList.remove ('common_list_row_selected');
-                                rows[i+1].classList.add ('common_list_row_selected');
-                                focus_item(rows[i+1]);
-                            }
-                            break;
-                        }
-                    i++;
-                }
-            }
-            else{
-                //no highlight found, highlight first
-                rows[0].classList.add ('common_list_row_selected');
-                focus_item(rows[0]);
-            }
-            break;
-        }
-        case 'Enter':{
-            //enter
-            if (module == 'lov'){
-                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_row`);
-                for (const row of rows) {
-                    if (row.classList.contains('common_list_row_selected')){
-                        //event on row is set in app when calling lov, dispatch it!
-                        row.click();
-                        row.classList.remove ('common_list_row_selected');
-                    }
-                }   
-            }
-            else{
-                const rows = COMMON_DOCUMENT.querySelectorAll(`.common_${list_name}_list_row`);
-                for (let i = 0; i &lt;= rows.length -1; i++) {
-                    if (rows[i].classList.contains('common_list_row_selected')){
-                        if (module=='profile'){
-                            //dispatch same event as clicked
-                            rows[i].querySelectorAll('.common_profile_search_list_username')[0].click();
-                        }
-                        else{
-                            rows[i].querySelectorAll('.common_module_leaflet_search_list_city')[0].click();
-                        }   
-                        rows[i].classList.remove ('common_list_row_selected');
-                    }
-                }
-            }
-            break;
-        }
-        default:{
-            if (module=='lov'){
-                //if db call will be implemented, add delay
-                //commonTypewatch(commonLovFilter, COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
-                commonLovFilter(COMMON_DOCUMENT.querySelector(`#common_${search_input}_input`).textContent); 
-            }
-            else
-                if (module=='profile')
-                    commonTypewatch(commonProfileSearch, event_function==null?null:event_function); 
-                else{
-                    commonTypewatch(commonMicroserviceWorldcitiesSearch, event_function==null?null:event_function); 
-                }
-            break;
-        }            
-    }
-};
+
 /**
  * User login
  * @param {boolean|null} admin 
@@ -1548,11 +1496,11 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         // ES6 object spread operator for user variables
         json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username').textContent),
                         password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent),
-                        ...commonUservariables()
+                        ...commonMiscUservariables()
         };
         path = '/server-iam-login';
         authorization_type = 'IAM_ADMIN';
-        if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
+        if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                         {
                         username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username'),
                         password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password'),
@@ -1579,7 +1527,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                                     profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
                                     profile_image_url:      '',
                                     profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
-            const profile_image = provider_data.profile_image_url==''?null:await commonImageConvert(  provider_data.profile_image_url, 
+            const profile_image = provider_data.profile_image_url==''?null:await commonMiscImageConvert(  provider_data.profile_image_url, 
                                                         COMMON_GLOBAL.image_avatar_width,
                                                         COMMON_GLOBAL.image_avatar_height);
             json_data ={    username:               null,
@@ -1592,7 +1540,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                             provider_image:         profile_image?COMMON_WINDOW.btoa(profile_image):null,
                             provider_image_url:     provider_data.profile_image_url,
                             provider_email:         provider_data.profile_email,
-                            ...commonUservariables()
+                            ...commonMiscUservariables()
                         };
             path = `/server-iam-login/${provider_data.profile_id}`;
             authorization_type = 'IAM_PROVIDER';
@@ -1605,11 +1553,11 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                             password:  encodeURI(password_verify?
                                             COMMON_DOCUMENT.querySelector(`#${password_verify}`).textContent:
                                                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
-                            ...commonUservariables()
+                            ...commonMiscUservariables()
             };
             path = '/server-iam-login';
             authorization_type = 'IAM_USER';
-            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
+            if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                             {
                             username: username_verify?
                                             COMMON_DOCUMENT.querySelector(`#${username_verify}`):
@@ -1674,7 +1622,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         //arabic script
         COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
         //update body class with app theme, direction and arabic script usage classes
-        commonPreferencesUpdateBodyClassFromPreferences();
+        commonMiscPreferencesUpdateBodyClassFromPreferences();
         if (login_data.active==0){
             commonDialogueShow('VERIFY', 'LOGIN', login_data.email, null);
             throw 'ERROR';
@@ -1744,7 +1692,7 @@ const commonUserLogout = async () => {
         commonUserPreferencesGlobalSetDefault('DIRECTION');
         commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
         //update body class with app theme, direction and arabic script usage classes
-        commonPreferencesUpdateBodyClassFromPreferences();
+        commonMiscPreferencesUpdateBodyClassFromPreferences();
     })
     .catch((error)=>{
         COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
@@ -1782,7 +1730,7 @@ const commonUserUpdate = async () => {
         /**@type{import('../../../common_types.js').CommonRESTAPIAuthorizationType}*/
         let authorization_type = 'APP_ACCESS';
         if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display == 'block') {
-            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+            if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                             {
                             username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_username'),
                             password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password'),
@@ -1832,13 +1780,13 @@ const commonUserUpdate = async () => {
                                 email:              email,
                                 new_email:          new_email==''?null:new_email,
                                 avatar:             avatar,
-                                ...commonUservariables()
+                                ...commonMiscUservariables()
                             };
                 path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
             }
                 
         } else {
-            if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+            if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                             {
                             bio: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_bio')
                             })==false)
@@ -1870,7 +1818,7 @@ const commonUserUpdate = async () => {
  */
 const commonUserSignup = () => {
     const email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_email').textContent;
-    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
+    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                             {
                             username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username'),
                             password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password'),
@@ -1883,7 +1831,7 @@ const commonUserSignup = () => {
                             password_reminder:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder').textContent,
                             email:              email,
                             active:             0,
-                            ...commonUservariables()
+                            ...commonMiscUservariables()
                             };
            
        commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
@@ -1935,7 +1883,7 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                 //activate user
                 json_data = {   verification_code:  verification_code,
                                 verification_type:  verification_type,
-                                ...commonUservariables()
+                                ...commonMiscUservariables()
                             };
                commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_dialogue_iam_verify_email_icon'})
                 .then(result=>{
@@ -2015,7 +1963,7 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
         switch (choice){
             case null:{
                 if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display == 'block' &amp;&amp;
-                    commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+                    commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                                     {
                                         password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password')
                                     })==false)
@@ -2117,9 +2065,9 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
 const commonUserForgot = async () => {
     const email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email').textContent;
     const json_data = { email: email,
-                        ...commonUservariables()
+                        ...commonMiscUservariables()
                     };
-    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                     {
                     email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email')
                     })==true){
@@ -2143,9 +2091,9 @@ const commonUserUpdatePassword = () => {
     const user_password_new_auth = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_auth').textContent;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
-                        ...commonUservariables()
+                        ...commonMiscUservariables()
                      };
-    if (commonInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+    if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                      {
                      password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_password'),
                      password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_confirm'),
@@ -2212,7 +2160,7 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
  */
 const commonModuleEasyQRCODECreate = async (div, url) => {
     /**@type {import('../../../common_types.js').CommonModuleEasyQRCode} */
-    const {QRCode} = await import(commonImportmap('easy.qrcode'));
+    const {QRCode} = await import(commonMiscImportmap('easy.qrcode'));
     COMMON_DOCUMENT.querySelector('#' + div).textContent='';
     new QRCode(COMMON_DOCUMENT.querySelector('#' + div), {
         text: url,
@@ -2250,7 +2198,7 @@ const commonModuleLeafletInit = async parameters => {
                                         app_eventListeners:COMMON_GLOBAL.app_eventListeners
                                         },
                             methods:    {
-                                        commonImportMap:commonImportmap
+                                        commonMiscImportmap:commonMiscImportmap
                                         },
                             path:       '/common/component/common_module_leaflet.js'})
     .catch(error=>{throw error;});
@@ -2266,10 +2214,10 @@ const commonModuleLeafletInit = async parameters => {
                     },
         methods:    {
                     function_event_doubleclick: parameters.doubleclick_event,
-                    commonImportMap:commonImportmap,
+                    commonMiscImportmap:commonMiscImportmap,
                     commonComponentRender:commonComponentRender,
                     commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
-                    commonElementRow:commonElementRow,
+                    commonMiscElementRow:commonMiscElementRow,
                     commonFFB:commonFFB,
                     moduleLeafletContainer:module_leaflet.methods.leafletContainer,
                     moduleLeafletLibrary:module_leaflet.methods.leafletLibrary
@@ -2617,55 +2565,104 @@ const commonException = (appException_function, error) => {
         appException_function(error);
 };
 /**
- * Set app service parameters
- * @param {*} parameters 
- * @returns {void}
- */
-const commonInitParametersInfoSet = parameters => {
-    //app info
-    COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
-    COMMON_GLOBAL.app_id = parameters.app_id;
-    COMMON_GLOBAL.app_logo = parameters.app_logo;
-   
-    //rest 
-    COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
-
-    //client credentials
-    COMMON_GLOBAL.token_dt = parameters.app_idtoken;
-
-    //admin
-    COMMON_GLOBAL.iam_user_id = null;
-    COMMON_GLOBAL.iam_user_name = null;
-    COMMON_GLOBAL.admin_only = parameters.admin_only;
-    COMMON_GLOBAL.admin_first_time = parameters.first_time;
-
-    //user info
-    COMMON_GLOBAL.user_identity_provider_id=null;
-    COMMON_GLOBAL.user_account_id = null;
-    
-    //client info
-    COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
-    COMMON_GLOBAL.client_longitude = parameters.client_longitude;
-    COMMON_GLOBAL.client_place     = parameters.client_place;
-    COMMON_GLOBAL.client_timezone  = parameters.client_timezone==''?null:parameters.client_timezone;
-    
-    if (COMMON_GLOBAL.admin_only==0){
-        commonUserPreferencesGlobalSetDefault('LOCALE');
-        commonUserPreferencesGlobalSetDefault('TIMEZONE');
-        commonUserPreferencesGlobalSetDefault('DIRECTION');
-        commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
-    }
-
-    COMMON_GLOBAL.user_locale                = parameters.locale;
-    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
-    COMMON_GLOBAL.user_direction             = '';
-    COMMON_GLOBAL.user_arabic_script         = '';  
-};
-/**
  * Disable textediting
  * @returns {boolean}
  */
 const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
+
+/**
+* @param {string} event_target_id
+* @param { import('../../../common_types.js').CommonAppEvent['target']|
+*          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
+*/
+const commonEventSelectAction = async (event_target_id, target) =>{
+   //module leaflet events
+   if(event_target_id== 'common_module_leaflet_select_country')
+       COMMON_GLOBAL.moduleLeaflet.methods.eventClickCountry(event_target_id);
+   if (event_target_id== 'common_module_leaflet_select_city')
+       await COMMON_GLOBAL.moduleLeaflet.methods.eventClickCity(event_target_id);
+   if(event_target_id == 'common_module_leaflet_select_mapstyle')
+       COMMON_GLOBAL.moduleLeaflet.methods.eventClickMapLayer(target);
+
+   //dialogue user menu events
+   if (event_target_id == 'common_dialogue_user_menu_app_theme'){
+       COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value');
+       commonMiscPreferencesUpdateBodyClassFromPreferences();
+   }
+   if (event_target_id == 'common_dialogue_user_menu_user_locale_select'){
+       COMMON_GLOBAL.user_locale = target?.getAttribute('data-value') ?? '';
+       /**
+        * @todo change COMMON_WINDOW.navigator.language, however when logging out default COMMON_WINDOW.navigator.language will be set
+        *       commented at the moment
+        *       Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+        */
+       await commonUserPreferenceSave();
+       await commonComponentRender({
+        mountDiv:   'common_dialogue_user_menu_user_locale_select', 
+        data:       {
+                    default_data_value:COMMON_GLOBAL.user_locale,
+                    default_value:'',
+                    options: await commonFFB({
+                                                path:'/app-module-function/COMMON_LOCALE', 
+                                                query:`lang_code=${COMMON_GLOBAL.user_locale}`, 
+                                                method:'POST', authorization_type:'APP_DATA',
+                                                body:{data_app_id : COMMON_GLOBAL.common_app_id}
+                                            })
+                                            .then((/**@type{string}*/result)=>JSON.parse(result).rows),
+                    path:null,
+                    query:null,
+                    method:null,
+                    authorization_type:null,
+                    column_value:'locale',
+                    column_text:'text'
+                    },
+        methods:    {commonFFB:commonFFB},
+        path:       '/common/component/common_select.js'});
+        commonMiscSelectCurrentValueSet('common_dialogue_user_menu_user_locale_select', COMMON_GLOBAL.user_locale);
+   }
+   if (event_target_id == 'common_dialogue_user_menu_user_timezone_select'){
+       COMMON_GLOBAL.user_timezone = target?.getAttribute('data-value') ?? '';
+       await commonUserPreferenceSave().then(()=>{
+           if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit').textContent !='') {
+               commonComponentRender({
+                   mountDiv:   'common_dialogue_iam_edit',
+                   data:       {
+                                app_id:COMMON_GLOBAL.app_id,
+                                iam_user_id:COMMON_GLOBAL.iam_user_id,
+                                user_account_id:COMMON_GLOBAL.user_account_id,
+                                common_app_id:COMMON_GLOBAL.common_app_id
+                               },
+                   methods:    {
+                              commonFFB:commonFFB,
+                               commonMessageShow:commonMessageShow,
+                               commonMiscFormatJsonDate:commonMiscFormatJsonDate
+                               },
+                   path:       '/common/component/common_dialogue_iam_edit.js'})
+               .then(()=>{
+                   commonComponentRemove('common_dialogue_user_menu');
+               });
+           }
+       });
+   }
+   if(event_target_id =='common_dialogue_user_menu_user_direction_select'){
+       if(target?.getAttribute('data-value')=='rtl')
+           COMMON_DOCUMENT.body.classList.add('rtl');
+       else
+           COMMON_DOCUMENT.body.classList.remove('rtl');
+       COMMON_GLOBAL.user_direction = target?.getAttribute('data-value') ?? '';
+       await commonUserPreferenceSave();
+   }
+   if(event_target_id == 'common_dialogue_user_menu_user_arabic_script_select'){
+       COMMON_GLOBAL.user_arabic_script = target?.getAttribute('data-value') ?? '';
+       //check if app theme div is using default theme with common select div
+       if (COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className?
+           COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme').className.toLowerCase().indexOf('common_select')>-1:false){
+           COMMON_DOCUMENT.body.className = 'app_theme' + COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').getAttribute('data-value');
+           commonMiscPreferencesUpdateBodyClassFromPreferences();
+       }
+       await commonUserPreferenceSave();
+   }
+};
 /**
  * Common events
  * @param {string} event_type 
@@ -2684,7 +2681,7 @@ const commonEvent = async (event_type,event=null) =>{
                 //close all open div selects except current target
                 if (typeof event.target.className=='string' &amp;&amp; event.target.className.indexOf('common_select')>-1){
                     Array.from(COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
-                        .filter((/**@type{HTMLElement}*/element)=>commonElementId(element) != commonElementId(event.target))
+                        .filter((/**@type{HTMLElement}*/element)=>commonMiscElementId(element) != commonMiscElementId(event.target))
                         .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
                 }
 
@@ -2695,7 +2692,7 @@ const commonEvent = async (event_type,event=null) =>{
                         event.target.classList.add('checked');
                 }
                 else{
-                    const event_target_id = commonElementId(event.target);
+                    const event_target_id = commonMiscElementId(event.target);
                     switch(event_target_id){
                         case event.target.parentNode.classList.contains('common_select_dropdown_value')?event_target_id:'':
                         case event.target.parentNode.classList.contains('common_select_dropdown_icon')?event_target_id:'':
@@ -2710,7 +2707,7 @@ const commonEvent = async (event_type,event=null) =>{
                             COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
                             COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
                             event.target.parentNode.parentNode.style.display = 'none';
-                            await commonSelectEventAction(event_target_id, event.target.parentNode);
+                            await commonEventSelectAction(event_target_id, event.target.parentNode);
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
@@ -2718,7 +2715,7 @@ const commonEvent = async (event_type,event=null) =>{
                             COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
                             COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
-                            await commonSelectEventAction(event_target_id, event.target);
+                            await commonEventSelectAction(event_target_id, event.target);
                             break;
                         }
                         // dialogue login/signup/forgot
@@ -2897,7 +2894,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 methods:    {
                                            commonFFB:commonFFB,
                                             commonMessageShow:commonMessageShow,
-                                            commonFormatJsonDate:commonFormatJsonDate
+                                            commonMiscFormatJsonDate:commonMiscFormatJsonDate
                                             },
                                 path:       '/common/component/common_dialogue_iam_edit.js'})
                             .then(()=>{
@@ -2921,7 +2918,7 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_dialogue_iam_edit_input_avatar_img':{
-                            commonImageShow(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                            commonMiscImageShow(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
                             break;
                         }
                         case 'common_dialogue_iam_edit_btn_user_update':{
@@ -2947,10 +2944,10 @@ const commonEvent = async (event_type,event=null) =>{
                         case 'common_profile_search_list':{
                             if (event.target.classList.contains('common_profile_search_list_username')){
                                 if (COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function']){
-                                    await COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'](commonElementRow(event.target).getAttribute('data-user_account_id'));
+                                    await COMMON_DOCUMENT.querySelector('#common_profile_search_list')['data-function'](commonMiscElementRow(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
-                                    await commonProfileShow(Number(commonElementRow(event.target).getAttribute('data-user_account_id')),null);
+                                    await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-user_account_id')),null);
                             }
                             break;
                         }
@@ -3016,27 +3013,27 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_profile_stat_list':{
-                            await commonProfileShow(Number(commonElementRow(event.target).getAttribute('data-user_account_id')),null);
+                            await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-user_account_id')),null);
                             break;
                         }
                         case 'common_profile_detail_list':{
                             if (event.target.classList.contains('common_profile_detail_list_username'))
-                                await commonProfileShow(Number(commonElementRow(event.target).getAttribute('data-user_account_id')),null);
+                                await commonProfileShow(Number(commonMiscElementRow(event.target).getAttribute('data-user_account_id')),null);
                             else{
                                 //app list
                                 if (event.target.classList.contains('common_profile_detail_list_app_name'))
-                                    COMMON_WINDOW.open(commonElementRow(event.target).getAttribute('data-url') ?? '', '_blank');
+                                    COMMON_WINDOW.open(commonMiscElementRow(event.target).getAttribute('data-url') ?? '', '_blank');
                                 else
                                     if (COMMON_DOCUMENT.querySelector('#common_profile_id').textContent==COMMON_GLOBAL.user_account_id &amp;&amp;
                                         event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
                                             await commonUserAccountAppDelete(null, 
                                                                     COMMON_DOCUMENT.querySelector('#common_profile_id').textContent,
-                                                                    Number(commonElementRow(event.target).getAttribute('data-app_id')),
+                                                                    Number(commonMiscElementRow(event.target).getAttribute('data-app_id')),
                                                                     () => { 
                                                                         commonComponentRemove('common_dialogue_message');
                                                                         commonUserAccountAppDelete(1, 
                                                                                                 COMMON_DOCUMENT.querySelector('#common_profile_id').textContent, 
-                                                                                                Number(commonElementRow(event.target).getAttribute('data-app_id')), 
+                                                                                                Number(commonMiscElementRow(event.target).getAttribute('data-app_id')), 
                                                                                                 null);
                                                                     });
                                     }
@@ -3115,7 +3112,7 @@ const commonEvent = async (event_type,event=null) =>{
             case 'keyup':{
                 if (event.target.classList.contains('common_password')){   
                     COMMON_DOCUMENT.querySelector(`#${event.target.id}_mask`).textContent = 
-                        event.target.textContent.replace(event.target.textContent, '*'.repeat(commonLengthWithoutDiacrites(event.target.textContent)));
+                        event.target.textContent.replace(event.target.textContent, '*'.repeat(commonMiscLengthWithoutDiacrites(event.target.textContent)));
                 }
                 else
                     switch (event.target.id){
@@ -3130,16 +3127,16 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         case 'common_profile_search_input':{
-                            commonListKeyEvent(event, 'profile', commonProfileShow);
+                            commonMiscListKeyEvent(event, 'profile', commonProfileShow);
                             break;
                         }        
                         case 'common_lov_search_input':{
-                            commonListKeyEvent(event, 'lov');
+                            commonMiscListKeyEvent(event, 'lov');
                             break;
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_input':{
-                            commonTypewatch(commonListKeyEvent, event, 'module_leaflet', event.target['data-function']); 
+                            commonMiscTypewatch(commonMiscListKeyEvent, event, 'module_leaflet', event.target['data-function']); 
                             break;
                         }
                         default:{
@@ -3229,7 +3226,51 @@ const commonEventCommonRemove = () => {
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).removeEventListener('touchstart', commonEventInputDisable);
 
 };
+/**
+ * Set app service parameters
+ * @param {*} parameters 
+ * @returns {void}
+ */
+const commonInitParametersInfoSet = parameters => {
+    //app info
+    COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
+    COMMON_GLOBAL.app_id = parameters.app_id;
+    COMMON_GLOBAL.app_logo = parameters.app_logo;
+   
+    //rest 
+    COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
+    //client credentials
+    COMMON_GLOBAL.token_dt = parameters.app_idtoken;
+
+    //admin
+    COMMON_GLOBAL.iam_user_id = null;
+    COMMON_GLOBAL.iam_user_name = null;
+    COMMON_GLOBAL.admin_only = parameters.admin_only;
+    COMMON_GLOBAL.admin_first_time = parameters.first_time;
+
+    //user info
+    COMMON_GLOBAL.user_identity_provider_id=null;
+    COMMON_GLOBAL.user_account_id = null;
+    
+    //client info
+    COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
+    COMMON_GLOBAL.client_longitude = parameters.client_longitude;
+    COMMON_GLOBAL.client_place     = parameters.client_place;
+    COMMON_GLOBAL.client_timezone  = parameters.client_timezone==''?null:parameters.client_timezone;
+    
+    if (COMMON_GLOBAL.admin_only==0){
+        commonUserPreferencesGlobalSetDefault('LOCALE');
+        commonUserPreferencesGlobalSetDefault('TIMEZONE');
+        commonUserPreferencesGlobalSetDefault('DIRECTION');
+        commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
+    }
+
+    COMMON_GLOBAL.user_locale                = parameters.locale;
+    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
+    COMMON_GLOBAL.user_direction             = '';
+    COMMON_GLOBAL.user_arabic_script         = '';  
+};
 /**
  * Set app parameters
  * Set common parameters and common app parameters 
@@ -3286,7 +3327,7 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
         case 2:{
             //Vue
             /**@type {import('../../../common_types.js').CommonModuleVue} */
-            const Vue = await import(commonImportmap('Vue'));
+            const Vue = await import(commonMiscImportmap('Vue'));
 
             //Use tempmount div to be able to return pure HTML without extra events
             //since event delegation is used
@@ -3312,9 +3353,9 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
         case 3:{
             //React
             /**@type {import('../../../common_types.js').CommonModuleReact} */
-            const React = await import(commonImportmap('React')).then(module=>module.React);
+            const React = await import(commonMiscImportmap('React')).then(module=>module.React);
             /**@type {import('../../../common_types.js').CommonModuleReactDOM} */
-            const ReactDOM = await import(commonImportmap('ReactDOM')).then(module=>module.ReactDOM);
+            const ReactDOM = await import(commonMiscImportmap('ReactDOM')).then(module=>module.ReactDOM);
 
             //convert HTML template to React component
             const div_template = COMMON_DOCUMENT.createElement('div');
@@ -3631,66 +3672,70 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, 
        COMMON_ICONS,
        /* MISC */
-       commonImportmap,
-       commonElementId, 
-       commonElementRow, 
-       commonElementListTitle, 
-       commonTimezoneDate, 
-       commonTypewatch, 
-       commonRoundOff, 
-       commonFormatJsonDate,
-       commonMobile,
-       commonImageConvert,
-       commonImageShow, 
-       commonInputControl,
-       commonThemeDefaultList, 
-       commonThemeUpdateFromBody,
-       commonPreferencesUpdateBodyClassFromPreferences,
-       commonDbAppSettingsGet,
-       commonSelectCurrentValueSet,
-       commonPreferencesPostMount,
-       /**window object functions */
-       commonWindowToBase64, 
+       commonMiscDbAppSettingsGet,
+       commonMiscElementId, 
+       commonMiscElementRow, 
+       commonMiscElementListTitle, 
+       commonMiscFormatJsonDate,
+       commonMiscImageConvert,
+       commonMiscImageShow, 
+       commonMiscInputControl,
+       commonMiscImportmap,
+       commonMiscListKeyEvent,
+       commonMiscMarkdownParse,
+       commonMiscMobile,
+       commonMiscPreferencesUpdateBodyClassFromPreferences,
+       commonMiscPreferencesPostMount,
+       commonMiscRoundOff, 
+       commonMiscSelectCurrentValueSet,
+       commonMiscThemeDefaultList, 
+       commonMiscThemeUpdateFromBody,
+       commonMiscTimezoneDate, 
+       commonMiscTypewatch,      
+       /**WINDOW OBJECT */
+       commonWindowDocumentFrame,
        commonWindowFromBase64, 
-       commonWindowSetTimeout,
-       commonWindowWait,
-       commonWindowNavigatorLocale,
-       commonWindowUserAgentPlatform,
        commonWindowHostname,
-       commonWndowLocationPathname,
+       commonWindowLocationPathname,
        commonWindowLocationReload,
+       commonWindowNavigatorLocale,
        commonWindowOpen,
        commonWindowPrompt,
-       commonWindowDocumentFrame,
        commonWindowServiceWorker,
+       commonWindowSetTimeout,
+       commonWindowToBase64, 
+       commonWindowUserAgentPlatform,
+       commonWindowWait,
        /* COMPONENTS */
-       commonComponentRender,
        commonComponentRemove,
+       commonComponentRender,
+       /* FRAMEWORK */
        commonFrameworkSet,
-       /* MESSAGE &amp; DIALOGUE */
+       /* DIALOGUE */
        commonDialogueShow, 
-       commonMessageShow,
-       commonLovEvent, 
+       /* LOV */
        commonLovAction,
+       commonLovEvent, 
        commonLovClose, 
        commonLovShow,
+       /* MESSAGE*/
+       commonMessageShow,
        /* PROFILE */
-       commonProfileFollowLike,
-       commonProfileStat, 
        commonProfileDetail, 
+       commonProfileFollowLike,
        commonProfileShow,
+       commonProfileStat, 
        commonProfileUpdateStat, 
-       commonListKeyEvent,
        /* USER  */
-       commonUserLogin, 
-       commonUserSessionCountdown, 
-       commonUserLogout, 
-       commonUserUpdate, 
-       commonUserSignup, 
-       commonUserVerifyCheckInput, 
        commonUserDelete, 
        commonUserFunction,
+       commonUserLogin, 
+       commonUserLogout,
+       commonUserSessionCountdown, 
+       commonUserSignup, 
+       commonUserUpdate, 
        commonUserUpdatePassword,
+       commonUserVerifyCheckInput, 
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 
        /* MODULE EASY.QRCODE */
@@ -3699,14 +3744,15 @@ export{/* GLOBALS*/
        commonFFB,
        /* SERVICE SOCKET */
        commonSocketBroadcastShow, 
-       commonSocketMaintenanceShow, 
        commonSocketConnectOnline,
        commonSocketConnectOnlineCheck,
-       /* SERVICE GEOLOCATION */
-       commonMicroserviceGeolocationPlace,
+       commonSocketMaintenanceShow, 
+       /* MICROSERVICE GEOLOCATION */
        commonMicroserviceGeolocationIp,
-       /* INIT */
+       commonMicroserviceGeolocationPlace,
+       /* EVENT */
        commonEvent,
+       /* INIT */
        commonInit};</code></pre>
         </div>
     </div>

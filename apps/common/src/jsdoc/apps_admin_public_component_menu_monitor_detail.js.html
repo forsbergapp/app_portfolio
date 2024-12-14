@@ -23,12 +23,12 @@
  * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
+ * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
  * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
  * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
- * @typedef {CommonModuleCommon['commonInputControl']} commonInputControl
+ * @typedef {CommonModuleCommon['commonMiscInputControl']} commonMiscInputControl
  * @typedef {CommonModuleCommon['commonWindowUserAgentPlatform']} commonWindowUserAgentPlatform
- * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
+ * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
  * @typedef {CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update']} map_update
  * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
  */
@@ -39,7 +39,7 @@
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
  *          function_commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
  *          function_get_order_by:function,
- *          function_roundOff:commonRoundOff,
+ *          function_roundOff:commonMiscRoundOff,
  *          logs:[],
  *          SERVICE_LOG_DATA_PARAMETERS:{
  *                                      SCOPE_REQUEST:string,
@@ -376,13 +376,13 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
 *                       monitorShow:function,
 *                       map_update:map_update,
 *                       appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
-*                       commonElementRow:commonElementRow,
+*                       commonMiscElementRow:commonMiscElementRow,
 *                       commonLovClose:commonLovClose,
 *                       commonLovShow:commonLovShow,
-*                       commonInputControl:commonInputControl,
+*                       commonMiscInputControl:commonMiscInputControl,
 *                       commonComponentRender:commonComponentRender,
 *                       commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
-*                       commonRoundOff:commonRoundOff,
+*                       commonMiscRoundOff:commonMiscRoundOff,
 *                       commonFFB:commonFFB
 *                       },
 *           lifecycle:  null}} props 
@@ -645,7 +645,7 @@ const component = async props => {
         const function_event = event => {
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
                                 //logscope and loglevel
-                                let filename = props.methods.commonElementRow(event.target).getAttribute('data-value') ?? '';
+                                let filename = props.methods.commonMiscElementRow(event.target).getAttribute('data-value') ?? '';
                                 const logscope = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
                                 const loglevel = filename.substring(0,filename.indexOf('_'));
@@ -683,7 +683,7 @@ const component = async props => {
     const monitorDetailShowServerLog = (offset, sort, order_by) =>{
         let search = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input').textContent;
         if (search != null){
-            if (props.methods.commonInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input'),100]]})==false)
+            if (props.methods.commonMiscInputControl(null,{check_valid_list_elements:[[props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_server_log_search_input'),100]]})==false)
                 return;
         }
         if(offset==0){
@@ -701,7 +701,7 @@ const component = async props => {
                                 order_by:order_by,
                                 LIMIT:props.data.LIMIT
                     },
-                    methods:{   commonRoundOff:props.methods.commonRoundOff,
+                    methods:{   commonMiscRoundOff:props.methods.commonMiscRoundOff,
                                 commonFFB:props.methods.commonFFB},
                     path:'/component/menu_monitor_detail_server_log.js'})
                     .then(result=>{
@@ -757,7 +757,7 @@ const component = async props => {
                                 monitor_detail:props.data.monitor_detail,
                                 function_commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                                 function_get_order_by:get_order_by,
-                                function_roundOff: props.methods.commonRoundOff,
+                                function_roundOff: props.methods.commonMiscRoundOff,
                                 logs:logs.rows,
                                 SERVICE_LOG_DATA_PARAMETERS:props.data.SERVICE_LOG_DATA.parameters})
     };
