@@ -7,12 +7,12 @@
  * @import {CommonRESTAPIAuthorizationType, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
+ * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
  */
 
 /**
  * @param {{function_get_order_by:function,
- *          function_roundOff:commonRoundOff,
+ *          function_roundOff:commonMiscRoundOff,
  *          logs:[],
  *          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} props
  * @returns {string}
@@ -327,7 +327,7 @@ const template = props => ` ${  /*
 *                       order_by:string,
 *                       LIMIT:number},
 *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonRoundOff:commonRoundOff,
+*                       commonMiscRoundOff:commonMiscRoundOff,
 *                       commonFFB:commonFFB},
 *           lifeycle:   null}} props 
 * @returns {Promise.<{ lifecycle:   CommonComponentLifecycle, 
@@ -350,7 +350,7 @@ const component = async props => {
         },
         methods:    null,
         template:   template({  function_get_order_by:get_order_by,
-                                function_roundOff:props.methods.commonRoundOff,
+                                function_roundOff:props.methods.commonMiscRoundOff,
                                 logs:logs.rows,
                                 logscope:props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0]})
     };

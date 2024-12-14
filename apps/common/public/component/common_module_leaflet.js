@@ -4,7 +4,7 @@
  */
 /**
  * @import {CommonModuleCommon, CommonModuleLeaflet, CommonModuleLeafletMapData, CommonModuleLeafletMethods, CommonGlobal, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonImportmap']} commonImportmap
+ * @typedef {CommonModuleCommon['commonMiscImportmap']} commonMiscImportmap
  */
 
 /**
@@ -24,7 +24,7 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonImportMap:commonImportmap
+ *                      commonMiscImportmap:commonMiscImportmap
  *                       }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -33,7 +33,7 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  */
 const component = async props => {
     /**@type {CommonModuleLeaflet} */
-    const LEAFLET = await import(props.methods.commonImportMap('leaflet'));
+    const LEAFLET = await import(props.methods.commonMiscImportmap('leaflet'));
     const LEAFLET_CONTAINER_DIV = 'leaflet';
     /**@type{CommonModuleLeafletMapData} */
     let LEAFLET_CONTAINER;

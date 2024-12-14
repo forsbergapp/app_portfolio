@@ -36,7 +36,7 @@ const appEventClick = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){

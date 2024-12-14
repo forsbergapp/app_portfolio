@@ -7,7 +7,7 @@
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonThemeDefaultList']} commonThemeDefaultList
+ * @typedef {CommonModuleCommon['commonMiscThemeDefaultList']} commonMiscThemeDefaultList
  */
 
 /**
@@ -18,7 +18,7 @@ const template = () => '';
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonThemeDefaultList:commonThemeDefaultList,
+ *                      commonMiscThemeDefaultList:commonMiscThemeDefaultList,
  *                      commonComponentRender:commonComponentRender,
  *                      app_theme_update:function}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -27,7 +27,7 @@ const template = () => '';
  *                      template:string}>}
  */
 const component = async props => {
-    const themes = props.methods.commonThemeDefaultList();
+    const themes = props.methods.commonMiscThemeDefaultList();
 
     const onMounted = async () =>{
         await props.methods.commonComponentRender({
