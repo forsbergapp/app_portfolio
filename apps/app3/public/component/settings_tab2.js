@@ -6,10 +6,10 @@
 /**
  * @import {CommonModuleCommon, CommonModuleRegional, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleRegional['getTimezone']} getTimezone
- * @typedef {CommonModuleCommon['commonDbAppSettingsGet']} commonDbAppSettingsGet
- * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
+ * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonTimezoneDate']} commonTimezoneDate
+ * @typedef {CommonModuleCommon['commonMiscTimezoneDate']} commonMiscTimezoneDate
  * @typedef {CommonModuleCommon['commonModuleLeafletInit']} commonModuleLeafletInit
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import {APP_REPORT_GLOBAL, APP_user_setting_record}  from '../js/types.js'
@@ -66,10 +66,10 @@ const template = () => `<div id='mapid'></div>
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
  *                      REPORT_GLOBAL:APP_REPORT_GLOBAL,
  *                      getTimezone:getTimezone,
- *                      commonDbAppSettingsGet:commonDbAppSettingsGet,
- *                      commonTimezoneDate:commonTimezoneDate,
+ *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet,
+ *                      commonMiscTimezoneDate:commonMiscTimezoneDate,
  *                      commonModuleLeafletInit:commonModuleLeafletInit,
- *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
  *                      commonComponentRender:commonComponentRender}}} props
  * @param {{COMMON_DOCUMENT:COMMON_DOCUMENT,
  *          commonMountdiv:string,
@@ -82,7 +82,7 @@ const template = () => `<div id='mapid'></div>
  *                      template:string}>}
  */
 const method = async props => {
-    const settings = (await props.methods.commonDbAppSettingsGet()).filter((/**@type{*}*/setting)=>
+    const settings = (await props.methods.commonMiscDbAppSettingsGet()).filter((/**@type{*}*/setting)=>
         setting.app_id == props.data.app_id && 
         setting.app_setting_type_name.startsWith('PLACE'));
 
@@ -107,7 +107,7 @@ const method = async props => {
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
-        props.methods.commonSelectCurrentValueSet(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
+        props.methods.commonMiscSelectCurrentValueSet(   'setting_select_popular_place', null, 'id', props.data.user_settings.gps_popular_place_id);
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_place').textContent = props.data.user_settings.description;
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_lat').textContent = props.data.user_settings.gps_lat_text;
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_long').textContent = props.data.user_settings.gps_long_text;
@@ -123,7 +123,7 @@ const method = async props => {
                 //Update GPS position
                 props.methods.appComponentSettingUpdate('GPS', 'POSITION');
                 const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
-                props.methods.REPORT_GLOBAL.session_currentDate = props.methods.commonTimezoneDate(timezone);
+                props.methods.REPORT_GLOBAL.session_currentDate = props.methods.commonMiscTimezoneDate(timezone);
             }   
         };
         await props.methods.commonModuleLeafletInit({

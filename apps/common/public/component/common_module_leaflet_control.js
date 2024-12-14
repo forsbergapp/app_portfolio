@@ -5,11 +5,11 @@
 
 /**
  * @import {CommonModuleRegional, CommonAppEvent, CommonModuleLeafletEvent, CommonModuleLeafletMapLayer, CommonGlobal, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonImportmap']} commonImportmap
+ * @typedef {CommonModuleCommon['commonMiscImportmap']} commonMiscImportmap
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  * @typedef {CommonModuleCommon['commonMicroserviceGeolocationPlace']} commonMicroserviceGeolocationPlace
- * @typedef {CommonModuleCommon['commonElementRow']} commonElementRow
+ * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
  */
 
 /**
@@ -60,10 +60,10 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event_doubleclick:function,
- *                      commonImportMap:commonImportmap,
+ *                      commonMiscImportmap:commonMiscImportmap,
  *                      commonComponentRender:commonComponentRender,
  *                      commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
- *                      commonElementRow:commonElementRow,
+ *                      commonMiscElementRow:commonMiscElementRow,
  *                      commonFFB:commonFFB,
  *                      moduleLeafletContainer:function,
  *                      moduleLeafletLibrary:function
@@ -229,7 +229,7 @@ const component = async props => {
     const eventClickSearchList = async target =>{
         //execute function from inparameter or use default when not specified
         if (target.classList.contains('common_module_leaflet_click_city')){
-            const row = props.methods.commonElementRow(target);
+            const row = props.methods.commonMiscElementRow(target);
             const data = {  city:       row.getAttribute('data-city') ?? '',
                             country:    row.getAttribute('data-country') ??'',
                             latitude:   row.getAttribute('data-latitude') ?? '',
@@ -484,7 +484,7 @@ const component = async props => {
      */
     const map_update = async (parameters) => {
         /**@type {CommonModuleRegional} */
-        const {getTimezone} = await import(props.methods.commonImportMap('regional'));
+        const {getTimezone} = await import(props.methods.commonMiscImportmap('regional'));
         return new Promise((resolve)=> {
             /**
              * Map update GPS

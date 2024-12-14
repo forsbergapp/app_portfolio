@@ -4,8 +4,8 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonDbAppSettingsGet']} commonDbAppSettingsGet
- * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
+ * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
  * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
@@ -121,9 +121,9 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
- *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
  *                      commonComponentRender:commonComponentRender,
- *                      commonDbAppSettingsGet:commonDbAppSettingsGet}}} props
+ *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -131,7 +131,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  */
 const method = async props => {
 
-    const settings = await props.methods.commonDbAppSettingsGet();
+    const settings = await props.methods.commonMiscDbAppSettingsGet();
     //update APP_GLOBAL with themes
     /**@type{import('../js//types.js').APP_GLOBAL['themes']} */
     props.data.themes.data = settings.filter(setting=>
@@ -184,11 +184,11 @@ const method = async props => {
             methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});
 
-        props.methods.commonSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.design_paper_size);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.design_paper_size);
         
         props.methods.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.design_paper_size;
 
-        props.methods.commonSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.design_row_highlight);
 
         if (Number(props.data.user_settings.design_column_weekday_checked))
             props.methods.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');

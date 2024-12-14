@@ -7,7 +7,7 @@
  * @import {CommonProfileUser, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonDialogueShow']} commonDialogueShow
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonFormatJsonDate']} commonFormatJsonDate
+ * @typedef {CommonModuleCommon['commonMiscFormatJsonDate']} commonMiscFormatJsonDate
  * @typedef {CommonModuleCommon['commonModuleEasyQRCODECreate']} commonModuleEasyQRCODECreate
  * @typedef {CommonModuleCommon['commonWindowHostname']} commonWindowHostname
  * @typedef {CommonModuleCommon['commonSocketConnectOnlineCheck']} commonSocketConnectOnlineCheck
@@ -17,7 +17,7 @@
 /**
  * 
  * @param {{profile:CommonProfileUser,
- *          function_commonFormatJsonDate:commonFormatJsonDate}} props 
+ *          function_commonMiscFormatJsonDate:commonMiscFormatJsonDate}} props 
  * @returns {string}
  */
 const template = props =>`  <div id='common_profile_main'>
@@ -41,7 +41,7 @@ const template = props =>`  <div id='common_profile_main'>
                                     <div class='common_profile_main_col'>
                                         <div id='common_profile_joined'>
                                             <div id='common_profile_joined_date_icon' class='common_icon'></div>
-                                            <div id='common_profile_joined_date'>${props.function_commonFormatJsonDate(props.profile.date_created ?? '', true)}</div>
+                                            <div id='common_profile_joined_date'>${props.function_commonMiscFormatJsonDate(props.profile.date_created ?? '', true)}</div>
                                         </div>
                                     </div>    
                                     <div class='common_profile_main_col'>
@@ -104,7 +104,7 @@ const template = props =>`  <div id='common_profile_main'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFormatJsonDate:commonFormatJsonDate,
+ *                      commonMiscFormatJsonDate:commonMiscFormatJsonDate,
  *                      commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
  *                      commonWindowHostname:commonWindowHostname,
  *                      commonDialogueShow:commonDialogueShow,
@@ -177,7 +177,7 @@ const component = async props => {
         methods:    null,
         template:   template({
                             profile:profile,
-                            function_commonFormatJsonDate:props.methods.commonFormatJsonDate
+                            function_commonMiscFormatJsonDate:props.methods.commonMiscFormatJsonDate
                         })
     };
 };

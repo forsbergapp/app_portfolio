@@ -141,11 +141,11 @@ const appSecureMenuShow = menu => {
                             appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
                             map_update:map_update,
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
-                            commonElementRow:common.commonElementRow,
-                            commonInputControl:common.commonInputControl,
+                            commonMiscElementRow:common.commonMiscElementRow,
+                            commonMiscInputControl:common.commonMiscInputControl,
                             commonComponentRender:common.commonComponentRender,
                             commonWindowUserAgentPlatform:common.commonWindowUserAgentPlatform,
-                            commonRoundOff:common.commonRoundOff,
+                            commonMiscRoundOff:common.commonMiscRoundOff,
                             commonLovClose:common.commonLovClose,
                             commonLovShow:common.commonLovShow,
                             commonFFB:common.commonFFB
@@ -181,7 +181,7 @@ const appSecureMenuShow = menu => {
                 mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {
-                            commonRoundOff:common.commonRoundOff,
+                            commonMiscRoundOff:common.commonMiscRoundOff,
                             commonFFB:common.commonFFB
                             },
                 path:       '/component/menu_db_info.js'});
@@ -628,7 +628,7 @@ const appSecureMenuInstallationDbUninstall = () =>{
  * @returns {void}
  */
 const appSecureMenuInstallationDemoInstall = () =>{
-    if (common.commonInputControl(null,
+    if (common.commonMiscInputControl(null,
                         {
                             check_valid_list_elements:[[COMMON_DOCUMENT.querySelector('#menu_installation_demo_password'),null]]
                         })==true){
@@ -735,7 +735,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     common.commonComponentRender({
                         mountDiv:   'menu_apps_detail',
                         data:       {
-                                    app_id_data:parseInt(common.commonElementRow(APP_SECURE_GLOBAL.previous_row).getAttribute('data-app_id') ?? ''),
+                                    app_id_data:parseInt(common.commonMiscElementRow(APP_SECURE_GLOBAL.previous_row).getAttribute('data-app_id') ?? ''),
                                     detail:event_target_id,
                                     },
                         methods:    {commonFFB:common.commonFFB},
@@ -863,19 +863,19 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
             switch (event_target_id){
                 case 'menu_apps':{
                     //event on master to automatically show detail records
-                    if (APP_SECURE_GLOBAL.previous_row != common.commonElementRow(event.target)){
-                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    if (APP_SECURE_GLOBAL.previous_row != common.commonMiscElementRow(event.target)){
+                        APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                         COMMON_DOCUMENT.querySelector('#menu_apps_detail_parameter').click();
                     }
                     break;
                 }
                 case 'menu_users_list':{
                     //event on master to automatically show detail records
-                    if (APP_SECURE_GLOBAL.previous_row != common.commonElementRow(event.target)){
-                        APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    if (APP_SECURE_GLOBAL.previous_row != common.commonMiscElementRow(event.target)){
+                        APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                         common.commonComponentRender({
                             mountDiv:   'menu_users_iam_user_login',
-                            data:       {user_account_id:parseInt(common.commonElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
+                            data:       {user_account_id:parseInt(common.commonMiscElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
                             path:       '/component/menu_users_iam_user_login.js'});
                     }
@@ -886,7 +886,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
         }
         case 'input':{
             if (event.target.classList.contains('list_edit')){
-                common.commonElementRow(event.target).setAttribute('data-changed-record','1');
+                common.commonMiscElementRow(event.target).setAttribute('data-changed-record','1');
             }
             break;
         }
@@ -898,7 +898,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(appSecureMenuUsers, 'username', 'asc');
+                        common.commonMiscTypewatch(appSecureMenuUsers, 'username', 'asc');
                     break;
                 }
                 case 'menu_monitor_detail_server_log_search_input':{
@@ -907,7 +907,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.commonTypewatch(APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 0, 'logdate', 'desc');
+                        common.commonMiscTypewatch(APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailShowServerLog, 0, 'logdate', 'desc');
                     break;
                 }
             }
@@ -916,10 +916,10 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
         case 'keydown':{
             if (event.target.classList.contains('list_edit')){
                 if (event.code=='ArrowUp') {
-                    APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    const element_previous = common.commonElementRow(event.target).previousSibling;
+                    const element_previous = common.commonMiscElementRow(event.target).previousSibling;
                     /**@ts-ignore */
                     if (element_previous && element_previous.classList?.contains('common_row')){
                         /**@ts-ignore */
@@ -927,10 +927,10 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     }
                 }
                 if (event.code=='ArrowDown') {
-                    APP_SECURE_GLOBAL.previous_row = common.commonElementRow(event.target);
+                    APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                     event.preventDefault();
                     //focus on first list_edit item in the row
-                    const element_next = common.commonElementRow(event.target).nextSibling;
+                    const element_next = common.commonMiscElementRow(event.target).nextSibling;
                     if (element_next){
                         /**@ts-ignore */
                         element_next.querySelectorAll?element_next.querySelectorAll('.list_edit')[0].focus():null;
@@ -1010,8 +1010,8 @@ const appEventClick = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
-        const list_title = common.commonElementListTitle(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
+        const list_title = common.commonMiscElementListTitle(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
@@ -1083,7 +1083,7 @@ const appEventClick = event => {
                                                     user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
                                                     },
                                         methods:    {
-                                                    commonSelectCurrentValueSet:common.commonSelectCurrentValueSet,
+                                                    commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                                                    commonFFB:common.commonFFB,
                                                     commonComponentRender:common.commonComponentRender,
                                                     commonUserSessionCountdown:common.commonUserSessionCountdown,
@@ -1095,9 +1095,9 @@ const appEventClick = event => {
                                         {mountDiv:  'common_dialogue_user_menu_app_theme',
                                         data:       null,
                                         methods:    {
-                                                    commonThemeDefaultList:common.commonThemeDefaultList, 
+                                                    commonMiscThemeDefaultList:common.commonMiscThemeDefaultList, 
                                                     commonComponentRender:common.commonComponentRender, 
-                                                    app_theme_update:common.commonPreferencesPostMount
+                                                    app_theme_update:common.commonMiscPreferencesPostMount
                                                     },
                                         path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
                     break;
@@ -1123,7 +1123,7 @@ const appEventChange = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('change',event)
         .then(()=>appSecureEvents('change', event, event_target_id));
     }
@@ -1141,7 +1141,7 @@ const appEventKeyUp = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('keyup',event)
         .then(()=>{
             switch (event_target_id){
@@ -1174,7 +1174,7 @@ const appEventKeyDown = event => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('keydown',event)
         .then(()=>{
             appSecureEvents('keydown', event, event_target_id);
@@ -1194,7 +1194,7 @@ const appEventInput = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('input',event)
         .then(()=>{
             appSecureEvents('input', event, event_target_id);
@@ -1214,7 +1214,7 @@ const appEventFocus = event => {
         }, true);
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('focus',event)
         .then(()=>{
             appSecureEvents('focus', event, event_target_id);

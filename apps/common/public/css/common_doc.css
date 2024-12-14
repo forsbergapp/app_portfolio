@@ -57,7 +57,21 @@ body {
     font-size: 1em;
     font-weight: bold;
 }
-
+.markdown{
+    white-space: pre-wrap;
+    font-size: 0.8em;
+    width:80em !important;
+    margin-bottom: 10em;
+}
+.markdown_image{
+    display:block;
+    width: 256px;
+    height:144px;
+    max-width:100%;
+    margin:auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
 #nav{
     width: 350px;
     font-size: 1em;
@@ -123,10 +137,6 @@ body {
 }
 .details .li{
     padding-top: 6px;
-}
-.markdown{
-    white-space: pre-wrap;
-    font-size: 0.8em;
 }
 .source{
     font-size: 0.7em !important;

@@ -5,8 +5,8 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonDbAppSettingsGet']} commonDbAppSettingsGet
- * @typedef {CommonModuleCommon['commonSelectCurrentValueSet']} commonSelectCurrentValueSet
+ * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
+ * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @import {appComponentSettingUpdate}  from '../js/app.js'
@@ -134,8 +134,8 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonDbAppSettingsGet:commonDbAppSettingsGet,
- *                      commonSelectCurrentValueSet:commonSelectCurrentValueSet,
+ *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet,
+ *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
  *                      commonComponentRender:commonComponentRender,
  *                      commonFFB:commonFFB}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -144,7 +144,7 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      template:string}>}
  */
 const method = async props => {
-    const settings = await props.methods.commonDbAppSettingsGet();
+    const settings = await props.methods.commonMiscDbAppSettingsGet();
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
@@ -286,15 +286,15 @@ const method = async props => {
             path:'/common/component/common_select.js'});
       
         //update select with settings values
-        props.methods.commonSelectCurrentValueSet('setting_select_locale', props.data.user_settings.regional_language_locale);
-        props.methods.commonSelectCurrentValueSet('setting_select_report_locale_second', props.data.user_settings.regional_second_language_locale);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_locale', props.data.user_settings.regional_language_locale);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_locale_second', props.data.user_settings.regional_second_language_locale);
 
-        props.methods.commonSelectCurrentValueSet('setting_select_report_timezone', props.data.user_settings.regional_timezone);
-        props.methods.commonSelectCurrentValueSet('setting_select_report_numbersystem', props.data.user_settings.regional_number_system);
-        props.methods.commonSelectCurrentValueSet('setting_select_report_direction', props.data.user_settings.regional_layout_direction);
-        props.methods.commonSelectCurrentValueSet('setting_select_report_arabic_script', props.data.user_settings.regional_arabic_script);
-        props.methods.commonSelectCurrentValueSet('setting_select_calendartype', props.data.user_settings.regional_calendar_type);
-        props.methods.commonSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.regional_calendar_hijri_type);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_timezone', props.data.user_settings.regional_timezone);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_numbersystem', props.data.user_settings.regional_number_system);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_direction', props.data.user_settings.regional_layout_direction);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_report_arabic_script', props.data.user_settings.regional_arabic_script);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_calendartype', props.data.user_settings.regional_calendar_type);
+        props.methods.commonMiscSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.regional_calendar_hijri_type);
 
         //display live timezone time
         props.methods.appComponentSettingUpdate('REGIONAL', 'TIMEZONE');

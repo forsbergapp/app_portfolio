@@ -7,7 +7,7 @@
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonRoundOff']} commonRoundOff
+ * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
  */
 
 
@@ -30,7 +30,7 @@
  *                          data_used:number,
  *                          data_free:number,
  *                          pct_used:number},
- *          function_roundOff:commonRoundOff}} props
+ *          function_roundOff:commonMiscRoundOff}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_db_info_content_widget1' class='widget'>
@@ -76,7 +76,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
 * 
 * @param {{ data:{      commonMountdiv:string},
 *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonRoundOff:commonRoundOff,
+*                       commonMiscRoundOff:commonMiscRoundOff,
 *                       commonFFB:commonFFB},
 *           lifecycle:  null}} props 
 * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -107,7 +107,7 @@ const component = async props => {
                                 db:db,
                                 db_detail:db_detail,
                                 db_detail_sum:db_detail_sum,
-                                function_roundOff:props.methods.commonRoundOff
+                                function_roundOff:props.methods.commonMiscRoundOff
       })
   };
 };
