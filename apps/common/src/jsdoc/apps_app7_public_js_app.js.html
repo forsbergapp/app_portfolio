@@ -58,7 +58,7 @@ const appEventClick = (event=null) => {
         });
     }
     else{
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
@@ -251,7 +251,7 @@ const appInit = async () => {
                     common_app_id:common.COMMON_GLOBAL.common_app_id
                     },
         methods:    {
-                    commonElementRow:common.commonElementRow,
+                    commonMiscElementRow:common.commonMiscElementRow,
                     commonLovShow:common.commonLovShow,
                     commonLovClose:common.commonLovClose,
                     commonMessageShow:common.commonMessageShow,

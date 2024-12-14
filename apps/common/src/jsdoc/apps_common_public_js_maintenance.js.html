@@ -30,7 +30,7 @@ const appException = () => {
 const appCommonInit= parameters => {
     COMMON_DOCUMENT.title = '⚒';
     COMMON_DOCUMENT.querySelector('#common_broadcast').addEventListener('click', (/**@type{import('../../../common_types.js').CommonAppEvent}*/event) => {
-        const event_target_id = common.commonElementId(event.target);
+        const event_target_id = common.commonMiscElementId(event.target);
         if (event_target_id=='common_broadcast_close')
             common.commonComponentRemove('common_broadcast');
     });
