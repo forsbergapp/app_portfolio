@@ -14,34 +14,77 @@ const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
-const APP_GLOBAL = {
-    'docs':[{'id':1,
-            'doc_title':'Arquitecture Diagram',
-            'doc_type':'IMAGE',
-            'doc_url':'/common/documents/arquitecture.webp',
-            'doc_image':'/common/documents/arquitecture.webp',
-            'doc_image_small':'/common/documents/arquitecture_small.webp'},
-            {'id':2,
-                'doc_title':'Infrastructure as Code Diagram',
-                'doc_type':'IMAGE',
-                'doc_url':'/common/documents/iac.webp',
-                'doc_image':'/common/documents/iac.webp',
-                'doc_image_small':'/common/documents/iac_small.webp'},
-            {'id':3,
-            'doc_title':'Data Model',
-            'doc_type':'IMAGE',
-            'doc_url':'/common/documents/data_model.webp',
-            'doc_image':'/common/documents/data_model.webp',
-            'doc_image_small':'/common/documents/data_model_small.webp'},
-            {'id':4,
-            'doc_title':'Documentation',
-            'doc_type':'URL',
-            'doc_url':'/info/doc',
-            'doc_image':null,
-            'doc_image_small':null}
-            ]
+/**@type {import('../../../common_types.js').CommonModuleJsonDocPrettify} */
+const {prettyPrint} = await import(common.commonMiscImportmap('jsdoc_prettify'));
+
+/**
+ * @param {string} href
+ */
+const linenumber = href =>{
+    const source = document.getElementsByClassName('prettyprint source linenums');
+    let i = 0;
+    let lineNumber = 0;
+    let lineId;
+    let lines;
+    let totalLines;
+    let anchorHash;
+
+    if (source && source[0]) {
+        anchorHash = href.split('#')[1];
+        lines = source[0].getElementsByTagName('li');
+        totalLines = lines.length;
+
+        for (; i < totalLines; i++) {
+            lineNumber++;
+            lineId = `line${lineNumber}`;
+            lines[i].id = lineId;
+            if (lineId === anchorHash) {
+                lines[i].className += ' selected';
+            }
+        }
+    }
 };
-Object.seal(APP_GLOBAL);
+/**
+ * @param {string} href
+ * @param {string} title
+ * @param {boolean} markdown
+ * @param {boolean} local
+ */
+const show = async (href, title, markdown, local) =>{
+    if (local)
+        try {
+            COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
+            COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+            const response = await fetch(href);    
+            if (response.ok){
+                COMMON_DOCUMENT.querySelector('#content_title').innerHTML= title;
+                if (markdown)
+                    COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
+                else
+                    COMMON_DOCUMENT.querySelector('#content').className = '';
+
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
+                //prettyPrint();
+                //if (href.split('#')[1])
+                //    linenumber(href);
+            }
+
+        } catch (error) {
+            null;
+        }
+    else{
+        COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
+        COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+        const content = await common.commonFFB({path:'/app-common-doc/' + href, method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
+        COMMON_DOCUMENT.querySelector('#content_title').innerHTML= content?title:'';
+        if (markdown)
+            COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
+        else
+            COMMON_DOCUMENT.querySelector('#content').className = '';
+        COMMON_DOCUMENT.querySelector('#content').innerHTML= content ?? '';
+    }
+        
+};
 /**
  * App exception function
  * @function
@@ -69,6 +112,32 @@ const appEventClick = event => {
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
+                case 'title':{
+                    event.preventDefault();
+                    COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
+                    show(COMMON_DOCUMENT.querySelector('#title').getAttribute('href'), event.target.textContent, true, true);
+                    break;
+                }
+                case 'menu_open':{
+                    COMMON_DOCUMENT.querySelector('#nav').style.display = 'block';
+                    break;
+                }
+                case 'menu_close': {
+                    COMMON_DOCUMENT.querySelector('#nav').style.display = 'none';
+                    break;
+                }
+                case 'nav_content_app':{
+                    event.preventDefault();
+                    if (event.target.getAttribute('href'))
+                        show(event.target.getAttribute('href'), event.target.textContent, true, true);
+                    break;
+                }
+                case 'nav_content_jsdoc':{
+                    event.preventDefault();
+                    if (event.target.getAttribute('href'))
+                        show(event.target.getAttribute('href'), event.target.textContent, false, false);
+                    break;
+                }
                 case 'common_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
@@ -85,16 +154,14 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#dialogue_documents').style.visibility = 'visible';
                     break;
                 }
-                case 'doc_list':
-                case event.target.classList.contains('doc_list_item_image')?event_target_id:'':{
-                    const target_row = common.commonMiscElementRow(event.target);
-                    if (target_row.querySelector('.doc_list_item_image')?.getAttribute('data-type'))
+                case event.target.classList.contains('markdown_image')?event_target_id:'':{
+                    if (event.target.getAttribute('data-url'))
                         common.commonComponentRender({
                             mountDiv:   'common_window_info',
                             data:       {
-                                        //show IMAGE type 0 or URL type 1
-                                        info:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-type')=='IMAGE'?0:1,
-                                        url:target_row.querySelector('.doc_list_item_image')?.getAttribute('data-url'),
+                                        //show IMAGE type 0 
+                                        info:0,
+                                        url:event.target.getAttribute('data-url'),
                                         content_type:null, 
                                         iframe_content:null
                                         },
@@ -146,13 +213,7 @@ const appInit = async () => {
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
-    common.commonComponentRender({
-        mountDiv:   'doc_list',
-        data:       {docs:APP_GLOBAL.docs},
-        methods:    null,
-        path:       '/component/docs.js'});
-    COMMON_DOCUMENT.querySelector('#dialogue_documents').style.visibility = 'visible';
-   
+
 };
 /**
  * Init common

@@ -372,7 +372,7 @@ function buildNav(members) {
 
         members.globals.forEach(({kind, longname, name}) => {
             if ( kind !== 'typedef' && !hasOwnProp.call(seen, longname) ) {
-                globalNav += `<div class='li'>${linkto(longname, name)}</div>`;
+                globalNav += `<div class='li common_link'>${linkto(longname, name)}</div>`;
             }
             seen[longname] = true;
         });

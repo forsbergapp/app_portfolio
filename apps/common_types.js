@@ -111,6 +111,7 @@
  * @property {number}   clientY
  * @property {{ id:                 string,
  *              blur:               function,
+ *              href:               string,
  *              focus:              function,
  *              classList:          {contains:function, remove:function, add:function},
  *              className:          string,
@@ -534,6 +535,11 @@
  * Type CommonModuleEasyQRCode
  * @typedef {{QRCode:*}} CommonModuleEasyQRCode
  */
+/**
+ * Type CommonModuleEasyQRCode
+ * @typedef {{prettyPrint:function}} CommonModuleJsonDocPrettify
+ */
+
 /**
  * Type CommonModuleLeaflet
  * @typedef {import('./common/public/modules/leaflet/leaflet-src.esm.js')} CommonModuleLeaflet
