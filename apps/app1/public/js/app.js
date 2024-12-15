@@ -64,9 +64,7 @@ const show = async (href, title, markdown, local) =>{
                     COMMON_DOCUMENT.querySelector('#content').className = '';
 
                 COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
-                //prettyPrint();
-                //if (href.split('#')[1])
-                //    linenumber(href);
+                
             }
 
         } catch (error) {
@@ -75,13 +73,16 @@ const show = async (href, title, markdown, local) =>{
     else{
         COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
         COMMON_DOCUMENT.querySelector('#content').innerHTML='';
-        const content = await common.commonFFB({path:'/app-common-doc/' + href, method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
+        const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
         COMMON_DOCUMENT.querySelector('#content_title').innerHTML= content?title:'';
         if (markdown)
             COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
         else
             COMMON_DOCUMENT.querySelector('#content').className = '';
         COMMON_DOCUMENT.querySelector('#content').innerHTML= content ?? '';
+        prettyPrint();
+        if (href.split('#')[1])
+            linenumber(href);
     }
         
 };
@@ -112,12 +113,6 @@ const appEventClick = event => {
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
-                case 'title':{
-                    event.preventDefault();
-                    COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
-                    show(COMMON_DOCUMENT.querySelector('#title').getAttribute('href'), event.target.textContent, true, true);
-                    break;
-                }
                 case 'menu_open':{
                     COMMON_DOCUMENT.querySelector('#nav').style.display = 'block';
                     break;
@@ -126,16 +121,19 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#nav').style.display = 'none';
                     break;
                 }
-                case 'nav_content_app':{
+                case 'title':
+                case 'nav_content_app':
+                case 'nav_content_jsdoc':
+                case 'article':{
                     event.preventDefault();
                     if (event.target.getAttribute('href'))
-                        show(event.target.getAttribute('href'), event.target.textContent, true, true);
-                    break;
-                }
-                case 'nav_content_jsdoc':{
-                    event.preventDefault();
-                    if (event.target.getAttribute('href'))
-                        show(event.target.getAttribute('href'), event.target.textContent, false, false);
+                        show(   event.target.getAttribute('href'), 
+                                //use title from first menu text if clicking on title
+                                event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.textContent, 
+                                //markdown links in title and nav_content_app
+                                (event_target_id=='title' ||event_target_id=='nav_content_app')?true:false, 
+                                //local links in title and nav_content_app
+                                (event_target_id=='title' ||event_target_id=='nav_content_app')?true:false);
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -213,6 +211,8 @@ const appInit = async () => {
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
+    //show first menu at start
+    COMMON_DOCUMENT.querySelector('#title').click();
 
 };
 /**
