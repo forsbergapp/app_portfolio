@@ -413,12 +413,13 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
 /**
  * Importmap that return file path for given file
  * to solve importmap not working for some browsers
- * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
+ * @param {'easy.qrcode'|'jsdoc_prettify'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
  * @return {string}
  */
 const commonMiscImportmap = file =>{
     return {
         'easy.qrcode'   : '/common/modules/easy.qrcode/easy.qrcode.js',
+        jsdoc_prettify  : '/common/modules/jsdoc/prettify/prettify.js',
         leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
         React 		    : '/common/modules/react/react.development.js',
         ReactDOM 	    : '/common/modules/react/react-dom.development.js',
@@ -561,36 +562,33 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
  * not supported:
  * ![alt text ](img "hover text")
  *                  
- * @param {string} div
- * @param {string} markdown_file
- * @returns {Promise.<void>}
+ * @param {string} markdown
+ * @returns {string}
  */
-const commonMiscMarkdownParse = async (div, markdown_file) =>{
-    let file = await fetch(markdown_file)
-                        .then(response=>response.text())
-                        .then(result=>result)
-                        .catch((err)=>{throw err;});
+const commonMiscMarkdownParse = markdown =>{
+    //remove all '\r' in '\r\n'
+    markdown = markdown.replaceAll('\r\n','\n');
     //convert headings #, ## and ##
     //correct syntax 
     //#[1 space character] []text,   ex # heading 1
     //##[1 space character] []text,  ex ## heading 2
     //###[1 space character] []text, ex ### heading 3
     //# must be first character in the row or it is not part of markdown parsing
-    file = file.split('\n').map(row=>row.indexOf('###')==0?`<div class='title_h3'>${row.replace('###','')}</div>`:row).join('');
-    file = file.split('\n').map(row=>row.indexOf('##')==0?`<div class='title_h2'>${row.replace('##','')}</div>`:row).join('');
-    file = file.split('\n').map(row=>row.indexOf('#')==0?`<div class='title_h1'>${row.replace('#','')}</div>`:row).join('');
+    markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='title_h3'>${row.replace('###','')}</div>`:row).join('\n');
+    markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='title_h2'>${row.replace('##','')}</div>`:row).join('\n');
+    markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='title_h1'>${row.replace('#','')}</div>`:row).join('\n');
                                 
     //convert image tags
     //regexp for [![](small img)](full size img)
     const regexp =   /\[!\[\s*\]\(([^)]+)\)\]\(([^)]+)\)/g;
     let match;
-    while ((match = regexp.exec(file)) !==null){
-        file.replace(match[0], 
+    while ((match = regexp.exec(markdown)) !==null){
+        markdown.replace(match[0], 
                         `<div 	class='markdown_image' 
                                 style='background-image:url("${match[1]}")' 
                                 data-url='${match[2]}'></div>`);
     }
-    COMMON_DOCUMENT.querySelector(div).innerHTML = file;
+    return markdown;
 };
 /**
  * 
