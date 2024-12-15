@@ -11,15 +11,32 @@
  */
 /**
  * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {appMenu}  from '../js/types.js'
  */
 /**
+ * @param {{app_menu:appMenu[]
+ *          jsdoc_menu:string}} props
  * @returns {string}
  */
-const template = () =>` &lt;div id='dialogue_documents' class='dialogue'>
-                            &lt;div id='dialogue_documents_content' class='dialogue_content'>
-                                &lt;div id='doc_list'>&lt;/div>
+const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
+                            &lt;div id='nav'>
+                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' class='title_h1'>App Portfolio&lt;/div>
+                                &lt;div id='menu_close' class='common_icon'>&lt;/div>
+                                &lt;div id='nav_content_app'>
+                                    ${props.app_menu.map(row=>
+                                        `&lt;div>${row.menu}&lt;/div>
+                                        ${row.menu_sub?.map(row_sub=>
+                                            `&lt;div class='common_link' href='${row_sub.menu_url}'>${row_sub.menu}&lt;/div>`
+                                        ).join('')}
+                                        `
+                                    ).join('')}
+                                &lt;/div>
+                                &lt;link type="text/css" rel="stylesheet" href="/common/modules/jsdoc/prettify-tomorrow.css">
+                                &lt;link type="text/css" rel="stylesheet" href="/common/modules/jsdoc/jsdoc-default.css">
+                                &lt;div id='nav_content_jsdoc'>${props.jsdoc_menu}&lt;/div>
                             &lt;/div>
-                        &lt;/div>`;
+                            &lt;div id='content_title'>&lt;/div>
+                            &lt;div id='content'>&lt;/div>`;
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
@@ -30,12 +47,14 @@ const template = () =>` &lt;div id='dialogue_documents' class='dialogue'>
  *                      template:string}>}
  */
 const component = async props => {
-    props; 
+    props;
     return {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template()
+        template:   template({  app_menu:await fetch('/js/menu.json').then(result=>result.json()),
+                                jsdoc_menu:await fetch('/info/doc/nav.html').then(result=>result.text())
+        })
     };
 };
 export default component;</code></pre>

@@ -38,7 +38,7 @@
     cursor:pointer;
 }
 .title_h1{
-    font-size: 1em;
+    font-size: 1.5em;
     font-weight: bold;
     color: #0095dd;
     margin-top: 10px;
@@ -81,9 +81,14 @@
 	background-position: center;
 	cursor: pointer;
 }
+.markdown_image_text{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
 #nav{
     width: 350px;
-    font-size: 1em;
+    font-size: 0.9em;
     overflow-y:auto;
     overflow-x:hidden;
     height:100%;
@@ -169,8 +174,8 @@
 		display:block !important;
 	}
     #content_title{
-        font-size: 2em;
         margin-inline-start: 360px;
+        top: 30px;
     }
     #content{
         width: calc(100% - 360px);
@@ -191,7 +196,6 @@
 	visibility: hidden;
 }
 #common_window_info{
-	z-index: 0 !important;
 	display:grid;
 }
 #common_window_info_info{

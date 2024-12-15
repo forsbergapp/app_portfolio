@@ -557,8 +557,8 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
  * #                                title_h1
  * ##                               title_h2
  * ###                              title_h3
- * [![](small img)](full size img)  markdown_image  no alt text or hover text supported
- *                                                  all images should have text displayed below
+ * [![text](small img)](full size img)  markdown_image  alt text should be used here as text below image
+ *                                                      hover text is not supported
  * not supported:
  * ![alt text ](img "hover text")
  *                  
@@ -579,14 +579,14 @@ const commonMiscMarkdownParse = markdown =>{
     markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='title_h1'>${row.replace('#','')}</div>`:row).join('\n');
                                 
     //convert image tags
-    //regexp for [![](small img)](full size img)
-    const regexp =   /\[!\[\s*\]\(([^)]+)\)\]\(([^)]+)\)/g;
+    //regexp for [![text](small img)](full size img)
+    const regexp =   /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
     let match;
     while ((match = regexp.exec(markdown)) !==null){
-        markdown.replace(match[0], 
-                        `<div 	class='markdown_image' 
-                                style='background-image:url("${match[1]}")' 
-                                data-url='${match[2]}'></div>`);
+        markdown = markdown.replace(match[0], 
+                                    `<div 	class='markdown_image' 
+                                            style='background-image:url("${match[2]}")' 
+                                            data-url='${match[3]}'></div><div class='markdown_image_text'>${match[1]}</div>`);
     }
     return markdown;
 };
