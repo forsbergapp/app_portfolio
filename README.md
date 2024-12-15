@@ -22,6 +22,7 @@
 		- factory
 		- race condition
 		- file transaction management
+		- object relational mapping (ORM)
 		- frontend for backend (FFB)
 		- backend for frontend (BFF)
 		- entity/resource datamodel using hybrid JSON storage concept with flexible and minimal data model design
@@ -50,7 +51,7 @@
 
 # Installation
 
-	Full documentation in /apps/common/src/jsdoc/guide or in presentation app when installed together with JSDoc generated documentation
+	Full documentation in /apps/common/public/documents or in presentation app when installed
 
 	WINDOWS DEVELOPMENT
 

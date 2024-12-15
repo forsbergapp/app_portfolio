@@ -324,7 +324,7 @@ function buildMemberNav(items, itemHeading, itemsSeen, linktoFn) {
         });
 
         if (itemsNav !== '') {
-            nav += `<div class='title_h3'>${itemHeading}</div><div class='ul'>${itemsNav}</div>`;
+            nav += `<div >${itemHeading}</div><div class='ul'>${itemsNav}</div>`;
         }
     }
 
