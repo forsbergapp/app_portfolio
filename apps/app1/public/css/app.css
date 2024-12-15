@@ -28,6 +28,9 @@
 #nav_content_app div[href]{
 	margin-inline-start: 1em;
 }
+#nav_content_jsdoc{
+    margin-top: 1em;
+}
 #title,
 #nav_content_app div[href],
 #nav_content_jsdoc li{
@@ -38,31 +41,30 @@
     cursor:pointer;
 }
 .title_h1{
-    font-size: 1.5em;
+    font-size: 1.7em;
     font-weight: bold;
-    color: #0095dd;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 .title_h2{
     margin-top: 0.5em;
-    font-size: 1em;
+    font-size: 1.2em;
     font-weight: bold;
 }
 .title_h3{
-    margin-top: 0.5em;
-    font-size: 1em;
+    font-size: 1.1em;
     font-weight: bold;
+    font-style: italic;
 }
 .title_h4{
-    margin-top: 0.5em;
     font-size: 1em;
     font-weight: bold;
+    font-style: italic;
 }
 .title_h5{
-    margin-top: 0.5em;
     font-size: 1em;
     font-weight: bold;
+    font-style: italic;
 }
 .markdown{
     white-space: pre-wrap;
@@ -217,7 +219,13 @@ body {
 #content.css_spinner::before{
     background-color: var(--common_app_color_light) !important;
 }
-
+.title_h1,
+.title_h2,
+.title_h3,
+.title_h4,
+.title_h5{
+    color: #0095dd;
+}
 /* APP THEME COMMON*/
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
