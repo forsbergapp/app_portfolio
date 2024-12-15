@@ -32,6 +32,24 @@ const app_common= await import(`file://${process.cwd()}/apps/common/src/common.j
 const {default:serverError} = await import('../apps/common/src/component/common_server_error.js');
 
 const fs = await import('node:fs');
+
+/**
+ * @param {number} app_id
+ * @param {server_bff_parameters} bff_parameters
+ * @param {string} service
+ * @param {string} filePath
+ * @returns {Promise.&lt;void>}
+ */
+const bffSendFile = async (app_id, bff_parameters, service, filePath) => {
+    await fs.promises.access(filePath)
+          .then(()=>{
+            bff_parameters.res?bff_parameters.res.sendFile(filePath):null;
+            bff_parameters.res?bff_parameters.res.status(200):null;
+        })
+          .catch((error)=>{
+            bffErrorLog(app_id, bff_parameters, service, error);
+        });
+};
 /**
  * Logs error and returns error
  * @function
@@ -223,8 +241,7 @@ const bffStart = async (req, res) =>{
             .then(result=>{
                 if (result!=null &amp;&amp; result.STATIC){
                     if (result.SENDFILE){
-                        bff_parameters.res?bff_parameters.res.sendFile(result.SENDFILE):null;
-                        bff_parameters.res?bff_parameters.res.status(200):null;
+                        bffSendFile(app_id, bff_parameters, service, result.SENDFILE);
                     }
                     else
                         bff_parameters.res?bff_parameters.res.status(200).send(result.SENDCONTENT):null;
@@ -280,12 +297,12 @@ const bffStart = async (req, res) =>{
                              */
                             const return_result =(status, result) =>{
                                 bff_parameters.res.statusCode = status;
-                                if (bff_parameters.endpoint=='APP'){
+                                if (bff_parameters.endpoint=='APP' || (result.STATIC &amp;&amp; result.SENDFILE)){
                                     //APP can request server shared modules or reports using REST API
+                                    //APP_DATA can return JSDoc files using result.STATIC and result.SENDFILE and REST API
                                     if (result!=null &amp;&amp; result.STATIC){
                                         if (result.SENDFILE){
-                                            bff_parameters.res?bff_parameters.res.sendFile(result.SENDFILE):null;
-                                            bff_parameters.res?bff_parameters.res.status(200):null;
+                                            bffSendFile(app_id, bff_parameters, service, result.SENDFILE);
                                         }
                                         else
                                             bff_parameters.res?bff_parameters.res.status(200).send(result.SENDCONTENT):null;

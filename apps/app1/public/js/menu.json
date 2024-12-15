@@ -6,6 +6,10 @@
                 { "id":1,
                     "menu":"Introduction",
                     "menu_url":"/common/documents/1.introduction.md"
+                },
+                { "id":2,
+                "menu":"Project",
+                "menu_url":"/common/documents/1.project.md"
                 }]
     },
     {
