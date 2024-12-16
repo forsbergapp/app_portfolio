@@ -128,8 +128,11 @@
 }
 /*CODE*/
 .code {
-    white-space: preserve-spaces;
     border: 1px solid;
+    white-space: preserve;
+    border-radius: 4px;
+    padding: 0.5em;
+    font-size: 0.9em !important;
 }
 .code_line{
     width: 4em;
@@ -296,6 +299,8 @@ body {
     color: var(--common_app_color_blue3);
 }
 .code {
+    background-color: var(--common_app_color_black);
+	color: var(--common_app_color_white);
     border-color: var(--common_app_color_light);
 }
 .code_line_selected{
