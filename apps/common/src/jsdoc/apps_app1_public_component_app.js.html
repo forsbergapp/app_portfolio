@@ -20,7 +20,7 @@
  */
 const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                             &lt;div id='nav'>
-                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' class='title_h1'>App Portfolio&lt;/div>
+                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >App Portfolio&lt;/div>
                                 &lt;div id='menu_close' class='common_icon'>&lt;/div>
                                 &lt;div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
@@ -31,8 +31,6 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                                         `
                                     ).join('')}
                                 &lt;/div>
-                                &lt;link type="text/css" rel="stylesheet" href="/common/modules/jsdoc/prettify-tomorrow.css">
-                                &lt;link type="text/css" rel="stylesheet" href="/common/modules/jsdoc/jsdoc-default.css">
                                 &lt;div id='nav_content_jsdoc'>${props.jsdoc_menu}&lt;/div>
                             &lt;/div>
                             &lt;div id='content_title'>&lt;/div>
