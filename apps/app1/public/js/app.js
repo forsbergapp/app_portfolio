@@ -63,7 +63,7 @@ const show = async (href, title, markdown, local) =>{
                 //Module
                 //can contain @example JSDoc tags with html code tags
                 //replace all <code></code> tags with <div class='code'></div>
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.innerHTML.replace('<code>','<div class=\'code\'>').replace('</code>','</div>');
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
             }       
         }
     }
