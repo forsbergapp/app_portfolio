@@ -25,48 +25,48 @@ const show = async (href, title, markdown, local) =>{
         try {
             COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
             COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+            COMMON_DOCUMENT.querySelector('#content').className = '';
             const response = await fetch(href);    
             if (response.ok){
                 COMMON_DOCUMENT.querySelector('#content_title').innerHTML= title;
                 if (markdown)
                     COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
-                else
-                    COMMON_DOCUMENT.querySelector('#content').className = '';
-
                 COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
-                
             }
-
         } catch (error) {
             null;
         }
     else{
         COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
         COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+        COMMON_DOCUMENT.querySelector('#content').className = '';
         const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
         COMMON_DOCUMENT.querySelector('#content_title').innerHTML= content?title:'';
         if (markdown){
             COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
-            COMMON_DOCUMENT.querySelector('#content').innerHTML= content ?? '';
+            COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
         }
         else{
-            COMMON_DOCUMENT.querySelector('#content').className = '';
             const content_element = COMMON_DOCUMENT.createElement('div');
             content_element.innerHTML = content;
-
-            if (content_element.querySelector('.prettyprint')){
+            if (content_element.querySelector('.prettyprint.source')){
+                //Code
                 COMMON_DOCUMENT.querySelector('#content').className = 'code';
                 COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
                                                                         .map((/**@type{string}*/row,/**@type{number}*/index)=>
                                                                             `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
+                //highlight selected line if # is used in link
+                if (href.split('#')[1])
+                    Array.from(COMMON_DOCUMENT.querySelectorAll(`#content [data-line='${href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
             }
-            else
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= content;
+            else{
+                //Module
+                //can contain @example JSDoc tags with html code tags
+                //replace all <code></code> tags with <div class='code'></div>
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.innerHTML.replace('<code>','<div class=\'code\'>').replace('</code>','</div>');
+            }       
         }
-        if (href.split('#')[1])
-            Array.from(COMMON_DOCUMENT.querySelectorAll(`#content [data-line='${href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
     }
-        
 };
 /**
  * App exception function
