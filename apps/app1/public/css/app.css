@@ -226,6 +226,17 @@ thead tr
 {
     font-weight: bold;
 }
+.params .code{
+    border: none;
+    white-space: inherit;
+    border-radius: inherit;
+    padding: 0;
+    font-size: inherit !important;
+    font-family: inherit;
+    background-color: inherit;
+	color: inherit;
+    border-color: inherit;
+}
 /*RESPONSIVE SECURE*/
 @media only screen and (min-width: 768px) {
 	body{
