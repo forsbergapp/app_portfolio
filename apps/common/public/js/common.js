@@ -549,18 +549,23 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
 };
 /**
  * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
- * Converts only heading and image tags
+ * Converts only heading, code and images
  * Images should be clickable and displayed in windows info using event delegation
- * headings
+ * headings:
+ * must start at first position on a row
  *                                  div class       comment
  * #                                title_h1
  * ##                               title_h2
  * ###                              title_h3
+ * code:
+ * code block must start as first position on a row, no support for inline code
+ * ```                              code            code block
+ * images:
  * [![text](small img)](full size img)  markdown_image  alt text should be used here as text below image
  *                                                      hover text is not supported
  * not supported:
  * ![alt text ](img "hover text")
- *                  
+ *         
  * @param {string} markdown
  * @returns {string}
  */
@@ -576,10 +581,16 @@ const commonMiscMarkdownParse = markdown =>{
     markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='title_h3'>${row.replace('###','')}</div>`:row).join('\n');
     markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='title_h2'>${row.replace('##','')}</div>`:row).join('\n');
     markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='title_h1'>${row.replace('#','')}</div>`:row).join('\n');
-                                
+    //convert code
+    //regexp for code blocks
+    const regexp_code = /```([\s\S]*?)```/g;
+    let match_code;
+    while ((match_code = regexp_code.exec(markdown)) !==null){
+        markdown = markdown.replace(match_code[0], `<div class='code'>${match_code[1]}</div>`);
+    }
     //convert image tags
     //regexp for [![text](small img)](full size img)
-    const regexp =   /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
+    const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
     let match;
     while ((match = regexp.exec(markdown)) !==null){
         markdown = markdown.replace(match[0], 
