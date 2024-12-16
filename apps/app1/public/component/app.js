@@ -13,7 +13,7 @@
  */
 const template = props =>`  <div id='menu_open' class='common_icon'></div>
                             <div id='nav'>
-                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' class='title_h1'>App Portfolio</div>
+                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >App Portfolio</div>
                                 <div id='menu_close' class='common_icon'></div>
                                 <div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
@@ -24,8 +24,6 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                         `
                                     ).join('')}
                                 </div>
-                                <link type="text/css" rel="stylesheet" href="/common/modules/jsdoc/prettify-tomorrow.css">
-                                <link type="text/css" rel="stylesheet" href="/common/modules/jsdoc/jsdoc-default.css">
                                 <div id='nav_content_jsdoc'>${props.jsdoc_menu}</div>
                             </div>
                             <div id='content_title'></div>

@@ -536,11 +536,6 @@
  * @typedef {{QRCode:*}} CommonModuleEasyQRCode
  */
 /**
- * Type CommonModuleEasyQRCode
- * @typedef {{prettyPrint:function}} CommonModuleJsonDocPrettify
- */
-
-/**
  * Type CommonModuleLeaflet
  * @typedef {import('./common/public/modules/leaflet/leaflet-src.esm.js')} CommonModuleLeaflet
  */

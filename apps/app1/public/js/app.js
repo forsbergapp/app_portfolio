@@ -14,36 +14,6 @@ const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
-/**@type {import('../../../common_types.js').CommonModuleJsonDocPrettify} */
-const {prettyPrint} = await import(common.commonMiscImportmap('jsdoc_prettify'));
-
-/**
- * @param {string} href
- */
-const linenumber = href =>{
-    const source = document.getElementsByClassName('prettyprint source linenums');
-    let i = 0;
-    let lineNumber = 0;
-    let lineId;
-    let lines;
-    let totalLines;
-    let anchorHash;
-
-    if (source && source[0]) {
-        anchorHash = href.split('#')[1];
-        lines = source[0].getElementsByTagName('li');
-        totalLines = lines.length;
-
-        for (; i < totalLines; i++) {
-            lineNumber++;
-            lineId = `line${lineNumber}`;
-            lines[i].id = lineId;
-            if (lineId === anchorHash) {
-                lines[i].className += ' selected';
-            }
-        }
-    }
-};
 /**
  * @param {string} href
  * @param {string} title
@@ -75,14 +45,26 @@ const show = async (href, title, markdown, local) =>{
         COMMON_DOCUMENT.querySelector('#content').innerHTML='';
         const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
         COMMON_DOCUMENT.querySelector('#content_title').innerHTML= content?title:'';
-        if (markdown)
+        if (markdown){
             COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
-        else
+            COMMON_DOCUMENT.querySelector('#content').innerHTML= content ?? '';
+        }
+        else{
             COMMON_DOCUMENT.querySelector('#content').className = '';
-        COMMON_DOCUMENT.querySelector('#content').innerHTML= content ?? '';
-        prettyPrint();
+            const content_element = COMMON_DOCUMENT.createElement('div');
+            content_element.innerHTML = content;
+
+            if (content_element.querySelector('.prettyprint')){
+                COMMON_DOCUMENT.querySelector('#content').className = 'code';
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
+                                                                        .map((/**@type{string}*/row,/**@type{number}*/index)=>
+                                                                            `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
+            }
+            else
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= content;
+        }
         if (href.split('#')[1])
-            linenumber(href);
+            Array.from(COMMON_DOCUMENT.querySelectorAll(`#content [data-line='${href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
     }
         
 };

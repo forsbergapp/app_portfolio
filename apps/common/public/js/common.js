@@ -413,13 +413,12 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
 /**
  * Importmap that return file path for given file
  * to solve importmap not working for some browsers
- * @param {'easy.qrcode'|'jsdoc_prettify'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
+ * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
  * @return {string}
  */
 const commonMiscImportmap = file =>{
     return {
         'easy.qrcode'   : '/common/modules/easy.qrcode/easy.qrcode.js',
-        jsdoc_prettify  : '/common/modules/jsdoc/prettify/prettify.js',
         leaflet	        : '/common/modules/leaflet/leaflet-src.esm.js',
         React 		    : '/common/modules/react/react.development.js',
         ReactDOM 	    : '/common/modules/react/react-dom.development.js',
