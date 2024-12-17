@@ -130,7 +130,7 @@
 .code {
     border: 1px solid;
     white-space: preserve;
-    border-radius: 4px;
+    border-radius: var(--common_app_css_border_radius);
     padding: 0.5em;
     font-size: 0.9em !important;
 }
@@ -291,13 +291,6 @@ body {
 }
 #content.css_spinner::before{
     background-color: var(--common_app_color_light) !important;
-}
-.title_h1,
-.title_h2,
-.title_h3,
-.title_h4,
-.title_h5{
-    color: var(--common_app_color_blue3);
 }
 #nav{
     background-color: var(--common_app_color_blue3);

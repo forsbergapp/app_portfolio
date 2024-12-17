@@ -238,7 +238,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	margin:20px;
 	padding: 5px;
 	text-align: center;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .save_buttons, .button_save{
 	margin:10px;
@@ -246,7 +246,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 .list_search{
 	margin-bottom: 10px;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .list_search_input{
 	border: none;
@@ -256,7 +256,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	padding-right: 3px;
 	margin: 5px;
 	box-sizing: border-box;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .list_search_icon{
 	display: inline-block;
@@ -269,20 +269,20 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	padding-left: 3px;
 	padding-right: 3px;
 	box-sizing: border-box;
-	border-radius: 4px
+	border-radius: var(--common_app_css_border_radius);
 }
 .list_readonly{
 	border:none;
 	width: 100%;
 	display: inline-block;
-	border-radius: 4px
+	border-radius: var(--common_app_css_border_radius);
 }
 .list_sort_click, .gps_click, .chat_click {
 	cursor:pointer;
 }
 .list_button{
 	border: none;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 	text-transform: uppercase;
 	cursor: pointer;
 	background:none;
@@ -521,7 +521,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .menu_users_list_row, .menu_users_iam_user_login_row{
 	padding-top:4px;
@@ -565,7 +565,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .menu_apps_row, .menu_apps_detail_row{
 	height: auto;
@@ -711,7 +711,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	grid-template-columns: 9em 14em 4em 7em 9em 10em 8em 10em 7em 7em 15em 15em 12em 8em !important
 }
 #menu_monitor_detail_app_log, #menu_monitor_detail_connected{
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .menu_monitor_detail_app_log_row, .menu_monitor_detail_connected_row{
 	height: auto;
@@ -748,7 +748,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 #menu_monitor_detail_server_log{
 	display: block;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 	height: calc(100% - 62px);
 }
 .menu_monitor_detail_server_log_row{
@@ -1008,7 +1008,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 .menu_db_info_space_detail_row{
 	height: auto;

@@ -31,7 +31,7 @@ body {
 .app_shop_div {
 	padding: 1em;
 	display:inline-block;
-	border-radius: 4px;	
+	border-radius: var(--common_app_css_border_radius);
 	transition-duration: .3s;
     transition-property: box-shadow;
 	vertical-align: middle;
@@ -66,7 +66,7 @@ body {
 .dialogue_content{
 	padding: 3em;
 	display:inline-block;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 /*COMMON*/
 .common_app_data_display_master_col1{

@@ -89,7 +89,7 @@ body{
 	width: auto;
 	height: auto;
 	word-break: break-word;
-	border-radius: 4px;
+	border-radius: var(--common_app_css_border_radius);
 }
 
 @keyframes common_pulsate {
