@@ -6,7 +6,7 @@
 #paper {
 	background-color:var(--common_report_color_white);
 	color: var(--common_report_color_black);
-	font-family: var(--common_global_font_arabic_sans);
+	font-family: var(--common_app_font_arabic_sans);
 	z-index: 0;
 	margin-top: 10px;
 }

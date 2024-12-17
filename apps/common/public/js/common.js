@@ -3542,7 +3542,7 @@ const commonFrameworkSet = async (framework, events) => {
  */
  const setUserAgentAttributes = () => {
     if (COMMON_WINDOW.navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
-        COMMON_DOCUMENT.querySelector(':root').style.setProperty('--common_app_useragent_fix_margin_top', '-5px');
+        COMMON_DOCUMENT.querySelector(':root').style.setProperty('--common_app_css_useragent_fix_margin_top', '-5px');
  };
 /**
  * Set custom framework functionality overriding console messages and save info about events created
