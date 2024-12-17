@@ -26,7 +26,6 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                 </div>
                                 <div id='nav_content_jsdoc'>${props.jsdoc_menu}</div>
                             </div>
-                            <div id='content_title'></div>
                             <div id='content'></div>`;
 /**
  * 
@@ -39,11 +38,32 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
  */
 const component = async props => {
     props;
+    /**@type{appMenu[]} */
+    const markdown_menu_docs = await fetch('/js/menu.json').then(result=>result.json());
+    try {
+        for (const menu of markdown_menu_docs){
+            for (const menu_sub of menu.menu_sub??[]){
+                const response = await fetch(menu_sub.menu_url);    
+                if (response.ok){
+                    try {
+                        menu_sub.menu =  (await response.text().then(result=>result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0])).split('#')[1];
+                    } catch (error) {
+                        null;
+                    }
+                }
+                else
+                    menu_sub.menu = '';
+            }
+        }
+        
+    } catch (error) {
+        null;
+    }
     return {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({  app_menu:await fetch('/js/menu.json').then(result=>result.json()),
+        template:   template({  app_menu:markdown_menu_docs,
                                 jsdoc_menu:await fetch('/info/doc/nav.html').then(result=>result.text())
         })
     };

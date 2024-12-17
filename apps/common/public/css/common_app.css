@@ -1505,6 +1505,84 @@ body.rtl{
 #common_profile_detail_header_app div{
 	display: inline-block;
 }
+/**Markdown*/
+/*MARKDOWN */
+.common_markdown{
+    white-space: pre-wrap;
+    font-size: 0.8em !important;
+    margin-bottom: 10em;
+}
+.common_markdown_header{
+	background-size: contain;
+	background-repeat: no-repeat;
+  	height: 1em;
+    text-align: start;
+    margin-bottom: 1em;
+    border-bottom: 0.5px solid;
+}
+.common_markdown_article{
+    margin: 1em;
+	margin-top: -5em;
+}
+.common_markdown_section{
+    margin: 1em;
+}
+.common_markdown_footer{
+    font-size: 0.7em !important;
+	text-align: start;
+	border-top: 0.5px solid;
+}
+.common_markdown_image{
+    display:block;
+    width: 256px;
+    height:144px;
+    max-width:100%;
+    margin:auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+	background-position: center;
+	cursor: pointer;
+}
+.common_markdown_image_text{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+.common_markdown_title_h1{
+    font-size: 1.7em;
+    font-weight: bold;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+.common_markdown_title_h2{
+    margin-top: 0.5em;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.common_markdown_title_h3{
+    font-size: 1.1em;
+    font-weight: bold;
+    font-style: italic;
+}
+.common_markdown_title_h4{
+    font-size: 1em;
+    font-weight: bold;
+    font-style: italic;
+}
+.common_markdown_title_h5{
+    font-size: 1em;
+    font-weight: bold;
+    font-style: italic;
+}
+.common_markdown_code {
+    border: 1px solid;
+    white-space: preserve;
+    border-radius: var(--common_app_css_border_radius);
+    padding: 0.5em;
+    font-size: 0.9em !important;
+	font-family: 'Noto Sans Mono';
+}
+
 /*Module easy qrcode*/
 .common_module_easy\.qrcode rect[fill='DARK']{
 	fill: var(--common_app_color_dark);

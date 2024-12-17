@@ -578,15 +578,15 @@ const commonMiscMarkdownParse = markdown =>{
     //##[1 space character] []text,  ex ## heading 2
     //###[1 space character] []text, ex ### heading 3
     //# must be first character in the row or it is not part of markdown parsing
-    markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='title_h3'>${row.replace('###','')}</div>`:row).join('\n');
-    markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='title_h2'>${row.replace('##','')}</div>`:row).join('\n');
-    markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='title_h1'>${row.replace('#','')}</div>`:row).join('\n');
+    markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_markdown_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
+    markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_markdown_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
+    markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_markdown_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
     //convert code
     //regexp for code blocks
     const regexp_code = /```([\s\S]*?)```/g;
     let match_code;
     while ((match_code = regexp_code.exec(markdown)) !==null){
-        markdown = markdown.replace(match_code[0], `<div class='code'>${match_code[1]}</div>`);
+        markdown = markdown.replace(match_code[0], `<div class='common_markdown_code'>${match_code[1]}</div>`);
     }
     //convert image tags
     //regexp for [![text](small img)](full size img)
@@ -594,11 +594,15 @@ const commonMiscMarkdownParse = markdown =>{
     let match;
     while ((match = regexp.exec(markdown)) !==null){
         markdown = markdown.replace(match[0], 
-                                    `<div 	class='markdown_image' 
+                                    `<div 	class='common_markdown_image' 
                                             style='background-image:url("${match[2]}")' 
-                                            data-url='${match[3]}'></div><div class='markdown_image_text'>${match[1]}</div>`);
+                                            data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
     }
-    return markdown;
+    return `<div class='common_markdown_header' style='background-image:url("${COMMON_GLOBAL.app_logo}")'></div>
+                <div class='common_markdown_article'>
+                    ${markdown}
+                </div>
+            <div class='common_markdown_footer'>${COMMON_GLOBAL.app_copyright}</div>`;
 };
 /**
  * 
