@@ -1,5 +1,8 @@
 /*APP*/
-
+#app{
+    display: block;
+    width: calc(380px + 80em);
+}
 #menu_open::before{		content: var(--common_app_icon_menu_open)}
 #menu_close::before{    content: var(--common_app_icon_menu_close)}
 
@@ -47,7 +50,6 @@
     font-size: 0.9em;
     overflow-y:auto;
     overflow-x:hidden;
-    position: absolute;
     padding-inline-start: 10px;
     display:none;
     z-index: 10;
@@ -86,47 +88,20 @@
     font-weight: bold;
     font-style: italic;
 }
-/*MARKDOWN */
-.markdown{
-    white-space: pre-wrap;
-    font-size: 0.8em !important;
-    width:80em !important;
-    margin-bottom: 10em;
-}
-.markdown_image{
-    display:block;
-    width: 256px;
-    height:144px;
-    max-width:100%;
-    margin:auto;
-    background-size: contain;
-    background-repeat: no-repeat;
-	background-position: center;
-	cursor: pointer;
-}
-.markdown_image_text{
-    display: inline-block;
-    width: 100%;
-    text-align: center;
-}
-
 #content_title{
     font-size: 1.5em;
-    position: absolute;
-    margin-inline-start: 10px;
+    margin-inline-start: 10px !important;
 }
 #content{
     display: inline-block;
-    position: absolute;
-    top: 100px;
     font-size: 1em;
     margin-inline-start: 10px;
-}
-#content.css_spinner{
-    margin-inline-start: 50% !important;
-    display: block;
+    width:80em !important;
+    min-width:80em;
+    vertical-align: top;
 }
 /*CODE*/
+.common_markdown_code,
 .code {
     border: 1px solid;
     white-space: preserve;
@@ -246,19 +221,8 @@ thead tr
 		display: none;
 	}
 	#nav{
-		display:block !important;
+		display:inline-block !important;
 	}
-    #content_title{
-        margin-inline-start: 360px;
-        top: 30px;
-    }
-    #content{
-        width: calc(100% - 380px);
-        margin-inline-start: 370px;
-    }
-    #content.css_spinner{
-        margin-inline-start: calc(50% + 180px) !important;
-    }
 }
 /*COMMON*/
 #common_toolbar_framework{
@@ -289,8 +253,9 @@ body {
 	background: var(--common_app_color_white);
 	caret-color: var(--common_app_color_black);
 }
-#content.css_spinner::before{
-    background-color: var(--common_app_color_light) !important;
+#app .css_spinner::before,
+#content_title .css_spinner::before{
+    background-color: var(--common_app_color_white) !important;
 }
 #nav{
     background-color: var(--common_app_color_blue3);
@@ -302,6 +267,7 @@ body {
 .a {
     color: var(--common_app_color_blue3);
 }
+.common_markdown_code,
 .code {
     background-color: var(--common_app_color_black);
 	color: var(--common_app_color_white);
@@ -328,6 +294,12 @@ td, th{
     border-color:  var(--common_app_color_shadow1);
 }
 /* APP THEME COMMON*/
+.common_markdown_header{
+    border-bottom-color: var(--common_app_color_shadow1) !important;
+}
+.common_markdown_footer{
+    border-top-color: var(--common_app_color_shadow1) !important;
+}
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }

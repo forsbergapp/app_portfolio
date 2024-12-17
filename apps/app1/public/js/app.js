@@ -23,27 +23,23 @@ const common = await import(commonPath);
 const show = async (href, title, markdown, local) =>{
     if (local)
         try {
-            COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
             COMMON_DOCUMENT.querySelector('#content').innerHTML='';
             COMMON_DOCUMENT.querySelector('#content').className = '';
             const response = await fetch(href);    
             if (response.ok){
-                COMMON_DOCUMENT.querySelector('#content_title').innerHTML= title;
                 if (markdown)
-                    COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
+                    COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
                 COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
             }
         } catch (error) {
             null;
         }
     else{
-        COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
-        COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+        COMMON_DOCUMENT.querySelector('#content').innerHTML='<div id=\'content_title\'></div>';
         COMMON_DOCUMENT.querySelector('#content').className = '';
-        const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
-        COMMON_DOCUMENT.querySelector('#content_title').innerHTML= content?title:'';
+        const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content_title'}).catch(()=>null);
         if (markdown){
-            COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
+            COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
             COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
         }
         else{
@@ -52,7 +48,9 @@ const show = async (href, title, markdown, local) =>{
             if (content_element.querySelector('.prettyprint.source')){
                 //Code
                 COMMON_DOCUMENT.querySelector('#content').className = 'code';
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= 
+                                                                        `<div id='content_title'>${title}</div>`+ 
+                                                                        content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
                                                                         .map((/**@type{string}*/row,/**@type{number}*/index)=>
                                                                             `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
                 //highlight selected line if # is used in link
@@ -63,7 +61,8 @@ const show = async (href, title, markdown, local) =>{
                 //Module
                 //can contain @example JSDoc tags with html code tags
                 //replace all <code></code> tags with <div class='code'></div>
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
+                COMMON_DOCUMENT.querySelector('#content').innerHTML=    `<div id='content_title'>${title}</div>`+ 
+                                                                        content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
             }       
         }
     }
