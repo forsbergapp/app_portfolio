@@ -1150,29 +1150,29 @@
 /*Themes*/
 /*DISPLAY FONT*/
 .timetable_class.font_arabic_sans .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_sans);
+	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_sans);
 }
 .timetable_class.font_arabic_kufi .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_kufi);
+	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_kufi);
 }
 .timetable_class.font_arabic_nashk .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_nashk);
+	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nashk);
 }
 .timetable_class.font_arabic_nastaliq .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_global_font_arabic_nastaliq);
+	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nastaliq);
 }
 /*DEFAULT FONT*/
 .timetable_class.font_arabic_sans .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_global_font_arabic_sans);
+	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_sans);
 }
 .timetable_class.font_arabic_kufi .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_global_font_arabic_kufi);
+	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_kufi);
 }
 .timetable_class.font_arabic_nashk .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_global_font_arabic_nashk);
+	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_nashk);
 }
 .timetable_class.font_arabic_nastaliq .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_global_font_arabic_nastaliq);
+	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_nastaliq);
 }
 /*set default text color for all timetables*/
 .timetable_class{
