@@ -1511,6 +1511,7 @@ body.rtl{
     white-space: pre-wrap;
     font-size: 0.8em !important;
     margin-bottom: 10em;
+	line-height: 1.2em;
 }
 .common_markdown_header{
 	background-size: contain;
@@ -1525,7 +1526,7 @@ body.rtl{
 	margin-top: -5em;
 }
 .common_markdown_section{
-    margin: 1em;
+    margin: 0.5em;
 }
 .common_markdown_footer{
     font-size: 0.7em !important;

@@ -549,7 +549,7 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
 };
 /**
  * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
- * Converts only heading, code and images
+ * Converts only sections, headings, code and images
  * Images should be clickable and displayed in windows info using event delegation
  * headings:
  * must start at first position on a row
@@ -572,12 +572,51 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
 const commonMiscMarkdownParse = markdown =>{
     //remove all '\r' in '\r\n'
     markdown = markdown.replaceAll('\r\n','\n');
+    //convert headings to section
+    let current_section = -1;
+    let old_section = -1;
+    markdown = markdown.split('\n').map((row, /**@type{number}*/index)=>{
+        let div = '';
+        if (row.indexOf('#')==0){
+            current_section = row.split('#').length;
+            if (index==0)
+                div = '<div class=\'common_markdown_section\'>' + '\n' + row;
+            else
+                switch (true){
+                    case current_section == old_section:{
+                        div =   '</div>' + '\n' +
+                                '<div class=\'common_markdown_section\'>' + '\n' + row;
+                        break;
+                    }
+                    case current_section < old_section:{
+                        div +='</div>' + '\n';
+                        for (let i=1;i<=(old_section - current_section);i++){
+                            div +='</div>' + '\n';
+                        }
+                        div +=  '<div class=\'common_markdown_section\'>' + '\n' + row;
+                        break;
+                    }
+                    case current_section > old_section:{
+                        div =   '\n' +
+                                '<div class=\'common_markdown_section\'>' + '\n' + row;
+                        break;
+                    }
+                }   
+            old_section = row.split('#').length;
+            return div;
+        }
+        else
+            return row;
+    }).join('\n') + '</div>';
+                                        
     //convert headings #, ## and ##
     //correct syntax 
     //#[1 space character] []text,   ex # heading 1
     //##[1 space character] []text,  ex ## heading 2
     //###[1 space character] []text, ex ### heading 3
     //# must be first character in the row or it is not part of markdown parsing
+    markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_markdown_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
+    markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_markdown_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
     markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_markdown_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
     markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_markdown_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
     markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_markdown_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
