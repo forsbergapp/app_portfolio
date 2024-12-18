@@ -637,7 +637,7 @@ const commonMiscMarkdownParse = markdown =>{
                                             style='background-image:url("${match[2]}")' 
                                             data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
     }
-    return `<div class='common_markdown_header' style='background-image:url("${COMMON_GLOBAL.app_logo}")'></div>
+    return `<div class='common_markdown_header' style='background-image:url("${COMMON_GLOBAL.app_logo}")'>${COMMON_DOCUMENT.title}</div>
                 <div class='common_markdown_article'>
                     ${markdown}
                 </div>
