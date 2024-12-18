@@ -1516,10 +1516,14 @@ body.rtl{
 .common_markdown_header{
 	background-size: contain;
 	background-repeat: no-repeat;
-  	height: 1em;
+  	height: 2em;
     text-align: start;
     margin-bottom: 1em;
     border-bottom: 0.5px solid;
+	padding-inline-start: 3em;
+  	display: inline-block;
+  	width: 100%;
+  	padding-top: 0.5em;
 }
 .common_markdown_article{
     margin: 1em;
