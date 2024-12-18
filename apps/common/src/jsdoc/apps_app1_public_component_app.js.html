@@ -14,14 +14,15 @@
  * @import {appMenu}  from '../js/types.js'
  */
 /**
- * @param {{app_menu:appMenu[]
+ * @param {{title:string,
+ *          app_menu:appMenu[]
  *          jsdoc_menu:string}} props
  * @returns {string}
  */
 const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                             &lt;div id='nav'>
-                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >App Portfolio&lt;/div>
-                                &lt;div id='menu_close' class='common_icon'>&lt;/div>
+                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >${props.title}&lt;/div>
+                                &lt;div id='menu_close' class='common_dialogue_button common_icon'>&lt;/div>
                                 &lt;div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
                                         `&lt;div>${row.menu}&lt;/div>
@@ -33,7 +34,6 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                                 &lt;/div>
                                 &lt;div id='nav_content_jsdoc'>${props.jsdoc_menu}&lt;/div>
                             &lt;/div>
-                            &lt;div id='content_title'>&lt;/div>
                             &lt;div id='content'>&lt;/div>`;
 /**
  * 
@@ -46,11 +46,33 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
  */
 const component = async props => {
     props;
+    /**@type{appMenu[]} */
+    const markdown_menu_docs = await fetch('/js/menu.json').then(result=>result.json());
+    try {
+        for (const menu of markdown_menu_docs){
+            for (const menu_sub of menu.menu_sub??[]){
+                const response = await fetch(menu_sub.menu_url);    
+                if (response.ok){
+                    try {
+                        menu_sub.menu =  (await response.text().then(result=>result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0])).split('#')[1];
+                    } catch (error) {
+                        null;
+                    }
+                }
+                else
+                    menu_sub.menu = '';
+            }
+        }
+        
+    } catch (error) {
+        null;
+    }
     return {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({  app_menu:await fetch('/js/menu.json').then(result=>result.json()),
+        template:   template({  title:props.methods.COMMON_DOCUMENT.title,
+                                app_menu:markdown_menu_docs,
                                 jsdoc_menu:await fetch('/info/doc/nav.html').then(result=>result.text())
         })
     };
