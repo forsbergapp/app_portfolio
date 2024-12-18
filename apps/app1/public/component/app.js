@@ -7,13 +7,14 @@
  * @import {appMenu}  from '../js/types.js'
  */
 /**
- * @param {{app_menu:appMenu[]
+ * @param {{title:string,
+ *          app_menu:appMenu[]
  *          jsdoc_menu:string}} props
  * @returns {string}
  */
 const template = props =>`  <div id='menu_open' class='common_icon'></div>
                             <div id='nav'>
-                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >App Portfolio</div>
+                                <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >${props.title}</div>
                                 <div id='menu_close' class='common_icon'></div>
                                 <div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
@@ -63,7 +64,8 @@ const component = async props => {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({  app_menu:markdown_menu_docs,
+        template:   template({  title:props.methods.COMMON_DOCUMENT.title,
+                                app_menu:markdown_menu_docs,
                                 jsdoc_menu:await fetch('/info/doc/nav.html').then(result=>result.text())
         })
     };
