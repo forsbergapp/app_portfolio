@@ -1587,7 +1587,11 @@ body.rtl{
     font-size: 0.9em !important;
 	font-family: 'Noto Sans Mono';
 }
-
+.common_markdown_code_inline{
+	border-radius:var(--common_app_css_border_radius);
+	font-family: "Noto Sans Mono";
+	display: inline-block;
+}
 /*Module easy qrcode*/
 .common_module_easy\.qrcode rect[fill='DARK']{
 	fill: var(--common_app_color_dark);

@@ -297,6 +297,9 @@ td, th{
 .common_markdown_header{
     border-bottom-color: var(--common_app_color_shadow1) !important;
 }
+.common_markdown_code_inline{
+	background-color:var(--common_app_color_shadow1);
+}
 .common_markdown_footer{
     border-top-color: var(--common_app_color_shadow1) !important;
 }

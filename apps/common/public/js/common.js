@@ -627,6 +627,13 @@ const commonMiscMarkdownParse = markdown =>{
     while ((match_code = regexp_code.exec(markdown)) !==null){
         markdown = markdown.replace(match_code[0], `<div class='common_markdown_code'>${match_code[1]}</div>`);
     }
+    //convert code inline
+    //regexp for code blocks
+    const regexp_code_inline = /`([\s\S]*?)`/g;
+    let match_code_inline;
+    while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
+        markdown = markdown.replace(match_code_inline[0], `<div class='common_markdown_code_inline'>${match_code_inline[1]}</div>`);
+    }
     //convert image tags
     //regexp for [![text](small img)](full size img)
     const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
