@@ -1588,6 +1588,7 @@ body.rtl{
 	font-family: 'Noto Sans Mono';
 }
 .common_markdown_code_inline{
+	border: 1px solid;
 	border-radius:var(--common_app_css_border_radius);
 	font-family: "Noto Sans Mono";
 	display: inline-block;

@@ -15,7 +15,7 @@
 const template = props =>`  <div id='menu_open' class='common_icon'></div>
                             <div id='nav'>
                                 <div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].menu_url}'`:''} id='title' >${props.title}</div>
-                                <div id='menu_close' class='common_icon'></div>
+                                <div id='menu_close' class='common_dialogue_button common_icon'></div>
                                 <div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
                                         `<div>${row.menu}</div>

@@ -27,9 +27,20 @@ const show = async (href, title, markdown, local) =>{
             COMMON_DOCUMENT.querySelector('#content').className = '';
             const response = await fetch(href);    
             if (response.ok){
-                if (markdown)
+                if (markdown){
                     COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
+                    common.commonComponentRender({
+                        mountDiv:   'content',
+                        data:       {
+                                    app_logo:common.COMMON_GLOBAL.app_logo,
+                                    app_title:COMMON_DOCUMENT.title,
+                                    app_copyright:common.COMMON_GLOBAL.app_copyright,
+                                    markdown: await response.text()
+                                    },
+                        methods:    null,
+                        path:'/common/component/common_markdown.js'});
+                    //COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
+                }
             }
         } catch (error) {
             null;
@@ -40,7 +51,17 @@ const show = async (href, title, markdown, local) =>{
         const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content_title'}).catch(()=>null);
         if (markdown){
             COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
-            COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
+            content?common.commonComponentRender({
+                mountDiv:   'content',
+                data:       {
+                            app_logo:common.COMMON_GLOBAL.app_logo,
+                            app_title:COMMON_DOCUMENT.title,
+                            app_copyright:common.COMMON_GLOBAL.app_copyright,
+                            markdown: content
+                            },
+                methods:    null,
+                path:'/common/component/common_markdown.js'}):null;
+            //COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
         }
         else{
             const content_element = COMMON_DOCUMENT.createElement('div');
@@ -127,25 +148,6 @@ const appEventClick = event => {
                 }
                 case 'common_toolbar_framework_react':{
                    appFrameworkSet(3);
-                    break;
-                }
-                case 'common_window_info_btn_close':{
-                    COMMON_DOCUMENT.querySelector('#dialogue_documents').style.visibility = 'visible';
-                    break;
-                }
-                case event.target.classList.contains('markdown_image')?event_target_id:'':{
-                    if (event.target.getAttribute('data-url'))
-                        common.commonComponentRender({
-                            mountDiv:   'common_window_info',
-                            data:       {
-                                        //show IMAGE type 0 
-                                        info:0,
-                                        url:event.target.getAttribute('data-url'),
-                                        content_type:null, 
-                                        iframe_content:null
-                                        },
-                            methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
-                            path:       '/common/component/common_window_info.js'});
                     break;
                 }
             }

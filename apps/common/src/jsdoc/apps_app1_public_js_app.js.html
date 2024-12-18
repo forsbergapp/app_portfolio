@@ -30,28 +30,45 @@ const common = await import(commonPath);
 const show = async (href, title, markdown, local) =>{
     if (local)
         try {
-            COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
             COMMON_DOCUMENT.querySelector('#content').innerHTML='';
             COMMON_DOCUMENT.querySelector('#content').className = '';
             const response = await fetch(href);    
             if (response.ok){
-                COMMON_DOCUMENT.querySelector('#content_title').innerHTML= title;
-                if (markdown)
-                    COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
+                if (markdown){
+                    COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
+                    common.commonComponentRender({
+                        mountDiv:   'content',
+                        data:       {
+                                    app_logo:common.COMMON_GLOBAL.app_logo,
+                                    app_title:COMMON_DOCUMENT.title,
+                                    app_copyright:common.COMMON_GLOBAL.app_copyright,
+                                    markdown: await response.text()
+                                    },
+                        methods:    null,
+                        path:'/common/component/common_markdown.js'});
+                    //COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
+                }
             }
         } catch (error) {
             null;
         }
     else{
-        COMMON_DOCUMENT.querySelector('#content_title').innerHTML= '';
-        COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+        COMMON_DOCUMENT.querySelector('#content').innerHTML='&lt;div id=\'content_title\'>&lt;/div>';
         COMMON_DOCUMENT.querySelector('#content').className = '';
-        const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content'}).catch(()=>null);
-        COMMON_DOCUMENT.querySelector('#content_title').innerHTML= content?title:'';
+        const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content_title'}).catch(()=>null);
         if (markdown){
-            COMMON_DOCUMENT.querySelector('#content').className = 'markdown';
-            COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
+            COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
+            content?common.commonComponentRender({
+                mountDiv:   'content',
+                data:       {
+                            app_logo:common.COMMON_GLOBAL.app_logo,
+                            app_title:COMMON_DOCUMENT.title,
+                            app_copyright:common.COMMON_GLOBAL.app_copyright,
+                            markdown: content
+                            },
+                methods:    null,
+                path:'/common/component/common_markdown.js'}):null;
+            //COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
         }
         else{
             const content_element = COMMON_DOCUMENT.createElement('div');
@@ -59,7 +76,9 @@ const show = async (href, title, markdown, local) =>{
             if (content_element.querySelector('.prettyprint.source')){
                 //Code
                 COMMON_DOCUMENT.querySelector('#content').className = 'code';
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
+                COMMON_DOCUMENT.querySelector('#content').innerHTML= 
+                                                                        `&lt;div id='content_title'>${title}&lt;/div>`+ 
+                                                                        content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
                                                                         .map((/**@type{string}*/row,/**@type{number}*/index)=>
                                                                             `&lt;div data-line='${index+1}' class='code_line'>${index+1}&lt;/div>&lt;div data-line='${index+1}' class='code_text'>${row.replaceAll('&lt;','&amp;lt').replaceAll('>','&amp;gt')}&lt;/div>`).join('\n') ?? '';
                 //highlight selected line if # is used in link
@@ -70,7 +89,8 @@ const show = async (href, title, markdown, local) =>{
                 //Module
                 //can contain @example JSDoc tags with html code tags
                 //replace all &lt;code>&lt;/code> tags with &lt;div class='code'>&lt;/div>
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= content_element.innerHTML.replaceAll('&lt;code>','&lt;div class=\'code\'>').replaceAll('&lt;/code>','&lt;/div>');
+                COMMON_DOCUMENT.querySelector('#content').innerHTML=    `&lt;div id='content_title'>${title}&lt;/div>`+ 
+                                                                        content_element.innerHTML.replaceAll('&lt;code>','&lt;div class=\'code\'>').replaceAll('&lt;/code>','&lt;/div>');
             }       
         }
     }
@@ -135,25 +155,6 @@ const appEventClick = event => {
                 }
                 case 'common_toolbar_framework_react':{
                    appFrameworkSet(3);
-                    break;
-                }
-                case 'common_window_info_btn_close':{
-                    COMMON_DOCUMENT.querySelector('#dialogue_documents').style.visibility = 'visible';
-                    break;
-                }
-                case event.target.classList.contains('markdown_image')?event_target_id:'':{
-                    if (event.target.getAttribute('data-url'))
-                        common.commonComponentRender({
-                            mountDiv:   'common_window_info',
-                            data:       {
-                                        //show IMAGE type 0 
-                                        info:0,
-                                        url:event.target.getAttribute('data-url'),
-                                        content_type:null, 
-                                        iframe_content:null
-                                        },
-                            methods:    {commonWindowSetTimeout:common.commonWindowSetTimeout},
-                            path:       '/common/component/common_window_info.js'});
                     break;
                 }
             }

@@ -13,11 +13,10 @@
 }
 #menu_close{
     display: block;
-    top:10px;
+    top:40px;
     position: absolute;
-    text-align: end;
     height: 20px;
-    width: 95% !important;
+    margin-inline-start: 300px;
 }
 #menu_open, #menu_close{
     background: none;
@@ -293,12 +292,16 @@ tr > th:last-child { border-inline-end: 1px solid var(--common_app_color_shadow1
 td, th{
     border-color:  var(--common_app_color_shadow1);
 }
+#menu_close.common_dialogue_button {
+    color: var(--common_app_color_light);
+}
 /* APP THEME COMMON*/
 .common_markdown_header{
     border-bottom-color: var(--common_app_color_shadow1) !important;
 }
 .common_markdown_code_inline{
-	background-color:var(--common_app_color_shadow1);
+	background-color:var(--common_app_color_white3);
+    border-color: var(--common_app_color_white2) !important;
 }
 .common_markdown_footer{
     border-top-color: var(--common_app_color_shadow1) !important;
@@ -312,10 +315,6 @@ td, th{
     box-shadow: 0px 0px 10px var(--common_app_color_shadow1);
 }
 
-.common_dialogue_button,
-.common_toolbar_button{
-	color: var(--common_app_color_black) !important;
-}
 .common_link:hover,
 .common_link:active{
 	color:var(--common_app_color_green);
