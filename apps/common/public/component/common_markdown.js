@@ -39,7 +39,7 @@ const template = props =>`  <div class='common_markdown_header' style='backgroun
 const component = async props => {
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
-     * Converts only sections, headings, code, code inline and images
+     * Converts sections, headings, code blocks, code inline, notes and images
      * Images should be clickable and displayed in windows info using event delegation
      * headings:
      * must start at first position on a row
@@ -124,6 +124,9 @@ const component = async props => {
         while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
             markdown = markdown.replace(match_code_inline[0], `<div class='common_markdown_code_inline'>${match_code_inline[1]}</div>`);
         }
+        //convert notes
+        markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_markdown_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
+        
         //convert image tags
         //regexp for [![text](small img)](full size img)
         const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;

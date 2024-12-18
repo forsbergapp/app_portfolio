@@ -306,6 +306,14 @@ td, th{
 .common_markdown_footer{
     border-top-color: var(--common_app_color_shadow1) !important;
 }
+.common_markdown_note{
+    background-color: var(--common_app_color_blue2);
+    border-inline-start-color: var(--common_app_color_blue1) !important;
+}
+.common_markdown_note::before{
+  	color: var(--common_app_color_light);
+    background-color: var(--common_app_color_blue1);
+}
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }
