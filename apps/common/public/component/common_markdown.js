@@ -137,6 +137,33 @@ const component = async props => {
                                                 style='background-image:url("${match[2]}")' 
                                                 data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
         }
+        //convert tables
+        let table_new = true;
+        const tables = markdown.split('\n').
+                        map(row=>{
+                            if (row.indexOf('|')==0)
+                                if (table_new){
+                                    table_new = false;
+                                    return '*NEW*' + row;
+                                }
+                                else
+                                    return row;
+                            else{
+                                table_new = true;
+                                return '';
+                            }
+                        }).filter(row=>row!='').join('\n').split('*NEW*');
+        for (const table of tables.filter(row=>row!='')){
+            const align = table.split('\n').filter(row=>row.indexOf('---')>-1)[0].split('|').slice(1, -1).map(row=>
+                (row.indexOf(':-')>-1 && row.indexOf('-:')>-1)?'center':row.indexOf(':-')>-1?'start':row.indexOf('-:')>-1?'end':''
+            );
+            markdown = markdown.replace(table, 
+                    `<div class='common_markdown_table'>${table.split('\n').filter(row=>row.indexOf('---')<0).map((row, index_row)=>
+                        `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'}'>${
+                            row.split('|').slice(1, -1).map((text, index_col) =>`<div class='common_markdown_table_col' style='text-align:${align[index_col]}'>${text.trim()}</div>`).join('')
+                        }</div>`
+                    ).join('')}</div>`);
+        }
         return markdown;
     };
     

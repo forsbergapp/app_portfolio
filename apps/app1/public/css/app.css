@@ -314,6 +314,14 @@ td, th{
   	color: var(--common_app_color_light);
     background-color: var(--common_app_color_blue1);
 }
+.common_markdown_table_row_odd{
+    color: var(--common_report_color_black);
+  	background-color: var(--common_report_color_lightblue3);
+}
+.common_markdown_table_row_even{
+	color: var(--common_report_color_black);
+	background-color:var(--common_report_color_white);
+}
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }
