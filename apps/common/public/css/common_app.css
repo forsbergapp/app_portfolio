@@ -1533,6 +1533,8 @@ body.rtl{
 }
 .common_markdown_section{
     margin: 0.5em;
+	margin-top: 0em;
+  	margin-bottom: 0em;
 }
 .common_markdown_footer{
     font-size: 0.7em !important;
@@ -1612,8 +1614,12 @@ body.rtl{
   	padding-top: 0.25em;
   	margin-bottom: 0.5em;
 }
+.common_markdown_table{
+	font-family: "Noto Sans Mono";
+	font-size: 0.9em;
+}
 .common_markdown_table_row{
-	display: block;
+	display: flex;
 	width: 100%;
 }
 .common_markdown_table_col{
