@@ -1,5 +1,6 @@
 /**
  * Displays markdown document
+ * Returns markdown document converted to HTML wrapped with metadata divs header, article and footer
  *         
  * @module apps/common/component/common_markdown
  */
@@ -39,30 +40,68 @@ const template = props =>`  <div class='common_markdown_header' style='backgroun
 const component = async props => {
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
-     * Converts sections, headings, code blocks, code inline, notes and images
-     * Images should be clickable and displayed in windows info using event delegation
-     * headings:
-     * must start at first position on a row
-     *                                  div class       comment
-     * #                                title_h1
-     * ##                               title_h2
-     * ###                              title_h3
-     * code:
-     * code block must start as first position on a row, no support for inline code
-     * ```                              code            code block
-     * images:
-     * [![text](small img)](full size img)  markdown_image  alt text should be used here as text below image
-     *                                                      hover text is not supported
-     * not supported:
-     * ![alt text ](img "hover text")
-     *         
+     * Converts following in this order:
+     * 1.sections
+     *   # character must start at first position on a  row
+     *   creates div with class common_markdown_section for all sections
+     *   so all sections will have the correct indentations
+     *   supports unlimited amount of heading levels although implemented h1-h5
+     * 
+     * 2.headings:
+     *   # character must start at first position on a row
+     *          div class
+     *   #      title_h1
+     *   ##     title_h2
+     *   ###    title_h3
+     *   ####   title_h4
+     *   #####  title_h5
+     * 
+     * 3.code block:
+     *   ```` must start as first position on a row and ends with ```` on a new row
+     *   all text within is a code block
+     * 
+     * 4.code inline:
+     *   text should be wrapped with `` and is processed after code block
+     * 
+     * 5.notes:
+     *   > **Note:** must start as first position and text after must be on one row
+     * 
+     * 6.images:
+     *   [![text](small img)](full size img)  
+     *   creates class common_markdown_image  
+     *   alt text should be used here as text below image
+     *   hover text is not supported
+     *   images should be clickable and displayed in windows info using event delegation
+     * 
+     *   not supported:
+     *   ![alt text ](img "hover text")
+     * 
+     * 7.tables:
+     *   | must start as first position on a row
+     *   unlimited columns supported
+     *   unlimited rows supported
+     * 
+     *   |Header|Header|    header row
+     *   |------|------|    alignment row, must contain at least --- 
+     *   |Data  |Data  |    Data rows the rest
+     *   |...   |...   |
+     * 
+     *   alignment row syntax
+     *   
+     *   center: :- and -: in cell
+     *   start : :- in cell
+     *   end   : -: in cell
+     *   ''    : no : found in cell 
+     *   css used:
+     *   style:text-align: center|start|end|'' start and end is used to support RTL and LTR direction
+     * 
      * @param {string} markdown
      * @returns {string}
      */
     const MarkdownParse = markdown =>{
         //remove all '\r' in '\r\n'
         markdown = markdown.replaceAll('\r\n','\n');
-        //convert headings to section
+        //1.sections
         let current_section = -1;
         let old_section = -1;
         markdown = markdown.split('\n').map((row, /**@type{number}*/index)=>{
@@ -99,35 +138,30 @@ const component = async props => {
                 return row;
         }).join('\n') + '</div>';
                                             
-        //convert headings #, ## and ##
-        //correct syntax 
-        //#[1 space character] []text,   ex # heading 1
-        //##[1 space character] []text,  ex ## heading 2
-        //###[1 space character] []text, ex ### heading 3
-        //# must be first character in the row or it is not part of markdown parsing
+        //2.headings        
         markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_markdown_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_markdown_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_markdown_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_markdown_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_markdown_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
-        //convert code
+        //3. code blocks
         //regexp for code blocks
         const regexp_code = /```([\s\S]*?)```/g;
         let match_code;
         while ((match_code = regexp_code.exec(markdown)) !==null){
             markdown = markdown.replace(match_code[0], `<div class='common_markdown_code'>${match_code[1]}</div>`);
         }
-        //convert code inline
+        //4.code inline
         //regexp for code blocks
         const regexp_code_inline = /`([\s\S]*?)`/g;
         let match_code_inline;
         while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
             markdown = markdown.replace(match_code_inline[0], `<div class='common_markdown_code_inline'>${match_code_inline[1]}</div>`);
         }
-        //convert notes
+        //5.notes
         markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_markdown_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
         
-        //convert image tags
+        //6.images
         //regexp for [![text](small img)](full size img)
         const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
         let match;
@@ -137,14 +171,14 @@ const component = async props => {
                                                 style='background-image:url("${match[2]}")' 
                                                 data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
         }
-        //convert tables
+        //7.tables
         let table_new = true;
         const tables = markdown.split('\n').
                         map(row=>{
                             if (row.indexOf('|')==0)
                                 if (table_new){
                                     table_new = false;
-                                    return '*NEW*' + row;
+                                    return '*TABLE*' + row;
                                 }
                                 else
                                     return row;
@@ -152,7 +186,7 @@ const component = async props => {
                                 table_new = true;
                                 return '';
                             }
-                        }).filter(row=>row!='').join('\n').split('*NEW*');
+                        }).filter(row=>row!='').join('\n').split('*TABLE*');
         for (const table of tables.filter(row=>row!='')){
             const align = table.split('\n').filter(row=>row.indexOf('---')>-1)[0].split('|').slice(1, -1).map(row=>
                 (row.indexOf(':-')>-1 && row.indexOf('-:')>-1)?'center':row.indexOf(':-')>-1?'start':row.indexOf('-:')>-1?'end':''
