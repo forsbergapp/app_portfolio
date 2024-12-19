@@ -1612,7 +1612,14 @@ body.rtl{
   	padding-top: 0.25em;
   	margin-bottom: 0.5em;
 }
-
+.common_markdown_table_row{
+	display: block;
+	width: 100%;
+}
+.common_markdown_table_col{
+	display: inline-block;
+	min-width: 20em;
+}
 /*Module easy qrcode*/
 .common_module_easy\.qrcode rect[fill='DARK']{
 	fill: var(--common_app_color_dark);
