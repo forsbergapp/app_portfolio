@@ -699,18 +699,6 @@ const serverUtilAppLine = () =>{
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/app-common-doc/${resource_id_string}`, method:'GET', required:true}):{
-                    resolve(app_common.commonApp({  
-                                                    ip:routesparameters.ip, 
-                                                    host:routesparameters.host, 
-                                                    user_agent:routesparameters.user_agent, 
-                                                    accept_language:routesparameters.accept_language, 
-                                                    url:'/info/doc/' + resource_id_get_string() ??'', 
-                                                    query:app_query?.get('lang_code') ??'', 
-                                                    res:routesparameters.res})
-                                .then(result=>iso_return_message(result, true)));
-                    break;
-                }
                 case route({url:`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, method:'GET'}):{
                     resolve(iso_return_message(socket.CheckOnline(
                                                 /**@ts-ignore */
