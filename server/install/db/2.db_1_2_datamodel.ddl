@@ -166,22 +166,12 @@ GRANT SELECT ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_common;
 
 CREATE TABLE <DB_SCHEMA/>.app_translation (
     language_id                            INTEGER NOT NULL,
-    app_id                                 INTEGER,
     app_setting_id                         INTEGER,
     text                                   VARCHAR(2000),
     json_data                              TEXT
 );
 
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT arc_3 CHECK ( ( ( app_setting_id IS NOT NULL )
-                                   AND ( app_id IS NULL ) )
-                                 OR ( ( app_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL ) ) );
-
 GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
-                                                                                         language_id );
 
 ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
@@ -282,6 +272,7 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app (
     app_setting_preference_direction_id               INTEGER,
     app_setting_preference_arabic_script_id           INTEGER,
     date_created                                      DATETIME NOT NULL,
+    json_data                                         TEXT,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                  app_id
                                                  )
@@ -483,11 +474,6 @@ ALTER TABLE <DB_SCHEMA/>.app_setting
 
 ALTER TABLE <DB_SCHEMA/>.app_setting_type
     ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
 

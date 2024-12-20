@@ -1,0 +1,58 @@
+[
+    {
+        "id": 1,
+        "app_id": 0,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Admin", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 2,
+        "app_id": 1,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Presentation", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 3,
+        "app_id": 2,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"App Portfolio", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 4,
+        "app_id": 3,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Timetables", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 5,
+        "app_id": 4,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Maps", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 6,
+        "app_id": 5,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Bank", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 7,
+        "app_id": 6,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Shop", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    },
+    {
+        "id": 8,
+        "app_id": 7,
+        "locale": "en",
+        "text": "",
+        "json_data":{"name":"Cube", "description":"", "pattern":"", "technology":"", "reference":"", "security":""}
+    }
+]

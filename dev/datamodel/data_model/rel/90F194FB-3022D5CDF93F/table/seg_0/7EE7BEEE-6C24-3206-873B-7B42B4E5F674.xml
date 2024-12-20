@@ -22,22 +22,6 @@
 <colAssociation fkAssociation="6721B89D-5AB6-139A-E9B2-89D63AA8E3A9" referredColumn="56940672-7C78-C6EE-33E8-AEFCAAA604F1"/>
 </associations>
 </Column>
-<Column name="app_id" id="145515DA-45DC-6089-FDC7-67E257F1F543">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="DC0003B9-C408-DA45-FB9A-4F19D0E44EB0" referredColumn="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
-</associations>
-</Column>
 <Column name="app_setting_id" id="731248E8-998E-5F49-DB6A-58095E5C150B">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -81,30 +65,6 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="0D920F6B-FDAD-B539-F590-A060F3BB1B53" name="app_translation_app_UN">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>EE76ABEA-FAF7-A3C4-DD9C-7F08C8551CA0</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
-<colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="5311043B-2029-9D8E-817B-082755B5DF9E" name="app_translation_app_category_UN">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>3FE78642-2EB9-EABE-DCB6-D53DD4650CB6</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
-<colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="4BEEEFE9-A6ED-9512-2AD9-C254C758F525" name="app_translation_app_setting_UN">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
@@ -115,17 +75,6 @@
 <indexColumnUsage>
 <colUsage columnID="731248E8-998E-5F49-DB6A-58095E5C150B"/>
 <colUsage columnID="B6265773-7C95-5239-C73D-DAAD7BBCC650"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="6BFC6A1C-124A-8EBC-A884-7B44AB392DA2" name="app_translation_app_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<generatorID>7DC27455-0B7B-555C-4922-3F29987DA5DD</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="145515DA-45DC-6089-FDC7-67E257F1F543"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E" name="app_translation_app_setting_FK">
