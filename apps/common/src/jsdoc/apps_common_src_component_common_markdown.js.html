@@ -11,20 +11,19 @@
  *         
  * @module apps/common/component/common_markdown
  */
+/**
+ * @import { server_db_file_app} from '../../../../server/types.js' 
+ */
 
 /**
- * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- */
-/**
- * @param {{app_logo:string,
- *          app_title:string,
+ * @param {{app:server_db_file_app,
  *          app_copyright:string,
  *          markdown :string,
  *          functionMarkdownParse:function
  *          }} props
  * @returns {string}
  */
-const template = props =>`  &lt;div class='common_markdown_header' style='background-image:url("${props.app_logo}")'>${props.app_title}&lt;/div>
+const template = props =>`  &lt;div class='common_markdown_header' style='background-image:url("${props.app.logo}")'>${props.app.name}&lt;/div>
                                 &lt;div class='common_markdown_article'>
                                     ${props.functionMarkdownParse(props.markdown)}
                                 &lt;/div>
@@ -32,19 +31,19 @@ const template = props =>`  &lt;div class='common_markdown_header' style='backgr
 /**
  * 
  * @param {{data:       {
- *                      commonMountdiv:string,
- *                      app_logo:string,
- *                      app_title:string,
+ *                      app_common:server_db_file_app,
+ *                      app:server_db_file_app|null,
  *                      app_copyright:string,
+ *                      type:'GUIDE'|'APP',
  *                      markdown:string,
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
- * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
- *                      data:   null,
- *                      methods:null,
- *                      template:string}>}
+ *          methods:    null}} props
+ * @returns {Promise.&lt;string>}
  */
 const component = async props => {
+    if (props.data.type=='APP' &amp;&amp; props.data.app){
+        props.data.markdown = props.data.markdown.replaceAll('@{APP_NAME}', props.data.app.name);
+    }
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
@@ -198,27 +197,24 @@ const component = async props => {
             const align = table.split('\n').filter(row=>row.indexOf('---')>-1)[0].split('|').slice(1, -1).map(row=>
                 (row.indexOf(':-')>-1 &amp;&amp; row.indexOf('-:')>-1)?'center':row.indexOf(':-')>-1?'start':row.indexOf('-:')>-1?'end':''
             );
+            //get max length of first column and set max length 40em (half width)
+            //use number to calculate width/80
+            const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
             markdown = markdown.replace(table, 
                     `&lt;div class='common_markdown_table'>${table.split('\n').filter(row=>row.indexOf('---')&lt;0).map((row, index_row)=>
                         `&lt;div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'}'>${
-                            row.split('|').slice(1, -1).map((text, index_col) =>`&lt;div class='common_markdown_table_col' style='text-align:${align[index_col]}'>${text.trim()}&lt;/div>`).join('')
+                            row.split('|').slice(1, -1).map((text, index_col) =>`&lt;div class='common_markdown_table_col' style='${index_col==0?`min-width:${width}em;`:''}text-align:${align[index_col]}'>${text}&lt;/div>`).join('')
                         }&lt;/div>`
                     ).join('')}&lt;/div>`);
         }
         return markdown;
     };
     
-    return {
-        lifecycle:  null,
-        data:       null,
-        methods:    null,
-        template:   template({  app_logo:props.data.app_logo,
-                                app_title:props.data.app_title,
-                                app_copyright:props.data.app_copyright,
-                                markdown:props.data.markdown,
-                                functionMarkdownParse : MarkdownParse
-        })
-    };
+    return template({   app:props.data.app_common,
+                        app_copyright:props.data.app_copyright,
+                        markdown:props.data.markdown,
+                        functionMarkdownParse : MarkdownParse
+                    });
 };
 export default component;</code></pre>
         </div>
