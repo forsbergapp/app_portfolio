@@ -4,7 +4,8 @@
  * @import {server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
  *          server_config_server,server_config_iam_policy,
  *          server_config_server_server, server_config_server_service_iam,
- *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret} from '../types.js'
+ *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,
+ *          server_db_file_app_translation} from '../types.js'
  * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
  */
 
@@ -90,7 +91,8 @@ const configDefault = async () => {
                 [server_db_file_db_name, server_db_file_app[]],
                 [server_db_file_db_name, server_db_file_app_module[]],
                 [server_db_file_db_name, server_db_file_app_parameter[]],
-                [server_db_file_db_name, server_db_file_app_secret[]]
+                [server_db_file_db_name, server_db_file_app_secret[],
+                [server_db_file_db_name, server_db_file_app_translation[]]
             ]} 
     */
     const config_obj = [
@@ -102,7 +104,9 @@ const configDefault = async () => {
                             ['APP',                             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['APP_MODULE',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_module.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['APP_PARAMETER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_parameter.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_secret.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_secret.json`).then(filebuffer=>JSON.parse(filebuffer.toString())),
+                            ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_translation.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                            ]
                         ]; 
     //set server parameters
     config_obj[0][1].SERVER.map((/**@type{server_config_server_server}*/row)=>{

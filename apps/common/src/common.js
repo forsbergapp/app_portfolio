@@ -928,9 +928,8 @@ const commonApp = async parameters =>{
  * @returns {Promise.<server_config_apps_with_db_columns[]>}
  */
 const commonAppsGet = async (app_id, resource_id, locale) =>{
-    /**@type{import('../../../server/db/dbModelApp.js')} */
-    const dbModelApp = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
-    const apps_db =  await dbModelApp.get(app_id, resource_id, locale);
+    /**@type{import('../../../server/db/fileModelAppTranslation.js')} */
+    const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
     
     /**@type{server_db_file_app[]}*/
     const apps = fileModelApp.get(app_id, null, null);
@@ -941,7 +940,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
     }
     const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
     return apps
-    .filter(app=>apps_db.filter(app_db=>app_db.id == app.id)[0])
+    .filter(app=>app.id == (resource_id ?? app.id))
     .map(app=>{
         return {
                     app_id:app.id,
@@ -952,7 +951,7 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
                     port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
                                         fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
                                             fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT')),
-                    app_name_translation : JSON.parse(apps_db.filter(app_db=>app_db.id==app.id)[0].app_translation.toString()).name,
+                    app_name_translation : fileModelAppTranslation.get(app_id,null,locale, app.id,null).filter(appTranslation=>appTranslation.app_id==app.id)[0].json_data.name,
                     logo:app.logo
                 };
     });
