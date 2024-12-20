@@ -28,6 +28,15 @@
     },
     {
         "id":4,
+        "app_id": 0,
+        "common_type": "FUNCTION",
+        "common_name": "COMMON_DOC",
+        "common_role": "APP_DATA",
+        "common_path": "/apps/common/src/functions/common_doc.js",
+        "common_description": "Get documentation menu or guide, app or jsdoc documentation"
+    },
+    {
+        "id":5,
         "app_id": 3,
         "common_type": "REPORT",
         "common_name": "TIMETABLE",
@@ -36,7 +45,7 @@
         "common_description": "Timetable day, month and year"
     },
     {
-        "id":5,
+        "id":6,
         "app_id": 3,
         "common_type": "MODULE",
         "common_name": "MODULE_LIB_TIMETABLE",
@@ -45,7 +54,7 @@
         "common_description": "Timetable module"
     },
     {
-        "id":6,
+        "id":7,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_METADATA",
@@ -54,7 +63,7 @@
         "common_description": "ACCOUNT metadata"
     },
     {
-        "id":7,
+        "id":8,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "CUSTOMER_METADATA",
@@ -63,7 +72,7 @@
         "common_description": "CUSTOMER metadata"
     },
     {
-        "id":8,
+        "id":9,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "TRANSACTION_METADATA",
@@ -72,7 +81,7 @@
         "common_description": "TRANSACTION metadata"
     },
     {
-        "id":9,
+        "id":10,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_CREATE",
@@ -81,7 +90,7 @@
         "common_description": "ACCOUNT create"
     },
     {
-        "id":10,
+        "id":11,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_GET",
@@ -90,7 +99,7 @@
         "common_description": "ACCOUNT get"
     },
     {
-        "id":11,
+        "id":12,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_STATEMENT",
@@ -99,7 +108,7 @@
         "common_description": "ACCOUNT get statement"
     },
     {
-        "id":12,
+        "id":13,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_TRANSACTIONS",
@@ -108,7 +117,7 @@
         "common_description": "ACCOUNT get transactions"
     },
     {
-        "id":13,
+        "id":14,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "CUSTOMER_CREATE",
@@ -117,7 +126,7 @@
         "common_description": "CUSTOMER create"
     },
     {
-        "id":14,
+        "id":15,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "CUSTOMER_GET",
@@ -126,7 +135,7 @@
         "common_description": "CUSTOMER get"
     },
     {
-        "id":15,
+        "id":16,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_UPDATE",
@@ -135,7 +144,7 @@
         "common_description": "PAYMENT REQUEST update"
     },
     {
-        "id":16,
+        "id":17,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_CREATE",
@@ -144,7 +153,7 @@
         "common_description": "PAYMENT REQUEST create"
     },
     {
-        "id":17,
+        "id":18,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET_STATUS",
@@ -153,7 +162,7 @@
         "common_description": "PAYMENT REQUEST get status"
     },
     {
-        "id":18,
+        "id":19,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET",
@@ -162,7 +171,7 @@
         "common_description": "PAYMENT REQUEST get"
     },
     {
-        "id":19,
+        "id":20,
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_METADATA",
@@ -171,7 +180,7 @@
         "common_description": "PAYMENT REQUEST metadata"
     },
     {
-        "id":20,
+        "id":21,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_GET",
@@ -180,7 +189,7 @@
         "common_description": "PRODUCT get"
     },
     {
-        "id":21,
+        "id":22,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_LOCATION_GET",
@@ -189,7 +198,7 @@
         "common_description": "PRODUCT location get"
     },
     {
-        "id":22,
+        "id":23,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_METADATA",
@@ -198,7 +207,7 @@
         "common_description": "PRODUCT metadata"
     },
     {
-        "id":23,
+        "id":24,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_VARIANT_LOCATION_METADATA",
@@ -207,7 +216,7 @@
         "common_description": "PRODUCT variant location metadata"
     },
     {
-        "id":24,
+        "id":25,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_METADATA",
@@ -216,7 +225,7 @@
         "common_description": "PAYMENT metadata"
     },
     {
-        "id":25,
+        "id":26,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_METADATA",
@@ -225,7 +234,7 @@
         "common_description": "PAYMENT REQUEST metadata"
     },
     {
-        "id":26,
+        "id":27,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_CREATE",
@@ -234,7 +243,7 @@
         "common_description": "PAYMENT REQUEST create"
     },
     {
-        "id":27,
+        "id":28,
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET_STATUS",
@@ -243,7 +252,7 @@
         "common_description": "PAYMENT REQUEST get status"
     },
     {
-        "id":28,
+        "id":29,
         "app_id": 7, 
         "common_type": "FUNCTION",
         "common_name": "CUBE_SOLVE",

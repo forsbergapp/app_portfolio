@@ -17,76 +17,45 @@ const common = await import(commonPath);
 /**
  * @param {string} href
  * @param {string} title
- * @param {boolean} markdown
- * @param {boolean} local
+ * @param {'GUIDE'|'APP'|'JSDOC'} type
  */
-const show = async (href, title, markdown, local) =>{
-    if (local)
-        try {
-            COMMON_DOCUMENT.querySelector('#content').innerHTML='';
-            COMMON_DOCUMENT.querySelector('#content').className = '';
-            const response = await fetch(href);    
-            if (response.ok){
-                if (markdown){
-                    COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
-                    common.commonComponentRender({
-                        mountDiv:   'content',
-                        data:       {
-                                    app_logo:common.COMMON_GLOBAL.app_logo,
-                                    app_title:COMMON_DOCUMENT.title,
-                                    app_copyright:common.COMMON_GLOBAL.app_copyright,
-                                    markdown: await response.text()
-                                    },
-                        methods:    null,
-                        path:'/common/component/common_markdown.js'});
-                    //COMMON_DOCUMENT.querySelector('#content').innerHTML= common.commonMiscMarkdownParse(await response.text());
-                }
-            }
-        } catch (error) {
-            null;
-        }
-    else{
-        COMMON_DOCUMENT.querySelector('#content').innerHTML='<div id=\'content_title\'></div>';
-        COMMON_DOCUMENT.querySelector('#content').className = '';
-        const content = await common.commonFFB({path:'/app-common-doc/' + (href.split('#').length>1?href.split('#')[0]:href), method:'GET', authorization_type:'APP_DATA', spinner_id:'content_title'}).catch(()=>null);
-        if (markdown){
-            COMMON_DOCUMENT.querySelector('#content').className = 'common_markdown';
-            content?common.commonComponentRender({
-                mountDiv:   'content',
-                data:       {
-                            app_logo:common.COMMON_GLOBAL.app_logo,
-                            app_title:COMMON_DOCUMENT.title,
-                            app_copyright:common.COMMON_GLOBAL.app_copyright,
-                            markdown: content
-                            },
-                methods:    null,
-                path:'/common/component/common_markdown.js'}):null;
-            //COMMON_DOCUMENT.querySelector('#content').innerHTML= content?common.commonMiscMarkdownParse(content):'';
+const show = async (href, title, type) =>{
+    
+    COMMON_DOCUMENT.querySelector('#content').innerHTML='';
+    COMMON_DOCUMENT.querySelector('#content').className = type=='JSDOC'?'':'common_markdown';
+    const content = await common.commonFFB({path:'/app-module-function/COMMON_DOC', 
+                                            method:'POST', 
+                                            authorization_type:'APP_DATA',
+                                            body:{  type:type,
+                                                    data_app_id:common.COMMON_GLOBAL.common_app_id,
+                                                    doc:(href.split('#').length>1?href.split('#')[0]:href)} })
+                            .then(result=>JSON.parse(result).rows[0])
+                            .catch(()=>null);
+    if (type=='JSDOC'){
+        const content_element = COMMON_DOCUMENT.createElement('div');
+        content_element.innerHTML = content;
+        if (content_element.querySelector('.prettyprint.source')){
+            //Code
+            COMMON_DOCUMENT.querySelector('#content').className = 'code';
+            COMMON_DOCUMENT.querySelector('#content').innerHTML= 
+                                                                    `<div id='content_title'>${title}</div>`+ 
+                                                                    content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
+                                                                    .map((/**@type{string}*/row,/**@type{number}*/index)=>
+                                                                        `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
+            //highlight selected line if # is used in link
+            if (href.split('#')[1])
+                Array.from(COMMON_DOCUMENT.querySelectorAll(`#content [data-line='${href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
         }
         else{
-            const content_element = COMMON_DOCUMENT.createElement('div');
-            content_element.innerHTML = content;
-            if (content_element.querySelector('.prettyprint.source')){
-                //Code
-                COMMON_DOCUMENT.querySelector('#content').className = 'code';
-                COMMON_DOCUMENT.querySelector('#content').innerHTML= 
-                                                                        `<div id='content_title'>${title}</div>`+ 
-                                                                        content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
-                                                                        .map((/**@type{string}*/row,/**@type{number}*/index)=>
-                                                                            `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
-                //highlight selected line if # is used in link
-                if (href.split('#')[1])
-                    Array.from(COMMON_DOCUMENT.querySelectorAll(`#content [data-line='${href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
-            }
-            else{
-                //Module
-                //can contain @example JSDoc tags with html code tags
-                //replace all <code></code> tags with <div class='code'></div>
-                COMMON_DOCUMENT.querySelector('#content').innerHTML=    `<div id='content_title'>${title}</div>`+ 
-                                                                        content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
-            }       
+            //Module
+            //can contain @example JSDoc tags with html code tags
+            //replace all <code></code> tags with <div class='code'></div>
+            COMMON_DOCUMENT.querySelector('#content').innerHTML=    `<div id='content_title'>${title}</div>`+ 
+                                                                    content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
         }
     }
+    else
+        COMMON_DOCUMENT.querySelector('#content').innerHTML=content;
 };
 /**
  * App exception function
@@ -132,10 +101,8 @@ const appEventClick = event => {
                         show(   event.target.getAttribute('href'), 
                                 //use title from first menu text if clicking on title
                                 event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.textContent, 
-                                //markdown links in title and nav_content_app
-                                (event_target_id=='title' ||event_target_id=='nav_content_app')?true:false, 
-                                //local links in title and nav_content_app
-                                (event_target_id=='title' ||event_target_id=='nav_content_app')?true:false);
+                                //GUIDE in title and nav_content_app
+                                (event_target_id=='title' ||event_target_id=='nav_content_app')?'GUIDE':'JSDOC');
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -191,8 +158,8 @@ const appInit = async () => {
                                         path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
-        data:       null,
-        methods:    null,
+        data:       {app_id:common.COMMON_GLOBAL.common_app_id},
+        methods:    {commonFFB:common.commonFFB},
         path:       '/component/app.js'});
     //show first menu at start
     COMMON_DOCUMENT.querySelector('#title').click();

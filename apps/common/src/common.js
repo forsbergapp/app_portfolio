@@ -456,13 +456,6 @@ const commonAssetfile = parameters =>{
                     }
                     break;
                 }
-                case '.md':{
-                    parameters.res.type('text/markdown');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
-                    break;
-                }
                 case '.html':{
                     parameters.res.type('text/html');
                     if (app_cache_control !='')
@@ -884,15 +877,7 @@ const commonApp = async parameters =>{
             case (parameters.url == '/apps/common_types.js'): {
                 return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:fileModelApp.get(app_id, app_id, null)[0].path, res:parameters.res}).catch(()=>null);
             }
-            case (parameters.url.toLowerCase().startsWith('/info/doc/index.html')):{
-                //block default index.html created by JSDoc without changing template
-                return '';
-            }
-            case (parameters.url.toLowerCase().startsWith('/info/doc')):{
-                return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/info/doc'.length), basepath:'/apps/common/src/jsdoc', res:parameters.res}).catch(()=>null);
-            }
             case (parameters.url.toLowerCase().startsWith('/info/about')):{
-                //Use JSDoc for about app
                 return '';
             }
             case (parameters.url.toLowerCase().startsWith('/info/disclaimer')):{

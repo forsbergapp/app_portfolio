@@ -4,20 +4,19 @@
  *         
  * @module apps/common/component/common_markdown
  */
+/**
+ * @import { server_db_file_app} from '../../../../server/types.js' 
+ */
 
 /**
- * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- */
-/**
- * @param {{app_logo:string,
- *          app_title:string,
+ * @param {{app:server_db_file_app,
  *          app_copyright:string,
  *          markdown :string,
  *          functionMarkdownParse:function
  *          }} props
  * @returns {string}
  */
-const template = props =>`  <div class='common_markdown_header' style='background-image:url("${props.app_logo}")'>${props.app_title}</div>
+const template = props =>`  <div class='common_markdown_header' style='background-image:url("${props.app.logo}")'>${props.app.name}</div>
                                 <div class='common_markdown_article'>
                                     ${props.functionMarkdownParse(props.markdown)}
                                 </div>
@@ -25,19 +24,15 @@ const template = props =>`  <div class='common_markdown_header' style='backgroun
 /**
  * 
  * @param {{data:       {
- *                      commonMountdiv:string,
- *                      app_logo:string,
- *                      app_title:string,
+ *                      app:server_db_file_app,
  *                      app_copyright:string,
  *                      markdown:string,
  *                      },
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
- * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
- *                      data:   null,
- *                      methods:null,
- *                      template:string}>}
+ *          methods:    null}} props
+ * @returns {Promise.<string>}
  */
 const component = async props => {
+    
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
@@ -204,16 +199,10 @@ const component = async props => {
         return markdown;
     };
     
-    return {
-        lifecycle:  null,
-        data:       null,
-        methods:    null,
-        template:   template({  app_logo:props.data.app_logo,
-                                app_title:props.data.app_title,
-                                app_copyright:props.data.app_copyright,
-                                markdown:props.data.markdown,
-                                functionMarkdownParse : MarkdownParse
-        })
-    };
+    return template({   app:props.data.app,
+                        app_copyright:props.data.app_copyright,
+                        markdown:props.data.markdown,
+                        functionMarkdownParse : MarkdownParse
+                    });
 };
 export default component;
