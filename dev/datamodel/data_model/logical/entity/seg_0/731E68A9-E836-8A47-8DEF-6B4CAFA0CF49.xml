@@ -15,20 +15,6 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="app_id" id="3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 03:56:49 UTC</createdTime>
-<generatorID>7DC27455-0B7B-555C-4922-3F29987DA5DD</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>A5D99573-E640-21A7-D685-6D434FAA1C53</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="app_setting_id" id="7E859F7B-E90E-55B6-655B-87EEC25C8068">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 03:55:48 UTC</createdTime>
@@ -93,9 +79,8 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<newElementsIDs>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<newElementsIDs>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
 <usedAttributes>
-<attributeRef>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15</attributeRef>
 <attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
 </usedAttributes>
 </identifier>
@@ -108,7 +93,6 @@
 </engineerTo>
 <newElementsIDs>7DC27455-0B7B-555C-4922-3F29987DA5DD,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
 <usedAttributes>
-<attributeRef>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15</attributeRef>
 <attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
 </usedAttributes>
 </identifier>

@@ -11,11 +11,6 @@
 <rejectLimit></rejectLimit>
 <storeAs>CLOB</storeAs>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
-<ColumnProxy name="app_id" id="145515DA-45DC-6089-FDC7-67E257F1F543">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-07 06:18:41 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="json_data" id="17D6BA0E-D368-129D-293A-32DDEA0ACCD8">
 <createdBy>admin</createdBy>
 <createdTime>2024-08-07 06:18:41 UTC</createdTime>
@@ -48,26 +43,9 @@
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_FK" id="6BFC6A1C-124A-8EBC-A884-7B44AB392DA2">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ForeignKey>
 </foreignKeys>
 <uniqueKeys>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_UN" id="0D920F6B-FDAD-B539-F590-A060F3BB1B53">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
 <UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_setting_UN" id="4BEEEFE9-A6ED-9512-2AD9-C254C758F525">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 21:43:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_category_UN" id="5311043B-2029-9D8E-817B-082755B5DF9E">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

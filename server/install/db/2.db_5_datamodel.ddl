@@ -203,19 +203,10 @@ CREATE TABLE <DB_SCHEMA/>.app_setting_type (
 
 CREATE TABLE <DB_SCHEMA/>.app_translation (
     language_id                            INTEGER NOT NULL,
-    app_id                                 INTEGER,
     app_setting_id                         INTEGER,
     text                                   VARCHAR(2000),
     json_data                              TEXT,
-    CONSTRAINT arc_3 CHECK ( ( ( app_setting_id IS NOT NULL )
-                                   AND ( app_id IS NULL ) )
-                                 OR ( ( app_id IS NOT NULL )
-                                      AND ( app_setting_id IS NULL ) ) ),
-    CONSTRAINT app_translation_app_un UNIQUE ( app_id,language_id ),
     CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id, language_id ),
-    CONSTRAINT app_translation_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id )
-            ON DELETE CASCADE,
     CONSTRAINT app_translation_app_setting_fk FOREIGN KEY ( app_setting_id )
         REFERENCES app_setting ( id )
             ON DELETE CASCADE,
@@ -302,6 +293,7 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app (
     app_setting_preference_direction_id               INTEGER,
     app_setting_preference_arabic_script_id           INTEGER,
     date_created                                      DATETIME NOT NULL,
+    json_data                                         TEXT,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                  app_id
                                                  ),

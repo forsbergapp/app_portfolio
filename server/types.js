@@ -391,6 +391,7 @@
  *              'APP_MODULE_QUEUE'|
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
+ *              'APP_TRANSLATION'|
  *              'IAM_APP_TOKEN'|
  *              'IAM_CONTROL_IP'|
  *              'IAM_CONTROL_USER_AGENT'|
@@ -534,6 +535,15 @@
  *              common_image_avatar_height:         {value:string, comment:string},
  *              common_image_avatar_width:          {value:string, comment:string}}} server_db_file_app_parameter
  */
+/**
+ * DB FILE server_db_file_app_translation
+ * @typedef {{  id: number,
+ *              app_id: number,
+ *			    locale: string,
+ *			    text: string,			            //simple text
+ *			    json_data: {[key:string]:string}    //complex text
+ *}} server_db_file_app_translation		
+*/
 
 /**
  * DB FILE server_db_file_app_parameter
@@ -1111,19 +1121,6 @@
  *              data_free:      number,
  *              pct_used:       number}} server_db_sql_result_admin_DBInfoSpaceSum
  */
-
-/**
- * 
- * DB SQL APP server_db_sql_result_app_getApp
- * @typedef {{  id:number, 
- *              app_translation:string}} server_db_sql_result_app_getApp
- */
-
-/**
- * DB SQL APP server_db_sql_result_app_getAdminId
- * @typedef {{  id:number}} server_db_sql_result_app_getAdminId
- */
-
 
 /**
  * DB SQL APP_DATA_ENTITY server_db_sql_result_app_data_entity_get

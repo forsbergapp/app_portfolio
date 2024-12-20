@@ -2,6 +2,7 @@
  * Tables implemented using object mapping relation (ORM) pattern
  * each table has dbModel*.js file with methods
  * not implemented for tables:
+ *       app (fileModelApp is used)
  *       app_setting_type
  *       app_data_translation
  *       app_translation

@@ -453,8 +453,6 @@ const dbInstallGetFiles = async (install_type) =>{
     /**@type{import('./fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
-    /**@type{import('./dbModelApp.js')} */
-    const {getAdminId} = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
     /**@type{import('./dbModelUserAccount.js')} */
     const {userPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./dbModelUserAccountApp.js')} */
@@ -479,7 +477,10 @@ const dbInstallGetFiles = async (install_type) =>{
 
     /**@type{import('./dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
-    
+
+    /**@type{import('./fileModelApp.js')} */
+    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+
     /**@type{import('./fileModelAppSecret.js')} */
     const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
@@ -649,7 +650,8 @@ const dbInstallGetFiles = async (install_type) =>{
 
     //create all users first and update with id
     await create_users(demo_users);
-    const apps = await getAdminId(app_id);
+    /**@type{server_db_file_app[]}*/
+    const apps = fileModelApp.get(app_id, null, null);
     
     //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
