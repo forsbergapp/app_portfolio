@@ -15,11 +15,20 @@
  *  CommonComponentLifecycle
  *  CommonComponentResult
  *  CommonErrorMessageISO20022
+ *  CommonAppMenu
  * 
  * Common REST API types
  *  CommonRESTAPIMethod
  *  CommonRESTAPIAuthorizationType
  *  CommonAppRecord
+ *  commonInitAppParameters
+ *  CommonAppParametersRecord
+ *  CommonAppSecretsRecord
+ *  CommonAppModulesRecord
+ *  CommonAppModuleMetadata
+ *  CommonAppModuleWithMetadata
+ *  CommonAppModuleQueueStatus
+ *  CommonAppModuleQueue
  *  CommonCountryType
  *  CommonProfileUser
  *  CommonProfileStatRecord
@@ -40,7 +49,6 @@
  *  CommonModuleCommon
  *  CommonModuleEasyQRCode
  *  CommonModuleLeaflet
- *  CommonModulePrayTimes
  *  CommonModuleRegional
  *  CommonModuleReact
  *  CommonModuleReactDOM
@@ -74,6 +82,10 @@
  *              __VUE_DEVTOOLS_HOOK_REPLAY__?:*,
  *              __VUE_HMR_RUNTIME__?:*,
  *              __VUE__?:*}} COMMON_WINDOW
+ */
+/**
+ * Type CommonAppEventEventSource
+ * @typedef {{data:string}} CommonAppEventEventSource
  */
 
 /**
@@ -137,10 +149,6 @@
  *            }}  target
  */
 
-/**
- * Type CommonAppEventEventSource
- * @typedef {{data:string}} CommonAppEventEventSource
- */
 
 /**
  * Type CommonGlobal
@@ -259,6 +267,26 @@
  *               developer_text:string|null,
  *               more_info:string|null}}} CommonErrorMessageISO20022
  */
+/**
+ * Type CommonAppMenu
+ * @typedef{{   id:number, 
+ *              menu:string,
+ *              type:'GUIDE'|'APP',
+ *              menu_sub:{  id:number,
+ *                          menu:string,
+ *                          doc:string}[]|null}} CommonAppMenu
+ */
+
+/**
+ * Type CommonRESTAPIMethod
+ * @typedef{'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} CommonRESTAPIMethod
+ */
+
+/**
+ * Type CommonRESTAPIMethod
+ * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
+ */
+
 
 /**
  * Type CommonAppRecord
@@ -396,11 +424,11 @@
  *              common_description:string}}CommonAppModulesRecord
  */
 /**
- * APP CommonAppModuleMetadata
+ * Type CommonAppModuleMetadata
  * @typedef {{param:{name:string, text:string, default:string|number}}} CommonAppModuleMetadata
  */
 /**
- * Type CommonAppModuleMetadata
+ * Type CommonAppModuleWithMetadata
  * @typedef {{  id:number,
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
@@ -410,7 +438,7 @@
  *              common_description:string}} CommonAppModuleWithMetadata
  */
 /**
- * DB FILE CommonAppModuleQueueStatus
+ * Type CommonAppModuleQueueStatus
  * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} CommonAppModuleQueueStatus
  */
 /**
@@ -427,6 +455,12 @@
  *              status:CommonAppModuleQueueStatus,
  *              message:string|null}} CommonAppModuleQueue
  */
+
+/**
+ * Type CommonCountryType
+ * @typedef {{id:number, value:string, display_data:string}} CommonCountryType
+ */
+
 /**
  * Type CommonProfileUser
  * @typedef {{  id:number|null,
@@ -465,22 +499,7 @@
  * Type CommonProfileSearchRecord
  * @typedef {{id:number, avatar:string, provider_image:string, username:string}} CommonProfileSearchRecord
  */
-
-/**
- * Type CommonRESTAPIMethod
- * @typedef{'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} CommonRESTAPIMethod
- */
-/**
- * Type CommonRESTAPIMethod
- * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
- */
-
-
- /**
- * Type CommonCountryType
-* @typedef {{id:number, value:string, display_data:string}} CommonCountryType
-*/
-
+ 
 /** 
  * Type 
  * @typedef {*} CommonMasterObjectType

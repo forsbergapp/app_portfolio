@@ -24,15 +24,19 @@ const template = props =>`  <div class='common_markdown_header' style='backgroun
 /**
  * 
  * @param {{data:       {
- *                      app:server_db_file_app,
+ *                      app_common:server_db_file_app,
+ *                      app:server_db_file_app|null,
  *                      app_copyright:string,
+ *                      type:'GUIDE'|'APP',
  *                      markdown:string,
  *                      },
  *          methods:    null}} props
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    
+    if (props.data.type=='APP' && props.data.app){
+        props.data.markdown = props.data.markdown.replaceAll('@{APP_NAME}', props.data.app.name);
+    }
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
@@ -199,7 +203,7 @@ const component = async props => {
         return markdown;
     };
     
-    return template({   app:props.data.app,
+    return template({   app:props.data.app_common,
                         app_copyright:props.data.app_copyright,
                         markdown:props.data.markdown,
                         functionMarkdownParse : MarkdownParse

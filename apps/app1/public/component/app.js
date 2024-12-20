@@ -3,13 +3,12 @@
  * @module apps/app3/component/app
  */
 /**
- * @import {COMMON_DOCUMENT,CommonModuleCommon,CommonComponentLifecycle}  from '../../../common_types.js'
- * @import {appMenu}  from '../js/types.js'
+ * @import {CommonAppMenu, COMMON_DOCUMENT,CommonModuleCommon,CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
  * @param {{title:string,
- *          app_menu:appMenu[]
+ *          app_menu:CommonAppMenu[]
  *          jsdoc_menu:string}} props
  * @returns {string}
  */
@@ -19,10 +18,15 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                 <div id='menu_close' class='common_dialogue_button common_icon'></div>
                                 <div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
-                                        `<div>${row.menu}</div>
-                                        ${row.menu_sub?.map(row_sub=>
-                                            `<div class='common_link' href='${row_sub.doc}'>${row_sub.menu}</div>`
-                                        ).join('')}
+                                        `<div data-id='${row.id}' data-type='${row.type}'>
+                                            <div >${row.menu}</div>
+                                            ${row.menu_sub?.map(row_sub=>
+                                                `<div class='common_link' href='${row_sub.doc}'>
+                                                    ${row_sub.menu}
+                                                </div>`
+                                                ).join('')}
+                                        </div>
+
                                         `
                                     ).join('')}
                                 </div>
