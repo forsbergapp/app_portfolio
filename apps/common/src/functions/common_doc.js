@@ -45,17 +45,28 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 /**@type{appMenu[]} */
                 const markdown_menu_docs = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
                 for (const menu of markdown_menu_docs){
-                    for (const menu_sub of menu.menu_sub??[]){
-                        await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
-                                .then(result=>{
-                                    try {
-                                        menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
-                                    } catch (error) {
-                                        menu_sub.menu = '';
-                                    }
-                                })
-                                .catch(()=>menu_sub.menu = '');
+                    if (menu.type=='APP'){
+                        //generate menu for app with updated id and app name
+                        menu.menu_sub = fileModelApp.get(app_id, null, null).map(app=>{
+                                            return { 
+                                                    id:app.id,
+                                                    menu:app.name,
+                                                    doc:app.id.toString()
+                                                    };
+                                            });
                     }
+                    else
+                        for (const menu_sub of menu.menu_sub??[]){
+                            await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
+                                    .then(result=>{
+                                        try {
+                                            menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
+                                        } catch (error) {
+                                            menu_sub.menu = '';
+                                        }
+                                    })
+                                    .catch(()=>menu_sub.menu = '');
+                        }
                 }
                 return [JSON.stringify(markdown_menu_docs)];
             }
@@ -64,13 +75,16 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
                 const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');
-                
-                return [await ComponentCreate({data:{   app:fileModelApp.get(app_id, data.app_id_doc, null)[0], 
-                                                                    app_copyright: fileModelAppParameter.get(data.app_id_doc, null)[0].app_copyright.value, 
-                                                                    //guide documents in separate files, all app use app template
-                                                                    markdown:await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
-                                                                                            (data.type.toUpperCase()=='GUIDE'?data.doc + '.md':'app.md'))},
-                                                            methods:null})];
+                /**@type{import('../../../../server/server.js')} */
+                const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+                return [await ComponentCreate({ data:{  app_common:     fileModelApp.get(app_id, data.data_app_id, null)[0], 
+                                                        app:            data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
+                                                        app_copyright:  fileModelAppParameter.get(data.app_id_doc, null)[0].app_copyright.value, 
+                                                        type:           data.type.toUpperCase(),
+                                                        //guide documents in separate files, all app use app template
+                                                        markdown:       await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
+                                                                                            (data.type.toUpperCase()=='GUIDE'?(data.doc + '.md'):'2.app.md'))},
+                                                methods:null})];
             }
             case 'JSDOC':{
                         return [await getFile(`${process.cwd()}/apps/common/src/jsdoc/${data.doc}`)];
