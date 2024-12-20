@@ -32,7 +32,9 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 });
     };
     //check if valid document request
-    if (data?.doc && (data.doc.indexOf('/')>-1 ||data.doc.indexOf('\\')>-1||data.doc.indexOf('..')>-1 ||data.doc.indexOf(' ')>-1)){
+    if (
+        ((data.type.toUpperCase()=='GUIDE' ||data.type.toUpperCase()=='APP'||data.type.toUpperCase()=='JSDOC') && data?.doc == null) ||
+        data?.doc && (data.doc.indexOf('/')>-1 ||data.doc.indexOf('\\')>-1||data.doc.indexOf('..')>-1 ||data.doc.indexOf(' ')>-1)){
         res.statusCode = 400;
         throw '⛔';
     }
@@ -74,15 +76,21 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
             case 'APP':{                
                 /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
                 const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+                /**@type{import('../../../../server/db/fileModelAppTranslation.js')} */
+                const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');
                 /**@type{import('../../../../server/server.js')} */
                 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-                return [await ComponentCreate({ data:{  app_common:     fileModelApp.get(app_id, data.data_app_id, null)[0], 
-                                                        app:            data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
-                                                        app_copyright:  fileModelAppParameter.get(data.app_id_doc, null)[0].app_copyright.value, 
-                                                        type:           data.type.toUpperCase(),
+                return [await ComponentCreate({ data:{  app_common:         fileModelApp.get(app_id, data.data_app_id, null)[0], 
+                                                        app:                data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
+                                                        app_translation:    data.type.toUpperCase()=='APP'?
+                                                                                fileModelAppTranslation.get(app_id,null, locale, 
+                                                                                                            /**@ts-ignore */
+                                                                                                            serverUtilNumberValue(data.doc), null)[0]:null,
+                                                        app_copyright:      fileModelAppParameter.get(data.app_id_doc, null)[0].app_copyright.value, 
+                                                        type:               data.type.toUpperCase(),
                                                         //guide documents in separate files, all app use app template
-                                                        markdown:       await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
+                                                        markdown:           await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
                                                                                             (data.type.toUpperCase()=='GUIDE'?(data.doc + '.md'):'2.app.md'))},
                                                 methods:null})];
             }
