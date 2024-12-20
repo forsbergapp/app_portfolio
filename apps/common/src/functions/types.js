@@ -6,9 +6,9 @@
  * Type appMenu
  * @typedef{{   id:number, 
  *              menu:string,
- *              menu_sub:{  id:string,
+ *              type:'GUIDE'|'APP',
+ *              menu_sub:{  id:number,
  *                          menu:string,
- *                          type:'GUIDE'|'APP',
  *                          doc:string}[]|null}} appMenu
  */
 

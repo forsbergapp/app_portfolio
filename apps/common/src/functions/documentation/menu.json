@@ -2,62 +2,22 @@
     {
         "id":1,
         "menu":"1 About",
+        "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"1.introduction"
                 },
                 {   "id":2,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"1.project"
                 }]
     },
     {
         "id":2,
         "menu":"2 Apps",
-        "menu_sub":[
-                { "id":2,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"2"
-                },
-                { "id":3,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"3"
-                },
-                { "id":4,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"4"
-                },
-                { "id":5,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"5"
-                },
-                { "id":6,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"6"
-                },
-                { "id":7,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"7"
-                },
-                { "id":8,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"1"
-                },
-                { "id":9,
-                    "menu":"",
-                    "type":"APP",
-                    "doc":"0"
-                }]
+        "type":"APP",
+        "menu_sub":null
     },
     {
         "id":3,

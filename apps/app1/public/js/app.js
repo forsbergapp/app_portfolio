@@ -102,7 +102,7 @@ const appEventClick = event => {
                                 //use title from first menu text if clicking on title
                                 event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.textContent, 
                                 //GUIDE in title and nav_content_app
-                                (event_target_id=='title' ||event_target_id=='nav_content_app')?'GUIDE':'JSDOC');
+                                event_target_id=='title'?'GUIDE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
                     break;
                 }
                 case 'common_toolbar_framework_js':{
