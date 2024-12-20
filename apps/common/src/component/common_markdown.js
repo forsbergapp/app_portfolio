@@ -5,7 +5,7 @@
  * @module apps/common/component/common_markdown
  */
 /**
- * @import { server_db_file_app} from '../../../../server/types.js' 
+ * @import { server_db_file_app, server_db_file_app_translation} from '../../../../server/types.js' 
  */
 
 /**
@@ -26,6 +26,7 @@ const template = props =>`  <div class='common_markdown_header' style='backgroun
  * @param {{data:       {
  *                      app_common:server_db_file_app,
  *                      app:server_db_file_app|null,
+ *                      app_translation:server_db_file_app_translation|null,
  *                      app_copyright:string,
  *                      type:'GUIDE'|'APP',
  *                      markdown:string,
@@ -35,7 +36,10 @@ const template = props =>`  <div class='common_markdown_header' style='backgroun
  */
 const component = async props => {
     if (props.data.type=='APP' && props.data.app){
+        //replace APP_NAME
         props.data.markdown = props.data.markdown.replaceAll('@{APP_NAME}', props.data.app.name);
+        //replace DESCRIPTION
+        props.data.markdown = props.data.markdown.replaceAll('@{DESCRIPTION}', props.data.app_translation?props.data.app_translation.json_data.description:'');
     }
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
