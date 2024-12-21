@@ -30,8 +30,22 @@ const component = async props => {
     if (props.data.type=='APP' && props.data.app){
         //replace APP_NAME
         props.data.markdown = props.data.markdown.replaceAll('@{APP_NAME}', props.data.app.name);
+        //replace SCREENSHOT_START
+        props.data.markdown = props.data.markdown.replaceAll('@{SCREENSHOT_START}', props.data.app_translation?props.data.app_translation.json_data.screenshot_start:'');
         //replace DESCRIPTION
         props.data.markdown = props.data.markdown.replaceAll('@{DESCRIPTION}', props.data.app_translation?props.data.app_translation.json_data.description:'');
+        //replace REFERENCE
+        props.data.markdown = props.data.markdown.replaceAll('@{REFERENCE}', props.data.app_translation?props.data.app_translation.json_data.reference:'');
+        //replace TECHNOLOGY
+        props.data.markdown = props.data.markdown.replaceAll('@{TECHNOLOGY}', props.data.app_translation?props.data.app_translation.json_data.technology:'');
+        //replace SECURITY
+        props.data.markdown = props.data.markdown.replaceAll('@{SECURITY}', props.data.app_translation?props.data.app_translation.json_data.security:'');
+        //replace PATTERN
+        props.data.markdown = props.data.markdown.replaceAll('@{PATTERN}', props.data.app_translation?props.data.app_translation.json_data.pattern:'');
+        //replace SOLUTION
+        props.data.markdown = props.data.markdown.replaceAll('@{SOLUTION}', props.data.app_translation?props.data.app_translation.json_data.solution:'');
+        //replace SCREENSHOT_END
+        props.data.markdown = props.data.markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end:'');
     }
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML

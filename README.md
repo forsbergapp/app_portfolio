@@ -10,7 +10,7 @@
 	Implemented with less third party libraries and module dependencies for performance and better maintainability.
 	Server renders basic app HTML using parameters.
 	Server uses secure REST API with authentication middleware that authenticates claims in access or id tokens and 
-	also authenticates request access to resources on user and app level.
+	also authenticates request access to resources at user, app and domain level.
 	Databases use common ANSI SQL with minium differences for all databases, 
 	Databases use centralized and conslidated common SQL parameter syntax and consolidated data validation in Javascript 
 	for all databases.
