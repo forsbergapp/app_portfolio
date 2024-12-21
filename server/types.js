@@ -476,7 +476,7 @@
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
  *              common_name:string,
- *              common_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'',
+ *              common_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'',
  *              common_path:string,
  *              common_description:string}} server_db_file_app_module
  */
