@@ -205,7 +205,7 @@ const component = async props => {
             const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
             markdown = markdown.replace(table, 
                     `<div class='common_markdown_table'>${table.split('\n').filter(row=>row.indexOf('---')<0).map((row, index_row)=>
-                        `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'}'>${
+                        `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'} ${index_row==0?'common_markdown_table_row_title':''}'>${
                             row.split('|').slice(1, -1).map((text, index_col) =>`<div class='common_markdown_table_col' style='${index_col==0?`min-width:${width}em;`:''}text-align:${align[index_col]}'>${text}</div>`).join('')
                         }</div>`
                     ).join('')}</div>`);

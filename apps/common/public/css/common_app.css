@@ -1601,6 +1601,9 @@ body.rtl{
 	display: flex;
 	width: 100%;
 }
+.common_markdown_table_row_title{
+	font-weight: bold;
+}
 .common_markdown_table_col{
 	display: inline-block;
 	min-width: 20em;
