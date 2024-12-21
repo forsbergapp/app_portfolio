@@ -22,45 +22,42 @@
     {
         "id":3,
         "menu":"3 Installation",
+        "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"3.installationDatabase"
                 },
                 {   "id":2,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"3.installationServer"
                 },
                 {   "id":3,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"3.installationNodeJs"
                 }]
     },
     {
         "id":4,
         "menu":"4 Configuration",
+        "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"4.configurationServer"
                 },
                 {   "id":2,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"4.configurationApp"
                 }]
     },
     {
         "id":5,
         "menu":"5 Development",
+        "type":"GUIDE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "type":"GUIDE",
                     "doc":"5.development"
                 }]
     }
