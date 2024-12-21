@@ -1,6 +1,6 @@
 # App portfolio
 
-	[![App Portfolio](common/public/documents/app_start_small.webp)](common/public/documents/app_start.webp)
+	![App Portfolio](common/public/documents/app_start.webp)
 
 	An app portfolio created as a reference platform and implemented with support for any language and regional settings.
 	
