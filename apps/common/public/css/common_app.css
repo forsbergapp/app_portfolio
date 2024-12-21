@@ -1620,6 +1620,8 @@ body.rtl{
 }
 .common_document_article{
     margin: 1em;
+}
+.common_document_article.common_markdown {
 	margin-top: -5em;
 }
 .common_document_footer{
