@@ -89,7 +89,12 @@
 }
 #content_title{
     font-size: 1.5em;
-    margin-inline-start: 10px !important;
+    font-weight: bold;
+    display: inline-block;
+    position: relative;
+    top: 2em;
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 #content{
     display: inline-block;
@@ -98,6 +103,10 @@
     width:80em !important;
     min-width:80em;
     vertical-align: top;
+}
+.code #content_title{
+    margin-bottom: 2em;
+    display: block;
 }
 /*CODE*/
 .common_markdown_code,
@@ -296,15 +305,15 @@ td, th{
     color: var(--common_app_color_light);
 }
 /* APP THEME COMMON*/
-.common_markdown_header{
+.common_document_header{
     border-bottom-color: var(--common_app_color_shadow1) !important;
+}
+.common_document_footer{
+    border-top-color: var(--common_app_color_shadow1) !important;
 }
 .common_markdown_code_inline{
 	background-color:var(--common_app_color_white3);
     border-color: var(--common_app_color_white2) !important;
-}
-.common_markdown_footer{
-    border-top-color: var(--common_app_color_shadow1) !important;
 }
 .common_markdown_note{
     background-color: var(--common_app_color_blue2);
