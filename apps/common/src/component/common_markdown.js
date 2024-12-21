@@ -9,25 +9,17 @@
  */
 
 /**
- * @param {{app:server_db_file_app,
- *          app_copyright:string,
- *          markdown :string,
+ * @param {{markdown :string,
  *          functionMarkdownParse:function
  *          }} props
  * @returns {string}
  */
-const template = props =>`  <div class='common_markdown_header' style='background-image:url("${props.app.logo}")'>${props.app.name}</div>
-                                <div class='common_markdown_article'>
-                                    ${props.functionMarkdownParse(props.markdown)}
-                                </div>
-                            <div class='common_markdown_footer'>${props.app_copyright}</div>`;
+const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
 /**
  * 
  * @param {{data:       {
- *                      app_common:server_db_file_app,
- *                      app:server_db_file_app|null,
  *                      app_translation:server_db_file_app_translation|null,
- *                      app_copyright:string,
+ *                      app:server_db_file_app|null,
  *                      type:'GUIDE'|'APP',
  *                      markdown:string,
  *                      },
@@ -207,9 +199,7 @@ const component = async props => {
         return markdown;
     };
     
-    return template({   app:props.data.app_common,
-                        app_copyright:props.data.app_copyright,
-                        markdown:props.data.markdown,
+    return template({   markdown:props.data.markdown,
                         functionMarkdownParse : MarkdownParse
                     });
 };

@@ -1515,31 +1515,10 @@ body.rtl{
     margin-bottom: 10em;
 	line-height: 1.2em;
 }
-.common_markdown_header{
-	background-size: contain;
-	background-repeat: no-repeat;
-  	height: 2em;
-    text-align: start;
-    margin-bottom: 1em;
-    border-bottom: 0.5px solid;
-	padding-inline-start: 3em;
-  	display: inline-block;
-  	width: 100%;
-  	padding-top: 0.5em;
-}
-.common_markdown_article{
-    margin: 1em;
-	margin-top: -5em;
-}
 .common_markdown_section{
     margin: 0.5em;
 	margin-top: 0em;
   	margin-bottom: 0em;
-}
-.common_markdown_footer{
-    font-size: 0.7em !important;
-	text-align: start;
-	border-top: 0.5px solid;
 }
 .common_markdown_image{
     display:block;
@@ -1626,6 +1605,29 @@ body.rtl{
 	display: inline-block;
 	min-width: 20em;
 }
+/* common document metadata*/
+.common_document_header{
+	background-size: contain;
+	background-repeat: no-repeat;
+  	height: 2em;
+    text-align: start;
+    margin-bottom: 1em;
+    border-bottom: 0.5px solid;
+	padding-inline-start: 3em;
+  	display: inline-block;
+  	width: 100%;
+  	padding-top: 0.5em;
+}
+.common_document_article{
+    margin: 1em;
+	margin-top: -5em;
+}
+.common_document_footer{
+    font-size: 0.7em !important;
+	text-align: start;
+	border-top: 0.5px solid;
+}
+
 /*Module easy qrcode*/
 .common_module_easy\.qrcode rect[fill='DARK']{
 	fill: var(--common_app_color_dark);

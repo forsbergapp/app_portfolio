@@ -22,40 +22,19 @@ const common = await import(commonPath);
 const show = async (href, title, type) =>{
     
     COMMON_DOCUMENT.querySelector('#content').innerHTML='';
-    COMMON_DOCUMENT.querySelector('#content').className = type=='JSDOC'?'':'common_markdown';
-    const content = await common.commonFFB({path:'/app-module-function/COMMON_DOC', 
-                                            method:'POST', 
-                                            authorization_type:'APP_DATA',
-                                            body:{  type:type,
-                                                    data_app_id:common.COMMON_GLOBAL.common_app_id,
-                                                    doc:(href.split('#').length>1?href.split('#')[0]:href)} })
-                            .then(result=>JSON.parse(result).rows[0])
-                            .catch(()=>null);
-    if (type=='JSDOC'){
-        const content_element = COMMON_DOCUMENT.createElement('div');
-        content_element.innerHTML = content;
-        if (content_element.querySelector('.prettyprint.source')){
-            //Code
-            COMMON_DOCUMENT.querySelector('#content').className = 'code';
-            COMMON_DOCUMENT.querySelector('#content').innerHTML= 
-                                                                    `<div id='content_title'>${title}</div>`+ 
-                                                                    content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
-                                                                    .map((/**@type{string}*/row,/**@type{number}*/index)=>
-                                                                        `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
-            //highlight selected line if # is used in link
-            if (href.split('#')[1])
-                Array.from(COMMON_DOCUMENT.querySelectorAll(`#content [data-line='${href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
-        }
-        else{
-            //Module
-            //can contain @example JSDoc tags with html code tags
-            //replace all <code></code> tags with <div class='code'></div>
-            COMMON_DOCUMENT.querySelector('#content').innerHTML=    `<div id='content_title'>${title}</div>`+ 
-                                                                    content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
-        }
-    }
-    else
-        COMMON_DOCUMENT.querySelector('#content').innerHTML=content;
+    //common app component
+    await common.commonComponentRender({mountDiv:   'content',
+        data:       {
+                        common_app_id:common.COMMON_GLOBAL.common_app_id,
+                        app_logo:common.COMMON_GLOBAL.app_logo,
+                        app_copyright:common.COMMON_GLOBAL.app_copyright,
+                        app_name:COMMON_DOCUMENT.title,
+                        href:href,
+                        title:title,
+                        type:type
+                    },
+        methods:    {commonFFB:common.commonFFB},
+        path:       '/common/component/common_document.js'});
 };
 /**
  * App exception function
@@ -100,7 +79,7 @@ const appEventClick = event => {
                     if (event.target.getAttribute('href'))
                         show(   event.target.getAttribute('href'), 
                                 //use title from first menu text if clicking on title
-                                event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.textContent, 
+                                event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
                                 //GUIDE in title and nav_content_app
                                 event_target_id=='title'?'GUIDE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
                     break;
