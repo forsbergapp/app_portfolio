@@ -1522,8 +1522,8 @@ body.rtl{
 }
 .common_markdown_image{
     display:block;
-    width: 256px;
-    height:144px;
+    width: 1024px;
+    height:576px;
     max-width:100%;
     margin:auto;
     background-size: contain;
