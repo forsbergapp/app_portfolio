@@ -25,20 +25,14 @@ const get = (app_id, resource_id, res) =>{
 
 /**
  * Get result for given resource_id
+ * (bff controls if file exists)
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_server_res} res
- * @returns {Promise.<string>}
+ * @returns {Promise.<{STATIC:Boolean, SENDFILE:String, SENDCONTENT:null}>}
  */
-const getResult = async (app_id, resource_id, res) => {
-    const fs = await import('node:fs');
-    const filepath = `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${resource_id}.html`;
-    return fs.promises.readFile(process.cwd() + filepath, 'utf8').catch(()=>{
-        if (res)
-            res.statusCode = 404;
-        throw '⛔';
-    });
+const getResult = async (app_id, resource_id) => {
+    return {STATIC:true, SENDFILE:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${resource_id}.html`, SENDCONTENT:null};
 };
 /**
  * Add record

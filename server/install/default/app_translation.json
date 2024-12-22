@@ -12,7 +12,23 @@
                     "reference":"", 
                     "security":"OWASP",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end": [
+                                        "[![Menu start](/common/documents/screenshot_app0_menu_start_small.webp)](/common/documents/screenshot_app0_menu_start.webp)",
+                                        "[![Menu user stat](/common/documents/screenshot_app0_menu_user_stat_small.webp)](/common/documents/screenshot_app0_menu_user_stat.webp)",
+                                        "[![Menu users](/common/documents/screenshot_app0_menu_users_small.webp)](/common/documents/screenshot_app0_menu_users.webp)",
+                                        "[![Menu app parameter](/common/documents/screenshot_app0_menu_app_parameter_small.webp)](/common/documents/screenshot_app0_app_parameter.webp)",
+                                        "[![Menu app secret](/common/documents/screenshot_app0_menu_app_secret_small.webp)](/common/documents/screenshot_app0_menu_app_secret.webp)",
+                                        "[![Menu app module](/common/documents/screenshot_app0_menu_app_module_small.webp)](/common/documents/screenshot_app0_menu_app_module.webp)",
+                                        "[![Menu monitor connected](/common/documents/screenshot_app0_menu_monitor_connected_small.webp)](/common/documents/screenshot_app0_menu_monitor_connected.webp)",
+                                        "[![Menu monitor app log](/common/documents/screenshot_app0_menu_monitor_app_log_small.webp)](/common/documents/screenshot_app0_monitor_app_log.webp)",
+                                        "[![Menu monitor server log](/common/documents/screenshot_app0_menu_monitor_server_log_small.webp)](/common/documents/screenshot_app0_monitor_server_log.webp)",
+                                        "[![Menu server parameter](/common/documents/screenshot_app0_menu_server_parameter_small.webp)](/common/documents/screenshot_app0_menu_server_parameter.webp)",
+                                        "[![Menu server IAM policy](/common/documents/screenshot_app0_menu_server_iam_policy_small.webp)](/common/documents/screenshot_app0_menu_server_iam_policy_.webp)",
+                                        "[![Menu database installation](/common/documents/screenshot_app0_menu_database_installation_small.webp)](/common/documents/screenshot_app0_menu_database_installation.webp)",
+                                        "[![Menu database info](/common/documents/screenshot_app0_menu_database_info_small.webp)](/common/documents/screenshot_app0_menu_database_info.webp)",
+                                        "[![Menu report queue](/common/documents/screenshot_app0_menu_report_queue_small.webp)](/common/documents/screenshot_app0_menu_report_queue.webp)",
+                                        "[![Menu report queue performance test](/common/documents/screenshot_app0_menu_report_queue_performance_test_small.webp)](/common/documents/screenshot_app0_menu_report_queue_performance_test.webp)",
+                                        "[![Menu OS and process info](/common/documents/screenshot_app0_menu_os_process_info_small.webp)](/common/documents/screenshot_app0_menu_os_process_info.webp)"]}
     },
     {
         "id": 2,
@@ -27,7 +43,7 @@
                     "reference":"jsdoc.app, www.readthedocs.io, Oracle SQL Data modeler, Terraform", 
                     "security":"OWASP refactored thirdparty code JSDOc template and removed unsafe thirdparty code prettify",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     },
     {
         "id": 3,
@@ -42,7 +58,7 @@
                     "reference":"OS app presentation Ubuntu and Windows", 
                     "security":"OWASP",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     },
     {
         "id": 4,
@@ -57,7 +73,7 @@
                     "reference":"Prayertime sun and moon calculations", 
                     "security":"OWASP",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     },
     {
         "id": 5,
@@ -72,7 +88,7 @@
                     "reference":"OpenStreetMap, simplemaps, Leaflet", 
                     "security":"OWASP",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     },
     {
         "id": 6,
@@ -87,7 +103,7 @@
                     "reference":"Virtual Private Address: Pix Brazil www.bcb.gov.br/en/financialstability/pix_en, Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
                     "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any ceritificates saved in clients",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     },
     {
         "id": 7,
@@ -102,7 +118,7 @@
                     "reference":"Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
                     "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any ceritificates saved in clients",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     },
     {
         "id": 8,
@@ -117,6 +133,6 @@
                     "reference":"Kociemba algorithm, CFOP / Fridrich method, Thistlewaite, Singmaster notation", 
                     "security":"OWASP refactored thirdparty obscure animation by replacing canvas with svg animation without events and removing unnecessary obscure code",
                     "solution":"",
-                    "screenshot_end":""}
+                    "screenshot_end":[""]}
     }
 ]
