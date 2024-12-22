@@ -27,36 +27,17 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    if (props.data.type=='APP' && props.data.app){
-        //replace APP_NAME
-        props.data.markdown = props.data.markdown.replaceAll('@{APP_NAME}', props.data.app.name);
-        //replace SCREENSHOT_START
-        props.data.markdown = props.data.markdown.replaceAll('@{SCREENSHOT_START}', props.data.app_translation?props.data.app_translation.json_data.screenshot_start:'');
-        //replace DESCRIPTION
-        props.data.markdown = props.data.markdown.replaceAll('@{DESCRIPTION}', props.data.app_translation?props.data.app_translation.json_data.description:'');
-        //replace REFERENCE
-        props.data.markdown = props.data.markdown.replaceAll('@{REFERENCE}', props.data.app_translation?props.data.app_translation.json_data.reference:'');
-        //replace TECHNOLOGY
-        props.data.markdown = props.data.markdown.replaceAll('@{TECHNOLOGY}', props.data.app_translation?props.data.app_translation.json_data.technology:'');
-        //replace SECURITY
-        props.data.markdown = props.data.markdown.replaceAll('@{SECURITY}', props.data.app_translation?props.data.app_translation.json_data.security:'');
-        //replace PATTERN
-        props.data.markdown = props.data.markdown.replaceAll('@{PATTERN}', props.data.app_translation?props.data.app_translation.json_data.pattern:'');
-        //replace SOLUTION
-        props.data.markdown = props.data.markdown.replaceAll('@{SOLUTION}', props.data.app_translation?props.data.app_translation.json_data.solution:'');
-        //replace SCREENSHOT_END
-        props.data.markdown = props.data.markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end:'');
-    }
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
-     * 1.sections
+     * 1. variables for APP template
+     * 2.sections
      *   # character must start at first position on a  row
      *   creates div with class common_markdown_section for all sections
      *   so all sections will have the correct indentations
      *   supports unlimited amount of heading levels although implemented h1-h5
      * 
-     * 2.headings:
+     * 3.headings:
      *   # character must start at first position on a row
      *          div class
      *   #      title_h1
@@ -65,17 +46,17 @@ const component = async props => {
      *   ####   title_h4
      *   #####  title_h5
      * 
-     * 3.code block:
+     * 4.code block:
      *   ```` must start as first position on a row and ends with ```` on a new row
      *   all text within is a code block
      * 
-     * 4.code inline:
+     * 5.code inline:
      *   text should be wrapped with `` and is processed after code block
      * 
-     * 5.notes:
+     * 6.notes:
      *   > **Note:** must start as first position and text after must be on one row
      * 
-     * 6.images:
+     * 7.images:
      *   [![text](small img)](full size img)  
      *   creates class common_markdown_image  
      *   alt text should be used here as text below image
@@ -85,7 +66,7 @@ const component = async props => {
      *   not supported:
      *   ![alt text ](img "hover text")
      * 
-     * 7.tables:
+     * 8.tables:
      *   | must start as first position on a row
      *   unlimited columns supported
      *   unlimited rows supported
@@ -110,7 +91,29 @@ const component = async props => {
     const MarkdownParse = markdown =>{
         //remove all '\r' in '\r\n'
         markdown = markdown.replaceAll('\r\n','\n');
-        //1.sections
+        //1.replace variables for APP template
+        if (props.data.type=='APP' && props.data.app){
+            //replace APP_NAME
+            markdown = markdown.replaceAll('@{APP_NAME}', props.data.app.name);
+            //replace SCREENSHOT_START
+            markdown = markdown.replaceAll('@{SCREENSHOT_START}', props.data.app_translation?props.data.app_translation.json_data.screenshot_start:'');
+            //replace DESCRIPTION
+            markdown = markdown.replaceAll('@{DESCRIPTION}', props.data.app_translation?props.data.app_translation.json_data.description:'');
+            //replace REFERENCE
+            markdown = markdown.replaceAll('@{REFERENCE}', props.data.app_translation?props.data.app_translation.json_data.reference:'');
+            //replace TECHNOLOGY
+            markdown = markdown.replaceAll('@{TECHNOLOGY}', props.data.app_translation?props.data.app_translation.json_data.technology:'');
+            //replace SECURITY
+            markdown = markdown.replaceAll('@{SECURITY}', props.data.app_translation?props.data.app_translation.json_data.security:'');
+            //replace PATTERN
+            markdown = markdown.replaceAll('@{PATTERN}', props.data.app_translation?props.data.app_translation.json_data.pattern:'');
+            //replace SOLUTION
+            markdown = markdown.replaceAll('@{SOLUTION}', props.data.app_translation?props.data.app_translation.json_data.solution:'');
+            //replace SCREENSHOT_END
+            //images are saved in an array
+            markdown = markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end.join('\n'):'');    
+        }
+        //2.sections
         let current_section = -1;
         let old_section = -1;
         markdown = markdown.split('\n').map((row, /**@type{number}*/index)=>{
@@ -147,30 +150,30 @@ const component = async props => {
                 return row;
         }).join('\n') + '</div>';
                                             
-        //2.headings        
+        //3.headings        
         markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_markdown_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_markdown_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_markdown_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_markdown_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_markdown_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
-        //3. code blocks
+        //4. code blocks
         //regexp for code blocks
         const regexp_code = /```([\s\S]*?)```/g;
         let match_code;
         while ((match_code = regexp_code.exec(markdown)) !==null){
             markdown = markdown.replace(match_code[0], `<div class='common_markdown_code'>${match_code[1]}</div>`);
         }
-        //4.code inline
+        //5.code inline
         //regexp for code blocks
         const regexp_code_inline = /`([\s\S]*?)`/g;
         let match_code_inline;
         while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
             markdown = markdown.replace(match_code_inline[0], `<div class='common_markdown_code_inline'>${match_code_inline[1]}</div>`);
         }
-        //5.notes
+        //6.notes
         markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_markdown_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
         
-        //6.images
+        //7.images
         //regexp for [![text](small img)](full size img)
         const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
         let match;
@@ -180,7 +183,7 @@ const component = async props => {
                                                 style='background-image:url("${match[2]}")' 
                                                 data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
         }
-        //7.tables
+        //8.tables
         let table_new = true;
         const tables = markdown.split('\n').
                         map(row=>{

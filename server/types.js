@@ -541,7 +541,7 @@
  *              app_id: number,
  *			    locale: string,
  *			    text: string,			            //simple text
- *			    json_data: {[key:string]:string}    //complex text
+ *			    json_data: {[key:string]:*} //complex text
  *}} server_db_file_app_translation		
 */
 
