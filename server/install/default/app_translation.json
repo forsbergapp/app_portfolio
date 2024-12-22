@@ -103,7 +103,12 @@
                     "reference":"Virtual Private Address: Pix Brazil www.bcb.gov.br/en/financialstability/pix_en, Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
                     "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any ceritificates saved in clients",
                     "solution":"",
-                    "screenshot_end":[""]}
+                    "screenshot_end": [
+                                        "[![Bank statement](/common/documents/screenshot_app5_bank_statement_small.webp)](/common/documents/screenshot_app5_bank_statement.webp)",
+                                        "[![Bank account info](/common/documents/screenshot_app5_bank_account_info_small.webp)](/common/documents/screenshot_app5_bank_account_info.webp)",
+                                        "[![Payment request](/common/documents/screenshot_app5_payment_request_small.webp)](/common/documents/screenshot_app5_payment_request.webp)",
+                                        "[![Payment request paid](/common/documents/screenshot_app5_payment_request_paid_small.webp)](/common/documents/screenshot_app5_payment_request_paid.webp)",
+                                        "[![Payment request no funds](/common/documents/screenshot_app5_payment_request_no_funds_small.webp)](/common/documents/screenshot_app5_payment_request_no_funds.webp)"]}
     },
     {
         "id": 7,
@@ -118,7 +123,10 @@
                     "reference":"Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
                     "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any ceritificates saved in clients",
                     "solution":"",
-                    "screenshot_end":[""]}
+                    "screenshot_end": [
+                                        "[![Payment request](/common/documents/screenshot_app6_payment_request_small.webp)](/common/documents/screenshot_app6_payment_request.webp)",
+                                        "[![Payment request paid](/common/documents/screenshot_app6_payment_request_paid_small.webp)](/common/documents/screenshot_app6_payment_request_paid.webp)",
+                                        "[![Payment request no funds](/common/documents/screenshot_app6_payment_request_no_funds_small.webp)](/common/documents/screenshot_app6_payment_request_no_funds.webp)"]}
     },
     {
         "id": 8,
