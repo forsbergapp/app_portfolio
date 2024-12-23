@@ -824,8 +824,7 @@ const serverUtilAppLine = () =>{
                 case route({url:`/bff/admin/v1/app-module-report-queue-result/${resource_id_string}`, method:'GET'}):{
                     resolve(fileModelAppModuleQueue.getResult(  routesparameters.app_id, 
                                                                 /**@ts-ignore */
-                                                                resource_id_get_number(), 
-                                                                routesparameters.res)
+                                                                resource_id_get_number())
                             .then((result=>iso_return_message(result, resource_id_get_number()!=null)))); 
                     break;
                 }
