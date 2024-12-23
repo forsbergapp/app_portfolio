@@ -101,7 +101,7 @@
                     "pattern":"ISO20022, factory pattern using entity/resource and json in data model concept, serverless functions, IAM", 
                     "technology":"serverless functions, server side events and EventSource", 
                     "reference":"Virtual Private Address: Pix Brazil www.bcb.gov.br/en/financialstability/pix_en, Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
-                    "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any ceritificates saved in clients",
+                    "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any certificates saved in clients",
                     "solution":"",
                     "screenshot_end": [
                                         "[![Bank statement](/common/documents/screenshot_app5_bank_statement_small.webp)](/common/documents/screenshot_app5_bank_statement.webp)",
@@ -121,7 +121,7 @@
                     "pattern":"ISO20022, factory pattern using entity/resource and json in data model concept, serverless functions, IAM", 
                     "technology":"serverless functions, server side events and EventSource", 
                     "reference":"Payment request process: Swish developer.swish.nu, Payment REST API: Stripe docs.stripe.com/payments", 
-                    "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any ceritificates saved in clients",
+                    "security":"OWASP improved security solution compared to references with higher level of encrypted messages, server controlled events using IAM authenticated server side events without thirdparty webhooks, without exposed messages and stateless design without any certificates saved in clients",
                     "solution":"",
                     "screenshot_end": [
                                         "[![Payment request](/common/documents/screenshot_app6_payment_request_small.webp)](/common/documents/screenshot_app6_payment_request.webp)",
