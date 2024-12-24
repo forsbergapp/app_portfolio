@@ -299,6 +299,9 @@ td, th{
     color: var(--common_app_color_light);
 }
 /* APP THEME COMMON*/
+.common_markdown_image {
+    border-color: var(--common_app_color_light) !important;
+}
 .common_document_header{
     border-bottom-color: var(--common_app_color_shadow1) !important;
 }
