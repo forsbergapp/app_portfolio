@@ -1530,11 +1530,14 @@ body.rtl{
     background-repeat: no-repeat;
 	background-position: center;
 	cursor: pointer;
+	border: 2px solid;
 }
 .common_markdown_image_text{
     display: inline-block;
     width: 100%;
     text-align: center;
+	margin-top: 0.5em;
+	margin-bottom: 1em;
 }
 .common_markdown_title_h1{
     font-size: 1.7em;
