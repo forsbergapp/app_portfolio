@@ -1,5 +1,7 @@
 /**
- * 
+ * @name getTimezone
+ * @description Get tiemzone for given latitude and longitude
+ * @function
  * @param {string} latitude 
  * @param {string} longitude 
  * @returns {string}

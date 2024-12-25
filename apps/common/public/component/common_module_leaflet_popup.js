@@ -8,7 +8,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{country:string,
  *          city:string,
  *          timezone_text:string,
@@ -28,6 +30,9 @@ const template = props => ` <div class='common_module_leaflet_popup_title'>${pro
                                 data-longitude='${props.longitude}'>${props.latitude + ', ' + props.longitude}</div>
                         `;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      timezone_text:string,

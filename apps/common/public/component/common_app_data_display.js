@@ -25,6 +25,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
  *              master_object:CommonMasterObjectType,
  *              rows:[],
@@ -159,6 +162,9 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                 }
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,

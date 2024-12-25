@@ -3,7 +3,11 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_name:string}} props
+ * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
@@ -19,7 +23,9 @@ const template = props =>`  <!DOCTYPE html>
                                 </div> 
                             </body>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {app_name:string},
  *          methods:    null}} props 
  * @returns {Promise.<string>}

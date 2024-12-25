@@ -98,37 +98,48 @@ const COMMON_ICONS = {
 Object.seal(COMMON_ICONS);
 
 /**
+ * @name commonMiscDbAppSettingsGet
+ * @description Get db app settings
+ * @function
  * @returns {Promise<{  id:number,
-*                      app_id:number,
-*                      value:string,
-*                      text:string,
-*                      app_setting_type_name:string,
-*                      data2:string,
-*                      data3:string,
-*                      data4:string,
-*                      data5:string}[]>}
-*/
+ *                      app_id:number,
+ *                      value:string,
+ *                      text:string,
+ *                      app_setting_type_name:string,
+ *                      data2:string,
+ *                      data3:string,
+ *                      data4:string,
+ *                      data5:string}[]>}
+ */
 const commonMiscDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_DATA'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 /**
- * Finds recursive parent id. Use when current element can be an image or svg attached to an event element
+ * @name commonMiscElementId
+ * @description Finds recursive parent id. Use when current element can be an image or svg attached to an event element
+ * @function
  * @param {*} element 
  * @returns {string} 
  */
 const commonMiscElementId = element => element.id==''?commonMiscElementId(element.parentNode):element.id;
 /**
- * Finds recursive parent row with class common_row. Use when clicking in a list of records
+ * @name commonMiscElementRow
+ * @description Finds recursive parent row with class common_row. Use when clicking in a list of records
+ * @function
  * @param {*} element 
  * @returns {HTMLElement} 
  */
 const commonMiscElementRow = element => element.classList.contains('common_row')?element:commonMiscElementRow(element.parentNode);
 /**
- * Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
+ * @name commonMiscElementListTitle
+ * @description Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
+ * @function
  * @param {*} element 
  * @returns {HTMLElement} 
  */
 const commonMiscElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
 /**
- * Format JSON date with user timezone
+ * @name commonMiscFormatJsonDate
+ * @description Format JSON date with user timezone
+ * @function
  * @param {string} db_date 
  * @param {boolean|null} short 
  * @returns {string|null}
@@ -174,7 +185,9 @@ const commonMiscFormatJsonDate = (db_date, short) => {
     }
 };
 /**
- * Converts image
+ * @name commonMiscImageConvert
+ * @description Converts image
+ * @function
  * @param {string} image_url 
  * @param {number} image_width 
  * @param {number} image_height 
@@ -203,7 +216,9 @@ const commonMiscImageConvert = async (image_url, image_width, image_height) => {
     });
 };
 /**
- * Show image
+ * @name commonMiscImageShow
+ * @description Show image
+ * @function
  * @param {HTMLImageElement} item_img 
  * @param {string|null} item_input 
  * @param {number} image_width 
@@ -255,164 +270,168 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
     
 };
 /**
- * Input control
+ * @name commonMiscInputControl
+ * @description Controls input
+ * @function
  * @param {HTMLElement|null} dialogue 
  * @param {{
-*			check_valid_list_elements?:[HTMLElement,number|null][],
-*			check_valid_list_values?:[string,number|null][],
-*			username?:HTMLElement,
-*			password?:*,
-*          password_confirm?:HTMLElement,
-*          password_confirm_reminder?:HTMLElement,
-*			password_reminder?:HTMLElement,
-*			password_new?:HTMLElement,
-*			password_new_confirm?:*,
-*			email?:HTMLElement,
-*			bio?:HTMLElement
-*		}} validate_items 
-* @returns {boolean}
-*/
+ *			check_valid_list_elements?:[HTMLElement,number|null][],
+ *			check_valid_list_values?:[string,number|null][],
+ *			username?:HTMLElement,
+ *			password?:*,
+ *          password_confirm?:HTMLElement,
+ *          password_confirm_reminder?:HTMLElement,
+ *			password_reminder?:HTMLElement,
+ *			password_new?:HTMLElement,
+ *			password_new_confirm?:*,
+ *			email?:HTMLElement,
+ *			bio?:HTMLElement
+ *		}} validate_items 
+ * @returns {boolean}
+ */
 const commonMiscInputControl = (dialogue, validate_items) =>{
-  let result = true;
-  /**
-   * Valid text element or value
-   * @param {HTMLElement|string} validate
-   * @returns {boolean}
-   */
-  const valid_text = validate =>{
-      let div;
-      if (typeof validate=='object')
-          div = validate;
-      else{
-          div = COMMON_DOCUMENT.createElement('div');
-          div.textContent = validate;
-      }
-      if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
-          return false;
-      else
-          try {
-              JSON.parse(JSON.stringify(div.textContent));
-              return true;
-              
-          } catch (error) {
-              return false;
-          }
-  };
-  /**
-   * Set error
-   * @param {HTMLElement} element 
-   * @param {HTMLElement|null} element2 
-   */
-  const set_error = (element, element2=null) => {
-      element.classList.add('common_input_error');
-      element2?element.classList.add('common_input_error'):null;
-      result = false;
-  };
-  if (dialogue)
-      dialogue.querySelectorAll('.common_input_error')
-          .forEach(element=>element.classList.remove('common_input_error'));
+    let result = true;
+    /**
+     * Valid text element or value
+     * @param {HTMLElement|string} validate
+     * @returns {boolean}
+     */
+    const valid_text = validate =>{
+        let div;
+        if (typeof validate=='object')
+            div = validate;
+        else{
+            div = COMMON_DOCUMENT.createElement('div');
+            div.textContent = validate;
+        }
+        if (div.textContent.indexOf(':') > -1 || div.textContent.includes('"') || div.textContent.includes('\\') )
+            return false;
+        else
+            try {
+                JSON.parse(JSON.stringify(div.textContent));
+                return true;
+                
+            } catch (error) {
+                return false;
+            }
+    };
+    /**
+     * Set error
+     * @param {HTMLElement} element 
+     * @param {HTMLElement|null} element2 
+     */
+    const set_error = (element, element2=null) => {
+        element.classList.add('common_input_error');
+        element2?element.classList.add('common_input_error'):null;
+        result = false;
+    };
+    if (dialogue)
+        dialogue.querySelectorAll('.common_input_error')
+            .forEach(element=>element.classList.remove('common_input_error'));
 
-  if (validate_items.check_valid_list_elements)
-      for (const element of validate_items.check_valid_list_elements){
-          element[0].classList.remove('common_input_error');
-      }
-      
-  //validate text content
-  if (validate_items.username && valid_text(validate_items.username) == false){
-      set_error(validate_items.username);
-  }
-  if (validate_items.password && valid_text(validate_items.password)== false){
-      set_error(validate_items.password);
-  }
-  if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
-      set_error(validate_items.password);
-  }
-  if (validate_items.password_new && valid_text(validate_items.password_new)== false){
-      set_error(validate_items.password);
-  }
-  if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
-      set_error(validate_items.password);
-  }
-  if (validate_items.email && valid_text(validate_items.email)== false){
-      set_error(validate_items.email);
-  }
-  if (validate_items.bio && valid_text(validate_items.bio)== false){
-      set_error(validate_items.bio);
-  }
-  if (validate_items.check_valid_list_elements){
-      for (const element of validate_items.check_valid_list_elements){
-          if (valid_text(element[0])==false)
-              set_error(element[0]);
-      }
-  }
-  if (validate_items.check_valid_list_values){
-      for (const element of validate_items.check_valid_list_values){
-          if (valid_text(element[0])==false){
-              result = false;
-              break;
-          }
-      }
-  }
-  //validate text length
-  if (validate_items.username && validate_items.username.textContent && validate_items.username.textContent.length > 100){
-      set_error(validate_items.username);
-  }
-  if (validate_items.password && validate_items.password.textContent.length > 100){
-      set_error(validate_items.password);
-  }
-  if (validate_items.password_reminder && validate_items.password_reminder.textContent && validate_items.password_reminder.textContent.length > 100){
-      set_error(validate_items.password_reminder);
-  }
-  if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 100){
-      set_error(validate_items.password_new);
-  }
-  if (validate_items.bio && validate_items.bio.textContent && validate_items.bio.textContent.length > 150){
-      set_error(validate_items.bio);
-  }
-  if (validate_items.check_valid_list_elements){
-      for (const element of validate_items.check_valid_list_elements){
-          if (element[0] && element[1] && element[0].textContent && element[0].textContent.length > element[1])
-              set_error(element[0]);
-      }
-  }
-  if (validate_items.check_valid_list_values){
-      for (const element of validate_items.check_valid_list_values){
-          if (element[0] && element[1] && element[0].length > element[1]){
-              result = false;
-              break;
-          }
-      }
-  }
-  //validate not empty
-  if (validate_items.username && validate_items.username.textContent == '') {
-      set_error(validate_items.username);
-  }
-  if (validate_items.password && validate_items.password.textContent == '') {
-      set_error(validate_items.password);
-  }
-  if (validate_items.email && validate_items.email.textContent == '') {
-      set_error(validate_items.email);
-  }
-  if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.textContent ==''){
-      set_error(validate_items.password_confirm);
-  }
-  //validate same password
-  if (validate_items.password && validate_items.password_confirm && (validate_items.password.textContent != validate_items.password_confirm.textContent)){
-      set_error(validate_items.password, validate_items.password_confirm);
-  }
-  if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 0 && (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
-      set_error(validate_items.password_new, validate_items.password_new_confirm);
-  }
-  if (result==false){
-      commonMessageShow('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
-      return false;
-  }
-  else
-      return true;
+    if (validate_items.check_valid_list_elements)
+        for (const element of validate_items.check_valid_list_elements){
+            element[0].classList.remove('common_input_error');
+        }
+        
+    //validate text content
+    if (validate_items.username && valid_text(validate_items.username) == false){
+        set_error(validate_items.username);
+    }
+    if (validate_items.password && valid_text(validate_items.password)== false){
+        set_error(validate_items.password);
+    }
+    if (validate_items.password_reminder && valid_text(validate_items.password_reminder)== false){
+        set_error(validate_items.password);
+    }
+    if (validate_items.password_new && valid_text(validate_items.password_new)== false){
+        set_error(validate_items.password);
+    }
+    if (validate_items.password_new_confirm && valid_text(validate_items.password_new_confirm)== false){
+        set_error(validate_items.password);
+    }
+    if (validate_items.email && valid_text(validate_items.email)== false){
+        set_error(validate_items.email);
+    }
+    if (validate_items.bio && valid_text(validate_items.bio)== false){
+        set_error(validate_items.bio);
+    }
+    if (validate_items.check_valid_list_elements){
+        for (const element of validate_items.check_valid_list_elements){
+            if (valid_text(element[0])==false)
+                set_error(element[0]);
+        }
+    }
+    if (validate_items.check_valid_list_values){
+        for (const element of validate_items.check_valid_list_values){
+            if (valid_text(element[0])==false){
+                result = false;
+                break;
+            }
+        }
+    }
+    //validate text length
+    if (validate_items.username && validate_items.username.textContent && validate_items.username.textContent.length > 100){
+        set_error(validate_items.username);
+    }
+    if (validate_items.password && validate_items.password.textContent.length > 100){
+        set_error(validate_items.password);
+    }
+    if (validate_items.password_reminder && validate_items.password_reminder.textContent && validate_items.password_reminder.textContent.length > 100){
+        set_error(validate_items.password_reminder);
+    }
+    if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 100){
+        set_error(validate_items.password_new);
+    }
+    if (validate_items.bio && validate_items.bio.textContent && validate_items.bio.textContent.length > 150){
+        set_error(validate_items.bio);
+    }
+    if (validate_items.check_valid_list_elements){
+        for (const element of validate_items.check_valid_list_elements){
+            if (element[0] && element[1] && element[0].textContent && element[0].textContent.length > element[1])
+                set_error(element[0]);
+        }
+    }
+    if (validate_items.check_valid_list_values){
+        for (const element of validate_items.check_valid_list_values){
+            if (element[0] && element[1] && element[0].length > element[1]){
+                result = false;
+                break;
+            }
+        }
+    }
+    //validate not empty
+    if (validate_items.username && validate_items.username.textContent == '') {
+        set_error(validate_items.username);
+    }
+    if (validate_items.password && validate_items.password.textContent == '') {
+        set_error(validate_items.password);
+    }
+    if (validate_items.email && validate_items.email.textContent == '') {
+        set_error(validate_items.email);
+    }
+    if (validate_items.password && validate_items.password_confirm && validate_items.password_confirm.textContent ==''){
+        set_error(validate_items.password_confirm);
+    }
+    //validate same password
+    if (validate_items.password && validate_items.password_confirm && (validate_items.password.textContent != validate_items.password_confirm.textContent)){
+        set_error(validate_items.password, validate_items.password_confirm);
+    }
+    if (validate_items.password_new && validate_items.password_new.textContent && validate_items.password_new.textContent.length > 0 && (validate_items.password_new.textContent != validate_items.password_new_confirm.textContent)){
+        set_error(validate_items.password_new, validate_items.password_new_confirm);
+    }
+    if (result==false){
+        commonMessageShow('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
+        return false;
+    }
+    else
+        return true;
 };
 /**
- * Importmap that return file path for given file
- * to solve importmap not working for some browsers
+ * @name commonMiscImportmap
+ * @description Importmap that return file path for given file
+ *              to solve importmap not working for some browsers
+ * @function
  * @param {'easy.qrcode'|'leaflet'|'React'|'ReactDOM'|'regional'|'Vue'} file
  * @return {string}
  */
@@ -427,7 +446,9 @@ const commonMiscImportmap = file =>{
     }[file] ??'';
 };
 /**
- * List key event
+ * @name commonMiscListKeyEvent
+ * @description List key event
+ * @function
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @param {string} module 
  * @param {function|null} event_function 
@@ -549,15 +570,18 @@ const commonMiscListKeyEvent = (event, module, event_function=null) => {
 };
 
 /**
- * 
- * Check if mobile
+ * @name commonMiscMobile
+ * @description Check if mobile
+ * @function
  * @returns {boolean}
  */
 const commonMiscMobile = () =>{
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(COMMON_WINDOW.navigator.userAgent));
 };
 /**
- * Common theme update body class from preferences
+ * @name commonMiscPreferencesUpdateBodyClassFromPreferences
+ * @description Common theme update body class from preferences
+ * @function
  * @returns {void}
  */
 const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
@@ -572,7 +596,9 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
         COMMON_DOCUMENT.body.classList.add(class_arabic_script);
 };
 /**
- * Common preference post mount
+ * @name commonMiscPreferencesPostMount
+ * @description Common preference post mount
+ * @function
  * @returns {void}
  */
 const commonMiscPreferencesPostMount = () => {
@@ -580,7 +606,9 @@ const commonMiscPreferencesPostMount = () => {
     commonMiscThemeUpdateFromBody();
 };
 /**
- * Rounds a number with 2 decimals
+ * @name commonMiscRoundOff
+ * @description Rounds a number with 2 decimals
+ * @function
  * @param {number} num 
  * @returns number
  */
@@ -589,14 +617,16 @@ const commonMiscRoundOff = num => {
     return Math.round(num * x) / x;
 };
 /**
-* Sets current value for select div
-* Get json data for given key and value is found or matches value if not json
-* @param {string} div
-* @param {string|number|null} value
-* @param {string|null} json_key
-* @param {string|number|null} json_value
-*/
-const commonMiscSelectCurrentValueSet= (div, value, json_key=null, json_value=null) =>{
+ * @name commonMiscSelectCurrentValueSet
+ * @description Sets current value for select div
+ *              Get json data for given key and value is found or matches value if not json
+ * @function
+ * @param {string} div
+ * @param {string|number|null} value
+ * @param {string|null} json_key
+ * @param {string|number|null} json_value
+ */
+const commonMiscSelectCurrentValueSet = (div, value, json_key=null, json_value=null) =>{
     COMMON_DOCUMENT.querySelector(`#${div} .common_select_dropdown_value`).textContent = Array.from(COMMON_DOCUMENT.querySelectorAll(`#${div} .common_select_option`))
                                                                                             .filter(option=>(json_key?JSON.parse(option.getAttribute('data-value'))[json_key]:
                                                                                                                 option.getAttribute('data-value'))==(json_value ?? value))[0].textContent;
@@ -608,11 +638,16 @@ const commonMiscSelectCurrentValueSet= (div, value, json_key=null, json_value=nu
       
 };
 /**
- * Default app themes 
+ * @name commonMiscThemeDefaultList
+ * @description Default app themes 
+ * @function
+ * @returns {{VALUE:number, TEXT:string}[]}
  */
 const commonMiscThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT:'Dark'}, {VALUE:3, TEXT:'Caffè Latte'}];
 /**
- * Common theme get
+ * @name commonMiscThemeUpdateFromBody
+ * @description Common theme get
+ * @function
  * @returns {void}
  */
  const commonMiscThemeUpdateFromBody = () => {    
@@ -621,7 +656,9 @@ const commonMiscThemeDefaultList = () =>[{VALUE:1, TEXT:'Light'}, {VALUE:2, TEXT
     COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_app_theme .common_select_dropdown_value').setAttribute('data-value', COMMON_DOCUMENT.body.className[9]);
 };
 /**
- * Get timezone date
+ * @name commonMiscTimezoneDate
+ * @description Get timezone date
+ * @function
  * @param {string} timezone 
  * @returns {Date}
  */
@@ -634,8 +671,10 @@ const commonMiscTimezoneDate = timezone =>{
     return new Date(utc.setHours(  utc.getHours() + commonMiscTimezoneOffset(timezone)));
 };
 /**
- * Delay API calls when typing to avoid too many calls 
- * ES6 spread operator, arrow function without function keyword 
+ * @name commonMiscTypewatch
+ * @description Delay API calls when typing to avoid too many calls 
+ *              ES6 spread operator, arrow function without function keyword 
+ * @function
  * @param {*} function_name 
  * @param  {...any} parameter 
  */
@@ -657,7 +696,9 @@ const commonMiscTypewatch = (function_name, ...parameter) =>{
     }, type_delay);
 };
 /**
- * Length without diacrites
+ * @name commonMiscLengthWithoutDiacrites
+ * @description Length without diacrites
+ * @function
  * @param {string} str 
  * @returns {number}
  */
@@ -665,7 +706,9 @@ const commonMiscLengthWithoutDiacrites = (str) =>{
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
 };
 /**
- * Get timezone offset
+ * @name commonMiscTimezoneOffset
+ * @description Get timezone offset
+ * @function
  * @param {string} local_timezone 
  * @returns {number}
  */
@@ -683,15 +726,17 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
     return (local-utc) / 1000 / 60 / 60;
 };
 /**
- * Get user variables
+ * @name commonMiscUservariables
+ * @description Get user variables
+ * @function
  * @returns {{  user_language:string,
-*              user_timezone:string,
-*              user_number_system:string,
-*              user_platform:string,
-*              client_latitude:string,
-*              client_longitude:string,
-*              client_place:string}}
-*/
+ *              user_timezone:string,
+ *              user_number_system:string,
+ *              user_platform:string,
+ *              client_latitude:string,
+ *              client_longitude:string,
+ *              client_place:string}}
+ */
 const commonMiscUservariables = () => {
    return {    user_language:      commonWindowNavigatorLocale(),
                user_timezone:      COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -703,14 +748,18 @@ const commonMiscUservariables = () => {
            };
 };
 /**
- * Get hostname with protocol and port
+ * @name commonWindowHostname
+ * @description Get hostname with protocol and port
+ * @function
  * @returns {string}
  */
 const commonWindowHostname = () =>{
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
 };
 /**
- * Serviceworker
+ * @name commonWindowServiceWorker
+ * @description Serviceworker
+ * @function
  * @returns {void}
  */
 const commonWindowServiceWorker = () => {
@@ -722,7 +771,9 @@ const commonWindowServiceWorker = () => {
     }
 };
 /**
- * 
+ * @name commonWindowUserAgentPlatform
+ * @description Get user agent platform
+ * @function
  * @param {string} useragent 
  */
 const commonWindowUserAgentPlatform = useragent =>{
@@ -739,7 +790,9 @@ const commonWindowUserAgentPlatform = useragent =>{
 };
 
 /**
- * Use SetTimout for given function and millseconds
+ * @name commonWindowSetTimeout
+ * @description Use SetTimout for given function and millseconds
+ * @function
  * @param {function}    function_timeout
  * @param {number}      milliseconds
  * @returns {void}
@@ -747,14 +800,18 @@ const commonWindowUserAgentPlatform = useragent =>{
 const commonWindowSetTimeout = (function_timeout, milliseconds) => COMMON_WINDOW.setTimeout(function_timeout, milliseconds);
 
 /**
- * Waits given amount of milliseconds
+ * @name commonWindowWait
+ * @description Waits given amount of milliseconds
+ * @function
  * @param {number} milliseconds
  * @returns {Promise<null>}
  */
 const commonWindowWait = async milliseconds => new Promise ((resolve)=>{commonWindowSetTimeout(()=> resolve(null),milliseconds);});
 
 /**
- * Convert string to Base64
+ * @name commonWindowToBase64
+ * @description Convert string to Base64
+ * @function
  * @param {string} str 
  * @returns {string}
  */
@@ -762,7 +819,9 @@ const commonWindowToBase64 = str => {
     return COMMON_WINDOW.btoa(unescape(encodeURIComponent(str)));
 };	
 /**
- * Convert base64 to string
+ * @name commonWindowFromBase64
+ * @description Convert base64 to string
+ * @function
  * @param {string} str 
  * @returns {string}
  */
@@ -771,41 +830,60 @@ const commonWindowFromBase64 = (str) => {
 };
 
 /**
- * Read Navigator language
+ * @name commonWindowNavigatorLocale
+ * @description Read Navigator language
+ * @function
  * @returns {string}
  */
 const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLowerCase();
 
 /**
- * Returns frames document element
+ * @name commonWindowDocumentFrame
+ * @description Returns frames document element
+ * @function
+ * @returns {import('../../../common_types.js').COMMON_DOCUMENT}
  */
 const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
 
 /**
- * Returns info about location pathname for given argument number
+ * @name commonWindowLocationPathname
+ * @description Returns info about location pathname for given argument number
+ * @function
  * @param {number} argumentNumber
+ * @returns {string}
  */
 const commonWindowLocationPathname = argumentNumber => COMMON_WINDOW.location.pathname.substring(argumentNumber);
 
 /**
- * Reloads window
+ * @name commonWindowLocationReload
+ * @description Reloads window
+ * @function
+ * @returns {void}
  */
 const commonWindowLocationReload = () => COMMON_WINDOW.location.reload();
 
 /**
- * Opens an url in a new window
+ * @name commonWindowOpen
+ * @description Opens an url in a new window
+ * @function
  * @param {string} url
+ * @returns {void}
  */
 const commonWindowOpen = url => COMMON_WINDOW.open(url, '_blank');
 
 /**
- * Opens an window prompt with given text
+ * @name commonWindowPrompt
+ * @description Opens an window prompt with given text
+ * @function
  * @param {string} text
+ * @returns {void}
  */
 const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 
 /**
- * Convert HTML to React component
+ * @name commonFrameworkHtml2ReactComponent
+ * @description Convert HTML to React component
+ * @function
  * @param {*} React_create_element
  * @param {*} element 
  * @returns {*}
@@ -881,15 +959,16 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
         return null;
 };
 /**
- * Renders component
- * Components use analogic Vue SFC structure
- * Components are mounted using given framework
- * Components return:
- *      data        
- *      methods
- *      lifecycle   implemented onMounted, onBeforeMounted, onUnmounted
- *      template    rendered HTML to mount
- *      
+ * @name commonComponentRender
+ * @description Renders component
+ *              Components use analogic Vue SFC structure
+ *              Components are mounted using given framework
+ *              Components return:
+ *                  data        
+ *                  methods
+ *                  lifecycle   implemented onMounted, onBeforeMounted, onUnmounted
+ *                  template    rendered HTML to mount
+ * @function
  * @param {{mountDiv:string|null,
  *          data:{}|null,
  *          methods:{}|null,
@@ -956,9 +1035,12 @@ const commonComponentRender = async commonComponentRender => {
     return {data:component?component.data:null, methods:component?component.methods:null};
 };
 /**
- * Component remove
+ * @name commonComponentRemove
+ * @description Component remove
+ * @function
  * @param {string} div 
  * @param {boolean} remove_modal
+ * @returns {void}
  */
 const commonComponentRemove = (div, remove_modal=false) => {
     const APPDIV = COMMON_DOCUMENT.querySelector(`#${div}`);
@@ -977,7 +1059,9 @@ const commonComponentRemove = (div, remove_modal=false) => {
 };
 
 /**
- * Show common dialogue
+ * @name commonDialogueShow
+ * @description Show common dialogue
+ * @function
  * @param {string} dialogue 
  * @param {string|null} user_verification_type 
  * @param {string|null} title 
@@ -1052,13 +1136,16 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
     }
 };
 /**
- * 
+ * @name commonMessageShow
+ * @description Show message dialogue
+ * @function
  * @param {'ERROR'|'ERROR_BFF'|'INFO'|'EXCEPTION'|'CONFIRM'|'LOG'|'PROGRESS'} message_type 
  * @param {string|null} code
  * @param {function|null} function_event 
  * @param {string|null} text_class
  * @param {*} message 
  * @param {number|null} data_app_id 
+ * @returns {Promise.<void>}
  */
 const commonMessageShow = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
     commonComponentRender({
@@ -1078,7 +1165,9 @@ const commonMessageShow = async (message_type, code, function_event, text_class=
         path:           '/common/component/common_dialogue_message.js'});
 };
 /**
- * Dialogue password new clear
+ * @name commonDialoguePasswordNewClear
+ * @description Dialogue password new clear
+ * @function
  * @returns {void}
  */
 const commonDialoguePasswordNewClear = () => {
@@ -1087,9 +1176,12 @@ const commonDialoguePasswordNewClear = () => {
     COMMON_GLOBAL.token_at = '';
 };
 /**
- * LOV event
+ * @name commonLovEvent
+ * @description LOV event
+ * @function
  * @param {import('../../../common_types.js').CommonAppEvent} event
  * @param {string} lov
+ * @returns {void}
  */
 const commonLovEvent = (event, lov) => {
     /**
@@ -1128,7 +1220,9 @@ const commonLovEvent = (event, lov) => {
     commonLovShow({lov:lov, function_event:commonLovEvent_function});
 };
 /**
- * Lov action fetches id and value, updates values and manages data-defaultValue
+ * @name commonLovAction
+ * @description Lov action fetches id and value, updates values and manages data-defaultValue
+ * @function
  * @param {import('../../../common_types.js').CommonAppEvent} event 
  * @param {string} lov 
  * @param {string|null} old_value
@@ -1137,6 +1231,7 @@ const commonLovEvent = (event, lov) => {
  * @param {import('../../../common_types.js').CommonRESTAPIMethod} method 
  * @param {import('../../../common_types.js').CommonRESTAPIAuthorizationType} authorization_type 
  * @param {{}|null} json_data 
+ * @returns {void}
  */
 const commonLovAction = (event, lov, old_value, path, query, method, authorization_type, json_data) => {
    commonFFB({path:path, query:query, method:method, authorization_type:authorization_type, body:json_data})
@@ -1170,14 +1265,18 @@ const commonLovAction = (event, lov, old_value, path, query, method, authorizati
 };
 
 /**
- * Lov close
+ * @name commonLovClose
+ * @description Lov close
+ * @function
  * @returns {void}
  */
 const commonLovClose = () => {
     commonComponentRemove('common_dialogue_lov', true);
 };
 /**
- * Lov show
+ * @name commonLovShow
+ * @description Lov show
+ * @function
  * @param {{lov:string, 
  *          lov_custom_list?:{}[],
  *          lov_custom_value?:string, 
@@ -1201,8 +1300,11 @@ const commonLovShow = parameters => {
         path:       '/common/component/common_dialogue_lov.js'});        
 };
 /**
- * Lov filter
+ * @name commonLovFilter
+ * @description Lov filter
+ * @function
  * @param {string} text_filter 
+ * @returns {void}
  */
 const commonLovFilter = text_filter => {
     const rows = COMMON_DOCUMENT.querySelectorAll('.common_list_lov_row');
@@ -1223,7 +1325,9 @@ const commonLovFilter = text_filter => {
 };
 
 /**
- * Window zoom info
+ * @name commonZoomInfo
+ * @description Window zoom info
+ * @function
  * @param {number|null} zoomvalue 
  * @returns {void}
  */
@@ -1242,7 +1346,9 @@ const commonZoomInfo = (zoomvalue = null) => {
     }
 };
 /**
- * Window move info
+ * @name commonMoveInfo
+ * @description Window move info
+ * @function
  * @param {number|null} move1 
  * @param {number|null} move2 
  * @returns {void}
@@ -1260,7 +1366,9 @@ const commonMoveInfo = (move1=null, move2=null) => {
     }
 };
 /**
- * Show or hide window info toolbar
+ * @name commonWindoInfoToolbarShowHide
+ * @description Show or hide window info toolbar
+ * @function
  * @returns {void}
  */
 const commonWindoInfoToolbarShowHide = () => {
@@ -1271,7 +1379,10 @@ const commonWindoInfoToolbarShowHide = () => {
         COMMON_DOCUMENT.querySelector('#common_window_info_toolbar').style.display='inline-block';
 };
 /**
- * Close window info
+ * @name commonWindoInfoClose
+ * @description Close window info
+ * @function
+ * @returns {void}
  */
 const commonWindoInfoClose = () =>{
     commonComponentRemove('common_window_info');
@@ -1281,8 +1392,11 @@ const commonWindoInfoClose = () =>{
 };
 
 /**
- * Profile follow or like and then update stat
+ * @name commonProfileFollowLike
+ * @description Profile follow or like and then update stat
+ * @function
  * @param {'FOLLOW'|'LIKE'} function_name 
+ * @returns {Promise.<void>}
  */
 const commonProfileFollowLike = async (function_name) => {
     await commonUserFunction(function_name)
@@ -1290,7 +1404,9 @@ const commonProfileFollowLike = async (function_name) => {
     .catch(()=>null);
 };
 /**
- * Profile stat
+ * @name commonProfileStat
+ * @description Profile stat
+ * @function
  * @param {number} statchoice 
  * @param {string|null} app_rest_url
  * @returns {Promise.<void>}
@@ -1309,7 +1425,9 @@ const commonProfileStat = async (statchoice, app_rest_url = null) => {
         path:       '/common/component/common_dialogue_profile.js'});
 };
 /**
- * Profile detail
+ * @name commonProfileDetail
+ * @description Profile detail
+ * @function
  * @param {number} detailchoice  
  * @returns {void}
  */
@@ -1334,7 +1452,9 @@ const commonProfileDetail = (detailchoice) => {
     }
 };
 /**
- * Profile search
+ * @name commonProfileSearch
+ * @description Profile search
+ * @function
  * @param {function} click_function 
  * @returns {void}
  */
@@ -1358,11 +1478,12 @@ const commonProfileSearch = click_function => {
     });
 };
 /**
- * Profile show
- * commonProfileShow(null, null)     from dropdown menu in apps or choosing logged in users profile
- * commonProfileShow(userid, null) 	from choosing profile in commonProfileStat, profile_detail and commonProfileSearch
- * commonProfileShow(null, username) from init startup when user enters url
- * 
+ * @name commonProfileShow
+ * @description Profile show
+ *              commonProfileShow(null, null)       from dropdown menu in apps or choosing logged in users profile
+ *              commonProfileShow(userid, null)     from choosing profile in commonProfileStat, profile_detail and commonProfileSearch
+ *              commonProfileShow(null, username)   from init startup when user enters url
+ * @function
  * @param {number|null} user_account_id_other 
  * @param {string|null} username 
  * @returns {Promise.<void>}
@@ -1400,7 +1521,9 @@ const commonProfileShow = async (user_account_id_other = null, username = null) 
         path:       '/common/component/common_dialogue_profile_info.js'});
 };
 /**
- * Profile update stat
+ * @name commonProfileUpdateStat
+ * @description Profile update stat
+ * @function
  * @returns {Promise.<{id:number}>}
  */
 const commonProfileUpdateStat = async () => {
@@ -1425,7 +1548,9 @@ const commonProfileUpdateStat = async () => {
 };
 
 /**
- * User login
+ * @name commonUserLogin
+ * @description User login
+ * @function
  * @param {boolean|null} admin 
  * @param {string|null} username_verify
  * @param {string|null} password_verify
@@ -1584,9 +1709,11 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
     }
 };
 /**
- * Countdown function to monitor token expire time
- * Uses event listener on element instead of setTimeout since element can removed 
- * and then event listener will automatically be removed
+ * @name commonUserSessionCountdown
+ * @description Countdown function to monitor token expire time
+ *              Uses event listener on element instead of setTimeout since element can removed 
+ *              and then event listener will automatically be removed
+ * @function
  * @param {HTMLElement} element
  * @param {number} token_exp
  * @param {function|null} app_function
@@ -1619,7 +1746,9 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
     }
 };
 /**
- * User logout
+ * @name commonUserLogout
+ * @description User logout
+ * @function
  * @returns {Promise.<void>}
  */
 const commonUserLogout = async () => {
@@ -1664,7 +1793,9 @@ const commonUserLogout = async () => {
 };
 
 /**
- * User update
+ * @name commonUserUpdate
+ * @description User update
+ * @function
  * @returns {Promise.<null>}
  */
 const commonUserUpdate = async () => {
@@ -1762,7 +1893,9 @@ const commonUserUpdate = async () => {
     });
 };
 /**
- * User signup
+ * @name commonUserSignup
+ * @description User signup
+ * @function
  * @returns {void}
  */
 const commonUserSignup = () => {
@@ -1796,7 +1929,9 @@ const commonUserSignup = () => {
     }
 };
 /**
- * User verify check input
+ * @name commonUserVerifyCheckInput
+ * @description User verify check input
+ * @function
  * @param {HTMLElement} item 
  * @param {string} nextField 
  * @param {function} login_function
@@ -1901,7 +2036,9 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
     
 };
 /**
- * User delete
+ * @name commonUserDelete
+ * @description User delete
+ * @function
  * @param {number|null} choice 
  * @param {function|null} function_delete_event 
  * @returns {Promise.<{deleted:number}|null>}
@@ -1940,7 +2077,9 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
     });
 };
 /**
- * User function
+ * @name commonUserFunction
+ * @description User function FOLLOW and LIKE with delete and post for both
+ * @function
  * @param {'FOLLOW'|'LIKE'} function_name 
  * @returns {Promise.<null>}
  */
@@ -1981,11 +2120,14 @@ const commonUserFunction = function_name => {
     });
 };
 /**
- * User account app delete
+ * @name commonUserAccountAppDelete
+ * @description User account app delete
+ * @function
  * @param {number|null} choice 
  * @param {number} user_account_id 
  * @param {number} app_id 
  * @param {function|null} function_delete_event 
+ * @returns {void}
  */
 const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, function_delete_event=null) => {
     switch (choice){
@@ -2008,7 +2150,9 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
     }
 };
 /**
- * User forgot
+ * @name commonUserForgot
+ * @description User forgot
+ * @function
  * @returns {Promise.<void>}
  */
 const commonUserForgot = async () => {
@@ -2032,7 +2176,9 @@ const commonUserForgot = async () => {
     }
 };
 /**
- * Update password
+ * @name commonUserUpdatePassword
+ * @description Update password
+ * @function
  * @returns {void}
  */
 const commonUserUpdatePassword = () => {
@@ -2056,7 +2202,9 @@ const commonUserUpdatePassword = () => {
     }    
 };
 /**
- * User preference save
+ * @name commonUserPreferenceSave
+ * @description User preference save
+ * @function
  * @returns {Promise.<void>}
  */
 const commonUserPreferenceSave = async () => {
@@ -2076,7 +2224,9 @@ const commonUserPreferenceSave = async () => {
     }
 };
 /**
- * User prefernce set default globals
+ * @name commonUserPreferencesGlobalSetDefault
+ * @description User prefernce set default globals
+ * @function
  * @param {*} preference 
  * @returns {void}
  */
@@ -2102,7 +2252,9 @@ const commonUserPreferencesGlobalSetDefault = (preference) => {
 };
 
 /**
- * Create QR code
+ * @name commonModuleEasyQRCODECreate
+ * @description Create QR code
+ * @function
  * @param {string} div 
  * @param {string} url 
  * @returns {Promise.<void>}
@@ -2123,7 +2275,9 @@ const commonModuleEasyQRCODECreate = async (div, url) => {
     commonWindowWait(1);
 };
 /**
- * Map init
+ * @name commonModuleLeafletInit
+ * @description Module Leaflet init
+ * @function
  * @param {{mount_div:string,
  *          longitude:string,
  *          latitude:string,
@@ -2185,7 +2339,9 @@ const commonModuleLeafletInit = async parameters => {
 };
 
 /**
- * Frontend for Backend (FFB)
+ * @name commonFFB
+ * @description Frontend for Backend (FFB)
+ * @function
  * @param {{path:string,
  *          query?:string|null,
  *          method:import('../../../common_types.js').CommonRESTAPIMethod,
@@ -2340,7 +2496,9 @@ const commonFFB = async parameter => {
     }        
 };
 /**
- * Show broadcast message
+ * @name commonSocketBroadcastShow
+ * @description Show broadcast message
+ * @function
  * @param {string} broadcast_message 
  * @returns {void}
  */
@@ -2389,7 +2547,9 @@ const commonSocketBroadcastShow = (broadcast_message) => {
     }
 };
 /**
- * Show maintenance
+ * @name commonSocketMaintenanceShow
+ * @description Show maintenance
+ * @function
  * @param {string|null} message 
  * @param {number|null} init 
  * @returns {void}
@@ -2407,14 +2567,18 @@ const commonSocketMaintenanceShow = (message, init=null) => {
         COMMON_DOCUMENT.querySelector('#common_maintenance_footer').textContent = message ?? '';
 };
 /**
- * Socket reconnect
+ * @name socketReconnect
+ * @description Socket reconnect
+ * @function
  * @returns {void}
  */
 const socketReconnect = () => {
     commonWindowSetTimeout(()=>{commonSocketConnectOnline();}, 5000);
 };
 /**
- * Socket connect online
+ * @name commonSocketConnectOnline
+ * @description Socket connect online
+ * @function
  * @returns {Promise.<void>}
  */
 const commonSocketConnectOnline = async () => {
@@ -2435,7 +2599,9 @@ const commonSocketConnectOnline = async () => {
     .catch(()=>socketReconnect());
 };
 /**
- * Socket check online
+ * @name commonSocketConnectOnlineCheck
+ * @description Socket check online
+ * @function
  * @param {string} div_icon_online 
  * @param {number} user_account_id 
  * @returns {void}
@@ -2445,7 +2611,9 @@ const commonSocketConnectOnlineCheck = (div_icon_online, user_account_id) => {
     .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
- * Get place from GPS
+ * @name commonMicroserviceGeolocationPlace
+ * @description Microservice Geolocation: Get place from GPS
+ * @function
  * @param {string} longitude 
  * @param {string} latitude 
  * @returns {Promise.<string>}
@@ -2466,7 +2634,9 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
     });
 };
 /**
- * Get GPS from IP
+ * @name commonMicroserviceGeolocationIp
+ * @description Microservice Geolocation: Get GPS from IP
+ * @function
  * @returns {Promise.<null>}
  */
 const commonMicroserviceGeolocationIp = async () => {
@@ -2489,7 +2659,9 @@ const commonMicroserviceGeolocationIp = async () => {
 
 };
 /**
- * Worldcities - Search
+ * @name commonMicroserviceWorldcitiesSearch
+ * @description Microservice Geolocation: Worldcities - Search
+ * @function
  * @param {function} event_function 
  * @returns {Promise.<void>}
  */
@@ -2504,7 +2676,9 @@ const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
         path:       '/common/component/common_module_leaflet_search_city.js'});
 };
 /**
- * Exception function
+ * @name commonException
+ * @description Exception function
+ * @function
  * @param {function|null} appException_function 
  * @param {Error|string} error 
  * @returns {void}
@@ -2514,16 +2688,22 @@ const commonException = (appException_function, error) => {
         appException_function(error);
 };
 /**
- * Disable textediting
+ * @name commonTextEditingDisabled
+ * @description Check if textediting is disabled
+ * @function
  * @returns {boolean}
  */
 const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
 
 /**
-* @param {string} event_target_id
-* @param { import('../../../common_types.js').CommonAppEvent['target']|
-*          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
-*/
+ * @name commonEventSelectAction
+ * @description Performs action for select event
+ * @function
+ * @param {string} event_target_id
+ * @param { import('../../../common_types.js').CommonAppEvent['target']|
+ *          import('../../../common_types.js').CommonAppEvent['target']['parentNode']|null} target
+ * @returns {Promise.<void>}
+ */
 const commonEventSelectAction = async (event_target_id, target) =>{
    //module leaflet events
    if(event_target_id== 'common_module_leaflet_select_country')
@@ -2613,7 +2793,9 @@ const commonEventSelectAction = async (event_target_id, target) =>{
    }
 };
 /**
- * Common events
+ * @name commonEvent
+ * @description Common events
+ * @function
  * @param {string} event_type 
  * @param {import('../../../common_types.js').CommonAppEvent|null} event 
  * @returns {Promise.<void>}
@@ -3137,8 +3319,11 @@ const commonEvent = async (event_type,event=null) =>{
     
 };
 /**
- * Disable copy cut paste
+ * @name commonEventCopyPasteCutDisable
+ * @description Disable copy cut paste
+ * @function
  * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
  */
  const commonEventCopyPasteCutDisable = event => {
     if (commonTextEditingDisabled()){
@@ -3155,8 +3340,11 @@ const commonEvent = async (event_type,event=null) =>{
     }
 };
 /**
- * Disable common input textediting
+ * @name commonEventInputDisable
+ * @description Disable common input textediting
+ * @function
  * @param {import('../../../common_types.js').CommonAppEvent} event 
+ * @returns {void}
  */
 const commonEventInputDisable = event => {
     if (commonTextEditingDisabled())
@@ -3166,7 +3354,9 @@ const commonEventInputDisable = event => {
         }
 };
 /**
- * Adds common events for all apps
+ * @name commonEventCommonAdd
+ * @description Adds common events for all apps
+ * @function
  * @returns {void}
  */
 const commonEventCommonAdd = () => {
@@ -3179,7 +3369,9 @@ const commonEventCommonAdd = () => {
 
 };
 /**
- * Remove common events for all apps
+ * @name commonEventCommonRemove
+ * @description Remove common events for all apps
+ * @function
  * @returns {void}
  */
 const commonEventCommonRemove = () => {
@@ -3192,7 +3384,9 @@ const commonEventCommonRemove = () => {
 
 };
 /**
- * Set app service parameters
+ * @name commonInitParametersInfoSet
+ * @description Set app service parameters
+ * @function
  * @param {*} parameters 
  * @returns {void}
  */
@@ -3237,8 +3431,10 @@ const commonInitParametersInfoSet = parameters => {
     COMMON_GLOBAL.user_arabic_script         = '';  
 };
 /**
- * Set app parameters
- * Set common parameters and common app parameters 
+ * @name commonInitParametersAppSet
+ * @description Set app parameters
+ *              Set common parameters and common app parameters 
+ * @function
  * @param {import('../../../common_types.js').commonInitAppParameters['APP']} app_parameters 
  * @param {import('../../../common_types.js').commonInitAppParameters['COMMON']} common_parameters 
  * @returns {void}
@@ -3274,18 +3470,21 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.app_text_edit = app_parameters.app_text_edit.value;
 };
 /**
- * Mount app using Vue or React framework
- * Component is mounted as pure HTML without events
- * App component is mounted with supported events on app root for Vue
- * App component is mounted without events on app root for React
- * Template is already rendered HTML
- * Mounting the rendered template means parsing HTML according to Vue or React standards
- * that validate that the component renders valid HTML
+ * @name commonFrameworkMount
+ * @description Mount app using Vue or React framework
+ *              Component is mounted as pure HTML without events
+ *              App component is mounted with supported events on app root for Vue
+ *              App component is mounted without events on app root for React
+ *              Template is already rendered HTML
+ *              Mounting the rendered template means parsing HTML according to Vue or React standards
+ *              that validate that the component renders valid HTML
+ * @function
  * @param {2|3} framework
  * @param {string} template
  * @param {{}} methods
  * @param {string} mount_div
  * @param {boolean} component
+ * @returns {Promise.<void>}
  */
 const commonFrameworkMount = async (framework, template, methods,mount_div, component) =>{
     switch (framework){
@@ -3341,6 +3540,12 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
         }
     }
 };
+/**
+ * @name commonFrameworkClean
+ * @description Removes objects created by frameworks
+ * @function
+ * @returns {void}
+ */
 const commonFrameworkClean = () =>{
     //remove Reacts objects
     delete COMMON_WINDOW.ReactDOM;
@@ -3371,7 +3576,9 @@ const commonFrameworkClean = () =>{
     Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
 };
 /**
- * Sets framework and uses given list of event functions
+ * @name commonFrameworkSet
+ * @description Sets framework and uses given list of event functions
+ * @function
  * @param {number|null} framework
  * @param {{Click:function|null,
  *          Change:function|null,
@@ -3501,7 +3708,9 @@ const commonFrameworkSet = async (framework, events) => {
     commonEventCommonAdd();
 };
 /**
- * Set useragent attributes
+ * @name setUserAgentAttributes
+ * @description Set useragent attributes
+ * @function
  * @returns {void}
  */
  const setUserAgentAttributes = () => {
@@ -3509,7 +3718,9 @@ const commonFrameworkSet = async (framework, events) => {
         COMMON_DOCUMENT.querySelector(':root').style.setProperty('--common_app_css_useragent_fix_margin_top', '-5px');
  };
 /**
- * Set custom framework functionality overriding console messages and save info about events created
+ * @name custom_framework
+ * @description Set custom framework functionality overriding console messages and save info about events created
+ * @function
  * @returns {void}
  */
 const custom_framework = () => {
@@ -3612,7 +3823,9 @@ const custom_framework = () => {
     COMMON_WINDOW.console.error = console_error;
 };
 /**
- * Init common
+ * @name commonInit
+ * @description Init common
+ * @function
  * @param {string} parameters 
  * @returns {Promise.<import('../../../common_types.js').commonInitAppParameters>}
  */

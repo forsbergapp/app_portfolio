@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{default_data_value:string,
  *          default_value:string,
  *          options:[{value:string, text:string}]|[],
@@ -26,6 +29,9 @@ const template = props => ` <div class='common_select_dropdown'>
                                 }
                             </div>` ;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      default_data_value:string,
