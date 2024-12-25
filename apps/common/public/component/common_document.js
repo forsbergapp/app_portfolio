@@ -92,7 +92,7 @@ const component = async props => {
             break;
         }
         default:{
-            //APP, GUIDE, JSDOC_MODULE
+            //APP, GUIDE, MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
             classname = 'common_markdown';
         }
     }   
