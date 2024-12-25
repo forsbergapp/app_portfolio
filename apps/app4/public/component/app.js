@@ -6,11 +6,14 @@
  * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
+ * @name temaplte
+ * @description Template
  * @returns {string}
  */
 const template = () =>' <div id=\'mapid\'></div>';
 /**
- * 
+ * @name component
+ * @description Component
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 

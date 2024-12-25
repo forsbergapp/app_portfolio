@@ -3,15 +3,18 @@
  */
 
 /**
+ * @name payment_request_get_status
+ * @description Get payment request status
+ * @function
  * @param {number} app_id
  * @param {{payment_request_id: string,
-*          data_app_id: number}} data
-* @param {string} user_agent
-* @param {string} ip
-* @param {string} locale
-* @param {import('../../../../server/types.js').server_server_res} res
-* @returns {Promise.<{ status:string}[]>}
-*/
+ *          data_app_id: number}} data
+ * @param {string} user_agent
+ * @param {string} ip
+ * @param {string} locale
+ * @param {import('../../../../server/types.js').server_server_res} res
+ * @returns {Promise.<{ status:string}[]>}
+ */
 const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
 
     /**@type{import('../../../../server/db/file.js')} */

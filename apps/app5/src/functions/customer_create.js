@@ -3,6 +3,9 @@
  */
 
 /**
+ * @name customer_create
+ * @description Customer create
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

@@ -3,15 +3,18 @@
  */
 
 /**
+ * @name payment_request_get_status
+ * @description Get payment request status
+ * @function
  * @param {number} app_id
  * @param {{id:string,
-*          message:string}} data
-* @param {string} user_agent
-* @param {string} ip
-* @param {string} locale
-* @param {import('../../../../server/types.js').server_server_res} res
-* @returns {Promise.<{message:string}[]>}
-*/
+ *          message:string}} data
+ * @param {string} user_agent
+ * @param {string} ip
+ * @param {string} locale
+ * @param {import('../../../../server/types.js').server_server_res} res
+ * @returns {Promise.<{message:string}[]>}
+ */
 const payment_request_get_status = async (app_id, data, user_agent, ip, locale, res) =>{
      
     const {default:jwt} = await import('jsonwebtoken');
