@@ -2,6 +2,9 @@
  * @module apps/app5/src/functions/account_get
  */
 /**
+ * @name account_get
+ * @description Get bank account
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

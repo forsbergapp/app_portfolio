@@ -3,6 +3,9 @@
  */
 
 /**
+ * @name customer_metadata
+ * @description Get customer metadata
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

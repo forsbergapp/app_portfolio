@@ -3,6 +3,9 @@
  */
 
 /**
+ * @name module_timetable_lib
+ * @description Module timetable
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

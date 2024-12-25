@@ -14,7 +14,8 @@ const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error 
  * @returns {void}
@@ -23,7 +24,8 @@ const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -78,7 +80,8 @@ const appEventClick = event => {
     }
 };
 /**
- * App event keyup
+ * @name appEventKeyUp
+ * @description App event keyup
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -103,7 +106,8 @@ const appEventKeyUp = event => {
     }
 };
 /**
- * Validate VPA
+ * @name appVPAIsValid
+ * @description Validate VPA
  * @function
  * @param {CommonAppEvent['target']} element
  * @param {string} str
@@ -120,7 +124,8 @@ const appVPAIsValid = (element, str) => {
     }
 };
 /**
- * Product update attributes
+ * @name appProductUpdate
+ * @description Product update attributes
  * @function
  * @returns {Promise.<void>}
  */
@@ -165,7 +170,8 @@ const appProductUpdate = async () =>{
     
 };
 /**
- * Get payment request status
+ * @name appPaymentRequestStatus
+ * @description Get payment request status
  * @function
  * @returns {void}
  */
@@ -185,7 +191,8 @@ const appPaymentRequestStatus = ()=>{
     }
 };
 /**
- * Payment request
+ * @name appPaymentRequest
+ * @description Payment request
  * @function
  * @returns {Promise.<void>}
  */
@@ -251,7 +258,8 @@ const appPaymentRequest = async () =>{
         common.commonMessageShow('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
 };
 /**
- * Pay cancel
+ * @name appPayCancel
+ * @description Pay cancel
  * @function
  * @returns {Promise.<void>}
  */
@@ -260,7 +268,8 @@ const appPayCancel = async () =>{
     common.commonComponentRemove('common_dialogue_app_data_display', true);
 };
 /**
- * Pay product
+ * @name appPay
+ * @description Pay product
  * @function
  * @returns {Promise.<void>}
  */
@@ -306,7 +315,8 @@ const appPay = async () =>{
         COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2[data-value=payment_id]').classList.add('common_input_error');
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -321,7 +331,8 @@ const appPay = async () =>{
             Input:null});
 };
 /**
- * Init app
+ * @name appInit
+ * @description Init app
  * @function
  * @returns {Promise.<void>}
  */
@@ -363,12 +374,13 @@ const appInit = async () => {
     appProductUpdate();
 };
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit= (parameters) => {
+const appCommonInit = (parameters) => {
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
     common.commonInit(parameters).then(()=>{
