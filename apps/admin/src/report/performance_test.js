@@ -35,6 +35,9 @@
  *             status:number}} test_function_result
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {report_data} props
  */
 const template = props => ` <div id='report'>
@@ -82,6 +85,9 @@ const template = props => ` <div id='report'>
                                 }
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{app_id:number,
  *          queue_parameters:{
  *                              appModuleQueueId:number|null,

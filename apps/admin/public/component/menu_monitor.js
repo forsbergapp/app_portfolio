@@ -19,6 +19,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
@@ -51,7 +54,9 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor_mapid'></div>
                             </div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:{      commonMountdiv:string,
  *                      app_id:number,
  *                      service_socket_client_ID: number,

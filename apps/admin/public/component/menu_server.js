@@ -9,6 +9,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{function_seconds_to_time:function,
  *          server_info:{os:{   hostname:string,
  *                              cpus:{length:number},
@@ -75,16 +78,18 @@ const template = props => ` <div id='menu_server_content_widget1' class='widget'
                                 </div>
                             </div>` ;
 /**
-* 
-* @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonFFB:commonFFB},
-*           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{ data:{      commonMountdiv:string},
+ *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonFFB:commonFFB},
+ *           lifecycle:  null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
    /**
      * Seconds to time string

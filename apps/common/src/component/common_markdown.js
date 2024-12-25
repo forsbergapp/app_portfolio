@@ -167,7 +167,10 @@ const component = async props => {
                                                                             //no tag, return after first '*', remove start space characters
                                                                             HTMLEntities(row
                                                                                 .substring(row.indexOf('*')+1)));
-                                                        }).join('\n');
+                                                        })
+                                                        //remove @name tag presented in title
+                                                        .filter(row=>row.indexOf('@name')<0)
+                                                        .join('\n');
                     //calculate source line: row match found + match row length
                     const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
                                         match_module_function[1].split('\n').length;
@@ -176,7 +179,12 @@ const component = async props => {
                                     HEADER
                                         .replace('@{TYPE}',match_module_function[1].indexOf('@module')>-1?'Module':'Function')
                                         .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
-                                                                    match_module_function[1].split('\n').filter(row=>row.indexOf('@name'))[1]:'')
+                                                                    match_module_function[1]
+                                                                        .split('\n')
+                                                                        .filter(row=>row.indexOf('@name')>-1)
+                                                                        .map(row=>  row
+                                                                                    .substring( row.indexOf('@name')+'@name'.length)
+                                                                                    .trimStart())[0]:'')
                                     + '\n' +
                                     ALIGNMENT+ '\n' +
                                     function_tags + '\n' +

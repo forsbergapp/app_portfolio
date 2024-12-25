@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{report_queue:CommonAppModuleQueue[],
  *          function_get_order_by:function}} props
  * @returns {string}
@@ -44,22 +47,24 @@ const template = props => ` <div class='menu_report_queue_row'>
                             ).join('')
                             }`;
 /**
-* 
-* @param {{data:        {
-*                       commonMountdiv:string,
-*                       sort:string,
-*                       order_by:string
-*                       },
-*          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonFFB:commonFFB
-*                       },
-*          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function
+ * @param {{data:        {
+ *                       commonMountdiv:string,
+ *                       sort:string,
+ *                       order_by:string
+ *                       },
+ *          methods:     {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonFFB:commonFFB
+ *                       },
+ *          lifecycle:   null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     /**
      * Get order by if column matches

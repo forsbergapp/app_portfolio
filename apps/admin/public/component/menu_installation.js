@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{installed:boolean|null}} props
  * @returns {string}
  */
@@ -39,18 +42,20 @@ const template = props => ` <div id='menu_installation_content_widget1' class='w
                                 </div>
                             </div>`;
 /**
-* 
-* @param {{data:        {commonMountdiv:string},
-*          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonFFB:commonFFB
-*                       },
-*          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function
+ * @param {{data:        {commonMountdiv:string},
+ *          methods:     {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonFFB:commonFFB
+ *                       },
+ *          lifecycle:   null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     //checks installed if admin
     /**@type{boolean|null} */

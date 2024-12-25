@@ -9,6 +9,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{maintenance:0|1|null}} props
  * @returns {string}
  */
@@ -34,19 +37,21 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
                                 </div>
                             </div>`;
 /**
-* 
-* @param {{ data:       {commonMountdiv:string},
-*           methods:    {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonComponentRender:commonComponentRender,
-*                       commonFFB:commonFFB
-*                       },
-*           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null,
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{ data:       {commonMountdiv:string},
+ *           methods:    {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonComponentRender:commonComponentRender,
+ *                       commonFFB:commonFFB
+ *                       },
+ *           lifecycle:  null}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null,
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     /**@type{{status_codes:[number, string][]}} */
     const result_obj = await props.methods.commonFFB({path:'/server/info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));

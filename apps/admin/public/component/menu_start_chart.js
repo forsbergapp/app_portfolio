@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_id:number|null,
  *          chart1_stat:{   chart:number,
  *                          app_id:number,
@@ -76,18 +79,21 @@ const template = props => ` <div id='menu_start_chart_box1'>
                                 </div>
                             </div>`;
 /**
-* @param {{ data:       {commonMountdiv:string},
-*           methods:    {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonComponentRender:commonComponentRender,
-*                       commonFFB:commonFFB
-*                       },
-*           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null,
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function
+ * @param {{ data:       {commonMountdiv:string},
+ *           methods:    {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonComponentRender:commonComponentRender,
+ *                       commonFFB:commonFFB
+ *                       },
+ *           lifecycle:  null}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null,
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     const app_id = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').getAttribute('data-value'); 
     const year = props.methods.COMMON_DOCUMENT.querySelector('#menu_start_select_year .common_select_dropdown_value').getAttribute('data-value'); 

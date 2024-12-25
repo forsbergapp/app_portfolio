@@ -49,7 +49,8 @@ const APP_SECURE_GLOBAL = {
 Object.seal(APP_SECURE_GLOBAL);
 
 /**
- * Set globals to null
+ * @name appSecureGlobalDelete
+ * @description Set globals to null
  * @function
  * @returns {void}
  */
@@ -71,7 +72,8 @@ const appSecureGlobalDelete = () => {
 };
 
 /**
- * Show given menu
+ * @name appSecureMenuShow
+ * @description Show given menu
  * @function
  * @param {number} menu 
  * @returns {void}
@@ -214,7 +216,8 @@ const appSecureMenuShow = menu => {
     }            
 };
 /**
- * Show charts
+ * @name appSecureMenuStartChartShow
+ * @description Show charts
  * @function
  * @returns{Promise.<void>}
  */
@@ -229,7 +232,8 @@ const appSecureMenuStartChartShow = async () => {
         path:       '/component/menu_start_chart.js'});
 };
 /**
- * Broadcast send
+ * @name appSecureDialogueSendBroadcastSend
+ * @description Broadcast send
  * @function
  * @returns{void}
  */
@@ -271,7 +275,8 @@ const appSecureDialogueSendBroadcastSend = () => {
     }
 };    
 /**
- * Broadcast close
+ * @name appSecureDialogueSendBroadcastClose
+ * @description Broadcast close
  * @function
  * @returns{void}
  */
@@ -279,7 +284,8 @@ const appSecureDialogueSendBroadcastClose = () => {
     common.commonComponentRemove('dialogue_send_broadcast', true);
 };
 /**
- * Broadcast close
+ * @name appSecureDialogueSendBroadcastShow
+ * @description Broadcast send broadcast show
  * @function
  * @param {string} dialogue_type 
  * @param {number|null} client_id 
@@ -333,7 +339,8 @@ const appSecureDialogueSendBroadcastShow = async (dialogue_type, client_id=null)
     });
 };
 /**
- * Broadcast set type
+ * @name appSecureDialogueSendBroadcastBroadcastTypeSet
+ * @description Broadcast set type
  * @function
  * @returns{void}
  */
@@ -360,7 +367,8 @@ const appSecureDialogueSendBroadcastBroadcastTypeSet = () => {
     }
 };
 /**
- * Maintenance set
+ * @name appSecureDialogueSendBroadcastMaintenanceSet
+ * @description Maintenance set
  * @function
  * @returns{void}
  */
@@ -374,7 +382,8 @@ const appSecureDialogueSendBroadcastMaintenanceSet = () => {
     common.commonFFB({path:'/server-config/config/CONFIG_SERVER', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
 };
 /**
- * Renders component menu_users_list
+ * @name appSecureMenuUsers
+ * @description Renders component menu_users_list
  * @function
  * @param {string} sort 
  * @param {string} order_by 
@@ -394,9 +403,10 @@ const appSecureMenuUsers = (sort='username', order_by='asc') => {
 };
 
 /**
- * Button save
- * Saves apps, modules, parameters and secrets
- * or config or users
+ * @name appSecureCommonButtonSave
+ * @description Button save
+ *              Saves apps, modules, parameters and secrets
+ *              or config or users
  * @function
  * @param {string} item 
  * @returns {Promise.<void>}
@@ -523,7 +533,8 @@ const appSecureCommonButtonSave = async (item) => {
     }
 };
 /**
- * Updates record
+ * @name appSecureCommonRecordUpdate
+ * @description Updates record
  * @function
  * @param {'user_account'|'app'|'app_parameter'|'app_secret'|'app_module'} table 
  * @param {HTMLElement} row_element 
@@ -573,7 +584,8 @@ const appSecureCommonRecordUpdate = async ( table,
 
 
 /**
- * Executes installation rest API and presents the result
+ * @name appSecureMenuInstallationDbInstallationFunction
+ * @description Executes installation rest API and presents the result
  * @function
  * @param {string} id 
  * @param {boolean|null} db_icon 
@@ -600,7 +612,8 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, quer
     });
 };
 /**
- * Installs DB
+ * @name appSecureMenuInstallationDbInstall
+ * @description Installs DB
  * @function
  * @returns {void}
  */
@@ -612,7 +625,8 @@ const appSecureMenuInstallationDbInstall = () =>{
                             'POST', null);
 };
 /**
- * Uninstalls DB
+ * @name appSecureMenuInstallationDbUninstall
+ * @description Uninstalls DB
  * @function
  * @returns {void}
  */
@@ -623,7 +637,8 @@ const appSecureMenuInstallationDbUninstall = () =>{
                             `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', null);
 };
 /**
- * Installs Demo data
+ * @name appSecureMenuInstallationDemoInstall
+ * @description Installs Demo data
  * @function
  * @returns {void}
  */
@@ -640,7 +655,8 @@ const appSecureMenuInstallationDemoInstall = () =>{
     }
 };
 /**
- * Uninstalls Demo data
+ * @name appSecureMenuInstallationDemoUninstall
+ * @description Uninstalls Demo data
  * @function
  * @returns {void}
  */
@@ -652,7 +668,8 @@ const appSecureMenuInstallationDemoUninstall = () =>{
 };
 
 /**
- * App events
+ * @name appSecureEvents
+ * @description App events
  * @function
  * @param {string} event_type 
  * @param {CommonAppEvent} event 
@@ -942,7 +959,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
     }
 };
 /**
- * Init secure
+ * @name appSecureInit
+ * @description Init secure
  * @function
  * @returns {void}
  */
@@ -954,7 +972,8 @@ const appSecureInit = () => {
 };
 
 /**
- * App logout
+ * @name appLogout
+ * @description App logout
  * @function
  * @returns {void}
  */
@@ -966,7 +985,8 @@ const appLogout = () => {
     });
 };
 /**
- * Admin login
+ * @name appLogin
+ * @description Admin login
  * @function
  * @returns {Promise.<void>}
  */
@@ -998,7 +1018,8 @@ const appLogin = async () => {
     .catch(()=>common.commonComponentRemove('secure'));
 };
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -1111,7 +1132,8 @@ const appEventClick = event => {
     }
 };
 /**
- * App event change
+ * @name appEventChange
+ * @description App event change
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -1129,7 +1151,8 @@ const appEventChange = event => {
     }
 };
 /**
- * App event keyup
+ * @name appEventKeyUp
+ * @description App event keyup
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -1162,7 +1185,8 @@ const appEventKeyUp = event => {
     }
 };
 /**
- * App event keydown
+ * @name appEventKeyDown
+ * @description App event keydown
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -1182,7 +1206,8 @@ const appEventKeyDown = event => {
     }
 };
 /**
- * App event input
+ * @name appEventInput
+ * @description App event input
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -1202,7 +1227,8 @@ const appEventInput = event => {
     }
 };
 /**
- * App event focus
+ * @name appEventFocus
+ * @description App event focus
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -1223,7 +1249,8 @@ const appEventFocus = event => {
 };
 
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error
  * @returns {void}
@@ -1232,7 +1259,8 @@ const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -1247,7 +1275,8 @@ const appFrameworkSet = async (framework=null) => {
                         Input:appEventInput});
 };
 /**
- * App init
+ * @name appInit
+ * @description App init
  * @function
  * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
@@ -1271,12 +1300,13 @@ const appInit = async (parameters) => {
     await common.commonDialogueShow('LOGIN_ADMIN');
 };    
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit= async parameters => {        
+const appCommonInit = async parameters => {        
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appLogout;

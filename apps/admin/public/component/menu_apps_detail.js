@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_id:number,
  *          detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret',
  *          app_detail:*}} props
@@ -60,6 +63,9 @@ const template = props => ` <div class='menu_apps_detail_row'>
                                 }`
                             }`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:{      commonMountdiv:string,
  *                      app_id_data:number,
  *                      detail:'menu_apps_detail_parameter'|'menu_apps_detail_module'|'menu_apps_detail_secret'},

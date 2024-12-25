@@ -9,6 +9,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{records_user_stat:[{identity_provider_id:string, provider_name:string, count_users:number, count_connected:number}]|[],
  *          count_not_connected:number}} props
  * @returns {string}
@@ -41,7 +44,9 @@ const template = props => `<div id='menu_user_stat_content_widget1' class='widge
                                 </div>
                             </div>` ;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{ data:{      commonMountdiv:string},
  *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                       commonFFB:commonFFB},

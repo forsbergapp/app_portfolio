@@ -8,6 +8,9 @@
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => `<div id='menu_users_content_widget1' class='widget'>
@@ -26,15 +29,17 @@ const template = () => `<div id='menu_users_content_widget1' class='widget'>
                             </div>
                         </div>` ;
 /**
-* 
-* @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
-*           lifecycle:  null}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{ data:{      commonMountdiv:string},
+ *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
+ *           lifecycle:  null}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     props;
     return {

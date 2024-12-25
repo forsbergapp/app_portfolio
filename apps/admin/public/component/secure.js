@@ -7,6 +7,9 @@
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () =>` <div id='secure'>
@@ -37,7 +40,9 @@ const template = () =>` <div id='secure'>
                         </div>
                         `;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:{      commonMountdiv:string},
  *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
