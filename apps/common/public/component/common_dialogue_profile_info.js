@@ -15,7 +15,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{profile:CommonProfileUser,
  *          function_commonMiscFormatJsonDate:commonMiscFormatJsonDate}} props 
  * @returns {string}
@@ -94,6 +96,9 @@ const template = props =>`  <div id='common_profile_main'>
                                 ${props.profile.private==1?'<div id=\'common_profile_private_title\' class=\'common_icon\'></div>':''}
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_account_id:number,

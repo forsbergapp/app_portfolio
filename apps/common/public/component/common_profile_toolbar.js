@@ -8,11 +8,16 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => ' <div id=\'common_profile_btn_top\' class=\'common_toolbar_button common_icon\' ></div>';
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props  
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 

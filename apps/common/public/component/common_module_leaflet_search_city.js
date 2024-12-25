@@ -9,7 +9,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{records:CommonMicroserviceWorldcitiesRecordType[]}
  *          } props 
  * @returns {string}
@@ -36,6 +38,9 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
                                 }
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      search:string},

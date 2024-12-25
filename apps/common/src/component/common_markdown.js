@@ -9,6 +9,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{markdown :string,
  *          functionMarkdownParse:function
  *          }} props
@@ -16,7 +19,9 @@
  */
 const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      app_translation:server_db_file_app_translation|null,
  *                      app:server_db_file_app|null,

@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{css_url:string,
  *          leaflet_container:string}} props
  * @returns {string}
@@ -16,6 +19,9 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
                             <div id='${props.leaflet_container}'></div>`;
 
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      longitude:string,

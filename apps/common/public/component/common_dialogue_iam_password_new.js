@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{auth:string}} props
  * @returns {string}
  */
@@ -26,7 +29,9 @@ const template = props =>`  <div id='common_dialogue_iam_password_new_icon' clas
                                 <div id='common_dialogue_iam_password_new_ok' class='common_dialogue_button common_icon'></div>
                             </div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      auth:string},

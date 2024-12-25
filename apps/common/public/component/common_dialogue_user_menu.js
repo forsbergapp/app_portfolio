@@ -13,7 +13,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_id:number,
  *          common_app_id:number,
  *          user_account_id:number|null,
@@ -71,7 +73,9 @@ const template = props =>`  ${props.app_id == props.common_app_id?
                             }
                             <div id='common_dialogue_user_menu_close' class='common_dialogue_button common_icon' ></div>`;
 /**
- * div common_dialogue_user_menu_app_theme used to show optional component app_theme.js
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,

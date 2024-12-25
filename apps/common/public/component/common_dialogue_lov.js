@@ -8,7 +8,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{list:*,
  *          lov:string,
  *          lov_column_value:string}} props 
@@ -36,6 +38,9 @@ const template = props =>`  <div id='common_lov_form'>
                             <div id='common_lov_close' class='common_dialogue_button common_icon'></div>
                         </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      common_app_id:number,

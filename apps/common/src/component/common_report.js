@@ -3,11 +3,15 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{config:import('../../../../server/types.js').server_db_file_app, 
  *          papersize:'A4'|'Letter',
  *          function_report:function,
  *          data:*
  *          }} props
+ * @returns {Promise.<string>}
  */
 const template = async props =>`  <!DOCTYPE html>
                             <html>
@@ -195,7 +199,9 @@ const template = async props =>`  <!DOCTYPE html>
                             </body>
                             </html>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      CONFIG_APP:import('../../../../server/types.js').server_db_file_app, 
  *                      data:import('../../../../server/types.js').server_apps_report_create_parameters,

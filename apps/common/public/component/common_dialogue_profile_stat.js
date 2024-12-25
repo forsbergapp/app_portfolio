@@ -10,6 +10,9 @@
  * 
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () =>  `   <div id='common_profile_stat_row1'>
@@ -20,6 +23,9 @@ const template = () =>  `   <div id='common_profile_stat_row1'>
                             <div id='common_profile_stat_row2'></div>
                             <div id='common_profile_stat_list'></div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      stat_list_app_rest_url:string,
