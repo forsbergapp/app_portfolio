@@ -22,6 +22,9 @@ const commonPath ='/common/js/common.js';
 const common = await import(commonPath);
 
 /**
+ * @name show
+ * @description Shows document
+ * @function
  * @param {string} href
  * @param {string} title
  * @param {'GUIDE'|'APP'|'JSDOC'} type
@@ -44,7 +47,8 @@ const show = async (href, title, type) =>{
         path:       '/common/component/common_document.js'});
 };
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error 
  * @returns {void}
@@ -54,7 +58,8 @@ const appException = (error) => {
 };
  
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -81,6 +86,7 @@ const appEventClick = event => {
                 case 'title':
                 case 'nav_content_app':
                 case 'nav_content_jsdoc':
+                case 'content':
                 case 'article':{
                     event.preventDefault();
                     if (event.target.getAttribute('href'))
@@ -88,7 +94,7 @@ const appEventClick = event => {
                                 //use title from first menu text if clicking on title
                                 event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
                                 //GUIDE in title and nav_content_app
-                                event_target_id=='title'?'GUIDE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
+                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'JSDOC_CODE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
                     break;
                 }
                 case 'common_toolbar_framework_js':{
@@ -108,7 +114,8 @@ const appEventClick = event => {
     }
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.&lt;void>}
@@ -123,7 +130,8 @@ const appFrameworkSet = async (framework=null) => {
             Input:null});
 };
 /**
- * Init app
+ * @name appInit
+ * @description Init app
  * @function
  * @returns {Promise.&lt;void>}
  */
@@ -152,12 +160,13 @@ const appInit = async () => {
 
 };
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit= parameters => {
+const appCommonInit = parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;

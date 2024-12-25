@@ -15,6 +15,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{about_logo:String,
  *          app_copyright:string,
  *          app_link_title:string,
@@ -34,6 +37,9 @@ const template = props => ` &lt;div id='about_logo' style='background-image:url(
                             &lt;div id='info_link4' class='common_link'>${props.info_link4}&lt;/div>
                             &lt;div id='info_close' class='common_dialogue_button common_icon' >&lt;/div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      about_logo:string,
@@ -51,7 +57,7 @@ const template = props => ` &lt;div id='about_logo' style='background-image:url(
  *                      methods:null, 
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
     props.methods.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
     return {
@@ -68,7 +74,7 @@ const method = async props => {
         })
     };
 };
-export default method;</code></pre>
+export default component;</code></pre>
         </div>
     </div>
 

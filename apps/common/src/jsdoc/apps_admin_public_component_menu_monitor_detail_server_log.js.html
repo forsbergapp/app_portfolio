@@ -18,6 +18,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{function_get_order_by:function,
  *          function_roundOff:commonMiscRoundOff,
  *          logs:[],
@@ -325,23 +328,25 @@ const template = props => ` ${  /*
                             }`;
                             
 /**
-* 
-* @param {{ data:{      commonMountdiv:string,
-*                       path:string,
-*                       query:string,
-*                       token_type:CommonRESTAPIAuthorizationType,
-*                       sort:string,
-*                       order_by:string,
-*                       LIMIT:number},
-*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonMiscRoundOff:commonMiscRoundOff,
-*                       commonFFB:commonFFB},
-*           lifeycle:   null}} props 
-* @returns {Promise.&lt;{ lifecycle:   CommonComponentLifecycle, 
-*                      data:        {page_last:number, total_count:number},
-*                      methods:     null,
-*                      template:    string}>}
-*/
+ * @name component
+ * @description Component
+ * @function
+ * @param {{ data:{      commonMountdiv:string,
+ *                       path:string,
+ *                       query:string,
+ *                       token_type:CommonRESTAPIAuthorizationType,
+ *                       sort:string,
+ *                       order_by:string,
+ *                       LIMIT:number},
+ *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonMiscRoundOff:commonMiscRoundOff,
+ *                       commonFFB:commonFFB},
+ *           lifeycle:   null}} props 
+ * @returns {Promise.&lt;{ lifecycle:   CommonComponentLifecycle, 
+ *                      data:        {page_last:number, total_count:number},
+ *                      methods:     null,
+ *                      template:    string}>}
+ */
 const component = async props => {
     const logs = await props.methods.commonFFB({path:props.data.path, query:props.data.query, method:'GET', authorization_type:props.data.token_type}).then((/**@type{string}*/result)=>JSON.parse(result));
     /**

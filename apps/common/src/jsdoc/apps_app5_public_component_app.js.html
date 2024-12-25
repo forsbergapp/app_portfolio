@@ -13,6 +13,9 @@
  * @import {COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () =>` &lt;div id='app_top'>
@@ -26,7 +29,9 @@ const template = () =>` &lt;div id='app_top'>
                             &lt;div id='app_bottom_about'>&lt;/div>
                         &lt;/div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props 
  * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 

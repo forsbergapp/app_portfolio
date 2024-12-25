@@ -16,6 +16,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{user_logons:[{  id:number,
  *                          app_id:number,
  *                          res:string,
@@ -71,17 +74,19 @@ const template = props => ` &lt;div id='menu_users_iam_user_login_row_title' cla
                             ).join('')
                             }`;
 /**
-* 
-* @param {{ data:{      commonMountdiv:string,
-*                       user_account_id:number},
-*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonFFB:commonFFB},
-*           lifecycle:  null}} props
-* @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{ data:{      commonMountdiv:string,
+ *                       user_account_id:number},
+ *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonFFB:commonFFB},
+ *           lifecycle:  null}} props
+ * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     const user_logon = await props.methods.commonFFB({path:'/server-iam/iam_user_login', query:`data_user_account_id=${props.data.user_account_id}&amp;data_app_id=`, method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));

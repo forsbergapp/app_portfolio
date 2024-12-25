@@ -12,20 +12,23 @@
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 
 /**
+ * @name cube_solve
+ * @description Solves Rubiks cube using generative AI pattern
+ * 				Model: 		Robot
+ * 							Using Kociemba and Thistlewaite algorithms
+ * 							Mathematical best solutions
+ * 							Human
+ * 							Using CFOP / Fridrich method  (Cross – F2L – OLL – PLL)
+ * 							Used often by speed cubers that is easier to understand for humans (?)
+ * 				Preamble:	Sing master notation
+ * 				Temperature:	Return one best solution or all solutions
  * 
- * Solves Rubiks cube using generative AI pattern
- * Model: 		Robot
- * 				Using Kociemba and Thistlewaite algorithms
- * 				Mathematical best solutions
- * 				Human
- * 				Using CFOP / Fridrich method  (Cross – F2L – OLL – PLL)
- * 				Used often by speed cubers that is easier to understand for humans (?)
- * Preamble:	Sing master notation
- * Temperature:	Return one best solution or all solutions
+ * 				Solves cube from current state to solved state or given state
+ * 				Uses worker_threads for Kociemba algorithm so main proces is not blocked
+ * 				since this algorithm can takes from seconds to mintues to solve the cube
  * 
- * Solve cube from current state to solved state or given state
- * 
- * Returns Singmaster notation with moves, time, length and model for each solution
+ * 				Returns Singmaster notation with moves, time, length and model for each solution
+ * @function
  * @param {number} app_id
  * @param {import('./types.js').APP_FUNCTION_cube_solve_data} data
  * @param {string} user_agent
