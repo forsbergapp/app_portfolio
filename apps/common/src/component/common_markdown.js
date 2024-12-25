@@ -49,7 +49,7 @@ const component = async props => {
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
-     * 1. variables for APP template and JSDOC MODULE
+     * 1. variables for APP template and MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
      * 2.sections
      *   # character must start at first position on a  row
      *   creates div with class common_markdown_section for all sections
@@ -133,6 +133,7 @@ const component = async props => {
             //images are saved in an array
             markdown = markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end.join('\n'):'');    
         }
+        //1.replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
         if (props.data.type.startsWith('MODULE')){
             markdown = markdown.replaceAll('@{MODULE_NAME}', props.data.module ?? '');
             markdown = markdown.replaceAll('@{MODULE}',props.data.module ??'');
@@ -176,6 +177,8 @@ const component = async props => {
                                                         })
                                                         //remove @name tag presented in title
                                                         .filter(row=>row.indexOf('@name')<0)
+                                                        //remove @function tag presented in title
+                                                        .filter(row=>row.indexOf('@function')<0)
                                                         .join('\n');
                     //calculate source line: row match found + match row length
                     const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
