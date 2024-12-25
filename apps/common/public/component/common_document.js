@@ -59,7 +59,7 @@ const component = async props => {
                 .map((/**@type{string}*/row,/**@type{number}*/index)=>{
                     const selected_class = (props.data.href.split('#line')[1] == (index+1).toString())?'code_line_selected':'';
                     //split rows into two columns and highlight selected line if #line is used in link
-                    return `<div data-line='${index+1}' class='code_line ${selected_class}'>${index+1}</div><div data-line='${index+1}' class='code_text ${selected_class}'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`;
+                    return `<div data-line='${index+1}' class='code_line ${selected_class}'>${index+1}</div><div data-line='${index+1}' class='code_text ${selected_class}'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
                 }).join('\n') ?? '';
             break;
         }
@@ -72,7 +72,7 @@ const component = async props => {
                 content_element.innerHTML = `<div id='content_title'>${props.data.title}</div>`+ 
                                                 content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
                                                 .map((/**@type{string}*/row,/**@type{number}*/index)=>
-                                                    `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt').replaceAll('>','&gt')}</div>`).join('\n') ?? '';
+                                                    `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`).join('\n') ?? '';
                 //highlight selected line if # is used in link
                 if (props.data.href.split('#')[1])
                     Array.from(content_element.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
