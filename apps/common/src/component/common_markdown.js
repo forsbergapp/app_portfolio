@@ -30,6 +30,17 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  */
 const component = async props => {
     /**
+     * Return supported characters as HTML Entities for tables
+     * @param {string} text
+     * @returns {string}
+     */
+    const HTMLEntities = text => text
+                                    .replaceAll('|','&vert;')
+                                    .replaceAll('[','&#91;')
+                                    .replaceAll(']','&#93;')
+                                    .replaceAll('<','&lt;')
+                                    .replaceAll('>','&gt;');
+    /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
      * 1. variables for APP template and JSDOC MODULE
@@ -132,7 +143,7 @@ const component = async props => {
             const ALIGNMENT         = '|:---------------|:--------------------------------------|';
             const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
             const SOURCE_LINE_TAG   = '|Source line     |[@{MODULE_LINE}](@{SOURCE_LINE_LINK)   |';
-
+            
             const REGEXP_TAG = /@\w+/g;
             props.data.code = props.data.code?.replaceAll('\r\n','\n') ??'';
             while ((match_module_function = regexp_module_function.exec(props.data.code ?? '')) !==null){
@@ -140,17 +151,22 @@ const component = async props => {
                 if (match_module_function[0].indexOf('@function')>-1 ||match_module_function[0].indexOf('@module')>-1){
                     const function_tags = match_module_function[1].split('\n')
                                             .map(row=>{
+                                                        //reset regexp so regexp will work in loop
+                                                        REGEXP_TAG.lastIndex = 0;
                                                         const tag = REGEXP_TAG.exec(row)?.[0]??'';
                                                         return FUNCTION_TAG
                                                         .replace(   '@{FUNCTION_TAG}',
                                                                     tag)
                                                         .replace(   '@{FUNCTION_TEXT}',
                                                                     //check if tag exists
-                                                                    row.indexOf('@')>-1?
+                                                                    (tag!='' && row.indexOf(tag)>-1)?
                                                                         //return part after tag
-                                                                        row.split(tag)[1].trimStart():
+                                                                        HTMLEntities(row.substring(row
+                                                                                        .indexOf(tag)+tag.length)
+                                                                                        .trimStart()):
                                                                             //no tag, return after first '*', remove start space characters
-                                                                            row.trimStart().substring(1).trimStart());
+                                                                            HTMLEntities(row
+                                                                                .substring(row.indexOf('*')+1)));
                                                         }).join('\n');
                     //calculate source line: row match found + match row length
                     const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
@@ -274,6 +290,7 @@ const component = async props => {
             //get max length of first column and set max length 40em (half width)
             //use number to calculate width/80
             const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
+            //return with HTML Entities for tables
             markdown = markdown.replace(table, 
                     `<div class='common_markdown_table'>${table.split('\n').filter(row=>row.indexOf('---')<0).map((row, index_row)=>
                         `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'} ${index_row==0?'common_markdown_table_row_title':''}'>${
