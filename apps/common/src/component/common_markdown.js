@@ -246,7 +246,6 @@ const component = async props => {
         //8.links
         //regexp for [text](url)
         const regexp_links = /\[([^)]+)\]\(([^)]+)\)/g;
-        //const regexp_links = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
         let match_links;
         while ((match_links = regexp_links.exec(markdown)) !==null){
             markdown = markdown.replace(match_links[0], 
