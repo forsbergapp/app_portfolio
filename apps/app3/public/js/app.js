@@ -153,7 +153,8 @@ const APP_GLOBAL = {
 Object.seal(APP_GLOBAL);
 
 /**
- * Print timetable
+ * @name appReportTimetablePrint
+ * @description Print timetable
  * @function
  * @returns {Promise.<void>}
  */
@@ -180,7 +181,8 @@ const appReportTimetablePrint = async () => {
     
 };
 /**
- * Get report settings
+ * @name appReportTimetableSettings
+ * @description Get report settings
  * @function
  * @returns {APP_REPORT_settings}
  */
@@ -248,7 +250,8 @@ const appReportTimetableSettings = () => {
                 ui_navigation_right     : 'toolbar_btn_right'};
 };
 /**
- * Timetable update
+ * @name appReportTimetableUpdate
+ * @description Timetable update
  * @function
  * @param {number} timetable_type 
  * @param {'toolbar_btn_left' | 'toolbar_btn_right' | null} item_id 
@@ -328,7 +331,8 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
     }
 };
 /**
- * Get report url
+ * @name appReportUrl
+ * @description Get report url
  * @function
  * @param {number|null} id 
  * @param {number} sid 
@@ -360,7 +364,8 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
 };
 
 /**
- * Update thumbnails with timetables
+ * @name appSettingThemeThumbnailsUpdate
+ * @description Update thumbnails with timetables
  * @function
  * @param {{type:'day'|'month'|'year'|null,
  *          theme_id:string}|null} theme
@@ -453,7 +458,8 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
 };
 
 /**
- * Get theme id
+ * @name appSettingThemeId
+ * @description Get theme id
  * @function
  * @param {string} type 
  * @returns {string}
@@ -469,7 +475,8 @@ const appSettingThemeId = type => {
 };
 
 /**
- * Updates settings theme thumbnail
+ * @name appSettingThemeNav
+ * @description Updates settings theme thumbnail
  * @function
  * @param {number} nav 
  * @param {'day'|'month'|'year'} type 
@@ -477,7 +484,6 @@ const appSettingThemeId = type => {
  */
 const appSettingThemeNav = async (nav, type) => {
     
-
     let theme_index_APP_GLOBAL = 0;
 
     //get current index
@@ -511,7 +517,8 @@ const appSettingThemeNav = async (nav, type) => {
 };
 
 /**
- * Get horizontal alignment
+ * @name appSettingAlignGet
+ * @description Get horizontal alignment
  * @function
  * @param {boolean} al 
  * @param {boolean} ac 
@@ -528,7 +535,8 @@ const appSettingAlignGet = (al,ac,ar) => {
 	return null;
 };
 /**
- * Show settings times for users timezone and timetable timezone
+ * @name settingsTimesShow
+ * @description Show settings times for users timezone and timetable timezone
  * @function
  * @returns {Promise.<void>}
  */
@@ -563,7 +571,8 @@ const settingsTimesShow = async () => {
     
 };
 /**
- * Toolbar button
+ * @name appToolbarButton
+ * @description Toolbar button
  * @function
  * @param {number} choice 
  * @returns {Promise.<void>}
@@ -629,7 +638,8 @@ const appToolbarButton = async (choice) => {
 };
 
 /**
- * Show setting
+ * @name SettingShow
+ * @description Show setting
  * @function
  * @param {number} tab_selected 
  * @returns {Promise.<void>}
@@ -751,7 +761,8 @@ const SettingShow = async (tab_selected) => {
     
 };
 /**
- * Get alignment for button
+ * @name appSettingButtonAlignValue
+ * @description Get alignment for button
  * @function
  * @param {string} report_align_where 
  * @returns {string}
@@ -767,7 +778,8 @@ const appSettingButtonAlignValue = (report_align_where) => {
     return '';
 };
 /**
- * Zoom paper
+ * @name appPaperZoom
+ * @description Zoom paper
  * @function
  * @param {number|null} zoomvalue 
  * @returns {void}
@@ -791,12 +803,13 @@ const appPaperZoom = (zoomvalue = null) => {
 };
 
 /**
- * Show dialogue
+ * @name appDialogueShow
+ * @description Show dialogue
  * @function
  * @param {*} dialogue 
  * @returns {void}
  */
-const appDialogueShow = (dialogue) => {
+const appDialogueShow = dialogue => {
     if (dialogue == 'SCAN' && common.commonMiscMobile()==false){
         common.commonComponentRender({mountDiv:   'dialogue_scan_open_mobile',
                                 data:       null,
@@ -808,7 +821,8 @@ const appDialogueShow = (dialogue) => {
     }
 };
 /**
- * Update ui
+ * @name appComponentSettingUpdate
+ * @description Update component
  * @function
  * @param {'REGIONAL'|'GPS'|'DESIGN'|'IMAGE'|'TEXT'|'PRAYER'|'USER'} setting_tab
  * @param {string} setting_type
@@ -1016,7 +1030,8 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
 };
 
 /**
- * User login
+ * @name appUserLogin
+ * @description User login
  * @function
  * @param {boolean} admin
  * @param {string|null} username_verify
@@ -1033,7 +1048,8 @@ const appUserLogin = async (admin=false, username_verify=null, password_verify=n
 };
 
 /**
- * User function
+ * @name appUserFunction
+ * @description User function
  * @function
  * @param {'FOLLOW'|'LIKE'} function_name 
  * @returns {Promise.<void>}
@@ -1045,7 +1061,8 @@ const appUserFunction = async (function_name) => {
 };
 
 /**
- * User logout
+ * @name appUserLogout
+ * @description User logout
  * @function
  * @returns {void}
  */
@@ -1062,7 +1079,8 @@ const appUserLogout = () => {
     });    
 };
 /**
- * Login common
+ * @name appUserLoginCommon
+ * @description Login common
  * @function
  * @param {string|null} avatar 
  * @returns {void}
@@ -1089,7 +1107,8 @@ const appUserLoginCommon = avatar => {
     });
 };
 /**
- * Provider login
+ * @name appUserLoginProvider
+ * @description Provider login
  * @function
  * @param {*} provider_id 
  * @returns {Promise.<void>}
@@ -1102,7 +1121,8 @@ const appUserLoginProvider = async (provider_id) => {
     .catch(()=>null);
 };
 /**
- * Profile stat update
+ * @name appUserProfileStatUpdate
+ * @description Profile stat update
  * @function
  * @returns {Promise.<void>}
  */
@@ -1111,7 +1131,8 @@ const appUserProfileStatUpdate = async () => {
     APP_GLOBAL.function_profile_user_setting_stat(result.id);
 };
 /**
- * Profile stat
+ * @name appUserProfileStat
+ * @description Profile stat
  * @function
  * @param {number} statchoice 
  * @param {string|null} app_rest_url
@@ -1128,7 +1149,8 @@ const appUserProfileStatUpdate = async () => {
     });
  };
 /**
- * Profile detail
+ * @name appUserProfileDetail
+ * @description Profile detail
  * @function
  * @param {number} detailchoice 
  * @returns {void}
@@ -1152,7 +1174,8 @@ const appUserProfileDetail = (detailchoice) => {
         common.commonDialogueShow('LOGIN');
 };
 /**
- * User settings get
+ * @name appUserSettingsGet
+ * @description User settings get
  * @function
  * @returns {Promise.<null>}
  */
@@ -1219,7 +1242,8 @@ const appUserSettingsGet = async () => {
     });
 };
 /**
- * User setting show link
+ * @name appUserSettingLink
+ * @description User setting show link
  * @function
  * @param {HTMLElement} item 
  * @returns {void}
@@ -1252,7 +1276,8 @@ const appUserSettingLink = (item) => {
     }
 };
 /**
- * User settings function
+ * @name appUserSettingLink
+ * @description User settings function
  * @function
  * @param {'ADD'|'ADD_LOGIN'|'SAVE'} function_name 
  * @param {boolean} initial_user_setting 
@@ -1345,7 +1370,8 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
     }
 };
 /**
- * User settings delete
+ * @name appUserSettingDelete
+ * @description User settings delete
  * @function
  * @param {number|null} choice 
  * @returns {void}
@@ -1398,7 +1424,8 @@ const appUserSettingDelete = (choice=null) => {
     }
 };
 /**
- * Set default settings
+ * @name appUserSettingDefaultSet
+ * @description Set default settings
  * @function
  * @returns {Promise.<void>}
  */
@@ -1466,14 +1493,16 @@ const appUserSettingDefaultSet = async () => {
     COMMON_DOCUMENT.querySelector('#paper').className=APP_GLOBAL.design_default_papersize;
 };
  /**
-  * Fix float number
+  * @name appCommonFixFloat
+  * @description Fix float number
   * @function
   * @param {string} value 
   * @returns {number|null}
   */
 const appCommonFixFloat = value =>  (value==''||value==null)?null:parseFloat(value);
 /**
- * Settings update
+ * @name appUserSettingUpdate
+ * @description Settings update
  * @function
  * @param {'REGIONAL'|'GPS'|'DESIGN'|'IMAGE'|'TEXT'|'PRAYER'|'USER'} setting_tab
  * @returns {void}
@@ -1574,7 +1603,8 @@ const appUserSettingUpdate = setting_tab => {
 };
 
 /**
- * Profile user setting show link
+ * @name appUserSettingProfileLink
+ * @description Profile user setting show link
  * @function
  * @param {HTMLElement} item 
  * @returns {void}
@@ -1615,7 +1645,8 @@ const appUserSettingProfileLink = item => {
 };
 
 /**
- * User settings like
+ * @name appUserSettingsLike
+ * @description User settings like
  * @function
  * @param {number} user_account_app_data_post_id 
  * @returns {void}
@@ -1639,7 +1670,8 @@ const appUserSettingsLike = user_account_app_data_post_id => {
     }
 };
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -2168,7 +2200,8 @@ const appEventClick = event => {
     }
 };
 /**
- * App event change
+ * @name appEventChange
+ * @description App event change
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -2200,7 +2233,8 @@ const appEventChange = event => {
     }
 };
 /**
- * App event keyup
+ * @name appEventKeyUp
+ * @description App event keyup
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -2267,7 +2301,8 @@ const appEventKeyUp = event => {
 };
 
 /**
- * Map show qibbla
+ * @name appModuleLeafletMapQibblaShow
+ * @description Map show qibbla
  * @function
  * @returns {void}
  */
@@ -2295,7 +2330,8 @@ const appModuleLeafletMapQibblaShow = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);
 };
 /**
- * Map update
+ * @name appModuleLeafletMapUpdate
+ * @description Map update
  * @function
  * @param {{longitude:string,
  *          latitude:string,
@@ -2323,16 +2359,18 @@ const appModuleLeafletMapUpdate = async (parameters) => {
 };
 
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error
  * @returns {void}
  */
-const appException = (error) => {
+const appException = error => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -2348,7 +2386,8 @@ const appFrameworkSet = async (framework=null) => {
 };
 
 /**
- * Init app
+ * @name appInit
+ * @description Init app
  * @function
  * @param {{APP:APP_PARAMETERS,
  *          COMMON:commonInitAppParameters['COMMON'],
@@ -2496,12 +2535,13 @@ const appInit = async parameters => {
     });
 };
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit= parameters => {
+const appCommonInit = parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;

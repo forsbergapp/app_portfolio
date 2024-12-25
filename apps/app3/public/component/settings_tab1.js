@@ -14,6 +14,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{user_timezone:string}} props
  * @returns {string}
  */
@@ -124,6 +127,9 @@ const template = props => ` <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      common_app_id:number,
@@ -143,7 +149,7 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     const settings = await props.methods.commonMiscDbAppSettingsGet();
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
@@ -307,4 +313,4 @@ const method = async props => {
         template: template({user_timezone:props.data.user_timezone})
     };
 };
-export default method;
+export default component;

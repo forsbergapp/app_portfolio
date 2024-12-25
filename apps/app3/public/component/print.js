@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_link_app_report_css:string,
  *          common_link_common_css:string,
  *          html:string}} props
@@ -26,6 +29,9 @@ const template = props =>`  <!DOCTYPE html>
                             </body>
                             </html> `;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      appHtml:string
@@ -37,7 +43,7 @@ const template = props =>`  <!DOCTYPE html>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props;
     return {
         lifecycle:  null,
@@ -48,4 +54,4 @@ const method = async props => {
                                 html: props.data.appHtml})
     };
 };
-export default method;
+export default component;

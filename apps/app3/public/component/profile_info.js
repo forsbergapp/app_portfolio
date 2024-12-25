@@ -9,6 +9,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{setting:boolean}} props
  * @returns {string}
  */
@@ -48,6 +51,9 @@ const template = props => ` ${props.setting?
                             }
                             `;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_account_id:number|null,
@@ -66,7 +72,7 @@ const template = props => ` ${props.setting?
  *                                  },
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
 
     /**
      * @param {number} profile_id
@@ -171,4 +177,4 @@ const method = async props => {
         template:   template({setting:user_settings.length>0})
     };
 };
-export default method;
+export default component;

@@ -15,7 +15,8 @@ const commonPath ='/common/js/common.js';
 const common = await import(commonPath);
 
 /**
- * Show or hide dialogue
+ * @name appDialogueAppsShowHide
+ * @description Show or hide dialogue
  * @function
  * @returns {void}
  */
@@ -31,7 +32,8 @@ const appDialogueAppsShowHide = () => {
     }
 };
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -146,7 +148,8 @@ const appEventClick = event => {
     }
 };
 /**
- * App event change
+ * @name appEventChange
+ * @description App event change
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -161,7 +164,8 @@ const appEventChange = event => {
         common.commonEvent('change',event);
 };
 /**
- * App event keyup
+ * @name appEventKeyUp
+ * @description App event keyup
  * @function
  * @param {CommonAppEvent} event
  * @returns {void} 
@@ -204,7 +208,8 @@ const appEventKeyUp = event => {
     }
 };
 /**
- * App theme update
+ * @name appThemeUpdate
+ * @description App theme update
  * @function
  * @param {boolean} toggle_theme 
  * @returns {void}
@@ -229,7 +234,8 @@ const appThemeUpdate = (toggle_theme=false) => {
     common.commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
 /**
- * App theme get
+ * @name appThemeUpdateFromBody
+ * @description App theme get
  * @function
  * @returns {void}
  */
@@ -240,7 +246,8 @@ const appThemeUpdate = (toggle_theme=false) => {
         COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
 };
 /**
- * App preference post mount
+ * @name appPreferencesPostMount
+ * @description App preference post mount
  * @returns {void}
  */
  const appPreferencesPostMount = () => {
@@ -254,7 +261,8 @@ const appThemeUpdate = (toggle_theme=false) => {
 };
 
 /**
- * User login app
+ * @name appUserLogin
+ * @description User login app
  * @function
  * @param {boolean|null} admin 
  * @param {string|null} username_verify
@@ -267,7 +275,8 @@ const appUserLogin = async (admin=false, username_verify=null, password_verify=n
     .then(()=>appAppsGet());
 };
 /**
- * User logout app
+ * @name appUserLogout
+ * @description User logout app
  * @function
  * @returns {Promise.<void>}
  */
@@ -277,7 +286,8 @@ const appUserLogin = async (admin=false, username_verify=null, password_verify=n
 };
 
 /**
- * Get apps
+ * @name appAppsGet
+ * @description Get apps
  * @function
  * @returns {void}
  */
@@ -299,7 +309,8 @@ const appAppsGet = () => {
         path:       '/common/component/common_dialogue_apps.js'});
 };
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error 
  * @returns {void}
@@ -308,7 +319,8 @@ const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -323,7 +335,8 @@ const appFrameworkSet = async (framework=null) => {
             Input:null});
 };
 /**
- * Init app
+ * @name appInit
+ * @description Init app
  * @function
  * @param {commonInitAppParameters} parameters 
  * @returns {Promise.<void>}
@@ -378,12 +391,13 @@ const appInit = async (parameters) => {
    
 };
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit= parameters => {
+const appCommonInit = parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
