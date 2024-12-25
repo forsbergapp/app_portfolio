@@ -21,16 +21,17 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                         `<div data-id='${row.id}' data-type='${row.type}'>
                                             <div >${row.menu}</div>
                                             ${row.menu_sub?.map(row_sub=>
-                                                `<div class='common_link' href='${row_sub.doc}'>
-                                                    ${row_sub.menu}
-                                                </div>`
+                                                `<div class='common_link' href='${row_sub.doc}'>${row_sub.menu}</div>`
                                                 ).join('')}
                                         </div>
 
                                         `
                                     ).join('')}
                                 </div>
-                                <div id='nav_content_jsdoc'>${props.jsdoc_menu}</div>
+                                <div id='nav_content_jsdoc'>
+                                    <div id>JSDoc</div>
+                                    ${props.jsdoc_menu}
+                                </div>
                             </div>
                             <div id='content'></div>`;
 /**
