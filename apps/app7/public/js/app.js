@@ -30,16 +30,18 @@ const APP_GLOBAL = {
 };
 
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error 
  * @returns {void}
  */
-const appException = (error) => {
+const appException = error => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent|null} event 
  * @returns {void}
@@ -128,7 +130,8 @@ const appEventClick = (event=null) => {
     }
 };
 /**
- * App event other
+ * @name appEvenOther
+ * @description App event other
  * @function
  * @returns {void}
  */
@@ -195,7 +198,8 @@ const appEvenOther = () => {
     });
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -212,7 +216,8 @@ const appEvenOther = () => {
 };
 
 /**
- * Init app
+ * @name appInit
+ * @description Init app
  * @function
  * @returns {Promise.<void>}
  */
@@ -272,12 +277,13 @@ const appInit = async () => {
     });
 };
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit= (parameters) => {
+const appCommonInit = (parameters) => {
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = null;
     common.commonInit(parameters).then(()=>{
