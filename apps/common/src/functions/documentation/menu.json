@@ -63,8 +63,20 @@
     },
     {
         "id":6,
-        "menu":"6 Modules",
-        "type":"JSDOC_MODULE",
+        "menu":"6 Modules Apps",
+        "type":"MODULE_APPS",
+        "menu_sub":null
+    },
+    {
+        "id":7,
+        "menu":"7 Modules Microservice",
+        "type":"MODULE_MICROSERVICE",
+        "menu_sub":null
+    },
+    {
+        "id":8,
+        "menu":"8 Modules Server",
+        "type":"MODULE_SERVER",
         "menu_sub":null
     }
 ]
