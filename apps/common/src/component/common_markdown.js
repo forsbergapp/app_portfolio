@@ -20,8 +20,10 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  * @param {{data:       {
  *                      app_translation:server_db_file_app_translation|null,
  *                      app:server_db_file_app|null,
- *                      type:'GUIDE'|'APP',
+ *                      type:'GUIDE'|'APP'|'JSDOC_MODULE',
  *                      markdown:string,
+ *                      code:string|null,
+ *                      module:string|null
  *                      },
  *          methods:    null}} props
  * @returns {Promise.<string>}
@@ -30,7 +32,7 @@ const component = async props => {
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
-     * 1. variables for APP template
+     * 1. variables for APP template and JSDOC MODULE
      * 2.sections
      *   # character must start at first position on a  row
      *   creates div with class common_markdown_section for all sections
@@ -65,8 +67,9 @@ const component = async props => {
      * 
      *   not supported:
      *   ![alt text ](img "hover text")
-     * 
-     * 8.tables:
+     * 8.links
+     *   [text](url)
+     * 9.tables:
      *   | must start as first position on a row
      *   unlimited columns supported
      *   unlimited rows supported
@@ -112,6 +115,63 @@ const component = async props => {
             //replace SCREENSHOT_END
             //images are saved in an array
             markdown = markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end.join('\n'):'');    
+        }
+        if (props.data.type=='JSDOC_MODULE'){
+            markdown = markdown.replaceAll('@{MODULE_NAME}', props.data.module ?? '');
+            markdown = markdown.replaceAll('@{MODULE}',props.data.module ??'');
+            markdown = markdown.replaceAll('@{SOURCE_LINK}',props.data.module ??'');
+                                        
+            //search all JSDoc comments
+            const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
+            
+            const module_functions =[];
+            let match_module_function;
+
+            //JSDOC module table with variables
+            const HEADER            = '|@{TYPE}         |@{FUNCTION_NAME}                       |';
+            const ALIGNMENT         = '|:---------------|:--------------------------------------|';
+            const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
+            const SOURCE_LINE_TAG   = '|Source line     |[@{MODULE_LINE}](@{SOURCE_LINE_LINK)   |';
+
+            const REGEXP_TAG = /@\w+/g;
+            props.data.code = props.data.code?.replaceAll('\r\n','\n') ??'';
+            while ((match_module_function = regexp_module_function.exec(props.data.code ?? '')) !==null){
+                //JSDoc must have @function tag or @module tag
+                if (match_module_function[0].indexOf('@function')>-1 ||match_module_function[0].indexOf('@module')>-1){
+                    const function_tags = match_module_function[1].split('\n')
+                                            .map(row=>{
+                                                        const tag = REGEXP_TAG.exec(row)?.[0]??'';
+                                                        return FUNCTION_TAG
+                                                        .replace(   '@{FUNCTION_TAG}',
+                                                                    tag)
+                                                        .replace(   '@{FUNCTION_TEXT}',
+                                                                    //check if tag exists
+                                                                    row.indexOf('@')>-1?
+                                                                        //return part after tag
+                                                                        row.split(tag)[1].trimStart():
+                                                                            //no tag, return after first '*', remove start space characters
+                                                                            row.trimStart().substring(1).trimStart());
+                                                        }).join('\n');
+                    //calculate source line: row match found + match row length
+                    const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
+                                        match_module_function[1].split('\n').length;
+
+                    module_functions.push(
+                                    HEADER
+                                        .replace('@{TYPE}',match_module_function[1].indexOf('@module')>-1?'Module':'Function')
+                                        .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
+                                                                    match_module_function[1].split('\n').filter(row=>row.indexOf('@name'))[1]:'')
+                                    + '\n' +
+                                    ALIGNMENT+ '\n' +
+                                    function_tags + '\n' +
+                                    SOURCE_LINE_TAG
+                                        .replace('@{MODULE_LINE}',props.data.module ??'')
+                                        .replace('@{SOURCE_LINE_LINK',`${props.data.module}#line${source_line}`));
+                }
+                
+            }
+            //replace all found JSDoc comments with markdown formatted module functions
+            markdown = markdown.replace('@{MODULE_FUNCTION}', module_functions.join('\n'+'\n'));
         }
         //2.sections
         let current_section = -1;
@@ -183,7 +243,16 @@ const component = async props => {
                                                 style='background-image:url("${match[2]}")' 
                                                 data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
         }
-        //8.tables
+        //8.links
+        //regexp for [text](url)
+        const regexp_links = /\[([^)]+)\]\(([^)]+)\)/g;
+        //const regexp_links = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
+        let match_links;
+        while ((match_links = regexp_links.exec(markdown)) !==null){
+            markdown = markdown.replace(match_links[0], 
+                                        `<div class='common_link' href='${match_links[2]}' data-url='${match_links[2]}'>${match_links[2]}</div>`);
+        }
+        //9.tables
         let table_new = true;
         const tables = markdown.split('\n').
                         map(row=>{

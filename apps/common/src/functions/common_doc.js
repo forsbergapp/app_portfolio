@@ -34,7 +34,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
     //check if valid document request
     if (
         ((data.type.toUpperCase()=='GUIDE' ||data.type.toUpperCase()=='APP'||data.type.toUpperCase()=='JSDOC') && data?.doc == null) ||
-        data?.doc && (data.doc.indexOf('/')>-1 ||data.doc.indexOf('\\')>-1||data.doc.indexOf('..')>-1 ||data.doc.indexOf(' ')>-1)){
+        data?.doc && (data.doc.indexOf('\\')>-1||data.doc.indexOf('..')>-1 ||data.doc.indexOf(' ')>-1)){
         res.statusCode = 400;
         throw '⛔';
     }
@@ -43,43 +43,90 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
         const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
         switch (data.type.toUpperCase()){
             case 'MENU':{
-                //return menu with updated first title from the documents
+                
                 /**@type{appMenu[]} */
                 const markdown_menu_docs = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
                 for (const menu of markdown_menu_docs){
-                    if (menu.type=='APP'){
-                        //generate menu for app with updated id and app name
-                        menu.menu_sub = fileModelApp.get(app_id, null, null).map(app=>{
-                                            return { 
-                                                    id:app.id,
-                                                    menu:app.name,
-                                                    doc:app.id.toString()
-                                                    };
-                                            });
-                    }
-                    else
-                        for (const menu_sub of menu.menu_sub??[]){
-                            await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
-                                    .then(result=>{
-                                        try {
-                                            menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
-                                        } catch (error) {
-                                            menu_sub.menu = '';
-                                        }
-                                    })
-                                    .catch(()=>menu_sub.menu = '');
+                    switch (menu.type){
+                        case 'APP':{
+                            //return menu for app with updated id and app name
+                            menu.menu_sub = fileModelApp.get(app_id, null, null).map(app=>{
+                                return { 
+                                        id:app.id,
+                                        menu:app.name,
+                                        doc:app.id.toString()
+                                        };
+                                });
+                            break;
                         }
+                        case 'GUIDE':{
+                            //return menu with updated first title from the documents
+                            for (const menu_sub of menu.menu_sub??[]){
+                                await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
+                                        .then(result=>{
+                                            try {
+                                                menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
+                                            } catch (error) {
+                                                menu_sub.menu = '';
+                                            }
+                                        })
+                                        .catch(()=>menu_sub.menu = '');
+                            }
+                            break;
+                        }
+                        case 'JSDOC_MODULE':{
+                            //return all *.js files in /apps, /microservices and /server directories
+                            //remove OS path info, .js suffix and replace \\ with /
+                            const fs = await import('node:fs');
+                            const path = await import('node:path');
+                            /**@type{appMenu['menu_sub']} */
+                            const jsdoc_menu = [];
+                            const filePattern = /\.js$/;
+                            let index =0;
+                            /**
+                             * @param {string} directory
+                             * @param {RegExp} pattern
+                             */
+                            const findFiles = async (directory, pattern) =>{
+                                const files = await fs.promises.readdir(directory, { withFileTypes: true });
+                                
+                                for (const file of files){
+                                    const fullPath = path.join(directory, file.name);
+                                    if (file.isDirectory())
+                                        await findFiles(fullPath, pattern);
+                                    else 
+                                        if (file.isFile() && file.name.match(pattern)){
+                                            
+                                            jsdoc_menu.push({id: ++index,
+                                                                menu:fullPath
+                                                                    .replace(process.cwd(),'')
+                                                                    .replace('.js','')
+                                                                    .replaceAll('\\','/'),
+                                                                doc:fullPath
+                                                                    .replace(process.cwd(),'')
+                                                                    .replace('.js','')
+                                                                    .replaceAll('\\','/')});
+                                        }
+
+                                }
+                            };
+                            await findFiles(`${process.cwd()}/apps`, filePattern);
+                            await findFiles(`${process.cwd()}/microservice`, filePattern);
+                            await findFiles(`${process.cwd()}/server`, filePattern);
+                            menu.menu_sub = jsdoc_menu;
+                        }
+                    }
                 }
                 return [JSON.stringify(markdown_menu_docs)];
             }
             case 'GUIDE':
-            case 'APP':{                
+            case 'APP':{
                 /**@type{import('../../../../server/db/fileModelAppTranslation.js')} */
                 const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');
                 /**@type{import('../../../../server/server.js')} */
                 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-                return [await ComponentCreate({ data:{app:                    data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
+                return [await ComponentCreate({ data:{  app:                    data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
                                                         app_translation:        data.type.toUpperCase()=='APP'?
                                                                                     fileModelAppTranslation.get(app_id,null, locale, 
                                                                                                             /**@ts-ignore */
@@ -88,11 +135,34 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                         type:                   data.type.toUpperCase(),
                                                         //guide documents in separate files, all app use app template
                                                         markdown:               await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
-                                                                                            (data.type.toUpperCase()=='GUIDE'?(data.doc + '.md'):'2.app.md'))},
+                                                                                            (data.type.toUpperCase()=='GUIDE'?(data.doc + '.md'):'2.app.md')),
+                                                        code:                   null,
+                                                        module:                 null},
                                                 methods:null})];
             }
+            case 'JSDOC_CODE':
+            case 'JSDOC_MODULE':{
+                if (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server'))
+                    if (data.type.toUpperCase()=='JSDOC_CODE')
+                        return [await getFile(`${process.cwd()}${data.doc}.js`)];
+                    else{
+                        const {default:ComponentCreate} = await import('../component/common_markdown.js');
+                        return [await ComponentCreate({ data:{app:              null, 
+                                                        app_translation:        null,
+                                                        type:                   data.type.toUpperCase(),
+                                                        //guide documents in separate files, all app use app template
+                                                        markdown:               await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.module.md`),
+                                                        code:                   await getFile(`${process.cwd()}${data.doc}.js`),
+                                                        module:                 data.doc},
+                                                methods:null})];
+                    }
+                else{
+                    res.statusCode = 400;
+                    throw '⛔';
+                }
+            }
             case 'JSDOC':{
-                        return [await getFile(`${process.cwd()}/apps/common/src/jsdoc/${data.doc}`)];
+                return [await getFile(`${process.cwd()}/apps/common/src/jsdoc/${data.doc}`)];   
             }
             default:{
                 res.statusCode = 400;

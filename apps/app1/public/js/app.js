@@ -74,6 +74,7 @@ const appEventClick = event => {
                 case 'title':
                 case 'nav_content_app':
                 case 'nav_content_jsdoc':
+                case 'content':
                 case 'article':{
                     event.preventDefault();
                     if (event.target.getAttribute('href'))
@@ -81,7 +82,7 @@ const appEventClick = event => {
                                 //use title from first menu text if clicking on title
                                 event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
                                 //GUIDE in title and nav_content_app
-                                event_target_id=='title'?'GUIDE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
+                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'JSDOC_CODE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
                     break;
                 }
                 case 'common_toolbar_framework_js':{

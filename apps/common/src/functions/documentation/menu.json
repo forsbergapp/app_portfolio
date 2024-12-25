@@ -60,5 +60,11 @@
                     "menu":"",
                     "doc":"5.development"
                 }]
+    },
+    {
+        "id":6,
+        "menu":"6 Modules",
+        "type":"JSDOC_MODULE",
+        "menu_sub":null
     }
 ]
