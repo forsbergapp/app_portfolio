@@ -16,6 +16,7 @@
  *  CommonComponentResult
  *  CommonErrorMessageISO20022
  *  CommonAppMenu
+ *  CommonDocumentType
  * 
  * Common REST API types
  *  CommonRESTAPIMethod
@@ -142,10 +143,11 @@
  *                                      innerHTML:string,
  *                                      getAttribute:function,
  *                                      parentNode:{style:{display:string}},
- *                                      style:{display:string}
+ *                                      style:{display:string},
+ *                                      querySelector: function
  *                                  },
  *              setAttribute:       function,
- *              value:              string
+ *              value:              string,
  *            }}  target
  */
 
@@ -269,14 +271,17 @@
  */
 /**
  * Type CommonAppMenu
- * @typedef{{   id:number, 
+ * @typedef {{  id:number, 
  *              menu:string,
  *              type:'GUIDE'|'APP',
  *              menu_sub:{  id:number,
  *                          menu:string,
  *                          doc:string}[]|null}} CommonAppMenu
  */
-
+/**
+ * Type commonDocumentType
+ * @typedef {'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'} commonDocumentType
+ */
 /**
  * Type CommonRESTAPIMethod
  * @typedef{'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} CommonRESTAPIMethod

@@ -122,12 +122,13 @@ const commonMiscDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/
 const commonMiscElementId = element => element.id==''?commonMiscElementId(element.parentNode):element.id;
 /**
  * @name commonMiscElementRow
- * @description Finds recursive parent row with class common_row. Use when clicking in a list of records
+ * @description Finds recursive parent row with given class or default common_row. Use when clicking in a list of records
  * @function
  * @param {*} element 
+ * @param {string|null} [className]
  * @returns {HTMLElement} 
  */
-const commonMiscElementRow = element => element.classList.contains('common_row')?element:commonMiscElementRow(element.parentNode);
+const commonMiscElementRow = (element, className) => element?.classList?.contains(className ?? 'common_row')?element:commonMiscElementRow(element.parentNode, className);
 /**
  * @name commonMiscElementListTitle
  * @description Returns current target or parent with class list_title or returns empty. Use when clicking in a list title

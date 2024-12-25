@@ -21,19 +21,25 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                 <div id='menu_close' class='common_dialogue_button common_icon'></div>
                                 <div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
-                                        `<div data-id='${row.id}' data-type='${row.type}'>
-                                            <div >${row.menu}</div>
-                                            ${row.menu_sub?.map(row_sub=>
-                                                `<div class='common_link' href='${row_sub.doc}'>${row_sub.menu}</div>`
-                                                ).join('')}
+                                        `<div class='app_menu_data' data-id='${row.id}' data-type='${row.type}'>
+                                            <div class='app_menu'>${row.menu}</div>
+                                            <div class='app_submenu'>
+                                                ${row.menu_sub?.map(row_sub=>
+                                                    `<div class='common_link' href='${row_sub.doc}'>${row_sub.menu}</div>`
+                                                    ).join('')
+                                                }
+                                            </div>
                                         </div>
-
                                         `
                                     ).join('')}
                                 </div>
                                 <div id='nav_content_jsdoc'>
-                                    <div id>JSDoc</div>
-                                    ${props.jsdoc_menu}
+                                    <div class='app_menu_data' data-type='JSDOC'>
+                                        <div class='app_menu'>JSDOC</div>
+                                        <div class='app_submenu'>
+                                            ${props.jsdoc_menu}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div id='content'></div>`;

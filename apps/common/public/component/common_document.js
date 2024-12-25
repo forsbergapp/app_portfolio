@@ -4,7 +4,7 @@
  * @module apps/common/component/common_document
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, commonDocumentType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
@@ -35,7 +35,7 @@ const template = props =>`  <div class='common_document_header' style='backgroun
  *                      app_name:string,
  *                      href:string,
  *                      title:string,
- *                      type:'APP'|'GUIDE'|'JSDOC'|'JSDOC_CODE'|'JSDOC_MODULE'
+ *                      type:commonDocumentType
  *                      },
  *          methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -57,7 +57,7 @@ const component = async props => {
                             .then(result=>JSON.parse(result).rows[0])
                             .catch(()=>null);
     switch (props.data.type){
-        case 'JSDOC_CODE':{
+        case 'MODULE_CODE':{
             classname = 'common_markdown code';
             content = content
                 .replaceAll('\r\n','\n').split('\n')

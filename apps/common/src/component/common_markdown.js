@@ -5,7 +5,8 @@
  * @module apps/common/component/common_markdown
  */
 /**
- * @import { server_db_file_app, server_db_file_app_translation} from '../../../../server/types.js' 
+ * @import { server_db_file_app, serverDocumentType, server_db_file_app_translation} from '../../../../server/types.js' 
+ * 
  */
 
 /**
@@ -25,7 +26,7 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  * @param {{data:       {
  *                      app_translation:server_db_file_app_translation|null,
  *                      app:server_db_file_app|null,
- *                      type:'GUIDE'|'APP'|'JSDOC_MODULE',
+ *                      type:serverDocumentType,
  *                      markdown:string,
  *                      code:string|null,
  *                      module:string|null
@@ -132,7 +133,7 @@ const component = async props => {
             //images are saved in an array
             markdown = markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end.join('\n'):'');    
         }
-        if (props.data.type=='JSDOC_MODULE'){
+        if (props.data.type.startsWith('MODULE')){
             markdown = markdown.replaceAll('@{MODULE_NAME}', props.data.module ?? '');
             markdown = markdown.replaceAll('@{MODULE}',props.data.module ??'');
             markdown = markdown.replaceAll('@{SOURCE_LINK}',props.data.module ??'');
