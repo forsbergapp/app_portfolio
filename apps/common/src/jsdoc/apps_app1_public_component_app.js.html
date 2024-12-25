@@ -14,6 +14,9 @@
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{title:string,
  *          app_menu:CommonAppMenu[]
  *          jsdoc_menu:string}} props
@@ -28,20 +31,23 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                                         `&lt;div data-id='${row.id}' data-type='${row.type}'>
                                             &lt;div >${row.menu}&lt;/div>
                                             ${row.menu_sub?.map(row_sub=>
-                                                `&lt;div class='common_link' href='${row_sub.doc}'>
-                                                    ${row_sub.menu}
-                                                &lt;/div>`
+                                                `&lt;div class='common_link' href='${row_sub.doc}'>${row_sub.menu}&lt;/div>`
                                                 ).join('')}
                                         &lt;/div>
 
                                         `
                                     ).join('')}
                                 &lt;/div>
-                                &lt;div id='nav_content_jsdoc'>${props.jsdoc_menu}&lt;/div>
+                                &lt;div id='nav_content_jsdoc'>
+                                    &lt;div id>JSDoc&lt;/div>
+                                    ${props.jsdoc_menu}
+                                &lt;/div>
                             &lt;/div>
                             &lt;div id='content'>&lt;/div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number

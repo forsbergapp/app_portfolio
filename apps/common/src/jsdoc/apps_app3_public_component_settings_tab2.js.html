@@ -22,6 +22,9 @@
  * @import {APP_REPORT_GLOBAL, APP_user_setting_record}  from '../js/types.js'
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => `&lt;div id='mapid'>&lt;/div>
@@ -62,6 +65,9 @@ const template = () => `&lt;div id='mapid'>&lt;/div>
                             &lt;div class='setting_horizontal_col'>&lt;/div>
                         &lt;/div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
@@ -88,7 +94,7 @@ const template = () => `&lt;div id='mapid'>&lt;/div>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     const settings = (await props.methods.commonMiscDbAppSettingsGet()).filter((/**@type{*}*/setting)=>
         setting.app_id == props.data.app_id &amp;&amp; 
         setting.app_setting_type_name.startsWith('PLACE'));
@@ -150,7 +156,7 @@ const method = async props => {
         template: template()
     };
 };
-export default method;</code></pre>
+export default component;</code></pre>
         </div>
     </div>
 

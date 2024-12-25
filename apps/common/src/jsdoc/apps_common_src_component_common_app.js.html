@@ -10,7 +10,11 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{APP:import('../../../../server/types.js').server_db_file_app, APP_PARAMETERS:string}} props
+ * @returns {string}
  */
 const template = props =>`  &lt;!DOCTYPE html>
                             &lt;html>
@@ -37,8 +41,10 @@ const template = props =>`  &lt;!DOCTYPE html>
                             &lt;/body>
                             &lt;/html> `;
 /**
- * 
- @param {{data:       {APP:import('../../../../server/types.js').server_db_file_app, APP_PARAMETERS:string},
+ * @name component
+ * @description Component
+ * @function
+ * @param {{data:       {APP:import('../../../../server/types.js').server_db_file_app, APP_PARAMETERS:string},
  *        methods:    null}} props 
  * @returns {Promise.&lt;string>}
  */

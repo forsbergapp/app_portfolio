@@ -10,13 +10,15 @@
 */
 
 /**
- * Converts locale format
- * Locales are saved in locale.json using this case sensitive structure:
- * locale-list\data\[language]\language.json
- * locale-list\data\[language_Script_COUNTRYCODE]\locale.json
- * locale-list\data\[language_Script]\locale.json
- * locale-list\data\[language_COUNTRYCODE]\locale.json
- * {"de":"German", [code]:[Text], [code]:[Text], ...}
+ * @name formatLocale
+ * @description Converts locale format
+ *              Locales are saved in locale.json using this case sensitive structure:
+ *              locale-list\data\[language]\language.json
+ *              locale-list\data\[language_Script_COUNTRYCODE]\locale.json
+ *              locale-list\data\[language_Script]\locale.json
+ *              locale-list\data\[language_COUNTRYCODE]\locale.json
+ *              {"de":"German", [code]:[Text], [code]:[Text], ...}
+ * @function
  * @param {string} locale
  * @returns {string}
  */
@@ -56,8 +58,9 @@ const formatLocale = locale =>{
 };
 
 /**
- * Get locales using ISO 639-1 for language code and ISO 3166-1 for country code
- * 
+ * @name appFunction
+ * @description Get locales using ISO 639-1 for language code and ISO 3166-1 for country code
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

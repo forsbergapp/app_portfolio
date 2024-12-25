@@ -7,19 +7,7 @@
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/**
  * Cube component library
- * @module apps/app7/component/cube_lib
- */
-
-const commonPath ='/common/js/common.js';
-
-/**
- * @import {CommonModuleCommon}  from '../../../common_types.js'
- */
-/**@type{CommonModuleCommon} */
-const {commonWindowSetTimeout} = await import(commonPath);
-
-
-/**
+ * 
  * Original code https://github.com/stringham/rubiks-solver
  * Changes
  * Converted to one javascript module
@@ -32,7 +20,18 @@ const {commonWindowSetTimeout} = await import(commonPath);
  * Removed unused code
  * Replaced saving DOM element in classes with querySelector
  * Added jsdoc, es-lint and typescript support
+ * 
+ * @module apps/app7/component/cube_lib
  */
+
+const commonPath ='/common/js/common.js';
+
+/**
+ * @import {CommonModuleCommon}  from '../../../common_types.js'
+ */
+/**@type{CommonModuleCommon} */
+const {commonWindowSetTimeout} = await import(commonPath);
+
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';
 
 const clock90 =   '↷';
@@ -40,6 +39,9 @@ const counter90 = '↶';
 const clock180 = '↷180°';
 
 /**
+ * @name RubiksCubeControls
+ * @description RubiksCubeControls
+ * @function
  * @param {*} id
  * @param {*} cube
  */
@@ -47,7 +49,11 @@ const RubiksCubeControls = function(id, cube){
 	this.cube = cube;
 };
 /**
+ * @name RubiksCubeControls.prototype.setSolution
+ * @description RubiksCubeControls.prototype.setSolution
+ * @function
  * @param {*} solution
+ * @returns {void}
  */
 RubiksCubeControls.prototype.setSolution = function(solution) {
 	if(solution.length > 0){
@@ -62,7 +68,12 @@ RubiksCubeControls.prototype.setSolution = function(solution) {
 		document.querySelector('#button_controls #overlay').style.display = 'none';
 	}
 };
-
+/**
+ * @name RubiksCubeControls.prototype.updateStepButton
+ * @description RubiksCubeControls.prototype.updateStepButton
+ * @function
+ * @returns {void}
+ */
 RubiksCubeControls.prototype.updateStepButton = function() {
 	if(this.solution &amp;&amp; this.solution.length > 0){
 		const move = this.solution[0];
@@ -81,6 +92,12 @@ RubiksCubeControls.prototype.updateStepButton = function() {
 		document.querySelector('#button_controls #button_step').appendChild(document.createTextNode(this.solution.length));
 	}
 };
+/**
+ * @name RubiksCubeControls.prototype.nextMove
+ * @description RubiksCubeControls.prototype.nextMove
+ * @function
+ * @returns {void}
+ */
 RubiksCubeControls.prototype.nextMove = function() {
 	const move = this.solution.shift();
 	this.cube.makeMove(move);
@@ -98,7 +115,11 @@ RubiksCubeControls.prototype.nextMove = function() {
  * Utility Functions
  **********************************/
 /**
+ * @name hexToRgb
+ * @description hexToRgb
+ * @function
  * @param {*} hex
+ * @returns {*}
  */
 function hexToRgb(hex) {
 	if(hex.length == 7){
@@ -121,19 +142,26 @@ function hexToRgb(hex) {
 	}
 }
 /**
+ * @name makeRotationAffine
+ * @description makeRotationAffine
+ * @function
  * @param {*} x
  * @param {*} y
  * @param {*} z
+ * @returns {*}
  */
 function makeRotationAffine(x,y,z){
 	return multiplyAffine(multiplyAffine(makeRotateAffineX(x),makeRotateAffineY(y)),makeRotateAffineZ(z));
 }
 
 /**
- * Search an array for the first element that satisfies a given condition and
- * return that element.
+ * @name arrayFind
+ * @description Search an array for the first element that satisfies a given condition and
+ * 				return that element.
+ * @function
  * @param {*} arr
  * @param {*} f
+ * @returns {*}
  */
 const arrayFind = function(arr, f) {
   const i = arrayFindIndex(arr, f);
@@ -142,10 +170,13 @@ const arrayFind = function(arr, f) {
 
 
 /**
- * Search an array for the first element that satisfies a given condition and
- * return its index.
-  * @param {*} arr
+ * @name arrayFindIndex
+ * @description Search an array for the first element that satisfies a given condition and
+ * 				return its index.
+ * @function
+ * @param {*} arr
  * @param {*} f
+ * @returns {number}
  */
 const arrayFindIndex = function(arr, f) {
   const l = arr.length;  // must be fixed during loop... see docs
@@ -171,16 +202,18 @@ const arrayFindIndex = function(arr, f) {
  *********************************/
 
 /** 
- * This represents an affine 4x4 matrix, stored as a 3x4 matrix with the last
- * row implied as [0, 0, 0, 1].  This is to avoid generally unneeded work,
- * skipping part of the homogeneous coordinates calculations and the
- * homogeneous divide.  Unlike points, we use a constructor function instead
- * of object literals to ensure map sharing.  The matrix looks like:
- *  e0  e1  e2  e3
- *  e4  e5  e6  e7
- *  e8  e9  e10 e11
- *  0   0   0   1
+ * @name AffineMatrix
+ * @description This represents an affine 4x4 matrix, stored as a 3x4 matrix with the last
+ * 				row implied as [0, 0, 0, 1].  This is to avoid generally unneeded work,
+ * 				skipping part of the homogeneous coordinates calculations and the
+ * 				homogeneous divide.  Unlike points, we use a constructor function instead
+ * 				of object literals to ensure map sharing.  The matrix looks like:
  * 
+ *  			e0  e1  e2  e3
+ *  			e4  e5  e6  e7
+ *  			e8  e9  e10 e11
+ *  			0   0   0   1
+ * @function
  * @param {*} e0
  * @param {*} e1
  * @param {*} e2
@@ -193,6 +226,7 @@ const arrayFindIndex = function(arr, f) {
  * @param {*} e9
  * @param {*} e10
  * @param {*} e11
+ * @returns {void}
  */
 function AffineMatrix(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11) {
 	this.e0  = e0;
@@ -210,11 +244,13 @@ function AffineMatrix(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11) {
 }
 
 /** 
- * Matrix multiplication of AffineMatrix |a| x |b|.  This is unrolled,
- * and includes the calculations with the implied last row.
- *
+ * @name multiplyAffine
+ * @description  Matrix multiplication of AffineMatrix |a| x |b|.  This is unrolled,
+ * 				and includes the calculations with the implied last row.
+ * @function
  * @param {*} a 
  * @param {*} b
+ * @returns {*}
  */
 function multiplyAffine(a, b) {
 	// Avoid repeated property lookups by accessing into the local frame.
@@ -237,7 +273,12 @@ function multiplyAffine(a, b) {
 		a8 * b3 + a9 * b7 + a10 * b11 + a11
 	);
 }
-
+/** 
+ * @name makeIdentityAffine
+ * @description  makeIdentityAffine
+ * @function
+ * @returns {*}
+ */
 function makeIdentityAffine() {
 	return new AffineMatrix(
 		1, 0, 0, 0,
@@ -245,10 +286,12 @@ function makeIdentityAffine() {
 		0, 0, 1, 0
 	);
 }
-/**
- * http://en.wikipedia.org/wiki/Rotation_matrix
- * 
+/** 
+ * @name makeRotateAffineX
+ * @description  http://en.wikipedia.org/wiki/Rotation_matrix
+ * @function
  * @param {*} theta
+ * @returns {*}
  */
 function makeRotateAffineX(theta) {
 	const s = Math.sin(theta);
@@ -260,8 +303,11 @@ function makeRotateAffineX(theta) {
 	);
 }
 /**
- * 
+ * @name makeRotateAffineY
+ * @description makeRotateAffineY
+ * @function
  * @param {*} theta
+ * @returns {*}
  */
 function makeRotateAffineY(theta) {
 	const s = Math.sin(theta);
@@ -273,8 +319,11 @@ function makeRotateAffineY(theta) {
 	);
 }
 /**
- * 
+ * @name makeRotateAffineZ
+ * @description makeRotateAffineZ
+ * @function
  * @param {*} theta
+ * @returns {*}
  */
 function makeRotateAffineZ(theta) {
 	const s = Math.sin(theta);
@@ -287,23 +336,23 @@ function makeRotateAffineZ(theta) {
 }
 
 /**
- *  e0  e1  e2  e3
- *  e4  e5  e6  e7
- *  e8  e9  e10 e11
- *  0   0   0   1
-
- *  a b c   x   (xa + yb + zc)
- *  d e f * y = (xd + ye + zf) 
- *  g h i   z   (xg + yh + zi)
-
- *  j k l   (xa + yb + zc)
- *  m n o * (xd + ye + zf)
- *  p q r   (xg + yh + zi)
+ * @name transformPoint
+ * @description e0  e1  e2  e3
+ *  			e4  e5  e6  e7
+ *  			e8  e9  e10 e11
+ *  			0   0   0   1
+ *  			a b c   x   (xa + yb + zc)
+ *  			d e f * y = (xd + ye + zf) 
+ *  			g h i   z   (xg + yh + zi)
+ *  			j k l   (xa + yb + zc)
+ *  			m n o * (xd + ye + zf)
+ *  			p q r   (xg + yh + zi)
  * 
- *  Transform the point |p| by the AffineMatrix |t|.
- * 
+ *  			Transform the point |p| by the AffineMatrix |t|.
+ * @function
  * @param {*} t
  * @param {*} p
+ * @returns {*}
  */
 
 function transformPoint(t, p) {
@@ -315,8 +364,11 @@ function transformPoint(t, p) {
 }
 
 /**
- *  Average a list of points, returning a new "centroid" point.
+ * @name averagePoints
+ * @description Average a list of points, returning a new "centroid" point.
+ * @function
  * @param {*} ps
+ * @returns {*}
  */
 function averagePoints(ps) {
 	const avg = {x: 0, y: 0, z: 0};
@@ -337,7 +389,11 @@ function averagePoints(ps) {
 	return avg;
 }
 /**
+ * @name averageUnRotatedPoints
+ * @description averageUnRotatedPoints
+ * @function
  * @param {*} ps
+ * @returns {*}
  */
 function averageUnRotatedPoints(ps) {
 	const avg = {x: 0, y: 0, z: 0};
@@ -362,10 +418,14 @@ function averageUnRotatedPoints(ps) {
  * 3D Point
  **********************************/
 /**
+ * @name Point
+ * @description Point
+ * @function
  * @param {*} parent
  * @param {*} xyz
  * @param {*} project
  * @param {*} rubiks
+ * @returns {void}
  */
  const Point = function (parent, xyz, project, rubiks) { 
 	this.project = project; 
@@ -375,6 +435,12 @@ function averageUnRotatedPoints(ps) {
 	this.zo = xyz[2]; 
 	this.cube = parent; 
 };
+/**
+ * @name Point.prototype.projection
+ * @description Point.prototype.projection
+ * @function
+ * @returns {void}
+ */
 Point.prototype.projection = function () { 
 	let p = transformPoint(this.cube.rotationAffine, {x:this.xo, y:this.yo, z:this.zo});
 	// this.rubiks.cameraAffines.forEach(function(affine){
@@ -403,11 +469,15 @@ Point.prototype.projection = function () {
  * Face Object
  **********************************/
 /**
+ * @name Face
+ * @description Face
+ * @function
  * @param {*} cube
  * @param {*} index
  * @param {*} normalVector
  * @param {*} color
  * @param {*} rubiks
+ * @returns {void}
  */
 const Face = function (cube, index, normalVector, color, rubiks) { 
 	/*eslint-disable */
@@ -426,6 +496,12 @@ const Face = function (cube, index, normalVector, color, rubiks) {
 	// ---- color ----
 	this.color = color;
 };
+/**
+ * @name Face.prototype.distanceToCamera
+ * @description Face.prototype.distanceToCamera
+ * @function
+ * @returns {void}
+ */
 Face.prototype.distanceToCamera = function () { 
 	// ---- distance to camera ---- 
 	const dx = (this.p0.x + this.p1.x + this.p2.x + this.p3.x ) * 0.25; 
@@ -434,7 +510,11 @@ Face.prototype.distanceToCamera = function () {
 	this.distance = Math.sqrt(dx * dx + dy * dy + dz * dz); 
 }; 
 /**
+ * @name Face.prototype.draw
+ * @description Face.prototype.draw
+ * @function
  * @param {*} index
+ * @returns {void}
  */
 Face.prototype.draw = function (index) { 
 	// ---- light ---- 
@@ -461,12 +541,16 @@ Face.prototype.draw = function (index) {
  * Cube Object
  **********************************/
 /**
+ * @name Cube
+ * @description Cube
+ * @function
  * @param {*} x
  * @param {*} y
  * @param {*} z
  * @param {*} w
  * @param {*} rubiks
  * @param {*} colors
+ * @returns {void}
  */
 const Cube = function(x, y, z, w, rubiks, colors) { 
 	this.rubiks = rubiks;
@@ -519,13 +603,24 @@ const Cube = function(x, y, z, w, rubiks, colors) {
 	this.rotateY = 0;
 	this.rotateZ = 0;
 };
-
+/**
+ * @name RubiksCube.prototype.update
+ * @description RubiksCube.prototype.update
+ * @function
+ * @returns {void}
+ */
 RubiksCube.prototype.update = function(){
 	if(!this.rotating){
 		this.updateCallbacks.forEach(function(f){f();});
 	}
 };
 
+/**
+ * @name Cube.prototype.getPosition
+ * @description Cube.prototype.getPosition
+ * @function
+ * @returns {*}
+ */
 Cube.prototype.getPosition = function() {
 	const points = [];
 	for(let i=0; i&lt;this.points.length; i++){
@@ -543,10 +638,22 @@ Cube.prototype.getPosition = function() {
 	result.z = Math.round(result.z);
 	return result;
 };
+/**
+ * @name Cube.prototype.setRotationAffine
+ * @description Cube.prototype.setRotationAffine
+ * @function
+ * @returns {void}
+ */
 Cube.prototype.setRotationAffine = function(){
 	if(this.rotateX != 0 || this.rotateY != 0 || this.rotateZ != 0)
 		this.rotationAffine = makeRotationAffine(this.rotateX, this.rotateY, this.rotateZ);
 };
+/**
+ * @name Cube.prototype.resetRotation
+ * @description Cube.prototype.resetRotation
+ * @function
+ * @returns {void}
+ */
 Cube.prototype.resetRotation = function() {
 	const points = [];
 	for(var i=0; i&lt;this.points.length; i++){
@@ -578,6 +685,9 @@ Cube.prototype.resetRotation = function() {
 };
 
 /**
+ * @name RubiksCube
+ * @description RubiksCube
+ * @function
  * @param {*} width
  */
 function RubiksCube(width){
@@ -629,13 +739,22 @@ function RubiksCube(width){
 	}
 
 }
-
+/**
+ * @name RubiksCube.prototype.isSolvable
+ * @description RubiksCube.prototype.isSolvable
+ * @function
+ * @returns {*}
+ */
 RubiksCube.prototype.isSolvable = function(){
 	return !this.rotating;
 };
 
 /**
+ * @name RubiksCube.prototype.scramble
+ * @description RubiksCube.prototype.scramble
+ * @function
  * @param {*} num
+ * @returns {void}
  */
 RubiksCube.prototype.scramble = function(num) {
 	if(this.isSolvable()){
@@ -664,7 +783,12 @@ RubiksCube.prototype.scramble = function(num) {
 		checkAgain();
 	}
 };
-
+/**
+ * @name RubiksCube.prototype.render
+ * @description RubiksCube.prototype.render
+ * @function
+ * @returns {*}
+ */
 RubiksCube.prototype.render = function(){
 		
 	this.cameraAffine = makeRotationAffine(this.cameraX,this.cameraY,this.cameraZ);
@@ -690,7 +814,6 @@ RubiksCube.prototype.render = function(){
 		this.faces[i].draw(i);
 	}
 };
-
 RubiksCube.prototype.opposites = {
 	'F':'B',
 	'B':'F',
@@ -700,8 +823,12 @@ RubiksCube.prototype.opposites = {
 	'L':'R'
 };
 /**
+ * @name RubiksCube.prototype.rotateFace
+ * @description RubiksCube.prototype.rotateFace
+ * @function 
  * @param {*} face
  * @param {*} d
+ * @returns {void}
  */
 RubiksCube.prototype.rotateFace = function(face, d){
 	if(this.rotating)
@@ -755,7 +882,11 @@ RubiksCube.prototype.rotateFace = function(face, d){
 	rotate();
 };
 /**
+ * @name RubiksCube.prototype.getBlocks
+ * @description RubiksCube.prototype.getBlocks
+ * @function 
  * @param {*} face
+ * @returns {*}
  */
 RubiksCube.prototype.getBlocks = function(face) {
 	/**@ts-ignore */
@@ -802,7 +933,11 @@ RubiksCube.prototype.getBlocks = function(face) {
 	return result;
 };
 /**
+ * @name RubiksCube.prototype.makeMoves
+ * @description RubiksCube.prototype.makeMoves
+ * @function 
  * @param {*} moves
+ * @returns {void}
  */
 RubiksCube.prototype.makeMoves = function(moves) {
 	moves = moves.split(/\s/);
@@ -811,7 +946,11 @@ RubiksCube.prototype.makeMoves = function(moves) {
 	}
 };
 /**
+ * @name RubiksCube.prototype.makeMove
+ * @description RubiksCube.prototype.makeMove
+ * @function 
  * @param{*} move
+ * @returns {void}
  */
 RubiksCube.prototype.makeMove = function(move) {
 	if(this.rotating){
@@ -881,14 +1020,23 @@ RubiksCube.prototype.makeMove = function(move) {
 			break;
 	}
 };
-
+/**
+ * @name RubiksCube.prototype.makeNextMove
+ * @description RubiksCube.prototype.makeNextMove
+ * @function 
+ * @returns {void}
+ */
 RubiksCube.prototype.makeNextMove = function() {	
 	if(this.queue.length > 0){
 		this.makeMove(this.queue.shift());
 	}
 };
 /**
+ * @name RubiksCube.prototype.getFaceColor
+ * @description RubiksCube.prototype.getFaceColor
+ * @function 
  * @param {*}face
+ * @returns {*}
  */
 RubiksCube.prototype.getFaceColor = function(face){
 	/**
@@ -951,8 +1099,12 @@ RubiksCube.prototype.getFaceColor = function(face){
 };
 
 /**
- *  // var faceNames = ['L', 'U', 'D', 'B', 'F', 'R'];
+ * @name RubiksCube.prototype.getCubie
+ * @description RubiksCube.prototype.getCubie
+ * 				// var faceNames = ['L', 'U', 'D', 'B', 'F', 'R'];
+ * @function 
  * @param {*} position
+ * @returns {*}
  */
 RubiksCube.prototype.getCubie = function(position){
 	const cubes = this.getBlocks(position[0]);
@@ -1023,7 +1175,12 @@ RubiksCube.prototype.getCubie = function(position){
 };
 
 RubiksCube.prototype.faceNames = ['L', 'U', 'D', 'B', 'F', 'R'];
-
+/**
+ * @name RubiksCube.prototype.getState
+ * @description RubiksCube.prototype.getState
+ * @function 
+ * @returns {string}
+ */
 RubiksCube.prototype.getState = function(){
 	const me = this;
 	let result = '';

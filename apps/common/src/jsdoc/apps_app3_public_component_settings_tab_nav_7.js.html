@@ -14,12 +14,17 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{avatar:string|null}} props
  * @returns {string}
  */
 const template = props => `&lt;div id='user_setting_avatar_img' class='common_image' style='background-image:url(${props.avatar?props.avatar:''})'>&lt;/div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      avatar:string|null
@@ -30,7 +35,7 @@ const template = props => `&lt;div id='user_setting_avatar_img' class='common_im
  *                      methods:null, 
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     return {
         lifecycle:  null,
         data:       null,
@@ -38,7 +43,7 @@ const method = async props => {
         template:   template({avatar:props.data.avatar})
     };
 };
-export default method;</code></pre>
+export default component;</code></pre>
         </div>
     </div>
 
