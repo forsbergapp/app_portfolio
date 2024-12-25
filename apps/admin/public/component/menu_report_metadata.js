@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{report_metadata:CommonAppModuleMetadata[]}} props
  * @returns {string}
  */
@@ -19,20 +22,22 @@ const template = props => ` ${props.report_metadata.map(report_metadata=>
                             ).join('')
                             }`;
 /**
-* 
-* @param {{data:        {
-*                       commonMountdiv:string,
-*                       report_metadata:CommonAppModuleMetadata[]
-*                       },
-*          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT
-*                       },
-*          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{data:        {
+ *                       commonMountdiv:string,
+ *                       report_metadata:CommonAppModuleMetadata[]
+ *                       },
+ *          methods:     {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT
+ *                       },
+ *          lifecycle:   null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
        
     return {

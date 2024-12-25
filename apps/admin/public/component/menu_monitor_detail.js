@@ -27,6 +27,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{
  *          service_socket_client_ID:number,
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
@@ -335,61 +338,63 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 ''
                             }`;
 /**
-* 
-* @param {{ data:       {
-*                       commonMountdiv:string,
-*                       app_id:number,
-*                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
-*                       offset:number,
-*                       sort:string,
-*                       order_by:string,
-*                       page:number|null,
-*                       page_last:number|null,
-*                       service_socket_client_ID:number,
-*                       LIMIT:number,
-*                       SERVICE_LOG_FILE_INTERVAL:string,
-*                       SERVICE_LOG_DATA:{parameters:{  SCOPE_REQUEST:string,
-*                                                       SCOPE_SERVER:string, 
-*                                                       SCOPE_SERVICE:string,
-*                                                       SCOPE_APP:string,
-*                                                       SCOPE_DB:string,
-*                                                       REQUEST_LEVEL:number,
-*                                                       SERVICE_LEVEL:number,
-*                                                       DB_LEVEL:number,
-*                                                       APP_LEVEL:number,
-*                                                       LEVEL_VERBOSE:string 
-*                                                       LEVEL_ERROR:string
-*                                                       LEVEL_INFO:string,
-*                                                       FILE_INTERVAL:string
-*                                                    },
-*                                       logscope_level_options:{log_scope:string, log_level:string}[]}
-*                       },
-*           methods:    {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       monitorShow:function,
-*                       map_update:map_update,
-*                       appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
-*                       commonMiscElementRow:commonMiscElementRow,
-*                       commonLovClose:commonLovClose,
-*                       commonLovShow:commonLovShow,
-*                       commonMiscInputControl:commonMiscInputControl,
-*                       commonComponentRender:commonComponentRender,
-*                       commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
-*                       commonMiscRoundOff:commonMiscRoundOff,
-*                       commonFFB:commonFFB
-*                       },
-*           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:    null,
-*                      methods: {
-*                               monitorDetailPage:function,
-*                               monitorDetailShowServerLog:function,
-*                               monitorDetailShowLogDir:function,
-*                               monitorDetailClickSort:function,
-*                               monitorDetailClickItem:function
-*                               },
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{ data:       {
+ *                       commonMountdiv:string,
+ *                       app_id:number,
+ *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
+ *                       offset:number,
+ *                       sort:string,
+ *                       order_by:string,
+ *                       page:number|null,
+ *                       page_last:number|null,
+ *                       service_socket_client_ID:number,
+ *                       LIMIT:number,
+ *                       SERVICE_LOG_FILE_INTERVAL:string,
+ *                       SERVICE_LOG_DATA:{parameters:{  SCOPE_REQUEST:string,
+ *                                                       SCOPE_SERVER:string, 
+ *                                                       SCOPE_SERVICE:string,
+ *                                                       SCOPE_APP:string,
+ *                                                       SCOPE_DB:string,
+ *                                                       REQUEST_LEVEL:number,
+ *                                                       SERVICE_LEVEL:number,
+ *                                                       DB_LEVEL:number,
+ *                                                       APP_LEVEL:number,
+ *                                                       LEVEL_VERBOSE:string 
+ *                                                       LEVEL_ERROR:string
+ *                                                       LEVEL_INFO:string,
+ *                                                       FILE_INTERVAL:string
+ *                                                    },
+ *                                       logscope_level_options:{log_scope:string, log_level:string}[]}
+ *                       },
+ *           methods:    {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       monitorShow:function,
+ *                       map_update:map_update,
+ *                       appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
+ *                       commonMiscElementRow:commonMiscElementRow,
+ *                       commonLovClose:commonLovClose,
+ *                       commonLovShow:commonLovShow,
+ *                       commonMiscInputControl:commonMiscInputControl,
+ *                       commonComponentRender:commonComponentRender,
+ *                       commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
+ *                       commonMiscRoundOff:commonMiscRoundOff,
+ *                       commonFFB:commonFFB
+ *                       },
+ *           lifecycle:  null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:    null,
+ *                      methods: {
+ *                               monitorDetailPage:function,
+ *                               monitorDetailShowServerLog:function,
+ *                               monitorDetailShowLogDir:function,
+ *                               monitorDetailClickSort:function,
+ *                               monitorDetailClickItem:function
+ *                               },
+ *                      template:string}>}
+ */
 const component = async props => {
     
     /**
