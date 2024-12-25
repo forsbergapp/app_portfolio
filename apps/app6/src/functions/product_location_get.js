@@ -2,6 +2,9 @@
  * @module apps/app6/src/functions/product_location_get
  */
 /**
+ * @name product_location_get
+ * @description Get product location
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

@@ -3,6 +3,9 @@
  */
 
 /**
+ * @name transaction_metadata
+ * @description Get transaction metadata
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

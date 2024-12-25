@@ -8,7 +8,9 @@ const dbModelUserAccountAppDataPostView = await import(`file://${process.cwd()}/
 const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
 /**
- * Timetable get user settings
+ * @name timetable_user_account_app_data_post_get
+ * @description Timetable get user settings
+ * @function
  * @param {number} app_id 
  * @param {number} user_account_app_data_post_id 
  * @returns {Promise.<import('../types.js').APP_REPORT_settings>}
@@ -83,7 +85,9 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 	});
 };
 /**
- * Timetable get day user settings
+ * @name timetable_day_user_account_app_data_posts_get
+ * @description Timetable get day user settings
+ * @function
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @returns {Promise.<import('../types.js').APP_REPORT_day_user_account_app_data_posts[]>}
@@ -125,7 +129,9 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 	});
 };
 /**
- * Create timetable day, month or year
+ * @name timetable
+ * @description Create timetable day, month or year
+ * @function
  * @param {import('../../../../server/types.js').server_apps_report_create_parameters} timetable_parameters
  * @returns {Promise.<string>}
  */

@@ -81,6 +81,9 @@ const APP_REPORT_GLOBAL = {
 Object.seal(APP_REPORT_GLOBAL);
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{TIMETABLE:'DAY'|'MONTH'|'YEAR', 
  * 			TIMETABLE_YEAR_MONTH:boolean,
  * 			TIMETABLE_ID: string, 
@@ -274,6 +277,9 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 						</div>`;
 
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  * 						commonMountdiv:null,
  * 						timetable:'DAY'|'MONTH'|'YEAR',

@@ -2,6 +2,9 @@
  * @module apps/app5/src/functions/account_metadata
  */
 /**
+ * @name account_metadata
+ * @description Gets account metadata
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

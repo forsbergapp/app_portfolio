@@ -8,11 +8,17 @@
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => `<div id='app_page_start_shop' class='app_page_start_shop app_shop_div'>
                         </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,

@@ -2,6 +2,9 @@
  * @module apps/app6/src/functions/product_metadata
  */
 /**
+ * @name product_metadata
+ * @description Get product metadata
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

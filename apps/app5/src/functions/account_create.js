@@ -10,7 +10,9 @@ const createBankAccountNumber = ()=>Date.now().toString().padStart(16,'0');
 const createBankAccountVPA = ()=>securityUUIDCreate();
 
 /**
- * 
+ * @name createBankAccount
+ * @description Creates bank account
+ * @function
  * @param {number} app_id 
  * @param {*} data 
  * @param {string} user_agent

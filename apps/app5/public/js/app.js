@@ -14,7 +14,8 @@ const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 /**
- * App exception function
+ * @name appException
+ * @description App exception function
  * @function
  * @param {Error} error 
  * @returns {void}
@@ -23,7 +24,8 @@ const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
- * App event click
+ * @name appEventClick
+ * @description App event click
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -247,7 +249,8 @@ const appEventClick = event => {
     }
 };
 /**
- * App event change
+ * @name appEventChange
+ * @description App event change
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -262,7 +265,8 @@ const appEventChange = event =>{
         common.commonEvent('change',event);
 };
 /**
- * App event keyup
+ * @name appEventKeyUp
+ * @description App event keyup
  * @function
  * @param {CommonAppEvent} event 
  * @returns {void}
@@ -292,7 +296,8 @@ const appEventKeyUp = event => {
     }
 };
 /**
- * User login
+ * @name appUserLogin
+ * @description User login
  * @function
  * @returns {void}
  */
@@ -303,7 +308,8 @@ const appUserLogin = () =>{
     .catch(()=>null);
 };
 /**
- * User logout
+ * @name appUserLogout
+ * @description User logout
  * @function
  * @returns {void}
  */
@@ -318,7 +324,8 @@ const appUserLogout = () =>{
             path:       '/component/page_start.js'}));
 };
 /**
- * Sets framework
+ * @name appFrameworkSet
+ * @description Sets framework
  * @function
  * @param {number|null} framework 
  * @returns {Promise.<void>}
@@ -333,7 +340,8 @@ const appFrameworkSet = async (framework=null) => {
             Input:null});
 };
 /**
- * Customer create
+ * @name appCustomerCreate
+ * @description Customer create
  * @function
  * @returns {Promise.<void>}
  */
@@ -356,7 +364,8 @@ const appCustomerCreate = async () => {
     appSecureInit();
 };
 /**
- * Payment request update
+ * @name appPaymentRequestUpdate
+ * @description Payment request update
  * @function
  * @param {1|0} status 
  * @returns {Promise.<void>}
@@ -375,7 +384,8 @@ const appPaymentRequestUpdate = async status => {
     .finally(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
 };
 /**
- * Payment request accept
+ * @name appPaymentRequestAccept
+ * @description Payment request accept
  * @function
  * @returns {Promise.<void>}
  */
@@ -383,7 +393,8 @@ const appPaymentRequestAccept = async () => {
     appPaymentRequestUpdate(1);
 };
 /**
- * Payment request cancel
+ * @name appPaymentRequestCancel
+ * @description Payment request cancel
  * @function
  * @returns {Promise.<void>}
  */
@@ -391,7 +402,8 @@ const appPaymentRequestCancel = async () => {
     appPaymentRequestUpdate(0);
 };
 /**
- * Payment request show
+ * @name appPaymentRequestShow
+ * @description Payment request show
  * @function
  * @param {string} message 
  * @returns {Promise.<void>}
@@ -452,7 +464,8 @@ const appPaymentRequestShow = async message =>{
 };
 
 /**
- * Init secure
+ * @name appSecureInit
+ * @description Init secure
  * @functions
  * @returns {void}
  */
@@ -472,7 +485,8 @@ const appSecureInit = () => {
         path:       '/component/page_secure.js'});
 };
 /**
- * Init app
+ * @name appInit
+ * @description Init app
  * @function
  * @returns {Promise.<void>}
  */
@@ -511,12 +525,13 @@ const appInit = async () => {
             path:       '/component/page_start.js'}));
 };
 /**
- * Init common
+ * @name appCommonInit
+ * @description Init common
  * @function
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit= parameters => {
+const appCommonInit = parameters => {
     common.COMMON_GLOBAL.app_function_exception = appException;
     common.COMMON_GLOBAL.app_function_session_expired = appUserLogout;
     common.COMMON_GLOBAL.app_function_sse = appPaymentRequestShow;

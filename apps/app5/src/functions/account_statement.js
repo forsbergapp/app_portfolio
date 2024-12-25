@@ -3,7 +3,9 @@
  */
 
 /**
- * IBAN mod 97
+ * @name IBAN_mod97
+ * @description IBAN mod 97
+ * @function
  * @param {string} str 
  * @returns {number}
  */
@@ -17,7 +19,9 @@
     return remainder;};
 
 /**
- * IBAN get check digit
+ * @name IBAN_getCheckDigit
+ * @description IBAN get check digit
+ * @function
  * @param {string} country_code 
  * @param {string} bban 
  * @returns {number}
@@ -32,7 +36,9 @@ const IBAN_getCheckDigit = (country_code, bban) => {
     return -1;
 };
 /**
- * IBAN compose with optional print format
+ * @name IBAN_compose
+ * @description IBAN compose with optional print format
+ * @function
  * @param {string} country_code 
  * @param {string} bank_id 
  * @param {string} account_number 
@@ -52,7 +58,9 @@ const IBAN_compose = (country_code, bank_id, account_number, print_format=false)
         return country_code.toUpperCase() + IBAN_getCheckDigit(country_code, bban) + bban.toString();
 };
 /**
- * IBAN validate
+ * @name IBAN_validate
+ * @description IBAN validate
+ * @function
  * @param {string} iban 
  * @returns {boolean}
  */
@@ -62,7 +70,9 @@ const IBAN_validate = iban => {
     return IBAN_mod97(replacedString) === 1;
 };
 /**
- * 
+ * @name getStatement
+ * @description Get bank statement
+ * @function
  * @param {number} app_id 
  * @param {*} data 
  * @param {string} user_agent

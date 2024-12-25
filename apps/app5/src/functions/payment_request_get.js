@@ -3,6 +3,9 @@
  */
 
 /**
+ * @name payment_request_get
+ * @description Get payment request
+ * @function
  * @param {number} app_id
  * @param {{data_app_id:number,
  *          user_account_id:number,

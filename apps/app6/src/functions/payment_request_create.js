@@ -2,6 +2,9 @@
  * @module apps/app6/src/functions/payment_request_create
  */
 /**
+ * @name payment_request_create
+ * @description Create payment request
+ * @function
  * @param {number} app_id
  * @param {{reference:string,
  *          data_app_id: number,

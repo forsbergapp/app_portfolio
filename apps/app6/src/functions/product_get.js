@@ -2,6 +2,9 @@
  * @module apps/app6/src/functions/product_get
  */
 /**
+ * @name product_get
+ * @description Get product
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

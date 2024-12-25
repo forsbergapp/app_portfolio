@@ -8,7 +8,9 @@
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
- *  
+ * @name template
+ * @description Template
+ * @function
  * @param {{customer:[]}} props 
  * @returns {string}
  */
@@ -33,6 +35,9 @@ const template = props => ` <div id='app_page_secure'>
                                 }
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
