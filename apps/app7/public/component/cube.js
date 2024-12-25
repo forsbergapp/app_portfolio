@@ -13,6 +13,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{icon_robot:string,
  *          icon_human:string, 
  *          icon_solution:string,
@@ -108,7 +111,9 @@ const template = props =>`  <div id='cube'>
                                 </div>
                             </div>`;
 /**
- * Cube component
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      cube_width:number,
