@@ -13,6 +13,8 @@
  */
 
 /**
+ * @name template
+ * @description Template
  * @param {{theme_id_day:string,
  *          theme_id_month:string,
  *          theme_id_year:string}} props
@@ -112,6 +114,8 @@ const template = props =>`  <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                             </div>`;
 /**
+ * @name component
+ * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
@@ -129,7 +133,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
 
     const settings = await props.methods.commonMiscDbAppSettingsGet();
     //update APP_GLOBAL with themes
@@ -223,4 +227,4 @@ const method = async props => {
                             theme_id_year:props.data.user_settings.design_theme_year_id})
     };
 };
-export default method;
+export default component;
