@@ -7,6 +7,8 @@
  */
 
 /**
+ * @name template
+ * @description Template
  * @param {{class:string,
  *          theme_id:string
  *          type:'day'|'month'|'year',
@@ -17,6 +19,8 @@ const template = props => ` <div class='paper ${props.class}'>
                                 ${props.html}
                             </div>`;
 /**
+ * @name component
+ * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      class:string,
@@ -30,7 +34,7 @@ const template = props => ` <div class='paper ${props.class}'>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
 
     return {
         lifecycle:  null,
@@ -39,4 +43,4 @@ const method = async props => {
         template:   template({class:props.data.class, theme_id:props.data.theme_id, type:props.data.type, html:props.data.html})
     };
 };
-export default method;
+export default component;

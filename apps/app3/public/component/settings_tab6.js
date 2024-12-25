@@ -13,6 +13,8 @@
  */
 
 /**
+ * @name template
+ * @description Template
  * @returns {string}
  */
 const template = () =>`   <div class='setting_horizontal_row'>
@@ -167,6 +169,8 @@ const template = () =>`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                     </div>`;
 /**
+ * @name component
+ * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
@@ -185,7 +189,7 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     const settings = await props.methods.commonMiscDbAppSettingsGet();
     const onMounted = async () =>{
         //Method
@@ -394,4 +398,4 @@ const method = async props => {
         template:   template()
     };
 };
-export default method;
+export default component;

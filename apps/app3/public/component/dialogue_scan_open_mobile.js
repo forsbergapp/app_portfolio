@@ -9,12 +9,18 @@
  * @typedef {CommonModuleCommon['commonWindowHostname']} commonWindowHostname
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => `<div id='scan_open_mobile_qrcode' class='common_module_easy.qrcode'></div>
                         <div id='scan_open_mobile_title1' class='common_icon'></div>
                         <div id='scan_open_mobile_close' class='common_dialogue_button common_icon' ></div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -25,7 +31,7 @@ const template = () => `<div id='scan_open_mobile_qrcode' class='common_module_e
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show0');
     props.methods.COMMON_DOCUMENT.querySelector('#dialogues').classList.add('common_dialogues_modal');
     const onMounted = async () =>{
@@ -38,4 +44,4 @@ const method = async props => {
         template:   template()
     };
 };
-export default method;
+export default component;

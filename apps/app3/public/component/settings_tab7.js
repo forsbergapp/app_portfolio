@@ -9,6 +9,8 @@
  */
 
 /**
+ * @name template
+ * @description Template
  * @returns {string}
  */
 const template = () =>`  <div id='user_settings'>
@@ -70,6 +72,8 @@ const template = () =>`  <div id='user_settings'>
                                 </div>
                             </div>`;
 /**
+ * @name component
+ * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_settings:APP_user_setting,
@@ -83,7 +87,7 @@ const template = () =>`  <div id='user_settings'>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     const onMounted = async () =>{
         
         await props.methods.commonComponentRender({
@@ -109,4 +113,4 @@ const method = async props => {
         template:   template()
     };
 };
-export default method;
+export default component;

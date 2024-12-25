@@ -9,6 +9,8 @@
  */
 
 /**
+ * @name template
+ * @description Template
  * @returns {string}
  */
 const template = () => `<div class='setting_horizontal_row'>
@@ -37,6 +39,8 @@ const template = () => `<div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                         </div>`;
 /**
+ * @name component
+ * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_settings:APP_user_setting_record
@@ -47,7 +51,7 @@ const template = () => `<div class='setting_horizontal_row'>
  *                      methods:null,
  *                      template:string}>}
  */
-const method = async props => {
+const component = async props => {
     const onMounted = async () =>{
         //Image
         props.methods.COMMON_DOCUMENT.querySelector('#setting_input_reportheader_img').value = '';
@@ -82,4 +86,4 @@ const method = async props => {
         template:   template()
     };
 };
-export default method;
+export default component;
