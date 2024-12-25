@@ -67,7 +67,7 @@ const dbInfoSpace = app_id =>import(`file://${process.cwd()}/server/db/common.js
                                                 DBA, 
                                                 null));
 /**
- * Dataabse info space sum
+ * Database info space sum
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpaceSum[]>}
