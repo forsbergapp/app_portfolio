@@ -38,7 +38,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>cube_solve<span class="signature">(app_id, user_agent, ip, locale)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>cube_solve<span class="signature">(app_id, user_agent, ip, locale)</span><span class="type-signature"></span></div>
     
 
     
@@ -55,8 +55,12 @@ Using CFOP / Fridrich method  (Cross – F2L – OLL – PLL)
 Used often by speed cubers that is easier to understand for humans (?)
 Preamble:	Sing master notation
 Temperature:	Return one best solution or all solutions</p>
-<p>Solve cube from current state to solved state or given state</p>
-<p>Returns Singmaster notation with moves, time, length and model for each solution</p>
+<pre><code>			Solves cube from current state to solved state or given state
+			Uses worker_threads for Kociemba algorithm so main proces is not blocked
+			since this algorithm can takes from seconds to mintues to solve the cube
+
+			Returns Singmaster notation with moves, time, length and model for each solution
+</code></pre>
 </div>
 
 
@@ -254,7 +258,7 @@ Temperature:	Return one best solution or all solutions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solve.js.html">apps/app7/src/functions/solve.js</a>, <a href="apps_app7_src_functions_solve.js.html#line30">line 30</a>
+        <a href="apps_app7_src_functions_solve.js.html">apps/app7/src/functions/solve.js</a>, <a href="apps_app7_src_functions_solve.js.html#line7">line 7</a>
     </div></div></dd>
     
 
