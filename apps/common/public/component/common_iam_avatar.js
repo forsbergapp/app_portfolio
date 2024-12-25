@@ -8,6 +8,9 @@
  * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () =>` <div id='common_iam_avatar'>
@@ -21,7 +24,9 @@ const template = () =>` <div id='common_iam_avatar'>
                             </div>
                         </div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 

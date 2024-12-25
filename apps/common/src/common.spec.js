@@ -1,12 +1,17 @@
 /** 
- * Test
  * @module apps/common/src/common.spec 
  */
 let filterCount_APP_SECRET = 0;
 let filterCount_IAM_APP_TOKEN = 0;
 //Save original filter function
 const ORIGINAL_FILTER = Array.prototype.filter;
-
+/**
+ * @name describe
+ * @description describe: Spy test, commonApp as called from bff
+ *              it: should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_TOKEN at least 1 time each when requesting app
+ * @function
+ * @returns {void}
+ */
 describe('Spy test, commonApp as called from bff', ()=> {   
     beforeAll(()=>{
         /**

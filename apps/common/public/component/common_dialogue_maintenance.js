@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () =>` <div id='common_dialogue_maintenance_content' class='common_dialogue_content'>
@@ -21,6 +24,9 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
                             <div id='common_maintenance_footer'></div>
                         </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,

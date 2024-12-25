@@ -48,7 +48,8 @@ const dbModelDatabase = await await import(`file://${process.cwd()}/server/db/db
 const fs = await import('node:fs');
 
 /**
- * Creates email
+ * @name commonMailCreate
+ * @description Creates email
  * @function
  * @param {number} app_id                       - Application id
  * @param {server_apps_email_param_data} data         - Email param data
@@ -101,7 +102,8 @@ const commonMailCreate = async (app_id, data) =>{
         throw '';
 };
 /**
- * Creates and sends email
+ * @name commonMailSend
+ * @description Creates and sends email
  * @function
  * @param {number} app_id 
  * @param {string} emailtype 
@@ -146,7 +148,8 @@ const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language
     return await bffServer(app_id, parameters);
 };
 /**
- * Checks if ok to start app
+ * @name commonAppStart
+ * @description Checks if ok to start app
  * @function
  * @param {number|null} app_id
  * @returns {Promise.<boolean>}
@@ -181,7 +184,8 @@ const commonAppStart = async (app_id=null) =>{
 };
 
 /**
- * Get client locale from accept language from request
+ * @name commonClientLocale
+ * @description Get client locale from accept language from request
  * @function
  * @param {string} accept_language  - Accept language from request
  * @returns {string}                - lowercase locale, can be default 'en' or with syntax 'en-us' or 'zh-hant-cn'
@@ -207,7 +211,8 @@ const commonClientLocale = accept_language =>{
     return locale;
 };
 /**
- * Returns geodata
+ * @name commonGeodata
+ * @description Returns geodata
  * @function
  * @param {{app_id:number,
  *          endpoint:server_bff_endpoint_type,
@@ -271,7 +276,8 @@ const commonGeodata = async parameters =>{
 };
 
 /**
- * External request
+ * @name commonBFE
+ * @description External request
  * @function
  * @param {{host:string,
  *          method:string,
@@ -340,10 +346,11 @@ const commonBFE = async parameters =>{
 };
 
 /**
- * Router function - get asset file
- *  Supported
- *  .css files
- *  .js files       
+ * @name commonAssetfile
+ * @description Router function - get asset file
+ *              Supported
+ *              .css files
+ *              .js files       
  *                  modifies at request:
  *                  /modules/react/react-dom.development.js
  *                      makes ECMAScript module adding export
@@ -357,12 +364,12 @@ const commonBFE = async parameters =>{
  *                      makes ECMAScript module adding minimal modifications and export
  *                  /apps/common_types.js
  *                      used to display common_types.js since developer path is different
- *  .html files
- *  .webp files
- *  .png files
- *  .woff2 files
- *  .ttf files
- *  .json
+ *              .html files
+ *              .webp files
+ *              .png files
+ *              .woff2 files
+ *              .ttf files
+ *              .json
  * @function
  * @param {{app_id:Number,
  *          url:String,
@@ -517,7 +524,8 @@ const commonAssetfile = parameters =>{
 };
 
 /**
- * Router function - run function
+ * @name commonModuleRun
+ * @description Router function - run function
  * @function
  * @param {{app_id:number,
  *          type:'FUNCTION',
@@ -545,7 +553,8 @@ const commonModuleRun = async parameters => {
     }    
 };
 /**
- * Router function - get module
+ * @name commonModuleGet
+ * @description Router function - get module
  * @function
  * @param {{app_id:Number,
  *          type:'REPORT'|'MODULE',
@@ -612,7 +621,8 @@ const commonModuleGet = async parameters => {
     }
 };
 /**
- * Runs report in queue
+ * @name commonAppReportQueue
+ * @description Runs report in queue
  * @function
  * @param {{app_id:Number,
  *          type:'REPORT'|'MODULE',
@@ -670,7 +680,8 @@ const commonAppReportQueue = async parameters =>{
 };
 
 /**
- * Returns all modules with metadata
+ * @name commonModuleMetaDataGet
+ * @description Returns all modules with metadata
  * @function
  * @param {{app_id:Number,
  *          type:'REPORT'|'MODULE'|'FUNCTION',
@@ -692,15 +703,16 @@ const commonModuleMetaDataGet = async parameters =>{
     return modules;
 }; 
 /**
- * Creates server component and returns to client
- * app
- * reports
- * maintenance
- * mail
- * info disclaimer
- * info privacy policy
- * info terms
- * server error
+ * @name commonComponentCreate
+ * @description Creates server component and returns to client
+ *              app
+ *              reports
+ *              maintenance
+ *              mail
+ *              info disclaimer
+ *              info privacy policy
+ *              info terms
+ *              server error
  * @function
  * @param {{app_id:number, 
  *          componentParameters:{   param?:             string|null,
@@ -813,11 +825,12 @@ const commonComponentCreate = async parameters =>{
 };
 
 /**
-  * Returns app id for given host
-  * Checks if host matches configured host or starts with www or is a valid subdomain
-  * @param {string} host 
-  * @returns {number|null}
-  */
+ * @name commonAppHost
+ * @description Returns app id for given host
+ *              Checks if host matches configured host or starts with www or is a valid subdomain
+ * @param {string} host 
+ * @returns {number|null}
+ */
 const commonAppHost = host =>{
     switch (host.toString().split('.')[0]){
         case fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST'):
@@ -835,7 +848,8 @@ const commonAppHost = host =>{
     }
  };
 /**
- * Router function - App: get app asset, common asset, app info page, app report, app module or app
+ * @name commonApp
+ * @description Router function - App: get app asset, common asset, app info page, app report, app module or app
  * @function
  * @param {{ip:string,
  *          host:string,
@@ -920,7 +934,8 @@ const commonApp = async parameters =>{
         }
 };
 /**
- * Get all aps from app registry and translated names and add info to create url links
+ * @name commonAppsGet
+ * @description Get all aps from app registry and translated names and add info to create url links
  * @function
  * @param {number} app_id 
  * @param {number|null} resource_id 
@@ -958,8 +973,9 @@ const commonAppsGet = async (app_id, resource_id, locale) =>{
 };
 
 /**
- * App registry APP MODULE
- * Modules that are shared by apps and server
+ * @name commonRegistryAppModule
+ * @description App registry APP MODULE
+ *              Modules that are shared by apps and server
  * @function
  * @param {number} app_id
  * @param {{type:string,
@@ -974,7 +990,8 @@ const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get(a
                                                                app.common_role == parameters.role)[0];
 
 /**
- * App Registry APP SECRET reset db username and passwords for database in use
+ * @name commonRegistryAppSecretDBReset
+ * @description App Registry APP SECRET reset db username and passwords for database in use
  * @function
  * @param {number}  app_id
  * @returns {Promise.<void>}

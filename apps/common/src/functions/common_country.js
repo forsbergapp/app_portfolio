@@ -2,9 +2,9 @@
  * @module apps/common/src/functions/common_country
  */
 /**
- * 
- * Get countries using ISO 3166-1 country code and language code using ISO 639-1
- * 
+ * @name appFunction
+ * @description Get countries using ISO 3166-1 country code and language code using ISO 639-1
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

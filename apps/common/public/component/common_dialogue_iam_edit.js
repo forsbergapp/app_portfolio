@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => `<div id='common_dialogue_iam_edit_common'>
@@ -194,6 +197,9 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
                         </div>
                         <div id='common_dialogue_iam_edit_close' class='common_dialogue_button common_icon' ></div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,

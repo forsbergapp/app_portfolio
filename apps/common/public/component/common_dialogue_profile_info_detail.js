@@ -8,7 +8,9 @@
  */
 
 /**
- * Displays profile detail
+ * @name template
+ * @description Template
+ * @function
  * @param {{user_account_id:number,
  *          user_account_id_profile:number,
  *          detailchoice:number,
@@ -68,6 +70,9 @@ const template = props => `     ${props.list.map(row=>
                                 ).join('')
                                 }`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_account_id:number,

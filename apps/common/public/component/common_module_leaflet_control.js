@@ -13,6 +13,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{
  *          title_search:string,
  *          title_fullscreen:string,
@@ -49,6 +52,9 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
                             </div>
                         </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      data_app_id:number,

@@ -14,6 +14,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{info_type:number, info:string, iframe_class:string, content:string}} props
  * @returns {string}
  */
@@ -53,6 +56,9 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
                             }`
 ;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      info:number, 

@@ -8,7 +8,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{providers:CommonProvider[],
  *          admin_app:boolean,
  *          type:'LOGIN'|'SIGNUP'|'FORGOT',
@@ -88,6 +90,9 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
                                 <div id='common_dialogue_iam_start_close' class='common_dialogue_button common_icon' ></div>`
                             }`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      type:'LOGIN'|'SIGNUP'|'FORGOT',

@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{title: string,
  *          verification_type:string,
  *          username:string,
@@ -30,6 +33,9 @@ const template = props => `
                             </div>
                             <div id='common_dialogue_iam_verify_cancel' class='common_dialogue_button common_icon'></div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_verification_type:string,

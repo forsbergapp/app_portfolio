@@ -9,10 +9,12 @@
  */
 
 /**
-* 
-* @param {{stat_list:CommonProfileStatRecord[]|[]}} props 
-* @returns {string}
-*/
+ * @name template
+ * @description Template
+ * @function
+ * @param {{stat_list:CommonProfileStatRecord[]|[]}} props 
+ * @returns {string}
+ */
 const template = props =>`   
                             ${props.stat_list.map(row=>
                                 `   <div data-user_account_id='${row.id}' class='common_profile_stat_list_row common_row'>
@@ -35,6 +37,9 @@ const template = props =>`
                             }`;
 
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      stat_choice:number,

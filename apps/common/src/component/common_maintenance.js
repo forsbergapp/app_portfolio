@@ -3,7 +3,11 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{CONFIG_APP:*, ITEM_COMMON_PARAMETERS:string}} props
+ * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
@@ -24,7 +28,9 @@ const template = props =>`  <!DOCTYPE html>
                             </body>
                             </html>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {CONFIG_APP:*, ITEM_COMMON_PARAMETERS:string},
  *          methods:    null}} props 
  * @returns {Promise.<string>}

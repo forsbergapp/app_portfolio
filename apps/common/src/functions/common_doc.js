@@ -6,8 +6,9 @@
  * @import { appMenu} from './types.js'
  */
 /**
- * Get documentation menu or guide, app or jsdoc documentation
- * 
+ * @name appFunction
+ * @description Get documentation menu, guide, app or jsdoc documentation
+ * @function
  * @param {number} app_id
  * @param {*} data
  * @param {string} user_agent

@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () =>` <div id='common_dialogue_profile_home' class='common_dialogue_button common_icon' ></div>
@@ -17,6 +20,9 @@ const template = () =>` <div id='common_dialogue_profile_home' class='common_dia
                         <div id='common_dialogue_profile_close' class='common_dialogue_button common_icon' ></div>`;
 
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      stat_list_app_rest_url:string,

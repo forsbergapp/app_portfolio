@@ -3,7 +3,11 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_name:string}} props
+ * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>

@@ -8,6 +8,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{message:string}} props
  * @returns {string}
  */
@@ -26,7 +29,9 @@ const template = props =>` <div id='common_broadcast_info'>
                             </div>
                         </div>`;
 /**
- * 
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      message:string

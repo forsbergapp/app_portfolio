@@ -9,38 +9,43 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{app_logo:string,
-*          app_copyright:string,
-*          app_name:string,
-*          document :string,
-*          document_class:string
-*          }} props
-* @returns {string}
-*/
+ *          app_copyright:string,
+ *          app_name:string,
+ *          document :string,
+ *          document_class:string
+ *          }} props
+ * @returns {string}
+ */
 const template = props =>`  <div class='common_document_header' style='background-image:url("${props.app_logo}")'>${props.app_name}</div>
                                <div class='common_document_article ${props.document_class ?? ''}'>${props.document}</div>
                            <div class='common_document_footer'>${props.app_copyright}</div>`;
 /**
-* 
-* @param {{data:       {
-*                      commonMountdiv:string,
-*                      common_app_id:number
-*                      app_logo:string,
-*                      app_copyright:string,
-*                      app_name:string,
-*                      href:string,
-*                      title:string,
-*                      type:'APP'|'GUIDE'|'JSDOC'|'JSDOC_CODE'|'JSDOC_MODULE'
-*                      },
-*          methods:    {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonFFB:commonFFB
-*                      }}} props
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:   null,
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{data:       {
+ *                      commonMountdiv:string,
+ *                      common_app_id:number
+ *                      app_logo:string,
+ *                      app_copyright:string,
+ *                      app_name:string,
+ *                      href:string,
+ *                      title:string,
+ *                      type:'APP'|'GUIDE'|'JSDOC'|'JSDOC_CODE'|'JSDOC_MODULE'
+ *                      },
+ *          methods:    {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonFFB:commonFFB
+ *                      }}} props
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:   null,
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     let classname = '';
     let content = await props.methods.commonFFB({path:'/app-module-function/COMMON_DOC', 

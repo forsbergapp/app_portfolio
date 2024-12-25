@@ -8,7 +8,9 @@
  */
 
 /**
- * 
+ * @name template
+ * @description Template
+ * @function
  * @param {{framework:number,
  *          font_default:boolean|null,
  *          font_arabic:boolean|null,
@@ -232,6 +234,9 @@ const template = props =>`  <div id='common_toolbar_framework' ${props.framework
                                 }
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      framework: number,

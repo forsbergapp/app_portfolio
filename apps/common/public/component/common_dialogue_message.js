@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{message:*,
  *          message_type:string,
  *          message_title_font_class:string|null,
@@ -54,6 +57,9 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
                                 }
                             </div>`;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      text_class:string,
