@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => ` <div id='menu_report_content_widget1' class='widget'>
@@ -22,22 +25,24 @@ const template = () => ` <div id='menu_report_content_widget1' class='widget'>
                                 <div id='menu_report_queue' class='common_list_scrollbar'></div>
                             </div>`;
 /**
-* 
-* @param {{data:        {commonMountdiv:string},
-*          methods:     {
-*                       COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonComponentRender:commonComponentRender,
-*                       commonFFB:commonFFB
-*                       },
-*          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:{    updateMetadata:function, 
-*                                   reportRun:function,
-*                                   reportQueueUpdate:function,
-*                                   reportPreview:function},
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{data:        {commonMountdiv:string},
+ *          methods:     {
+ *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonComponentRender:commonComponentRender,
+ *                       commonFFB:commonFFB
+ *                       },
+ *          lifecycle:   null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:{    updateMetadata:function, 
+ *                                   reportRun:function,
+ *                                   reportQueueUpdate:function,
+ *                                   reportPreview:function},
+ *                      template:string}>}
+ */
 const component = async props => {
     
     /**@type{CommonAppModuleWithMetadata[]} */

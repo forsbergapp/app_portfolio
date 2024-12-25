@@ -11,6 +11,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{apps:CommonAppRecord[]}} props
  * @returns {string}
  */
@@ -63,6 +66,9 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 </div>
                             </div>` ;
 /**
+ * @name component
+ * @description Component
+ * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,

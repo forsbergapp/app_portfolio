@@ -6,6 +6,9 @@
  * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
+ * @name template
+ * @description Template
+ * @function
  * @returns {string}
  */
 const template = () => ` <div id='menu_config_content_widget1' class='widget'>
@@ -19,15 +22,17 @@ const template = () => ` <div id='menu_config_content_widget1' class='widget'>
                             </div>
                         </div>`;
 /**
-* 
-* @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
-*           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function
+ * @param {{ data:{      commonMountdiv:string},
+ *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT},
+ *           lifecycle:  null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     const onMounted = () =>{
         props.methods.COMMON_DOCUMENT.querySelector('#menu_config_config_server').click();

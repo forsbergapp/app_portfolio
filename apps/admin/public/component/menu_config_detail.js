@@ -10,6 +10,9 @@
  */
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{server_group:number[],
  *          file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY',
  *          config:[]}} props
@@ -50,17 +53,19 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
                                 `<div id='menu_config_detail_edit' contentEditable = 'true'>${JSON.stringify(props.config, undefined, 2)}</div>`
                             }`;
 /**
-* 
-* @param {{data:{       commonMountdiv:string,
-*                       file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY'},
-*          methods:{    COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonFFB:commonFFB},
-*          lifecycle:   null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function
+ * @param {{data:{       commonMountdiv:string,
+ *                       file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY'},
+ *          methods:{    COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonFFB:commonFFB},
+ *          lifecycle:   null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     const server_groups = [0,1,2,3,4];
     const config_server = await props.methods.commonFFB({path:`/server-config/config/${props.data.file}`, query:'saved=1', method:'GET', authorization_type:'ADMIN'})

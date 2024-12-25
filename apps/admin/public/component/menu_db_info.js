@@ -12,6 +12,9 @@
 
 
 /**
+ * @name template
+ * @description Template
+ * @function
  * @param {{size:string,
  *          db:{database_use:string, 
  *              database_name:string,
@@ -73,17 +76,19 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                 </div>
                             </div>`;
 /**
-* 
-* @param {{ data:{      commonMountdiv:string},
-*           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
-*                       commonMiscRoundOff:commonMiscRoundOff,
-*                       commonFFB:commonFFB},
-*           lifecycle:  null}} props 
-* @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
-*                      data:null, 
-*                      methods:null,
-*                      template:string}>}
-*/
+ * @name component
+ * @description Component
+ * @function 
+ * @param {{ data:{      commonMountdiv:string},
+ *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonMiscRoundOff:commonMiscRoundOff,
+ *                       commonFFB:commonFFB},
+ *           lifecycle:  null}} props 
+ * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
+ *                      data:null, 
+ *                      methods:null,
+ *                      template:string}>}
+ */
 const component = async props => {
     const size = '(Mb)';
     /**
