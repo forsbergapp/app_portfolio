@@ -51,8 +51,8 @@
     overflow-x:hidden;
     padding-inline-start: 10px;
     display:none;
-    z-index: 10;
     text-align: start;
+    height: 100vh;
 }
 #nav_content_guide{
     font-size: 0.9em;
@@ -60,6 +60,16 @@
 #nav_content_guide > div{
     cursor:pointer;
 }
+.app_menu{
+    cursor: pointer;
+}
+.app_submenu{
+    display: none;
+}
+.app_submenu.active{
+    display: block;
+}
+
 /*DOCUMENTS */
 .title_h1{
     font-size: 1.7em;

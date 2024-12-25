@@ -114,13 +114,28 @@
  * @property {number|null} port
  */
 
-
 /**
  * APP serverComponentLifecycle
  * @typedef  {{ onBeforeMounted?:function|null,
-*              onMounted?:function|null, 
-*              onUnmounted?:function|null}|null} serverComponentLifecycle
-*/
+ *              onMounted?:function|null, 
+ *              onUnmounted?:function|null}|null} serverComponentLifecycle
+ */
+
+/**
+ * APP commonDocumentType
+ * @typedef {'MENU'|'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'} serverDocumentType
+ */
+
+/**
+ * APP commonDocumentMenu
+ * @typedef{{   id:number, 
+ *              menu:string,
+ *              type:serverDocumentType,
+ *              menu_sub:{  id:number,
+ *                          menu:string,
+ *                          doc:string}[]|null}} serverDocumentMenu
+ */
+
 /** 
  * BFF server_bff_endpoint_type
  * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|

@@ -2,15 +2,16 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import { server_server_res} from '../../../../server/types.js'
- * @import { appMenu} from './types.js'
+ * @import { server_server_res, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
  */
 /**
  * @name appFunction
  * @description Get documentation menu, guide, app or jsdoc documentation
  * @function
  * @param {number} app_id
- * @param {*} data
+ * @param {{    type:serverDocumentType,
+ *              data_app_id:number,
+ *              doc:string}} data
  * @param {string} user_agent
  * @param {string} ip
  * @param {string} locale
@@ -42,14 +43,13 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
     else{
         /**@type{import('../../../../server/db/fileModelApp.js')} */
         const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-        switch (data.type.toUpperCase()){
-            case 'MENU':{
-                
-                /**@type{appMenu[]} */
+        switch (true){
+            case data.type=='MENU':{
+                /**@type{serverDocumentMenu[]} */
                 const markdown_menu_docs = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
                 for (const menu of markdown_menu_docs){
-                    switch (menu.type){
-                        case 'APP':{
+                    switch (true){
+                        case menu.type=='APP':{
                             //return menu for app with updated id and app name
                             menu.menu_sub = fileModelApp.get(app_id, null, null).map(app=>{
                                 return { 
@@ -60,7 +60,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                 });
                             break;
                         }
-                        case 'GUIDE':{
+                        case menu.type=='GUIDE':{
                             //return menu with updated first title from the documents
                             for (const menu_sub of menu.menu_sub??[]){
                                 await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
@@ -75,12 +75,12 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                             }
                             break;
                         }
-                        case 'JSDOC_MODULE':{
+                        case menu.type.startsWith('MODULE'):{
                             //return all *.js files in /apps, /microservices and /server directories
                             //remove OS path info, .js suffix and replace \\ with /
                             const fs = await import('node:fs');
                             const path = await import('node:path');
-                            /**@type{appMenu['menu_sub']} */
+                            /**@type{serverDocumentMenu['menu_sub']} */
                             const jsdoc_menu = [];
                             const filePattern = /\.js$/;
                             let index =0;
@@ -111,17 +111,15 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
 
                                 }
                             };
-                            await findFiles(`${process.cwd()}/apps`, filePattern);
-                            await findFiles(`${process.cwd()}/microservice`, filePattern);
-                            await findFiles(`${process.cwd()}/server`, filePattern);
+                            await findFiles(`${process.cwd()}/${menu.type.substring('MODULE'.length+1).toLowerCase()}`, filePattern);
                             menu.menu_sub = jsdoc_menu;
                         }
                     }
                 }
                 return [JSON.stringify(markdown_menu_docs)];
             }
-            case 'GUIDE':
-            case 'APP':{
+            case data.type=='GUIDE':
+            case data.type=='APP':{
                 /**@type{import('../../../../server/db/fileModelAppTranslation.js')} */
                 const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');
@@ -133,7 +131,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                                                                             /**@ts-ignore */
                                                                                                             serverUtilNumberValue(data.doc), null)[0]:null,
                                                         
-                                                        type:                   data.type.toUpperCase(),
+                                                        type:                   data.type,
                                                         //guide documents in separate files, all app use app template
                                                         markdown:               await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
                                                                                             (data.type.toUpperCase()=='GUIDE'?(data.doc + '.md'):'2.app.md')),
@@ -141,16 +139,16 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                         module:                 null},
                                                 methods:null})];
             }
-            case 'JSDOC_CODE':
-            case 'JSDOC_MODULE':{
+            case data.type=='MODULE_CODE':
+            case data.type.startsWith('MODULE'):{
                 if (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server'))
-                    if (data.type.toUpperCase()=='JSDOC_CODE')
+                    if (data.type=='MODULE_CODE')
                         return [await getFile(`${process.cwd()}${data.doc}.js`)];
                     else{
                         const {default:ComponentCreate} = await import('../component/common_markdown.js');
                         return [await ComponentCreate({ data:{app:              null, 
                                                         app_translation:        null,
-                                                        type:                   data.type.toUpperCase(),
+                                                        type:                   data.type,
                                                         //guide documents in separate files, all app use app template
                                                         markdown:               await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.module.md`),
                                                         code:                   await getFile(`${process.cwd()}${data.doc}.js`),
@@ -162,7 +160,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                     throw '⛔';
                 }
             }
-            case 'JSDOC':{
+            case data.type=='JSDOC':{
                 return [await getFile(`${process.cwd()}/apps/common/src/jsdoc/${data.doc}`)];   
             }
             default:{

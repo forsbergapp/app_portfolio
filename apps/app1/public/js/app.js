@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
+ * @import {CommonAppEvent, commonDocumentType, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -20,7 +20,7 @@ const common = await import(commonPath);
  * @function
  * @param {string} href
  * @param {string} title
- * @param {'GUIDE'|'APP'|'JSDOC'} type
+ * @param {commonDocumentType} type
  */
 const show = async (href, title, type) =>{
     
@@ -76,6 +76,13 @@ const appEventClick = event => {
                     COMMON_DOCUMENT.querySelector('#nav').style.display = 'none';
                     break;
                 }
+                case event.target.classList.contains('app_menu')?event_target_id:'':{
+                    if (event.target.parentNode.querySelector('.app_submenu').classList.contains('active'))
+                        event.target.parentNode.querySelector('.app_submenu').classList.remove('active');
+                    else
+                        event.target.parentNode.querySelector('.app_submenu').classList.add('active');
+                    break;
+                }
                 case 'title':
                 case 'nav_content_app':
                 case 'nav_content_jsdoc':
@@ -87,7 +94,8 @@ const appEventClick = event => {
                                 //use title from first menu text if clicking on title
                                 event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
                                 //GUIDE in title and nav_content_app
-                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'JSDOC_CODE':event.target?.parentNode.getAttribute('data-type') ?? 'JSDOC');
+                                /**@ts-ignore */
+                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':event_target_id=='article'?'JSDOC':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
                     break;
                 }
                 case 'common_toolbar_framework_js':{
