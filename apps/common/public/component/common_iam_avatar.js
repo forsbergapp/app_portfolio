@@ -4,8 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
+ * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 /**
  * @name template

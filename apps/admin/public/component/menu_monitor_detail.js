@@ -14,15 +14,6 @@
 
 /**
  * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
- * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
- * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
- * @typedef {CommonModuleCommon['commonMiscInputControl']} commonMiscInputControl
- * @typedef {CommonModuleCommon['commonWindowUserAgentPlatform']} commonWindowUserAgentPlatform
- * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
- * @typedef {CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update']} map_update
  * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
  */
 
@@ -33,9 +24,9 @@
  * @param {{
  *          service_socket_client_ID:number,
  *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
- *          function_commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
+ *          function_commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *          function_get_order_by:function,
- *          function_roundOff:commonMiscRoundOff,
+ *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
  *          SERVICE_LOG_DATA_PARAMETERS:{
  *                                      SCOPE_REQUEST:string,
@@ -372,16 +363,16 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *           methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                       monitorShow:function,
- *                       map_update:map_update,
+ *                       map_update:CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
  *                       appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow,
- *                       commonMiscElementRow:commonMiscElementRow,
- *                       commonLovClose:commonLovClose,
- *                       commonLovShow:commonLovShow,
- *                       commonMiscInputControl:commonMiscInputControl,
- *                       commonComponentRender:commonComponentRender,
- *                       commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
- *                       commonMiscRoundOff:commonMiscRoundOff,
- *                       commonFFB:commonFFB
+ *                       commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
+ *                       commonLovClose:CommonModuleCommon['commonLovClose'],
+ *                       commonLovShow:CommonModuleCommon['commonLovShow'],
+ *                       commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
+ *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                       commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
+ *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
+ *                       commonFFB:CommonModuleCommon['commonFFB']
  *                       },
  *           lifecycle:  null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 

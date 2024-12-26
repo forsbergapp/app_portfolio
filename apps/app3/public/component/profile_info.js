@@ -4,8 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -61,8 +59,8 @@ const template = props => ` ${props.setting?
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonComponentRender:commonComponentRender,
- *                      commonFFB:commonFFB}}} props
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {

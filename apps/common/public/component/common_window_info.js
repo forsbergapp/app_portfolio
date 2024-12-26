@@ -9,8 +9,6 @@
  */
 /**
  * @import {CommonModuleCommon, CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
  */
 
 /**
@@ -73,8 +71,8 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
  *                      iframe_class:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonWindowSetTimeout:commonWindowSetTimeout,
- *                      commonFFB:commonFFB
+ *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

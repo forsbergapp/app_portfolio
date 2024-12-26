@@ -5,7 +5,6 @@
 
 /**
  * @import {CommonMicroserviceWorldcitiesRecordType, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -47,7 +46,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      click_function:function,
- *                      commonFFB:commonFFB
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

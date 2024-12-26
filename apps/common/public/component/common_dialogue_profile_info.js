@@ -5,13 +5,6 @@
 
 /**
  * @import {CommonProfileUser, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonDialogueShow']} commonDialogueShow
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonMiscFormatJsonDate']} commonMiscFormatJsonDate
- * @typedef {CommonModuleCommon['commonModuleEasyQRCODECreate']} commonModuleEasyQRCODECreate
- * @typedef {CommonModuleCommon['commonWindowHostname']} commonWindowHostname
- * @typedef {CommonModuleCommon['commonSocketConnectOnlineCheck']} commonSocketConnectOnlineCheck
- * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
  */
 
 /**
@@ -19,7 +12,7 @@
  * @description Template
  * @function
  * @param {{profile:CommonProfileUser,
- *          function_commonMiscFormatJsonDate:commonMiscFormatJsonDate}} props 
+ *          function_commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate']}} props 
  * @returns {string}
  */
 const template = props =>`  <div id='common_profile_main'>
@@ -109,13 +102,13 @@ const template = props =>`  <div id='common_profile_main'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscFormatJsonDate:commonMiscFormatJsonDate,
- *                      commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
- *                      commonWindowHostname:commonWindowHostname,
- *                      commonDialogueShow:commonDialogueShow,
- *                      commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
- *                      commonWindowSetTimeout:commonWindowSetTimeout,
- *                      commonFFB:commonFFB
+ *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
+ *                      commonModuleEasyQRCODECreate:CommonModuleCommon['commonModuleEasyQRCODECreate'],
+ *                      commonWindowHostname:CommonModuleCommon['commonWindowHostname'],
+ *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
+ *                      commonSocketConnectOnlineCheck:CommonModuleCommon['commonSocketConnectOnlineCheck'],
+ *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

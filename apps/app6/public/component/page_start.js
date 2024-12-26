@@ -4,8 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
  * @name template
@@ -27,8 +25,8 @@ const template = () => `<div id='app_page_start_shop' class='app_page_start_shop
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      pay:function,
- *                      commonFFB:commonFFB,
- *                      commonComponentRender:commonComponentRender,
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonMessageShow:function}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 

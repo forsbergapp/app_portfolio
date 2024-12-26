@@ -5,8 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonComponentRemove']} commonComponentRemove
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -69,9 +67,9 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  *                      message:*},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:commonFFB,
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      function_event:function,
- *                      commonComponentRemove:commonComponentRemove
+ *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
