@@ -24,9 +24,9 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 
 const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
-
 /**
- * Config get
+ * @name get
+ * @description Config get
  * @function
  * @param {server_db_file_db_name_config} file
  * @param {string|null} [config_group]
@@ -56,8 +56,9 @@ const get = (file, config_group, parameter) => {
     
 };
 /**
- * Config exists
- * Checks if all config files exist
+ * @name configExists
+ * @description Config exists
+ *              Checks if all config files exist
  * @function
  * @returns {Promise&lt;boolean>}
  */
@@ -75,7 +76,8 @@ const configExists = async () => {
     }
 };
 /**
- * Default config
+ * @name configDefault
+ * @description Default config
  * @function
  * @returns {Promise&lt;void>}
  */
@@ -165,7 +167,8 @@ const configDefault = async () => {
     }
 };
 /**
- * Init config
+ * @name configInit
+ * @description Init config
  * @function
  * @returns {Promise&lt;null>}
  */
@@ -193,7 +196,8 @@ const configInit = async () => {
     });
 };
 /**
- * Config get saved
+ * @name getFile
+ * @description Config get saved
  * @function
  * @param {server_db_file_db_name} file
  * @param {*} query
@@ -217,7 +221,8 @@ const getFile = async (file, query=null) => {
     });
 };
 /**
- * Config save
+ * @name update
+ * @description Config save
  * @function
  * @param {server_db_file_db_name} resource_id
  * @param { *} data

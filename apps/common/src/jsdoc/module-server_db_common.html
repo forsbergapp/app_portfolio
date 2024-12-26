@@ -224,8 +224,8 @@
 
 
 <div class="description">
-    <p>Get app code derived from database error</p>
-<pre><code>if known SQL error, example:
+    <p>Get app code derived from database error
+if known SQL error, example:
 MariaDB sqlMessage
 'Duplicate entry '[value]' for key 'user_account_username_un''
 MySQL sqlMessage
@@ -233,8 +233,7 @@ MySQL sqlMessage
 PostgreSQL message:
 'duplicate key value violates unique constraint &quot;user_account_username_un&quot;'
 Oracle message:
-'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
-</code></pre>
+'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'</p>
 </div>
 
 
@@ -327,7 +326,7 @@ Oracle message:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line38">line 38</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line21">line 21</a>
     </div></div></dd>
     
 
@@ -373,7 +372,7 @@ Oracle message:
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbCommonCheckedError<span class="signature">(app_id, lang_code, err, res)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonCheckedError<span class="signature">(app_id, lang_code, err, res)</span><span class="type-signature"></span></div>
     
 
     
@@ -543,7 +542,7 @@ Oracle message:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line73">line 73</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line65">line 65</a>
     </div></div></dd>
     
 
@@ -695,7 +694,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line188">line 188</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line177">line 177</a>
     </div></div></dd>
     
 
@@ -749,7 +748,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbCommonExecute<span class="signature">(app_id, sql, parameters, dba, locale)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonExecute<span class="signature">(app_id, sql, parameters, dba, locale)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
     
 
     
@@ -792,8 +791,6 @@ returns pagination in ISO20022 format if used</p>
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -822,10 +819,6 @@ returns pagination in ISO20022 format if used</p>
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last"></td>
         </tr>
@@ -849,10 +842,6 @@ returns pagination in ISO20022 format if used</p>
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last"></td>
         </tr>
@@ -875,10 +864,6 @@ returns pagination in ISO20022 format if used</p>
 
             
 
-            
-                <td class="default">
-                
-                </td>
             
 
             <td class="description last"></td>
@@ -906,12 +891,6 @@ returns pagination in ISO20022 format if used</p>
             
 
             
-                <td class="default">
-                
-                    null
-                
-                </td>
-            
 
             <td class="description last"></td>
         </tr>
@@ -937,12 +916,6 @@ returns pagination in ISO20022 format if used</p>
 
             
 
-            
-                <td class="default">
-                
-                    null
-                
-                </td>
             
 
             <td class="description last"></td>
@@ -986,7 +959,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line211">line 211</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line197">line 197</a>
     </div></div></dd>
     
 
@@ -1167,7 +1140,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line128">line 128</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line120">line 120</a>
     </div></div></dd>
     
 
@@ -1224,7 +1197,7 @@ returns pagination in ISO20022 format if used</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbCommonRecordNotFound<span class="signature">(app_id, lang_code, res)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonRecordNotFound<span class="signature">(app_id, lang_code, res)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span></div>
     
 
     
@@ -1371,7 +1344,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line105">line 105</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line98">line 98</a>
     </div></div></dd>
     
 
@@ -1459,8 +1432,6 @@ returns pagination in ISO20022 format if used</p>
         
 
         
-        <th>Default</th>
-        
 
         <th class="last">Description</th>
     </tr>
@@ -1485,12 +1456,6 @@ returns pagination in ISO20022 format if used</p>
 
             
 
-            
-                <td class="default">
-                
-                    true
-                
-                </td>
             
 
             <td class="description last"></td>
@@ -1534,7 +1499,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line159">line 159</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line156">line 156</a>
     </div></div></dd>
     
 

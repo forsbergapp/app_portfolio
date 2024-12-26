@@ -24,23 +24,26 @@ const { iamAuthenticateApp } = await import(`file://${process.cwd()}/server/iam.
 const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
 /**
- * Returns resource id number from URI path
- * if resource id not requested for a route using resource id and last part of path is string then return null
+ * @name microserviceUtilResourceIdNumberGet
+ * @description Returns resource id number from URI path
+ *              if resource id not requested for a route using resource id and last part of path is string then return null
  * @function
  * @param {string} uri_path
  * @returns {number|null}
  */
  const microserviceUtilResourceIdNumberGet = uri_path => microserviceUtilNumberValue(uri_path.substring(uri_path.lastIndexOf('/') + 1));
 /**
- * Returns resource id string from URI path
- * if resource id not requested for a route using resource id and last part of path is string then return null
+ * @name microserviceUtilResourceIdStringGet
+ * @description Returns resource id string from URI path
+ *              if resource id not requested for a route using resource id and last part of path is string then return null
  * @function
  * @param {string} uri_path
  * @returns {string|null}
  */
  const microserviceUtilResourceIdStringGet = uri_path => uri_path.substring(uri_path.lastIndexOf('/') + 1);
 /**
- * Route match
+ * @name microserviceRouteMatch
+ * @description Route match
  * @function
  * @param {string} route_path
  * @param {string} route_method
@@ -53,7 +56,8 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
   route_method == request_method;
 
 /**
- * Request microservice using circuitbreaker
+ * @name microserviceRequest
+ * @description Request microservice using circuitbreaker
  * @function
  * @param {boolean} admin 
  * @param {string} path 
@@ -74,9 +78,10 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
 }; 
 
 /**
- * Get number value from request key
- * returns number or null for numbers
- * so undefined and '' are avoided sending arguement to service functions
+ * @name microserviceUtilNumberValue
+ * @description Get number value from request key
+ *              returns number or null for numbers
+ *              so undefined and '' are avoided sending arguement to service functions
  * @function
  * @param {server_server_req_id_number} param
  * @returns {number|null}
@@ -84,7 +89,8 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
  const microserviceUtilNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
 
 /**
- * Return result from microservice
+ * @name microserviceResultReturn
+ * @description Return result from microservice
  * @function
  * @param {number} code 
  * @param {string|null} error 
@@ -112,9 +118,9 @@ const microserviceRequest = async (admin, path, query, method,client_ip,authoriz
     res.end();
 };
 
-
 /**
- * Request microservice
+ * @name microserviceHttpRequest
+ * @description Request microservice
  * @function
  * @param {string} service
  * @param {string|undefined} path

@@ -26,17 +26,17 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
 
 /**
- * Get app code derived from database error
- * 
- *	if known SQL error, example:
- *	MariaDB sqlMessage
- *	'Duplicate entry '[value]' for key 'user_account_username_un''
- *	MySQL sqlMessage
- *	'Duplicate entry '[value]' for key 'user_account.user_account_username_un''
- *	PostgreSQL message:
- *	'duplicate key value violates unique constraint "user_account_username_un"'
- *	Oracle message:
- *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
+ * @name dbCommonAppCodeGet
+ * @description	Get app code derived from database error
+ *				if known SQL error, example:
+ *				MariaDB sqlMessage
+ *					'Duplicate entry '[value]' for key 'user_account_username_un''
+ *				MySQL sqlMessage
+ *					'Duplicate entry '[value]' for key 'user_account.user_account_username_un''
+ *				PostgreSQL message:
+ *					'duplicate key value violates unique constraint "user_account_username_un"'
+ *				Oracle message:
+ *					'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  * @function
  * @param {server_db_common_result_error} error
  * @returns (string|null)
@@ -70,7 +70,8 @@ const dbCommonAppCodeGet = error => {
 	}
 };
 /**
- * Displays message for error
+ * @name dbCommonCheckedError
+ * @description	Displays message for error
  * @function
  * @param {number} app_id 
  * @param {string} lang_code 
@@ -102,7 +103,8 @@ const dbCommonAppCodeGet = error => {
 };
 
 /** 
- * Displays DB message for record not found for single resource DB
+ * @name dbCommonRecordNotFound
+ * @description	Displays DB message for record not found for single resource DB
  * @function
  * @param {number} app_id 
  * @param {string} lang_code
@@ -123,10 +125,11 @@ const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
 	});
 };
 /**
- * Get locale part
- * 1 = complete lang code
- * 2 = ex zh-hant from zh-hant-cn
- * 3 = ex zh from zh-hant-cn
+ * @name dbCommonLocaleGet
+ * @description	Get locale part
+ * 				1 = complete lang code
+ * 				2 = ex zh-hant from zh-hant-cn
+ * 				3 = ex zh from zh-hant-cn
  * @function
  * @param {string} lang_code 
  * @param {number} part 
@@ -158,7 +161,8 @@ const dbCommonLocaleGet = (lang_code, part) => {
 };
 
 /**
- * Sets pagination using limit and offset or limit records on SQL rows
+ * @name dbCommonRowsLimit
+ * @description	Sets pagination using limit and offset or limit records on SQL rows
  * @function
  * @param {boolean} pagination
  * @returns {string}
@@ -178,16 +182,17 @@ const dbCommonRowsLimit = (pagination = true) => {
 };
 
 /**
- * Get SQL date string using EXTRACT or STRFTIME depending database
- * examples in WHERE clause:
- * Database 1,2,3,4:
- * 	EXTRACT(year from date_created) 	= :year
- * 	EXTRACT(month from date_created)	= :month
- *  EXTRACT(day from date_created) 		= :day
- * Database 5:
- *  CAST(STRFTIME('%Y', date_created) AS INT) = :year
- *  CAST(STRFTIME('%m', date_created) AS INT) = :month
- *  CAST(STRFTIME('%d', date_created) AS INT) = :day
+ * @name dbCommonDatePeriod
+ * @description	Get SQL date string using EXTRACT or STRFTIME depending database
+ * 				examples in WHERE clause:
+ * 				Database 1,2,3,4:
+ * 					EXTRACT(year from date_created) 	= :year
+ * 					EXTRACT(month from date_created)	= :month
+ *  				EXTRACT(day from date_created) 		= :day
+ * 				Database 5:
+ *  				CAST(STRFTIME('%Y', date_created) AS INT) = :year
+ *  				CAST(STRFTIME('%m', date_created) AS INT) = :month
+ *  				CAST(STRFTIME('%d', date_created) AS INT) = :day
  * @function
  * @param {'YEAR'|'MONTH'|'DAY'} period
  * @returns {string}
@@ -197,16 +202,17 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CO
 								` EXTRACT(${period} from date_created)`;
 														
 /**
- * Common execute SQL
- * Updates SQL before execution:
- * sets DB schema
- * sets date period syntax depending database used
- * sets locale search string
- * sets pagination info
- * sets limit record
- * Modifies SQL result:
- * parses json_data column so json_data columns are returned also if any
- * returns pagination in ISO20022 format if used
+ * @name dbCommonExecute
+ * @description	Common execute SQL
+ * 				Updates SQL before execution:
+ * 				sets DB schema
+ * 				sets date period syntax depending database used
+ * 				sets locale search string
+ * 				sets pagination info
+ * 				sets limit record
+ * 				Modifies SQL result:
+ * 				parses json_data column so json_data columns are returned also if any
+ * 				returns pagination in ISO20022 format if used
  * @function
  * @param {number|null} app_id 
  * @param {string} sql 

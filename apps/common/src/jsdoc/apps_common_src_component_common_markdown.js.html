@@ -12,7 +12,8 @@
  * @module apps/common/component/common_markdown
  */
 /**
- * @import { server_db_file_app, server_db_file_app_translation} from '../../../../server/types.js' 
+ * @import { server_db_file_app, serverDocumentType, server_db_file_app_translation} from '../../../../server/types.js' 
+ * 
  */
 
 /**
@@ -32,10 +33,13 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  * @param {{data:       {
  *                      app_translation:server_db_file_app_translation|null,
  *                      app:server_db_file_app|null,
- *                      type:'GUIDE'|'APP'|'JSDOC_MODULE',
+ *                      type:serverDocumentType,
  *                      markdown:string,
  *                      code:string|null,
- *                      module:string|null
+ *                      module:string|null,
+ *                      app_copyright:string|null,
+ *                      configuration:string|null
+ *                      server_host:string|null
  *                      },
  *          methods:    null}} props
  * @returns {Promise.&lt;string>}
@@ -52,10 +56,21 @@ const component = async props => {
                                     .replaceAll(']','&amp;#93;')
                                     .replaceAll('&lt;','&amp;lt;')
                                     .replaceAll('>','&amp;gt;');
+
+    /**
+     * Returns type of comment or null if comment not supported
+     * @param {string} comment
+     * @returns {string|null}
+     */
+    const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
+                                    comment.indexOf('@function')>-1?'Function':
+                                    comment.indexOf('@constant')>-1?'Constant':
+                                    comment.indexOf('@class')>-1?'Class':
+                                    comment.indexOf('@method')>-1?'Method':null;
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
-     * 1. variables for APP template and JSDOC MODULE
+     * 1. variables for APP template and MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
      * 2.sections
      *   # character must start at first position on a  row
      *   creates div with class common_markdown_section for all sections
@@ -139,11 +154,17 @@ const component = async props => {
             //images are saved in an array
             markdown = markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end.join('\n'):'');    
         }
-        if (props.data.type=='JSDOC_MODULE'){
+        //1.replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
+        if (props.data.type.startsWith('MODULE')){
             markdown = markdown.replaceAll('@{MODULE_NAME}', props.data.module ?? '');
             markdown = markdown.replaceAll('@{MODULE}',props.data.module ??'');
             markdown = markdown.replaceAll('@{SOURCE_LINK}',props.data.module ??'');
-                                        
+
+            //metadata tags                            
+            markdown = markdown.replaceAll('@{SERVER_HOST}',props.data.server_host??'');
+            markdown = markdown.replaceAll('@{APP_CONFIGURATION}',props.data.configuration??'');
+            markdown = markdown.replaceAll('@{APP_COPYRIGHT}',props.data.app_copyright??'');
+            
             //search all JSDoc comments
             const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
             
@@ -159,8 +180,7 @@ const component = async props => {
             const REGEXP_TAG = /@\w+/g;
             props.data.code = props.data.code?.replaceAll('\r\n','\n') ??'';
             while ((match_module_function = regexp_module_function.exec(props.data.code ?? '')) !==null){
-                //JSDoc must have @function tag or @module tag
-                if (match_module_function[0].indexOf('@function')>-1 ||match_module_function[0].indexOf('@module')>-1){
+                if (commentType(match_module_function[1])){
                     const function_tags = match_module_function[1].split('\n')
                                             .map(row=>{
                                                         //reset regexp so regexp will work in loop
@@ -182,6 +202,10 @@ const component = async props => {
                                                         })
                                                         //remove @name tag presented in title
                                                         .filter(row=>row.indexOf('@name')&lt;0)
+                                                        //remove tags presented in title
+                                                        .filter(row=>row.indexOf('@function')&lt;0)
+                                                        .filter(row=>row.indexOf('@constant')&lt;0)
+                                                        .filter(row=>row.indexOf('@class')&lt;0)
                                                         .join('\n');
                     //calculate source line: row match found + match row length
                     const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
@@ -189,7 +213,7 @@ const component = async props => {
 
                     module_functions.push(
                                     HEADER
-                                        .replace('@{TYPE}',match_module_function[1].indexOf('@module')>-1?'Module':'Function')
+                                        .replace('@{TYPE}',commentType(match_module_function[1])??'')
                                         .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
                                                                     match_module_function[1]
                                                                         .split('\n')
@@ -312,7 +336,13 @@ const component = async props => {
             const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
             //return with HTML Entities for tables
             markdown = markdown.replace(table, 
-                    `&lt;div class='common_markdown_table'>${table.split('\n').filter(row=>row.indexOf('---')&lt;0).map((row, index_row)=>
+                    //add class for @method if not inside table with @metadata tag
+                    `&lt;div class='common_markdown_table ${(table.indexOf('@method')>-1 &amp;&amp; table.indexOf('@metadata')&lt;0)?'common_markdown_table_method':''}'>${table.split('\n')
+                        //remove alignemnt row and @method tag used to add css class for table but already presented in title
+                        .filter(row=>row.indexOf('---')&lt;0)
+                        .filter(row=>(row.indexOf('@method')&lt;0 &amp;&amp; table.indexOf('@metadata')&lt;0)||table.indexOf('@metadata')>-1)
+                        .filter(row=>row.indexOf('@metadata')&lt;0)
+                        .map((row, index_row)=>
                         `&lt;div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'} ${index_row==0?'common_markdown_table_row_title':''}'>${
                             row.split('|').slice(1, -1).map((text, index_col) =>`&lt;div class='common_markdown_table_col' style='${index_col==0?`min-width:${width}em;`:''}text-align:${align[index_col]}'>${text}&lt;/div>`).join('')
                         }&lt;/div>`

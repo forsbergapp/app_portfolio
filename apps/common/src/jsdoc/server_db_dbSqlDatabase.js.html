@@ -10,16 +10,16 @@
  * @module server/db/dbSqlDatabase
  */
 
-
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('./fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-
 /**
- * Database info select
+ * @name DATABASE_INFO_SELECT
+ * @description Database info select
+ * @function
  * @example Oracle Cloud syntax for v$pdbs.cloud_identity: 
  *    {
  *    "DATABASE_NAME" : "[DATABASE NAME]",
@@ -130,6 +130,9 @@ const DATABASE_INFO_SELECT = () => {
     }
 };
 /**
+ * @name DATABASE_INFO_SELECT_SPACE
+ * @description Database info select space
+ * @function
  * @returns {string}
  */
 const DATABASE_INFO_SELECT_SPACE = () => {
@@ -193,7 +196,12 @@ const DATABASE_INFO_SELECT_SPACE = () => {
         }
     }
 };
-
+/**
+ * @name DATABASE_INFO_SELECT_SPACE_SUM
+ * @description Database info select space sum
+ * @function
+ * @returns {string}
+ */
 const DATABASE_INFO_SELECT_SPACE_SUM = () => {
     const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
     switch (db_use){
@@ -243,7 +251,11 @@ const DATABASE_INFO_SELECT_SPACE_SUM = () => {
         }
     }
 };
-
+/**
+ * @name DATABASE_SELECT_INSTALLED_CHECK
+ * @description Database select installed check
+ * @constant
+ */
 const DATABASE_SELECT_INSTALLED_CHECK = 
         `SELECT 1 "installed"
            FROM &lt;DB_SCHEMA/>.app
