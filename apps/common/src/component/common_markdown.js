@@ -29,7 +29,10 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  *                      type:serverDocumentType,
  *                      markdown:string,
  *                      code:string|null,
- *                      module:string|null
+ *                      module:string|null,
+ *                      app_copyright:string|null,
+ *                      configuration:string|null
+ *                      server_host:string|null
  *                      },
  *          methods:    null}} props
  * @returns {Promise.<string>}
@@ -149,7 +152,12 @@ const component = async props => {
             markdown = markdown.replaceAll('@{MODULE_NAME}', props.data.module ?? '');
             markdown = markdown.replaceAll('@{MODULE}',props.data.module ??'');
             markdown = markdown.replaceAll('@{SOURCE_LINK}',props.data.module ??'');
-                                        
+
+            //metadata tags                            
+            markdown = markdown.replaceAll('@{SERVER_HOST}',props.data.server_host??'');
+            markdown = markdown.replaceAll('@{APP_CONFIGURATION}',props.data.configuration??'');
+            markdown = markdown.replaceAll('@{APP_COPYRIGHT}',props.data.app_copyright??'');
+            
             //search all JSDoc comments
             const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
             
@@ -321,10 +329,12 @@ const component = async props => {
             const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
             //return with HTML Entities for tables
             markdown = markdown.replace(table, 
-                    `<div class='common_markdown_table ${table.indexOf('@method')>-1?'common_markdown_table_method':''}'>${table.split('\n')
+                    //add class for @method if not inside table with @metadata tag
+                    `<div class='common_markdown_table ${(table.indexOf('@method')>-1 && table.indexOf('@metadata')<0)?'common_markdown_table_method':''}'>${table.split('\n')
                         //remove alignemnt row and @method tag used to add css class for table but already presented in title
                         .filter(row=>row.indexOf('---')<0)
-                        .filter(row=>row.indexOf('@method')<0)
+                        .filter(row=>(row.indexOf('@method')<0 && table.indexOf('@metadata')<0)||table.indexOf('@metadata')>-1)
+                        .filter(row=>row.indexOf('@metadata')<0)
                         .map((row, index_row)=>
                         `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'} ${index_row==0?'common_markdown_table_row_title':''}'>${
                             row.split('|').slice(1, -1).map((text, index_col) =>`<div class='common_markdown_table_col' style='${index_col==0?`min-width:${width}em;`:''}text-align:${align[index_col]}'>${text}</div>`).join('')
