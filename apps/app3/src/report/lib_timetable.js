@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts}  from '../types.js'
+ * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts, timesType}  from '../types.js'
  * @import {serverComponentLifecycle}  from '../../../../server/types.js'
  */
 
@@ -300,11 +300,7 @@ const component = props => {
 	 * placed here to simplify app and server share of same component
 	 * converted function to class to simplify type declarations
 	 */
-	/**
-	 * Type timesType
-	 * added day key for timetables
-	 * @typedef {{day?:number, imsak:number, fajr:number, sunrise:number, dhuhr:number, asr:number, sunset:number, maghrib:number, isha:number, midnight?:number}} timesType
-	 */
+	
 	//--------------------- Copyright Block ----------------------
 	/* 
 

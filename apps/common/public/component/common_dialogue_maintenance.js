@@ -5,8 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonWindowSetTimeout']} commonWindowSetTimeout
- * @typedef {CommonModuleCommon['commonWindowLocationReload']} commonWindowLocationReload
  */
 
 /**
@@ -30,8 +28,8 @@ const template = () =>` <div id='common_dialogue_maintenance_content' class='com
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonWindowSetTimeout:commonWindowSetTimeout,
- *                      commonWindowLocationReload:commonWindowLocationReload
+ *                      commonWindowSetTimeout:CommonModuleCommon['commonWindowSetTimeout'],
+ *                      commonWindowLocationReload:CommonModuleCommon['commonWindowLocationReload']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 

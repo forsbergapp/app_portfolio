@@ -4,7 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, CommonModuleLeaflet, CommonModuleLeafletMapData, CommonModuleLeafletMethods, CommonGlobal, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonMiscImportmap']} commonMiscImportmap
  */
 
 /**
@@ -30,7 +29,7 @@ const template = props => ` <link media="all" rel="stylesheet" href='${props.css
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscImportmap:commonMiscImportmap
+ *                      commonMiscImportmap:CommonModuleCommon['commonMiscImportmap']
  *                       }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

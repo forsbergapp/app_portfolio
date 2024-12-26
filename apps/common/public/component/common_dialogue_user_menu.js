@@ -5,11 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
- * @typedef {CommonModuleCommon['commonUserSessionCountdown']} commonUserSessionCountdown
- * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
  */
 
 /**
@@ -94,11 +89,11 @@ const template = props =>`  ${props.app_id == props.common_app_id?
  *                      user_arabic_script:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
- *                      commonFFB:commonFFB,
- *                      commonComponentRender:commonComponentRender,
- *                      commonUserSessionCountdown:commonUserSessionCountdown,
- *                      commonMessageShow:commonMessageShow
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown'],
+ *                      commonMessageShow:CommonModuleCommon['commonMessageShow']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

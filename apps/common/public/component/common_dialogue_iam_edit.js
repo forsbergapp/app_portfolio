@@ -4,9 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonMiscFormatJsonDate']} commonMiscFormatJsonDate
- * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
  */
 
 /**
@@ -209,9 +206,9 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscFormatJsonDate:commonMiscFormatJsonDate,
- *                      commonMessageShow:commonMessageShow,
- *                      commonFFB:commonFFB
+ *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
+ *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

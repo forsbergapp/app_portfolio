@@ -4,8 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
 
 /**
@@ -43,8 +41,8 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
  * @param {{ data:       {commonMountdiv:string},
  *           methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonComponentRender:commonComponentRender,
- *                       commonFFB:commonFFB
+ *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                       commonFFB:CommonModuleCommon['commonFFB']
  *                       },
  *           lifecycle:  null}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 

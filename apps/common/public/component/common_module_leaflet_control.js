@@ -5,11 +5,6 @@
 
 /**
  * @import {CommonModuleRegional, CommonAppEvent, CommonModuleLeafletEvent, CommonModuleLeafletMapLayer, CommonGlobal, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonMiscImportmap']} commonMiscImportmap
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMicroserviceGeolocationPlace']} commonMicroserviceGeolocationPlace
- * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
  */
 
 /**
@@ -66,11 +61,11 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event_doubleclick:function,
- *                      commonMiscImportmap:commonMiscImportmap,
- *                      commonComponentRender:commonComponentRender,
- *                      commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
- *                      commonMiscElementRow:commonMiscElementRow,
- *                      commonFFB:commonFFB,
+ *                      commonMiscImportmap:CommonModuleCommon['commonMiscImportmap'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace'],
+ *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      moduleLeafletContainer:function,
  *                      moduleLeafletLibrary:function
  *                      }}} props

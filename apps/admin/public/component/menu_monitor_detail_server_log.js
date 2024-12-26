@@ -5,9 +5,6 @@
 
 /**
  * @import {CommonRESTAPIAuthorizationType, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
  */
 
 /**
@@ -15,7 +12,7 @@
  * @description Template
  * @function
  * @param {{function_get_order_by:function,
- *          function_roundOff:commonMiscRoundOff,
+ *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
  *          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} props
  * @returns {string}
@@ -332,8 +329,8 @@ const template = props => ` ${  /*
  *                       order_by:string,
  *                       LIMIT:number},
  *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonMiscRoundOff:commonMiscRoundOff,
- *                       commonFFB:commonFFB},
+ *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
+ *                       commonFFB:CommonModuleCommon['commonFFB']},
  *           lifeycle:   null}} props 
  * @returns {Promise.<{ lifecycle:   CommonComponentLifecycle, 
  *                      data:        {page_last:number, total_count:number},

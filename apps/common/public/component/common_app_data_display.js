@@ -21,14 +21,16 @@
  */
 /**
  * @import {CommonRESTAPIMethod, CommonRESTAPIAuthorizationType, CommonModuleCommon, CommonMasterObjectType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @typedef {{  display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
+ */
+
+/**
+ * @param {{    display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
  *              master_object:CommonMasterObjectType,
  *              rows:[],
  *              detail_class:string,
@@ -45,11 +47,7 @@
  *              button_post:boolean,
  *              button_post_icon_class:string,
  *              button_delete:boolean,
- *              button_delete_icon_class:string}} props_template
- */
-
-/**
- * @param {props_template} props 
+ *              button_delete_icon_class:string}} props 
  * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
@@ -197,7 +195,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_delete_icon_class:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:commonFFB,
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      button_print:function,
  *                      button_update:function,
  *                      button_post:function,

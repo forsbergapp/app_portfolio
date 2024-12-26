@@ -5,10 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
- * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * 
  */
@@ -140,10 +136,10 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet,
- *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
- *                      commonComponentRender:commonComponentRender,
- *                      commonFFB:commonFFB}}} props
+ *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet'],
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,

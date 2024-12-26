@@ -5,8 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonModuleEasyQRCODECreate']} commonModuleEasyQRCODECreate
- * @typedef {CommonModuleCommon['commonWindowHostname']} commonWindowHostname
  */
 /**
  * @name template
@@ -24,8 +22,8 @@ const template = () => `<div id='scan_open_mobile_qrcode' class='common_module_e
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonModuleEasyQRCODECreate:commonModuleEasyQRCODECreate,
- *                      commonWindowHostname:commonWindowHostname}}} props
+ *                      commonModuleEasyQRCODECreate:CommonModuleCommon['commonModuleEasyQRCODECreate'],
+ *                      commonWindowHostname:CommonModuleCommon['commonWindowHostname']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,

@@ -4,7 +4,6 @@
  */
 /**
  * @import {CommonProvider, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -101,7 +100,7 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
  *                      admin_first_time:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:commonFFB
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

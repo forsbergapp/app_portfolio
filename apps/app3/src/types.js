@@ -251,5 +251,9 @@
  *          app_prayer_default_show_fast_start_end:           {value:string, comment:string}
  *          }} APP_PARAMETERS
  */
-
+/**
+ * Type timesType
+ * added day key for timetables
+ * @typedef {{day?:number, imsak:number, fajr:number, sunrise:number, dhuhr:number, asr:number, sunset:number, maghrib:number, isha:number, midnight?:number}} timesType
+ */
 export{};

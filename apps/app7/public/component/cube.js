@@ -4,12 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
- * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
- * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
- * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
- * @typedef {CommonModuleCommon['commonComponentRemove']} commonComponentRemove
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -120,12 +114,12 @@ const template = props =>`  <div id='cube'>
  *                      common_app_id:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscElementRow:commonMiscElementRow,
- *                      commonLovShow:commonLovShow,
- *                      commonLovClose:commonLovClose,
- *                      commonMessageShow:commonMessageShow,
- *                      commonComponentRemove:commonComponentRemove,
- *                      commonFFB:commonFFB}}} props
+ *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
+ *                      commonLovShow:CommonModuleCommon['commonLovShow'],
+ *                      commonLovClose:CommonModuleCommon['commonLovClose'],
+ *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
+ *                      commonComponentRemove:CommonModuleCommon['commonComponentRemove'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
  *                      data:   null
  *                      methods:{
