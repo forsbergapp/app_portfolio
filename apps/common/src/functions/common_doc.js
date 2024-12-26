@@ -6,7 +6,7 @@
  */
 /**
  * @name appFunction
- * @description Get documentation menu, guide, app or jsdoc documentation
+ * @description Get documentation menu, guide, app, module or jsdoc documentation
  * @function
  * @param {number} app_id
  * @param {{    type:serverDocumentType,
@@ -43,6 +43,8 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
     else{
         /**@type{import('../../../../server/db/fileModelApp.js')} */
         const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+        /**@type{import('../../../../server/server.js')} */
+        const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
         switch (true){
             case data.type=='MENU':{
                 /**@type{serverDocumentMenu[]} */
@@ -123,8 +125,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 /**@type{import('../../../../server/db/fileModelAppTranslation.js')} */
                 const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');
-                /**@type{import('../../../../server/server.js')} */
-                const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+                
                 return [await ComponentCreate({ data:{  app:                    data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
                                                         app_translation:        data.type.toUpperCase()=='APP'?
                                                                                     fileModelAppTranslation.get(app_id,null, locale, 
@@ -136,7 +137,10 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                         markdown:               await getFile(`${process.cwd()}/apps/common/src/functions/documentation/` + 
                                                                                             (data.type.toUpperCase()=='GUIDE'?(data.doc + '.md'):'2.app.md')),
                                                         code:                   null,
-                                                        module:                 null},
+                                                        module:                 null,
+                                                        app_copyright:          null,
+                                                        configuration:          null,
+                                                        server_host:            null},
                                                 methods:null})];
             }
             case data.type=='MODULE_CODE':
@@ -145,6 +149,10 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                     if (data.type=='MODULE_CODE')
                         return [await getFile(`${process.cwd()}${data.doc}.js`)];
                     else{
+                        /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
+                        const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+                        /**@type{import('../../../../server/db/fileModelConfig.js')} */
+                        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
                         const {default:ComponentCreate} = await import('../component/common_markdown.js');
                         return [await ComponentCreate({ data:{app:              null, 
                                                         app_translation:        null,
@@ -152,7 +160,11 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                         //guide documents in separate files, all app use app template
                                                         markdown:               await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.module.md`),
                                                         code:                   await getFile(`${process.cwd()}${data.doc}.js`),
-                                                        module:                 data.doc},
+                                                        module:                 data.doc,
+                                                                                //copyright displayed same as function app owner
+                                                        app_copyright:          fileModelAppParameter.get(app_id, null)[0].app_copyright.value,
+                                                        configuration:          fileModelConfig.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION'),
+                                                        server_host:            fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'HOST')},
                                                 methods:null})];
                     }
                 else{
