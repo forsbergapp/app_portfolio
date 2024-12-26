@@ -46,6 +46,17 @@ const component = async props => {
                                     .replaceAll(']','&#93;')
                                     .replaceAll('<','&lt;')
                                     .replaceAll('>','&gt;');
+
+    /**
+     * Returns type of comment or null if comment not supported
+     * @param {string} comment
+     * @returns {string|null}
+     */
+    const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
+                                    comment.indexOf('@function')>-1?'Function':
+                                    comment.indexOf('@constant')>-1?'Constant':
+                                    comment.indexOf('@class')>-1?'Class':
+                                    comment.indexOf('@method')>-1?'Method':null;
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
@@ -154,8 +165,7 @@ const component = async props => {
             const REGEXP_TAG = /@\w+/g;
             props.data.code = props.data.code?.replaceAll('\r\n','\n') ??'';
             while ((match_module_function = regexp_module_function.exec(props.data.code ?? '')) !==null){
-                //JSDoc must have @function tag or @module tag
-                if (match_module_function[0].indexOf('@function')>-1 ||match_module_function[0].indexOf('@module')>-1){
+                if (commentType(match_module_function[1])){
                     const function_tags = match_module_function[1].split('\n')
                                             .map(row=>{
                                                         //reset regexp so regexp will work in loop
@@ -177,8 +187,10 @@ const component = async props => {
                                                         })
                                                         //remove @name tag presented in title
                                                         .filter(row=>row.indexOf('@name')<0)
-                                                        //remove @function tag presented in title
+                                                        //remove tags presented in title
                                                         .filter(row=>row.indexOf('@function')<0)
+                                                        .filter(row=>row.indexOf('@constant')<0)
+                                                        .filter(row=>row.indexOf('@class')<0)
                                                         .join('\n');
                     //calculate source line: row match found + match row length
                     const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
@@ -186,7 +198,7 @@ const component = async props => {
 
                     module_functions.push(
                                     HEADER
-                                        .replace('@{TYPE}',match_module_function[1].indexOf('@module')>-1?'Module':'Function')
+                                        .replace('@{TYPE}',commentType(match_module_function[1])??'')
                                         .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
                                                                     match_module_function[1]
                                                                         .split('\n')
@@ -309,7 +321,11 @@ const component = async props => {
             const width = Math.min(Math.max(...table.split('\n').map(row=>(row.split('|')[1]??'').length)),40);
             //return with HTML Entities for tables
             markdown = markdown.replace(table, 
-                    `<div class='common_markdown_table'>${table.split('\n').filter(row=>row.indexOf('---')<0).map((row, index_row)=>
+                    `<div class='common_markdown_table ${table.indexOf('@method')>-1?'common_markdown_table_method':''}'>${table.split('\n')
+                        //remove alignemnt row and @method tag used to add css class for table but already presented in title
+                        .filter(row=>row.indexOf('---')<0)
+                        .filter(row=>row.indexOf('@method')<0)
+                        .map((row, index_row)=>
                         `<div class='common_markdown_table_row ${(index_row % 2)==0?'common_markdown_table_row_odd':'common_markdown_table_row_even'} ${index_row==0?'common_markdown_table_row_title':''}'>${
                             row.split('|').slice(1, -1).map((text, index_col) =>`<div class='common_markdown_table_col' style='${index_col==0?`min-width:${width}em;`:''}text-align:${align[index_col]}'>${text}</div>`).join('')
                         }</div>`
