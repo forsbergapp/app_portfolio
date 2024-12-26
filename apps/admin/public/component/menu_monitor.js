@@ -5,16 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscElementRow']} commonMiscElementRow
- * @typedef {CommonModuleCommon['commonLovClose']} commonLovClose
- * @typedef {CommonModuleCommon['commonLovShow']} commonLovShow
- * @typedef {CommonModuleCommon['commonMiscInputControl']} commonMiscInputControl
- * @typedef {CommonModuleCommon['commonWindowUserAgentPlatform']} commonWindowUserAgentPlatform
- * @typedef {CommonModuleCommon['commonMiscRoundOff']} commonMiscRoundOff
- * @typedef {CommonModuleCommon['commonModuleLeafletInit']} commonModuleLeafletInit
- * @typedef {CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update']} map_update
  * @import {appSecureDialogueSendBroadcastShow} from '../js/app.js'
  */
 
@@ -65,16 +55,16 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  *                      client_place:string},
  *          methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appSecureDialogueSendBroadcastShow:appSecureDialogueSendBroadcastShow, 
- *                      map_update:map_update,
- *                      commonModuleLeafletInit:commonModuleLeafletInit,
- *                      commonMiscElementRow:commonMiscElementRow,
- *                      commonMiscInputControl:commonMiscInputControl,
- *                      commonComponentRender:commonComponentRender,
- *                      commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
- *                      commonMiscRoundOff:commonMiscRoundOff,
- *                      commonLovClose:commonLovClose,
- *                      commonLovShow:commonLovShow,
- *                      commonFFB:commonFFB}}} props 
+ *                      map_update:CommonModuleCommon['COMMON_GLOBAL']['moduleLeaflet']['methods']['map_update'],
+ *                      commonModuleLeafletInit:CommonModuleCommon['commonModuleLeafletInit'],
+ *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
+ *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
+ *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
+ *                      commonLovClose:CommonModuleCommon['commonLovClose'],
+ *                      commonLovShow:CommonModuleCommon['commonLovShow'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
  * @returns {Promise.<{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,

@@ -4,7 +4,6 @@
  */
 /**
  * @import {CommonRESTAPIAuthorizationType, CommonRESTAPIMethod, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -52,7 +51,7 @@ const template = props =>`  <div id='common_lov_form'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event:function,
- *                      commonFFB:commonFFB
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

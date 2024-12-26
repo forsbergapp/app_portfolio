@@ -4,12 +4,8 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
- * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
  * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
- * @typedef {APP_GLOBAL['themes']} themes
  */
 
 /**
@@ -120,14 +116,14 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      commonMountdiv:string,
  *                      app_id:number,
  *                      user_settings:APP_user_setting_record,
- *                      themes:themes
+ *                      themes:APP_GLOBAL['themes']
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
- *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
- *                      commonComponentRender:commonComponentRender,
- *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet}}} props
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,

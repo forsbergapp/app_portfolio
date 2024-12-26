@@ -4,8 +4,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
  */
 
 /**
@@ -30,8 +28,8 @@ const template = () => `<div id='dialogue_send_broadcast_form'>
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:        COMMON_DOCUMENT,
- *                      commonComponentRender:  commonComponentRender,
- *                      commonFFB:              commonFFB
+ *                      commonComponentRender:  CommonModuleCommon['commonComponentRender'],
+ *                      commonFFB:              CommonModuleCommon['commonFFB']
  *                      }
  *          }} props 
  * @returns {Promise.<{ lifecycle:              CommonComponentLifecycle,

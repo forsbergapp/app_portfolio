@@ -4,12 +4,8 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import {APP_user_setting_record, APP_REPORT_GLOBAL}  from '../js/types.js'
- * @typedef {APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']} CommonModulePrayTimes_methods
  */
 
 /**
@@ -175,14 +171,14 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *                      commonMountdiv:string,
  *                      app_id:number,
  *                      user_settings:APP_user_setting_record,
- *                      methods:CommonModulePrayTimes_methods
+ *                      methods:APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
- *                      commonComponentRender:commonComponentRender,
- *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
+ *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet']
  *                       }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 

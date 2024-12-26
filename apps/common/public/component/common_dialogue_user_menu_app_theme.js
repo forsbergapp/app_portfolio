@@ -5,9 +5,6 @@
 
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscThemeDefaultList']} commonMiscThemeDefaultList
  */
 
 /**
@@ -24,8 +21,8 @@ const template = () => '';
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscThemeDefaultList:commonMiscThemeDefaultList,
- *                      commonComponentRender:commonComponentRender,
+ *                      commonMiscThemeDefaultList:CommonModuleCommon['commonMiscThemeDefaultList'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      app_theme_update:function}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,

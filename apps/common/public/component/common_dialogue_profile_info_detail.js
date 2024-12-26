@@ -3,8 +3,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonDialogueShow']} commonDialogueShow
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
 /**
@@ -81,8 +79,8 @@ const template = props => `     ${props.list.map(row=>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonDialogueShow:commonDialogueShow,
- *                      commonFFB:commonFFB
+ *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle,
  *                      data:null, 
