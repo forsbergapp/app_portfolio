@@ -16,7 +16,9 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * 
+ * @name post
+ * @description Create user account app record
+ * @function
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @returns {Promise.<server_db_sql_result_user_account_app_createUserAccountApp>}
@@ -32,7 +34,9 @@ const post = async (app_id, user_account_id) =>
                         null, 
                         null));
 /**
- * 
+ * @name update
+ * @description Update user account app
+ * @function
  * @param {number} app_id
  * @param {number} resource_id
  * @param {server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
@@ -53,7 +57,9 @@ const update = (app_id, resource_id, data) =>
                         null, 
                         null));
 /**
- * 
+ * @name get
+ * @description Get user account app
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @returns {Promise.<server_db_sql_result_user_account_app_getUserAccountApp[]>}
@@ -70,7 +76,9 @@ const get = (app_id, resource_id) =>
                         null));
 
 /**
- * 
+ * @name getApps
+ * @description Get user account app apps
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {string} locale
@@ -96,7 +104,8 @@ const getApps = async (app_id, resource_id, locale) => {
 };
 
 /**
- * Delete record
+ * @name deleteRecord
+ * @description Delete record
  * @function
  * @param {number} app_id
  * @param {number} resource_id

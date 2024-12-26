@@ -12,7 +12,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * Follow
+ * @name post
+ * @description Follow
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -30,7 +31,8 @@ const post = (app_id, resource_id, data) =>
                         null, 
                         null));
 /**
- * Unfollow
+ * @name deleteRecord
+ * @description Unfollow
  * @function
  * @param {number} app_id
  * @param {number} resource_id

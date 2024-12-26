@@ -15,7 +15,8 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * Get stat
+ * @name get
+ * @description Get stat
  * @function
  * @param {number} app_id 
  * @param {*} query
@@ -31,7 +32,8 @@ const get = (app_id, query) =>
                         null, 
                         null));
 /**
-  * Get stat log
+ * @name getLog
+ * @description Get stat log
  * @function
  * @param {number} app_id 
  * @param {*} query
@@ -79,7 +81,8 @@ const getLog = (app_id, query) =>
                 return result;
         });
 /**
-  * Get stat unique visitors
+ * @name getStatUniqueVisitor
+ * @description Get stat unique visitors
  * @function
  * @param {number} app_id 
  * @param {*} query
@@ -151,7 +154,8 @@ const getStatUniqueVisitor = (app_id, query) =>{
     });
 };
 /**
- * Create stat record
+ * @name post
+ * @description Create stat record
  * @function
  * @param {number}      app_id
  * @param {*}           data
