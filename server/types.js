@@ -151,7 +151,7 @@
  *          route_path:string,
  *          method: string,
  *          query: string,
- *          body:object,
+ *          body:server_server_req['body']|{},
  *          authorization:string|null,
  *          ip: string,
  *          user_agent:string,

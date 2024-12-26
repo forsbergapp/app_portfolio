@@ -22,7 +22,8 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
- * Get geodata and user account data for connected user
+ * @name socketConnectedUserDataGet
+ * @description Get geodata and user account data for connected user
  * @function
  * @param {number} app_id 
  * @param {number|null} user_account_id 
@@ -74,8 +75,9 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
             identity_provider_id:identity_provider_id};
 };
 /**
- * Socket client send
- * Used by EventSource and closes connection
+ * @name socketClientSend
+ * @description Socket client send
+ *              Used by EventSource and closes connection
  * @function
  * @param {server_server_res} res
  * @param {string} message
@@ -88,10 +90,11 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
     res.flush();
 };
 /**
- * Socket client connect
- * Used by EventSource and leaves connection open
+ * @name socketClientConnect
+ * @description Socket client connect
+ *              Used by EventSource and leaves connection open
  * @function
-  * @param {server_server_res} res
+ * @param {server_server_res} res
  * @returns {void}
  */
  const socketClientConnect = (res) => {
@@ -99,8 +102,9 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
     res.setHeader('Connection', 'keep-alive');
 };
 /**
- * Socket client close
- * Used by EventSource and closes connection
+ * @name socketClientOnClose
+ * @description Socket client close
+ *              Used by EventSource and closes connection
  * @function
  * @param {server_server_res} res
  * @param {number} client_id
@@ -113,7 +117,8 @@ const socketClientOnClose = (res, client_id) => {
     });
 };
 /**
- * Socket client add
+ * @name socketClientAdd
+ * @description Socket client add
  * @function
  * @param {server_socket_connected_list} newClient
  * @returns {void}
@@ -123,7 +128,8 @@ const socketClientAdd = (newClient) => {
 };
 
 /**
- * Socket connected update
+ * @name socketConnectedUpdate
+ * @description Socket connected update
  * @function
  * @param {number} app_id,
  * @param {{iam:string,
@@ -177,7 +183,8 @@ const socketClientAdd = (newClient) => {
         }
 };
 /**
- * Socket check connected
+ * @name socketConnectedGet
+ * @description Socket check connected
  * @function
  * @param {number} user_account_id
  * @returns {server_socket_connected_list[]}
@@ -187,7 +194,8 @@ const socketClientAdd = (newClient) => {
 };
 
 /**
- * Socket client send as admin
+ * @name socketAdminSend
+ * @description Socket client send as admin
  * @function
  * @param {number|null} app_id
  * @param {{app_id:number|null,
@@ -230,7 +238,8 @@ const socketClientAdd = (newClient) => {
     return {sent:0};
 };
 /**
- * Socket connected list
+ * @name socketConnectedList
+ * @description Socket connected list
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -323,9 +332,9 @@ const socketClientAdd = (newClient) => {
                 };
 };
 /**
- * 
- * Sends message to given app having the correct authorization_header
- * Used for sending server side event from an app server function
+ * @name socketAppServerFunctionSend
+ * @description Sends message to given app having the correct authorization_header
+ *              Used for sending server side event from an app server function
  * @function
  * @param {number} app_id
  * @param {string} iam
@@ -346,7 +355,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         return {sent:0};
 };
 /**
- * Socket connected count
+ * @name socketConnectedCount
+ * @description Socket connected count
  * @function
  * @param {*} query
  * @returns {{count_connected:number}}
@@ -369,8 +379,9 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 };
 
 /**
- * Socket connect
- * Used by EventSource and leaves connection open
+ * @name socketConnect
+ * @description Socket connect
+ *              Used by EventSource and leaves connection open
  * @function
  * @param {number} app_id
  * @param {{iam:string,
@@ -436,7 +447,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 };
 
 /**
- * Socket start setInterval to check maintenance and logout users with expired tokens using server side event
+ * @name socketIntervalCheck
+ * @description Socket start setInterval to check maintenance and logout users with expired tokens using server side event
  * @function
  * @returns {void}
  */
@@ -458,7 +470,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     }
 };
 /**
- * Sends SESSION_EXPIRED message to clients with expired token
+ * @name socketExpiredTokensUpdate
+ * @description Sends SESSION_EXPIRED message to clients with expired token
  * @function
  * @returns {void}
  */
@@ -470,7 +483,8 @@ const socketExpiredTokensUpdate = () =>{
     }
 };
 /**
- * Checks if user is online
+ * @name CheckOnline
+ * @description Checks if user is online
  * @function
  * @param {number} resource_id 
  * @returns {{online:1|0}}

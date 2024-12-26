@@ -27,6 +27,9 @@ const {default:serverError} = await import('../apps/common/src/component/common_
 const fs = await import('node:fs');
 
 /**
+ * @name bffSendFile
+ * @description Bff send file if found or return error
+ * @function
  * @param {number} app_id
  * @param {server_bff_parameters} bff_parameters
  * @param {string} service
@@ -44,7 +47,8 @@ const bffSendFile = async (app_id, bff_parameters, service, filePath) => {
         });
 };
 /**
- * Logs error and returns error
+ * @name bffErrorLog
+ * @description Logs error and returns error
  * @function
  * @param {number} app_id 
  * @param {server_bff_parameters} bff_parameters
@@ -75,15 +79,15 @@ const bffErrorLog = (app_id, bff_parameters, service, error) =>{
 };
 
 /**
- * Backend for frontend (BFF) init for all methods
- * 
- * Logs if the request is from EventSource
- * Logs when the response is closed
- * Authenticates the request
- * Sets header values on both on the response and on the request
- * Checks robots.txt and favicon.ico
- * Returns a reason if response should be closed
- * 
+ * @name bffInit
+ * @description Backend for frontend (BFF) init for all methods
+ *              Logs if the request is from EventSource
+ *              Logs when the response is closed
+ *              Authenticates the request
+ *              Sets header values on both on the response and on the request
+ *              Checks robots.txt and favicon.ico
+ *              Returns a reason if response should be closed
+ * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
  * @returns Promise.<{  reason:'ROBOT'|'FAVICON'|'REQUEST'|null}>
@@ -161,13 +165,13 @@ const bffInit = async (req, res) =>{
     }
 };
 /**
- * Backend for frontend (BFF) start for get method
- * 
- * If first time, when no admin exists, then redirect everything to admin
- * Checks if SSL verification using Letsencrypt is enabled when validating domain
- * and sends requested verifcation file
- * Redirects naked domain to www except for localhost
- * Redirects from http to https if https is enabled
+ * @name bffStart
+ * @description Backend for frontend (BFF) start for get method
+ *              If first time, when no admin exists, then redirect everything to admin
+ *              Checks if SSL verification using Letsencrypt is enabled when validating domain
+ *              and sends requested verifcation file
+ *              Redirects naked domain to www except for localhost
+ *              Redirects from http to https if https is enabled
  * @functions
  * @param {server_server_req} req
  * @param {server_server_res} res
@@ -208,9 +212,10 @@ const bffStart = async (req, res) =>{
     }
 };
 /**
- * Backend for frontend (BFF) called from client
- * Calls app including assets and info pages or REST API
- * APP can request server shared modules or reports using REST API
+ * @name bff
+ * @description Backend for frontend (BFF) called from client
+ *              Calls app including assets and info pages or REST API
+ *              APP can request server shared modules or reports using REST API
  * @function
  * @param {server_bff_parameters} bff_parameters
  * @returns {*}
@@ -371,7 +376,8 @@ const bffStart = async (req, res) =>{
     }
 };
 /**
- * BFF called from server
+ * @name bffServer
+ * @description BFF called from server
  * @function
  * @param {number|null} app_id
  * @param {server_bff_parameters} bff_parameters

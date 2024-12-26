@@ -5,7 +5,8 @@
  */
 
 /**
- * Message queue
+ * @name messageQueue
+ * @description Message queue
  * @function
  * @param {string} service 
  * @param {string} message_type 

@@ -5,8 +5,8 @@
 */
 
 /**
- * 
- * Info about operating system and process
+ * @name info
+ * @description Info about operating system and process
  * @function
  * @returns {Promise.<server_info_result_Info>}
  */
