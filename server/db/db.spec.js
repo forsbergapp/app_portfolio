@@ -1,8 +1,13 @@
-/** 
- * Test
+/**
  * @module server/db/db.spec
  */
-
+/**
+ * @name describe
+ * @description describe: Unit test, dbSQLParamConvert
+ *              it: should return converted sql and parameters in correct format for the database used for SELECT, INSERT, DELETE and UPDATE sql
+ * @function
+ * @returns {void}
+ */
 describe('Unit test, dbSQLParamConvert', ()=> {
     it('should return converted sql and parameters in correct format for the database used for SELECT, INSERT, DELETE and UPDATE sql', async () =>{
         /**@type{import('./fileModelConfig.js')} */

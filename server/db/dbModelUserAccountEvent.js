@@ -10,7 +10,8 @@
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
 /**
- * Create user event
+ * @name post
+ * @description Create user event
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_event_insertUserEvent} data 
@@ -38,7 +39,8 @@ const post = async (app_id, data) =>
                         null, 
                         null));
 /**
- * Get last user event
+ * @name getLastUserEvent
+ * @description Get last user event
  * @function
  * @param {number} app_id 
  * @param {number|null} user_account_id 

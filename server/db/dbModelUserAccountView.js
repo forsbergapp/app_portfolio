@@ -10,7 +10,8 @@
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
 /**
- * Create view record
+ * @name post
+ * @description Create view record
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_view_insertUserAccountView} data 

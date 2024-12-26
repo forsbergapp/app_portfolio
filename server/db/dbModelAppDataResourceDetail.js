@@ -13,7 +13,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * Get detail resource
+ * @name get
+ * @description Get detail resource
  * @function
  * @param {number} app_id 
  * @param {number|null} resource_id
@@ -37,7 +38,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                     null, 
                     null));
 /**
- * Create detail resource
+ * @name post
+ * @description Create detail resource
  * @function
  * @param {number} app_id 
  * @param {*} data
@@ -60,7 +62,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                     null));
 
 /**
- * Update detail resource
+ * @name update
+ * @description Update detail resource
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -84,7 +87,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                     null, 
                     null));
 /**
- * Delete resource detail
+ * @name deleteRecord
+ * @description Delete detail resource
  * @function
  * @param {number} app_id 
  * @param {number} resource_id

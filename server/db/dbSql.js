@@ -1,5 +1,5 @@
 /**
- * All SQL statements
+ * All constants of SQL statements
  * @module server/db/dbSql
  */
 

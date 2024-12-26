@@ -39,7 +39,8 @@ const DB_APP_INSTALL_PATH       = '/scripts/';
 const DB_APP_INSTALL            = 'install_database.json';
 const DB_APP_UNINSTALL          = 'uninstall_database.json';
 /**
- * Database info
+ * @name dbInfo
+ * @description Database info
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_sql_result_admin_DBInfo[]>}
@@ -53,7 +54,8 @@ const dbInfo = app_id => import(`file://${process.cwd()}/server/db/common.js`).t
                                             DBA, 
                                             null));
 /**
- * Database info space
+ * @name dbInfoSpace
+ * @description Database info space
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpace[]>}
@@ -67,7 +69,8 @@ const dbInfoSpace = app_id =>import(`file://${process.cwd()}/server/db/common.js
                                                 DBA, 
                                                 null));
 /**
- * Database info space sum
+ * @name dbInfoSpaceSum
+ * @description Database info space sum
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpaceSum[]>}
@@ -82,11 +85,12 @@ const dbInfoSpaceSum = (app_id) =>import(`file://${process.cwd()}/server/db/comm
                                                     null));
 
 /**
-  * Database install get files
-  * @function
-  * @param {'install'|'uninstall'} install_type 
-  * @returns {Promise.<server_db_database_script_files>}
-  */
+ * @name dbInstallGetFiles
+ * @description Database install get files
+ * @function
+ * @param {'install'|'uninstall'} install_type 
+ * @returns {Promise.<server_db_database_script_files>}
+ */
 const dbInstallGetFiles = async (install_type) =>{
     const fs = await import('node:fs');
     let app_id = 1;
@@ -110,7 +114,8 @@ const dbInstallGetFiles = async (install_type) =>{
     }
  };
 /**
- * Install db and sends server side events of progress
+ * @name dbInstall
+ * @description Install db and sends server side events of progress
  * @function
  * @param {number}      app_id 
  * @param {*}           query
@@ -327,7 +332,8 @@ const dbInstallGetFiles = async (install_type) =>{
     return {info: install_result};
  };
  /**
-  * Checks if database is installed
+  * @name dbInstalledCheck
+  * @description Checks if database is installed
   * @function
   * @param {number|null} app_id
   * @returns {Promise.<server_db_database_install_db_check>}
@@ -343,7 +349,8 @@ const dbInstallGetFiles = async (install_type) =>{
                                                             return not_installed;
                                                         }));
  /**
-  * Uninstall database installation
+  * @name dbUninstall
+  * @description Uninstall database installation
   * @function
   * @param {number} app_id
   * @param {*} query
@@ -436,11 +443,12 @@ const dbInstallGetFiles = async (install_type) =>{
                 ]};
 };
 /**
- * Install demo users and sends server side events of progress
- * Creates user settings and imports images to base64 format
- * Creates random social records for social types LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
- * Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
- * Returns log about records created
+ * @name dbDemoInstall
+ * @description Install demo users and sends server side events of progress
+ *              Creates user settings and imports images to base64 format
+ *              Creates random social records for social types LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
+ *              Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
+ *              Returns log about records created
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -1039,8 +1047,9 @@ const dbInstallGetFiles = async (install_type) =>{
     return {info: install_result};
 };
 /**
- * Demo uninstall
- * Deletes all demo users and send server side events of progress
+ * @name dbDemoUninstall
+ * @description Demo uninstall
+ *              Deletes all demo users and send server side events of progress
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -1098,7 +1107,8 @@ const dbDemoUninstall = async (app_id, query)=> {
 };
 
 /**
- * Starts pool with parameters
+ * @name DB_POOL
+ * @description Starts pool with parameters
  * @function
  * @param {number|null} db_use 
  * @param {number|null} dba 
@@ -1149,7 +1159,8 @@ const dbDemoUninstall = async (app_id, query)=> {
     });
  };
  /**
-  * Start pools for database used
+  * @name dbStart
+  * @description Start pools for database used
   * @function
   * @returns {Promise.<void>}
   */

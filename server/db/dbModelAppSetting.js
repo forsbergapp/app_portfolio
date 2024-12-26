@@ -14,7 +14,8 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * Get setting with translation text
+ * @name get
+ * @description Get setting with translation text
  * @function
  * @param {number} app_id 
  * @param {*} query 
@@ -32,7 +33,8 @@ const get = (app_id, query) =>
                         null, 
                         query.get('lang_code')));
 /**
- * Get setting display data without translation
+ * @name getDisplayData
+ * @description Get setting display data without translation
  * @function
  * @param {number} app_id 
  * @param {*} query 
