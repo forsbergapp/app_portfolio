@@ -156,7 +156,7 @@ REST API is implemented following ISO20022 with additional resource authenticati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line788">line 788</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line793">line 793</a>
     </div></div></dd>
     
 
@@ -214,7 +214,7 @@ REST API is implemented following ISO20022 with additional resource authenticati
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line786">line 786</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line791">line 791</a>
     </div></div></dd>
     
 
@@ -300,7 +300,7 @@ REST API is implemented following ISO20022 with additional resource authenticati
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverExpress<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;server_server_express>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>serverExpress<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;server_server_express>}</span></div>
     
 
     
@@ -308,10 +308,9 @@ REST API is implemented following ISO20022 with additional resource authenticati
 
 
 <div class="description">
-    <p>Gets Express app with following settings in this order</p>
-<pre><code>1.Middleware	JSON maximum size setting
-</code></pre>
-<p>2.Routes	
+    <p>Gets Express app with following settings in this order
+1.Middleware	JSON maximum size setting
+2.Routes	
 path	                                    method	middleware                                  controller      comment
 /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
 used for shared libraries and open report url
@@ -334,8 +333,8 @@ responds to SSL verification if enabled
 *	                                        get	                                                bffApp		    app asset
 common asset
 info page
-app</p>
-<p>3.Middleware error logging</p>
+app
+3.Middleware error logging</p>
 </div>
 
 
@@ -379,7 +378,7 @@ app</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line402">line 402</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line373">line 373</a>
     </div></div></dd>
     
 
@@ -437,7 +436,7 @@ app</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverREST_API<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>serverREST_API<span class="signature">()</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
     
 
     
@@ -451,13 +450,14 @@ Validates using IAM token claims if path requires
 Validates calls to circuitbreaker controlled microservices using client_id and client_secret defined for given app
 Uses paths defined in app.route() in serverExpress() function
 Returns single resource result format or ISO20022 format with either list header format or page header metadata
-Returns HTML or  {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
+Returns HTML or {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
 /app-module-report-queue-result
 /bff/admin/v1/app-module-report
 /bff/app/v1/app-module-report
 /bff/app/v1/app-module-module</p>
-<p>Returns status 401 if user has not accessed to given resource
-Returns status 404 if route is not found</p>
+<pre><code>         Returns status 401 if user has not accessed to given resource
+         Returns status 404 if route is not found
+</code></pre>
 </div>
 
 
@@ -541,7 +541,7 @@ Returns status 404 if route is not found</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line491">line 491</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line476">line 476</a>
     </div></div></dd>
     
 
@@ -829,7 +829,7 @@ Returns status 404 if route is not found</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line26">line 26</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line15">line 15</a>
     </div></div></dd>
     
 
@@ -883,7 +883,7 @@ Returns status 404 if route is not found</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>serverStart<span class="signature">()</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>serverStart<span class="signature">()</span><span class="type-signature"></span></div>
     
 
     
@@ -937,7 +937,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1436">line 1436</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1434">line 1434</a>
     </div></div></dd>
     
 
@@ -1074,7 +1074,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line325">line 325</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line323">line 323</a>
     </div></div></dd>
     
 
@@ -1180,7 +1180,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line335">line 335</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line334">line 334</a>
     </div></div></dd>
     
 
@@ -1286,7 +1286,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line358">line 358</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line359">line 359</a>
     </div></div></dd>
     
 
@@ -1459,7 +1459,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line57">line 57</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line54">line 54</a>
     </div></div></dd>
     
 
@@ -1598,7 +1598,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line50">line 50</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line43">line 43</a>
     </div></div></dd>
     
 
@@ -1756,7 +1756,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line314">line 314</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line311">line 311</a>
     </div></div></dd>
     
 

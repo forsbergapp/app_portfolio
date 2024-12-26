@@ -9,6 +9,13 @@
  * Test performance
  * @module test/performance.spec
  */
+/**
+ * @name describe
+ * @description describe: Performance test, calling main server url according to configured values
+ *              it: should handle 100 concurrent requests without any error within 10 seconds
+ * @function
+ * @returns {void}
+ */
 describe('Performance test, calling main server url according to configured values', ()=> {
     it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{ 
         /**@type{import('../server/server.js')} */

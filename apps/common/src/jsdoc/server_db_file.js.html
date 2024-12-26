@@ -54,14 +54,20 @@
 
 const fs = await import('node:fs');
 
-/**@type{string} */
-let SLASH;
-if (process.platform == 'win32')
-    SLASH = '\\';
-else
-    SLASH = '/';
+/**
+ * @name SLASH
+ * @description Path separator depending the process.platform value
+ * @constant
+ * @type{string}
+ */
+const SLASH = process.platform == 'win32'?'\\':'/';
 
-/**@type{server_db_file_db_record[]} */
+/**
+ * @name FILE_DB
+ * @description File database using ORM pattern
+ * @constant
+ * @type{server_db_file_db_record[]} 
+ */
 const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_server.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_IAM_POLICY',              TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE',            TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice.json', CACHE_CONTENT:null},
@@ -96,7 +102,8 @@ const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',        
 Object.seal(FILE_DB);
 
 /**
- * Get file record from file db
+ * @name fileRecord
+ * @description Get file record from file db
  * @function
  * @param {server_db_file_db_name} filename 
  * @returns {server_db_file_db_record}
@@ -104,8 +111,9 @@ Object.seal(FILE_DB);
 const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
 /**
- * Start transaction
- * Using race condition, pessmistic lock and database transaction pattern
+ * @name fileTransactionStart
+ * @description Start transaction
+ *              Using race condition, pessmistic lock and database transaction pattern
  * @function
  * @param {server_db_file_db_name} file 
  * @param {string} filepath
@@ -147,7 +155,8 @@ const fileTransactionStart = async (file, filepath)=>{
     });
 };
 /**
- * Transation commit
+ * @name fileTransactionCommit
+ * @description Transation commit
  * @function
  * @param {server_db_file_db_name} file 
  * @param {number} transaction_id 
@@ -160,32 +169,30 @@ const fileTransactionCommit = (file, transaction_id)=>{
         fileRecord(file).TRANSACTION_CONTENT = null;
         return true;
     }
-    else{
+    else
         return false;
-    }
 };
 /**
- * Transaction rollback
+ * @name fileTransactionRollback
+ * @description Transaction rollback
  * @function
  * @param {server_db_file_db_name} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
 const fileTransactionRollback = (file, transaction_id)=>{
-
     if (fileRecord(file).TRANSACTION_ID==transaction_id){
         fileRecord(file).LOCK = 0;
         fileRecord(file).TRANSACTION_ID = null;
         fileRecord(file).TRANSACTION_CONTENT = null;
-        
         return true;
     }
-    else{
+    else
         return false;
-    }
 };
 /**
- * Get file suffix
+ * @name fileSuffix
+ * @description Get file suffix
  * @function
  * @param {string|null} filesuffix 
  * @param {string|null} sample 
@@ -215,9 +222,9 @@ const fileTransactionRollback = (file, transaction_id)=>{
     return file_filesuffix;
 };
 
-
 /**
- * Returns file path for given file
+ * @name filePath
+ * @description Returns file path for given file
  * @function
  * @param {server_db_file_db_name} file 
  * @returns {string}
@@ -225,7 +232,8 @@ const fileTransactionRollback = (file, transaction_id)=>{
 const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
 
 /**
- * Get file from cache already JSON parsed
+ * @name fileCache
+ * @description Get file from cache already JSON parsed
  * @function
  * @param {server_db_file_db_name} file
  * @returns {*}
@@ -233,18 +241,19 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  const fileCache = file => JSON.parse(JSON.stringify(fileRecord(file).CACHE_CONTENT));
 
 /**
- * Get files from directory
+ * @name fileFsDir
+ * @description Get files from directory
  * @function
  * @returns {Promise.&lt;string[]>}
  */
 const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
 /**
- * 
- * Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
- * Specify lock=true when updating a file to get transaction id 
- * when file is available to update.
- * Function returns file content after a lock of file and transaction id is given, lock info and transaction id.
- * This transaction id must be provided when updating file in fileFsWrite()
+ * @name fileFsRead
+ * @description Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
+ *              Specify lock=true when updating a file to get transaction id 
+ *              when file is available to update.
+ *              Function returns file content after a lock of file and transaction id is given, lock info and transaction id.
+ *              This transaction id must be provided when updating file in fileFsWrite()
  * @function
  * @param {server_db_file_db_name} file 
  * @param {boolean} lock
@@ -265,9 +274,10 @@ const fileFsRead = async (file, lock=false) =>{
     }
 };
 /**
- * Set cache for files using CACHE_CONTENT key to avoid using too much disk read
- * to increase performance
- * Cache content is updated after admin updates a file
+ * @name fileFsCacheSet
+ * @description Set cache for files using CACHE_CONTENT key to avoid using too much disk read
+ *              to increase performance
+ *              Cache content is updated after admin updates a file
  * @function
  * @returns {Promise.&lt;void>}
  */
@@ -282,11 +292,11 @@ const fileFsRead = async (file, lock=false) =>{
     }
  };
 /**
- * 
- * Writes file
- * Must specify valid transaction id given from fileFsRead()
- * to be able to update a file
- * Backup of old file will be written to backup directory
+ * @name fileFsWrite
+ * @description Writes file
+ *              Must specify valid transaction id given from fileFsRead()
+ *              to be able to update a file
+ *              Backup of old file will be written to backup directory
  * @function
  * @param {server_db_file_db_name} file 
  * @param {number|null} transaction_id 
@@ -335,7 +345,8 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
 };
 
 /**
- * Created directories and should be used only when server is started first time
+ * @name fileFsAccessMkdir
+ * @description Created directories and should be used only when server is started first time
  * @function
  * @returns{Promise.&lt;void>}
  */
@@ -365,8 +376,9 @@ const fileFsAccessMkdir = async () => {
     }
 };
 /**
- * Write to a file.
- * Should only be used by admin since no transaction is used
+ * @name fileFsWriteAdmin
+ * @description Write to a file.
+ *              Should only be used by admin since no transaction is used
  * @function
  * @param {server_db_file_db_name} file 
  * @param {server_db_file_config_files} file_content 
@@ -383,7 +395,9 @@ const fileFsWriteAdmin = async (file, file_content) =>{
 };
 
 /**
- * Delete a file
+ * @name fileFsDeleteAdmin
+ * @description Delete a file
+ * @function
  * @param {server_db_file_db_name} file 
  */
 const fileFsDeleteAdmin = async file => {
@@ -392,17 +406,18 @@ const fileFsDeleteAdmin = async file => {
 };
 
  /**
- * Get log file with given suffix or none or use sample to get specific suffix
- * for statistics
- * Filters for given resource_id if requested
- * @function
- * @param {number|null} app_id
- * @param {server_db_file_db_name} file
- * @param {number|null} resource_id
- * @param {string|null} filesuffix 
- * @param {string|null} sample
- * @returns {Promise.&lt;*>}
- */
+  * @name fileFsDBLogGet
+  * @description Get log file with given suffix or none or use sample to get specific suffix
+  *              for statistics
+  *              Filters for given resource_id if requested
+  * @function
+  * @param {number|null} app_id
+  * @param {server_db_file_db_name} file
+  * @param {number|null} resource_id
+  * @param {string|null} filesuffix 
+  * @param {string|null} sample
+  * @returns {Promise.&lt;*>}
+  */
  const fileFsDBLogGet = async (app_id, file, resource_id, filesuffix=null, sample=null) =>{
     
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, sample)}`;
@@ -410,7 +425,8 @@ const fileFsDeleteAdmin = async file => {
     return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id));
 };
 /**
- * Create log record with given suffix or none
+ * @name fileFsDBLogPost
+ * @description Create log record with given suffix or none
  * @function
  * @param {number|null} app_id
  * @param {server_db_file_db_name} file
@@ -437,9 +453,10 @@ const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>
     });
 };
 /**
- * Gets a record or records in a JSON_TABLE
- * for given app id and if resource id if specified
- * JSON_TABLE should have column id as primary key using this function
+ * @name fileDBGet
+ * @description Gets a record or records in a JSON_TABLE
+ *              for given app id and if resource id if specified
+ *              JSON_TABLE should have column id as primary key using this function
  * @function
  * @param {number|null} app_id
  * @param {server_db_file_db_name} table
@@ -461,8 +478,9 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
     
 };
 /**
- * Creates a record in a JSON_TABLE
- * and returns the record
+ * @name fileDBPost
+ * @description Creates a record in a JSON_TABLE
+ *              and returns the record
  * @function
  * @param {number} app_id
  * @param {server_db_file_db_name} table
@@ -482,10 +500,11 @@ const fileDBPost = async (app_id, table, data) =>{
     }
 };
 /**
- * Updates a record in a JSON_TABLE
- * with given values in given columns in data parameter
- * and returns updated record
- * JSON_TABLE should have column id as primary key using this function
+ * @name fileDBUpdate
+ * @description Updates a record in a JSON_TABLE
+ *              with given values in given columns in data parameter
+ *              and returns updated record
+ *              JSON_TABLE should have column id as primary key using this function
  * @function
  * @param {number} app_id
  * @param {server_db_file_db_name} table
@@ -517,9 +536,10 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
         return {affectedRows:0};
 };
 /**
- * Deletes a record in a JSON_TABLE
- * for given resource id and app id
- * JSON_TABLE should have column id as primary key using this function
+ * @name fileDBDelete
+ * @description Deletes a record in a JSON_TABLE
+ *              for given resource id and app id
+ *              JSON_TABLE should have column id as primary key using this function
  * @function
  * @param {number} app_id
  * @param {server_db_file_db_name} table
@@ -549,7 +569,8 @@ const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
         return {affectedRows:0};    
 };
 /**
- * Displays FILE message for record not found for single resource
+ * @name fileCommonRecordNotFound
+ * @description Displays FILE message for record not found for single resource
  * @function
  * @param {server_server_res|null} res
  * @returns {string}
@@ -562,7 +583,6 @@ const fileCommonRecordNotFound = (res) => {
     }
     return message;
 };
-
 
 export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsCacheSet, fileFsWrite, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
         fileFsDBLogGet, fileFsDBLogPost,

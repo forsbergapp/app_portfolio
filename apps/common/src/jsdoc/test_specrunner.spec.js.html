@@ -13,7 +13,13 @@
  * async, describe, it, expect, beforeAll and afterAll functions but Jasmine contains less devDependencies and complies more with directives.
  * Jasmine also supports specrunner using syntax below so tests can be performed in sequential order.
  * Snap shot test, acceptance test and UI/browser tests are out of scope in this project.
-
+ * 
+ * Test order           Path
+ * 1.Spy test           /apps/common/src/common.spec.js
+ * 2.Unit test          /server/db/db.spec.js
+ * 3.Integration test   /test/integration.spec.js
+ * 4.Performance test   /test/performance.spec.js
+ * 
  * @module test/specrunner.spec
  */
 

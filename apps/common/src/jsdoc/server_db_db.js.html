@@ -44,9 +44,11 @@ const {default: ORACLEDB} = await import('oracledb');
 const {default:sqlite3}   = await import('sqlite3');
 const sqlite              = await import('sqlite');
 /**
- * DB_POOL
- * All database pool connections are saved here
- * Oracle uses number to 
+ * @name DB_POOL
+ * @description DB_POOL
+ *             All database pool connections are saved here
+ *             Oracle uses number to 
+ * @constant
  * @type{server_db_db_pool[]}
  */
 const DB_POOL =[ 
@@ -63,12 +65,13 @@ if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
 }
 /**
- * Delete all pools for given database
- * Deletes variable content, not the same as 
- * using API to close, release or end connection
- * and all database API use different logic.
- * Needed to restart database connection after admin
- * have changed parameters and without having to restart server
+ * @name dbPoolDeleteAll
+ * @description Delete all pools for given database
+ *              Deletes variable content, not the same as 
+ *              using API to close, release or end connection
+ *              and all database API use different logic.
+ *              Needed to restart database connection after admin
+ *              have changed parameters and without having to restart server
  * @function
  * @param {number} db
  * @returns {void}
@@ -82,33 +85,32 @@ const dbPoolDeleteAll = (db)=>{
                         });
 };
 /**
- * Pool start
- * 
- *    parameters:
- * 
- *    use:                     1-5
- *    pool_id:                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
- *    port:                    port,
- *    host:                    host,
- *    dba:                     1/0,
- *    user:                    username,
- *    password:                password,
- *    database:                database,
+ * @name dbPoolStart
+ * @description Pool start
+ *                parameters:
+ *                use:                     1-5
+ *                pool_id:                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
+ *                port:                    port,
+ *                host:                    host,
+ *                dba:                     1/0,
+ *                user:                    username,
+ *                password:                password,
+ *                database:                database,
  *
- *    db 1 + 2 parameters      see MariaDB/MySQL documentation
- *    charset:                 character set,
- *    connnectionLimit:        connection limit
+ *                db 1 + 2 parameters      see MariaDB/MySQL documentation
+ *                charset:                 character set,
+ *                connnectionLimit:        connection limit
  *
- *    db 3 parameters          see PostgreSQL documentation
- *    connectionTimeoutMillis: connection timout milliseconds
- *    idleTimeoutMillis:       idle timeout milliseconds
- *    max:                     max
+ *                db 3 parameters          see PostgreSQL documentation
+ *                connectionTimeoutMillis: connection timout milliseconds
+ *                idleTimeoutMillis:       idle timeout milliseconds
+ *                max:                     max
  *
- *    db 4 parameters          see Oracle documentation
- *    connectString:           connectstring
- *    poolMin:                 pool min
- *    poolMax:                 pool max
- *    poolIncrement:           pool increment
+ *                db 4 parameters          see Oracle documentation
+ *                connectString:           connectstring
+ *                poolMin:                 pool min
+ *                poolMax:                 pool max
+ *                poolIncrement:           pool increment
  * @function
  * @param {server_db_db_pool_parameters} dbparameters 
  * @returns {Promise.&lt;null>}
@@ -237,7 +239,8 @@ const dbPoolStart = async (dbparameters) =>{
    });
 };
 /**
- * Delete pool for given database
+ * @name dbPoolClose
+ * @description Delete pool for given database
  * @function
  * @param {number|null} pool_id 
  * @param {number|null} db_use 
@@ -269,7 +272,8 @@ const dbPoolClose = async (pool_id, db_use, dba) =>{
 
 };
 /**
- * Get pool for database
+ * @name dbPoolGet
+ * @description Get pool for database
  * @function
  * @param {number|null} pool_id 
  * @param {number} db_use 
@@ -309,20 +313,22 @@ const dbPoolGet = (pool_id, db_use, dba) => {
    }  
 };
 /**
- * Converts SQL syntax and parameters depending what database is used
+ * @name dbSQLParamConvert
+ * @description Converts SQL syntax and parameters depending what database is used
  * 
- * common syntax used and also used by Oracle that should be converted:
+ *              common syntax used and also used by Oracle that should be converted:
  *                      SQL:        UPDATE [table] SET [column] = :title" 
  *                      parameters: { title: "value" }
  * 
- * postgreSql syntax:   SQL:        UPDATE [table] SET [column] = $1"
+ *              postgreSql syntax:   
+ *                      SQL:        UPDATE [table] SET [column] = $1"
  *                      parameters: [0, "value"]
- * uses unique index with $1, $2 etc, parameter can be used several times
- * example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
- * use indexorder received from parameters
+ *                      uses unique index with $1, $2 etc, parameter can be used several times
+ *                      example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+ *                      use indexorder received from parameters
  * 
- * MariaDB + 
- * mySql syntax:        SQL:        UPDATE [table] SET [column] = ?"
+ *              MariaDB + mySql syntax:
+ *                      SQL:        UPDATE [table] SET [column] = ?"
  *                      parameters: ["value"]
  *                      solution implemented here is to set values in the sql
  *                      using connection?.escape(params[key]) syntax
@@ -330,9 +336,10 @@ const dbPoolGet = (pool_id, db_use, dba) => {
  *                      that requires specific parameter order but a parameter key
  *                      is only allowed to occur once in this implementation
  * 
- * SQLite syntax:       SQL:        UPDATE [table] SET [column] = $title"
+ *              SQLite syntax:       
+ *                      SQL:        UPDATE [table] SET [column] = $title"
  *                      parameters: [$title, "value"]
- * 
+ * @function
  * @param {number} db
  * @param {server_db_db_pool_connection_1_2|null} connection
  * @param {string} parameterizedSql
@@ -432,10 +439,11 @@ const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
    }
 };	
 /**
- * Sets common attributes for SQL execution result:
- * insertId       returns id of inserted row
- * affectedRows   returns number of updated, inserted or deleted rows
- * 
+ * @name dbSQLResultConvert
+ * @description Sets common attributes for SQL execution result:
+ *                insertId       returns id of inserted row
+ *                affectedRows   returns number of updated, inserted or deleted rows
+ * @function
  * @param {number} db
  * @param {*} result
  * @param {server_db_db_pool_connection_3_fields} fields
@@ -508,22 +516,23 @@ const dbSQLResultConvert = (db, result, fields=[{type:0, name:''}]) =>{
 
 };
 /**
- * Execute query for given database
- * Common optional parameters:
- * DB_RETURN_ID
- * Returns new inserted id from table if used for given column in the parameter
- * DB_CLOB
- * Sets CLOB attributes if used 
- * contains array of columns with CLOB datatype
+ * @name dbSQL
+ * @description Execute query for given database
+ *                Common optional parameters:
+ *                DB_RETURN_ID
+ *                Returns new inserted id from table if used for given column in the parameter
+ *                DB_CLOB
+ *                Sets CLOB attributes if used 
+ *                contains array of columns with CLOB datatype
  * 
- * All databases return same metadata keys
- * INSERT:
- * result.insertId
- * INSERT, DELETE, UPDATE:
- * result.affectedRows 
+ *                All databases return same metadata keys
+ *                INSERT:
+ *                result.insertId
+ *                INSERT, DELETE, UPDATE:
+ *                result.affectedRows 
  * 
- * Conversion functions are implemented to support same parameter syntax inside SQL for all databases
- * and supports ':' before parameter in the SQL
+ *                Conversion functions are implemented to support same parameter syntax inside SQL for all databases
+ *                and supports ':' before parameter in the SQL
  * 
  * @function
  * @param {number|null} pool_id 
