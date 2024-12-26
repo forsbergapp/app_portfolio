@@ -22,7 +22,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * Get user post
+ * @name getUserPost
+ * @description Get user post
  * @function
  * @param {number} app_id 
  * @param {number} id 
@@ -36,7 +37,8 @@ const getUserPost = async (app_id, id) =>
                         null, 
                         null));
 /**
- * Get user post by id
+ * @name getUserPostsByUserId
+ * @description Get user post by id
  * @function
  * @param {number} app_id 
  * @param {number|null} resource_id
@@ -70,7 +72,8 @@ const getUserPostsByUserId = (app_id, resource_id, query, res) =>{
     });
 };
 /**
- * Get user profile post
+ * @name getProfileUserPosts
+ * @description Get user profile post
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -102,7 +105,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     });
 };
 /**
- * Get profile stat like
+ * @name getProfileStatLike
+ * @description Get profile stat like
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -133,7 +137,8 @@ const getProfileUserPosts =(app_id, resource_id, query, res) =>{
     });
 };
 /**
- * Get profile post stat
+ * @name getProfileStatPost
+ * @description Get profile post stat
  * @function
  * @param {number} app_id 
  * @param {*} query
@@ -163,7 +168,8 @@ const getProfileStatPost = (app_id, query, res) =>{
     });
 };
 /**
- * Get profile user detail post
+ * @name getProfileUserPostDetail
+ * @description Get profile user detail post
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -195,7 +201,8 @@ const getProfileUserPostDetail = (app_id, resource_id, query, res) => {
     });
 };
 /**
- * Create user post
+ * @name createUserPost
+ * @description Create user post
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -249,7 +256,8 @@ const createUserPost = (app_id, query, data) => {
 	
 };
 /**
- * Update user post
+ * @name updateUserPost
+ * @description Update user post
  * @function
  * @param {number} app_id 
  * @param {*} resource_id
@@ -285,7 +293,8 @@ const updateUserPost = (app_id, resource_id, query, data, res) => {
     });
 };
 /**
- * Delete user post
+ * @name deleteUserPost
+ * @description Delete user post
  * @function
  * @param {number} app_id 
  * @param {number} resource_id

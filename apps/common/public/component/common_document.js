@@ -79,8 +79,9 @@ const component = async props => {
                                                 .map((/**@type{string}*/row,/**@type{number}*/index)=>
                                                     `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`).join('\n') ?? '';
                 //highlight selected line if # is used in link
-                if (props.data.href.split('#')[1])
+                if (props.data.href.split('#')[1])   
                     Array.from(content_element.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
+                 
                 content = content_element.innerHTML;
             }
             else{
@@ -96,8 +97,15 @@ const component = async props => {
             classname = 'common_markdown';
         }
     }   
+    const onMounted = () =>{
+        if (props.data.href.split('#')[1]){
+            //set focus on highlighted row
+            Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].setAttribute('tabindex',0);
+            Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].focus();
+        }
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template({app_logo:props.data.app_logo,

@@ -50,7 +50,8 @@ const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db
 const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
 /**
- * Sets password using defined encryption
+ * @name set_password
+ * @description Sets password using defined encryption
  * @function
  * @param {string|null} password 
  * @returns {Promise.<string|null>}
@@ -61,7 +62,8 @@ const set_password = async (password) =>{
 	return password==null?null:await securityPasswordCreate(password);
 };
 /**
- * Checks password between 10 and 100 characters
+ * @name data_validation_password
+ * @description Checks password between 10 and 100 characters
  * @function
  * @param {server_db_sql_parameter_user_account_updatePassword} data 
  * @returns {object|null}
@@ -76,7 +78,8 @@ const data_validation_password = (data) => {
 };
 
 /**
- * Common validation logic
+ * @name data_validation_common
+ * @description Common validation logic
  * @function
  * @param {server_db_sql_parameter_user_account_updateUserCommon} data 
  * @returns {object|null}
@@ -103,7 +106,8 @@ const data_validation_password = (data) => {
 			return null;
  };
 /**
- * Data validation
+ * @name data_validation
+ * @description Data validation
  * @function
  * @param {	server_db_sql_parameter_user_account_create|
  * 			server_db_sql_parameter_user_account_updateUserLocal|
@@ -196,9 +200,9 @@ const data_validation = data => {
 					}
 };
 
-
 /**
- * Get username
+ * @name userGetUsername
+ * @description Get username
  * @function
  * @param {number} app_id
  * @param {server_db_sql_parameter_user_account_userLogin} data
@@ -215,7 +219,8 @@ const userGetUsername = (app_id, data) =>
                         null));
 
 /**
- * Get user provider
+ * @name userGetProvider
+ * @description Get user provider
  * @function
  * @param {number} app_id 
  * @param {number|null} identity_provider_id 
@@ -233,7 +238,8 @@ const userGetProvider = async (app_id, identity_provider_id, search_id) =>
                         null, 
                         null));
 /**
- * Update verification code
+ * @name updateUserVerificationCode
+ * @description Update verification code
  * @function
  * @param {number} app_id 
  * @param {number} id 
@@ -252,7 +258,8 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
                         null));
 
 /**
- * Update user provider
+ * @name userUpdateProvider
+ * @description Update user provider
  * @function
  * @param {number} app_id 
  * @param {number} id 
@@ -283,7 +290,8 @@ const userUpdateProvider = async (app_id, id, data) => {
 };
 
 /**
- * Create user
+ * @name userPost
+ * @description Create user
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_create} data 
@@ -324,7 +332,8 @@ const userPost = async (app_id, data) =>{
 };
 
 /**
- * Update user activate
+ * @name userUpdateActivate
+ * @description Update user activate
  * @function
  * @param {number} app_id 
  * @param {number} id 
@@ -347,7 +356,8 @@ const userUpdateActivate = async (app_id, id, verification_type, verification_co
                         null));
     
 /**
- * Get user email
+ * @name userGetEmail
+ * @description Get user email
  * @function
  * @param {number} app_id 
  * @param {string} email 
@@ -364,7 +374,8 @@ const userGetEmail = async (app_id, email) =>
                         null));
 
 /**
- * Get user profile
+ * @name getProfile
+ * @description Get user profile
  * @function
  * @param {number} app_id 
  * @param {number|null} resource_id_number
@@ -511,7 +522,8 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
     });
 };
 /**
- * Get profile stat
+ * @name getProfileStat
+ * @description Get profile stat
  * @function
  * @param {number} app_id 
  * @param {*} query
@@ -529,7 +541,8 @@ const getProfileStat = (app_id, query) =>
                         null));
 
 /**
- * Updates user by admin
+ * @name userUpdateAdmin
+ * @description Updates user by admin
  * @function
  * @param {number} app_id 
  * @param {number} id 
@@ -561,7 +574,8 @@ const userUpdateAdmin = async (app_id, id, data) =>{
         throw error_code;
 };
 /**
- * Gets user and updates user by admin
+ * @name updateAdmin
+ * @description Gets user and updates user by admin
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -610,7 +624,8 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
     });
 };
 /**
- * Get users by admin
+ * @name getUsersAdmin
+ * @description Get users by admin
  * @function
  * @param {number} app_id 
  * @param {*} query 
@@ -630,7 +645,8 @@ const getUsersAdmin = (app_id, query) =>
                         null));
 
 /**
- * Get user stat
+ * @name getStatCountAdmin
+ * @description Get user stat
  * @function
  * @param {number} app_id 
  * @returns {Promise.<server_db_sql_result_user_account_getStatCountAdmin[]>}
@@ -644,7 +660,8 @@ const getStatCountAdmin = app_id =>
                         null));
  
 /**
- * Update user password
+ * @name updatePassword
+ * @description Update user password
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -706,7 +723,8 @@ const getStatCountAdmin = app_id =>
         throw error_code;
 };
 /**
- * Update user local
+ * @name userUpdateLocal
+ * @description Update user local
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_updateUserLocal} data 
@@ -741,7 +759,8 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
 };
 
 /**
- * Update user common
+ * @name updateUserCommon
+ * @description Update user common
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -782,7 +801,8 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
         throw error_code;
 };
 /**
- * Get user by id
+ * @name getUserByUserId
+ * @description Get user by id
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -814,7 +834,8 @@ const getUserByUserId = (app_id, resource_id, query, res) => {
 };
 
 /**
- * Get password for given user
+ * @name userGetPassword
+ * @description Get password for given user
  * @function
  * @param {number} app_id 
  * @param {number} id
@@ -829,7 +850,8 @@ const userGetPassword = async (app_id, id) =>
                         null));
 
 /**
- * Delete user
+ * @name userDelete
+ * @description Delete user
  * @function
  * @param {number} app_id 
  * @param {number} id 
@@ -843,7 +865,8 @@ const userDelete = async (app_id, id) =>
                         null, 
                         null));
 /**
- * Get user profile detail
+ * @name getProfileDetail
+ * @description Get user profile detail
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -876,7 +899,8 @@ const userDelete = async (app_id, id) =>
     
 };
 /**
- * Get demo users
+ * @name userDemoGet
+ * @description Get demo users
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_sql_result_user_account_getDemousers[]>}
