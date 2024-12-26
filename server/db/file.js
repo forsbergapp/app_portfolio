@@ -57,7 +57,7 @@ const SLASH = process.platform == 'win32'?'\\':'/';
 
 /**
  * @name FILE_DB
- * @description File database suing ORM pattern
+ * @description File database using ORM pattern
  * @constant
  * @type{server_db_file_db_record[]} 
  */
