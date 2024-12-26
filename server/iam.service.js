@@ -51,12 +51,17 @@ const fileModelIamAppToken = await import(`file://${process.cwd()}/server/db/fil
 
 const {default:jwt} = await import('jsonwebtoken');
 
-//Rate limiter 
-/**@type{Object.<string,{count:number, firstRequestTime:number}>} */
+/**
+ * @name iamRequestRateLimiterCount
+ * @description Rate limiter 
+ * @constant
+ * @type{Object.<string,{count:number, firstRequestTime:number}>} 
+ */
 const iamRequestRateLimiterCount = {};
 
 /**
- * IAM util decode base64 in query
+ * @name iamUtilDecode
+ * @description IAM util decode base64 in query
  * @function
  * @param {string} query 
  * @returns {URLSearchParams}
@@ -65,7 +70,8 @@ const iamRequestRateLimiterCount = {};
     return new URLSearchParams(atob(query));
 };
 /**
- * IAM util token expired
+ * @name iamUtilTokenExpired
+ * @description IAM util token expired
  * @function
  * @param {number|null}  app_id
  * @param {'APP_ACCESS'|'APP_DATA'|'ADMIN'} token_type 
@@ -99,7 +105,8 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
 };
 
 /**
- * IAM util token expired set
+ * @name iamUtilTokenExpiredSet
+ * @description IAM util token expired set
  * @function
  * @param {number} app_id
  * @param {string} authorization
@@ -119,7 +126,8 @@ const iamUtilTokenExpiredSet = async (app_id, authorization, ip, res ) =>{
 };
 
 /**
- * IAM util response not authorized
+ * @name iamUtilResponseNotAuthorized
+ * @description IAM util response not authorized
  * @function
  * @param {server_server_res} res
  * @param {number} status
@@ -138,7 +146,9 @@ const iamUtilTokenExpiredSet = async (app_id, authorization, ip, res ) =>{
 };
 
 /**
- * Generate random verification code between 100000 and 999999
+ * @name iamUtilVerificationCode
+ * @description Generate random verification code between 100000 and 999999
+ * @function
  * @returns {string}
  */
 const iamUtilVerificationCode = () => {
@@ -146,7 +156,8 @@ const iamUtilVerificationCode = () => {
 };
 
 /**
- * IAM Middleware authenticates admin login
+ * @name iamAuthenticateAdmin
+ * @description IAM Authenticates admin login
  * @function
  * @param {number} app_id
  * @param {string} iam
@@ -257,7 +268,9 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
 };
 
 /**
- * 
+ * @name iamAuthenticateUser
+ * @description IAM Authenticates user login
+ * @function
  * @param {number} app_id
  * @param {string} iam
  * @param {string} ip
@@ -423,7 +436,9 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
 };
 
 /**
- * 
+ * @name iamAuthenticateUserProvider
+ * @description IAM Authenticates user provider login
+ * @function
  * @param {number} app_id 
  * @param {string} iam
  * @param {number} resource_id
@@ -598,7 +613,9 @@ const iamAuthenticateUserProvider = async (app_id, iam, resource_id, ip, user_ag
     });
 };
 /**
- * 
+ * @name iamAuthenticateUserSignup
+ * @description IAM Authenticates user signup
+ * @function
  * @param {number} app_id 
  * @param {string} ip 
  * @param {string} user_agent
@@ -693,7 +710,9 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
 };
 
 /**
- * 
+ * @name iamAuthenticateUserActivate
+ * @description IAM Authenticates user activate
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {string} ip 
@@ -812,7 +831,9 @@ const iamAuthenticateUserActivate = async (app_id, resource_id, ip, user_agent, 
 };
 
 /**
- * 
+ * @name iamAuthenticateUserForgot
+ * @description IAM Authenticates user password forgot
+ * @function
  * @param {number} app_id 
  * @param {string} ip 
  * @param {string} user_agent 
@@ -902,7 +923,9 @@ const iamAuthenticateUserForgot = async (app_id, ip, user_agent, accept_language
 };
 
 /**
- * 
+ * @name iamAuthenticateUserUpdate
+ * @description IAM Authenticates user update
+ * @function
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {string} ip
@@ -1044,7 +1067,9 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
 };
 
 /**
- * 
+ * @name iamAuthenticateUserDelete
+ * @description IAM Authenticates user delete
+ * @function
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} query
@@ -1143,7 +1168,8 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
 };
 
 /**
- * Middleware authenticate socket used for EventSource
+ * @name iamAuthenticateSocket
+ * @description Middleware authenticate socket used for EventSource
  * @function
  * @param {string} path
  * @param {string} host
@@ -1161,7 +1187,8 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
         iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateSocket');
 };
 /**
- * IAM Middleware authenticate IAM users
+ * @name iamAuthenticateUserCommon
+ * @description IAM Middleware authenticate IAM users
  * @function
  * @param {string} iam
  * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'ADMIN'|'APP_ACCESS'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
@@ -1263,7 +1290,8 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
 };
 
 /**
- * IAM external authenticate
+ * @name iamAuthenticateExternal
+ * @description IAM external authenticate
  * @function
  * @param {'APP_EXTERNAL'} endpoint 
  * @param {string} host 
@@ -1283,27 +1311,27 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
         iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateExternal');
 };
 /**
- * Authorize request
- * Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
- *  if ip is blocked in IAM_CONTROL_OBSERVE or ip range is blocked in IAM_CONTROL_IP 
- *     return 401
- *  else
- *     if request count > rate limit (anonymous, user or admin)
- *       if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
- *       return status 429
- *     else
- *       if subdomain is known
- *       if requested route is valid
- *       if host does not exist
- *       if request not accessed from domain or from os hostname
- *       if user agent is blocked
- *       if decodeURIComponent() has error 
- *       if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
- *       if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
- *          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
- *          return 401
- * 
+ * @name iamAuthenticateRequest
+ * @description IAM Authorize request
+ *              Controls if AUTHENTICATE_REQUEST_ENABLE=1 else skips all checks
+ *              if ip is blocked in IAM_CONTROL_OBSERVE or ip range is blocked in IAM_CONTROL_IP 
+ *                  return 401
+ *              else
+ *                  if request count > rate limit (anonymous, user or admin)
+ *                      if fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
+ *                          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
+ *                      return status 429
+ *                  else
+ *                      if subdomain is known
+ *                      if requested route is valid
+ *                      if host does not exist
+ *                      if request not accessed from domain or from os hostname
+ *                      if user agent is blocked
+ *                      if decodeURIComponent() has error 
+ *                      if method is not 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'
+ *                      if fail block or fail count > AUTHENTICATE_REQUEST_OBSERVE_LIMIT
+ *                          add IAM_CONTROL_OBSERVE with status = 1 and type=BLOCK_IP
+ *                          return 401
  * @function
  * @param {string} ip
  * @param {string} host
@@ -1592,9 +1620,10 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
 };
 
 /**
- * Authenticate app in microservice
- * file must be read from file, not file cache as main server
- * since microservices run in separate processes and servers
+ * @name iamAuthenticateApp
+ * @description Authenticate app in microservice
+ *              file must be read from file, not file cache as main server
+ *              since microservices run in separate processes and servers
  * @function
  * @param {number|null} app_id 
  * @param {string} authorization 
@@ -1615,7 +1644,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
     }    
 };
 /**
- * Authenticate resource
+ * @name iamAuthenticateResource
+ * @description Authenticate resource
  * @function
  * @param { {app_id:number|null,
  *           ip:string,
@@ -1645,7 +1675,8 @@ const iamAuthenticateResource = parameters =>  {
 };
                                             
 /**
- * Authorize id token
+ * @name iamAuthorizeIdToken
+ * @description Authorize id token
  * @function
  * @param {number} app_id
  * @param {string|null} ip
@@ -1669,7 +1700,8 @@ const iamAuthenticateResource = parameters =>  {
     return await fileModelIamAppToken.post(app_id, file_content).then(()=>jwt_data.token);
  };
 /**
- * Authorize token
+ * @name iamAuthorizeToken
+ * @description Authorize token
  * @function
  * @param {number} app_id
  * @param {'APP_ID'|'APP_ACCESS'|'ADMIN'|'APP_CUSTOM'} endpoint
@@ -1732,7 +1764,8 @@ const iamAuthenticateResource = parameters =>  {
 };
 
 /**
- * Get user login records
+ * @name iamUserLoginGet
+ * @description Get user login records
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -1749,7 +1782,8 @@ const iamUserLoginGet = (app_id, query) => {const rows = fileModelIamUserLogin.g
                                                             a.created.localeCompare(b.created)==1?-1:1):[];
                                                 };
 /**
- * User create
+ * @name iamUserCreate
+ * @description User create
  * @function
  * @param {number} app_id
  * @param {server_db_file_iam_user_new} data
@@ -1776,7 +1810,8 @@ const iamUserCreate = async (app_id, data, res) => {
                                 }, res);
 };
 /**
- * User get
+ * @name iamUserGet
+ * @description User get
  * @function
  * @param {number} app_id
  * @param {number} id
@@ -1809,7 +1844,8 @@ const iamUserGet = async (app_id, id, res) =>{
     }
 };
 /**
- * User get last login in current app
+ * @name iamUserGetLastLogin
+ * @description User get last login in current app
  * @function
  * @param {number} app_id
  * @param {number} id
@@ -1822,7 +1858,8 @@ const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserLogin.get(app_id, nul
                                                         /**@type{server_db_file_iam_user_login}*/b)=>a.created < b.created?1:-1)[0]?.created;
 
 /**
- * User update
+ * @name iamUserUpdate
+ * @description User update
  * @function
  * @param {number} app_id
  * @param {number} id
@@ -1850,7 +1887,8 @@ const iamUserUpdate = async (app_id, id, data, res) =>{
 };
 
 /**
- * User logout
+ * @name iamUserLogout
+ * @description User logout
  * @function
  * @param {number} app_id
  * @param {string} authorization

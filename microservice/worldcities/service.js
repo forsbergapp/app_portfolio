@@ -12,7 +12,8 @@
 const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
- * Get file with cities 
+ * @name getService
+ * @description Get file with cities
  * @function
  * @returns {Promise.<type_city[]>}  
  */
@@ -25,7 +26,8 @@ const getService = async () => {
     return JSON.parse(fileBuffer.toString());
 };
 /**
- * Get cities for given country
+ * @name getCities
+ * @description Get cities for given country
  * @function
  * @param {string|null} country 
  * @returns {Promise.<type_city[]>}
@@ -35,7 +37,8 @@ const getCities = async (country) => {
     return cities.filter((item) => item.iso2 == country);
 };
 /**
- * Get random city
+ * @name getCityRandom
+ * @description Get random city
  * @function
  * @returns {Promise.<type_city>}
  */
@@ -44,10 +47,11 @@ const getCityRandom = async () => {
     return cities[Math.floor(Math.random() * cities.length - 1)];
 };
 /**
- * Get searched cities
- * Filters searched and limit records 
- * Searches without diacritics and uses lower case
- * Uses localcompare as collation method when sorting
+ * @name getCitySearch
+ * @description Get searched cities
+ *              Filters searched and limit records 
+ *              Searches without diacritics and uses lower case
+ *              Uses localcompare as collation method when sorting
  * @function
  * @param {string} search 
  * @param {number} limit 

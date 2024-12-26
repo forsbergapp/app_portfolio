@@ -15,7 +15,8 @@ const { microserviceRouteMatch, microserviceUtilNumberValue, microserviceResultR
 const { registryMicroServiceServer } = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
- * Starts the server
+ * @name serverStart
+ * @description Starts the server
  * @function
  * @returns {Promise.<void>}
  */

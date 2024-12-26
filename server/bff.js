@@ -15,7 +15,8 @@
 const bffService = await import('./bff.service.js');
 
 /**
- * Backend for frontend (BFF) init for all methods
+ * @name bffInit
+ * @description Backend for frontend (BFF) init for all methods
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
@@ -30,7 +31,8 @@ const bffService = await import('./bff.service.js');
         res.end();
 };
 /**
- * Backend for frontend (BFF) start for get method
+ * @name bffStart
+ * @description Backend for frontend (BFF) start for get method
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
@@ -54,17 +56,18 @@ const bffService = await import('./bff.service.js');
     }
 };
 /**
- * Backend for frontend (BFF) common
+ * @name bffCommon
+ * @description Backend for frontend (BFF) common
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
- * returns {{host:string,
+ * @returns {{host:string,
  *          url:string,
  *          route_path:string,
  *          method:string,
  *          query:string,
- *          body:string,
- *          autohorization:string
+ *          body:server_server_req['body'],
+ *          authorization:string|null,
  *          ip:string,
  *          user_agent:string,
  *          accept_language:string,
@@ -90,7 +93,8 @@ const bffService = await import('./bff.service.js');
     };
  };
 /**
- * Backend for frontend (BFF) APP including assets, report and info pages
+ * @name bffApp
+ * @description Backend for frontend (BFF) APP including assets, report and info pages
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
@@ -104,7 +108,8 @@ const bffService = await import('./bff.service.js');
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) APP_DATA
+ * @name bffAppData
+ * @description Backend for frontend (BFF) APP_DATA
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -118,7 +123,8 @@ const bffService = await import('./bff.service.js');
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) APP_SIGNUP
+ * @name bffAppSignup
+ * @description Backend for frontend (BFF) APP_SIGNUP
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -132,7 +138,8 @@ const bffService = await import('./bff.service.js');
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) APP_ACCESS
+ * @name bffAppAccess
+ * @description Backend for frontend (BFF) APP_ACCESS
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -146,7 +153,8 @@ const bffService = await import('./bff.service.js');
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) APP_EXTERNAL
+ * @name bffAppExternal
+ * @description Backend for frontend (BFF) APP_EXTERNAL
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -160,7 +168,8 @@ const bffAppExternal = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) ADMIN
+ * @name bffAdmin
+ * @description Backend for frontend (BFF) ADMIN
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -175,7 +184,8 @@ const bffAppExternal = (req, res) =>{
 };
 
 /**
- * Backend for frontend (BFF) socket
+ * @name bffSocket
+ * @description Backend for frontend (BFF) socket
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -189,7 +199,8 @@ const bffSocket = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) IAM_ADMIN
+ * @name bffIAMAdmin
+ * @description Backend for frontend (BFF) IAM_ADMIN
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -203,7 +214,8 @@ const bffIAMAdmin = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) IAM_USER
+ * @name bffIAMUser
+ * @description Backend for frontend (BFF) IAM_USER
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
@@ -217,7 +229,8 @@ const bffIAMAdmin = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) IAM_PROVIDER
+ * @name bffIAMProvider
+ * @description Backend for frontend (BFF) IAM_PROVIDER
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res

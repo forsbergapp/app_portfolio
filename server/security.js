@@ -7,7 +7,8 @@ const { randomUUID,
         publicEncrypt, privateDecrypt} = await import('node:crypto');
 
 /**
- * Create random string
+ * @name securityCreateRandomString
+ * @description Create random string
  * @function
  * @returns {string}
  */
@@ -21,26 +22,31 @@ const { randomUUID,
 };
 
 /**
- * Creates random UUID
+ * @name securityUUIDCreate
+ * @description Creates random UUID
  * @function
  * @returns {string}
  */
 const securityUUIDCreate = () =>randomUUID();
 /**
- * Creates request id using UUID and removes '-'
+ * @name securityRequestIdCreate
+ * @description Creates request id using UUID and removes '-'
  * @function
  * @returns {string}
  */
 const securityRequestIdCreate = () =>randomUUID().replaceAll('-','');
 /**
- * Creates correlation id using MD5
+ * @name securityCorrelationIdCreate
+ * @description Creates correlation id using MD5
+ * @function
  * @param {string} text 
  * @returns {string}
  */
 const securityCorrelationIdCreate = text =>createHash('md5').update(text).digest('hex');
 
 /**
- * Creates secret using SHA256
+ * @name securitySecretCreate
+ * @description Creates secret using SHA256
  * @function
  * @param {boolean} extra           some databases requires extra '!' and random A-Z character
  * @param {number|null} max_length  some databases requires maximum length
@@ -63,7 +69,15 @@ const securitySecretCreate = (extra=false, max_length=null) =>{
             return createHash('sha256').update(securityCreateRandomString()).digest('hex');
 };
 /**
- * Creates password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ * @name securityPasswordCreate
+ * @description Creates password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ *              Uses parameters
+ *              CONFIG_SERVER
+ *                  SERVICE_IAM
+ *                      ADMIN_PASSWORD_ENCRYPTION_KEY
+ *              CONFIG_SERVER
+ *                  SERVICE_IAM
+ *                      ADMIN_PASSWORD_INIT_VECTOR
  * @function
  * @param {string} password 
  * @returns {Promise.<string>}
@@ -80,7 +94,15 @@ const securityPasswordCreate = async (password) => {
 };
 
 /**
- * Compares password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ * @name securityPasswordCompare
+ * @description Compares password for IAM using aes-256-cbc and base64, encryption key parameter and init vector parameter from server config
+ *              Uses parameters
+ *              CONFIG_SERVER
+ *                  SERVICE_IAM
+ *                      ADMIN_PASSWORD_ENCRYPTION_KEY
+ *              CONFIG_SERVER
+ *                  SERVICE_IAM
+ *                      ADMIN_PASSWORD_INIT_VECTOR
  * @function
  * @param {string} password 
  * @param {string} compare_password 
@@ -101,11 +123,12 @@ const securityPasswordCompare = async (password, compare_password) =>{
     }
 };
 /**
- * Creates key pair using 8192 bits giving 8192/8 - 11 = 1013 max characters length
- * to be used for external server communication when longer encrypted message must be used
- * function can take several seconds to execute
- * public : spki and pem format
- * private: pkcs8 and pem format
+ * @name securityKeyPairCreate
+ * @description Creates key pair using 8192 bits giving 8192/8 - 11 = 1013 max characters length
+ *              to be used for external server communication when longer encrypted message must be used
+ *              function can take several seconds to execute
+ *              public : spki and pem format
+ *              private: pkcs8 and pem format
  * @function
  * @returns {Promise.<{ publicKey:string, privateKey:string }>}
  */
@@ -131,7 +154,8 @@ const securityKeyPairCreate = async () => {
     });
 };
 /**
- * Encrypt with public key
+ * @name securityPublicEncrypt
+ * @description Encrypt with public key
  * @function
  * @param {string} publicKey 
  * @param {string} text 
@@ -139,7 +163,9 @@ const securityKeyPairCreate = async () => {
  */
 const securityPublicEncrypt = (publicKey, text) => publicEncrypt(publicKey,Buffer.from(text)).toString('base64');
 /**
- * Decrypt with private key
+ * @name securityPrivateDecrypt
+ * @description Decrypt with private key
+ * @function
  * @param {string} privateKey 
  * @param {string} text 
  * @returns {string}

@@ -17,7 +17,8 @@ const { registryMicroServiceServer } = await import(`file://${process.cwd()}/mic
 
 
 /**
- * Starts the server
+ * @name serverStart
+ * @description Starts the server
  * @function
  * @returns {Promise.<void>}
  */

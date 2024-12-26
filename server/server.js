@@ -13,7 +13,8 @@
  */
 const zlib = await import('node:zlib');
 /**
- * Sends ISO 20022 error format
+ * @name serverResponseErrorSend
+ * @description Sends ISO 20022 error format
  * @function
  * @param {server_server_res} res 
  * @param {number} http 
@@ -40,9 +41,10 @@ const zlib = await import('node:zlib');
     res.end();
 };
 /**
- * Get number value from request key
- * returns number or null for numbers
- * so undefined and '' are avoided sending argument to service functions
+ * @name serverUtilNumberValue
+ * @description Get number value from request key
+ *              returns number or null for numbers
+ *              so undefined and '' are avoided sending argument to service functions
  * @function
  * @param {server_server_req_id_number} param
  * @returns {number|null}
@@ -50,7 +52,9 @@ const zlib = await import('node:zlib');
  const serverUtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
 
  /**
-  * Compression of response for supported requests
+  * @name serverUtilCompression
+  * @description Compression of response for supported requests
+  * @function
   * @param {server_server_res['req']} req
   * @param {server_server_res} res
   */
@@ -304,9 +308,9 @@ const zlib = await import('node:zlib');
     }
 };
 
-
 /**
- * Calculate responsetime
+ * @name serverUtilResponseTime
+ * @description Calculate responsetime
  * @function
  * @param {server_server_res} res
  * @returns {number}
@@ -317,7 +321,8 @@ const serverUtilResponseTime = (res) => {
 };    
 
 /**
- * Returns filename/module used
+ * @name serverUtilAppFilename
+ * @description Returns filename/module used
  * @function
  * @param {string} module
  * @returns {string}
@@ -327,7 +332,8 @@ const serverUtilAppFilename = module =>{
     return module.substring(from_app_root);
 };
 /**
- * Returns function used
+ * @name serverUtilAppFunction
+ * @description Returns function used
  * @function
  * @param{server_server_error_stack} stack
  * @returns {string}
@@ -351,7 +357,8 @@ const serverUtilAppFunction = stack => {
     return functionName ?? '';
 };
 /**
- * Returns function row number from Error stack
+ * @name serverUtilAppLine
+ * @description Returns function row number from Error stack
  * @function
  * @returns {number}
  */
@@ -364,38 +371,35 @@ const serverUtilAppLine = () =>{
 };
 
 /**
- * 
- *  Gets Express app with following settings in this order
- *
- *	1.Middleware	JSON maximum size setting
- *	
- *  2.Routes	
- *	path	                                    method	middleware                                  controller      comment
- *  /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
- *                                                                                                                  used for shared libraries and open report url
- *	*	                                        all	                                                bffInit	        logs EventSource and response when closed, 
- *                                                                                                                  authenticates request and will end request if not passing controls,
- *                                                                                                                  sets headers, 
- *                                                                                                                  returns disallow for robots.txt and empty favicon.ico
- *	*	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled 
- *							                                                                                        and to admin subdomain if first time, 
- *							                                                                                        responds to SSL verification if enabled
- *  /bff/app_data/v1*                           all     iam.iamAuthenticateIdToken                  bffAppData
- *  /bff/app_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
- *  /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
- *  /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
- *  /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
- *  /bff/socket/v1*                             get     iam.iamAuthenticateSocket                   bffSocket
- *  /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
- *  /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
- *  /bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
- *	*	                                        get	                                                bffApp		    app asset
- *							                                                                                        common asset
- *							                                                                                        info page
- *							                                                                                        app
- *	
- * 3.Middleware error logging
- * 
+ * @name serverExpress
+ * @description Gets Express app with following settings in this order
+ *	            1.Middleware	JSON maximum size setting
+ *	            2.Routes	
+ *	            path	                                    method	middleware                                  controller      comment
+ *              /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
+ *                                                                                                                              used for shared libraries and open report url
+ *	            *	                                        all	                                                bffInit	        logs EventSource and response when closed, 
+ *                                                                                                                              authenticates request and will end request if not passing controls,
+ *                                                                                                                              sets headers, 
+ *                                                                                                                              returns disallow for robots.txt and empty favicon.ico
+ *	            *	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled 
+ *				            			                                                                                        and to admin subdomain if first time, 
+ *							                                                                                                    responds to SSL verification if enabled
+ *              /bff/app_data/v1*                           all     iam.iamAuthenticateIdToken                  bffAppData
+ *              /bff/app_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
+ *              /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
+ *              /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
+ *              /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
+ *              /bff/socket/v1*                             get     iam.iamAuthenticateSocket                   bffSocket
+ *              /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
+ *              /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
+ *              /bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
+ *	            *	                                        get	                                                bffApp		    app asset
+ *				        			                                                                                            common asset
+ *						            	                                                                                        info page
+ *							                                                                                                    app
+ *              3.Middleware error logging
+
  * @function
  * @returns {Promise<server_server_express>} app
  */
@@ -470,20 +474,21 @@ const serverUtilAppLine = () =>{
     return app;
 };
 /**
- * Server REST API routes
- * Validates if user has access to given resource
- * Validates using IAM token claims if path requires
- * Validates calls to circuitbreaker controlled microservices using client_id and client_secret defined for given app
- * Uses paths defined in app.route() in serverExpress() function
- * Returns single resource result format or ISO20022 format with either list header format or page header metadata
- * Returns HTML or  {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
- *  /app-module-report-queue-result
- *  /bff/admin/v1/app-module-report
- *  /bff/app/v1/app-module-report
- *  /bff/app/v1/app-module-module
+ * @name serverREST_API
+ * @description Server REST API routes
+ *              Validates if user has access to given resource
+ *              Validates using IAM token claims if path requires
+ *              Validates calls to circuitbreaker controlled microservices using client_id and client_secret defined for given app
+ *              Uses paths defined in app.route() in serverExpress() function
+ *              Returns single resource result format or ISO20022 format with either list header format or page header metadata
+ *              Returns HTML or {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
+ *              /app-module-report-queue-result
+ *              /bff/admin/v1/app-module-report
+ *              /bff/app/v1/app-module-report
+ *              /bff/app/v1/app-module-module
  * 
- * Returns status 401 if user has not accessed to given resource
- * Returns status 404 if route is not found
+ *              Returns status 401 if user has not accessed to given resource
+ *              Returns status 404 if route is not found
  * @function
  * @param {import('./types.js').server_server_routesparameters} routesparameters
  * @returns {Promise.<*>}
@@ -1427,9 +1432,10 @@ const serverUtilAppLine = () =>{
  };
 
 /**
- * Server start
- * Logs uncaughtException and unhandledRejection
- * Start http server and https server if enabled
+ * @name serverStart
+ * @description Server start
+ *              Logs uncaughtException and unhandledRejection
+ *              Start http server and https server if enabled
  * @function
  * @returns{Promise.<void>}
  */
