@@ -8,7 +8,8 @@
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
- * Get records for given appid
+ * @name get
+ * @description Get records for given appid
  * @function
  * @param {number} app_id
  * @param {server_server_res|null} res
@@ -23,9 +24,10 @@ const get = (app_id, res) =>{
 };
 
 /**
- * Add record
- * Table is designed to add one parameter in the same record
- * so update function is called  and returns same resource id
+ * @name post
+ * @description Add record
+ *              Table is designed to add one parameter in the same record
+ *              so update function is called  and returns same resource id
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -35,7 +37,8 @@ const get = (app_id, res) =>{
  */
 const post = async (app_id, resource_id, data, res) => update(app_id, resource_id, data, res).then(()=>{return {id:resource_id};}) ;
 /**
- * Update
+ * @name update
+ * @description Update
  * Table is designed to update one parameter in the same record
  * @function
  * @param {number} app_id
@@ -62,7 +65,8 @@ const update = async (app_id, resource_id, data, res) => {
 };
 
 /**
- * Delete
+ * @name deleteRecord
+ * @description Delete
  * @function
  * @param {number} app_id
  * @param {number} resource_id
