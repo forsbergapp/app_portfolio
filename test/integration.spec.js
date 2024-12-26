@@ -2,6 +2,13 @@
  * Test integration
  * @module test/integration.spec
  */
+/**
+ * @name describe
+ * @description describe: Integration test, setting FILE_DB cache
+ *              it: should return values when using ORM pattern for fileModelConfig
+ * @function
+ * @returns {void}
+ */
 describe('Integration test, setting FILE_DB cache', ()=> {
     it('should return values when using ORM pattern for fileModelConfig', async () =>{
         /**@type{import('../server/server.js')} */
@@ -22,6 +29,13 @@ describe('Integration test, setting FILE_DB cache', ()=> {
         expect(PORT).not.toBe(null);
     });
 });
+/**
+ * @name describe
+ * @description describe: Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps
+ *              it: should return values
+ * @function
+ * @returns {void}
+ */
 describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps', ()=> {
     it('should return values', async () =>{
         /**@type{import('../server/db/fileModelApp.js')} */
@@ -59,6 +73,13 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
         }
     });
 });
+/**
+ * @name describe
+ * @description describe: Integration test, microservice worldcities random city called from BFF and from all apps
+ *              it: should return values
+ * @function
+ * @returns {void}
+ */
 describe('Integration test, microservice worldcities random city called from BFF and from all apps', ()=> {    
     it('should return values ', async () =>{
         /**@type{import('../server/db/fileModelApp.js')} */
