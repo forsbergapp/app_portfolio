@@ -141,7 +141,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
             }
             case data.type=='MODULE_CODE':
             case data.type.startsWith('MODULE'):{
-                if (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server'))
+                if (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server')||data.doc.startsWith('/test'))
                     if (data.type=='MODULE_CODE')
                         return [await getFile(`${process.cwd()}${data.doc}.js`)];
                     else{
