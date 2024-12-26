@@ -1600,6 +1600,9 @@ body.rtl{
 	font-family: "Noto Sans Mono";
 	font-size: 0.9em;
 }
+.common_markdown_table_method{
+	margin-inline-start: 2em;
+}
 .common_markdown_table_row{
 	display: flex;
 	width: 100%;
