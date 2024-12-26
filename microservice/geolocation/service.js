@@ -14,7 +14,8 @@ const fs = await import('node:fs');
 const http = await import('node:http');
 
 /**
- * Returns empty geodata
+ * @name getGeodataEmpty
+ * @description Returns empty geodata
  * @function
  * @param {'IP'|'PLACE'} geotype 
  * @returns {*}
@@ -70,7 +71,8 @@ const getGeodataEmpty = (geotype) => {
 	}
 };
 /**
- * Returns cached geodata
+ * @name getCacheGeodata
+ * @description Returns cached geodata
  * @function
  * @param {'IP'|'PLACE'} cachetype 
  * @param {string|null} ip 
@@ -144,7 +146,8 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     
 };
 /**
- * Writes geodata cache
+ * @name writeCacheGeodata
+ * @description Writes geodata cache
  * @function
  * @param {'IP'|'PLACE'} cachetype 
  * @param {*} geodata 
@@ -169,7 +172,8 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
     }
 };
 /**
- * Returns geodata from http.request
+ * @name getGeodata
+ * @description Returns geodata from http.request
  * @function
  * @param {string} url 
  * @param {string} language 
@@ -201,7 +205,8 @@ const getGeodata = async (url, language) => {
     });
 };
 /**
- * Get place
+ * @name getPlace
+ * @description Get place
  * @function
  * @param {string} latitude
  * @param {string} longitude
@@ -224,7 +229,8 @@ const getGeodata = async (url, language) => {
 	}
 };
 /**
- * Get geodata for ip
+ * @name getIp
+ * @description Get geodata for ip
  * @function
  * @param {string} ip
  * @param {string} accept_language

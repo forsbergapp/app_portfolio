@@ -4,15 +4,17 @@
 const {REGISTRY_CONFIG} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 /**
- * Circuit breaker
- * Uses circuit states CLOSED, HALF, OPEN
- * Origin   Timeout
- * server   1 second
- * admin    1 minute * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES or default 60 minutes
- * app      1 second * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS or default 20 seconds
+ * @name circuitBreakerClass
+ * @description Circuit breaker
+ *              Uses circuit states CLOSED, HALF, OPEN
+ *              Origin   Timeout
+ *              server   1 second
+ *              admin    1 minute * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES or default 60 minutes
+ *              app      1 second * CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS or default 20 seconds
  * 
- * Failure threshold    CONFIG.CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS or default 5 seconds
- * Cooldown period      CONFIG.CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS or default 10 seconds
+ *              Failure threshold    CONFIG.CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS or default 5 seconds
+ *              Cooldown period      CONFIG.CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS or default 10 seconds
+ * @class
  */
 class circuitBreakerClass {
     constructor() {
@@ -23,7 +25,9 @@ class circuitBreakerClass {
         this.requestTimetout = REGISTRY_CONFIG?REGISTRY_CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS:20;
     }
     /**
-     * Call microservice
+     * @name MicroServiceCall
+     * @description Call microservice
+     * @method
      * @param {function} function_httpRequest
      * @param {boolean} admin 
      * @param {string} path 
@@ -61,14 +65,18 @@ class circuitBreakerClass {
         }
     }
     /**
-     * Circuitbreaker on success
+     * @name onSuccess
+     * @description Circuitbreaker on success
+     * @method
      * @param {string} service
      */
     onSuccess(service){
         this.initState(service);
     }
     /**
-     * Circuitbreaker on failure
+     * @name onFailure
+     * @description Circuitbreaker on failure
+     * @method
      * @param {string} service 
      */
     onFailure(service){
@@ -80,7 +88,9 @@ class circuitBreakerClass {
         }
     }
     /**
-     * Circuitbreaker can request
+     * @name canRequest
+     * @description Circuitbreaker can request
+     * @method
      * @param {string} service
      * @returns 
      */
@@ -96,7 +106,9 @@ class circuitBreakerClass {
         return false;
     }
     /**
-     * Circuitbreaker init
+     * @name initState
+     * @description Circuitbreaker init
+     * @method
      * @param {string} service 
      */
     initState(service){

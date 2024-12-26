@@ -16,7 +16,8 @@ const { registryMicroServiceServer } = await import(`file://${process.cwd()}/mic
 
 
 /**
- * Starts the server
+ * @name serverStart
+ * @description Starts the server
  * @function
  * @returns {Promise.<void>}
  */
@@ -29,7 +30,7 @@ const serverStart = async () =>{
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE BATCH PORT ${request.port} `);
 	});
-	service.start_jobs();
+	service.startJobs();
 	process.on('uncaughtException', (err) =>{
 		console.log(err);
 	});
