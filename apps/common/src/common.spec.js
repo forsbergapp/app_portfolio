@@ -9,6 +9,8 @@ const ORIGINAL_FILTER = Array.prototype.filter;
  * @name describe
  * @description describe: Spy test, commonApp as called from bff
  *              it: should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_TOKEN at least 1 time each when requesting app
+ *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with APP_SECRET and APP_TOKEN
+ *              afterAll:   restores Array.prototype.filter
  * @function
  * @returns {void}
  */

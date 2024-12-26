@@ -78,5 +78,11 @@
         "menu":"8 Modules Server",
         "type":"MODULE_SERVER",
         "menu_sub":null
+    },
+    {
+        "id":9,
+        "menu":"9 Modules Test",
+        "type":"MODULE_TEST",
+        "menu_sub":null
     }
 ]
