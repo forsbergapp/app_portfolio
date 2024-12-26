@@ -20,7 +20,8 @@ const REGISTRY_CONFIG = await fileFsRead('CONFIG_MICROSERVICE').then((/**@type{s
 const REGISTRY_CONFIG_SERVICES = await fileFsRead('CONFIG_MICROSERVICE_SERVICES').then((/**@type{server_db_file_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 /**
- * Reads config services
+ * @name registryConfigServices
+ * @description Reads config services
  * @function
  * @param {string} servicename
  * @returns {microservice_config_service_record}
@@ -30,7 +31,8 @@ const registryConfigServices = (servicename) =>{
 };
 
 /**
- * Get microservice server port and http or https for given microservice
+ * @name registryMicroServiceServer
+ * @description Get microservice server port and http or https for given microservice
  * @function
  * @param {string} service 
  * @returns {Promise.&lt;{ server:{createServer:function},
@@ -62,7 +64,8 @@ const registryMicroServiceServer = async (service) =>{
 };
 
 /**
- * Get microservice API version
+ * @name registryMicroserviceApiVersion
+ * @description Get microservice API version
  * @function
  * @param {'GEOLOCATION'|'WORLDCITIES'|'MAIL'} service 
  * @returns {number}

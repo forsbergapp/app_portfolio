@@ -169,7 +169,7 @@ Oracle uses number to</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line45">line 45</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line39">line 39</a>
     </div></div></dd>
     
 
@@ -285,7 +285,7 @@ Oracle uses number to</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line365">line 365</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line372">line 372</a>
     </div></div></dd>
     
 
@@ -313,7 +313,7 @@ Oracle uses number to</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbPoolClose<span class="signature">(pool_id, db_use, dba)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbPoolClose<span class="signature">(pool_id, db_use, dba)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
     
 
     
@@ -466,7 +466,7 @@ Oracle uses number to</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line240">line 240</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line234">line 234</a>
     </div></div></dd>
     
 
@@ -626,7 +626,7 @@ have changed parameters and without having to restart server</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line69">line 69</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line60">line 60</a>
     </div></div></dd>
     
 
@@ -833,7 +833,7 @@ have changed parameters and without having to restart server</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line272">line 272</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line267">line 267</a>
     </div></div></dd>
     
 
@@ -893,7 +893,7 @@ have changed parameters and without having to restart server</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbPoolStart<span class="signature">(dbparameters)</span><span class="type-signature"> &rarr; {Promise.&lt;null>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbPoolStart<span class="signature">(dbparameters)</span><span class="type-signature"> &rarr; {Promise.&lt;null>}</span></div>
     
 
     
@@ -901,9 +901,9 @@ have changed parameters and without having to restart server</p>
 
 
 <div class="description">
-    <p>Pool start</p>
-<p>parameters:</p>
-<p>use:                     1-5
+    <p>Pool start
+parameters:
+use:                     1-5
 pool_id:                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
 port:                    port,
 host:                    host,
@@ -911,18 +911,21 @@ dba:                     1/0,
 user:                    username,
 password:                password,
 database:                database,</p>
-<p>db 1 + 2 parameters      see MariaDB/MySQL documentation
-charset:                 character set,
-connnectionLimit:        connection limit</p>
-<p>db 3 parameters          see PostgreSQL documentation
-connectionTimeoutMillis: connection timout milliseconds
-idleTimeoutMillis:       idle timeout milliseconds
-max:                     max</p>
-<p>db 4 parameters          see Oracle documentation
-connectString:           connectstring
-poolMin:                 pool min
-poolMax:                 pool max
-poolIncrement:           pool increment</p>
+<pre><code>           db 1 + 2 parameters      see MariaDB/MySQL documentation
+           charset:                 character set,
+           connnectionLimit:        connection limit
+
+           db 3 parameters          see PostgreSQL documentation
+           connectionTimeoutMillis: connection timout milliseconds
+           idleTimeoutMillis:       idle timeout milliseconds
+           max:                     max
+
+           db 4 parameters          see Oracle documentation
+           connectString:           connectstring
+           poolMin:                 pool min
+           poolMax:                 pool max
+           poolIncrement:           pool increment
+</code></pre>
 </div>
 
 
@@ -1015,7 +1018,7 @@ poolIncrement:           pool increment</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line109">line 109</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line80">line 80</a>
     </div></div></dd>
     
 
@@ -1069,7 +1072,7 @@ poolIncrement:           pool increment</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbSQL<span class="signature">(pool_id, db_use, sql, parameters, dba)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbSQL<span class="signature">(pool_id, db_use, sql, parameters, dba)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
     
 
     
@@ -1084,13 +1087,15 @@ Returns new inserted id from table if used for given column in the parameter
 DB_CLOB
 Sets CLOB attributes if used
 contains array of columns with CLOB datatype</p>
-<p>All databases return same metadata keys
-INSERT:
-result.insertId
-INSERT, DELETE, UPDATE:
-result.affectedRows</p>
-<p>Conversion functions are implemented to support same parameter syntax inside SQL for all databases
-and supports ':' before parameter in the SQL</p>
+<pre><code>           All databases return same metadata keys
+           INSERT:
+           result.insertId
+           INSERT, DELETE, UPDATE:
+           result.affectedRows 
+
+           Conversion functions are implemented to support same parameter syntax inside SQL for all databases
+           and supports ':' before parameter in the SQL
+</code></pre>
 </div>
 
 
@@ -1288,7 +1293,7 @@ and supports ':' before parameter in the SQL</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line533">line 533</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line511">line 511</a>
     </div></div></dd>
     
 
@@ -1351,24 +1356,30 @@ and supports ':' before parameter in the SQL</p>
 
 <div class="description">
     <p>Converts SQL syntax and parameters depending what database is used</p>
-<p>common syntax used and also used by Oracle that should be converted:
-SQL:        UPDATE [table] SET [column] = :title&quot;
-parameters: { title: &quot;value&quot; }</p>
-<p>postgreSql syntax:   SQL:        UPDATE [table] SET [column] = $1&quot;
-parameters: [0, &quot;value&quot;]
-uses unique index with $1, $2 etc, parameter can be used several times
-example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
-use indexorder received from parameters</p>
-<p>MariaDB +
-mySql syntax:        SQL:        UPDATE [table] SET [column] = ?&quot;
-parameters: [&quot;value&quot;]
-solution implemented here is to set values in the sql
-using connection?.escape(params[key]) syntax
-to avoid SQL injection and without having to use ? syntax
-that requires specific parameter order but a parameter key
-is only allowed to occur once in this implementation</p>
-<p>SQLite syntax:       SQL:        UPDATE [table] SET [column] = $title&quot;
-parameters: [$title, &quot;value&quot;]</p>
+<pre><code>         common syntax used and also used by Oracle that should be converted:
+                 SQL:        UPDATE [table] SET [column] = :title&quot; 
+                 parameters: { title: &quot;value&quot; }
+
+         postgreSql syntax:   
+                 SQL:        UPDATE [table] SET [column] = $1&quot;
+                 parameters: [0, &quot;value&quot;]
+                 uses unique index with $1, $2 etc, parameter can be used several times
+                 example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+                 use indexorder received from parameters
+
+         MariaDB + mySql syntax:
+                 SQL:        UPDATE [table] SET [column] = ?&quot;
+                 parameters: [&quot;value&quot;]
+                 solution implemented here is to set values in the sql
+                 using connection?.escape(params[key]) syntax
+                 to avoid SQL injection and without having to use ? syntax
+                 that requires specific parameter order but a parameter key
+                 is only allowed to occur once in this implementation
+
+         SQLite syntax:       
+                 SQL:        UPDATE [table] SET [column] = $title&quot;
+                 parameters: [$title, &quot;value&quot;]
+</code></pre>
 </div>
 
 
@@ -1528,7 +1539,7 @@ parameters: [$title, &quot;value&quot;]</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line335">line 335</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line308">line 308</a>
     </div></div></dd>
     
 
@@ -1731,7 +1742,7 @@ affectedRows   returns number of updated, inserted or deleted rows</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line436">line 436</a>
+        <a href="server_db_db.js.html">server/db/db.js</a>, <a href="server_db_db.js.html#line434">line 434</a>
     </div></div></dd>
     
 

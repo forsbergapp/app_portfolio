@@ -15,12 +15,13 @@
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
- * Get records for given appid
- * Returns translation in found order
- * 1 = requested locale
- * 2 = language and region/script of locale containing language, region/script and country, zh-hant from zh-hant-cn
- * 3 = language of locale containing language and region/country/script ex zh from zh-hant, en from en-us or sr from sr-cyrl
- * 4 = default language
+ * @name get
+ * @description Get records for given appid
+ *              Returns translation in found order
+ *              1 = requested locale
+ *              2 = language and region/script of locale containing language, region/script and country, zh-hant from zh-hant-cn
+ *              3 = language of locale containing language and region/country/script ex zh from zh-hant, en from en-us or sr from sr-cyrl
+ *              4 = default language
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id

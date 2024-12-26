@@ -28,19 +28,25 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                                 &lt;div id='menu_close' class='common_dialogue_button common_icon'>&lt;/div>
                                 &lt;div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
-                                        `&lt;div data-id='${row.id}' data-type='${row.type}'>
-                                            &lt;div >${row.menu}&lt;/div>
-                                            ${row.menu_sub?.map(row_sub=>
-                                                `&lt;div class='common_link' href='${row_sub.doc}'>${row_sub.menu}&lt;/div>`
-                                                ).join('')}
+                                        `&lt;div class='app_menu_data' data-id='${row.id}' data-type='${row.type}'>
+                                            &lt;div class='app_menu'>${row.menu}&lt;/div>
+                                            &lt;div class='app_submenu'>
+                                                ${row.menu_sub?.map(row_sub=>
+                                                    `&lt;div class='common_link' href='${row_sub.doc}'>${row_sub.menu}&lt;/div>`
+                                                    ).join('')
+                                                }
+                                            &lt;/div>
                                         &lt;/div>
-
                                         `
                                     ).join('')}
                                 &lt;/div>
                                 &lt;div id='nav_content_jsdoc'>
-                                    &lt;div id>JSDoc&lt;/div>
-                                    ${props.jsdoc_menu}
+                                    &lt;div class='app_menu_data' data-type='JSDOC'>
+                                        &lt;div class='app_menu'>JSDOC&lt;/div>
+                                        &lt;div class='app_submenu'>
+                                            ${props.jsdoc_menu}
+                                        &lt;/div>
+                                    &lt;/div>
                                 &lt;/div>
                             &lt;/div>
                             &lt;div id='content'>&lt;/div>`;

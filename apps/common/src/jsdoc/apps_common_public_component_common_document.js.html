@@ -11,7 +11,7 @@
  * @module apps/common/component/common_document
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, commonDocumentType, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 
@@ -42,7 +42,7 @@ const template = props =>`  &lt;div class='common_document_header' style='backgr
  *                      app_name:string,
  *                      href:string,
  *                      title:string,
- *                      type:'APP'|'GUIDE'|'JSDOC'|'JSDOC_CODE'|'JSDOC_MODULE'
+ *                      type:commonDocumentType
  *                      },
  *          methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -64,7 +64,7 @@ const component = async props => {
                             .then(result=>JSON.parse(result).rows[0])
                             .catch(()=>null);
     switch (props.data.type){
-        case 'JSDOC_CODE':{
+        case 'MODULE_CODE':{
             classname = 'common_markdown code';
             content = content
                 .replaceAll('\r\n','\n').split('\n')
@@ -86,8 +86,9 @@ const component = async props => {
                                                 .map((/**@type{string}*/row,/**@type{number}*/index)=>
                                                     `&lt;div data-line='${index+1}' class='code_line'>${index+1}&lt;/div>&lt;div data-line='${index+1}' class='code_text'>${row.replaceAll('&lt;','&amp;lt;').replaceAll('>','&amp;gt;')}&lt;/div>`).join('\n') ?? '';
                 //highlight selected line if # is used in link
-                if (props.data.href.split('#')[1])
+                if (props.data.href.split('#')[1])   
                     Array.from(content_element.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
+                 
                 content = content_element.innerHTML;
             }
             else{
@@ -99,12 +100,19 @@ const component = async props => {
             break;
         }
         default:{
-            //APP, GUIDE, JSDOC_MODULE
+            //APP, GUIDE, MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
             classname = 'common_markdown';
         }
     }   
+    const onMounted = () =>{
+        if (props.data.href.split('#')[1]){
+            //set focus on highlighted row
+            Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].setAttribute('tabindex',0);
+            Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`))[0].focus();
+        }
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template({app_logo:props.data.app_logo,
