@@ -13,14 +13,16 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 const {fileFsDBLogGet, fileFsDir, fileFsDBLogPost} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**
- * Log date format
+ * @name logDate
+ * @description Log date format
  * @function
  * @returns {string}
  */
 const logDate = () => new Date().toISOString();
 
 /**
- * Write log
+ * @name post
+ * @description Write log
  * @function
  * @param {server_log_scope} logscope 
  * @param {server_log_level} loglevel 
@@ -39,7 +41,8 @@ const logDate = () => new Date().toISOString();
     });
 };
 /**
- * Log request error
+ * @name postRequestE
+ * @description Log request error
  * @param {server_server_req} req 
  * @param {number} statusCode 
  * @param {string|number|object|Error|null} statusMessage 
@@ -72,7 +75,8 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
     });
 };
 /**
- * Log request Info
+ * @name postRequestI
+ * @description Log request Info
  * @function
  * @param {server_server_req} req 
  * @param {number} statusCode 
@@ -161,7 +165,8 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     });
 };
 /**
- * Log server
+ * @name postServer
+ * @description Log server
  * @function
  * @param {server_log_level} log_level 
  * @param {string} logtext 
@@ -178,7 +183,8 @@ const postServer = async (log_level, logtext) =>{
     });
 };
 /**
- * Log server Info
+ * @name postServerI
+ * @description Log server Info
  * @function
  * @param {string} logtext 
  * @returns {Promise.<null>}
@@ -189,7 +195,8 @@ const postServerI = async (logtext)=>{
     });
 };
 /**
- * Log server error
+ * @name postServerE
+ * @description Log server error
  * @function
  * @param {string} logtext 
  * @returns {Promise.<null>}
@@ -200,7 +207,8 @@ const postServerE = async (logtext)=>{
     });
 };
 /**
- * Log DB Info
+ * @name postDBI
+ * @description Log DB Info
  * @function
  * @param {number|null} app_id 
  * @param {number|null} db 
@@ -248,7 +256,8 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
     });
 };
 /**
- * Log DB Error
+ * @name postDBE
+ * @description Log DB error
  * @function
  * @param {number|null} app_id 
  * @param {number|null} db 
@@ -272,7 +281,8 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
     });
 };
 /**
- * Log service Info
+ * @name postServiceI
+ * @description Log service Info
  * @function
  * @param {number} app_id 
  * @param {string} service 
@@ -315,7 +325,8 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
     });
 };
 /**
- * Log service Error
+ * @name postServiceE
+ * @description Log service error
  * @function
  * @param {number} app_id 
  * @param {string} service 
@@ -337,7 +348,8 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
     });
 };
 /**
- * Log App
+ * @name postApp
+ * @description Log app
  * @function
  * @param {number} app_id 
  * @param {'INFO'|'ERROR'} level_info 
@@ -363,7 +375,8 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
     });
 };
 /**
- * Log App Info
+ * @name postAppI
+ * @description Log app info
  * @function
  * @param {number} app_id 
  * @param {string} app_filename 
@@ -382,7 +395,8 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
     });
 };
 /**
- * Logg App Error
+ * @name postAppE
+ * @description Log app error
  * @function
  * @param {number} app_id 
  * @param {string} app_filename 
@@ -398,8 +412,9 @@ const postAppE = async (app_id, app_filename, app_function_name, app_line, logte
 };
 
 /**
- * Get logs with page navigation support using limit and offset parameters
- * and returns in ISO20022 format
+ * @name get
+ * @description Get logs with page navigation support using limit and offset parameters
+ *              and returns in ISO20022 format
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -533,18 +548,17 @@ const get = async (app_id, query) => {
     
 };
 /**
- * Get status codes
- * 
- *  Status codes
- *  Informational responses (100 – 199)
- *  Successful responses    (200 – 299)
- *  Redirection messages    (300 – 399)
- *  Client error responses  (400 – 499)
- *  Server error responses  (500 – 599)
- *
- *  nodejs codes:
- *  100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
- *  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+ * @name getStatusCodes
+ * @description Get status codes
+ *                  Status codes
+ *                  Informational responses (100 – 199)
+ *                  Successful responses    (200 – 299)
+ *                  Redirection messages    (300 – 399)
+ *                  Client error responses  (400 – 499)
+ *                  Server error responses  (500 – 599)
+ *                  NodeJS codes:
+ *                  100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
+ *                  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
  * @function
  * @returns {Promise.<object>}
  */
@@ -556,7 +570,8 @@ const getStatusCodes = async () =>{
     
 };
 /**
- * Get log stat
+ * @name getStat
+ * @description Get log stat
  * @function
  * @param {number} app_id
  * @param {*} query
@@ -684,7 +699,8 @@ const getStat = async (app_id, query) => {
     return logstat;
 };
 /**
- * Get log files
+ * @name getFiles
+ * @description Get log files
  * @function
  * @returns{Promise.<[server_log_result_logFilesGet]|[]>}
  */

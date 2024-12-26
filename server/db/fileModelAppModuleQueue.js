@@ -8,7 +8,8 @@
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, SLASH, fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
- * Get records for given appid
+ * @name get
+ * @description Get records for given appid
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -24,8 +25,9 @@ const get = (app_id, resource_id, res) =>{
 };
 
 /**
- * Get result for given resource_id
- * (bff controls if file exists)
+ * @name getResult
+ * @description Get result for given resource_id
+ *              (bff controls if file exists)
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -35,7 +37,8 @@ const getResult = async (app_id, resource_id) => {
     return {STATIC:true, SENDFILE:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${resource_id}.html`, SENDCONTENT:null};
 };
 /**
- * Add record
+ * @name post
+ * @description Add record
  * @function
  * @param {number} app_id 
  * @param {{type:'REPORT',
@@ -75,7 +78,8 @@ const post = async (app_id, data, res) => {
     }
 };
 /**
- * postResult(parameters.app_id, id, result);
+ * @name postResult
+ * @description Post result
  * @function
  * @param {number} app_id
  * @param {number} id
@@ -88,7 +92,8 @@ const postResult = async (app_id, id, result) =>{
     await fs.promises.writeFile(process.cwd() + filepath, result,  'utf8');
 };
 /**
- * Update
+ * @name update
+ * @description Update
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -128,7 +133,8 @@ const update = async (app_id, resource_id, data, res) => {
 };
 
 /**
- * Delete
+ * @name deleteRecord
+ * @description Delete
  * @function
  * @param {number} app_id
  * @param {number} resource_id

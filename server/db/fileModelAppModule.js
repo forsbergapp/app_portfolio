@@ -7,7 +7,8 @@
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
- * Get records for given appid
+ * @name get
+ * @description Get records for given appid
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
@@ -24,7 +25,8 @@ const get = (app_id, resource_id, data_app_id, res) => {
 };
 
 /**
- * Add record
+ * @name post
+ * @description Add record
  * @function
  * @param {number} app_id 
  * @param {*} data
@@ -57,7 +59,8 @@ const post = async (app_id, data, res) => {
     }
 };
 /**
- * Update record
+ * @name update
+ * @description Update record
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -93,7 +96,8 @@ const update = async (app_id, resource_id, data, res) => {
 };
 
 /**
- * Delete
+ * @name deleteRecord
+ * @description Delete
  * @function
  * @param {number} app_id
  * @param {number} resource_id

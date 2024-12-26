@@ -7,7 +7,8 @@
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBPost, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
- * Get user 
+ * @name get
+ * @description Get user
  * @function
  * @param {number} app_id
  * @returns {server_db_file_iam_app_token[]}
@@ -15,7 +16,8 @@ const {fileCommonRecordNotFound, fileDBPost, fileDBGet} = await import(`file://$
 const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
 
 /**
- * Add record
+ * @name post
+ * @description Add record
  * @function
  * @param {number} app_id 
  * @param {*} data

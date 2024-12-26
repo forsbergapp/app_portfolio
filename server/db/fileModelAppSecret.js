@@ -7,7 +7,8 @@
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileFsRead, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**
- * Get records for given appid
+ * @name get
+ * @description Get records for given appid
  * @function
  * @param {number|null} app_id
  * @param {server_server_res|null} res
@@ -22,14 +23,17 @@ const get = (app_id, res) => {
 };
 
 /**
- * Get records from file
+ * @name getFile
+ * @description Get records from file
+ * @function
  * @param {number} app_id
  * @returns {Promise.<server_db_file_app_secret>}
  */
 const getFile = async app_id => fileFsRead('APP_SECRET').then(result=>result.file_content.filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0]);
 
 /**
- * Add record
+ * @name post
+ * @description Add record
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -39,7 +43,8 @@ const getFile = async app_id => fileFsRead('APP_SECRET').then(result=>result.fil
  */
 const post = async (app_id, resource_id, data, res) => update(app_id, resource_id, data, res).then(()=>{return {id:resource_id};}) ;
 /**
- * Update
+ * @name update
+ * @description Update
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -65,7 +70,8 @@ const update = async (app_id, resource_id, data, res) => {
 };
 
 /**
- * Delete
+ * @name deleteRecord
+ * @description Delete
  * @function
  * @param {number} app_id
  * @param {number} resource_id
