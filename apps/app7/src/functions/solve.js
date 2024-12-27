@@ -152,8 +152,10 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 		if (data.cube_currentstate && data.cube_currentstate == '' )
 			return [];
 		else{
+			/**@type{import('../../../../server/iam.service.js')} */
+			const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
 			res.statusCode = 400;
-			throw '⛔';
+			throw iamUtilMesssageNotAuthorized();
 		}
 	}
 };

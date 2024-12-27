@@ -22,6 +22,9 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
 
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    
+    /**@type{import('../../../../server/iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
@@ -50,7 +53,7 @@ const payment_request_get_status = async (app_id, data, user_agent, ip, locale, 
     const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
     if (result_commonBFE.error){
         res.statusCode = result_commonBFE.error.http;
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
     }
     else{
         /**

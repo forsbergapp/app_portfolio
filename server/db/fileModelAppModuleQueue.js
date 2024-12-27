@@ -7,6 +7,7 @@
 
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, SLASH, fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+
 /**
  * @name get
  * @description Get records for given appid
@@ -73,8 +74,10 @@ const post = async (app_id, data, res) => {
         });
     }
     else{
+        /**@type{import('../iam.service.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
         res.statusCode = 400;
-        throw '⛔';    
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 /**
@@ -126,9 +129,11 @@ const update = async (app_id, resource_id, data, res) => {
                 throw fileCommonRecordNotFound(res);
         });
     else{
+        /**@type{import('../iam.service.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
         if (res)
             res.statusCode = 404;
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 

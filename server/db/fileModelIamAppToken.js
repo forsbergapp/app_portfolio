@@ -6,6 +6,7 @@
 
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBPost, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+
 /**
  * @name get
  * @description Get user
@@ -24,6 +25,8 @@ const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
  * @returns {Promise.<{affectedRows:number}>}
  */
 const post = async (app_id, data) => {
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     //check required attributes
     if (app_id!=null &&
         data.app_id != null &&
@@ -55,10 +58,10 @@ const post = async (app_id, data) => {
             });
         }
         else
-            throw '⛔';    
+            throw iamUtilMesssageNotAuthorized();
     }
     else
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
 };
 
 export {get, post};

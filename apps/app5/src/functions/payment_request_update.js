@@ -31,6 +31,9 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
+    /**@type{import('../../../../server/iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     const customer = await dbModelAppDataResourceMaster.get(app_id, null, 
                             new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=CUSTOMER`),
                             false)
@@ -122,7 +125,7 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
    }
    else{
        res.statusCode = 404;
-       throw '⛔';
+       throw iamUtilMesssageNotAuthorized();
    }
 };
 export default payment_request_update;
