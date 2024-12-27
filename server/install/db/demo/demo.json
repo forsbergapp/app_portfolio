@@ -308,7 +308,7 @@
                                                                                         "origin":"Initial deposit",
                                                                                         "amount_deposit":2000000000,
                                                                                         "amount_withdrawal":null},
-                                                                         "app_update_secret":[{"TIMESTAMP":"DATE_ISO"}]
+                                                                         "app_update_secret":[{"timestamp":"DATE_ISO"}]
                                                                         }]
                                                 }
                             ]
@@ -377,7 +377,7 @@
                                                                                         "origin":"Initial deposit",
                                                                                         "amount_deposit":2000000,
                                                                                         "amount_withdrawal":null},
-                                                                         "app_update_secret":[{"TIMESTAMP":"DATE_ISO"}]
+                                                                         "app_update_secret":[{"timestamp":"DATE_ISO"}]
                                                                         }]
                                                 }
                             ]
@@ -425,7 +425,7 @@
                                                                                         "origin":"Initial deposit",
                                                                                         "amount_deposit":1000,
                                                                                         "amount_withdrawal":null},
-                                                                         "app_update_secret":[{"TIMESTAMP":"DATE_ISO"}]
+                                                                         "app_update_secret":[{"timestamp":"DATE_ISO"}]
                                                                         }]
                                                 }
                             ]
