@@ -208,6 +208,7 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
  *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
+ *                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
  *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -279,7 +280,7 @@ const component = async props => {
                                                                                                             'url()';
         } else {
             //User not found
-            props.methods.commonMessageShow('ERROR', '20305', null, null, null, props.data.common_app_id);
+            props.methods.commonMessageShow('INFO', null, null, 'message_text',props.methods.commonMesssageNotAuthorized(), props.data.common_app_id);
         }
     };
     return {

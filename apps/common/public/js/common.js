@@ -241,13 +241,13 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
         const fileExtension = fileName.split('.').pop();
         if (!allowedExtensions.includes(fileExtension)){
             //File type not allowed
-            commonMessageShow('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
+            commonMessageShow('INFO', null, null, null,commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
             resolve(null);
         }
         else
             if (fileSize > COMMON_GLOBAL.image_file_max_size){
                 //File size too large
-                commonMessageShow('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
+                commonMessageShow('INFO', null, null, null,commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
                 resolve(null);
             }
             else {
@@ -1166,6 +1166,13 @@ const commonMessageShow = async (message_type, code, function_event, text_class=
         path:           '/common/component/common_dialogue_message.js'});
 };
 /**
+ * @name commonMesssageNotAuthorized
+ * @description Returns not authorized message
+ * @function
+ * @returns {string}
+ */
+const commonMesssageNotAuthorized = () => '⛔';
+/**
  * @name commonDialoguePasswordNewClear
  * @description Dialogue password new clear
  * @function
@@ -2018,7 +2025,7 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                         COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.add('common_input_error');
                         COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
-                        commonMessageShow('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
+                        commonMessageShow('INFO', null, null, 'message_text',commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
@@ -2765,6 +2772,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                    methods:    {
                               commonFFB:commonFFB,
                                commonMessageShow:commonMessageShow,
+                               commonMesssageNotAuthorized:commonMesssageNotAuthorized,
                                commonMiscFormatJsonDate:commonMiscFormatJsonDate
                                },
                    path:       '/common/component/common_dialogue_iam_edit.js'})
@@ -3026,6 +3034,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 methods:    {
                                            commonFFB:commonFFB,
                                             commonMessageShow:commonMessageShow,
+                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized,
                                             commonMiscFormatJsonDate:commonMiscFormatJsonDate
                                             },
                                 path:       '/common/component/common_dialogue_iam_edit.js'})
@@ -3898,6 +3907,7 @@ export{/* GLOBALS*/
        commonLovShow,
        /* MESSAGE*/
        commonMessageShow,
+       commonMesssageNotAuthorized,
        /* PROFILE */
        commonProfileDetail, 
        commonProfileFollowLike,

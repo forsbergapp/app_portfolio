@@ -60,6 +60,13 @@ const {default:jwt} = await import('jsonwebtoken');
 const iamRequestRateLimiterCount = {};
 
 /**
+ * @name iamUtilMesssageNotAuthorized
+ * @description Returns not authorized message
+ * @function
+ * @returns {string}
+ */
+const iamUtilMesssageNotAuthorized = () => '⛔';
+/**
  * @name iamUtilDecode
  * @description IAM util decode base64 in query
  * @function
@@ -139,10 +146,10 @@ const iamUtilTokenExpiredSet = async (app_id, authorization, ip, res ) =>{
     if (bff){
         res.statusCode = status;
         res.statusMessage = reason;
-        return '⛔';
+        return iamUtilMesssageNotAuthorized();
     }
     else
-        return serverResponseErrorSend(res, status, null, '⛔', null, reason);
+        return serverResponseErrorSend(res, status, null, iamUtilMesssageNotAuthorized(), null, reason);
 };
 
 /**
@@ -299,27 +306,15 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
     const { updateUserVerificationCode, userGetUsername} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./db/dbModelUserAccountApp.js')} */
     const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
-    /**@type{import('./db/dbModelAppSetting.js')} */
-    const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
     return new Promise((resolve, reject)=>{           
-        /**
-         * 
-         * @param {number} app_id 
-         */
-        const login_error = async (app_id) =>{
-            return getDisplayData(   app_id,
-                new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20300}`))
-            .then(result_message=>result_message[0].display_data)
-            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        };
 
        /**@type{server_db_sql_parameter_user_account_userLogin} */
        const data_login =    {   username: data.username};
        userGetUsername(app_id, data_login)
        .then(result_login=>{
            /**@type{server_db_file_iam_user_login_insert} */
-           const data_body = { iam_user_id: result_login[0].id,
+           const data_body = { iam_user_id: result_login[0]?.id,
                                app_id:      app_id,
                                user:        data.username,
                                db:          serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
@@ -413,9 +408,8 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                        //Username or password not found
                        fileModelIamUserLogin.post(app_id, data_body)
                        .then(()=>{
-                           res.statusCode = 400;
-                           login_error(app_id)
-                           .then((/**@type{string}*/text)=>reject(text));
+                           res.statusCode = 401;
+                           reject(iamUtilMesssageNotAuthorized());
                        })
                        .catch((/**@type{server_server_error}*/error)=>reject(error));
                    }
@@ -424,9 +418,8 @@ const iamAuthenticateUser = async (app_id, iam, ip, user_agent, accept_language,
                //User not found
                fileModelIamUserLogin.post(app_id, data_body)
                .then(()=>{
-                   res.statusCode = 404;
-                   login_error(app_id)
-                   .then((/**@type{string}*/text)=>reject(text));
+                   res.statusCode = 401;
+                   reject(iamUtilMesssageNotAuthorized());
                })
                .catch((/**@type{server_server_error}*/error)=>reject(error));
            }
@@ -954,9 +947,6 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
     /**@type{import('./db/dbModelUserAccountEvent.js')} */
     const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
-    /**@type{import('./db/dbModelAppSetting.js')} */
-    const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
-
     const result_user = await getUserByUserId(app_id, resource_id, query, res);
     
     /**@type{server_db_sql_result_user_account_event_getLastUserEvent[]}*/
@@ -1044,24 +1034,14 @@ const iamAuthenticateUserUpdate = async (app_id, resource_id, ip, user_agent, ho
                     res.statusCode=400;
                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                     //invalid password
-                    getDisplayData(  app_id,
-                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
-                    .then(result_message=>{
-                        reject(result_message[0].display_data);
-                    })
-                    .catch((/**@type{server_server_error}*/error)=>reject(error));
+                    reject(iamUtilMesssageNotAuthorized());
                 }
             });
         } 
         else {
             //user not found
             res.statusCode=404;
-            getDisplayData(  app_id,
-                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
-            .then(result_message=>{
-                reject(result_message[0].display_data);
-            })
-            .catch((/**@type{server_server_error}*/error)=>reject(error));
+            reject(iamUtilMesssageNotAuthorized());
         }
     });
 };
@@ -1082,9 +1062,6 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
     /**@type{import('./security.js')} */
     const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);
     
-    /**@type{import('./db/dbModelAppSetting.js')} */
-    const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
-
     /**@type{import('./db/dbModelUserAccount.js')} */
     const { getUserByUserId, userDelete, userGetPassword} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
 
@@ -1129,12 +1106,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                                     res.statusMessage = 'invalid password attempt for user id:' + resource_id;
                                     res.statusCode = 400;
                                     //invalid password
-                                    getDisplayData(  app_id,
-                                                            new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20401}`))
-                                    .then(result_message=>{
-                                        reject(result_message[0].display_data);
-                                    })
-                                    .catch((/**@type{server_server_error}*/error)=>reject(error));
+                                    reject(iamUtilMesssageNotAuthorized());
                                 } 
                             });
                             
@@ -1142,12 +1114,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
                         else{
                             //user not found
                             res.statusCode = 404;
-                            getDisplayData(  app_id,
-                                                    new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
-                            .then(result_message=>{
-                                reject(result_message[0].display_data);
-                            })
-                            .catch((/**@type{server_server_error}*/error)=>reject(error));
+                            reject(iamUtilMesssageNotAuthorized());
                         }
                     })
                     .catch((/**@type{server_server_error}*/error)=>reject(error));
@@ -1156,11 +1123,7 @@ const iamAuthenticateUserDelete = async (app_id, resource_id, query, data, res) 
             else{
                 //user not found
                 res.statusCode = 404;
-                getDisplayData(  app_id,
-                                        new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&setting_type=MESSAGE&value=${20305}`))
-                .then(result_message=>{
-                    reject(result_message[0].display_data);
-                });
+                reject(iamUtilMesssageNotAuthorized());
             }
         })
         .catch((/**@type{server_server_error}*/error)=>reject(error));
@@ -1840,7 +1803,7 @@ const iamUserGet = async (app_id, id, res) =>{
         return {...user, ...{last_logintime:iamUserGetLastLogin(app_id, id)}};
     else{
         res.statusCode = 404;
-        throw '⛔';    
+        throw iamUtilMesssageNotAuthorized();    
     }
 };
 /**
@@ -1921,7 +1884,8 @@ const iamUserLogout = async (app_id, authorization, ip, user_agent, accept_langu
             res: res});
 };
 
-export{ iamUtilDecode,
+export{ iamUtilMesssageNotAuthorized,
+        iamUtilDecode,
         iamUtilTokenExpired,
         iamUtilResponseNotAuthorized,
         iamAuthenticateAdmin,

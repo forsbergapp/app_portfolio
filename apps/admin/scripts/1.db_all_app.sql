@@ -43,10 +43,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 --	20100-20199
 --	db constraints info/error
 --	20200-20299
---	app info/error
---	20300-20399
---	node rest api info/error
---	20400-20499
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20100','👤 5-100!',1,1,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20101','ABC!',1,1,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20102','ABC!',1,1,NULL,NULL);
@@ -59,13 +55,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20200','📧⛝!',1,1,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20201','👤⛝!',1,1,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20203','👤⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20300','⛔!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20305','⛔!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20306','⛔!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20307','⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20308','⛝!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20400','?!',1,1,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'MESSAGE','20401','⛔!',1,1,NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','arab','arab',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'NUMBER_SYSTEM','arabext','arabext',NULL,NULL,NULL,NULL);
