@@ -93,7 +93,8 @@ const template = props =>`  ${props.app_id == props.common_app_id?
  *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown'],
- *                      commonMessageShow:CommonModuleCommon['commonMessageShow']
+ *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
+ *                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -125,7 +126,7 @@ const component = async props => {
             return user.identity_provider_id!=null;
         else {
             //User not found
-            props.methods.commonMessageShow('ERROR', '20305', null, null, null, props.data.common_app_id);
+            props.methods.commonMessageShow('INFO', null, null, 'message_text',props.methods.commonMesssageNotAuthorized(), props.data.common_app_id);
             return null;
         }
     };
