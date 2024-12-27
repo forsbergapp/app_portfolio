@@ -351,7 +351,7 @@ const bffStart = async (req, res) =>{
                                     }
                                 }
                                 else{
-                                    return_result(200, result_service);
+                                    return_result(200, result_service ?? '');
                                 }
                             }
                         }

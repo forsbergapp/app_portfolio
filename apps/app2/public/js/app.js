@@ -108,7 +108,8 @@ const appEventClick = event => {
                                         commonFFB:common.commonFFB,
                                         commonComponentRender:common.commonComponentRender,
                                         commonUserSessionCountdown:common.commonUserSessionCountdown,
-                                        commonMessageShow:common.commonMessageShow
+                                        commonMessageShow:common.commonMessageShow,
+                                        commonMesssageNotAuthorized:common.commonMesssageNotAuthorized
                                         },
                             path:       '/common/component/common_dialogue_user_menu.js'})
                         .then(()=>
