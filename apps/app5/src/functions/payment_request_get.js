@@ -33,6 +33,9 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
     const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
+    /**@type{import('../../../../server/iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     const payment_request = await dbModelAppDataResourceMaster.get(app_id, null, 
                                     new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=PAYMENT_REQUEST`),
                                     false)
@@ -76,12 +79,12 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
             }
         else{
             res.statusCode = 404;
-            throw '⛔';
+            throw iamUtilMesssageNotAuthorized();
         }
     }
     else{
         res.statusCode = 404;
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 export default payment_request_get;

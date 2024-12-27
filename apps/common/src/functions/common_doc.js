@@ -19,6 +19,8 @@
  * @returns {Promise.<[string]>}
  */
 const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
+    /**@type{import('../../../../server/iam.service.js')} */
+    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     /**
      *  Get file and add given suffix to path
      * @param {string} path
@@ -30,7 +32,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 .then(file=>file.toString())
                 .catch(()=>{
                     res.statusCode = 400;
-                    throw '⛔';
+                    throw iamUtilMesssageNotAuthorized();
                 });
     };
     //check if valid document request
@@ -38,7 +40,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
         ((data.type.toUpperCase()=='GUIDE' ||data.type.toUpperCase()=='APP'||data.type.toUpperCase()=='JSDOC') && data?.doc == null) ||
         data?.doc && (data.doc.indexOf('\\')>-1||data.doc.indexOf('..')>-1 ||data.doc.indexOf(' ')>-1)){
         res.statusCode = 400;
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
     }
     else{
         /**@type{import('../../../../server/db/fileModelApp.js')} */
@@ -169,7 +171,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                     }
                 else{
                     res.statusCode = 400;
-                    throw '⛔';
+                    throw iamUtilMesssageNotAuthorized();
                 }
             }
             case data.type=='JSDOC':{
@@ -177,7 +179,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
             }
             default:{
                 res.statusCode = 400;
-                throw '⛔';
+                throw iamUtilMesssageNotAuthorized();
             }
         }
     }

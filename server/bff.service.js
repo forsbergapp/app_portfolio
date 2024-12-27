@@ -114,7 +114,7 @@ const bffInit = async (req, res) =>{
         res.statusMessage = ' ';
         res.writeHead(res.statusCode, {
             'Content-Type': 'text/plain;charset=utf-8',
-            'Content-length':'⛔'.length
+            'Content-length':0
         });
         return {reason:'REQUEST'};
     }
@@ -384,6 +384,8 @@ const bffStart = async (req, res) =>{
  * @returns {Promise<(*)>}
  */
  const bffServer = async (app_id, bff_parameters) => {
+    /**@type{import('./iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     return new Promise((resolve, reject) => {
         const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
         if (app_id !=null && bff_parameters.endpoint){
@@ -410,7 +412,7 @@ const bffStart = async (req, res) =>{
         else{
             //required parameters not provided
             reject({
-                message: '⛔'
+                message: iamUtilMesssageNotAuthorized()
             });
         }
     });

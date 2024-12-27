@@ -6,6 +6,7 @@
 
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBPost, fileDBGet, fileDBUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
+
 /**
  * @name get
  * @description Get user 
@@ -25,11 +26,11 @@ const get = (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resourc
  * @returns {Promise.<{affectedRows:number}>}
  */
 const post = async (app_id, data) =>{
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     //check required attributes
     if (app_id!=null &&
-        data.iam_user_id!=null &&
         data.app_id != null &&
-        data.user != null &&
         data.res != null &&
         data.ip != null){
         //security check that token is not used already
@@ -64,12 +65,12 @@ const post = async (app_id, data) =>{
         }
         else{
             //token already used, user can not login
-            throw '⛔';
+            throw iamUtilMesssageNotAuthorized();
         }
             
     }
     else
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
 }; 
 
 /**
@@ -82,6 +83,8 @@ const post = async (app_id, data) =>{
  * @returns {Promise.<{affectedRows:number}>}
  */
 const update = async (app_id, resource_id, data) =>{
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     //check required attributes
     if (app_id!=null && resource_id != null){
         /**@type{server_db_file_iam_user_login} */
@@ -98,10 +101,10 @@ const update = async (app_id, resource_id, data) =>{
                 throw fileCommonRecordNotFound(null);    
         }
         else
-            throw '⛔';
+            throw iamUtilMesssageNotAuthorized();
     }
     else
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
 };
 
 export {get, post, update};
