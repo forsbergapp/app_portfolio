@@ -266,16 +266,16 @@ body {
 }
 #app .css_spinner::before,
 #content_title .css_spinner::before{
-    background-color: var(--common_app_color_white) !important;
+    background-color: var(--common_app_color_white);
 }
 #nav{
     background-color: var(--common_app_color_blue3);
-    color: var(--common_app_color_light) !important;
+    color: var(--common_app_color_light);
 }
-#nav a{
-    color: var(--common_app_color_light) !important;
+a {
+    color: var(--common_app_color_light);
 }
-.a {
+#content a {
     color: var(--common_app_color_blue3);
 }
 .common_markdown_code,
