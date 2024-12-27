@@ -2676,7 +2676,10 @@ const commonMicroserviceGeolocationIp = async () => {
 const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
     commonComponentRender({
         mountDiv:   'common_module_leaflet_search_list_wrap',
-        data:       {search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent},
+        data:       {
+                    data_app_id:COMMON_GLOBAL.common_app_id,
+                    search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent
+                    },
         methods:    {
                     click_function:event_function,
                    commonFFB:commonFFB

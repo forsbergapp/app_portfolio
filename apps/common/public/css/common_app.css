@@ -1730,7 +1730,7 @@ body.rtl{
 .common_module_leaflet_search_list_col{
 	display:block;
 	width: calc(100% - 2px);
-	height: 1.25em;
+	height: 2em;
 }
 .common_module_leaflet_search_list_col:nth-child(1),
 .common_module_leaflet_search_list_col:nth-child(4),

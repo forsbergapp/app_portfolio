@@ -253,20 +253,22 @@ const commonGeodata = async parameters =>{
     }
     else{
         /**@type{server_bff_parameters}*/
-        const parametersBFF = { endpoint:parameters.endpoint,
+        const parametersBFF = { endpoint:'APP_DATA',
                                 host:null,
-                                url:'/worldcities/city-random',
-                                route_path:'/worldcities/city-random',
-                                method:'GET', 
+                                url:'/bff/app_data/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                                route_path:'/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                                method:'POST', 
                                 query:'',
-                                body:{},
+                                body:{data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
                                 authorization:null,
                                 ip:parameters.ip, 
                                 user_agent:parameters.user_agent, 
                                 accept_language:parameters.accept_language,
                                 /**@ts-ignore */
-                                res:null};
-        const result_city = await bffServer(parameters.app_id, parametersBFF).catch((/**@type{server_server_error}*/error)=>{throw error;});
+                                res:{}};
+        const result_city = await bffServer(parameters.app_id, parametersBFF)
+                                    .then(result=>result.rows)
+                                    .catch((/**@type{server_server_error}*/error)=>{throw error;});
         result_geodata.latitude =   result_city.lat;
         result_geodata.longitude=   result_city.lng;
         result_geodata.place    =   result_city.city + ', ' + result_city.admin_name + ', ' + result_city.country;

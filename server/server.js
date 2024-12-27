@@ -1389,24 +1389,6 @@ const serverUtilAppLine = () =>{
                             .then(result=>iso_return_message(result, true)));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/worldcities/city', method:'GET'}):{
-                    resolve(call_microservice(  routesparameters.app_id,
-                                                `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, 
-                                                URI_query + `&limit=${serverUtilNumberValue(fileModelAppParameter.get(COMMON_APP_ID??0, routesparameters.res)[0].common_app_limit_records.value)}`)
-                            .then(result=>iso_return_message(result, false)));
-                    break;
-                }
-                case route({url:'/bff/app_data/v1/worldcities/city-random', method:'GET'})||
-                    (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/worldcities/city-random'):{
-                    resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query)
-                            .then(result=>iso_return_message(result, true)));
-                    break;
-                }
-                case route({url:`/bff/app_data/v1/worldcities/country/${resource_id_string}`, method:'GET', required:true}):{
-                    resolve(call_microservice(  routesparameters.app_id, `/worldcities/v${registryMicroserviceApiVersion('WORLDCITIES')}${routesparameters.route_path}`, URI_query)
-                            .then(result=>iso_return_message(result, false)));
-                    break;
-                }
                 case routesparameters.route_path=='/mail/sendemail' && routesparameters.endpoint.startsWith('SERVER'):{
                     //mail can only be sent from server
                     resolve(call_microservice(  routesparameters.app_id, `/mail/v${registryMicroserviceApiVersion('MAIL')}${routesparameters.route_path}`, URI_query));
