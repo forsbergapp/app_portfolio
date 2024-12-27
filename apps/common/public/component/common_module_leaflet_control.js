@@ -280,8 +280,11 @@ const component = async props => {
      */
     const map_city = async country_code =>{
         if (country_code!=null){
-             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
-            const cities = await props.methods.commonFFB({path:`/worldcities/country/${country_code.toUpperCase()}`, method:'GET', authorization_type:'APP_DATA'}).then(result=>JSON.parse(result).rows);
+            /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
+            const cities = await props.methods.commonFFB({path:'/app-module-function/COMMON_WORLDCITIES_COUNTRY', 
+                method:'POST', 
+                authorization_type:'APP_DATA', 
+                body:{country:country_code.toUpperCase(), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
             
             //sort admin name + city
             cities.sort((a, b) => {

@@ -33,7 +33,7 @@ import '../server/db/db.spec.js';
  *  should return values when using ORM pattern for fileModelConfig
  * Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps
  *  should return values
- * Integration test, microservice worldcities random city called from BFF and from all apps
+ * Integration test, server function worldcities random city called from BFF and from all apps
  *  should return values 
  */
 import './integration.spec.js';
