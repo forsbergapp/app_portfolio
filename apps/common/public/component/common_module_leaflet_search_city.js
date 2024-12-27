@@ -42,6 +42,7 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
+ *                      data_app_id:number,
  *                      search:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -54,8 +55,11 @@ const template = props =>`  <div id='common_module_leaflet_search_list'>
  *                      template:string}>}
  */
 const component = async props => {
-    const records = props.data.search==''?[]:await props.methods.commonFFB({path:'/worldcities/city', query:`search=${encodeURI(props.data.search)}`, method:'GET', authorization_type:'APP_DATA'})
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const cities = props.data.search==''?[]:await props.methods.commonFFB({path:'/app-module-function/COMMON_WORLDCITIES_CITY', 
+        method:'POST', 
+        authorization_type:'APP_DATA', 
+        body:{search:encodeURI(props.data.search), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
+
     const onMounted = async () =>{
         if (props.data.search.length>0)
             props.methods.COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_list')['data-function'] = props.methods.click_function;
@@ -64,7 +68,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({records:records})
+        template: template({records:cities})
     };
 };
 export default component;
