@@ -408,7 +408,8 @@ const serverUtilAppLine = () =>{
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-
+    /**@type{import('./iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     const {default:express} = await import('express');
     
     /**@type{server_server_express} */
@@ -466,7 +467,7 @@ const serverUtilAppLine = () =>{
             serverResponseErrorSend( res, 
                 err?.name=='PayloadTooLargeError'?400:500,
                 null, 
-                err?.name=='PayloadTooLargeError'?'⛔':'SERVER ERROR', 
+                err?.name=='PayloadTooLargeError'?iamUtilMesssageNotAuthorized():'SERVER ERROR', 
                 null, 
                 null);
         });
@@ -1412,7 +1413,6 @@ const serverUtilAppLine = () =>{
                     break;
                 }
                 default:{
-                    
                     if (resource_id_iamUtilResponseNotAuthorized){
                         routesparameters.res.statusMessage = 'resource id not authorized';
                         routesparameters.res.statusCode =401;
@@ -1421,7 +1421,7 @@ const serverUtilAppLine = () =>{
                         routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
                         routesparameters.res.statusCode =404;
                     }
-                    reject('⛔');
+                    reject(iam_service.iamUtilMesssageNotAuthorized());
                     break;
                 }
             }

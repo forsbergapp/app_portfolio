@@ -7,6 +7,7 @@
 
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+
 /**
  * @name get
  * @description Get user 
@@ -45,8 +46,10 @@ const post = async (app_id, data, res) => {
         });
     }
     else{
+        /**@type{import('../iam.service.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
         res.statusCode = 400;
-        throw '⛔';    
+        throw iamUtilMesssageNotAuthorized();
     }
 
 };
@@ -61,7 +64,8 @@ const post = async (app_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const update = async (app_id, resource_id, data, res) => {
-   
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     /**@type{server_db_file_iam_control_user_agent}*/
     const record = get(app_id, resource_id, null)[0];
     if (record){
@@ -78,17 +82,17 @@ const update = async (app_id, resource_id, data, res) => {
                 });
             else{
                 res.statusCode = 404;
-                throw '⛔';    
+                throw iamUtilMesssageNotAuthorized();
             }
         }
         else{
             res.statusCode = 400;
-            throw '⛔';        
+            throw iamUtilMesssageNotAuthorized();
         }
     }
     else{
         res.statusCode = 404;
-        throw '⛔';    
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 

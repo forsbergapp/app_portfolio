@@ -265,7 +265,7 @@ const iamAuthenticateAdmin = async (app_id, iam, authorization, ip, user_agent, 
             if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')))
                 return check_user(1, user.id, username, type); 
             else
-                return check_user(0, user.id, username, type);
+                return check_user(0, user?.id, username, type);
         }
     }
     else{

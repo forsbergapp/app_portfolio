@@ -62,8 +62,10 @@ const post = async (app_id, data, res) => {
         });
     }
     else{
+        /**@type{import('../iam.service.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
         res.statusCode = 400;
-        throw '⛔';    
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 /**
@@ -77,6 +79,9 @@ const post = async (app_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const update = async (app_id, resource_id, data, res) => {
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     if (app_id!=null){
         /**@type{server_db_file_app} */
         const data_update = {};
@@ -114,12 +119,12 @@ const update = async (app_id, resource_id, data, res) => {
             });
         else{
             res.statusCode = 404;
-            throw '⛔';    
+            throw iamUtilMesssageNotAuthorized();
         }
     }
     else{
         res.statusCode = 400;
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 
