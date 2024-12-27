@@ -3008,6 +3008,40 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         /* Dialogue user menu*/
+                        case 'common_iam_avatar':
+                        case 'common_iam_avatar_logged_in':
+                        case 'common_iam_avatar_avatar':
+                        case 'common_iam_avatar_avatar_img':
+                        case 'common_iam_avatar_logged_out':
+                        case 'common_iam_avatar_default_avatar':{
+                            await commonComponentRender({
+                                mountDiv:   'common_dialogue_user_menu',
+                                data:       {
+                                            app_id:COMMON_GLOBAL.app_id,
+                                            user_account_id:COMMON_GLOBAL.user_account_id,
+                                            common_app_id:COMMON_GLOBAL.common_app_id,
+                                            data_app_id:COMMON_GLOBAL.common_app_id,
+                                            username:COMMON_GLOBAL.user_account_username,
+                                            token_exp:COMMON_GLOBAL.token_exp,
+                                            token_iat:COMMON_GLOBAL.token_iat,
+                                            token_timestamp: COMMON_GLOBAL.token_timestamp,
+                                            admin:COMMON_GLOBAL.iam_user_name,
+                                            user_locale:COMMON_GLOBAL.user_locale,
+                                            user_timezone:COMMON_GLOBAL.user_timezone,
+                                            user_direction:COMMON_GLOBAL.user_direction,
+                                            user_arabic_script:COMMON_GLOBAL.user_arabic_script
+                                            },
+                                methods:    {
+                                            commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
+                                            commonFFB:commonFFB,
+                                            commonComponentRender:commonComponentRender,
+                                            commonUserSessionCountdown:commonUserSessionCountdown,
+                                            commonMessageShow:commonMessageShow,
+                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized
+                                            },
+                                path:       '/common/component/common_dialogue_user_menu.js'});
+                            break;
+                        }
                         case 'common_dialogue_user_menu_username':{
                             commonComponentRemove('common_dialogue_user_menu');
                             await commonProfileShow();

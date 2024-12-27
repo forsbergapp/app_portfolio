@@ -1085,35 +1085,7 @@ const appEventClick = event => {
                 case 'common_iam_avatar_avatar_img':
                 case 'common_iam_avatar_logged_out':
                 case 'common_iam_avatar_default_avatar':{
-                    common.commonComponentRender({
-                                        mountDiv:   'common_dialogue_user_menu',
-                                        data:       {
-                                                    app_id:common.COMMON_GLOBAL.app_id,
-                                                    user_account_id:common.COMMON_GLOBAL.user_account_id,
-                                                    common_app_id:common.COMMON_GLOBAL.common_app_id,
-                                                    data_app_id:common.COMMON_GLOBAL.common_app_id,
-                                                    username:common.COMMON_GLOBAL.user_account_username,
-                                                    token_exp:common.COMMON_GLOBAL.token_exp,
-                                                    token_iat:common.COMMON_GLOBAL.token_iat,
-                                                    token_timestamp: common.COMMON_GLOBAL.token_timestamp,
-                                                    admin:common.COMMON_GLOBAL.iam_user_name,
-                                                    admin_only:common.COMMON_GLOBAL.admin_only,
-                                                    user_locale:common.COMMON_GLOBAL.user_locale,
-                                                    user_timezone:common.COMMON_GLOBAL.user_timezone,
-                                                    user_direction:common.COMMON_GLOBAL.user_direction,
-                                                    user_arabic_script:common.COMMON_GLOBAL.user_arabic_script
-                                                    },
-                                        methods:    {
-                                                    commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
-                                                   commonFFB:common.commonFFB,
-                                                    commonComponentRender:common.commonComponentRender,
-                                                    commonUserSessionCountdown:common.commonUserSessionCountdown,
-                                                    commonMessageShow:common.commonMessageShow,
-                                                    commonMesssageNotAuthorized:common.commonMesssageNotAuthorized
-                                                    },
-                                        path:       '/common/component/common_dialogue_user_menu.js'})
-
-                        .then(()=>common.commonComponentRender(
+                    common.commonComponentRender(
                                         {mountDiv:  'common_dialogue_user_menu_app_theme',
                                         data:       null,
                                         methods:    {
@@ -1121,7 +1093,7 @@ const appEventClick = event => {
                                                     commonComponentRender:common.commonComponentRender, 
                                                     app_theme_update:common.commonMiscPreferencesPostMount
                                                     },
-                                        path:'/common/component/common_dialogue_user_menu_app_theme.js'}));
+                                        path:'/common/component/common_dialogue_user_menu_app_theme.js'});
                     break;
                 }
                 default:{
