@@ -475,6 +475,234 @@ const serverUtilAppLine = () =>{
     return app;
 };
 /**
+ * @name serverJs
+ * @description Same as serverExpress but without Express
+ * @function
+ * @returns {Promise<*>}
+ */
+const serverJs = async () => {
+    /**@type{import('./db/fileModelLog.js')} */
+    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('./iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
+    /**@type{import('./iam.js')} */
+    const iam = await import(`file://${process.cwd()}/server/iam.js`);
+
+    /**@type{import('./bff.js')} */
+    const { bffApp, bffAppData, bffAppSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+        bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bff.js`);
+
+    /**
+     * @param {server_server_req} req
+     * @param {server_server_res} res
+     * @returns {Promise.<*>}
+     */
+    const app = async (req, res)=>{
+        /**
+         * Routes request emulating Express  route() function
+         * @param {server_server_req} req
+         * @param {server_server_res} res
+         * @returns {Promise.<*>}
+         */
+        const bffRoute= async (req, res) =>{
+            //REST API 
+                //URI syntax implemented:
+                //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
+                //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
+                switch (true){
+                    case (req.path.startsWith('/bff/app/v1/app-module') && req.method == 'GET'):{
+                        req.route.path = '/bff/app/v1/app-module*';
+                        bffApp(req, res);
+                        break;
+                    }
+                    case req.path.startsWith('/bff/app_data/v1'):{
+                        req.route.path = '/bff/app_data/v1*';
+                        await iam.iamAuthenticateIdToken(req, res, () =>
+                            bffAppData(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/app_signup/v1') &&req.method=='POST':{
+                        req.route.path = '/bff/app_signup/v1*';
+                        await iam.iamAuthenticateIdTokenRegistration(req, res, () =>
+                                bffAppSignup(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/app_access/v1') :{
+                        req.route.path = '/bff/app_access/v1*';
+                        await iam.iamAuthenticateAccessToken(req, res, () =>
+                            bffAppAccess(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/app_external/v1/app-module-function') && req.method=='POST':{
+                        req.route.path = '/bff/app_external/v1/app-module-function*';
+                        iam.iamAuthenticateExternal(req, res, () =>
+                            bffAppExternal(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/app_admin/v1') :{
+                        req.route.path = '/bff/app_admin/v1*';
+                        await iam.iamAuthenticateAccessTokenAdmin(req, res, () =>
+                            bffAdmin(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/socket/v1') && req.method=='GET':{
+                        req.route.path = '/bff/socket/v1*';
+                        iam.iamAuthenticateSocket(req, res, () =>
+                            bffSocket(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
+                        req.route.path = '/bff/iam_admin/v1/server-iam-login';
+                        await iam.iamAuthenticateAdmin(req, res, () =>
+                            bffIAMAdmin(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/iam_user/v1') && req.method=='POST':{
+                        req.route.path = '/bff/iam_user/v1*';
+                        await iam.iamAuthenticateUser(req, res, () =>
+                            bffIAMUser(req, res)
+                        );
+                        break;
+                    }
+                    case req.path.startsWith('/bff/iam_provider/v1') && req.method=='POST':{
+                        req.route.path = '/bff/iam_provider/v1*';
+                        await iam.iamAuthenticateProvider(req, res, () =>
+                            bffIAMProvider(req, res)
+                        );
+                        break;
+                    }
+                    case req.method=='GET':{
+                        req.route.path = '*';
+                        //app asset, common asset, info page, report and app
+                        bffApp(req,res);
+                        break;
+                    }
+                    default:{
+                        serverResponseErrorSend( res, 
+                            400,
+                            null, 
+                            iamUtilMesssageNotAuthorized(), 
+                            null, 
+                            null);
+                    }
+                }
+        };
+        //set variables as set in Express
+        req.path = req.url;
+        req.originalUrl = req.url;
+        req.route = {path:''};
+        const read_body = async () =>{
+            return new Promise((resolve,reject)=>{
+                if (req.headers['content-type'] =='application/json'){
+                    let body= '';
+                    /**@ts-ignore */
+                    req.on('data', chunk =>{
+                        body += chunk.toString();
+                    });
+                    /**@ts-ignore */
+                    req.on('end', ()=>{
+                        try {
+                            req.body = JSON.parse(body);
+                            resolve(null);
+                        } catch (error) {
+                            /**@ts-ignore */
+                            req.body = {};
+                            reject(null);
+                        }
+                        
+                    });
+                }
+                else{
+                    /**@ts-ignore */
+                    req.body = {};
+                    resolve(null);
+                }
+            });
+            
+        };
+        await read_body();
+        // check JSON maximum size, parameter uses megabytes (MB)
+        if (req.body && JSON.stringify(req.body).length/1024/1024 > 
+                (serverUtilNumberValue((fileModelConfig.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
+            //log error
+            fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
+                serverResponseErrorSend( res, 
+                    400,
+                    null, 
+                    iamUtilMesssageNotAuthorized(), 
+                    null, 
+                    null);
+            });
+        }
+        else{
+            /**@ts-ignore */
+            req.query = req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
+                        .substring(req.path.indexOf('?')+1)))
+                        .reduce((query, param)=>{
+                            const key = {[param[0]] : decodeURIComponent(param[1])};
+                            return {...query, ...key};
+                        }, {}):null;
+            req.ip = req.socket.remoteAddress;
+            res.status = (/**@type{number}*/code) =>{
+                res.statusCode = code;
+            };
+            res.type = (/**@type{string}*/type)=>{
+                res.setHeader('Content-Type', type);
+            };
+            res.send = (/**@type{*}*/result) =>{
+                if (res.getHeader('Content-Type')==undefined)
+                    res.type('text/html; charset=utf-8');
+                //res.type('application/json');
+                res.write(result);
+                res.end();
+            };
+            res.sendFile = async (/**@type{*}*/path) =>{
+                const fs = await import('node:fs');
+                const readStream = fs.createReadStream(path);
+                readStream.on ('error', streamErr =>{
+                    streamErr;
+                    res.writeHead(500);
+                    res.end(iamUtilMesssageNotAuthorized());
+                });
+                /**@ts-ignore */
+                readStream.pipe(res);
+            };
+            /**@type{import('./bff.service.js')} */
+            const bffService = await import('./bff.service.js');
+            const resultbffInit = await bffService.bffInit(req, res);
+            if (resultbffInit.reason == null){
+                const resultbffStart = await bffService.bffStart(req, res);
+                switch (resultbffStart.reason){
+                    case 'REDIRECT':{
+                        res.redirect(resultbffStart.redirect);
+                        break;
+                    }
+                    case 'SEND':{
+                        res.end();
+                        break;
+                    }
+                    default:{
+                        return bffRoute(req, res);
+                    }
+                }
+            }
+            else
+                res.end();
+        }
+    };
+    return app;
+};
+/**
  * @name serverREST_API
  * @description Server REST API routes
  *              Validates if user has access to given resource
@@ -1447,9 +1675,8 @@ const serverStart = async () =>{
     try {
         await fileModelConfig.configInit();
         await dbModelDatabase.dbStart();
-        //Get express app with all configurations
-        /**@type{server_server_express}*/
-        const app = await serverExpress();
+        //Get framework JS or Express
+        const app = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'FRAMEWORK')) ==1?await serverJs():await serverExpress();
         socketIntervalCheck();
         //START HTTP SERVER
         /**@ts-ignore*/

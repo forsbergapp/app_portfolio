@@ -10,6 +10,7 @@
         {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the tempory path for Letsencrypt using certbot"},
         {"JSON_LIMIT": "10MB", "COMMENT": ""},
         {"APP_COMMON_APP_ID": "0", "COMMENT": "admin and common app id"},
+        {"FRAMEWORK": "1", "COMMENT": "1=JS,2=Express"},
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"}
     ],
     "SERVICE_IAM":[
