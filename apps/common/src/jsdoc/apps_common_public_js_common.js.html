@@ -248,13 +248,13 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
         const fileExtension = fileName.split('.').pop();
         if (!allowedExtensions.includes(fileExtension)){
             //File type not allowed
-            commonMessageShow('ERROR', '20307', null,null, null, COMMON_GLOBAL.common_app_id);
+            commonMessageShow('INFO', null, null, null,commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
             resolve(null);
         }
         else
             if (fileSize > COMMON_GLOBAL.image_file_max_size){
                 //File size too large
-                commonMessageShow('ERROR', '20308', null, null, null, COMMON_GLOBAL.common_app_id);
+                commonMessageShow('INFO', null, null, null,commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
                 resolve(null);
             }
             else {
@@ -1173,6 +1173,13 @@ const commonMessageShow = async (message_type, code, function_event, text_class=
         path:           '/common/component/common_dialogue_message.js'});
 };
 /**
+ * @name commonMesssageNotAuthorized
+ * @description Returns not authorized message
+ * @function
+ * @returns {string}
+ */
+const commonMesssageNotAuthorized = () => '⛔';
+/**
  * @name commonDialoguePasswordNewClear
  * @description Dialogue password new clear
  * @function
@@ -2025,7 +2032,7 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                         COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.add('common_input_error');
                         COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
-                        commonMessageShow('ERROR', '20306', null, null, null, COMMON_GLOBAL.common_app_id);
+                        commonMessageShow('INFO', null, null, 'message_text',commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
@@ -2676,7 +2683,10 @@ const commonMicroserviceGeolocationIp = async () => {
 const commonMicroserviceWorldcitiesSearch = async (event_function) =>{
     commonComponentRender({
         mountDiv:   'common_module_leaflet_search_list_wrap',
-        data:       {search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent},
+        data:       {
+                    data_app_id:COMMON_GLOBAL.common_app_id,
+                    search:COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').textContent
+                    },
         methods:    {
                     click_function:event_function,
                    commonFFB:commonFFB
@@ -2772,6 +2782,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                    methods:    {
                               commonFFB:commonFFB,
                                commonMessageShow:commonMessageShow,
+                               commonMesssageNotAuthorized:commonMesssageNotAuthorized,
                                commonMiscFormatJsonDate:commonMiscFormatJsonDate
                                },
                    path:       '/common/component/common_dialogue_iam_edit.js'})
@@ -3007,6 +3018,40 @@ const commonEvent = async (event_type,event=null) =>{
                             break;
                         }
                         /* Dialogue user menu*/
+                        case 'common_iam_avatar':
+                        case 'common_iam_avatar_logged_in':
+                        case 'common_iam_avatar_avatar':
+                        case 'common_iam_avatar_avatar_img':
+                        case 'common_iam_avatar_logged_out':
+                        case 'common_iam_avatar_default_avatar':{
+                            await commonComponentRender({
+                                mountDiv:   'common_dialogue_user_menu',
+                                data:       {
+                                            app_id:COMMON_GLOBAL.app_id,
+                                            user_account_id:COMMON_GLOBAL.user_account_id,
+                                            common_app_id:COMMON_GLOBAL.common_app_id,
+                                            data_app_id:COMMON_GLOBAL.common_app_id,
+                                            username:COMMON_GLOBAL.user_account_username,
+                                            token_exp:COMMON_GLOBAL.token_exp,
+                                            token_iat:COMMON_GLOBAL.token_iat,
+                                            token_timestamp: COMMON_GLOBAL.token_timestamp,
+                                            admin:COMMON_GLOBAL.iam_user_name,
+                                            user_locale:COMMON_GLOBAL.user_locale,
+                                            user_timezone:COMMON_GLOBAL.user_timezone,
+                                            user_direction:COMMON_GLOBAL.user_direction,
+                                            user_arabic_script:COMMON_GLOBAL.user_arabic_script
+                                            },
+                                methods:    {
+                                            commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
+                                            commonFFB:commonFFB,
+                                            commonComponentRender:commonComponentRender,
+                                            commonUserSessionCountdown:commonUserSessionCountdown,
+                                            commonMessageShow:commonMessageShow,
+                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized
+                                            },
+                                path:       '/common/component/common_dialogue_user_menu.js'});
+                            break;
+                        }
                         case 'common_dialogue_user_menu_username':{
                             commonComponentRemove('common_dialogue_user_menu');
                             await commonProfileShow();
@@ -3033,6 +3078,7 @@ const commonEvent = async (event_type,event=null) =>{
                                 methods:    {
                                            commonFFB:commonFFB,
                                             commonMessageShow:commonMessageShow,
+                                            commonMesssageNotAuthorized:commonMesssageNotAuthorized,
                                             commonMiscFormatJsonDate:commonMiscFormatJsonDate
                                             },
                                 path:       '/common/component/common_dialogue_iam_edit.js'})
@@ -3905,6 +3951,7 @@ export{/* GLOBALS*/
        commonLovShow,
        /* MESSAGE*/
        commonMessageShow,
+       commonMesssageNotAuthorized,
        /* PROFILE */
        commonProfileDetail, 
        commonProfileFollowLike,

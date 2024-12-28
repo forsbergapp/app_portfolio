@@ -43,7 +43,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     /**@type{import('../../../../server/iam.service.js')} */
-    const {iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const {iamUtilMesssageNotAuthorized, iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
@@ -111,8 +111,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                 const jwt_data = iamAuthorizeToken(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
                                                                         name:           '',
                                                                         ip:             ip,
-                                                                        /**@ts-ignore */
-                                                                        scope:          'APP_CUSTOM'}, fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].app_payment_request_expire);
+                                                                        scope:          'APP_CUSTOM'}, fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].app_payment_request_expire);
     
                 const payment_request_id = securityUUIDCreate();
                 const data_payment_request = {
@@ -171,17 +170,17 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             }
             else{
                 res.statusCode = 400;
-                throw '⛔';
+                throw iamUtilMesssageNotAuthorized();
             }
         }
         else{
             res.statusCode = 404;
-            throw '⛔';
+            throw iamUtilMesssageNotAuthorized();
         }
     }
     else{
         res.statusCode = 404;
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
     }
 
 };

@@ -82,29 +82,32 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
 });
 /**
  * @name describe
- * @description describe: Integration test, microservice worldcities random city called from BFF and from all apps
+ * @description describe: Integration test, server function worldcities random city called from BFF and from all apps
  *              it: should return values
  * @function
  * @returns {void}
  */
-describe('Integration test, microservice worldcities random city called from BFF and from all apps', ()=> {    
+describe('Integration test, server function worldcities random city called from BFF and from all apps', ()=> {    
     it('should return values ', async () =>{
         /**@type{import('../server/db/fileModelApp.js')} */
         const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-
+        /**@type{import('../server/db/fileModelConfig.js')} */
+        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
         /**@type{server_db_file_app[]}*/
         const apps = fileModelApp.get(null, null, null);
+        /**@type{import('../server/server.js')} */
+        const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
         for (const app of apps){
             /**@type{import('../server/bff.service.js')} */
             const bff = await import(`file://${process.cwd()}/server/bff.service.js`);
             /**@type{server_bff_parameters}*/
-            const parametersBFF = { endpoint:'SERVER_APP',
+            const parametersBFF = { endpoint:'APP_DATA',
                 host:null,
-                url:'/bff/app_data/v1/worldcities/city-random',
-                route_path:'/worldcities/city-random',
-                method:'GET', 
+                url:'/bff/app_data/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                route_path:'/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                method:'POST', 
                 query:'',
-                body:{},
+                body:{data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
                 authorization:null,
                 ip:':1', 
                 user_agent:'*', 
@@ -112,6 +115,7 @@ describe('Integration test, microservice worldcities random city called from BFF
                 /**@ts-ignore */
                 res:null};
             const result = await bff.bffServer(app.id, parametersBFF)
+                                .then(result=>result.rows)
                                 .catch(()=>{return {};});
                                 console.log('worldcites result:',result);
             console.log('Integration test worldcities app id:', app.id);

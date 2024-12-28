@@ -13,6 +13,7 @@
 
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBPost, fileDBGet, fileDBUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
+
 /**
  * @name get
  * @description Get user 
@@ -32,15 +33,15 @@ const get = (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resourc
  * @returns {Promise.&lt;{affectedRows:number}>}
  */
 const post = async (app_id, data) =>{
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     //check required attributes
     if (app_id!=null &amp;&amp;
-        data.iam_user_id!=null &amp;&amp;
         data.app_id != null &amp;&amp;
-        data.user != null &amp;&amp;
         data.res != null &amp;&amp;
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IAM_USER_LOGIN', null, null).filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token).length==0){
+        if (fileDBGet(app_id, 'IAM_USER_LOGIN', null, null).filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token &amp;&amp; data.token !=null).length==0){
             /**@type{server_db_file_iam_user_login} */
             const data_new = {};
             data_new.id =  Date.now();
@@ -71,12 +72,12 @@ const post = async (app_id, data) =>{
         }
         else{
             //token already used, user can not login
-            throw '⛔';
+            throw iamUtilMesssageNotAuthorized();
         }
             
     }
     else
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
 }; 
 
 /**
@@ -89,6 +90,8 @@ const post = async (app_id, data) =>{
  * @returns {Promise.&lt;{affectedRows:number}>}
  */
 const update = async (app_id, resource_id, data) =>{
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
     //check required attributes
     if (app_id!=null &amp;&amp; resource_id != null){
         /**@type{server_db_file_iam_user_login} */
@@ -105,10 +108,10 @@ const update = async (app_id, resource_id, data) =>{
                 throw fileCommonRecordNotFound(null);    
         }
         else
-            throw '⛔';
+            throw iamUtilMesssageNotAuthorized();
     }
     else
-        throw '⛔';
+        throw iamUtilMesssageNotAuthorized();
 };
 
 export {get, post, update};</code></pre>
