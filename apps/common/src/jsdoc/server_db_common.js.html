@@ -112,17 +112,9 @@ const dbCommonAppCodeGet = error => {
  * @returns {Promise.&lt;string>}
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
-	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`).then(({ getDisplayData }) => {
-			getDisplayData( 	app_id,
-				new URLSearchParams(`data_app_id=${serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))}&amp;setting_type=MESSAGE&amp;value=${20400}`))
-			.then((/**@type{server_db_sql_result_app_setting_getDisplayData[]}*/result_message)=>{
-				res.statusCode = 404;
-				res.statusMessage = result_message[0].display_data;
-				resolve(result_message[0].display_data);
-			});
-		});
-	});
+	/**@type{import('./file.js')} */
+	const {fileCommonRecordNotFound} = await import(`file://${process.cwd()}/server/db/file.js`);
+	return fileCommonRecordNotFound(res);
 };
 /**
  * @name dbCommonLocaleGet

@@ -12,12 +12,6 @@
 
 /**
  * @import {CommonModuleCommon, CommonModuleRegional, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleRegional['getTimezone']} getTimezone
- * @typedef {CommonModuleCommon['commonMiscDbAppSettingsGet']} commonMiscDbAppSettingsGet
- * @typedef {CommonModuleCommon['commonMiscSelectCurrentValueSet']} commonMiscSelectCurrentValueSet
- * @typedef {CommonModuleCommon['commonComponentRender']} commonComponentRender
- * @typedef {CommonModuleCommon['commonMiscTimezoneDate']} commonMiscTimezoneDate
- * @typedef {CommonModuleCommon['commonModuleLeafletInit']} commonModuleLeafletInit
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import {APP_REPORT_GLOBAL, APP_user_setting_record}  from '../js/types.js'
  */
@@ -78,12 +72,12 @@ const template = () => `&lt;div id='mapid'>&lt;/div>
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
  *                      REPORT_GLOBAL:APP_REPORT_GLOBAL,
- *                      getTimezone:getTimezone,
- *                      commonMiscDbAppSettingsGet:commonMiscDbAppSettingsGet,
- *                      commonMiscTimezoneDate:commonMiscTimezoneDate,
- *                      commonModuleLeafletInit:commonModuleLeafletInit,
- *                      commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
- *                      commonComponentRender:commonComponentRender}}} props
+ *                      getTimezone:CommonModuleRegional['getTimezone'],
+ *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet'],
+ *                      commonMiscTimezoneDate:CommonModuleCommon['commonMiscTimezoneDate'],
+ *                      commonModuleLeafletInit:CommonModuleCommon['commonModuleLeafletInit'],
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender']}}} props
  * @param {{COMMON_DOCUMENT:COMMON_DOCUMENT,
  *          commonMountdiv:string,
  *          app_id:number,
