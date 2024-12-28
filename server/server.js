@@ -1675,8 +1675,16 @@ const serverStart = async () =>{
     try {
         await fileModelConfig.configInit();
         await dbModelDatabase.dbStart();
-        //Get framework JS or Express
-        const app = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'FRAMEWORK')) ==1?await serverJs():await serverExpress();
+        /**
+         * Use framework JS or Express
+         * This is switchable in runtime at any time
+         * @param {server_server_req} req
+         * @param {server_server_res} res
+         */
+        const app = async (req, res) => {
+            const framework = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'FRAMEWORK')) ==1?await serverJs():await serverExpress();
+            framework(req, res);
+        };
         socketIntervalCheck();
         //START HTTP SERVER
         /**@ts-ignore*/
