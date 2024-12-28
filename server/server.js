@@ -509,95 +509,95 @@ const serverJs = async () => {
          */
         const bffRoute= async (req, res) =>{
             //REST API 
-                //URI syntax implemented:
-                //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
-                //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-                switch (true){
-                    case (req.path.startsWith('/bff/app/v1/app-module') && req.method == 'GET'):{
-                        req.route.path = '/bff/app/v1/app-module*';
-                        bffApp(req, res);
-                        break;
-                    }
-                    case req.path.startsWith('/bff/app_data/v1'):{
-                        req.route.path = '/bff/app_data/v1*';
-                        await iam.iamAuthenticateIdToken(req, res, () =>
-                            bffAppData(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/app_signup/v1') &&req.method=='POST':{
-                        req.route.path = '/bff/app_signup/v1*';
-                        await iam.iamAuthenticateIdTokenRegistration(req, res, () =>
-                                bffAppSignup(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/app_access/v1') :{
-                        req.route.path = '/bff/app_access/v1*';
-                        await iam.iamAuthenticateAccessToken(req, res, () =>
-                            bffAppAccess(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/app_external/v1/app-module-function') && req.method=='POST':{
-                        req.route.path = '/bff/app_external/v1/app-module-function*';
-                        iam.iamAuthenticateExternal(req, res, () =>
-                            bffAppExternal(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/app_admin/v1') :{
-                        req.route.path = '/bff/app_admin/v1*';
-                        await iam.iamAuthenticateAccessTokenAdmin(req, res, () =>
-                            bffAdmin(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/socket/v1') && req.method=='GET':{
-                        req.route.path = '/bff/socket/v1*';
-                        iam.iamAuthenticateSocket(req, res, () =>
-                            bffSocket(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
-                        req.route.path = '/bff/iam_admin/v1/server-iam-login';
-                        await iam.iamAuthenticateAdmin(req, res, () =>
-                            bffIAMAdmin(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/iam_user/v1') && req.method=='POST':{
-                        req.route.path = '/bff/iam_user/v1*';
-                        await iam.iamAuthenticateUser(req, res, () =>
-                            bffIAMUser(req, res)
-                        );
-                        break;
-                    }
-                    case req.path.startsWith('/bff/iam_provider/v1') && req.method=='POST':{
-                        req.route.path = '/bff/iam_provider/v1*';
-                        await iam.iamAuthenticateProvider(req, res, () =>
-                            bffIAMProvider(req, res)
-                        );
-                        break;
-                    }
-                    case req.method=='GET':{
-                        req.route.path = '*';
-                        //app asset, common asset, info page, report and app
-                        bffApp(req,res);
-                        break;
-                    }
-                    default:{
-                        serverResponseErrorSend( res, 
-                            400,
-                            null, 
-                            iamUtilMesssageNotAuthorized(), 
-                            null, 
-                            null);
-                    }
+            //URI syntax implemented:
+            //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
+            //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
+            switch (true){
+                case (req.path.startsWith('/bff/app/v1/app-module') && req.method == 'GET'):{
+                    req.route.path = '/bff/app/v1/app-module*';
+                    bffApp(req, res);
+                    break;
                 }
+                case req.path.startsWith('/bff/app_data/v1'):{
+                    req.route.path = '/bff/app_data/v1*';
+                    await iam.iamAuthenticateIdToken(req, res, () =>
+                        bffAppData(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/app_signup/v1') &&req.method=='POST':{
+                    req.route.path = '/bff/app_signup/v1*';
+                    await iam.iamAuthenticateIdTokenRegistration(req, res, () =>
+                            bffAppSignup(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/app_access/v1') :{
+                    req.route.path = '/bff/app_access/v1*';
+                    await iam.iamAuthenticateAccessToken(req, res, () =>
+                        bffAppAccess(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/app_external/v1/app-module-function') && req.method=='POST':{
+                    req.route.path = '/bff/app_external/v1/app-module-function*';
+                    iam.iamAuthenticateExternal(req, res, () =>
+                        bffAppExternal(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/app_admin/v1') :{
+                    req.route.path = '/bff/app_admin/v1*';
+                    await iam.iamAuthenticateAccessTokenAdmin(req, res, () =>
+                        bffAdmin(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/socket/v1') && req.method=='GET':{
+                    req.route.path = '/bff/socket/v1*';
+                    iam.iamAuthenticateSocket(req, res, () =>
+                        bffSocket(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
+                    req.route.path = '/bff/iam_admin/v1/server-iam-login';
+                    await iam.iamAuthenticateAdmin(req, res, () =>
+                        bffIAMAdmin(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/iam_user/v1') && req.method=='POST':{
+                    req.route.path = '/bff/iam_user/v1*';
+                    await iam.iamAuthenticateUser(req, res, () =>
+                        bffIAMUser(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/iam_provider/v1') && req.method=='POST':{
+                    req.route.path = '/bff/iam_provider/v1*';
+                    await iam.iamAuthenticateProvider(req, res, () =>
+                        bffIAMProvider(req, res)
+                    );
+                    break;
+                }
+                case req.method=='GET':{
+                    req.route.path = '*';
+                    //app asset, common asset, info page, report and app
+                    bffApp(req,res);
+                    break;
+                }
+                default:{
+                    serverResponseErrorSend( res, 
+                        400,
+                        null, 
+                        iamUtilMesssageNotAuthorized(), 
+                        null, 
+                        null);
+                }
+            }
         };
-        //set variables as set in Express
+        //set keys and functions as set in Express
         req.path = req.url;
         req.originalUrl = req.url;
         req.route = {path:''};
@@ -660,9 +660,9 @@ const serverJs = async () => {
                 res.setHeader('Content-Type', type);
             };
             res.send = (/**@type{*}*/result) =>{
+                //Content-Type should be set beforem sets default to text/html
                 if (res.getHeader('Content-Type')==undefined)
                     res.type('text/html; charset=utf-8');
-                //res.type('application/json');
                 res.write(result);
                 res.end();
             };
@@ -681,7 +681,7 @@ const serverJs = async () => {
             const bffService = await import('./bff.service.js');
             const resultbffInit = await bffService.bffInit(req, res);
             if (resultbffInit.reason == null){
-                const resultbffStart = await bffService.bffStart(req, res);
+                const resultbffStart = req.method=='GET'?await bffService.bffStart(req, res):{reason:null};
                 switch (resultbffStart.reason){
                     case 'REDIRECT':{
                         res.redirect(resultbffStart.redirect);

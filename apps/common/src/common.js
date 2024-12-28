@@ -879,6 +879,7 @@ const commonApp = async parameters =>{
                         .catch(()=>null);
             }
             case (app_id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) && await commonAppStart(app_id) ==false):{
+                parameters.res?.type('text/html; charset=utf-8');
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
             }
             case (parameters.url.toLowerCase().startsWith('/common')):{
@@ -898,16 +899,20 @@ const commonApp = async parameters =>{
                 return '';
             }
             case (parameters.url.toLowerCase().startsWith('/info/disclaimer')):{
+                parameters.res?.type('text/html; charset=utf-8');
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'});
             }
             case (parameters.url.toLowerCase().startsWith('/info/privacy_policy')):{
+                parameters.res?.type('text/html; charset=utf-8');
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'});
             }
             case (parameters.url.toLowerCase().startsWith('/info/terms')):{
+                parameters.res?.type('text/html; charset=utf-8');
                 return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
             }
             case (parameters.url == '/'):
             case ((fileModelApp.get(app_id, app_id, null)[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
+                parameters.res?.type('text/html; charset=utf-8');
                 return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
                                                                                         ip:             parameters.ip, 
                                                                                         user_agent:     parameters.user_agent,
