@@ -546,8 +546,8 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/app_admin/v1') :{
-                    req.route.path = '/bff/app_admin/v1*';
+                case req.path.startsWith('/bff/admin/v1') :{
+                    req.route.path = '/bff/admin/v1*';
                     await iam.iamAuthenticateAccessTokenAdmin(req, res, () =>
                         bffAdmin(req, res)
                     );
