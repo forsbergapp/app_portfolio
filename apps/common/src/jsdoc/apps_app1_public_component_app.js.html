@@ -11,7 +11,6 @@
  */
 /**
  * @import {CommonAppMenu, COMMON_DOCUMENT,CommonModuleCommon,CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
  */
 /**
  * @name template
@@ -24,12 +23,12 @@
  */
 const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                             &lt;div id='nav'>
-                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='title' >${props.title}&lt;/div>
+                                &lt;div ${props.app_menu[0]?.menu_sub?`href='${props.app_menu[0].menu_sub[0].doc}'`:''} id='title' class='common_link'>${props.title}&lt;/div>
                                 &lt;div id='menu_close' class='common_dialogue_button common_icon'>&lt;/div>
                                 &lt;div id='nav_content_app'>
                                     ${props.app_menu.map(row=>
                                         `&lt;div class='app_menu_data' data-id='${row.id}' data-type='${row.type}'>
-                                            &lt;div class='app_menu'>${row.menu}&lt;/div>
+                                            &lt;div class='app_menu common_link'>${row.menu}&lt;/div>
                                             &lt;div class='app_submenu'>
                                                 ${row.menu_sub?.map(row_sub=>
                                                     `&lt;div class='common_link' href='${row_sub.doc}'>${row_sub.menu}&lt;/div>`
@@ -42,7 +41,7 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
                                 &lt;/div>
                                 &lt;div id='nav_content_jsdoc'>
                                     &lt;div class='app_menu_data' data-type='JSDOC'>
-                                        &lt;div class='app_menu'>JSDOC&lt;/div>
+                                        &lt;div class='app_menu common_link'>JSDOC&lt;/div>
                                         &lt;div class='app_submenu'>
                                             ${props.jsdoc_menu}
                                         &lt;/div>
@@ -60,7 +59,7 @@ const template = props =>`  &lt;div id='menu_open' class='common_icon'>&lt;/div>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:commonFFB
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props 
  * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
@@ -80,8 +79,12 @@ const component = async props => {
                                     body:{type:'JSDOC', data_app_id:props.data.app_id, doc:'nav.html'}})
                 .then(result=>JSON.parse(result).rows[0])
                 .catch(()=>null);
+    const onMounted =()=>{
+        //add common_link to JSDoc generated menu so they will get default hover effect
+        Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('#nav_content_jsdoc .app_submenu .li a')).forEach(element=>element.classList.add('common_link'));
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted},
         data:       null,
         methods:    null,
         template:   template({  title:props.methods.COMMON_DOCUMENT.title,

@@ -11,9 +11,6 @@
  */
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonMiscFormatJsonDate']} commonMiscFormatJsonDate
- * @typedef {CommonModuleCommon['commonMessageShow']} commonMessageShow
  */
 
 /**
@@ -216,9 +213,10 @@ const template = () => `&lt;div id='common_dialogue_iam_edit_common'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscFormatJsonDate:commonMiscFormatJsonDate,
- *                      commonMessageShow:commonMessageShow,
- *                      commonFFB:commonFFB
+ *                      commonMiscFormatJsonDate:CommonModuleCommon['commonMiscFormatJsonDate'],
+ *                      commonMessageShow:CommonModuleCommon['commonMessageShow'],
+ *                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -289,7 +287,7 @@ const component = async props => {
                                                                                                             'url()';
         } else {
             //User not found
-            props.methods.commonMessageShow('ERROR', '20305', null, null, null, props.data.common_app_id);
+            props.methods.commonMessageShow('INFO', null, null, 'message_text',props.methods.commonMesssageNotAuthorized(), props.data.common_app_id);
         }
     };
     return {

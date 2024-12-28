@@ -304,8 +304,11 @@ const fileFsRead = async (file, lock=false) =>{
  * @returns {Promise.&lt;string|null>}
  */
 const fileFsWrite = async (file, transaction_id, file_content) =>{
-    if (!transaction_id || fileRecord(file).TRANSACTION_ID != transaction_id)
-        return ('⛔');
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    if (!transaction_id || fileRecord(file).TRANSACTION_ID != transaction_id){
+        return (iamUtilMesssageNotAuthorized());
+    }
     else{
         const filepath = fileRecord(file).PATH + fileRecord(file).FILENAME;
         const filepath_backup = fileRecord(file).PATH + 'backup/' + fileRecord(file).FILENAME;
@@ -333,7 +336,7 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
             if (fileTransactionCommit(file, transaction_id))
                 return null;
             else
-                throw ('⛔');
+                throw (iamUtilMesssageNotAuthorized());
         })
         .catch((error)=>{
             if (fileTransactionRollback(file, transaction_id))
@@ -435,6 +438,9 @@ const fileFsDeleteAdmin = async file => {
  * @returns {Promise.&lt;{affectedRows:number}>}
  */
 const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>{
+    /**@type{import('../iam.service.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
     const transaction_id = await fileTransactionStart(file, filepath);
     
@@ -443,13 +449,13 @@ const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>
         if (fileTransactionCommit(file, transaction_id))
             return {affectedRows:1};
         else
-            throw ('⛔');
+            throw (iamUtilMesssageNotAuthorized());
     })
     .catch((error)=>{
         if (fileTransactionRollback(file, transaction_id))
             throw(error);
         else
-            throw('⛔ ' + error);
+            throw(iamUtilMesssageNotAuthorized() + ' ' + error);
     });
 };
 /**

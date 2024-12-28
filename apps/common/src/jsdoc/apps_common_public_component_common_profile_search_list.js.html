@@ -12,8 +12,6 @@
 
 /**
  * @import {CommonProfileSearchRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
- * @typedef {CommonModuleCommon['commonFFB']} commonFFB
- * @typedef {CommonModuleCommon['commonMiscInputControl']} commonMiscInputControl
  */
 
 /**
@@ -53,9 +51,9 @@ const template = props =>`  ${props.records.length>0?
  *                      client_longitude:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonMiscInputControl:commonMiscInputControl,
+ *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
  *                      function_click_function:function,
- *                      commonFFB:commonFFB}}} props
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle,
  *                      data:   null,
  *                      methods:null,
