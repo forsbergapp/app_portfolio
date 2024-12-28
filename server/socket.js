@@ -98,7 +98,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
  * @returns {void}
  */
  const socketClientConnect = (res) => {
-    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Connection', 'keep-alive');
 };
 /**

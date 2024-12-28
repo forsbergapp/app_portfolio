@@ -241,8 +241,10 @@ const bffStart = async (req, res) =>{
                     if (result.SENDFILE){
                         bffSendFile(app_id, bff_parameters, service, result.SENDFILE);
                     }
-                    else
-                        bff_parameters.res?bff_parameters.res.status(200).send(result.SENDCONTENT):null;
+                    else{
+                        bff_parameters.res?bff_parameters.res.status(200):null;
+                        bff_parameters.res?bff_parameters.res.send(result.SENDCONTENT):null;
+                    }
                 }
                 else{
                     //result from APP can request to redirect
