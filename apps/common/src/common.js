@@ -387,14 +387,14 @@ const commonAssetfile = parameters =>{
             const app_cache_control_font = fileModelAppParameter.get(common_app_id, null)[0].common_app_cache_control_font.value;
             switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
                 case '.css':{
-                    parameters.res.type('text/css');
+                    parameters.res.type('text/css; charset=utf-8');
                     if (app_cache_control !='')
                         parameters.res.set('Cache-Control', app_cache_control);
                     resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.js':{
-                    parameters.res.type('text/javascript');
+                    parameters.res.type('text/javascript; charset=utf-8');
                     if (app_cache_control !='')
                         parameters.res.set('Cache-Control', app_cache_control);
                     switch (parameters.url){
@@ -466,7 +466,7 @@ const commonAssetfile = parameters =>{
                     break;
                 }
                 case '.html':{
-                    parameters.res.type('text/html');
+                    parameters.res.type('text/html; charset=utf-8');
                     if (app_cache_control !='')
                         parameters.res.set('Cache-Control', app_cache_control);
                     resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
@@ -501,7 +501,7 @@ const commonAssetfile = parameters =>{
                     break;
                 }
                 case '.json':{
-                    parameters.res.type('application/json');
+                    parameters.res.type('application/json; charset=utf-8');
                     if (app_cache_control !='')
                         parameters.res.set('Cache-Control', app_cache_control);
                     resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
@@ -575,6 +575,7 @@ const commonModuleGet = async parameters => {
     if (module && (parameters.type=='MODULE' ||parameters.type=='REPORT')){
         if (parameters.type=='MODULE'){
             const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
+            parameters.res?.type('text/javascript; charset=utf-8');
             return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
         }
         else{

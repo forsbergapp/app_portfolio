@@ -2022,6 +2022,7 @@
  * @property {string} hostname
  * @property {string} host                                          - Admin log parameter
  * @property {string} path
+ * @property {string} url
  * @property {string} originalUrl
  * @property {string} ip
  * @property {string} method
@@ -2157,6 +2158,7 @@
  * @property {object} socket
  * @property {number} socket.bytesRead
  * @property {number} socket.bytesWritten
+ * @property {string} socket.remoteAddress
  *
  */
 
