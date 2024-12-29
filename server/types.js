@@ -302,10 +302,73 @@
  *              ['SERVICE_LOG']:[server_config_server_service_log],
  *              ['METADATA']:server_config_server_metadata}} server_config_server
  */
+/**
+ * CONFIG server_config_rest_api_methods
+ * @typedef {'get'|'post'|'delete'|'patch'|'put'} server_config_rest_api_methods
+ */
+/**
+ * CONFIG server_config_rest_api_content
+ * @typedef {'application/json'} server_config_rest_api_content
+ */
+
+/**
+ * CONFIG server_config_rest_api followin Open API syntax
+ * @typedef  {{ info: {
+ *                      title: string,
+ *                      version: string,
+ *                      description: string
+ *                  },
+ *              servers: {url: string}[],
+ *              paths: {[key:string]: 
+ *                          {server_config_rest_api_methods:
+ *                              {
+ *                                  summary: string,
+ *                                  operationId: string,
+ *                                  parameters: [
+ *                                      {
+ *                                          description: string,
+ *                                          validate_resource_key:'id'|'app_id'|null, 
+ *                                          validate_resource_value:"number",
+ *                                          validate_resource_app_data_app_id:number|null,
+ *                                          validate_app_function:string|null, 
+ *                                          validate_app_function_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|''|null, 
+ *                                          resource_id_required: boolean,
+ *                                          resource_id_type: 'number'|'string'|null,
+ *                                          function_parameter_ip:boolean,
+ *                                          function_parameter_user_agent:boolean, 
+ *                                          function_parameteter_accept_language:boolean,
+ *                                          function_parameter_host:boolean,
+ *                                          function_parameter_locale:boolean,
+ *                                          function_parameter_endpoint:boolean,
+ *                                          function_parameter_query:boolean,
+ *                                          function_parameter_resource_id:boolean,
+ *                                          function_parameter_body:boolean,
+ *                                          function_parameter_res:boolean
+ *                                      }
+ *                                  ],
+ *                                  responses: {
+ *                                      [key:string]: {
+ *                                          description: string,
+ *                                          content: {
+ *                                              server_config_rest_api_content: {
+ *                                                  schema: {
+ *                                                      "$ref": string
+ *                                                  },
+ *                                                  single_resource?: null|false|true
+ *                                              }
+ *                                          }
+ *                                      }
+ *                                  }
+ *                              }
+ *                          }
+ *                  }
+ *          }} server_config_rest_api
+*/
 
 /**
  * CONFIG server_db_file_config_files
  * @typedef {   server_config_server|
+ *              server_config_rest_api|
  *              server_config_iam_policy|
  *              import('../microservice/types.js').microservice_config|
  *              import('../microservice/types.js').microservice_config_service|
@@ -449,8 +512,8 @@
 /**
  * DB FILE server_db_file_db_name_config
  * 
- * @typedef {  'CONFIG_APPS'|
- *              'CONFIG_SERVER'|
+ * @typedef {   'CONFIG_SERVER'|
+ *              'CONFIG_REST_API'|
  *              'CONFIG_IAM_POLICY'|
  *              'CONFIG_MICROSERVICE'|
  *              'CONFIG_MICROSERVICE_SERVICES'} server_db_file_db_name_config
