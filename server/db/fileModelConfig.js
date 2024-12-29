@@ -2,7 +2,7 @@
 
 /**
  * @import {server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
- *          server_config_server,server_config_iam_policy,
+ *          server_config_server,server_config_rest_api, server_config_iam_policy,
  *          server_config_server_server, server_config_server_service_iam,
  *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,
  *          server_db_file_app_translation} from '../types.js'
@@ -86,6 +86,7 @@ const configDefault = async () => {
     //read all default files
 
     /**@type{[  [server_db_file_db_name, server_config_server],
+                [server_db_file_db_name, server_config_rest_api],
                 [server_db_file_db_name, server_config_iam_policy],
                 [server_db_file_db_name, microservice_config],
                 [server_db_file_db_name, microservice_config_service],
@@ -99,6 +100,7 @@ const configDefault = async () => {
     */
     const config_obj = [
                             ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_REST_API',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_rest_api.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -139,7 +141,7 @@ const configDefault = async () => {
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for app secrets
-    config_obj[8][1].map((/**@type{server_db_file_app_secret}*/row)=>{
+    config_obj[9][1].map((/**@type{server_db_file_app_secret}*/row)=>{
         row.common_client_id = securitySecretCreate();
         row.common_client_secret = securitySecretCreate();
         row.common_app_id_secret = securitySecretCreate();
@@ -147,10 +149,10 @@ const configDefault = async () => {
     });        
     //set paths in microservice config
     /**@type{microservice_config} */
-    const microservice_config = config_obj[2][1];
+    const microservice_config = config_obj[3][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
-    config_obj[3][1].SERVICES.map((/**@type{microservice_config_service_record}*/row)=>{
+    config_obj[4][1].SERVICES.map((/**@type{microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
