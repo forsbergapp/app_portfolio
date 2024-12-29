@@ -1,0 +1,580 @@
+{
+    "info": {
+      "title": "App Portfolio REST API",
+      "version": "1.0.0",
+      "description": "REST API"
+    },
+    "servers": [{"url": "https://@{HOST}/v1"}
+    ],
+    "paths": {
+        "/bff/app_data/v1/app-common/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "app_common.commonAppsGet",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":true,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":false,
+                        "function_parameter_resource_id":true,
+                        "function_parameter_body":false,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": null
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-socket/socket-status/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "socket.CheckOnline",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "resource_id_required": true,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":false,
+                        "function_parameter_resource_id":true,
+                        "function_parameter_body":false,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": true
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/identity_provider": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelIdentityProvider.get",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": null,
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":false,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":false,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/app_settings": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppSetting.get",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": null,
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":false,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":false,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/app_settings_display": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppSetting.getDisplayData",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": null,
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":false,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account-activate/${resource_id_string}": {
+            "put": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateUserActivate",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":"id", 
+                        "validate_resource_value":"number",
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": true,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":true,
+                        "function_parameter_user_agent":true, 
+                        "function_parameter_accept_language":true,
+                        "function_parameter_host":true,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":true,
+                        "function_parameter_body":true,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account-forgot": {
+            "post": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateUserForgot",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": null,
+                        "function_parameter_ip":true,
+                        "function_parameter_user_agent":true, 
+                        "function_parameter_accept_language":true,
+                        "function_parameter_host":true,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":false,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":true,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account-profile-stat": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.getProfileStat",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": null,
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":false,
+                        "function_parameter_res":false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account-profile-name/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.getProfile",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": "string",
+                        "function_parameter_ip":true,
+                        "function_parameter_user_agent":true, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":true,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": null
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account-profile/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.getProfile",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":true,
+                        "function_parameter_user_agent":true, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":true,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": null
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account_app_data_post/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": true,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":true,
+                        "function_parameter_body":false,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": null
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": true,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":true,
+                        "function_parameter_body":false,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": true
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account_app_data_post-profile/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.getProfileUserPosts",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": true,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":true,
+                        "function_parameter_body":false,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": true
+                        }
+                    }
+                    }
+                }
+            }
+        },
+        "/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.getProfileStatPost",
+                "parameters": [
+                    {
+                        "description": "parameters",
+                        "validate_resource_key":null, 
+                        "validate_resource_value":null,
+                        "validate_resource_app_data_app_id":null,
+                        "validate_app_function":null, 
+                        "validate_app_function_role":null, 
+                        "resource_id_required": false,
+                        "resouce_id_type": "number",
+                        "function_parameter_ip":false,
+                        "function_parameter_user_agent":false, 
+                        "function_parameter_accept_language":false,
+                        "function_parameter_host":false,
+                        "function_parameter_locale":false,
+                        "function_parameter_endpoint":false,
+                        "function_parameter_query":true,
+                        "function_parameter_resource_id":false,
+                        "function_parameter_body":false,
+                        "function_parameter_res":true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": ""
+                            },
+                            "single_resource": false
+                        }
+                    }
+                    }
+                }
+            }
+        }
+    }
+  }
