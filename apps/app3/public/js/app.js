@@ -359,7 +359,8 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
     const service_parameter = `&format=${format}&ps=${papersize}`;
     const encodedurl = common.commonWindowToBase64( module_parameters + language_parameter + service_parameter);
     //url query parameters are decoded in report module and in report service
-    return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-report/${APP_GLOBAL.app_report_timetable}?reportid=${encodedurl}`;
+    return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-report/${APP_GLOBAL.app_report_timetable}?parameters=${common.commonWindowToBase64(`type=REPORT&reportid=${encodedurl}`)}`;
+    
 
 };
 
@@ -2369,7 +2370,7 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
-    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE`;
+    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE?parameters=${common.commonWindowToBase64('type=MODULE')}`;
     /**@type {CommonModuleLibTimetable} */
     appLibTimetable = await import(appLibTimetable_path);
     appFrameworkSet();

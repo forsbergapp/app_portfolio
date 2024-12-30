@@ -65,7 +65,7 @@ const component = async props => {
             return element.getAttribute('data-parameter') + '=' + element.querySelector('.menu_report_metadata_col2')?.textContent;
         }).join('&');
         const report = JSON.parse(props.methods.COMMON_DOCUMENT.querySelector('#menu_report_select_report .common_select_dropdown_value').getAttribute('data-value')).common_name;
-        await props.methods.commonFFB({path:`/app-module-report-queue/${report}`, query:`ps=A4&${parameters}`,method:'POST', authorization_type:'ADMIN', spinner_id:'menu_report_run'});
+        await props.methods.commonFFB({path:`/app-module-report-queue/${report}`, body:{ps:'A4', report_parameters:parameters},method:'POST', authorization_type:'ADMIN', spinner_id:'menu_report_run'});
         reportQueueUpdate();        
     };
     /**
