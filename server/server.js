@@ -1017,7 +1017,7 @@ const serverJs = async () => {
                 case route({url:`/bff/admin/v1/app-module-metadata/${resource_id_string}`, method:'GET'}):{
                     resolve(app_common.commonModuleMetaDataGet({app_id: routesparameters.app_id, 
                                                                 /**@ts-ignore */
-                                                                type:app_query?.get('type'),
+                                                                data:{type:app_query?.get('type')},
                                                                 /**@ts-ignore */
                                                                 resource_id:resource_id_get_number(),
                                                                 res:routesparameters.res})
@@ -1029,9 +1029,11 @@ const serverJs = async () => {
                 case route({url:`/bff/app/v1/app-module-report/${resource_id_string}`, method:'GET', required:true}):{
                     resolve(app_common.commonModuleGet({
                                                         app_id: routesparameters.app_id, 
-                                                        type:'REPORT',
                                                         resource_id:resource_id_get_string() ?? '', //module id
-                                                        data:new URLSearchParams(routesparameters.url.substring(routesparameters.url.indexOf('?')+1)), 
+                                                        /**@ts-ignore */
+                                                        data:{  type:app_query?.get('type'),
+                                                                reportid:app_query?.get('reportid')??''
+                                                            }, 
                                                         user_agent:routesparameters.user_agent,
                                                         ip:routesparameters.ip,
                                                         locale:app_query?.get('lang_code') ??'',
@@ -1058,10 +1060,9 @@ const serverJs = async () => {
                 case route({url:`/bff/admin/v1/app-module-report-queue/${resource_id_string}`, method:'POST', required:true}):{
                     resolve(app_common.commonAppReportQueue({
                         app_id: routesparameters.app_id, 
-                        type:'REPORT',
                         resource_id:resource_id_get_string() ?? '', //module id
                         iam:routesparameters.res.req.query.iam,
-                        data:new URLSearchParams(routesparameters.url.substring(routesparameters.url.indexOf('?')+1)), 
+                        data:routesparameters.body, 
                         user_agent:routesparameters.user_agent,
                         ip:routesparameters.ip,
                         locale:app_query?.get('lang_code') ??'',
@@ -1073,9 +1074,9 @@ const serverJs = async () => {
                 case route({url:`/bff/app/v1/app-module-module/${resource_id_string}`, method:'GET'}):{
                     resolve(app_common.commonModuleGet({
                                                         app_id: routesparameters.app_id, 
-                                                        type:'MODULE',
                                                         resource_id:resource_id_get_string() ?? '', //module id
-                                                        data:null, 
+                                                        /**@ts-ignore */
+                                                        data:{type:app_query?.get('type')}, 
                                                         user_agent:routesparameters.user_agent,
                                                         ip:routesparameters.ip,
                                                         locale:app_query?.get('lang_code') ??'',
@@ -1094,7 +1095,6 @@ const serverJs = async () => {
                     //call COMMON_APP_ID function if requested or call the function registered on the app
                     resolve(app_common.commonModuleRun({
                                             app_id:(routesparameters.body.data_app_id == COMMON_APP_ID)?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id, 
-                                            type:'FUNCTION',
                                             resource_id:resource_id_get_string() ?? '', 
                                             data:routesparameters.body, 
                                             user_agent:routesparameters.user_agent,
