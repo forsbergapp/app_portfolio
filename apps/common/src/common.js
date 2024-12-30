@@ -530,7 +530,6 @@ const commonAssetfile = parameters =>{
  * @description Router function - run function
  * @function
  * @param {{app_id:number,
- *          type:'FUNCTION',
  *          resource_id:string,
  *          data: *,
  *          user_agent:string,
@@ -541,7 +540,7 @@ const commonAssetfile = parameters =>{
  * @returns {Promise.<void>}
  */
 const commonModuleRun = async parameters => {
-    const module = commonRegistryAppModule(parameters.app_id, {type:parameters.type, name:parameters.resource_id,role:parameters.endpoint});
+    const module = commonRegistryAppModule(parameters.app_id, {type:'FUNCTION', name:parameters.resource_id,role:parameters.endpoint});
     if (module){
         const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
@@ -552,17 +551,20 @@ const commonModuleRun = async parameters => {
             if (parameters.res)
                 parameters.res.statusCode = 404;
         });
-    }    
+    }
 };
 /**
  * @name commonModuleGet
  * @description Router function - get module
  * @function
  * @param {{app_id:Number,
- *          type:'REPORT'|'MODULE',
- *          queue_parameters?:{},
  *          resource_id:string,
- *          data:*,
+ *          data:{
+ *                  ps?:'A4'|'Letter', 
+ *                  type:'REPORT'|'MODULE', 
+ *                  reportid?:string,
+ *                  report_parameters?:string,
+ *                  queue_parameters?:{}},
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
@@ -571,56 +573,65 @@ const commonModuleRun = async parameters => {
  * @returns {Promise.<*>}
  */
 const commonModuleGet = async parameters => {
-    const module = commonRegistryAppModule(parameters.app_id, {type:parameters.type, name:parameters.resource_id,role:parameters.endpoint});
-    if (module && (parameters.type=='MODULE' ||parameters.type=='REPORT')){
-        if (parameters.type=='MODULE'){
-            const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
-            parameters.res?.type('text/javascript; charset=utf-8');
-            return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+    if (parameters.data?.type =='REPORT' || parameters.data?.type =='MODULE'){
+        const module = commonRegistryAppModule(parameters.app_id, {type:parameters.data.type, name:parameters.resource_id,role:parameters.endpoint});
+        if (module && (parameters.data.type=='MODULE' ||parameters.data.type=='REPORT')){
+            if (parameters.data.type=='MODULE'){
+                const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
+                parameters.res?.type('text/javascript; charset=utf-8');
+                return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+            }
+            else{
+                //report
+                /**@type{import('../../../server/iam.service.js')} */
+                const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+                //ID token is created but not used in report
+                await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
+                const result_geodata =  await commonGeodata({   app_id:parameters.app_id, 
+                                                                endpoint:'SERVER_APP', 
+                                                                ip:parameters.ip, 
+                                                                user_agent:parameters.user_agent ??'', 
+                                                                accept_language:parameters.locale??''});
+                const {default:ComponentCreate} = await import('./component/common_report.js');
+                
+                const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
+    
+                const pagesize = parameters.data.ps ?? new URLSearchParams(Buffer.from(parameters.data.reportid ?? '', 'base64').toString('utf-8')).get('ps');
+                /**@type{server_apps_report_create_parameters} */
+                const data = {  app_id:         parameters.app_id,
+                                queue_parameters:parameters.data.queue_parameters,
+                                reportid:       parameters.data.reportid ?? '',
+                                ip:             parameters.ip,
+                                user_agent:     parameters.user_agent ?? '',
+                                accept_language:parameters.locale ?? '',
+                                latitude:       result_geodata?.latitude,
+                                longitude:      result_geodata?.longitude
+                                };
+                return ComponentCreate({data:   {
+                                                CONFIG_APP: {...fileModelApp.get(parameters.app_id, parameters.app_id, null)[0]},
+                                                data:       data,
+                                                /**@ts-ignore */
+                                                papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
+                                                },
+                                        methods:{function_report:RunReport}});
+            }
+            
         }
         else{
-            //report
-            /**@type{import('../../../server/iam.service.js')} */
-            const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
-            //ID token is created but not used in report
-            await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
-            const result_geodata =  await commonGeodata({   app_id:parameters.app_id, 
-                                                            endpoint:'SERVER_APP', 
-                                                            ip:parameters.ip, 
-                                                            user_agent:parameters.user_agent ??'', 
-                                                            accept_language:parameters.locale??''});
-            const {default:ComponentCreate} = await import('./component/common_report.js');
-            
-            const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
-
-            const pagesize = parameters.data.get('ps') ?? new URLSearchParams(Buffer.from(parameters.data.get('reportid') ?? '', 'base64').toString('utf-8')).get('ps');
-            /**@type{server_apps_report_create_parameters} */
-            const data = {  app_id:         parameters.app_id,
-                            queue_parameters:parameters.queue_parameters,
-                            reportid:       parameters.data.get('reportid') ?? '',
-                            ip:             parameters.ip,
-                            user_agent:     parameters.user_agent ?? '',
-                            accept_language:parameters.locale ?? '',
-                            latitude:       result_geodata?.latitude,
-                            longitude:      result_geodata?.longitude
-                            };
-            return ComponentCreate({data:   {
-                                            CONFIG_APP: {...fileModelApp.get(parameters.app_id, parameters.app_id, null)[0]},
-                                            data:       data,
-                                            /**@ts-ignore */
-                                            papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
-                                            },
-                                    methods:{function_report:RunReport}});
+            fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
+            .then(()=>{
+                if (parameters.res)
+                    parameters.res.statusCode = 404;
+                return {STATIC:true, SENDFILE:null, SENDCONTENT:''};
+            });
         }
-        
     }
     else{
-        fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
-        .then(()=>{
-            if (parameters.res)
-                parameters.res.statusCode = 404;
-            return {STATIC:true, SENDFILE:null, SENDCONTENT:''};
-        });
+        /**@type{import('../../../server/iam.service.js')} */
+        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        if (parameters.res)
+            parameters.res.statusCode = 400;
+        throw iamUtilMesssageNotAuthorized();
     }
 };
 /**
@@ -628,10 +639,10 @@ const commonModuleGet = async parameters => {
  * @description Runs report in queue
  * @function
  * @param {{app_id:Number,
- *          type:'REPORT'|'MODULE',
  *          resource_id:string,
  *          iam:string,
- *          data:*,
+ *          data:{  ps:'A4', 
+ *                  report_parameters:string},
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
@@ -648,26 +659,35 @@ const commonAppReportQueue = async parameters =>{
 
     /**@type{import('../../../server/iam.service.js')} */
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
-
-    const iam_user_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'));
-
-    const report_parameters = atob(parameters.data.get('parameters'));
-                                    
-    const report_parameters_obj = Object.fromEntries(Array.from(new URLSearchParams(report_parameters)).map(param=>[param[0],param[1]]));
+                   
     const {id} = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                     {
                                                     type:'REPORT',
                                                     name:parameters.resource_id,
-                                                    parameters:report_parameters,
-                                                    user:fileModelIamUser.get(parameters.app_id, iam_user_id, parameters.res)[0].username
+                                                    parameters:parameters.data.report_parameters,
+                                                    user:fileModelIamUser.get(  parameters.app_id, 
+                                                                                serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), 
+                                                                                parameters.res)[0].username
                                                     }, 
                                                     parameters.res);
     await fileModelAppModuleQueue.update(parameters.app_id, id, { start:new Date().toISOString(),
                                                             progress:0, 
                                                             status:'RUNNING'}, null);
     //report can update progress and only progress if necessary
-    //add queue id and parameters from parameter form origin
-    commonModuleGet({...parameters, ...{queue_parameters:{...{appModuleQueueId:id}, ...report_parameters_obj}}})
+    //add queue id and parameters from parameter from origin
+    commonModuleGet({   app_id:             parameters.app_id,
+                        resource_id:        parameters.resource_id,
+                        data:               {type:'REPORT', 
+                                                ...{ps:parameters.data.ps}, 
+                                                ...{queue_parameters:{appModuleQueueId:id,
+                                                                        ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
+                                                    }
+                                            },
+                        user_agent:         parameters.user_agent,
+                        ip:                 parameters.ip,
+                        locale:             parameters.locale,
+                        endpoint:           parameters.endpoint,
+                        res:                parameters.res})
     .then(result=>{
         if (result){
             fileModelAppModuleQueue.postResult(parameters.app_id, id, result)
@@ -687,23 +707,32 @@ const commonAppReportQueue = async parameters =>{
  * @description Returns all modules with metadata
  * @function
  * @param {{app_id:Number,
- *          type:'REPORT'|'MODULE'|'FUNCTION',
+ *          data:{type:'REPORT'|'MODULE'|'FUNCTION'},
  *          resource_id:number,
  *          res:server_server_res|null}} parameters
  * @returns {Promise.<server_apps_module_with_metadata[]>}
  */
 const commonModuleMetaDataGet = async parameters =>{
-    /**@type{*[]} */
-    const modules = fileModelAppModule.get(parameters.app_id, parameters.resource_id,parameters.app_id, parameters.res)
-    .filter(row=>row.common_type==parameters.type);
-    
-    for (const row of modules){
-        const module = await import(`file://${process.cwd()}${row.common_path}`);
-        /**@type{server_apps_module_metadata[]}*/
-        const metadata = module.metadata;
-        row.common_metadata = metadata;
+    if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
+        /**@type{*[]} */
+        const modules = fileModelAppModule.get(parameters.app_id, parameters.resource_id,parameters.app_id, parameters.res)
+        .filter(row=>row.common_type==parameters.data.type);
+        
+        for (const row of modules){
+            const module = await import(`file://${process.cwd()}${row.common_path}`);
+            /**@type{server_apps_module_metadata[]}*/
+            const metadata = module.metadata;
+            row.common_metadata = metadata;
+        }
+        return modules;
     }
-    return modules;
+    else{
+        /**@type{import('../../../server/iam.service.js')} */
+        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        if (parameters.res)
+            parameters.res?.statusCode==400;
+        throw iamUtilMesssageNotAuthorized();
+    }
 }; 
 /**
  * @name commonComponentCreate

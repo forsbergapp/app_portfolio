@@ -297,7 +297,7 @@ const bffStart = async (req, res) =>{
                              */
                             const return_result =(status, result) =>{
                                 bff_parameters.res.statusCode = status;
-                                if (bff_parameters.endpoint=='APP' || (result.STATIC && result.SENDFILE)){
+                                if (bff_parameters.endpoint=='APP' || (result && result.STATIC && result.SENDFILE)){
                                     //APP can request server shared modules or reports using REST API
                                     //APP_DATA can return JSDoc files using result.STATIC and result.SENDFILE and REST API
                                     if (result!=null && result.STATIC){
