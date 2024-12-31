@@ -37,22 +37,25 @@ const post = async (app_id, user_account_id) =>
  * @name update
  * @description Update user account app
  * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {server_db_sql_parameter_user_account_app_updateUserAccountApp} data 
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          data:{  preference_locale:string,
+ *                  app_setting_preference_timezone_id:number,
+ *                  app_setting_preference_direction_id:number|null,
+ *                  app_setting_preference_arabic_script_id:number|null}}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_updateUserAccountApp>}
  */
-const update = (app_id, resource_id, data) =>
+const update = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_UPDATE, 
                         {
-                            preference_locale: data.preference_locale,
-                            app_setting_preference_timezone_id: serverUtilNumberValue(data.app_setting_preference_timezone_id),
-                            app_setting_preference_direction_id: serverUtilNumberValue(data.app_setting_preference_direction_id),
-                            app_setting_preference_arabic_script_id: serverUtilNumberValue(data.app_setting_preference_arabic_script_id),
-                            user_account_id: resource_id,
-                            app_id: app_id
+                            preference_locale: parameters.data.preference_locale,
+                            app_setting_preference_timezone_id: serverUtilNumberValue(parameters.data?.app_setting_preference_timezone_id),
+                            app_setting_preference_direction_id: serverUtilNumberValue(parameters.data?.app_setting_preference_direction_id),
+                            app_setting_preference_arabic_script_id: serverUtilNumberValue(parameters.data?.app_setting_preference_arabic_script_id),
+                            user_account_id: parameters.resource_id,
+                            app_id: parameters.app_id
                             }, 
                         null, 
                         null));
@@ -60,17 +63,17 @@ const update = (app_id, resource_id, data) =>
  * @name get
  * @description Get user account app
  * @function
- * @param {number} app_id 
- * @param {number} resource_id
+ * @param {{app_id:number,
+ *          resource_id:number|null}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_getUserAccountApp[]>}
  */
-const get = (app_id, resource_id) => 
+const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_SELECT_USER_APP,
                         {
-                            user_account_id: resource_id,
-                            app_id: app_id
+                            user_account_id: parameters.resource_id,
+                            app_id: parameters.app_id
                         },
                         null, 
                         null));
@@ -79,46 +82,46 @@ const get = (app_id, resource_id) =>
  * @name getApps
  * @description Get user account app apps
  * @function
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {string} locale
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          locale:string}} parameters
  * @returns {Promise.<server_config_apps_with_db_columns[]>}
  */
-const getApps = async (app_id, resource_id, locale) => {
+const getApps = async parameters => {
 
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppsGet} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
     /**@type{server_db_sql_result_user_account_app_getUserAccountApps[]} */
     const apps_db = await import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_SELECT_USER_APPS,
                         {
-                            user_account_id: resource_id
+                            user_account_id: parameters.resource_id
                             },
                         null, 
                         null));
 
 
-    return (await commonAppsGet(app_id, app_id, locale)).filter(app=>app.app_id == apps_db.filter(app_db=>app_db.app_id==app.app_id)[0].app_id);
+    return (await commonAppsGet({app_id:parameters.app_id, resource_id:parameters.app_id, locale:parameters.locale})).filter(app=>app.app_id == apps_db.filter(app_db=>app_db.app_id==app.app_id)[0].app_id);
 };
 
 /**
  * @name deleteRecord
  * @description Delete record
  * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} query
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          data:{delete_app_id:number}}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_deleteUserAccountApp>}
  */
-const deleteRecord = (app_id, resource_id, query) => 
+const deleteRecord = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_DELETE,
                         {
-                            user_account_id: resource_id,
-                            app_id: serverUtilNumberValue(query.get('delete_app_id'))
+                            user_account_id: parameters.resource_id,
+                            app_id: serverUtilNumberValue(parameters.data?.delete_app_id)
                         },
                         null, 
                         null));

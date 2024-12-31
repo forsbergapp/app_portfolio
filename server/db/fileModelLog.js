@@ -416,27 +416,45 @@ const postAppE = async (app_id, app_filename, app_function_name, app_line, logte
  * @description Get logs with page navigation support using limit and offset parameters
  *              and returns in ISO20022 format
  * @function
- * @param {number} app_id
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{select_app_id?:string|null,
+*                  logscope?:string|null,
+*                  loglevel?:string|null,
+*                  search?:string|null,
+*                  sort?:string|null,
+*                  order_by?:string|null,
+*                  year?:string|null,
+*                  month?:string|null,
+*                  day?:string|null,
+*                  limit?:string|null,
+*                  offset?:string|null}}} parameters
  * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:[]}>}
  */
-const get = async (app_id, query) => {
+const get = async parameters => {
     /**@type{import('../server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{server_log_data_parameter_logGet} */
-    const data = {  app_id:			app_id,
-                    select_app_id:	serverUtilNumberValue(query.get('select_app_id')),
-                    logscope:		query.get('logscope'),
-                    loglevel:		query.get('loglevel'),
-                    search:			query.get('search'),
-                    sort:			query.get('sort'),
-                    order_by:		query.get('order_by'),
-                    year: 			query.get('year').toString(),
-                    month:			query.get('month').toString(),
-                    day:			query.get('day'),
-                    limit:			serverUtilNumberValue(query.get('limit')) ?? 0,
-                    offset:			serverUtilNumberValue(query.get('offset')) ?? 0
+    const data = {  app_id:			parameters.app_id,
+                    select_app_id:	serverUtilNumberValue(parameters.data.select_app_id),
+                    /**@ts-ignore */
+                    logscope:		parameters.data.logscope,
+                    /**@ts-ignore */
+                    loglevel:		parameters.data.loglevel,
+                    /**@ts-ignore */
+                    search:			parameters.data.search,
+                    /**@ts-ignore */
+                    sort:			parameters.data.sort,
+                    /**@ts-ignore */
+                    order_by:		parameters.data.order_by,
+                    /**@ts-ignore */
+                    year: 			parameters.data.year?.toString(),
+                    /**@ts-ignore */
+                    month:			parameters.data.month?.toString(),
+                    /**@ts-ignore */
+                    day:			parameters.data.day,
+                    limit:			serverUtilNumberValue(parameters.data.limit) ?? 0,
+                    offset:			serverUtilNumberValue(parameters.data.offset) ?? 0
     };
     return new Promise (resolve=>{
         /**
@@ -461,7 +479,7 @@ const get = async (app_id, query) => {
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         
-        fileFsDBLogGet(app_id, file, null, null, sample)
+        fileFsDBLogGet(parameters.app_id, file, null, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
@@ -573,21 +591,27 @@ const getStatusCodes = async () =>{
  * @name getStat
  * @description Get log stat
  * @function
- * @param {number} app_id
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{  select_app_id?:string|null,
+ *                  statGroup?:string|null,
+ *                  unique?:string|null,
+ *                  statValue?:string|null,
+ *                  year?:string|null,
+ *                  month?:string|null}}} parameters
  * @returns{Promise.<server_log_result_logStatGet[]|[]>}
  */
-const getStat = async (app_id, query) => {
+const getStat = async parameters => {
     /**@type{import('../server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{server_log_data_parameter_getLogStats} */
-    const data = {	app_id:			serverUtilNumberValue(query.get('select_app_id')),
-                    statGroup:		query.get('statGroup')==''?null:query.get('statGroup'),
-                    unique:		    serverUtilNumberValue(query.get('unique')),
-                    statValue:		serverUtilNumberValue(query.get('statValue')),
-                    year: 			serverUtilNumberValue(query.get('year')) ?? new Date().getFullYear(),
-                    month:			serverUtilNumberValue(query.get('month')) ?? new Date().getMonth() +1
+    const data = {	app_id:			serverUtilNumberValue(parameters.data.select_app_id),
+                    /**@ts-ignore */
+                    statGroup:		parameters.data.statGroup==''?null:parameters.data.statGroup,
+                    unique:		    serverUtilNumberValue(parameters.data.unique),
+                    statValue:		serverUtilNumberValue(parameters.data.statValue),
+                    year: 			serverUtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
+                    month:			serverUtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
                     };
     /**@type{server_log_result_logStatGet[]|[]} */
     const logfiles = [];
@@ -615,7 +639,7 @@ const getStat = async (app_id, query) => {
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await fileFsDBLogGet(app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
+            await fileFsDBLogGet(parameters.app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
             .then((logs)=>{
                 logs.forEach((/**@type{server_db_file_log_request|''}*/record) => {
                     if (record != ''){

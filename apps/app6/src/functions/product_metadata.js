@@ -17,8 +17,12 @@ const product_metadata = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
-    return await dbModelAppDataResourceMaster.get(app_id, data.resource_id, 
-                    new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=PRODUCT_METADATA&entity_id=${data.entity_id}`),
-                    true);
+    return await dbModelAppDataResourceMaster.get({ app_id:app_id, 
+                                                    resource_id:data.resource_id, 
+                                                    data:{  data_app_id:data.data_app_id,
+                                                            resource_name:'PRODUCT_METADATA',
+                                                            entity_id:data.entity_id,
+                                                            user_null:'1'
+                                                    }});
 };
 export default product_metadata;

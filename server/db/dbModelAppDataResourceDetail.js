@@ -16,24 +16,29 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get detail resource
  * @function
- * @param {number} app_id 
- * @param {number|null} resource_id
- * @param {*} query
- * @param {boolean|null} user_null
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          data:{user_null?:string|null,
+ *                master_id?:string|number|null,
+ *                user_account_id?:string|number|null,
+ *                data_app_id?:string|number|null,
+ *                resource_name?:string|null,
+ *                entity_id?:string|null
+ *              }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_get[]>}
  */
- const get = (app_id, resource_id, query, user_null=false) => 
+ const get = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-    dbCommonExecute(app_id, 
+    dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_SELECT, 
-                    {resource_id         : resource_id ?? null,
-                      master_id           : serverUtilNumberValue(query.get('master_id')),
-                      user_account_id     : serverUtilNumberValue(query.get('user_account_id')) ?? null,
-                      user_account_app_id : serverUtilNumberValue(query.get('user_account_id'))?serverUtilNumberValue(query.get('data_app_id')):null,
-                      data_app_id         : serverUtilNumberValue(query.get('data_app_id')),
-                      resource_name       : query.get('resource_name'),
-                      entity_id           : serverUtilNumberValue(query.get('entity_id')) ?? null,
-                      user_null           : user_null?1:0
+                    {resource_id         : parameters.resource_id ?? null,
+                      master_id           : serverUtilNumberValue(parameters.data.master_id),
+                      user_account_id     : serverUtilNumberValue(parameters.data.user_account_id),
+                      user_account_app_id : serverUtilNumberValue(parameters.data.user_account_id)?serverUtilNumberValue(parameters.data.data_app_id):null,
+                      data_app_id         : serverUtilNumberValue(parameters.data.data_app_id),
+                      resource_name       : parameters.data.resource_name,
+                      entity_id           : serverUtilNumberValue(parameters.data.entity_id) ?? null,
+                      user_null           : serverUtilNumberValue(parameters.data.user_null)?1:0
                       }, 
                     null, 
                     null));
@@ -41,22 +46,30 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name post
  * @description Create detail resource
  * @function
- * @param {number} app_id 
- * @param {*} data
+ * @param {{app_id:number,
+ *          data:{json_data:{},
+ *                app_data_resource_master_id:string|null,
+ *                app_data_entity_resource_id:string|null,
+ *                user_account_id:string|null,
+ *                data_app_id:string|null,
+ *                app_data_entity_resource_app_data_entity_id:string|null,
+ *                app_data_resource_master_attribute_id:string|null,
+ *                entity_id:string|null
+ *              }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_post>}
  */
- const post = (app_id, data) => 
+ const post = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-    dbCommonExecute(app_id, 
+    dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_INSERT, 
-                    {json_data                                       : JSON.stringify(data.json_data),
-                      app_data_resource_master_id                     : data.app_data_resource_master_id ?? null,
-                      app_data_entity_resource_id                     : data.app_data_entity_resource_id ?? null,
-                      user_account_id                                 : data.user_account_id ?? null,
-                      user_account_app_id                             : data.user_account_id?data.data_app_id:null,
-                      data_app_id                                     : data.data_app_id ?? null,
-                      app_data_entity_resource_app_data_entity_id     : data.app_data_entity_resource_app_data_entity_id ?? null,
-                      app_data_resource_master_attribute_id           : data.app_data_resource_master_attribute_id ?? null,
+                    {json_data                                       : JSON.stringify(parameters.data.json_data),
+                      app_data_resource_master_id                     : parameters.data.app_data_resource_master_id ?? null,
+                      app_data_entity_resource_id                     : parameters.data.app_data_entity_resource_id ?? null,
+                      user_account_id                                 : parameters.data.user_account_id ?? null,
+                      user_account_app_id                             : parameters.data.user_account_id?parameters.data.data_app_id:null,
+                      data_app_id                                     : parameters.data.data_app_id ?? null,
+                      app_data_entity_resource_app_data_entity_id     : parameters.data.app_data_entity_resource_app_data_entity_id ?? null,
+                      app_data_resource_master_attribute_id           : parameters.data.app_data_resource_master_attribute_id ?? null,
                       }, 
                     null, 
                     null));
@@ -65,24 +78,32 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name update
  * @description Update detail resource
  * @function
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} data
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          data:{json_data:{},
+ *                app_data_resource_master_id:string|null,
+ *                app_data_entity_resource_id:string|null,
+ *                user_account_id:string|null,
+ *                data_app_id:string|null,
+ *                app_data_entity_resource_app_data_entity_id:string|null,
+ *                app_data_resource_master_attribute_id:string|null,
+ *                entity_id:string|null
+ *              }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_update>}
  */
- const update = (app_id, resource_id, data) => 
+ const update = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-    dbCommonExecute(app_id, 
+    dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_UPDATE, 
-                    {resource_id:                                resource_id,
-                      json_data:                                  JSON.stringify(data.json_data),
-                      app_data_resource_master_id                 :data.app_data_resource_master_id ?? null, 
-                      app_data_entity_resource_id                 :data.app_data_entity_resource_id ?? null, 
-                      user_account_id                             :data.user_account_id ?? null,
-                      user_account_app_id                         :data.user_account_id?data.data_app_id:null,
-                      data_app_id                                 :data.data_app_id ?? null, 
-                      app_data_entity_resource_app_data_entity_id :data.app_data_entity_resource_app_data_entity_id ?? null,
-                      app_data_resource_master_attribute_id       :data.app_data_resource_master_attribute_id ?? null
+                    {resource_id:                                parameters.resource_id,
+                      json_data:                                  JSON.stringify(parameters.data.json_data),
+                      app_data_resource_master_id:                parameters.data.app_data_resource_master_id ?? null, 
+                      app_data_entity_resource_id:                parameters.data.app_data_entity_resource_id ?? null, 
+                      user_account_id:                            parameters.data.user_account_id ?? null,
+                      user_account_app_id:                        parameters.data.user_account_id?parameters.data.data_app_id:null,
+                      data_app_id:                                parameters.data.data_app_id ?? null, 
+                      app_data_entity_resource_app_data_entity_id:parameters.data.app_data_entity_resource_app_data_entity_id ?? null,
+                      app_data_resource_master_attribute_id:      parameters.data.app_data_resource_master_attribute_id ?? null
                       }, 
                     null, 
                     null));
@@ -90,19 +111,22 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name deleteRecord
  * @description Delete detail resource
  * @function
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} data
+ * @param {{app_id:number,
+*          resource_id:number|null,
+*          data:{json_data:{},
+*                user_account_id:string|null,
+*                data_app_id:string|null
+*              }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_delete>}
  */
- const deleteRecord = (app_id, resource_id, data) => 
+ const deleteRecord = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-    dbCommonExecute(app_id, 
+    dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DELETE, 
-                    {resource_id         :resource_id,
-                      user_account_id     :data.user_account_id ?? null,
-                      user_account_app_id :data.user_account_id?data.data_app_id:null,
-                      data_app_id         :data.data_app_id ?? null}, 
+                    {resource_id:         parameters.resource_id,
+                      user_account_id:    parameters.data.user_account_id ?? null,
+                      user_account_app_id:parameters.data.user_account_id?parameters.data.data_app_id:null,
+                      data_app_id:        parameters.data.data_app_id ?? null}, 
                     null, 
                     null));
 export{get, post, update, deleteRecord};

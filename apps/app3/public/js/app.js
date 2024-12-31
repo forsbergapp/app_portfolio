@@ -1300,14 +1300,13 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,null]
                                                 ]})==true){
         
-        const json_data = { description:        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
-                            json_data:          APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                            user_account_id:    common.COMMON_GLOBAL.user_account_id
-                        };
+        const body = {    description:        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+                        json_data:          APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                        user_account_id:    common.COMMON_GLOBAL.user_account_id
+                    };
         /**@type {CommonRESTAPIMethod}*/
         let method;
         let path = '';
-        let query = null;
         let spinner_id;
         switch (function_name){
             case 'ADD_LOGIN':
@@ -1316,7 +1315,8 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                     spinner_id = 'setting_btn_user_add';
                 method = 'POST';
                 path = '/server-db/user_account_app_data_post';
-                query = `initial=${initial_user_setting==true?1:0}`;
+                /**@ts-ignore */
+                body.initial = initial_user_setting==true?1:0;
                 break;
             }
             case 'SAVE':{
@@ -1327,7 +1327,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                 break;
             }
         }
-        await common.commonFFB({path:path, query:query, method:method, authorization_type:'APP_ACCESS', body:json_data, spinner_id:spinner_id?spinner_id:null})
+        await common.commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:body, spinner_id:spinner_id?spinner_id:null})
         .then((/**@type{string}*/result)=>{
             switch (function_name){
                 case 'ADD':{

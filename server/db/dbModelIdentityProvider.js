@@ -11,12 +11,12 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @name get
  * @description Get identity providers
  * @function
- * @param {number} app_id 
+ * @param {{app_id :number}} parameters
  * @returns {Promise.<server_db_sql_result_identity_provider_getIdentityProviders[]>}
  */
-const get = app_id => 
+const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.IDENTITY_PROVIDER_SELECT, 
                         {},
                         null, 
