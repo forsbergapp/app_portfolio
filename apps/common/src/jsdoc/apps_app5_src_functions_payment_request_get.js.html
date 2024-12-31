@@ -43,25 +43,39 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
     /**@type{import('../../../../server/iam.service.js')} */
     const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    const payment_request = await dbModelAppDataResourceMaster.get(app_id, null, 
-                                    new URLSearchParams(`data_app_id=${data.data_app_id}&amp;resource_name=PAYMENT_REQUEST`),
-                                    false)
+    const payment_request = await dbModelAppDataResourceMaster.get({app_id:app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  data_app_id:data.data_app_id,
+                                                                            resource_name:'=PAYMENT_REQUEST',
+                                                                            user_null:'0'
+                                                                    }})
                                     /**@ts-ignore */
                                     .then(result=>result.filter(payment_request=>payment_request.payment_request_id==data.payment_request_id)[0]);
     if (payment_request){
-        const account_payer = await dbModelAppDataResourceDetail.get(app_id, null, 
-                                        new URLSearchParams(`user_account_id=${data.user_account_id}&amp;data_app_id=${app_id}&amp;resource_name=ACCOUNT`),
-                                        false)
+        const account_payer = await dbModelAppDataResourceDetail.get({  app_id:app_id, 
+                                                                        resource_id:null, 
+                                                                        data:{  user_account_id:data.user_account_id,
+                                                                                data_app_id:app_id,
+                                                                                resource_name:'ACCOUNT',
+                                                                                user_null:'0'
+                                                                        }})
                                         /**@ts-ignore */
                                         .then(result=>result.filter(result=>result.bank_account_vpa == payment_request.payerid)[0]);
-        const merchant      = await dbModelAppDataResourceMaster.get(app_id, null, 
-                                        new URLSearchParams(`data_app_id=${app_id}&amp;resource_name=MERCHANT`),
-                                        false)
+        const merchant      = await dbModelAppDataResourceMaster.get({app_id:app_id, 
+                                                                        resource_id:null, 
+                                                                        data:{  data_app_id:app_id,
+                                                                                resource_name:'MERCHANT',
+                                                                                user_null:'0'
+                                                                        }})
                                         /**@ts-ignore */    
                                         .then(result=>result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==payment_request.merchant_id)[0]);
-        const currency      = await dbModelAppDataResourceMaster.get(app_id, null, 
-                                        new URLSearchParams(`data_app_id=${data.data_app_id}&amp;resource_name=CURRENCY`),
-                                        true).then(result=>JSON.parse(result[0].json_data));
+        const currency      = await dbModelAppDataResourceMaster.get({  app_id:app_id, 
+                                                                        resource_id:null, 
+                                                                        data:{data_app_id:data.data_app_id,
+                                                                            resource_name:'CURRENCY',
+                                                                            user_null:'1'
+                                                                        }})
+                                        .then(result=>JSON.parse(result[0].json_data));
         if (account_payer &amp;&amp; merchant &amp;&amp; currency){
             /**@ts-ignore */
             return  [{  payment_request_message:'Authorize this payment',

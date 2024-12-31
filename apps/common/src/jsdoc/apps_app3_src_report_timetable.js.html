@@ -104,7 +104,10 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 	const user_account_app_data_posts = [];
 	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
     const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
-    return getUserPostsByUserId(app_id, user_account_id,null,null)
+    return getUserPostsByUserId({app_id:app_id, 
+								resource_id:user_account_id,
+								locale:'en',
+								res:null})
 	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts) {
 			//use settings that can be used on a day timetable showing different user settings
@@ -159,7 +162,7 @@ const timetable = async (timetable_parameters) => {
 	 * @returns 
 	 */
 	
-	const parametersApp = fileModelAppParameter.get(timetable_parameters.app_id, null)[0]; 
+	const parametersApp = fileModelAppParameter.get({app_id:timetable_parameters.app_id, res:null})[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.value;
 		/**@ts-ignore */

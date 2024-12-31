@@ -25,61 +25,74 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get stat
  * @function
- * @param {number} app_id 
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{  id?:string|null,
+ *                  data_app_id?:string|null,
+ *                  resource_name_entity?:string|null}}} parameters
  * @returns {Promise.&lt;server_db_sql_result_app_data_stat_get[]>}
  */
-const get = (app_id, query) => 
+const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.APP_DATA_STAT_SELECT, 
-                        {   resource_id         : serverUtilNumberValue(query.get('id')),
-							data_app_id         : serverUtilNumberValue(query.get('data_app_id')),
-                            resource_name_entity: query.get('resource_name_entity')},
+                        {   resource_id         : serverUtilNumberValue(parameters.data.id),
+							data_app_id         : serverUtilNumberValue(parameters.data.data_app_id),
+                            resource_name_entity: parameters.data.resource_name_entity},
                         null, 
                         null));
 /**
  * @name getLog
  * @description Get stat log
  * @function
- * @param {number} app_id 
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{  sort?:string|null,
+ *                  order_by?:string|null,
+ *                  select_app_id?:string|null,
+ *                  year?:string|null,
+ *                  month?:string|null,
+ *                  day?:string|null,
+ *                  offset?:string|null,
+ *                  limit?:string|null,
+ *                  data_app_id?:string|null,
+ *                  resource_name_entity?:string|null}}} parameters
  * @returns {Promise.&lt;server_db_sql_result_app_data_stat_logGet[]>}
  */
-const getLog = (app_id, query) => 
+const getLog = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.APP_DATA_STAT_SELECT_LOG
-                                .replace('&lt;SORT/>', query.get('sort')=='date_created'?'date_created':'app_id')
-                                .replace('&lt;ORDER_BY/>',query.get('order_by')), 
-                        {   app_id:serverUtilNumberValue(query.get('select_app_id')),
-                            year:serverUtilNumberValue(query.get('year')),
-                            month:serverUtilNumberValue(query.get('month')),
-                            day:serverUtilNumberValue(query.get('day')),
-                            offset:serverUtilNumberValue(query.get('offset')),
-                            limit:serverUtilNumberValue(query.get('limit')),
+                                .replace('&lt;SORT/>', parameters.data.sort=='date_created'?'date_created':'app_id')
+                                .replace('&lt;ORDER_BY/>',parameters.data.order_by??''), 
+                        {   app_id:serverUtilNumberValue(parameters.data.select_app_id),
+                            year:serverUtilNumberValue(parameters.data.year),
+                            month:serverUtilNumberValue(parameters.data.month),
+                            day:serverUtilNumberValue(parameters.data.day),
+                            offset:serverUtilNumberValue(parameters.data.offset),
+                            limit:serverUtilNumberValue(parameters.data.limit),
                             app_data_entity_resource_id: 0,
                             app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
                             app_data_entity_resource_app_data_entity_id : 0},
                         null, 
                         null))
         .then(result =>{
-                if (query.get('sort')!='date_created' &amp;&amp; query.get('sort')!='app_id'){
+                if (parameters.data.sort!='date_created' &amp;&amp; parameters.data.sort!='app_id'){
                     //sort json_data columns
                     /**@ts-ignore*/
                     result.rows = result.rows.sort((first, second)=>{
                         //sort column inside json string
-                        const first_sort = JSON.parse(first.json_data)[query.get('sort')]?.toLowerCase();
-                        const second_sort = JSON.parse(second.json_data)[query.get('sort')]?.toLowerCase();
+                        /**@ts-ignore */
+                        const first_sort = JSON.parse(first.json_data)[parameters.data.sort]?.toLowerCase();
+                        /**@ts-ignore */
+                        const second_sort = JSON.parse(second.json_data)[parameters.data.sort]?.toLowerCase();
                         //using localeCompare as collation method for strings
                         if (first_sort !=null &amp;&amp; second_sort != null &amp;&amp; 
                             ((  typeof first_sort == 'number' &amp;&amp; first_sort &lt; second_sort) || 
                             (  typeof first_sort == 'string' &amp;&amp; first_sort.localeCompare(second_sort)&lt;0) ))
-                            return query.get('order_by').toLowerCase()=='asc'?-1:1;
+                            return parameters.data.order_by?.toLowerCase()=='asc'?-1:1;
                         else if (first_sort !=null &amp;&amp; second_sort != null &amp;&amp; 
                             ((  typeof first_sort == 'number' &amp;&amp; first_sort > second_sort) || 
                             (  typeof first_sort == 'string' &amp;&amp; first_sort.localeCompare(second_sort)>0) ))
-                            return query.get('order_by').toLowerCase()=='asc'?1:-1;
+                            return parameters.data.order_by?.toLowerCase()=='asc'?1:-1;
                         else
                             return 0;
                     });
@@ -91,11 +104,13 @@ const getLog = (app_id, query) =>
  * @name getStatUniqueVisitor
  * @description Get stat unique visitors
  * @function
- * @param {number} app_id 
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{  select_app_id?:string|null,
+ *                  year?:string|null,
+ *                  month?:string|null}}} parameters
  * @returns {Promise.&lt;server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
  */
-const getStatUniqueVisitor = (app_id, query) =>{
+const getStatUniqueVisitor = parameters =>{
     /**
      * Convert to array with object
      * @param {*} log
@@ -120,11 +135,11 @@ const getStatUniqueVisitor = (app_id, query) =>{
     };
     return new Promise((resolve)=>{
         import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(app_id, 
+            dbCommonExecute(parameters.app_id, 
                             dbSql.APP_DATA_STAT_SELECT_UNIQUE_VISITORS, 
-                            {   app_id_log: serverUtilNumberValue(query.get('select_app_id')),
-                                year_log: serverUtilNumberValue(query.get('year')),
-                                month_log: serverUtilNumberValue(query.get('month')),
+                            {   app_id_log: serverUtilNumberValue(parameters.data.select_app_id),
+                                year_log: serverUtilNumberValue(parameters.data.year),
+                                month_log: serverUtilNumberValue(parameters.data.month),
                                 app_data_entity_resource_id: 0,
                                 app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
                                 app_data_entity_resource_app_data_entity_id : 0},
