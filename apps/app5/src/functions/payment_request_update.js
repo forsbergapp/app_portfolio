@@ -34,13 +34,20 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/iam.service.js')} */
     const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    const customer = await dbModelAppDataResourceMaster.get(app_id, null, 
-                            new URLSearchParams(`user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&resource_name=CUSTOMER`),
-                            false)
+    const customer = await dbModelAppDataResourceMaster.get({app_id:app_id, 
+                                                                resource_id:null, 
+                                                                data:{  user_account_id:data.user_account_id,
+                                                                        data_app_id:data.data_app_id,
+                                                                        resource_name:'CUSTOMER',
+                                                                        user_null:'0'
+                                                                }})
                             .then(result=>result[0]);
-    const payment_request = await dbModelAppDataResourceMaster.get(app_id, null, 
-                                    new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=PAYMENT_REQUEST`),
-                                    false)
+    const payment_request = await dbModelAppDataResourceMaster.get({app_id:app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  data_app_id:data.data_app_id,
+                                                                            resource_name:'PAYMENT_REQUEST',
+                                                                            user_null:'0'
+                                                                    }})
                                     .then(result=>result
                                             /**@ts-ignore */
                                             .filter(payment_request=>payment_request.payment_request_id==data.payment_request_id)[0]);
@@ -53,14 +60,26 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
                 status = 'EXPIRED';
             else
                 try {
-                    const account_payer         =  await dbModelAppDataResourceDetail.get(app_id, null, 
-                                                            new URLSearchParams(`master_id=${customer.id}&user_account_id=${data.user_account_id}&data_app_id=${app_id}&resource_name=ACCOUNT`),
-                                                            false).then(result=>result[0]);
-                    const account_payer_saldo   =  await dbModelAppDataResourceDetailData.get(app_id, null, 
-                                                            new URLSearchParams(`app_data_detail_id=${account_payer.id}&user_account_id=${data.user_account_id}&data_app_id=${data.data_app_id}&`+ 
-                                                                                'resource_name_type=RESOURCE_TYPE&resource_name=ACCOUNT&'+
-                                                                                'resource_name_master_attribute_type=RESOURCE_TYPE&resource_name_master_attribute=CUSTOMER'),
-                                                            false)
+                    const account_payer         =  await dbModelAppDataResourceDetail.get({app_id:app_id, 
+                                                                                            resource_id:null, 
+                                                                                            data:{  master_id:customer.id,
+                                                                                                    user_account_id:data.user_account_id,
+                                                                                                    data_app_id:app_id,
+                                                                                                    resource_name:'ACCOUNT',
+                                                                                                    user_null:'0'
+                                                                                            }})
+                                                            .then(result=>result[0]);
+                    const account_payer_saldo   =  await dbModelAppDataResourceDetailData.get({ app_id:app_id, 
+                                                                                                resource_id:null, 
+                                                                                                data:{  app_data_detail_id:account_payer.id,
+                                                                                                        user_account_id:data.user_account_id,
+                                                                                                        data_app_id:data.data_app_id,
+                                                                                                        resource_name_type:'RESOURCE_TYPE',
+                                                                                                        resource_name:'ACCOUNT',
+                                                                                                        resource_name_master_attribute_type:'RESOURCE_TYPE',
+                                                                                                        resource_name_master_attribute:'CUSTOMER',
+                                                                                                        user_null:'0'
+                                                                                                }})
                                                             .then(result=>result.reduce((balance, current_row)=>balance += 
                                                                                                         /**@ts-ignore */
                                                                                                         (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0));
@@ -81,11 +100,14 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
                                             app_data_resource_master_attribute_id   : null
                                             };
                         //create DEBIT transaction PAYERID resource TRANSACTION
-                        await dbModelAppDataResourceDetailData.post(app_id, data_debit);
+                        await dbModelAppDataResourceDetailData.post({app_id:app_id, data:data_debit});
 
-                        const account_payee         =  await dbModelAppDataResourceDetail.get(app_id, null, 
-                                                                new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=ACCOUNT`),
-                                                                false)
+                        const account_payee         =  await dbModelAppDataResourceDetail.get({ app_id:app_id, 
+                                                                                                resource_id:null, 
+                                                                                                data:{  data_app_id:data.data_app_id,
+                                                                                                        resource_name:'ACCOUNT',
+                                                                                                        user_null:'0'
+                                                                                                }})
                                                                 /**@ts-ignore */
                                                                 .then(result=>result.filter(account=>account.bank_account_vpa == payment_request.payeeid)[0]);
                         const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
@@ -102,7 +124,7 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
                                                 app_data_resource_master_attribute_id   : null
                                                 };
                         //create CREDIT transaction PAYEEID resource TRANSACTION
-                        await dbModelAppDataResourceDetailData.post(app_id, data_credit);
+                        await dbModelAppDataResourceDetailData.post({app_id:app_id, data:data_credit});
                         status = 'PAID';
                     }
                 } catch (error) {
@@ -120,7 +142,7 @@ const payment_request_update = async (app_id, data, user_agent, ip, locale, res)
         //update status in json_data column
         data_payment_request.json_data.status = status;
         //update payment request
-        await dbModelAppDataResourceMaster.update(app_id, payment_request.id, data_payment_request);
+        await dbModelAppDataResourceMaster.update({app_id:app_id, resource_id:payment_request.id, data:data_payment_request});
         return [{status:status}];
    }
    else{

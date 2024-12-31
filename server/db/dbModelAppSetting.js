@@ -17,37 +17,40 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get setting with translation text
  * @function
- * @param {number} app_id 
- * @param {*} query 
+ * @param {{app_id:number,
+ *          data:{setting_type:string|null},
+ *          locale:string}} parameters
  * @returns {Promise.<server_db_sql_result_app_setting_getSettings[]>}
  */
-const get = (app_id, query) => 
+const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.APP_SETTING_SELECT, 
                         {
-                            app_id : app_id,
+                            app_id : parameters.app_id,
                             common_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
-                            app_setting_type_name: query.get('setting_type') ?? (query.get('setting_type')==''?null:query.get('setting_type'))
+                            app_setting_type_name: parameters.data.setting_type==''?null:parameters.data.setting_type
                             },
                         null, 
-                        query.get('lang_code')));
+                        parameters.locale));
 /**
  * @name getDisplayData
  * @description Get setting display data without translation
- * @function
- * @param {number} app_id 
- * @param {*} query 
+ * @function 
+ * @param {{app_id:number,
+ *          data:{  setting_type?:string|null,
+ *                  data_app_id?:string|null,
+ *                  value?:string|null}}} parameters
  * @returns {Promise.<server_db_sql_result_app_setting_getDisplayData[]>}
  */
-const getDisplayData = (app_id, query) => 
+const getDisplayData = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.APP_SETTING_SELECT_DISPLAYDATA, 
                         {
-                            app_setting_type_name: query.get('setting_type'),
-                            app_id : serverUtilNumberValue(query.get('data_app_id')),
-                            value:query.get('value') ==''?null:query.get('value')
+                            app_setting_type_name: parameters.data?.setting_type,
+                            app_id : serverUtilNumberValue(parameters.data.data_app_id),
+                            value:parameters.data.value ==''?null:parameters.data.value
                             },
                         null, 
                         null));    

@@ -42,11 +42,11 @@ const DB_APP_UNINSTALL          = 'uninstall_database.json';
  * @name dbInfo
  * @description Database info
  * @function
- * @param {number} app_id
+ * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_admin_DBInfo[]>}
  */
-const dbInfo = app_id => import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                            dbCommonExecute(app_id, 
+const dbInfo = parameters => import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                            dbCommonExecute(parameters.app_id, 
                                             dbSqlDatabase.DATABASE_INFO_SELECT(), 
                                             {   database: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), 
                                                 database_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)
@@ -57,11 +57,11 @@ const dbInfo = app_id => import(`file://${process.cwd()}/server/db/common.js`).t
  * @name dbInfoSpace
  * @description Database info space
  * @function
- * @param {number} app_id
+ * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpace[]>}
  */
-const dbInfoSpace = app_id =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                                dbCommonExecute(app_id, 
+const dbInfoSpace = parameters =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                                dbCommonExecute(parameters.app_id, 
                                                 dbSqlDatabase.DATABASE_INFO_SELECT_SPACE(), 
                                                 serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                                                     {}:
@@ -72,11 +72,11 @@ const dbInfoSpace = app_id =>import(`file://${process.cwd()}/server/db/common.js
  * @name dbInfoSpaceSum
  * @description Database info space sum
  * @function
- * @param {number} app_id
+ * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpaceSum[]>}
  */
-const dbInfoSpaceSum = (app_id) =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                                    dbCommonExecute(app_id, 
+const dbInfoSpaceSum = parameters =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                                    dbCommonExecute(parameters.app_id, 
                                                     dbSqlDatabase.DATABASE_INFO_SELECT_SPACE_SUM(), 
                                                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                                                         {}:
@@ -117,11 +117,11 @@ const dbInstallGetFiles = async (install_type) =>{
  * @name dbInstall
  * @description Install db and sends server side events of progress
  * @function
- * @param {number}      app_id 
- * @param {*}           query
+ * @param {{app_id:Number,
+ *          data:{client_id?:string|null}}} parameters
  * @returns {Promise.<{info: {}[]}>}
  */
- const dbInstall = async (app_id, query)=> {
+ const dbInstall = async parameters => {
     /**@type{import('./fileModelAppSecret.js')} */
     const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
     /**@type{import('../db/db.js')} */
@@ -179,11 +179,12 @@ const dbInstallGetFiles = async (install_type) =>{
     const DB_SCHEMA = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '';
     let install_count = 0;
     for (const file of files){
-        socketAdminSend(app_id, {   app_id:null,
-                                    client_id:serverUtilNumberValue(query.get('client_id')),
-                                    client_id_current:null,
-                                    broadcast_type:'PROGRESS',
-                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
+        socketAdminSend({   app_id:parameters.app_id,
+                            data:{app_id:null,
+                                client_id:serverUtilNumberValue(parameters.data.client_id),
+                                client_id_current:null,
+                                broadcast_type:'PROGRESS',
+                                broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))}});
         install_count++;
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
@@ -292,7 +293,7 @@ const dbInstallGetFiles = async (install_type) =>{
                             change_DBA_pool = false;
                             }
                         }
-                    await dbCommonExecute(app_id, sql, {}, DBA);
+                    await dbCommonExecute(parameters.app_id, sql, {}, DBA);
                     count_statements += 1;
                 }
             }
@@ -311,17 +312,17 @@ const dbInstallGetFiles = async (install_type) =>{
                             
                             sql_and_pw = await sql_with_password(app_username, users_row.sql);
                             users_row.sql = sql_and_pw[0];
-                            await fileModelAppSecret.update(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_user`,
-                                                                                    parameter_value:    app_username}, null);
-                            await fileModelAppSecret.update(file[2]??0, file[2]??0,{  parameter_name:     `service_db_db${db_use}_app_password`,
-                                                                                    parameter_value:    sql_and_pw[1]}, null);
+                            await fileModelAppSecret.update({app_id:file[2]??0, resource_id:file[2]??0,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
+                                                                                    parameter_value:    app_username}, res:null});
+                            await fileModelAppSecret.update({app_id:file[2]??0, resource_id:file[2]??0,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
+                                                                                    parameter_value:    sql_and_pw[1]}, res:null});
                         }
                         users_row.sql = users_row.sql.replaceAll('<APP_ID/>', file[2]);
                         users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
                         break;
                     }
                 }
-                await dbCommonExecute(app_id, users_row.sql, {}, DBA);
+                await dbCommonExecute(parameters.app_id, users_row.sql, {}, DBA);
                 count_statements += 1;
             }
         }   
@@ -335,13 +336,13 @@ const dbInstallGetFiles = async (install_type) =>{
   * @name dbInstalledCheck
   * @description Checks if database is installed
   * @function
-  * @param {number|null} app_id
+  * @param {{app_id:number|null}}parameters
   * @returns {Promise.<server_db_database_install_db_check>}
   */
- const dbInstalledCheck = async app_id =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                                        dbCommonExecute(app_id, 
+ const dbInstalledCheck = async parameters =>import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                                        dbCommonExecute(parameters.app_id, 
                                                         dbSqlDatabase.DATABASE_SELECT_INSTALLED_CHECK, 
-                                                        {app_id: app_id}, 
+                                                        {app_id: parameters.app_id}, 
                                                         DBA, 
                                                         null)
                                                         .catch(()=>{
@@ -352,11 +353,11 @@ const dbInstallGetFiles = async (install_type) =>{
   * @name dbUninstall
   * @description Uninstall database installation
   * @function
-  * @param {number} app_id
-  * @param {*} query
+  * @param {{app_id:Number,
+  *          data:{client_id?:string|null}}} parameters
   * @returns {Promise.<server_db_database_install_uninstall_result>} 
   */
- const dbUninstall = async (app_id, query)=> {
+ const dbUninstall = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonRegistryAppSecretDBReset} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
@@ -390,7 +391,14 @@ const dbInstallGetFiles = async (install_type) =>{
         let install_count=0;
         const files = await dbInstallGetFiles('uninstall');
         for (const file of  files){
-            socketAdminSend(app_id, { app_id:null, client_id:serverUtilNumberValue(query.get('client_id')),client_id_current:null,broadcast_type:'PROGRESS',broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))});
+            socketAdminSend({app_id:parameters.app_id, 
+                                data:{  app_id:null, 
+                                        client_id:serverUtilNumberValue(parameters.data.client_id),
+                                        client_id_current:null,
+                                        broadcast_type:'PROGRESS',
+                                        broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))
+
+                                }});
             install_count++;
             const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
             const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
@@ -428,14 +436,14 @@ const dbInstallGetFiles = async (install_type) =>{
                 else
                     sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
                 sql_row.sql = sql_row.sql.replaceAll('<APP_ID/>', file[2]?file[2]:'0');
-                await dbCommonExecute(app_id, sql_row.sql, {}, DBA)
+                await dbCommonExecute(parameters.app_id, sql_row.sql, {}, DBA)
                 .then(()=>{count_statements += 1;})
                 .catch(()=>{count_statements_fail += 1;});
                 
             }      
         }
         //remove db users and password
-        commonRegistryAppSecretDBReset(app_id);
+        commonRegistryAppSecretDBReset(parameters.app_id);
     }
     fileModelLog.postServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {info:[  { count    : count_statements},
@@ -450,12 +458,12 @@ const dbInstallGetFiles = async (install_type) =>{
  *              Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
  *              Returns log about records created
  * @function
- * @param {number} app_id
- * @param {*} query
- * @param {*} data
+ * @param {{app_id:Number,
+ *          data:{  demo_password?:string|null,
+ *                  client_id?:string|null}}} parameters
  * @returns {Promise.<{info: {}[]}>}
  */
- const dbDemoInstall = async (app_id, query, data)=> {
+ const dbDemoInstall = async parameters=> {
     /**@type{import('../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('./fileModelLog.js')} */
@@ -531,7 +539,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                         bio:                    demo_user.bio,
                                         avatar:                 demo_user.avatar,
                                         password:               null,
-                                        password_new:           data.demo_password,
+                                        password_new:           parameters.data.demo_password ?? '',
                                         password_reminder:      null,
                                         email:                  `demo${++email_index}@localhost`,
                                         email_unverified:       null,
@@ -548,7 +556,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                         provider_email:         null,
                                         admin:                  1
                                     };
-                return await userPost(app_id, data_create)
+                return await userPost(parameters.app_id, data_create)
                                 .catch((/**@type{server_server_error}*/err)=> {
                                     throw err;
                                 });
@@ -585,7 +593,11 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_user_post = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
-            createUserPost(user_account_post_app_id, new URLSearchParams('initial=0'), data)
+            /**@ts-ignore */
+            data.initial=0;
+            createUserPost({app_id:user_account_post_app_id, 
+                            /**@ts-ignore */
+                            data:data})
             .then(result=>{
                 if (result.data?.affectedRows == 1)
                     records_user_account_app_data_post++;
@@ -605,7 +617,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_resource_master = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
-            dbModelAppDataResourceMaster.post(user_account_post_app_id, data)
+            dbModelAppDataResourceMaster.post({app_id:user_account_post_app_id, data:data})
             .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_master++;
@@ -624,7 +636,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_resource_detail = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
-            dbModelAppDataResourceDetail.post(user_account_post_app_id, data)
+            dbModelAppDataResourceDetail.post({app_id:user_account_post_app_id, data:data})
             .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_detail++;
@@ -644,7 +656,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_resource_detail_data = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
-            dbModelAppDataResourceDetailData.post(user_account_post_app_id, data)
+            dbModelAppDataResourceDetailData.post({app_id:user_account_post_app_id, data:data})
             .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_resource_detail_data++;
@@ -659,25 +671,30 @@ const dbInstallGetFiles = async (install_type) =>{
     //create all users first and update with id
     await create_users(demo_users);
     /**@type{server_db_file_app[]}*/
-    const apps = fileModelApp.get(app_id, null, null);
+    const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null, res:null});
     
     //generate key pairs for each user that can be saved both in resource and apps configuration
     //Use same for all demo users since key creation can be slow
-    socketAdminSend(app_id, {   app_id:null,
-                                client_id:serverUtilNumberValue(query.get('client_id')),
+    socketAdminSend({   app_id:parameters.app_id, 
+                        data:{  app_id:null,
+                                client_id:serverUtilNumberValue(parameters.data.client_id),
                                 client_id_current:null,
                                 broadcast_type:'PROGRESS',
-                                broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))});
+                                broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))
+                            }});
     const {publicKey, privateKey} = await securityKeyPairCreate();
     const demo_public_key = publicKey;
     const demo_private_key = privateKey;
     //create user posts
     for (const demo_user of demo_users){
-        socketAdminSend(app_id, {   app_id:null,
-                                    client_id:serverUtilNumberValue(query.get('client_id')),
+        socketAdminSend({app_id:parameters.app_id, 
+                            data:{  app_id:null,
+                                    client_id:serverUtilNumberValue(parameters.data.client_id),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
-                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))});
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))
+                            }
+                        });
         install_count++;
 
         //generate vpa for each user that can be saved both in resource and apps configuration
@@ -757,24 +774,26 @@ const dbInstallGetFiles = async (install_type) =>{
             for (const key of Object.entries(resource.json_data)){
                 const value = value_set(key);
                 if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0] in secret_key).length>0)
-                    await fileModelAppSecret.update(serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-                                                        resource.app_registry_update_app_id,
-                                                        {   
+                    await fileModelAppSecret.update({   app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
+                                                        resource_id:resource.app_registry_update_app_id,
+                                                        data:{   
                                                             parameter_name:     key[0],
                                                             parameter_value:    value
-                                                        },null);
+                                                        },
+                                                        res:null});
                 resource.json_data[key[0]] = value;
             }
             //loop custom secret keys containing USER_ACCOUNT_ID not in json_data
             if (resource.app_update_secret)
                 for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                     const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                    await fileModelAppSecret.update(serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-                                                        resource.app_registry_update_app_id,
-                                                        {   
+                    await fileModelAppSecret.update({   app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
+                                                        resource_id:resource.app_registry_update_app_id,
+                                                        data:{   
                                                             parameter_name:     Object.keys(key)[0],
                                                             parameter_value:    value
-                                                        },null);
+                                                        },
+                                                        res:null});
                 }
             return resource.json_data;
         };
@@ -788,7 +807,7 @@ const dbInstallGetFiles = async (install_type) =>{
                             app_data_entity_resource_id:                    resource_master.app_data_entity_resource_id,
                             json_data:                                      await demo_data_update(resource_master)
             };
-            const master_id = await create_resource_master(app_id, data);
+            const master_id = await create_resource_master(parameters.app_id, data);
             for (const resource_detail of resource_master.resource_detail ?? []){
                 const data = {  app_data_resource_master_id                     : master_id,
                                 app_data_entity_resource_id                     : resource_detail.app_data_entity_resource_id,
@@ -799,7 +818,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                 app_data_resource_master_attribute_id           : resource_detail.app_data_resource_master_attribute_id,
                                 json_data                                       : await demo_data_update(resource_detail)
                                 };
-                const detail_id = await create_resource_detail(app_id, data);
+                const detail_id = await create_resource_detail(parameters.app_id, data);
                 for (const resource_detail_data of resource_detail.resource_detail_data ?? []){
                     const data ={   app_data_resource_detail_id             : detail_id,
                                     user_account_id                         : demo_user.id,
@@ -808,7 +827,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                     app_data_resource_master_attribute_id   : resource_detail_data.app_data_resource_master_attribute_id,
                                     json_data                               : await demo_data_update(resource_detail_data)
                                     };
-                    create_resource_detail_data(app_id, data);
+                    create_resource_detail_data(parameters.app_id, data);
                 }
             }
         }
@@ -828,7 +847,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_likeuser = async (app_id, id, id_like ) =>{
         return new Promise((resolve, reject) => {
-            user_account_like.post(app_id, id, {user_account_id:id_like})
+            user_account_like.post({app_id:app_id, resource_id:id, data:{user_account_id:id_like}})
             .then(result => {
                 if (result.affectedRows == 1)
                     records_user_account_like++;
@@ -867,7 +886,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_user_account_follow = async (app_id, id, id_follow ) =>{
         return new Promise((resolve, reject) => {
-            user_account_follow.post(app_id, id, {user_account_id:id_follow})
+            user_account_follow.post({app_id:app_id, resource_id:id, data:{user_account_id:id_follow}})
             .then(result=>{
                 if (result.affectedRows == 1)
                     records_user_account_follow++;
@@ -887,10 +906,12 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
         return new Promise((resolve, reject) => {
-            getUserPostsByUserId(app_id, user1,null,null)
+            getUserPostsByUserId({app_id:app_id, resource_id:user1,locale:'en',res:null})
             .then(result_posts=>{
                 const random_posts_index = Math.floor(1 + Math.random() * result_posts.length - 1 );
-                user_account_app_data_post_like.post(app_id, user2, {user_account_app_data_post_id:result_posts[random_posts_index].id})
+                user_account_app_data_post_like.post({  app_id:app_id, 
+                                                        resource_id:user2, 
+                                                        data:{user_account_app_data_post_id:result_posts[random_posts_index].id}})
                 .then(result => {
                     if (result.affectedRows == 1)
                         records_user_account_app_data_post_like++;
@@ -915,7 +936,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
         return new Promise((resolve, reject) => {
-            getUserPostsByUserId(app_id, user1, null,null)
+            getUserPostsByUserId({app_id:app_id, resource_id:user1, locale:'en',res:null})
             .then(result_posts=>{
                 //choose random post from user
                         const random_index = Math.floor(1 + Math.random() * result_posts.length -1);
@@ -946,11 +967,14 @@ const dbInstallGetFiles = async (install_type) =>{
         });
     };
     for (const social_type of social_types){
-        socketAdminSend(app_id, {   app_id:null,
-                                    client_id:serverUtilNumberValue(query.get('client_id')),
+        socketAdminSend({app_id:parameters.app_id, 
+                            data:{  app_id:null,
+                                    client_id:serverUtilNumberValue(parameters.data.client_id),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
-                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))});
+                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))
+                            }
+                        });
         install_count++;
         //select new random sample for each social type
         /**@type{[number]|[]} */
@@ -978,34 +1002,34 @@ const dbInstallGetFiles = async (install_type) =>{
             for(const user2 of random_users2){
                 switch (social_type){
                     case 'LIKE':{
-                        await create_likeuser(app_id, user1, user2);
+                        await create_likeuser(parameters.app_id, user1, user2);
                         break;
                     }
                     case 'VIEW':{
-                        await create_user_account_view(app_id, 
-                                                {user_account_id: user1,
-                                                user_account_id_view: user2,
-                                                client_ip: null,
-                                                client_user_agent: null,
-                                                client_longitude: null,
-                                                client_latitude: null
-                                                });
+                        await create_user_account_view(parameters.app_id, 
+                                                        {   user_account_id: user1,
+                                                            user_account_id_view: user2,
+                                                            client_ip: null,
+                                                            client_user_agent: null,
+                                                            client_longitude: null,
+                                                            client_latitude: null
+                                                        });
                         break;
                     }
                     case 'VIEW_ANONYMOUS':{
-                        await create_user_account_view(app_id, 
+                        await create_user_account_view(parameters.app_id, 
                                                         {
-                                                        user_account_id: null,
-                                                        user_account_id_view: user1,
-                                                        client_ip: null,
-                                                        client_user_agent: null,
-                                                        client_longitude: null,
-                                                        client_latitude: null
+                                                            user_account_id: null,
+                                                            user_account_id_view: user1,
+                                                            client_ip: null,
+                                                            client_user_agent: null,
+                                                            client_longitude: null,
+                                                            client_latitude: null
                                                         });
                         break;
                     }
                     case 'FOLLOWER':{
-                        await create_user_account_follow(app_id, user1, user2);
+                        await create_user_account_follow(parameters.app_id, user1, user2);
                         break;
                     }
                     case 'POSTS_LIKE':{
@@ -1051,11 +1075,11 @@ const dbInstallGetFiles = async (install_type) =>{
  * @description Demo uninstall
  *              Deletes all demo users and send server side events of progress
  * @function
- * @param {number} app_id
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{client_id?:string|null}}}parameters
  * @returns {Promise.<{info: {}[]}>}
  */
-const dbDemoUninstall = async (app_id, query)=> {
+const dbDemoUninstall = async parameters => {
     /**@type{import('../socket.js')} */
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('./fileModelLog.js')} */
@@ -1063,18 +1087,21 @@ const dbDemoUninstall = async (app_id, query)=> {
     /**@type{import('./dbModelUserAccount.js')} */
 	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     return new Promise((resolve, reject)=>{
-        userDemoGet(app_id)
+        userDemoGet(parameters.app_id)
         .then(result_demo_users=>{
             let deleted_user = 0;
             if (result_demo_users.length>0){
                 const delete_users = async () => {
                     for (const user of result_demo_users){
-                        socketAdminSend(app_id, {   app_id:null,
-                                                    client_id:serverUtilNumberValue(query.get('client_id')),
+                        socketAdminSend({   app_id:parameters.app_id, 
+                                            data:{  app_id:null,
+                                                    client_id:serverUtilNumberValue(parameters.data.client_id),
                                                     client_id_current:null,
                                                     broadcast_type:'PROGRESS',
-                                                    broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))});
-                        await userDelete(app_id, user.id)
+                                                    broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))
+                                            }
+                                        });
+                        await userDelete(parameters.app_id, user.id)
                         .then(()=>{
                             deleted_user++;
                             if (deleted_user == result_demo_users.length)
@@ -1189,8 +1216,8 @@ const dbStart = async () => {
                 await DB_POOL(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of fileModelApp.get(null, null, null)){
-                    const app_secret = fileModelAppSecret.get(null, null).filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
+                for (const app  of fileModelApp.get({app_id:null, resource_id:null, res:null})){
+                    const app_secret = fileModelAppSecret.get({app_id:null, res:null}).filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
                     /**@ts-ignore */
                     if (app_secret[`service_db_db${db_use}_app_user`])
                         await DB_POOL(  db_use, 

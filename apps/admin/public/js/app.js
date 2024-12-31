@@ -590,13 +590,13 @@ const appSecureCommonRecordUpdate = async ( table,
  * @param {string} id 
  * @param {boolean|null} db_icon 
  * @param {string} path 
- * @param {string} query
  * @param {CommonRESTAPIMethod} method 
- * @param {{demo_password:string}|null} data 
+ * @param {{demo_password?:string,
+ *          client_id:number|null}|null} data 
  * @returns {void}
  */
-const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, query, method, data) => {
-    common.commonFFB({path:path, query:query, method:method, authorization_type:'ADMIN', body:data, spinner_id:id})
+const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, method, data) => {
+    common.commonFFB({path:path, method:method, authorization_type:'ADMIN', body:data, spinner_id:id})
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
             if (db_icon){
@@ -619,10 +619,11 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, quer
  */
 const appSecureMenuInstallationDbInstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    appSecureMenuInstallationDbInstallationFunction(  'menu_installation_db_button_install', true, 
-                            '/server-db_admin/database', 
-                            `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 
-                            'POST', null);
+    appSecureMenuInstallationDbInstallationFunction('menu_installation_db_button_install', 
+                                                    true, 
+                                                    '/server-db_admin/database', 
+                                                    'POST', 
+                                                    {client_id:common.COMMON_GLOBAL.service_socket_client_ID});
 };
 /**
  * @name appSecureMenuInstallationDbUninstall
@@ -632,9 +633,11 @@ const appSecureMenuInstallationDbInstall = () =>{
  */
 const appSecureMenuInstallationDbUninstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
-    appSecureMenuInstallationDbInstallationFunction(  'menu_installation_db_button_uninstall', false, 
-                            '/server-db_admin/database', 
-                            `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`, 'DELETE', null);
+    appSecureMenuInstallationDbInstallationFunction('menu_installation_db_button_uninstall', 
+                                                    false, 
+                                                    '/server-db_admin/database', 
+                                                    'DELETE', 
+                                                    {client_id:common.COMMON_GLOBAL.service_socket_client_ID});
 };
 /**
  * @name appSecureMenuInstallationDemoInstall
@@ -647,11 +650,12 @@ const appSecureMenuInstallationDemoInstall = () =>{
                         {
                             check_valid_list_elements:[[COMMON_DOCUMENT.querySelector('#menu_installation_demo_password'),null]]
                         })==true){
-        const json_data = {demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
+        const json_data = { demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent,
+                            client_id:common.COMMON_GLOBAL.service_socket_client_ID};
         appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_install', null, 
                                 '/server-db_admin/database-demo', 
-                                `client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
-                                'POST', json_data);
+                                'POST', 
+                                json_data);
     }
 };
 /**
@@ -663,8 +667,8 @@ const appSecureMenuInstallationDemoInstall = () =>{
 const appSecureMenuInstallationDemoUninstall = () =>{
     appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_uninstall', null, 
                             '/server-db_admin/database-demo', 
-                            `?client_id=${common.COMMON_GLOBAL.service_socket_client_ID??''}`,
-                            'DELETE', null);
+                            'DELETE', 
+                            {client_id:common.COMMON_GLOBAL.service_socket_client_ID});
 };
 
 /**

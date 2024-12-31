@@ -12,17 +12,17 @@ const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDele
  * @name get
  * @description Get records for given appid
  * @function
- * @param {number|null} app_id
- * @param {number|null} resource_id //if empty then fetch all apps
- * @param {server_server_res|null} res
+ * @param {{app_id:number|null,
+ *          resource_id:number|null,
+ *          res:server_server_res|null}} parameters
  * @returns {server_db_file_app[]}
  */
-const get = (app_id, resource_id, res) =>{ 
-    const result = fileDBGet(app_id, 'APP',resource_id, null);
-    if (result.length>0 || resource_id==null)
+const get = parameters =>{ 
+    const result = fileDBGet(parameters.app_id, 'APP',parameters.resource_id, null);
+    if (result.length>0 || parameters.resource_id==null)
         return result;
     else
-        throw fileCommonRecordNotFound(res);
+        throw fileCommonRecordNotFound(parameters.res);
 };
 
 /**
@@ -72,58 +72,69 @@ const post = async (app_id, data, res) => {
  * @name update
  * @description Update
  * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} data
- * @param {server_server_res} res
+ * @param {{app_id:Number,
+ *          resource_id:number,
+ *          data:{  name:string,
+ *                  subdomain:string,
+ *                  path:string,
+ *                  logo:string,
+ *                  showparam:number,
+ *                  manifest:string,
+ *                  js:string,
+ *                  css:string,
+ *                  css_report:string,
+ *                  favicon_32x32:string,
+ *                  favicon_192x192:string,
+ *                  status:'ONLINE'|'OFFLINE'},
+ *          res:server_server_res}} parameters
  * @returns {Promise.<{affectedRows:number}>}
  */
-const update = async (app_id, resource_id, data, res) => {
+const update = async parameters => {
     /**@type{import('../iam.service.js')} */
     const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
 
-    if (app_id!=null){
+    if (parameters.app_id!=null){
         /**@type{server_db_file_app} */
         const data_update = {};
         //allowed parameters to update:
-        if (data.name!=null)
-            data_update.name = data.name;
-        if (data.subdomain!=null)
-            data_update.subdomain = data.subdomain;
-        if (data.path!=null)
-            data_update.path = data.path;
-        if (data.logo!=null)
-            data_update.logo = data.logo;
-        if (data.showparam!=null)
-            data_update.showparam = data.showparam;
-        if (data.manifest!=null)
-            data_update.manifest = data.manifest;
-        if (data.js!=null)
-            data_update.js = data.js;
-        if (data.css!=null)
-            data_update.css = data.css;
-        if (data.css_report!=null)
-            data_update.css_report = data.css_report;
-        if (data.favicon_32x32!=null)
-            data_update.favicon_32x32 = data.favicon_32x32;
-        if (data.favicon_192x192!=null)
-            data_update.favicon_192x192 = data.favicon_192x192;
-        if (data.status!=null)
-            data_update.status = data.status;
+        if (parameters.data.name!=null)
+            data_update.name = parameters.data.name;
+        if (parameters.data.subdomain!=null)
+            data_update.subdomain = parameters.data.subdomain;
+        if (parameters.data.path!=null)
+            data_update.path = parameters.data.path;
+        if (parameters.data.logo!=null)
+            data_update.logo = parameters.data.logo;
+        if (parameters.data.showparam!=null)
+            data_update.showparam = parameters.data.showparam;
+        if (parameters.data.manifest!=null)
+            data_update.manifest = parameters.data.manifest;
+        if (parameters.data.js!=null)
+            data_update.js = parameters.data.js;
+        if (parameters.data.css!=null)
+            data_update.css = parameters.data.css;
+        if (parameters.data.css_report!=null)
+            data_update.css_report = parameters.data.css_report;
+        if (parameters.data.favicon_32x32!=null)
+            data_update.favicon_32x32 = parameters.data.favicon_32x32;
+        if (parameters.data.favicon_192x192!=null)
+            data_update.favicon_192x192 = parameters.data.favicon_192x192;
+        if (parameters.data.status!=null)
+            data_update.status = parameters.data.status;
         if (Object.entries(data_update).length>0)
-            return fileDBUpdate(app_id, 'APP', resource_id, null, data_update).then((result)=>{
+            return fileDBUpdate(parameters.app_id, 'APP', parameters.resource_id, null, data_update).then((result)=>{
                 if (result.affectedRows>0)
                     return result;
                 else
-                    throw fileCommonRecordNotFound(res);
+                    throw fileCommonRecordNotFound(parameters.res);
             });
         else{
-            res.statusCode = 404;
+            parameters.res.statusCode = 404;
             throw iamUtilMesssageNotAuthorized();
         }
     }
     else{
-        res.statusCode = 400;
+        parameters.res.statusCode = 400;
         throw iamUtilMesssageNotAuthorized();
     }
 };

@@ -48,9 +48,13 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     /**@ts-ignore */
     const url = fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_api_url_payment_request_create;
-    const currency = await dbModelAppDataResourceMaster.get(app_id, null, 
-                            new URLSearchParams(`data_app_id=${data.data_app_id}&resource_name=CURRENCY`),
-                            true).then(result=>JSON.parse(result[0].json_data));
+    const currency = await dbModelAppDataResourceMaster.get({   app_id:app_id, 
+                                                                resource_id:null, 
+                                                                data:{  data_app_id:data.data_app_id,
+                                                                        resource_name:'CURRENCY',
+                                                                        user_null:'1'
+                                                                }})
+                            .then(result=>JSON.parse(result[0].json_data));
     //validate
 	if (data.currency_code==currency.currency_code && data.payerid !='' && data.payerid !=null){
         /** 
