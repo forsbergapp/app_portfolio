@@ -69,6 +69,7 @@ const SLASH = process.platform == 'win32'?'\\':'/';
  * @type{server_db_file_db_record[]} 
  */
 const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_server.json', CACHE_CONTENT:null},
+                    {NAME:'CONFIG_REST_API',                TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_rest_api.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_IAM_POLICY',              TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE',            TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE_SERVICES',   TYPE:'JSON',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice_services.json', CACHE_CONTENT:null},
