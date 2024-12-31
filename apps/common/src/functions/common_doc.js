@@ -55,7 +55,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                     switch (true){
                         case menu.type=='APP':{
                             //return menu for app with updated id and app name
-                            menu.menu_sub = fileModelApp.get(app_id, null, null).map(app=>{
+                            menu.menu_sub = fileModelApp.get({app_id:app_id, resource_id:null, res:null}).map(app=>{
                                 return { 
                                         id:app.id,
                                         menu:app.name,
@@ -128,7 +128,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');
                 
-                return [await ComponentCreate({ data:{  app:                    data.type.toUpperCase()=='APP'?fileModelApp.get(app_id, serverUtilNumberValue(data.doc), null)[0]:null, 
+                return [await ComponentCreate({ data:{  app:                    data.type.toUpperCase()=='APP'?fileModelApp.get({app_id:app_id, resource_id:serverUtilNumberValue(data.doc), res:null})[0]:null, 
                                                         app_translation:        data.type.toUpperCase()=='APP'?
                                                                                     fileModelAppTranslation.get(app_id,null, locale, 
                                                                                                             /**@ts-ignore */
@@ -164,7 +164,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                         code:                   await getFile(`${process.cwd()}${data.doc}.js`),
                                                         module:                 data.doc,
                                                                                 //copyright displayed same as function app owner
-                                                        app_copyright:          fileModelAppParameter.get(app_id, null)[0].app_copyright.value,
+                                                        app_copyright:          fileModelAppParameter.get({app_id:app_id, res:null})[0].app_copyright.value,
                                                         configuration:          fileModelConfig.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION'),
                                                         server_host:            fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'HOST')},
                                                 methods:null})];

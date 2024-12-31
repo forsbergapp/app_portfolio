@@ -101,7 +101,7 @@ const dbCommonAppCodeGet = error => {
  * @function
  * @param {number} app_id 
  * @param {string} lang_code
- * @param {server_server_res} res
+ * @param {server_server_res|null} res
  * @returns {Promise.<string>}
  */
 const dbCommonRecordNotFound = async (app_id, lang_code, res) => {

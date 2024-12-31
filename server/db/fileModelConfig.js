@@ -194,15 +194,16 @@ const configInit = async () => {
  * @name getFile
  * @description Config get saved
  * @function
- * @param {server_db_file_db_name} file
- * @param {*} query
+ * @param {{resource_id:server_db_file_db_name,
+ *          data:{  config_group?:string|null,
+ *                  parameter?:string|null,
+ *                  saved?:string|null}|null}} parameters
  * @returns {Promise.<*>}
  */
-const getFile = async (file, query=null) => {
-    const saved = query?serverUtilNumberValue(query.get('saved'))==1:false;
-    const config_group = query?query.get('config_group'):null;
-    const parameter = query?query.get('parameter'):null;
-    const config = saved?await fileFsRead(file).then((/**@type{*}*/config)=>config.file_content):fileCache(file);
+const getFile = async parameters => {
+    const config_group = parameters.data?.config_group?parameters.data.config_group:null;
+    const parameter = parameters.data?.parameter?parameters.data.parameter:null;
+    const config = serverUtilNumberValue(parameters.data?.saved)?await fileFsRead(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):fileCache(parameters.resource_id);
     return await new Promise((resolve) => {
         if (config_group)
             if (config_group =='METADATA')
@@ -219,39 +220,39 @@ const getFile = async (file, query=null) => {
  * @name update
  * @description Config save
  * @function
- * @param {server_db_file_db_name} resource_id
- * @param { *} data
+ * @param {{resource_id:server_db_file_db_name,
+ *          data:{  config: server_config_server|
+ *                          server_db_file_app[]|
+ *                          server_config_iam_policy|
+ *                          microservice_config|
+ *                          microservice_config_service|null,
+ *                  maintenance:string,
+ *                  comment:string,
+ *                  configuration:string}}} parameters
  * @returns {Promise.<void>}
  */
-const update = async (resource_id, data) => {
-    /**@type{server_config_server|
-             server_db_file_app[]|
-             server_config_iam_policy|
-             microservice_config|
-             microservice_config_service|null} */
-    const config = data.config;
-    const maintenance = serverUtilNumberValue(data.maintenance);
-    const comment = data.comment;
-    const configuration = data.configuration;
+const update = async parameters => {
+    const maintenance = serverUtilNumberValue(parameters.data.maintenance);
+    const comment = parameters.data.comment;
+    const configuration = parameters.data.configuration;
 
-
-    const file_config = await fileFsRead(resource_id, true);
-    if (config){
+    const file_config = await fileFsRead(parameters.resource_id, true);
+    if (parameters.data.config){
         //file updated
-        if (resource_id=='CONFIG_SERVER'){
+        if (parameters.resource_id=='CONFIG_SERVER'){
             const metadata = file_config.file_content.METADATA;
-            file_config.file_content = config;
+            file_config.file_content = parameters.data.config;
             file_config.file_content.METADATA = metadata;
         }
         else
-            file_config.file_content = config;
+            file_config.file_content = parameters.data.config;
     }
-    if (resource_id=='CONFIG_SERVER'){
+    if (parameters.resource_id=='CONFIG_SERVER'){
         file_config.file_content.METADATA.MAINTENANCE = maintenance ?? file_config.file_content.METADATA.MAINTENANCE;
         file_config.file_content.METADATA.CONFIGURATION = configuration ?? file_config.file_content.METADATA.CONFIGURATION;
         file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
         file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
     }
-    await fileFsWrite(resource_id, file_config.transaction_id, file_config.file_content);
+    await fileFsWrite(parameters.resource_id, file_config.transaction_id, file_config.file_content);
 };
 export{ getFile, update, get, configInit};

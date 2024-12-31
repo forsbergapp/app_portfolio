@@ -2145,7 +2145,7 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
         }
         case 1:{
             commonComponentRemove('common_dialogue_message');
-            commonFFB({path:`/server-db/user_account_app/${user_account_id}`, query:`delete_app_id=${app_id}`, method:'DELETE', authorization_type:'APP_ACCESS'})
+            commonFFB({path:`/server-db/user_account_app/${user_account_id}`, body:{delete_app_id:app_id}, method:'DELETE', authorization_type:'APP_ACCESS'})
             .then(()=>{
                 //execute event and refresh app list
                 COMMON_DOCUMENT.querySelector('#common_profile_info_main_btn_cloud').click();
