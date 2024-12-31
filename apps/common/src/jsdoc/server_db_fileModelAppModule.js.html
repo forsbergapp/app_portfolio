@@ -18,18 +18,18 @@ const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDele
  * @name get
  * @description Get records for given appid
  * @function
- * @param {number} app_id
- * @param {number|null} resource_id
- * @param {number|null} data_app_id
- * @param {server_server_res|null} res
+ * @param {{app_id:Number,
+ *          resource_id:number|null,
+ *          data:{data_app_id:number|null},
+ *          res:server_server_res|null}} parameters
  * @returns {server_db_file_app_module[]}
  */
-const get = (app_id, resource_id, data_app_id, res) => {
-    const result = fileDBGet(app_id, 'APP_MODULE',resource_id, data_app_id);
-    if (result.length>0 || resource_id==null)
+const get = parameters => {
+    const result = fileDBGet(parameters.app_id, 'APP_MODULE',parameters.resource_id, parameters.data.data_app_id);
+    if (result.length>0 || parameters.resource_id==null)
         return result;
     else
-        throw fileCommonRecordNotFound(res);
+        throw fileCommonRecordNotFound(parameters.res);
 };
 
 /**
@@ -72,37 +72,37 @@ const post = async (app_id, data, res) => {
  * @name update
  * @description Update record
  * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} data
- * @param {server_server_res} res
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          data:server_db_file_app_module,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;{affectedRows:number}>}
  */
-const update = async (app_id, resource_id, data, res) => {
+const update = async parameters => {
     /**@type{server_db_file_app_module} */
     const data_update = {};
     //allowed parameters to update:
-    if (data.common_type!=null)
-        data_update.common_type = data.common_type;
-    if (data.common_name!=null)
-        data_update.common_name = data.common_name;
-    if (data.common_role!=null)
-        data_update.common_role = data.common_role;
-    if (data.common_path!=null)
-        data_update.common_path = data.common_path;
-    if (data.common_description!=null)
-        data_update.common_description = data.common_description;
+    if (parameters.data.common_type!=null)
+        data_update.common_type = parameters.data.common_type;
+    if (parameters.data.common_name!=null)
+        data_update.common_name = parameters.data.common_name;
+    if (parameters.data.common_role!=null)
+        data_update.common_role = parameters.data.common_role;
+    if (parameters.data.common_path!=null)
+        data_update.common_path = parameters.data.common_path;
+    if (parameters.data.common_description!=null)
+        data_update.common_description = parameters.data.common_description;
     if (Object.entries(data_update).length>0)
-        return fileDBUpdate(app_id, 'APP_MODULE', resource_id, null, data_update).then((result)=>{
+        return fileDBUpdate(parameters.app_id, 'APP_MODULE', parameters.resource_id, null, data_update).then((result)=>{
             if (result.affectedRows>0)
                 return result;
             else
-                throw fileCommonRecordNotFound(res);
+                throw fileCommonRecordNotFound(parameters.res);
         });
     else{
         /**@type{import('../iam.service.js')} */
         const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
-        res.statusCode = 404;
+        parameters.res.statusCode = 404;
         throw iamUtilMesssageNotAuthorized();
     }  
 };

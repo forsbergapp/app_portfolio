@@ -384,17 +384,21 @@ const userGetEmail = async (app_id, email) =>
  * @name getProfile
  * @description Get user profile
  * @function
- * @param {number} app_id 
- * @param {number|null} resource_id_number
- * @param {string|null} resource_id_name
- * @param {string} ip 
- * @param {string} user_agent 
- * @param {*} query 
- * @param {*} data
- * @param {server_server_res} res
+ * @param {{app_id:Number,
+ *          resource_id:number|null,
+ *          ip:string,
+ *          user_agent:string,
+ *          data:{  resource_id_name:string|null,
+ *                  id?:string|null,
+ *                  search?:string|null,
+ *                  client_latitude?:string|null,
+ *                  client_longitude?:string|null,
+ *                  POST_ID?:string |null},
+ *          locale:string,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_getProfileUser[]>}
  */
-const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent, query, data, res) =>{
+const getProfile = parameters =>{
     return new Promise((resolve, reject)=>{
         /**
          * Clear private data if private
@@ -403,12 +407,12 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
          */
         const clear_private = result_getProfileUser =>
             result_getProfileUser.map(row=>{
-                if (row.id ==resource_id_number){
+                if (row.id ==parameters.resource_id){
                     //profile of current logged in user should always be displayed
                     row.private = null;
                 }
                 else
-                    if ((row.private==1 &amp;&amp; row.friends==null) || query.get('search')!=null){
+                    if ((row.private==1 &amp;&amp; row.friends==null) || parameters.data.search!=null){
                         //private and not friends or anonymous visit, remove stats
                         row.count_following = null;
                         row.count_followed = null;
@@ -430,10 +434,10 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 case (search!='' &amp;&amp; search != null):{
                     return 'u.username LIKE :user_value OR u.provider_first_name LIKE :user_value';
                 }
-                case (resource_id_name!='' &amp;&amp; resource_id_name != null):{
+                case (parameters.data.resource_id_name!='' &amp;&amp; parameters.data.resource_id_name != null):{
                     return 'u.username = :user_value';
                 }
-                case (resource_id_number != null):{
+                case (parameters.resource_id != null):{
                     return 'u.id = :user_value';
                 }
                 default:{
@@ -449,11 +453,11 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 case (search!='' &amp;&amp; search != null):{
                     return `${search}%`;
                 }
-                case (resource_id_name!='' &amp;&amp; resource_id_name != null):{
-                    return resource_id_name;
+                case (parameters.data.resource_id_name!='' &amp;&amp; parameters.data.resource_id_name != null):{
+                    return parameters.data.resource_id_name;
                 }
-                case (resource_id_number != null):{
-                    return resource_id_number;
+                case (parameters.resource_id != null):{
+                    return parameters.resource_id;
                 }
                 default:{
                     return null;
@@ -462,38 +466,38 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
         };
         //resource id can be number, string or empty if searching
         import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(app_id, 
+            dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_PROFILE
-                            .replace('&lt;USER_WHERE/>',user_where(query.get('search'))),
+                            .replace('&lt;USER_WHERE/>',user_where(parameters.data.search ??'')),
                             {
-                                user_accound_id_current_user: serverUtilNumberValue(query.get('id')),
-                                user_value: user_where_value(query.get('search'))
+                                user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
+                                user_value: user_where_value(parameters.data.search??'')
                             },
                             null, 
                             null))
         .then(result_getProfileUser=>{
-            if (query.get('search')){
+            if (parameters.data.search){
                 //searching, return result
                 import(`file://${process.cwd()}/server/db/dbModelAppDataStat.js`)
                 .then((/**@type{import('./dbModelAppDataStat.js')} */{ post }) => {
                     /**@type{server_db_sql_parameter_app_data_stat_post} */
-                    const data_insert = {json_data:                                         {   search:             query.get('search') ?? resource_id_number ?? resource_id_name,
-                                                                                                client_ip:          ip,
-                                                                                                client_user_agent:  user_agent,
-                                                                                                client_longitude:   query.get('client_longitude'),
-                                                                                                client_latitude:    query.get('client_latitude')},
+                    const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id ?? parameters.data.resource_id_name,
+                                                                                                client_ip:          parameters.ip,
+                                                                                                client_user_agent:  parameters.user_agent,
+                                                                                                client_longitude:   parameters.data.client_longitude,
+                                                                                                client_latitude:    parameters.data.client_latitude},
                                         //if user logged not logged in then save resource on app
-                                        app_id:                                             serverUtilNumberValue(query.get('id'))?null:app_id,
+                                        app_id:                                             serverUtilNumberValue(parameters.data.id)?null:parameters.app_id,
                                         user_account_id:                                    null,
                                         //save user account if logged in else set null in both user account app columns
-                                        user_account_app_user_account_id:                   serverUtilNumberValue(query.get('id')) ?? null,
-                                        user_account_app_app_id:                            serverUtilNumberValue(query.get('id'))?app_id:null,
+                                        user_account_app_user_account_id:                   serverUtilNumberValue(parameters.data.id) ?? null,
+                                        user_account_app_app_id:                            serverUtilNumberValue(parameters.data.id)?parameters.app_id:null,
                                         app_data_resource_master_id:                        null,
                                         app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
                                         app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
                                         app_data_entity_resource_app_data_entity_id:        0   //COMMON
                                         };
-                    post(app_id, data_insert)
+                    post(parameters.app_id, data_insert)
                     .then(()=>{
                         resolve(clear_private(result_getProfileUser));
                     })
@@ -505,13 +509,13 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                     //always save stat who is viewing, same user, none or someone else
                     import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`)
                     .then((/**@type{import('./dbModelUserAccountView.js')} */dbModelUserAccountView) => {
-                        const data_body = { user_account_id:        serverUtilNumberValue(query.get('id')),    //who views
-                                            user_account_id_view:   serverUtilNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id, //viewed account
-                                            client_ip:              ip,
-                                            client_user_agent:      user_agent,
-                                            client_longitude:       query.get('client_longitude'),
-                                            client_latitude:        query.get('client_latitude')};
-                        dbModelUserAccountView.post(app_id, data_body)
+                        const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
+                                            user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+                                            client_ip:              parameters.ip,
+                                            client_user_agent:      parameters.user_agent,
+                                            client_longitude:       parameters.data.client_longitude??'',
+                                            client_latitude:        parameters.data.client_latitude??''};
+                        dbModelUserAccountView.post(parameters.app_id, data_body)
                         .then(()=>{
                             resolve(clear_private(result_getProfileUser));
                         })
@@ -521,7 +525,7 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
                 else{
                     import(`file://${process.cwd()}/server/db/common.js`)
                     .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });
                 }
         })
@@ -532,17 +536,17 @@ const getProfile = (app_id, resource_id_number, resource_id_name, ip, user_agent
  * @name getProfileStat
  * @description Get profile stat
  * @function
- * @param {number} app_id 
- * @param {*} query
+ * @param {{app_id:number,
+ *          data:{statchoice?:string|null}}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_getProfileStat[]>}
  */
-const getProfileStat = (app_id, query) => 
+const getProfileStat = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_SELECT_PROFILE_STAT,
                         {
-                            statchoice: serverUtilNumberValue(query.get('statchoice')),
-                            app_id: app_id
+                            statchoice: serverUtilNumberValue(parameters.data?.statchoice),
+                            app_id: parameters.app_id
                         },
                         null, 
                         null));
@@ -583,47 +587,56 @@ const userUpdateAdmin = async (app_id, id, data) =>{
 /**
  * @name updateAdmin
  * @description Gets user and updates user by admin
- * @function
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} query 
- * @param {*} data
- * @param {server_server_res} res
+ * @function 
+ * @param {{app_id :number,
+ *          resource_id:number,
+ *          data:{  username:string,
+ *                  bio:string,
+ *                  email:string,
+ *                  email_unverified:string,
+ *                  password_new:string,
+ *                  password_reminder:string,
+ *                  active:number,
+ *                  user_level:number,
+ *                  private:number,
+ *                  verification_code:string},
+ *          locale:string,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_updateAdmin>}
  */
-const updateAdmin =(app_id, resource_id, query, data, res) =>{
+const updateAdmin = parameters =>{
     return new Promise((resolve, reject)=>{
         // get avatar and provider column used to validate
-        getUserByUserId(app_id, resource_id, query, res)
+        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, locale:parameters.locale, res:parameters.res})
         .then(result_user=>{
             if (result_user) {
                 /**@type{server_db_sql_parameter_user_account_updateAdmin} */
-                const body = {  active:             serverUtilNumberValue(data.active),
-                                user_level:         serverUtilNumberValue(data.user_level),
-                                private:            serverUtilNumberValue(data.private),
-                                username:           data.username,
-                                bio:                data.bio,
-                                email:              data.email,
-                                email_unverified:   data.email_unverified,
+                const body = {  active:             serverUtilNumberValue(parameters.data.active),
+                                user_level:         serverUtilNumberValue(parameters.data.user_level),
+                                private:            serverUtilNumberValue(parameters.data.private),
+                                username:           parameters.data.username,
+                                bio:                parameters.data.bio,
+                                email:              parameters.data.email,
+                                email_unverified:   parameters.data.email_unverified,
                                 password:           null,
-                                password_new:       data.password_new==''?null:data.password_new,
-                                password_reminder:  data.password_reminder,
-                                verification_code:  data.verification_code,
+                                password_new:       parameters.data.password_new==''?null:parameters.data.password_new,
+                                password_reminder:  parameters.data.password_reminder,
+                                verification_code:  parameters.data.verification_code,
                                 provider_id:        result_user.provider_id,
                                 avatar:             result_user.avatar,
                                 admin:              1};
-                userUpdateAdmin(app_id, resource_id, body)
+                userUpdateAdmin(parameters.app_id, parameters.resource_id, body)
                 .then(result_update=>{
                     resolve(result_update);
                 })
                 .catch((/**@type{server_server_error}*/error)=>{
-                    dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
             else{
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         })
@@ -634,19 +647,23 @@ const updateAdmin =(app_id, resource_id, query, data, res) =>{
  * @name getUsersAdmin
  * @description Get users by admin
  * @function
- * @param {number} app_id 
- * @param {*} query 
+ * @param {{app_id:number,
+ *          data:{  sort?:string|null,
+ *                  order_by?:string|null,
+ *                  search?:string|null,
+ *                  offset?:string|null,
+ *                  limit?:string|null}}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_getUsersAdmin[]>}
  */
-const getUsersAdmin = (app_id, query) => 
+const getUsersAdmin = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_SELECT
-                        .replace('&lt;SORT/>', query.get('sort'))
-                        .replace('&lt;ORDER_BY/>', query.get('order_by')),
-                        {   search: query.get('search')=='*'?query.get('search'):'%' + query.get('search') + '%',
-							offset: serverUtilNumberValue(query.get('offset')) ?? 0,
-							limit:  serverUtilNumberValue(query.get('limit'))
+                        .replace('&lt;SORT/>', parameters.data.sort ?? '')
+                        .replace('&lt;ORDER_BY/>', parameters.data.order_by ?? ''),
+                        {   search: parameters.data.search=='*'?parameters.data.search:'%' + parameters.data.search + '%',
+							offset: serverUtilNumberValue(parameters.data.offset) ?? 0,
+							limit:  serverUtilNumberValue(parameters.data.limit)
 							},
                         null, 
                         null));
@@ -654,13 +671,13 @@ const getUsersAdmin = (app_id, query) =>
 /**
  * @name getStatCountAdmin
  * @description Get user stat
- * @function
- * @param {number} app_id 
+ * @function 
+ * @param {{app_id:number}}parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_getStatCountAdmin[]>}
  */
-const getStatCountAdmin = app_id => 
+const getStatCountAdmin = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_SELECT_STAT_COUNT,
                         {},
                         null, 
@@ -669,30 +686,37 @@ const getStatCountAdmin = app_id =>
 /**
  * @name updatePassword
  * @description Update user password
- * @function
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {string} ip 
- * @param {string} user_agent 
- * @param {string} host 
- * @param {string} accept_language 
- * @param {*} query 
- * @param {*} data 
- * @param {server_server_res} res
+ * @function 
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          ip:string,
+ *          user_agent:string,
+ *          host:string,
+ *          accept_language:string,
+ *          data:{  password_new:string,
+ *                  auth:string,
+ *                  user_language:string,
+ *                  user_timezone:string,
+ *                  user_number_system:string,
+ *                  user_platform:string,
+ *                  client_latitude:string,
+ *                  client_longitude:string},
+ *          locale:string,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;void>}
  */
- const updatePassword = async (app_id, resource_id, ip, user_agent, host, accept_language, query, data, res) => {
-    const error_code = data_validation_password(data);
+ const updatePassword = async parameters => {
+    const error_code = data_validation_password(parameters.data);
     if (error_code==null){
         import(`file://${process.cwd()}/server/db/common.js`)
             .then((/**@type{import('./common.js')} */{dbCommonExecute})=>{
-                set_password(data.password_new)
-                .then(password=>dbCommonExecute(app_id, 
+                set_password(parameters.data.password_new)
+                .then(password=>dbCommonExecute(parameters.app_id, 
                                 dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
                                 {
                                     password_new: password,
-                                    id: resource_id,
-                                    auth: data.auth
+                                    id: parameters.resource_id,
+                                    auth: parameters.data.auth
                                 },
                                 null, 
                                 null))
@@ -700,30 +724,31 @@ const getStatCountAdmin = app_id =>
                     if (result_update) {
                         /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
                         const eventData = {
-                            user_account_id: resource_id,
+                            /**@ts-ignore */
+                            user_account_id: parameters.resource_id,
                             event: 'PASSWORD_RESET',
                             event_status: 'SUCCESSFUL',
-                            user_language: data.user_language,
-                            user_timezone: data.user_timezone,
-                            user_number_system: data.user_number_system,
-                            user_platform: data.user_platform,
-                            server_remote_addr : ip,
-                            server_user_agent : user_agent,
-                            server_http_host : host,
-                            server_http_accept_language : accept_language,
-                            client_latitude : data.client_latitude,
-                            client_longitude : data.client_longitude
+                            user_language: parameters.data.user_language,
+                            user_timezone: parameters.data.user_timezone,
+                            user_number_system: parameters.data.user_number_system,
+                            user_platform: parameters.data.user_platform,
+                            server_remote_addr : parameters.ip,
+                            server_user_agent : parameters.user_agent,
+                            server_http_host : parameters.host,
+                            server_http_accept_language : parameters.accept_language,
+                            client_latitude : parameters.data.client_latitude,
+                            client_longitude : parameters.data.client_longitude
                         };
-                        dbModelUserAccountEvent.post(app_id, eventData);
+                        dbModelUserAccountEvent.post(parameters.app_id, eventData);
                     }
                     else{
                         return import(`file://${process.cwd()}/server/db/common.js`)
                         .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) =>
-                            dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>{throw message;}));
+                            dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
                     }
                 })
                 .catch((/**@type{server_server_error}*/error)=>
-                        dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>{throw message;}));
+                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
             });
     }
     else
@@ -769,24 +794,24 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @name updateUserCommon
  * @description Update user common
  * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} query
- * @param {server_db_sql_parameter_user_account_updateUserCommon} data 
- * @param {server_server_res} res
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          data:server_db_sql_parameter_user_account_updateUserCommon,
+ *          locale:string,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_updateUserCommon>}
  */
- const updateUserCommon = (app_id, resource_id, query, data, res) => {
-    const error_code = data_validation_common(data);
+ const updateUserCommon = parameters => {
+    const error_code = data_validation_common(parameters.data);
 	if (error_code==null)
         return new Promise((resolve, reject)=>{
             import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                dbCommonExecute(app_id, 
+                dbCommonExecute(parameters.app_id, 
                                 dbSql.USER_ACCOUNT_UPDATE_COMMON,
-                                {	username: data.username,
-                                    bio: data.bio,
-                                    private: data.private,
-                                    id: resource_id
+                                {	username: parameters.data.username,
+                                    bio: parameters.data.bio,
+                                    private: parameters.data.private,
+                                    id: parameters.resource_id
                                 },
                                 null, 
                                 null))
@@ -796,12 +821,12 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                 else{
                     import(`file://${process.cwd()}/server/db/common.js`)
                     .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });
                 }
             })
             .catch((/**@type{server_server_error}*/error)=>{
-                dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
             });
         });
     else
@@ -810,29 +835,29 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
 /**
  * @name getUserByUserId
  * @description Get user by id
- * @function
- * @param {number} app_id 
- * @param {number} resource_id
- * @param {*} query 
- * @param {server_server_res} res 
+ * @function 
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          locale:string,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_getUserByUserId>}
  */
-const getUserByUserId = (app_id, resource_id, query, res) => {
+const getUserByUserId = parameters => {
     return new Promise((resolve, reject)=>{
         import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(app_id, 
+            dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_ID,
-                            {id: resource_id},
+                            {id: parameters.resource_id},
                             null, 
                             null))
             .then(result=>{
                 if (result[0]){
-                    resolve({...result[0], ...{last_logintime:iamUserGetLastLogin(app_id, resource_id)}});
+                    resolve({...result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}});
                 }
                 else{
                     import(`file://${process.cwd()}/server/db/common.js`)
                     .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(app_id, query?.get('lang_code') ?? 'en', res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });
                 }
             })
@@ -875,20 +900,21 @@ const userDelete = async (app_id, id) =>
  * @name getProfileDetail
  * @description Get user profile detail
  * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {*} query
- * @param {server_server_res} res 
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          data:{detailchoice?:string|null},
+ *          locale:String,
+ *          res:server_server_res}} parameters
  * @returns {Promise.&lt;server_db_sql_result_user_account_getProfileDetail[]>}
  */
- const getProfileDetail = (app_id, resource_id, query, res) => {
+ const getProfileDetail = parameters => {
     return new Promise((resolve, reject)=>{
         import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(app_id, 
+            dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_PROFILE_DETAIL,
                             {
-                                user_account_id: resource_id,
-                                detailchoice: serverUtilNumberValue(query.get('detailchoice'))
+                                user_account_id: parameters.resource_id,
+                                detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
                             },
                             null, 
                             null))
@@ -898,7 +924,7 @@ const userDelete = async (app_id, id) =>
             else {
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         });
