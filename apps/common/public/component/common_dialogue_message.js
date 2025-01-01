@@ -61,7 +61,7 @@ const template = props =>`  ${props.message_type=='CONFIRM'?
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      text_class:string,
- *                      message_type:'ERROR_BFF'|'ERROR'|'INFO'|'EXCEPTION'|'LOG'|'CONFIRM'|'PROGRESS',
+ *                      message_type:'ERROR_BFF'|'INFO'|'EXCEPTION'|'LOG'|'CONFIRM'|'PROGRESS',
  *                      data_app_id:number,
  *                      code:string,
  *                      message:*},
@@ -91,7 +91,6 @@ const component = async props => {
             display_message_font_class = 'common_font_normal';
             break;
         }
-        case 'ERROR':
         case 'INFO':
         case 'EXCEPTION':
         case 'LOG':{
@@ -105,16 +104,8 @@ const component = async props => {
                     return message;
                 }
             };
-            //return known error or parse error key or message
-            display_message = props.data.message_type=='ERROR'?await props.methods.commonFFB(
-                                                {
-                                                    path:'/server-db/app_settings_display', 
-                                                    query:`data_app_id=${props.data.data_app_id}&setting_type=MESSAGE&value=${props.data.code}`, 
-                                                    method:'GET', 
-                                                    authorization_type:'APP_DATA'
-                                                })
-                                .then((/**@type{string}*/result)=>JSON.parse(result)[0].display_data)
-                                .catch((/**@type{Error}*/error)=>error):format_message(props.data.message);
+            //parse error key or message
+            display_message = format_message(props.data.message);
             
             display_message_font_class = props.data.message_type=='LOG'?'common_font_log':'common_font_normal';
             break;
