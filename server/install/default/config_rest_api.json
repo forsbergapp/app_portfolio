@@ -4,82 +4,78 @@
       "version": "1.0.0",
       "description": "REST API"
     },
-    "servers": [{"url": "https://@{HOST}/v1"}
+    "servers": [
+        {"url": "https://@{HOST}/v1"}
     ],
     "paths": {
-        "/bff/app_data/v1/app-common/${resource_id_string}": {
+        "/bff/app_data/v1/app-common/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "app_common.commonAppsGet",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":true,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":false,
-                        "function_parameter_resource_id":true,
-                        "function_parameter_body":false,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": null
-                        }
-                    }
+                   	"200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
         },
-        "/bff/app_data/v1/server-socket/socket-status/${resource_id_string}": {
+        "/bff/app_data/v1/server-socket/socket-status/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "socket.CheckOnline",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "resource_id_required": true,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":false,
-                        "function_parameter_resource_id":true,
-                        "function_parameter_body":false,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"server_validation_resource_key":null},
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null},
+                        {"server_validation_app_function_role":null},
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false},
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": true
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -89,38 +85,27 @@
                 "summary": "",
                 "operationId": "dbModelIdentityProvider.get",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": null,
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":false,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":false,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -130,38 +115,33 @@
                 "summary": "",
                 "operationId": "dbModelAppSetting.get",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": null,
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":false,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":false,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {"setting_type":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -171,79 +151,79 @@
                 "summary": "",
                 "operationId": "dbModelAppSetting.getDisplayData",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": null,
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":false,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {"setting_type":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"value":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-activate/${resource_id_string}": {
+        "/bff/app_data/v1/server-db/user_account-activate/${resource_id_number}": {
             "put": {
                 "summary": "",
                 "operationId": "iam_service.iamAuthenticateUserActivate",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":"id", 
-                        "validate_resource_value":"number",
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": true,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":true,
-                        "function_parameter_user_agent":true, 
-                        "function_parameter_accept_language":true,
-                        "function_parameter_host":true,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":true,
-                        "function_parameter_body":true,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {"$ref": "#/components/parameters/resource_id_number"},
+                        {"resource_id_number":{
+                            "required":true
+                        }},
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":true},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -253,38 +233,27 @@
                 "summary": "",
                 "operationId": "iam_service.iamAuthenticateUserForgot",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": null,
-                        "function_parameter_ip":true,
-                        "function_parameter_user_agent":true, 
-                        "function_parameter_accept_language":true,
-                        "function_parameter_host":true,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":false,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":true,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":true},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
-                        }
-                    }
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
@@ -294,38 +263,33 @@
                 "summary": "",
                 "operationId": "dbModelUserAccount.getProfileStat",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": null,
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":false,
-                        "function_parameter_res":false
-                    }
+                        {"description": "parameters"},
+                        {"statchoice":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -335,79 +299,129 @@
                 "summary": "",
                 "operationId": "dbModelUserAccount.getProfile",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": "string",
-                        "function_parameter_ip":true,
-                        "function_parameter_user_agent":true, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":true,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "resource_id_string":{
+                                "required":false
+                            }
+                        },
+                        {"id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"search":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"client_latitude":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"client_longitude":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"POST_ID":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": null
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-profile/${resource_id_string}": {
+        "/bff/app_data/v1/server-db/user_account-profile/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccount.getProfile",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":true,
-                        "function_parameter_user_agent":true, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":true,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"search":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"client_latitude":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"client_longitude":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"POST_ID":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": null
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -417,120 +431,111 @@
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": true,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":true,
-                        "function_parameter_body":false,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "resource_id_string":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": null
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_string}": {
+        "/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": true,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":true,
-                        "function_parameter_body":false,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": true
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account_app_data_post-profile/${resource_id_string}": {
+        "/bff/app_data/v1/server-db/user_account_app_data_post-profile/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getProfileUserPosts",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": true,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":true,
-                        "function_parameter_body":false,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_string":{
+                                "required":true
+                            }
+                        },
+                        {"id_current_user":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": true
-                        }
-                    }
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
@@ -540,41 +545,138 @@
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getProfileStatPost",
                 "parameters": [
-                    {
-                        "description": "parameters",
-                        "validate_resource_key":null, 
-                        "validate_resource_value":null,
-                        "validate_resource_app_data_app_id":null,
-                        "validate_app_function":null, 
-                        "validate_app_function_role":null, 
-                        "resource_id_required": false,
-                        "resouce_id_type": "number",
-                        "function_parameter_ip":false,
-                        "function_parameter_user_agent":false, 
-                        "function_parameter_accept_language":false,
-                        "function_parameter_host":false,
-                        "function_parameter_locale":false,
-                        "function_parameter_endpoint":false,
-                        "function_parameter_query":true,
-                        "function_parameter_resource_id":false,
-                        "function_parameter_body":false,
-                        "function_parameter_res":true
-                    }
+                        {"description": "parameters"},
+                        {"statchoice":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/iam_admin/v1/server-iam-login": {
+            "post": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateAdmin",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/basicAuth"}
+                ],    
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":true},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        }
+    },
+    "components":{
+        "securitySchemes":{
+            "basicAuth": {
+                "type": "http",
+                "scheme":"basic"
+            }
+        },
+        "parameters":{
+            "resource_id_number":{
+                "name":	"resource_id_number",
+                "required":true,
+                "schema":{
+                    "type": "number"
+                }
+            },
+            "resource_id_string":{
+                "name":	"resource_id_string",
+                "required":true,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "locale":{
+                "name":	"locale",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "iam":{
+                "name":	"iam",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            }
+        },
+        "responses":{
+            "200": {
                     "description": "",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": ""
-                            },
-                            "single_resource": false
+                                "$ref": "*"
+                            }
                         }
                     }
+                },
+            "201": {
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "*"
+                            }
+                        }
+                    }
+                },
+            "401": {
+                    "description": "Unauthorized",
+                    "headers":{
+                        "WWW-Authenticate":{
+                            "description":"", 
+                            "type":"string"
+                        }
                     }
                 }
-            }
         }
     }
   }
