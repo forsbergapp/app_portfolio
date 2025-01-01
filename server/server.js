@@ -855,7 +855,6 @@ const serverJs = async () => {
              *          resource_validate_value?: string|number|null,
              *          required?: boolean,
              *          resource_validate_app_data_app_id?: number|null,
-             *          block_user_app_data_search?:boolean,
              *          validate_app_function?:string|null,
              *          validate_app_function_role?:string|null}} params
              * @returns {boolean}
@@ -866,7 +865,6 @@ const serverJs = async () => {
                 params.resource_validate_value = params.resource_validate_value ?? null;
                 params.required = params.required ?? false;
                 params.resource_validate_app_data_app_id = params.resource_validate_app_data_app_id ?? null;
-                params.block_user_app_data_search = params.block_user_app_data_search ?? false;
                 params.validate_app_function = params.validate_app_function ?? null;
                 params.validate_app_function_role = params.validate_app_function_role ?? null;
                 const APP_ID_VALIDATE = (params.resource_validate_app_data_app_id == COMMON_APP_ID)?COMMON_APP_ID:routesparameters.app_id;
@@ -878,8 +876,6 @@ const serverJs = async () => {
                     (params.required && URI_path.substring(URI_path.lastIndexOf('/') + 1) == '')==false &&
                     //match app data app id
                     ((params.resource_validate_app_data_app_id !=null && params.resource_validate_app_data_app_id == APP_ID_VALIDATE) ||params.resource_validate_app_data_app_id==null) &&
-                    //match block app data search
-                    ((params.block_user_app_data_search && serverUtilNumberValue(app_query?.get('user_account_id'))==null && serverUtilNumberValue(app_query?.get('app_id'))==null) ||params.block_user_app_data_search==false) && 
                     //match app function and app function role
                     ((params.validate_app_function && APP_ID_VALIDATE !=null && app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
                         params.validate_app_function == null)){
