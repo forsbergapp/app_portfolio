@@ -1015,7 +1015,12 @@ const USER_ACCOUNT_SELECT_PROFILE =
                 WHERE u_liked_current_user.user_account_id_like = u.id
                 AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
         FROM <DB_SCHEMA/>.user_account u
-       WHERE <USER_WHERE/>
+       WHERE ((:search IS NOT NULL AND (u.username LIKE :search OR u.provider_first_name LIKE :search))
+                OR
+                (:resource_id_type=='string' AND u.username = :user_value)
+                OR
+                (:resource_id_type=='number' AND u.id = :user_value)
+            )        
          AND u.active = 1`;
 const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
     `SELECT detail "detail",
