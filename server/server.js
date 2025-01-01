@@ -1606,7 +1606,7 @@ const serverJs = async () => {
                     resolve(fileModelConfig.getFile(
                                                     /**@ts-ignore */
                                                     {resource_id:resource_id_get_string(), 
-                                                    data:{config_group:app_query?.get('cofig_group'),
+                                                    data:{config_group:app_query?.get('config_group'),
                                                           parameter:app_query?.get('parameter'),
                                                           saved:app_query?.get('saved')}})
                                 .then(result=>iso_return_message(result, resource_id_get_string()!=null)));
@@ -1792,7 +1792,6 @@ const serverJs = async () => {
                             if (params.filter(parm=>parm == 'ip=').length==1)
                                 params.map(parm=>parm = parm.replace('ip=', `ip=${routesparameters.ip}`));
                         }
-                        console.log('route: geolocation/ip');
                         resolve(call_microservice(  routesparameters.app_id,
                                             `/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, 
                                             `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`)
