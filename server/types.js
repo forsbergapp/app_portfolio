@@ -2222,6 +2222,7 @@
  * @property {number} socket.bytesRead
  * @property {number} socket.bytesWritten
  * @property {string} socket.remoteAddress
+ * @property {boolean} socket.encrypted
  *
  */
 
