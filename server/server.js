@@ -939,7 +939,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, method:'GET'}):{
+                case route({url:`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, method:'GET', required:true}):{
                     resolve(iso_return_message(socket.CheckOnline({resource_id:resource_id_get_number()}), true));
                     break;
                 }
