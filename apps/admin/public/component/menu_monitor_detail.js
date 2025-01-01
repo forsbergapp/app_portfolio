@@ -372,7 +372,9 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                       commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       commonFFB:CommonModuleCommon['commonFFB'],
+ *                       commonMicroserviceGeolocationIp:CommonModuleCommon['commonMicroserviceGeolocationIp'],
+ *                       commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace']
  *                       },
  *           lifecycle:  null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -582,14 +584,11 @@ const component = async props => {
     const monitorDetailClickItem = (item_type, data) => {
         if (item_type=='GPS'){
             if (data['ip']){
-                props.methods.commonFFB({path:'/geolocation/ip', query:data['ip'] != '::1'?`ip=${data['ip']}`:null, method: 'GET', authorization_type:'APP_DATA'})
-                .then((/**@type{string}*/result)=>{
-                    const geodata = JSON.parse(result);
-                    props.methods.map_update({  longitude:geodata.geoplugin_longitude,
-                                                latitude:geodata.geoplugin_latitude,
-                                                text_place: geodata.geoplugin_city + ', ' +
-                                                            geodata.geoplugin_regionName + ', ' +
-                                                            geodata.geoplugin_countryName,
+                props.methods.commonMicroserviceGeolocationIp(data['ip'] != '::1'?data['ip']:null)
+                .then(result=>{
+                    props.methods.map_update({  longitude:result.longitude,
+                                                latitude:result.latitude,
+                                                text_place: result.place,
                                                 country:'',
                                                 city:'',
                                                 timezone_text :null
@@ -598,7 +597,7 @@ const component = async props => {
                 .catch(()=>null);
             }
             else{
-                props.methods.commonFFB({path:'/geolocation/place', query:`latitude=${data['latitude']}&longitude=${data['longitude']}`, method:'GET', authorization_type:'APP_DATA'})
+                props.methods.commonMicroserviceGeolocationPlace(data['longitude'], data['latitude'])
                 .then((/**@type{string}*/result)=>{
                     /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
                     const geodata = JSON.parse(result);
