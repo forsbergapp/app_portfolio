@@ -150,7 +150,9 @@ const appSecureMenuShow = menu => {
                             commonMiscRoundOff:common.commonMiscRoundOff,
                             commonLovClose:common.commonLovClose,
                             commonLovShow:common.commonLovShow,
-                            commonFFB:common.commonFFB
+                            commonFFB:common.commonFFB,
+                            commonMicroserviceGeolocationIp:common.commonMicroserviceGeolocationIp,
+                            commonMicroserviceGeolocationPlace:common.commonMicroserviceGeolocationPlace
                             },
                 path:       '/component/menu_monitor.js'})
             .then(result=>{

@@ -2643,27 +2643,25 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
 };
 /**
  * @name commonMicroserviceGeolocationIp
- * @description Microservice Geolocation: Get GPS from IP
+ * @description Microservice Geolocation: Get GPS from given ip or current user
  * @function
- * @returns {Promise.<null>}
+ * @param {string|null} ip
+ * @returns {Promise.<{latitude:String, longitude:string, place:string}>}
  */
-const commonMicroserviceGeolocationIp = async () => {
-    return new Promise((resolve)=>{
-       commonFFB({path:'/geolocation/ip', method:'GET', authorization_type:'APP_DATA'})
+const commonMicroserviceGeolocationIp = async ip => {
+    return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_DATA'})
         .then(result=>{
-            const geodata = JSON.parse(result);
-            COMMON_GLOBAL.client_latitude  = geodata.geoplugin_latitude;
-            COMMON_GLOBAL.client_longitude = geodata.geoplugin_longitude;
-            if (geodata.geoplugin_city=='' && geodata.geoplugin_regionName =='' && geodata.geoplugin_countryName =='')
-                COMMON_GLOBAL.client_place = '';
-            else
-                COMMON_GLOBAL.client_place =    geodata.geoplugin_city + ', ' +
-                                                geodata.geoplugin_regionName + ', ' +
-                                                geodata.geoplugin_countryName;
-            resolve(null);
+            return {
+                latitude:JSON.parse(result).geoplugin_latitude,
+                longitude: JSON.parse(result).geoplugin_longitude,
+                place: `${JSON.parse(result).geoplugin_city ?? ''}, ${JSON.parse(result).geoplugin_regionName}, ${JSON.parse(result).geoplugin_countryName}`
+            };
         })
-        .catch(()=>resolve(null));
-    });
+        .catch(()=>{return {
+            latitude:'',
+            longitude: '',
+            place: ''
+        };});
 
 };
 /**
