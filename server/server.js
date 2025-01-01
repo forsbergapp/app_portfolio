@@ -998,10 +998,10 @@ const serverJs = async () => {
                 }
                 case route({url:`/bff/app_data/v1/server-db/user_account-profile-name/${resource_id_string}`, method:'GET'}):{
                     resolve(dbModelUserAccount.getProfile({ app_id:routesparameters.app_id, 
-                                                            resource_id:null, 
+                                                            resource_id:resource_id_get_string(),
                                                             ip:routesparameters.ip, 
                                                             user_agent:routesparameters.user_agent, 
-                                                            data: { resource_id_name:resource_id_get_string(),
+                                                            data: { resource_id_type:'string',
                                                                     id:app_query?.get('id'),
                                                                     search:app_query?.get('search'),
                                                                     client_latitude:app_query?.get('client_latitude'),
@@ -1018,7 +1018,7 @@ const serverJs = async () => {
                                                             resource_id:resource_id_get_number(), 
                                                             ip:routesparameters.ip, 
                                                             user_agent:routesparameters.user_agent, 
-                                                            data: { resource_id_name:null,
+                                                            data: { resource_id_type:'number',
                                                                     id:app_query?.get('id'),
                                                                     search:app_query?.get('search'),
                                                                     client_latitude:app_query?.get('client_latitude'),
@@ -1027,7 +1027,7 @@ const serverJs = async () => {
                                                             },
                                                             locale:app_query?.get('lang_code') ??'en', 
                                                             res:routesparameters.res})
-                                .then(result=>iso_return_message(result, (app_query?.get('search')=='' ||app_query?.get('search') == null))));
+                                .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                     break;
                 }
                 case route({url:`/bff/app_data/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'GET', required:true}):{
