@@ -905,6 +905,8 @@ const serverJs = async () => {
                             
             /**
              * Calls microservice using client_id and client_secret defined for given app
+             * microservice REST API syntax:
+             * [microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query]
              * @param {{app_id:number,
              *          path:string,
              *          query:string|null,
@@ -1790,8 +1792,6 @@ const serverJs = async () => {
                     break;
                 }
                 //microservice routes
-                //changes URI to call microservices, syntax:
-                //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
                 case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
                     (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
                         resolve(call_microservice({ app_id:routesparameters.app_id,

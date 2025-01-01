@@ -71,7 +71,9 @@ const template = () => `&lt;div id='menu_monitor_content_widget1' class='widget'
  *                      commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                      commonLovClose:CommonModuleCommon['commonLovClose'],
  *                      commonLovShow:CommonModuleCommon['commonLovShow'],
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props 
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonMicroserviceGeolocationIp:CommonModuleCommon['commonMicroserviceGeolocationIp'],
+ *                      commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace']}}} props 
  * @returns {Promise.&lt;{ lifecycle:  CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,
@@ -221,7 +223,8 @@ const component = async props => {
                         commonComponentRender:props.methods.commonComponentRender,
                         commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                         commonMiscRoundOff:props.methods.commonMiscRoundOff,
-                        commonFFB:props.methods.commonFFB
+                        commonFFB:props.methods.commonFFB,
+                        commonMicroserviceGeolocationIp:props.methods.commonMicroserviceGeolocationIp
                         },
             path:       '/component/menu_monitor_detail.js'})
             .then(result=>{

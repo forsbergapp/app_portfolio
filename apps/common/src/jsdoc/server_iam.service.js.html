@@ -1619,11 +1619,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                                                                 type:'BLOCK_IP'}, 
                                                             /**@ts-ignore*/
                                                             {});
-                        return {statusCode: 401, 
-                                statusMessage: ''};
                     }
-                    else
-                        return null;            
+                    return {statusCode: 401, statusMessage: ''};
                 }
                 else
                     return null;

@@ -385,10 +385,10 @@ const userGetEmail = async (app_id, email) =>
  * @description Get user profile
  * @function
  * @param {{app_id:Number,
- *          resource_id:number|null,
+ *          resource_id:number|string|null,
  *          ip:string,
  *          user_agent:string,
- *          data:{  resource_id_name:string|null,
+ *          data:{  resource_id_type:'string'|'number',
  *                  id?:string|null,
  *                  search?:string|null,
  *                  client_latitude?:string|null,
@@ -426,52 +426,14 @@ const getProfile = parameters =>{
                         }
                 return row;
             });
-        /**
-         * @param {string} search
-         */
-        const user_where = search =>{
-            switch (true){
-                case (search!='' &amp;&amp; search != null):{
-                    return 'u.username LIKE :user_value OR u.provider_first_name LIKE :user_value';
-                }
-                case (parameters.data.resource_id_name!='' &amp;&amp; parameters.data.resource_id_name != null):{
-                    return 'u.username = :user_value';
-                }
-                case (parameters.resource_id != null):{
-                    return 'u.id = :user_value';
-                }
-                default:{
-                    return '1=2';
-                }
-            }
-        };
-        /**
-         * @param {string} search
-         */
-        const user_where_value = search =>{
-            switch (true){
-                case (search!='' &amp;&amp; search != null):{
-                    return `${search}%`;
-                }
-                case (parameters.data.resource_id_name!='' &amp;&amp; parameters.data.resource_id_name != null):{
-                    return parameters.data.resource_id_name;
-                }
-                case (parameters.resource_id != null):{
-                    return parameters.resource_id;
-                }
-                default:{
-                    return null;
-                }
-            }
-        };
-        //resource id can be number, string or empty if searching
         import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
             dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_SELECT_PROFILE
-                            .replace('&lt;USER_WHERE/>',user_where(parameters.data.search ??'')),
+                            dbSql.USER_ACCOUNT_SELECT_PROFILE,
                             {
                                 user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
-                                user_value: user_where_value(parameters.data.search??'')
+                                user_value: parameters.resource_id,
+                                search:parameters.data.search + '%',
+                                resource_id_type:parameters.data.resource_id_type
                             },
                             null, 
                             null))
@@ -481,7 +443,7 @@ const getProfile = parameters =>{
                 import(`file://${process.cwd()}/server/db/dbModelAppDataStat.js`)
                 .then((/**@type{import('./dbModelAppDataStat.js')} */{ post }) => {
                     /**@type{server_db_sql_parameter_app_data_stat_post} */
-                    const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id ?? parameters.data.resource_id_name,
+                    const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id,
                                                                                                 client_ip:          parameters.ip,
                                                                                                 client_user_agent:  parameters.user_agent,
                                                                                                 client_longitude:   parameters.data.client_longitude,
@@ -495,7 +457,7 @@ const getProfile = parameters =>{
                                         app_data_resource_master_id:                        null,
                                         app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
                                         app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
-                                        app_data_entity_resource_app_data_entity_id:        0   //COMMON
+                                        app_data_entity_resource_app_data_entity_id:        1   //COMMON
                                         };
                     post(parameters.app_id, data_insert)
                     .then(()=>{
