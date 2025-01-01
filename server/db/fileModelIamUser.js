@@ -21,7 +21,9 @@ const get = (app_id, resource_id, res) =>{
     if (result.length>0 || resource_id==null)
         return result;
     else
-        throw fileCommonRecordNotFound(res);
+        if (res)
+            throw fileCommonRecordNotFound(res);
+        return result;
 };
 
 /**
