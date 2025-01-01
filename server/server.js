@@ -598,9 +598,6 @@ const serverJs = async () => {
             }
         };
         //set keys and functions as set in Express
-        req.path = req.url;
-        req.originalUrl = req.url;
-        req.route = {path:''};
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] =='application/json'){
@@ -645,6 +642,13 @@ const serverJs = async () => {
             });
         }
         else{
+            req.protocol = req.socket.encrypted?'https':'http';
+            req.ip = req.socket.remoteAddress;
+            req.hostname = req.headers.host;
+            req.path = req.url;
+            req.originalUrl = req.url;
+            req.route = {path:''};
+
             /**@ts-ignore */
             req.query = req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
                         .substring(req.path.indexOf('?')+1)))
@@ -652,7 +656,7 @@ const serverJs = async () => {
                             const key = {[param[0]] : decodeURIComponent(param[1])};
                             return {...query, ...key};
                         }, {}):null;
-            req.ip = req.socket.remoteAddress;
+            
             res.status = (/**@type{number}*/code) =>{
                 res.statusCode = code;
             };
