@@ -29,20 +29,21 @@ class circuitBreakerClass {
      * @description Call microservice
      * @method
      * @param {function} function_httpRequest
+     * @param {string} service 
      * @param {boolean} admin 
      * @param {string} path 
      * @param {string} query
+     * @param {{}|null} body
      * @param {string} method 
      * @param {string} client_ip 
      * @param {string} authorization 
      * @param {string} headers_user_agent 
      * @param {string} headers_accept_language 
-     * @param {object} body 
+     
      * @param {boolean} server_app_timeout
      * @returns {Promise.<string>}
      */
-    async MicroServiceCall(function_httpRequest, admin, path, query, method, client_ip, authorization, headers_user_agent, headers_accept_language, body, server_app_timeout){
-        const service = (path?path.split('/')[1]:'').toUpperCase();
+    async MicroServiceCall(function_httpRequest, service, admin, path, query, body, method, client_ip, authorization, headers_user_agent, headers_accept_language, server_app_timeout){
         if (!this.canRequest(service))
             return '';
         try {
@@ -56,7 +57,7 @@ class circuitBreakerClass {
                     timeout = 60 * 1000 * (REGISTRY_CONFIG?REGISTRY_CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:60);
                 else
                     timeout = this.requestTimetout * 1000;
-            const response = await function_httpRequest (service, path, query, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
+            const response = await function_httpRequest (service, path, query, body, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language);
             this.onSuccess(service);
             return response;    
         } catch (error) {

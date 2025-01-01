@@ -13,6 +13,7 @@
  * @property {object}       query
  * @property {number|null}  query.app_id
  * @property {*}    query.data
+ * @property {*}    body
  */
 
 /** 

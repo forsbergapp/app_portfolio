@@ -681,6 +681,10 @@ const serverJs = async () => {
                 /**@ts-ignore */
                 readStream.pipe(res);
             };
+            res.redirect = (/**@type{string}*/url) =>{
+                res.writeHead(301, {'Location':url});
+                res.end();
+            };
             /**@type{import('./bff.service.js')} */
             const bffService = await import('./bff.service.js');
             const resultbffInit = await bffService.bffInit(req, res);
@@ -901,28 +905,37 @@ const serverJs = async () => {
                             
             /**
              * Calls microservice using client_id and client_secret defined for given app
-             * @param {number} app_id
-             * @param {string} microservice_path 
-             * @param {string} microservice_query 
+             * @param {{app_id:number,
+             *          path:string,
+             *          query:string|null,
+             *          data:{}|null}} parameters
              */
-            const call_microservice = async (app_id, microservice_path, microservice_query) => {
-                //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:app_id, res:null})[0].common_client_id + ':' + 
-                                                                fileModelAppSecret.get({app_id:app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
-                return microserviceRequest(app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
-                                            microservice_path, 
-                                            Buffer.from(microservice_query + `&app_id=${app_id}`).toString('base64'), 
-                                            routesparameters.method,
-                                            routesparameters.ip, 
-                                            authorization, 
-                                            routesparameters.user_agent, 
-                                            routesparameters.accept_language, 
-                                            routesparameters.body?routesparameters.body:null,
-                                            routesparameters.endpoint == 'SERVER_APP')
-                        .then(result=>JSON.parse(result))
-                        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+            const call_microservice = async parameters => {
+                const microservice = parameters.path.split('/')[1].toUpperCase();
+                if ((microservice == 'GEOLOCATION' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
+                    microservice != 'GEOLOCATION'){
+                    //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
+                    const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
+                                                                    fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
+                    return microserviceRequest(microservice,
+                                                parameters.app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
+                                                /**@ts-ignore */
+                                                `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
+                                                Buffer.from(parameters.query + `&app_id=${parameters.app_id}`).toString('base64'), 
+                                                parameters.data,
+                                                routesparameters.method,
+                                                routesparameters.ip, 
+                                                authorization, 
+                                                routesparameters.user_agent, 
+                                                routesparameters.accept_language, 
+                                                routesparameters.endpoint == 'SERVER_APP')
+                            .then(result=>JSON.parse(result))
+                            .catch((/**@type{server_server_error}*/error)=>{throw error;});
+                }
+                else
+                    return '';
             };
-
+        
             
             //using switch (true) pattern
             switch (true){
@@ -1781,34 +1794,27 @@ const serverJs = async () => {
                 //[microservice protocol]://[microservice host]:[microservice port]/[service]/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query];
                 case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
                     (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
-                    if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1){
-                        const params = URI_query.split('&');                        
-                        //set ip from client in case ip query parameter is missing
-                        //if ip parameter does not exist
-                        if (params.filter(parm=>parm.includes('ip=')).length==0 )
-                            params.push(`ip=${routesparameters.ip}`);
-                        else{
-                            //if empty ip parameter
-                            if (params.filter(parm=>parm == 'ip=').length==1)
-                                params.map(parm=>parm = parm.replace('ip=', `ip=${routesparameters.ip}`));
-                        }
-                        resolve(call_microservice(  routesparameters.app_id,
-                                            `/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, 
-                                            `${params.reduce((param_sum,param)=>param_sum += '&' + param)}`)
+                        resolve(call_microservice({ app_id:routesparameters.app_id,
+                                                    path:routesparameters.route_path, 
+                                                    query:URI_query,
+                                                    data:null})
                                 .then(result=>iso_return_message(result, true)));
-                    }   
-                    else
-                        return resolve('');
                     break;
                 }
                 case route({url:'/bff/app_data/v1/geolocation/place', method:'GET'}):{
-                    resolve(call_microservice(  routesparameters.app_id,`/geolocation/v${registryMicroserviceApiVersion('GEOLOCATION')}${routesparameters.route_path}`, URI_query)        
+                    resolve(call_microservice(  {   app_id:routesparameters.app_id,
+                                                    path:routesparameters.route_path, 
+                                                    query:URI_query,
+                                                    data:null})
                             .then(result=>iso_return_message(result, true)));
                     break;
                 }
                 case routesparameters.route_path=='/mail/sendemail' && routesparameters.endpoint.startsWith('SERVER'):{
                     //mail can only be sent from server
-                    resolve(call_microservice(  routesparameters.app_id, `/mail/v${registryMicroserviceApiVersion('MAIL')}${routesparameters.route_path}`, URI_query));
+                    resolve(call_microservice({ app_id:routesparameters.app_id, 
+                                                path:routesparameters.route_path, 
+                                                query:null,
+                                                data: routesparameters.body}));
                     break;
                 }
                 default:{
