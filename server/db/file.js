@@ -238,9 +238,10 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * @name fileFsDir
  * @description Get files from directory
  * @function
+ * @param {server_db_file_db_name} file
  * @returns {Promise.<string[]>}
  */
-const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}data${SLASH}logs`);
+const fileFsDir = async file => await fs.promises.readdir(`${process.cwd()}${fileRecord(file).PATH}`);
 /**
  * @name fileFsRead
  * @description Returns file content in FILE_DB.PATH + FILE_DB.FILENAME for given file
