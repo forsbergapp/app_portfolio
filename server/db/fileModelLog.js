@@ -621,16 +621,22 @@ const getStat = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    const files = await fileFsDir();
+    const files = await fileFsDir('LOG_REQUEST_INFO');
     /**@type{string} */
     let sample;
     let day = '';
     //declare ES6 Set to save unique status codes and days
     const log_stat_value = new Set();
     const log_days = new Set();
+    const regexp_request_day = /REQUEST_INFO_\d\d\d\d\d\d\d\d.log/g;
+    const regexp_verbose_day = /REQUEST_VERBOSE_\d\d\d\d\d\d\d\d.log/g;
+    const regexp_request_month = /REQUEST_INFO_\d\d\d\d\d\d.log/g;
+    const regexp_verbose_month = /REQUEST_VERBOSE_\d\d\d\d\d\d.log/g;
     for (const file of files){
-        if (file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`) ||
-            file.startsWith(`REQUEST_VERBOSE_${data.year}${data.month.toString().padStart(2,'0')}`)){
+        if ((file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+            (regexp_request_day.exec(file)!=null||regexp_request_month.exec(file)!=null)) ||
+            (file.startsWith(`REQUEST_VERBOSE_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+            (regexp_verbose_day.exec(file)!=null||regexp_verbose_month.exec(file)!=null))){
             //filename format: REQUEST_INFO_YYYMMDD.log
             if (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
@@ -731,7 +737,7 @@ const getStat = async parameters => {
 const getFiles = async () => {
     /**@type{[server_log_result_logFilesGet]|[]} */
     const logfiles =[];
-    const files = await fileFsDir();
+    const files = await fileFsDir('LOG_REQUEST_INFO');
     let i =1;
     files.forEach((/**@type{string}*/file) => {
         if (file.startsWith('REQUEST_INFO_')||
