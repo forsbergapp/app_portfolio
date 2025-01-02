@@ -83,7 +83,7 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                                 fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_public_key, 
                                                                 JSON.stringify(body))};
         
-        const result_commonBFE = await commonBFE({host:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
+        const result_commonBFE = await commonBFE({url:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
         if (result_commonBFE.error){
             res.statusCode = result_commonBFE.error.http;
             throw iamUtilMesssageNotAuthorized();
