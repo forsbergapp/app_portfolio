@@ -281,7 +281,7 @@ const commonGeodata = async parameters =>{
  * @name commonBFE
  * @description External request
  * @function
- * @param {{host:string,
+ * @param {{url:string,
  *          method:string,
  *          body:*,
  *          user_agent:string,
@@ -291,60 +291,60 @@ const commonGeodata = async parameters =>{
  * @returns {Promise.<*>}
  */
 const commonBFE = async parameters =>{
-    const zlib = await import('node:zlib');
-    const https = await import('node:https');
-    const timeout_message = '🗺⛔?';
-    const timeout = 5000;
-    return new Promise((resolve, reject)=>{
-        const host_request = parameters.host.indexOf(':')>-1?parameters.host.substring(0,parameters.host.indexOf(':')):parameters.host.substring(0,parameters.host.indexOf('/'));
-        const port = parameters.host.indexOf(':')>-1?parameters.host.substring(parameters.host.indexOf(':'),parameters.host.indexOf('/')):443;
-        const path = parameters.host.substring(parameters.host.indexOf('/'));
-        const options = {
-            method: parameters.method,
-            timeout: timeout,
-            headers : {
-                'User-Agent': parameters.user_agent,
-                'Accept-Language': parameters.locale,
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
-                'Authorization': parameters.authorization ?? '',
-                'X-Forwarded-For': parameters.ip
-            },
-            host: host_request,
-            port: port,
-            path: path,
-            rejectUnauthorized: false
-        };
-        
-        const request = https.request(options, res =>{
-            let responseBody = '';
-            if (res.headers['content-encoding'] == 'gzip'){
-                const gunzip = zlib.createGunzip();
-                res.pipe(gunzip);
-                gunzip.on('data', (chunk) =>responseBody += chunk);
-                gunzip.on('end', () => resolve (responseBody));
-            }
-            else{
-                res.setEncoding('utf8');
-                res.on('data', (chunk) =>{
-                    responseBody += chunk;
-                });
-                res.on('end', ()=>{
-                    resolve (responseBody);
-                });
-            }
-            
+    if (parameters.url.toLowerCase().startsWith('https://') || parameters.url.toLowerCase().startsWith('http://')){
+        const zlib = await import('node:zlib');
+        const request_protocol = parameters.url.toLowerCase().startsWith('https')?await import('node:https'):await import('node:http');
+        const timeout_message = '🗺⛔?';
+        const timeout = 5000;
+        return new Promise((resolve, reject)=>{           
+            const options = {
+                method: parameters.method,
+                timeout: timeout,
+                headers : {
+                    'User-Agent': parameters.user_agent,
+                    'Accept-Language': parameters.locale,
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(JSON.stringify(parameters.body)),
+                    'Authorization': parameters.authorization ?? '',
+                    'X-Forwarded-For': parameters.ip
+                },
+                rejectUnauthorized: false
+            };
+            const request = request_protocol.request(new URL(parameters.url),options, res =>{
+                let responseBody = '';
+                if (res.headers['content-encoding'] == 'gzip'){
+                    const gunzip = zlib.createGunzip();
+                    res.pipe(gunzip);
+                    gunzip.on('data', (chunk) =>responseBody += chunk);
+                    gunzip.on('end', () => resolve (responseBody));
+                }
+                else{
+                    res.setEncoding('utf8');
+                    res.on('data', (chunk) =>{
+                        responseBody += chunk;
+                    });
+                    res.on('end', ()=>{
+                        resolve (responseBody);
+                    });
+                }
+                
+            });
+            if (parameters.method !='GET')
+                request.write(JSON.stringify(parameters.body));
+            request.on('error', error => {
+                reject('EXTERNAL URL ERROR: ' + error);
+            });
+            request.on('timeout', () => {
+                reject(timeout_message);
+            });
+            request.end();
         });
-        if (parameters.method !='GET')
-            request.write(JSON.stringify(parameters.body));
-        request.on('error', error => {
-            reject('EXTERNAL URL ERROR: ' + error);
-        });
-        request.on('timeout', () => {
-            reject(timeout_message);
-        });
-        request.end();
-    });
+    }
+    else{
+        /**@type{import('../../../server/iam.service.js')} */
+        const { iamUtilMesssageNotAuthorized } = await import(`file://${process.cwd()}/server/iam.service.js`);
+        throw iamUtilMesssageNotAuthorized();
+    }
 };
 
 /**
