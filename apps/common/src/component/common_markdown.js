@@ -4,10 +4,6 @@
  *         
  * @module apps/common/component/common_markdown
  */
-/**
- * @import { server_db_file_app, serverDocumentType, server_db_file_app_translation} from '../../../../server/types.js' 
- * 
- */
 
 /**
  * @name template
@@ -24,53 +20,23 @@ const template = props =>`  ${props.functionMarkdownParse(props.markdown)}`;
  * @description Component
  * @function
  * @param {{data:       {
- *                      app_translation:server_db_file_app_translation|null,
- *                      app:server_db_file_app|null,
- *                      type:serverDocumentType,
  *                      markdown:string,
- *                      code:string|null,
- *                      module:string|null,
- *                      app_copyright:string|null,
- *                      configuration:string|null
- *                      server_host:string|null
  *                      },
  *          methods:    null}} props
  * @returns {Promise.<string>}
  */
 const component = async props => {
-    /**
-     * Return supported characters as HTML Entities for tables
-     * @param {string} text
-     * @returns {string}
-     */
-    const HTMLEntities = text => text
-                                    .replaceAll('|','&vert;')
-                                    .replaceAll('[','&#91;')
-                                    .replaceAll(']','&#93;')
-                                    .replaceAll('<','&lt;')
-                                    .replaceAll('>','&gt;');
-
-    /**
-     * Returns type of comment or null if comment not supported
-     * @param {string} comment
-     * @returns {string|null}
-     */
-    const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
-                                    comment.indexOf('@function')>-1?'Function':
-                                    comment.indexOf('@constant')>-1?'Constant':
-                                    comment.indexOf('@class')>-1?'Class':
-                                    comment.indexOf('@method')>-1?'Method':null;
+    
     /**
      * Converts given markdown file and mounts to given div id to supported div tags without any semantic HTML
      * Converts following in this order:
-     * 1. variables for APP template and MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
-     * 2.sections
+     * 1.sections
      *   # character must start at first position on a  row
      *   creates div with class common_markdown_section for all sections
      *   so all sections will have the correct indentations
      *   supports unlimited amount of heading levels although implemented h1-h5
      * 
-     * 3.headings:
+     * 2.headings:
      *   # character must start at first position on a row
      *          div class
      *   #      title_h1
@@ -79,17 +45,17 @@ const component = async props => {
      *   ####   title_h4
      *   #####  title_h5
      * 
-     * 4.code block:
+     * 3.code block:
      *   ```` must start as first position on a row and ends with ```` on a new row
      *   all text within is a code block
      * 
-     * 5.code inline:
+     * 4.code inline:
      *   text should be wrapped with `` and is processed after code block
      * 
-     * 6.notes:
+     * 5.notes:
      *   > **Note:** must start as first position and text after must be on one row
      * 
-     * 7.images:
+     * 6.images:
      *   [![text](small img)](full size img)  
      *   creates class common_markdown_image  
      *   alt text should be used here as text below image
@@ -98,9 +64,9 @@ const component = async props => {
      * 
      *   not supported:
      *   ![alt text ](img "hover text")
-     * 8.links
+     * 7.links
      *   [text](url)
-     * 9.tables:
+     * 8.tables:
      *   | must start as first position on a row
      *   unlimited columns supported
      *   unlimited rows supported
@@ -125,108 +91,7 @@ const component = async props => {
     const MarkdownParse = markdown =>{
         //remove all '\r' in '\r\n'
         markdown = markdown.replaceAll('\r\n','\n');
-        //1.replace variables for APP template
-        if (props.data.type=='APP' && props.data.app){
-            //replace APP_NAME
-            markdown = markdown.replaceAll('@{APP_NAME}', props.data.app.name);
-            //replace SCREENSHOT_START
-            markdown = markdown.replaceAll('@{SCREENSHOT_START}', props.data.app_translation?props.data.app_translation.json_data.screenshot_start:'');
-            //replace DESCRIPTION
-            markdown = markdown.replaceAll('@{DESCRIPTION}', props.data.app_translation?props.data.app_translation.json_data.description:'');
-            //replace REFERENCE
-            markdown = markdown.replaceAll('@{REFERENCE}', props.data.app_translation?props.data.app_translation.json_data.reference:'');
-            //replace TECHNOLOGY
-            markdown = markdown.replaceAll('@{TECHNOLOGY}', props.data.app_translation?props.data.app_translation.json_data.technology:'');
-            //replace SECURITY
-            markdown = markdown.replaceAll('@{SECURITY}', props.data.app_translation?props.data.app_translation.json_data.security:'');
-            //replace PATTERN
-            markdown = markdown.replaceAll('@{PATTERN}', props.data.app_translation?props.data.app_translation.json_data.pattern:'');
-            //replace SOLUTION
-            markdown = markdown.replaceAll('@{SOLUTION}', props.data.app_translation?props.data.app_translation.json_data.solution:'');
-            //replace SCREENSHOT_END
-            //images are saved in an array
-            markdown = markdown.replaceAll('@{SCREENSHOT_END}', props.data.app_translation?props.data.app_translation.json_data.screenshot_end.join('\n'):'');    
-        }
-        //1.replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
-        if (props.data.type.startsWith('MODULE')){
-            markdown = markdown.replaceAll('@{MODULE_NAME}', props.data.module ?? '');
-            markdown = markdown.replaceAll('@{MODULE}',props.data.module ??'');
-            markdown = markdown.replaceAll('@{SOURCE_LINK}',props.data.module ??'');
-
-            //metadata tags                            
-            markdown = markdown.replaceAll('@{SERVER_HOST}',props.data.server_host??'');
-            markdown = markdown.replaceAll('@{APP_CONFIGURATION}',props.data.configuration??'');
-            markdown = markdown.replaceAll('@{APP_COPYRIGHT}',props.data.app_copyright??'');
-            
-            //search all JSDoc comments
-            const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
-            
-            const module_functions =[];
-            let match_module_function;
-
-            //JSDOC module table with variables
-            const HEADER            = '|@{TYPE}         |@{FUNCTION_NAME}                       |';
-            const ALIGNMENT         = '|:---------------|:--------------------------------------|';
-            const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
-            const SOURCE_LINE_TAG   = '|Source line     |[@{MODULE_LINE}](@{SOURCE_LINE_LINK)   |';
-            
-            const REGEXP_TAG = /@\w+/g;
-            props.data.code = props.data.code?.replaceAll('\r\n','\n') ??'';
-            while ((match_module_function = regexp_module_function.exec(props.data.code ?? '')) !==null){
-                if (commentType(match_module_function[1])){
-                    const function_tags = match_module_function[1].split('\n')
-                                            .map(row=>{
-                                                        //reset regexp so regexp will work in loop
-                                                        REGEXP_TAG.lastIndex = 0;
-                                                        const tag = REGEXP_TAG.exec(row)?.[0]??'';
-                                                        return FUNCTION_TAG
-                                                        .replace(   '@{FUNCTION_TAG}',
-                                                                    tag)
-                                                        .replace(   '@{FUNCTION_TEXT}',
-                                                                    //check if tag exists
-                                                                    (tag!='' && row.indexOf(tag)>-1)?
-                                                                        //return part after tag
-                                                                        HTMLEntities(row.substring(row
-                                                                                        .indexOf(tag)+tag.length)
-                                                                                        .trimStart()):
-                                                                            //no tag, return after first '*', remove start space characters
-                                                                            HTMLEntities(row
-                                                                                .substring(row.indexOf('*')+1)));
-                                                        })
-                                                        //remove @name tag presented in title
-                                                        .filter(row=>row.indexOf('@name')<0)
-                                                        //remove tags presented in title
-                                                        .filter(row=>row.indexOf('@function')<0)
-                                                        .filter(row=>row.indexOf('@constant')<0)
-                                                        .filter(row=>row.indexOf('@class')<0)
-                                                        .join('\n');
-                    //calculate source line: row match found + match row length
-                    const source_line = (props.data.code?props.data.code.substring(0,props.data.code.indexOf(match_module_function[1])).split('\n').length:0)  + 
-                                        match_module_function[1].split('\n').length;
-
-                    module_functions.push(
-                                    HEADER
-                                        .replace('@{TYPE}',commentType(match_module_function[1])??'')
-                                        .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
-                                                                    match_module_function[1]
-                                                                        .split('\n')
-                                                                        .filter(row=>row.indexOf('@name')>-1)
-                                                                        .map(row=>  row
-                                                                                    .substring( row.indexOf('@name')+'@name'.length)
-                                                                                    .trimStart())[0]:'')
-                                    + '\n' +
-                                    ALIGNMENT+ '\n' +
-                                    function_tags + '\n' +
-                                    SOURCE_LINE_TAG
-                                        .replace('@{MODULE_LINE}',props.data.module ??'')
-                                        .replace('@{SOURCE_LINE_LINK',`${props.data.module}#line${source_line}`));
-                }
-                
-            }
-            //replace all found JSDoc comments with markdown formatted module functions
-            markdown = markdown.replace('@{MODULE_FUNCTION}', module_functions.join('\n'+'\n'));
-        }
-        //2.sections
+        //1.sections
         let current_section = -1;
         let old_section = -1;
         markdown = markdown.split('\n').map((row, /**@type{number}*/index)=>{
@@ -263,30 +128,30 @@ const component = async props => {
                 return row;
         }).join('\n') + '</div>';
                                             
-        //3.headings        
+        //2.headings        
         markdown = markdown.split('\n').map(row=>row.indexOf('#####')==0?`<div class='common_markdown_title_h5'>${row.replace('#####','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('####')==0?`<div class='common_markdown_title_h4'>${row.replace('####','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('###')==0?`<div class='common_markdown_title_h3'>${row.replace('###','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('##')==0?`<div class='common_markdown_title_h2'>${row.replace('##','')}</div>`:row).join('\n');
         markdown = markdown.split('\n').map(row=>row.indexOf('#')==0?`<div class='common_markdown_title_h1'>${row.replace('#','')}</div>`:row).join('\n');
-        //4. code blocks
+        //3. code blocks
         //regexp for code blocks
         const regexp_code = /```([\s\S]*?)```/g;
         let match_code;
         while ((match_code = regexp_code.exec(markdown)) !==null){
             markdown = markdown.replace(match_code[0], `<div class='common_markdown_code'>${match_code[1]}</div>`);
         }
-        //5.code inline
+        //4.code inline
         //regexp for code blocks
         const regexp_code_inline = /`([\s\S]*?)`/g;
         let match_code_inline;
         while ((match_code_inline = regexp_code_inline.exec(markdown)) !==null){
             markdown = markdown.replace(match_code_inline[0], `<div class='common_markdown_code_inline'>${match_code_inline[1]}</div>`);
         }
-        //6.notes
+        //5.notes
         markdown = markdown.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_markdown_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
         
-        //7.images
+        //6.images
         //regexp for [![text](small img)](full size img)
         const regexp = /\[!\[([^)]+)\]\(([^)]+)\)\]\(([^)]+)\)/g;
         let match;
@@ -296,7 +161,7 @@ const component = async props => {
                                                 style='background-image:url("${match[2]}")' 
                                                 data-url='${match[3]}'></div><div class='common_markdown_image_text'>${match[1]}</div>`);
         }
-        //8.links
+        //7.links
         //regexp for [text](url)
         const regexp_links = /\[([^)]+)\]\(([^)]+)\)/g;
         let match_links;
@@ -304,7 +169,7 @@ const component = async props => {
             markdown = markdown.replace(match_links[0], 
                                         `<div class='common_link' href='${match_links[2]}' data-url='${match_links[2]}'>${match_links[2]}</div>`);
         }
-        //9.tables
+        //8.tables
         let table_new = true;
         const tables = markdown.split('\n').
                         map(row=>{
