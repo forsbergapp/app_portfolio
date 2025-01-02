@@ -1693,11 +1693,11 @@ const serverJs = async () => {
                 case route({url:'/bff/admin/v1/server-log/log-stat', method:'GET'}):{
                     resolve(fileModelLog.getStat({app_id:routesparameters.app_id, 
                                                     data:{  select_app_id:app_query?.get('select_app_id'),
-                                                            statGroup:app_query?.get('select_app_id'),
-                                                            unique:app_query?.get('select_app_id'),
-                                                            statValue:app_query?.get('select_app_id'),
-                                                            year:app_query?.get('select_app_id'),
-                                                            month:app_query?.get('select_app_id')}})
+                                                            statGroup:app_query?.get('statGroup'),
+                                                            unique:app_query?.get('unique'),
+                                                            statValue:app_query?.get('statValue'),
+                                                            year:app_query?.get('year'),
+                                                            month:app_query?.get('month')}})
                                 .then(result=>iso_return_message(result, false)));
                     break;
                 }
