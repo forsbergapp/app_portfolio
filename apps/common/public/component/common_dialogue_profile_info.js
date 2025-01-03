@@ -130,7 +130,7 @@ const component = async props => {
                                 path:pathInfoGet(), 
                                 query:`id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
                                 method:'GET', 
-                                authorization_type:'APP_DATA'
+                                authorization_type:'APP_ID'
                             })
                         .then((/**@type{string}*/result)=>JSON.parse(result)[0]);
    

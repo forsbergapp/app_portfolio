@@ -253,9 +253,9 @@ const commonGeodata = async parameters =>{
     }
     else{
         /**@type{server_bff_parameters}*/
-        const parametersBFF = { endpoint:'APP_DATA',
+        const parametersBFF = { endpoint:'APP_ID',
                                 host:null,
-                                url:'/bff/app_data/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                                url:'/bff/app_id/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
                                 route_path:'/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
                                 method:'POST', 
                                 query:'',

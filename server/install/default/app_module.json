@@ -13,7 +13,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_COUNTRY",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/common/src/functions/common_country.js",
         "common_description": "Get countries for given locale"
     },
@@ -22,7 +22,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_LOCALE",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/common/src/functions/common_locale.js",
         "common_description": "Get locales for given locale"
     },
@@ -31,7 +31,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_DOC",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/common/src/functions/common_doc.js",
         "common_description": "Get documentation menu or guide, app or jsdoc documentation"
     },
@@ -40,7 +40,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_WORLDCITIES_CITY",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/common/src/functions/common_worldcities_city.js",
         "common_description": "Get searched city from worldcities database"
     },
@@ -49,7 +49,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_WORLDCITIES_CITY_RANDOM",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/common/src/functions/common_worldcities_city_random.js",
         "common_description": "Get random city from worldcities database"
     },
@@ -58,7 +58,7 @@
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_WORLDCITIES_COUNTRY",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/common/src/functions/common_worldcities_country.js",
         "common_description": "Get all cities from a given coutry from worldcities database"
     },
@@ -85,7 +85,7 @@
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "ACCOUNT_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app5/src/functions/account_metadata.js",
         "common_description": "ACCOUNT metadata"
     },
@@ -94,7 +94,7 @@
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "CUSTOMER_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app5/src/functions/customer_metadata.js",
         "common_description": "CUSTOMER metadata"
     },
@@ -103,7 +103,7 @@
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "TRANSACTION_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app5/src/functions/transaction_metadata.js",
         "common_description": "TRANSACTION metadata"
     },
@@ -202,7 +202,7 @@
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app5/src/functions/payment_request_metadata.js",
         "common_description": "PAYMENT REQUEST metadata"
     },
@@ -211,7 +211,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_GET",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/product_get.js",
         "common_description": "PRODUCT get"
     },
@@ -220,7 +220,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_LOCATION_GET",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/product_location_get.js",
         "common_description": "PRODUCT location get"
     },
@@ -229,7 +229,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/product_metadata.js",
         "common_description": "PRODUCT metadata"
     },
@@ -238,7 +238,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PRODUCT_VARIANT_LOCATION_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/product_variant_location_metadata.js",
         "common_description": "PRODUCT variant location metadata"
     },
@@ -247,7 +247,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/payment_metadata.js",
         "common_description": "PAYMENT metadata"
     },
@@ -256,7 +256,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_METADATA",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/payment_request_metadata.js",
         "common_description": "PAYMENT REQUEST metadata"
     },
@@ -265,7 +265,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_CREATE",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/payment_request_create.js",
         "common_description": "PAYMENT REQUEST create"
     },
@@ -274,7 +274,7 @@
         "app_id": 6,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET_STATUS",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app6/src/functions/payment_request_get_status.js",
         "common_description": "PAYMENT REQUEST get status"
     },
@@ -283,7 +283,7 @@
         "app_id": 7, 
         "common_type": "FUNCTION",
         "common_name": "CUBE_SOLVE",
-        "common_role": "APP_DATA",
+        "common_role": "APP_ID",
         "common_path": "/apps/app7/src/functions/solve.js",
         "common_description": "Cube solve"
     }

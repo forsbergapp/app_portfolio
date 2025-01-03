@@ -8,7 +8,7 @@
         {"url": "@{SERVER_URL}"}
     ],
     "paths": {
-        "/bff/app_data/v1/app-common/${resource_id_number}": {
+        "/bff/app_id/v1/app-common/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "app_common.commonAppsGet",
@@ -44,7 +44,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-socket/socket-status/${resource_id_number}": {
+        "/bff/app_id/v1/server-socket/socket-status/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "socket.CheckOnline",
@@ -80,7 +80,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/identity_provider": {
+        "/bff/app_id/v1/server-db/identity_provider": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelIdentityProvider.get",
@@ -110,7 +110,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/app_settings": {
+        "/bff/app_id/v1/server-db/app_settings": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelAppSetting.get",
@@ -146,7 +146,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/app_settings_display": {
+        "/bff/app_id/v1/server-db/app_settings_display": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelAppSetting.getDisplayData",
@@ -194,7 +194,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-activate/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/user_account-activate/${resource_id_number}": {
             "put": {
                 "summary": "",
                 "operationId": "iam_service.iamAuthenticateUserActivate",
@@ -205,7 +205,7 @@
                             "required":true
                         }},
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"number"},
+                        {"server_validation_resource_value":"resource_id_number"},
                         {"server_validation_resource_app_data_app_id":null},
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
@@ -228,7 +228,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-forgot": {
+        "/bff/app_id/v1/server-db/user_account-forgot": {
             "post": {
                 "summary": "",
                 "operationId": "iam_service.iamAuthenticateUserForgot",
@@ -258,7 +258,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-profile-stat": {
+        "/bff/app_id/v1/server-db/user_account-profile-stat": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccount.getProfileStat",
@@ -294,7 +294,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-profile-name/${resource_id_string}": {
+        "/bff/app_id/v1/server-db/user_account-profile-name/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccount.getProfile",
@@ -360,7 +360,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account-profile/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/user_account-profile/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccount.getProfile",
@@ -426,7 +426,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account_app_data_post/${resource_id_string}": {
+        "/bff/app_id/v1/server-db/user_account_app_data_post/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
@@ -462,7 +462,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
@@ -498,7 +498,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account_app_data_post-profile/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/user_account_app_data_post-profile/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getProfileUserPosts",
@@ -540,7 +540,7 @@
                 }
             }
         },
-        "/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat": {
+        "/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getProfileStatPost",
@@ -748,6 +748,40 @@
                         "$ref": "#/components/responses/200"
                     }
                 }
+            },
+            "post": {
+                "summary": "",
+                "operationId": "app_common.commonAppReportQueue",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "resource_id_string":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
             }
         },
         "/bff/admin/v1/app-module-report-queue-result/${resource_id_string}": {
@@ -784,10 +818,54 @@
                         "$ref": "#/components/responses/200"
                     }
                 }
-            },
+            }
+        },
+        "/bff/app/v1/app-module-module/${resource_id_string}": {
+            "get": {
+                "summary": "",
+                "operationId": "app_common.commonModuleGet",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "resource_id_string":{
+                                "required":false
+                            }
+                        },
+                        {"type":{
+                            "required":true,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_id/v1/app-module-function/${resource_id_string}": {
             "post": {
                 "summary": "",
-                "operationId": "app_common.commonAppReportQueue",
+                "operationId": "app_common.commonModuleRun",
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -798,13 +876,13 @@
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
+                        {"server_validation_resource_app_data_app_id":true},
+                        {"server_validation_app_function":true}, 
+                        {"server_validation_app_function_role":"APP_ID"}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_iam":false},
                         {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
                         {"server_function_parameter_locale":true},
@@ -814,8 +892,116 @@
                         {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            }
+        },
+        "/bff/app_external/v1/app-module-function/${resource_id_string}": {
+            "post": {
+                "summary": "",
+                "operationId": "app_common.commonModuleRun",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "resource_id_string":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":false},
+                        {"server_validation_app_function":true}, 
+                        {"server_validation_app_function_role":"APP_EXTERNAL"}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/app-module-function/${resource_id_string}": {
+            "post": {
+                "summary": "",
+                "operationId": "app_common.commonModuleRun",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_string",
+                            "resource_id_string":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"user_account_id"},
+                        {"server_validation_resource_app_data_app_id":true},
+                        {"server_validation_app_function":true}, 
+                        {"server_validation_app_function_role":"APP_ACCESS"}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account-password/${resource_id_number}": {
+            "patch": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.updatePassword",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":true},
+                        {"server_validation_app_function":true}, 
+                        {"server_validation_app_function_role":"APP_ACCESS"}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":true},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }

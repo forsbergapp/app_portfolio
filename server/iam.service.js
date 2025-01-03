@@ -81,7 +81,7 @@ const iamUtilMesssageNotAuthorized = () => '⛔';
  * @description IAM util token expired
  * @function
  * @param {number|null}  app_id
- * @param {'APP_ACCESS'|'APP_DATA'|'ADMIN'} token_type 
+ * @param {'APP_ACCESS'|'APP_ID'|'ADMIN'} token_type 
  * @param {string} token 
  * @returns {boolean}
  */
@@ -1190,7 +1190,7 @@ const iamAuthenticateUserDelete = async parameters => {
  */
 const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
     if (iam && iamUtilDecode(iam).get('authorization_bearer') && path.startsWith('/server-socket')){
-        iamAuthenticateUserCommon(iam, 'APP_DATA', iamUtilDecode(iam).get('authorization_bearer')??'', host, ip, res, next);
+        iamAuthenticateUserCommon(iam, 'APP_ID', iamUtilDecode(iam).get('authorization_bearer')??'', host, ip, res, next);
     }
     else
         iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateSocket');
@@ -1200,7 +1200,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
  * @description IAM Middleware authenticate IAM users
  * @function
  * @param {string} iam
- * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'ADMIN'|'APP_ACCESS'|'APP_DATA'|'APP_DATA_REGISTRATION'} scope
+ * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'ADMIN'|'APP_ACCESS'|'APP_ID'|'APP_ID_REGISTRATION'} scope
  * @param {string} authorization
  * @param {string} host
  * @param {string} ip
@@ -1213,9 +1213,9 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
     //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
     if (iam && scope && authorization && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
-        // APP_DATA uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
+        // APP_ID uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
         // other requests uses BASIC or BEARER access token in req.headers.authorization and ID token in iam.authorization_bearer
-        const id_token = scope=='APP_DATA'?authorization?.split(' ')[1] ?? '':iamUtilDecode(iam).get('authorization_bearer')?.split(' ')[1] ?? '';
+        const id_token = scope=='APP_ID'?authorization?.split(' ')[1] ?? '':iamUtilDecode(iam).get('authorization_bearer')?.split(' ')[1] ?? '';
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
@@ -1228,7 +1228,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                 (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
                 id_token_decoded.ip == ip &&
                 log_id_token){
-                if (scope=='APP_DATA')
+                if (scope=='APP_ID')
                     next();
                 else{
                     //validate scope, app_id and authorization
@@ -1277,7 +1277,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                                 iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case scope=='APP_DATA_REGISTRATION' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='APP_ID_REGISTRATION' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
                             next();
                             break;
                         }
@@ -1504,8 +1504,8 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                             path == '/robots.txt' ||
                             //REST API paths
                             path.startsWith('/bff/app/v1/app-module') ||
-                            path.startsWith('/bff/app_data/v1') ||
-                            path.startsWith('/bff/app_signup/v1') ||
+                            path.startsWith('/bff/app_id/v1') ||
+                            path.startsWith('/bff/app_id_signup/v1') ||
                             path.startsWith('/bff/app_access/v1') ||
                             path.startsWith('/bff/app_external/v1/app-module-function') ||
                             path.startsWith('/bff/admin/v1') ||

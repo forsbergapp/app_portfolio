@@ -113,7 +113,7 @@ const component = async props => {
 
     //fetch providers if not admin app
     const providers = props.data.app_id == props.data.common_app_id?[]:
-                        await props.methods.commonFFB({path:'/server-db/identity_provider', method:'GET', authorization_type:'APP_DATA'})
+                        await props.methods.commonFFB({path:'/server-db/identity_provider', method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     return {

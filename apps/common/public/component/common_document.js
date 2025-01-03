@@ -49,7 +49,7 @@ const component = async props => {
     let classname = '';
     let content = await props.methods.commonFFB({path:'/app-module-function/COMMON_DOC', 
                                             method:'POST', 
-                                            authorization_type:'APP_DATA',
+                                            authorization_type:'APP_ID',
                                             body:{  type:props.data.type,
                                                     data_app_id:props.data.common_app_id,
                                                     doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })

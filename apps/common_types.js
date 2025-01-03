@@ -289,7 +289,7 @@
 
 /**
  * Type CommonRESTAPIMethod
- * @typedef{'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
+ * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
 
@@ -424,7 +424,7 @@
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
  *              common_name:string,
- *              common_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|null,
+ *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|null,
  *              common_path:string,
  *              common_description:string}}CommonAppModulesRecord
  */
