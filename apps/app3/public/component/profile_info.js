@@ -77,7 +77,7 @@ const component = async props => {
      * @returns {Promise<{value:string, text:string}[]>}
      */
     const user_settings_get = async profile_id => {
-        return props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile/${profile_id}`, query:`id_current_user=${props.data.user_account_id??''}`, method:'GET', authorization_type:'APP_DATA'})
+        return props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile/${profile_id}`, query:`id_current_user=${props.data.user_account_id??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
                             JSON.parse(result)
                             .map((/**@type{{id:number, 
@@ -118,7 +118,7 @@ const component = async props => {
      * @returns {void}
      */
     const profile_user_setting_stat = id => {
-        props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_DATA'})
+        props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
             props.methods.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_likes_count').textContent = JSON.parse(result)[0].count_user_post_likes;
             props.methods.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_liked_count').textContent = JSON.parse(result)[0].count_user_post_liked;

@@ -50,7 +50,7 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
             /**@type{server_bff_parameters}*/
             const parametersBFF = { endpoint:'SERVER_APP',
                 host:null,
-                url:'/bff/app_data/v1/geolocation/ip',
+                url:'/bff/app_id/v1/geolocation/ip',
                 route_path:'/geolocation/ip',
                 method:'GET', 
                 query:'',
@@ -94,9 +94,9 @@ describe('Integration test, server function worldcities random city called from 
             /**@type{import('../server/bff.service.js')} */
             const bff = await import(`file://${process.cwd()}/server/bff.service.js`);
             /**@type{server_bff_parameters}*/
-            const parametersBFF = { endpoint:'APP_DATA',
+            const parametersBFF = { endpoint:'APP_ID',
                 host:null,
-                url:'/bff/app_data/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                url:'/bff/app_id/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
                 route_path:'/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
                 method:'POST', 
                 query:'',

@@ -84,7 +84,7 @@ const component = async props => {
             lov_column = 'text';
             path = '/app-module-function/COMMON_COUNTRY';
             query= `lang_code=${props.data.user_locale}`;
-            token_type = 'APP_DATA';
+            token_type = 'APP_ID';
             body = {data_app_id : props.data.common_app_id};
             break;
         }
@@ -93,7 +93,7 @@ const component = async props => {
             lov_column = 'text';
             path = '/server-db/app_settings';
             query= `setting_type=${props.data.lov}`;
-            token_type = 'APP_DATA';
+            token_type = 'APP_ID';
         }
     }
     const lov_rows          = props.data.lov=='CUSTOM'?props.data.lov_custom_list:await props.methods.commonFFB({

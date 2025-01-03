@@ -70,7 +70,7 @@ const component = async props => {
                                                     query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
                                                             `&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
                                                     method: 'GET', 
-                                                    authorization_type:'APP_DATA'
+                                                    authorization_type:'APP_ID'
                                                 })
                                         .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
 
