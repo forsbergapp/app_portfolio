@@ -426,15 +426,15 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account_app_data_post/${resource_id_string}": {
+        "/bff/app_id/v1/server-db/user_account_app_data_post/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "dbModelUserAccountAppDataPost.getUserPostsByUserId",
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
                                 "required":true
                             }
                         },
@@ -784,15 +784,15 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-report-queue-result/${resource_id_string}": {
+        "/bff/admin/v1/app-module-report-queue-result/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "fileModelAppModuleQueue.getResult",
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
                                 "required":false
                             }
                         },
@@ -1254,8 +1254,8 @@
                         {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             },
@@ -1324,8 +1324,8 @@
                         {"server_function_parameter_res":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             },
@@ -1546,6 +1546,1130 @@
                 }
             }
         },
+        "/bff/app_access/v1/server-db/user_account_app_data_post": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.createUserPost",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"user_account_id"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_number}": {
+            "put": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPostLike.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"user_account_id"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPostLike.deleteRecord",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"user_account_id"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_number}": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.createUserPost",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.createUserPost",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_entity/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataEntity.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_entity_resource/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataEntityResource.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"entity_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"resource_name":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_resource_master/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceMaster.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"user_null":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"entity_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"user_account_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"resource_name":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "put": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceMaster.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceMaster.deleteRecord",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_resource_master": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceMaster.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_resource_detail/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetail.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"user_null":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"master_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"entity_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"user_account_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"resource_name":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "put": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetail.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetail.deleteRecord",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_resource_detail": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetail.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_resource_detail_data/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetailData.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"user_null":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"app_data_detail_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"user_account_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"resource_name_type":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"resource_name":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"resource_name_master_attribute_type":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"resource_name_master_attribute":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"resource_name_master_data_master_attribute_type":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"resource_name_data_master_attribute":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"entity_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "put": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetailData.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetailData.deleteRecord",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_resource_detail_data": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelAppDataResourceDetailData.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/app_data_stat": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelAppDataStat.get",
+                "parameters": [
+                        {"id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"resource_name":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db_admin/app_data_stat-log": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataStat.getLog",
+                "parameters": [
+                        {"sort":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"order_by":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"select_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"year":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"month":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"day":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"offset":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"limit":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db_admin/app_data_stat-log-stat": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelAppDataStat.getStatUniqueVisitor",
+                "parameters": [
+                        {"select_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"year":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"month":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-socket/message": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelAppDataStat.getStatUniqueVisitor",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-socket/socket-stat": {
+            "get": {
+                "summary": "",
+                "operationId": "socket.socketConnectedCount",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"identity_provider_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"logged_in":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-socket/socket": {
+            "get": {
+                "summary": "",
+                "operationId": "socket.socketConnectedCount",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"select_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"offset":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"year":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"month":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"day":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"order_by":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"sort":{
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
         "/bff/iam_admin/v1/server-iam-login": {
             "post": {
                 "summary": "",
@@ -1573,8 +2697,8 @@
                         {"server_function_parameter_res":true}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
