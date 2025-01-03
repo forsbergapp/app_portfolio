@@ -1516,6 +1516,12 @@
                                 "required":true
                             }
                         },
+                        {"detailchoice":{
+                            "required":true,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -1530,7 +1536,7 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
                 "responses": {
