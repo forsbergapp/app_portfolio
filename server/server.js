@@ -1544,10 +1544,10 @@ const serverJs = async () => {
                                                 res:routesparameters.res}));
                     break;
                 }
-                case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'GET', required:true}):{
+                case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'GET'}):{
                     resolve(iso_return_message(fileModelAppModule.get(
                                                     {app_id:routesparameters.app_id, 
-                                                    data:{data_app_id:null},
+                                                    data:{data_app_id:app_query?.get('data_app_id')},
                                                     resource_id:resource_id_get_number(),
                                                     res:routesparameters.res}),
                                                     resource_id_get_number()!=null));
