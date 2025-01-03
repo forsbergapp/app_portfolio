@@ -2,8 +2,8 @@
 
 /**
  * @import {server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
- *          server_config_server,server_config_rest_api, server_config_iam_policy,
- *          server_config_server_server, server_config_server_service_iam,
+ *          server_db_file_config_server,server_db_file_config_rest_api, server_db_file_config_iam_policy,
+ *          server_db_file_config_server_server, server_db_file_config_server_service_iam,
  *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,
  *          server_db_file_app_translation} from '../types.js'
  * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
@@ -85,9 +85,9 @@ const configDefault = async () => {
     const i = 0;
     //read all default files
 
-    /**@type{[  [server_db_file_db_name, server_config_server],
-                [server_db_file_db_name, server_config_rest_api],
-                [server_db_file_db_name, server_config_iam_policy],
+    /**@type{[  [server_db_file_db_name, server_db_file_config_server],
+                [server_db_file_db_name, server_db_file_config_rest_api],
+                [server_db_file_db_name, server_db_file_config_iam_policy],
                 [server_db_file_db_name, microservice_config],
                 [server_db_file_db_name, microservice_config_service],
                 [server_db_file_db_name, server_db_file_iam_user[]],
@@ -113,7 +113,7 @@ const configDefault = async () => {
                             ]
                         ]; 
     //set server parameters
-    config_obj[0][1].SERVER.map((/**@type{server_config_server_server}*/row)=>{
+    config_obj[0][1].SERVER.map((/**@type{server_db_file_config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
                 row.HTTPS_KEY = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -122,7 +122,7 @@ const configDefault = async () => {
         } 
     });
     //generate hash
-    config_obj[0][1].SERVICE_IAM.map((/**@type{server_config_server_service_iam}*/row)=>{
+    config_obj[0][1].SERVICE_IAM.map((/**@type{server_db_file_config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row)){
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = securitySecretCreate();
@@ -221,9 +221,9 @@ const getFile = async parameters => {
  * @description Config save
  * @function
  * @param {{resource_id:server_db_file_db_name,
- *          data:{  config: server_config_server|
+ *          data:{  config: server_db_file_config_server|
  *                          server_db_file_app[]|
- *                          server_config_iam_policy|
+ *                          server_db_file_config_iam_policy|
  *                          microservice_config|
  *                          microservice_config_service|null,
  *                  maintenance:string,
