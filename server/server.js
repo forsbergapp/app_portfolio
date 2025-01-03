@@ -1302,7 +1302,7 @@ const serverJs = async () => {
                     resolve(dbModelUserAccountAppDataPost.getProfileUserPostDetail({app_id:routesparameters.app_id, 
                                                                                     /**@ts-ignore */
                                                                                     resource_id:resource_id_get_number(), 
-                                                                                    data:{detailchoice:routesparameters.body},
+                                                                                    data:{detailchoice:app_query?.get('detailchoice')},
                                                                                     locale:app_query?.get('lang_code') ??'en', 
                                                                                     res:routesparameters.res})
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
