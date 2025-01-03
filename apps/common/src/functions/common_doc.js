@@ -39,7 +39,9 @@ const markdownRender = async parameters =>{
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../../server/db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-
+    /**@type{import('../../../../server/db/fileModelApp.js')} */
+    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+            
     /**
     * Return supported characters as HTML Entities for tables
     * @param {string} text
@@ -67,8 +69,6 @@ const markdownRender = async parameters =>{
             //replace variables for APP template
             /**@type{import('../../../../server/db/fileModelAppTranslation.js')} */
             const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
-            /**@type{import('../../../../server/db/fileModelApp.js')} */
-            const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
             
             const app_translation = fileModelAppTranslation.get(parameters.app_id,null, parameters.locale, 
                                                                 /**@ts-ignore */
@@ -197,17 +197,25 @@ const markdownRender = async parameters =>{
                 const ROW               = '|@{KEY}          |@{VALUE}                               |';
                 switch (type.toUpperCase()){
                     case 'SERVERS':{
+
+                                const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+                                const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+                                const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                                                fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                                                    fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
                         return  HEADER.replace('@{TITLE}',type) + '\n' +
                                 ALIGNMENT + '\n' +
                                 ROW.replace( ROW,
-                                CONFIG_REST_API[type]
-                                            /**@ts-ignore*/
+                                            fileModelApp.get({app_id:parameters.app_id, resource_id:null, res:null})
                                             .map(row=>{
                                                 return ROW
                                                         /**@ts-ignore*/
-                                                        .replace('@{KEY}',Object.keys(row))
+                                                        .replace('@{KEY}','url')
                                                         /**@ts-ignore*/
-                                                        .replace('@{VALUE}',Object.values(row));
+                                                        .replace('@{VALUE}',(HTTPS_ENABLE? 'https://':'http://') + 
+                                                                                            row.subdomain + '.' +
+                                                                                            HOST +
+                                                                                            ((PORT==80||PORT==443)?'':`/:${PORT}`));
                                             }).join('\n'));
                     }
                     case 'PATHS':{
@@ -256,14 +264,6 @@ const markdownRender = async parameters =>{
                                     (tableRender('servers', details) + '\n\n') + 
                                     (tableRender('paths', details) + '\n\n') +
                                     (details?(tableRender('components',details) + '\n\n'):''));
-            //replace variable @{SERVER_URL}
-            const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-            const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
-            const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                                fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
-            const server_url = (HTTPS_ENABLE? 'https://':'http://') + HOST + ((PORT==80||PORT==443)?'':`:${PORT}`);
-            markdown = markdown.replace('@{SERVER_URL}',server_url);
             
             return markdown;
         }
