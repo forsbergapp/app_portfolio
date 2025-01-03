@@ -2670,6 +2670,346 @@
                 }
             }
         },
+        "/bff/admin/v1/server-db_admin/database-demo": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelDatabase.dbDemoInstall",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelDatabase.dbDemoUninstall",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/app-common": {
+            "get": {
+                "summary": "Gets all apps",
+                "operationId": "fileModelApp.get",
+                "parameters": [
+                        {"description": "Sends resource_id=null"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/app-common-app/${resource_id_number}": {
+            "put": {
+                "summary": "",
+                "operationId": "fileModelApp.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/app-common-app-module/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "fileModelAppModule.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":false
+                            }
+                        },
+                        {"data_app_id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "put": {
+                "summary": "",
+                "operationId": "fileModelAppModule.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/app-common-app-parameter/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "fileModelAppParameter.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "",
+                "operationId": "fileModelAppParameter.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/app-common-app-secret/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "fileModelAppSecret.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "",
+                "operationId": "fileModelAppSecret.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
         "/bff/iam_admin/v1/server-iam-login": {
             "post": {
                 "summary": "",
