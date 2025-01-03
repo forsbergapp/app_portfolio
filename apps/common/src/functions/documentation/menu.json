@@ -63,25 +63,35 @@
     },
     {
         "id":6,
-        "menu":"6 Modules Apps",
+        "menu":"6 REST API",
+        "type":"REST_API",
+        "menu_sub":[
+                {   "id":1,
+                    "menu":"",
+                    "doc":"6.restapi"
+                }]
+    },
+    {
+        "id":7,
+        "menu":"7 Modules Apps",
         "type":"MODULE_APPS",
         "menu_sub":null
     },
     {
-        "id":7,
-        "menu":"7 Modules Microservice",
+        "id":8,
+        "menu":"8 Modules Microservice",
         "type":"MODULE_MICROSERVICE",
         "menu_sub":null
     },
     {
-        "id":8,
-        "menu":"8 Modules Server",
+        "id":9,
+        "menu":"9 Modules Server",
         "type":"MODULE_SERVER",
         "menu_sub":null
     },
     {
-        "id":9,
-        "menu":"9 Modules Test",
+        "id":10,
+        "menu":"10 Modules Test",
         "type":"MODULE_TEST",
         "menu_sub":null
     }

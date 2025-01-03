@@ -2,7 +2,7 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import { server_server_res, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
+ * @import { server_db_file_config_rest_api, server_server_res, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
  */
 
 /**
@@ -27,7 +27,7 @@ const getFile = async (path, res) =>{
  * @description Renders markdown document from template APP
  * @function
  * @param {{app_id:number,
- *          type:string,
+ *          type:serverDocumentType,
  *          doc:string,
  *          module:string,
  *          locale:string,
@@ -35,6 +35,11 @@ const getFile = async (path, res) =>{
  * @returns {Promise.<string>}
  */
 const markdownRender = async parameters =>{
+    /**@type{import('../../../../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    /**@type{import('../../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
     /**
     * Return supported characters as HTML Entities for tables
     * @param {string} text
@@ -58,15 +63,13 @@ const markdownRender = async parameters =>{
                                     comment.indexOf('@method')>-1?'Method':null;
 
     switch (true){
-        case parameters.type=='APP':{
+        case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
             /**@type{import('../../../../server/db/fileModelAppTranslation.js')} */
             const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
             /**@type{import('../../../../server/db/fileModelApp.js')} */
             const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-            /**@type{import('../../../../server/server.js')} */
-            const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
+            
             const app_translation = fileModelAppTranslation.get(parameters.app_id,null, parameters.locale, 
                                                                 /**@ts-ignore */
                                                                 serverUtilNumberValue(parameters.doc), null)[0];
@@ -95,13 +98,11 @@ const markdownRender = async parameters =>{
             //images are saved in an array
             return markdown.replaceAll('@{SCREENSHOT_END}', app_translation?app_translation.json_data.screenshot_end.join('\n'):'');
         }
-        case parameters.type.startsWith('MODULE'):{
+        case parameters.type.toUpperCase().startsWith('MODULE'):{
             //replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
             /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
             const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
-            /**@type{import('../../../../server/db/fileModelConfig.js')} */
-            const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.module.md`, parameters.res);
+            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`, parameters.res);
             markdown = markdown.replaceAll('@{MODULE_NAME}', parameters.module ?? '');
             markdown = markdown.replaceAll('@{MODULE}',parameters.module ??'');
             markdown = markdown.replaceAll('@{SOURCE_LINK}',parameters.module ??'');
@@ -117,7 +118,7 @@ const markdownRender = async parameters =>{
             const module_functions =[];
             let match_module_function;
 
-            //JSDOC module table with variables
+            // module table with variables
             const HEADER            = '|@{TYPE}         |@{FUNCTION_NAME}                       |';
             const ALIGNMENT         = '|:---------------|:--------------------------------------|';
             const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
@@ -181,6 +182,91 @@ const markdownRender = async parameters =>{
             //replace all found JSDoc comments with markdown formatted module functions
             return markdown.replace('@{MODULE_FUNCTION}', module_functions.join('\n'+'\n'));
         }
+        case parameters.type.toUpperCase()=='REST_API':{
+            const CONFIG_REST_API = fileModelConfig.get('CONFIG_REST_API');
+            /**@type{server_db_file_config_rest_api} */
+            
+            /**
+             * @param {'info'|'servers'|'paths'|'components'} type
+             * @param {boolean} details
+             */
+            const tableRender = (type,details) =>{
+                // module table with variables
+                const HEADER            = '|@{TITLE}        |                                       |';
+                const ALIGNMENT         = '|:---------------|:--------------------------------------|';
+                const ROW               = '|@{KEY}          |@{VALUE}                               |';
+                switch (type.toUpperCase()){
+                    case 'SERVERS':{
+                        return  HEADER.replace('@{TITLE}',type) + '\n' +
+                                ALIGNMENT + '\n' +
+                                ROW.replace( ROW,
+                                CONFIG_REST_API[type]
+                                            /**@ts-ignore*/
+                                            .map(row=>{
+                                                return ROW
+                                                        /**@ts-ignore*/
+                                                        .replace('@{KEY}',Object.keys(row))
+                                                        /**@ts-ignore*/
+                                                        .replace('@{VALUE}',Object.values(row));
+                                            }).join('\n'));
+                    }
+                    case 'PATHS':{
+                        return  HEADER.replace('@{TITLE}',type) + '\n' +
+                                ALIGNMENT + '\n' +
+                                ROW.replace( ROW,
+                                Object.entries(CONFIG_REST_API[type])
+                                            .map(row=>{
+                                                if (details)
+                                                    return Object.keys(row[1]).map(method=>(ROW
+                                                                                            .replace('@{KEY}',method.toUpperCase())
+                                                                                            .replace('@{VALUE}',row[0])
+                                                                                            + '\n') +
+                                                                                            ROW
+                                                                                            .replace('@{KEY}','')
+                                                                                            .replace('@{VALUE}',JSON.stringify(row[1][method]))).join('\n');
+                                                else{
+                                                    return Object.keys(row[1]).map(method=>ROW
+                                                                                            .replace('@{KEY}',method.toUpperCase())
+                                                                                            .replace('@{VALUE}',row[0])).join('\n');
+                                                }
+                                            }).join('\n'));
+                    }
+                    default:{
+                        return  HEADER.replace('@{TITLE}',type) + '\n' +
+                                ALIGNMENT + '\n' +
+                                ROW.replace( ROW,
+                                Object.entries(CONFIG_REST_API[type])
+                                            .map(row=>{
+                                                return ROW
+                                                        .replace('@{KEY}',row[0])
+                                                        .replace('@{VALUE}',JSON.stringify(row[1]));
+                                            }).join('\n'));
+                    }
+                }
+            };            
+            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res);
+            //remove all '\r' in '\r\n'
+            markdown = markdown.replaceAll('\r\n','\n');
+            const details = false;
+            //replace with info in config_rest_api.json
+
+            markdown = markdown
+                        .replace('@{CONFIG_REST_API}', 
+                                    (tableRender('info',details) + '\n\n') + 
+                                    (tableRender('servers', details) + '\n\n') + 
+                                    (tableRender('paths', details) + '\n\n') +
+                                    (details?(tableRender('components',details) + '\n\n'):''));
+            //replace variable @{SERVER_URL}
+            const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+            const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+            const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                                fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+            const server_url = (HTTPS_ENABLE? 'https://':'http://') + HOST + ((PORT==80||PORT==443)?'':`:${PORT}`);
+            markdown = markdown.replace('@{SERVER_URL}',server_url);
+            
+            return markdown;
+        }
         default:{
             return '';
         }
@@ -210,6 +296,7 @@ const menuRender = async parameters =>{
                     });
                 break;
             }
+            case menu.type=='REST_API':
             case menu.type=='GUIDE':{
                 //return menu with updated first title from the documents
                 for (const menu_sub of menu.menu_sub??[]){
@@ -307,6 +394,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
             }
             case data.type=='GUIDE':
             case data.type=='APP':
+            case data.type=='REST_API':
             case data.type.startsWith('MODULE') &&
                 (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server')||data.doc.startsWith('/test')):{
                 const {default:ComponentCreate} = await import('../component/common_markdown.js');      
@@ -315,7 +403,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                         markdown: data.type.toUpperCase()=='GUIDE'?
                                                                     await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${data.doc}.md`, res):
                                                                         await markdownRender({  app_id:app_id,
-                                                                                                type:data.type.toUpperCase(),
+                                                                                                type:data.type,
                                                                                                 doc:data.doc,
                                                                                                 module:data.doc,
                                                                                                 locale:locale,

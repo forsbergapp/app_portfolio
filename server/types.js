@@ -123,7 +123,7 @@
 
 /**
  * APP commonDocumentType
- * @typedef {'MENU'|'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
+ * @typedef {'MENU'|'APP'|'GUIDE'|'REST_API'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
  */
 
 /**
@@ -190,12 +190,12 @@
  */
 
 /**
- * CONFIG server_config_server_group
- * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'|'METADATA'} server_config_server_group
+ * DB FILE server_db_file_config_server_group
+ * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'|'METADATA'} server_db_file_config_server_group
  */
 
 /**
- * CONFIG server_config_server_server
+ * DB FILE server_db_file_config_server_server
  * @typedef {{   HTTPS_KEY:string,
  *               HTTPS_CERT:string,
  *               PORT:string,
@@ -208,11 +208,11 @@
  *               APP_LOG:string,
  *               APP_START:string,
  *               APP_COMMON_APP_ID:string,
- *               REST_RESOURCE_BFF:string}} server_config_server_server
+ *               REST_RESOURCE_BFF:string}} server_db_file_config_server_server
  */
 
 /**
- * CONFIG server_config_server_service_iam
+ * DB FILE server_db_file_config_server_service_iam
  * @typedef {{ AUTHENTICATE_REQUEST_ENABLE:string,
  *             AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
  *             AUTHENTICATE_REQUEST_IP:string,
@@ -223,16 +223,16 @@
  *             ENABLE_CONTENT_SECURITY_POLICY:string,
  *             ENABLE_GEOLOCATION:string,
  *             ENABLE_USER_REGISTRATION:string,
- *             ENABLE_USER_LOGIN:string}} server_config_server_service_iam
+ *             ENABLE_USER_LOGIN:string}} server_db_file_config_server_service_iam
  */
 
 /**
- * CONFIG server_config_server_service_socket
- * @typedef {{CHECK_INTERVAL:string}} server_config_server_service_socket
+ * DB FILE server_db_file_config_server_service_socket
+ * @typedef {{CHECK_INTERVAL:string}} server_db_file_config_server_service_socket
  */
 
 /**
- * CONFIG server_config_server_service_db
+ * DB FILE server_db_file_config_server_service_db
  * @typedef {{   START:string,
  *               USE:string,
  *               DB1_DBA_USER:string,
@@ -264,11 +264,11 @@
  *               DB4_CONNECT_STRING:string,
  *               DB4_POOL_MIN:string,
  *               DB4_POOL_MAX:string,
- *               DB4_POOL_INCREMENT:string}} server_config_server_service_db
+ *               DB4_POOL_INCREMENT:string}} server_db_file_config_server_service_db
  */
 
 /**
- * CONFIG server_config_server_service_log
+ * DB FILE server_db_file_config_server_service_log
  * @typedef {{  SCOPE_REQUEST:string,
  *              SCOPE_SERVER:string,
  *              SCOPE_APP:string,
@@ -281,38 +281,38 @@
  *              LEVEL_VERBOSE:string,
  *              LEVEL_ERROR:string,
  *              LEVEL_INFO:string,
- *              FILE_INTERVAL:string}} server_config_server_service_log
+ *              FILE_INTERVAL:string}} server_db_file_config_server_service_log
  */
 
 /**
- * CONFIG server_config_server_metadata
+ * DB FILE server_db_file_config_server_metadata
  * @typedef  {{ MAINTENANCE:number,
  *              CONFIGURATION:string,
  *              COMMENT:string,
  *              CREATED:string,
- *              MODIFIED:string}} server_config_server_metadata
+ *              MODIFIED:string}} server_db_file_config_server_metadata
  */
 
 /**
- * CONFIG server_config_server
- * @typedef  {{ ['SERVER']:[server_config_server_server], 
- *              ['SERVICE_IAM']:[server_config_server_service_iam],
- *              ['SERVICE_SOCKET']:[server_config_server_service_socket],
- *              ['SERVICE_DB']:[server_config_server_service_db],
- *              ['SERVICE_LOG']:[server_config_server_service_log],
- *              ['METADATA']:server_config_server_metadata}} server_config_server
+ * DB FILE server_db_file_config_server
+ * @typedef  {{ ['SERVER']:[server_db_file_config_server_server], 
+ *              ['SERVICE_IAM']:[server_db_file_config_server_service_iam],
+ *              ['SERVICE_SOCKET']:[server_db_file_config_server_service_socket],
+ *              ['SERVICE_DB']:[server_db_file_config_server_service_db],
+ *              ['SERVICE_LOG']:[server_db_file_config_server_service_log],
+ *              ['METADATA']:server_db_file_config_server_metadata}} server_db_file_config_server
  */
 /**
- * CONFIG server_config_rest_api_methods
- * @typedef {'get'|'post'|'delete'|'patch'|'put'} server_config_rest_api_methods
+ * DB FILE server_db_file_config_rest_api_methods
+ * @typedef {'get'|'post'|'delete'|'patch'|'put'} server_db_file_config_rest_api_methods
  */
 /**
- * CONFIG server_config_rest_api_content
- * @typedef {'application/json'} server_config_rest_api_content
+ * DB FILE server_db_file_config_rest_api_content
+ * @typedef {'application/json'} server_db_file_config_rest_api_content
  */
 
 /**
- * CONFIG server_config_rest_api followin Open API syntax
+ * DB FILE server_db_file_config_rest_api following Open API syntax
  * @typedef  {{ info: {
  *                      title: string,
  *                      version: string,
@@ -320,56 +320,49 @@
  *                  },
  *              servers: {url: string}[],
  *              paths: {[key:string]: 
- *                          {server_config_rest_api_methods:
+ *                          {server_db_file_config_rest_api_methods:
  *                              {
  *                                  summary: string,
  *                                  operationId: string,
  *                                  parameters: [
- *                                      {
- *                                          description: string,
- *                                          validate_resource_key:'id'|'app_id'|null, 
- *                                          validate_resource_value:"number",
- *                                          validate_resource_app_data_app_id:number|null,
- *                                          validate_app_function:string|null, 
- *                                          validate_app_function_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|''|null, 
- *                                          resource_id_required: boolean,
- *                                          resource_id_type: 'number'|'string'|null,
- *                                          function_parameter_ip:boolean,
- *                                          function_parameter_user_agent:boolean, 
- *                                          function_parameteter_accept_language:boolean,
- *                                          function_parameter_host:boolean,
- *                                          function_parameter_locale:boolean,
- *                                          function_parameter_endpoint:boolean,
- *                                          function_parameter_query:boolean,
- *                                          function_parameter_resource_id:boolean,
- *                                          function_parameter_body:boolean,
- *                                          function_parameter_res:boolean
- *                                      }
+ *                                      {[key:string]:boolean|string|{}}
  *                                  ],
  *                                  responses: {
  *                                      [key:string]: {
- *                                          description: string,
- *                                          content: {
- *                                              server_config_rest_api_content: {
- *                                                  schema: {
- *                                                      "$ref": string
- *                                                  },
- *                                                  single_resource?: null|false|true
- *                                              }
- *                                          }
+ *                                          "$ref": string
  *                                      }
  *                                  }
  *                              }
  *                          }
- *                  }
- *          }} server_config_rest_api
-*/
+ *                  },
+ *              components:{
+ *                  "securitySchemes":{
+ *                      [key:string]: {}
+ *                  },
+ *                  "parameters":{
+ *                      [key:string]: {}
+ *                  },
+ *                  "responses":{
+ *                      [key:string]: {
+ *                          description: string,
+ *                          content: {
+ *                              server_db_file_config_rest_api_content: {
+ *                                  schema: {
+ *                                      "$ref": string
+ *                                  }
+ *                              }
+ *                          }
+ *                      }
+ *                  },
+ *              }
+ *          }} server_db_file_config_rest_api
+ */
 
 /**
- * CONFIG server_db_file_config_files
- * @typedef {   server_config_server|
- *              server_config_rest_api|
- *              server_config_iam_policy|
+ * DB FILE server_db_file_config_files
+ * @typedef {   server_db_file_config_server|
+ *              server_db_file_config_rest_api|
+ *              server_db_file_config_iam_policy|
  *              import('../microservice/types.js').microservice_config|
  *              import('../microservice/types.js').microservice_config_service|
  *              server_db_file_iam_user[]|
@@ -381,8 +374,8 @@
 
 
 /**
- * DB FILE server_config_iam_policy
- * @typedef {{'content-security-policy':string}} server_config_iam_policy
+ * DB FILE server_db_file_config_iam_policy
+ * @typedef {{'content-security-policy':string}} server_db_file_config_iam_policy
  */
 
 /**
@@ -925,7 +918,7 @@
 */
 
 /** 
-* DB_FILE server_log_result_logFilesGet
+* DB FILE server_log_result_logFilesGet
 * @typedef {{id:number, filename:string}} server_log_result_logFilesGet
 */
 
@@ -2206,7 +2199,7 @@
  * @property {string} query.admin                            - app portfolio parameter
  * @property {number} query.identity_provider_id
  * @property {0|1|2|3|4|5|6} query.config_type_no                   - Server parameter
- * @property {server_config_server_group} query.server_config_group                      - Server parameter
+ * @property {server_db_file_config_server_group} query.server_config_group                      - Server parameter
  * 
  * @property {{ authorization: string, 
  *              'user-agent': string, 
