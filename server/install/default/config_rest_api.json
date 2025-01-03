@@ -985,8 +985,8 @@
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
                         {"server_validation_resource_app_data_app_id":true},
-                        {"server_validation_app_function":true}, 
-                        {"server_validation_app_function_role":"APP_ACCESS"}, 
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
                         {"server_function_parameter_iam":false},
                         {"server_function_parameter_authorization":false},
@@ -1002,6 +1002,540 @@
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/server-db/user_account/${resource_id_number}": {
+            "patch": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateUserUpdate",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":false},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":true},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account/${resource_id_number}": {
+            "patch": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateUserUpdate",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":false},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":true},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.getUserByUserId",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":false},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateUserDelete",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":false},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account-common/${resource_id_number}": {
+            "patch": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.updateUserCommon",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account-profile-detail/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccount.getProfileDetail",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"detailchoice":{
+                            "required":true,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_follow/${resource_id_number}": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelUserAccountFollow.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelUserAccountFollow.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_like/${resource_id_number}": {
+            "post": {
+                "summary": "",
+                "operationId": "dbModelUserAccountLike.post",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelUserAccountLike.deleteRecord",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_app/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountApp.get",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "patch": {
+                "summary": "",
+                "operationId": "dbModelUserAccountApp.update",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "",
+                "operationId": "dbModelUserAccountApp.deleteRecord",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_app-apps/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountApp.getApps",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":"id"}, 
+                        {"server_validation_resource_value":"resource_id_number"},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":false},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-db/user_account_app_data_post-profile-detail/${resource_id_number}": {
+            "get": {
+                "summary": "",
+                "operationId": "dbModelUserAccountAppDataPost.getProfileUserPostDetail",
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "resource_id_number":{
+                                "required":true
+                            }
+                        },
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":false},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":false}, 
+                        {"server_function_parameter_accept_language":false},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":false}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
                     }
                 }
             }
