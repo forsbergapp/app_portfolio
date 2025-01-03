@@ -37,7 +37,7 @@ const iamService = await import(`file://${process.cwd()}/server/iam.service.js`)
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_DATA', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ID', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateIdTokenRegistration
@@ -48,7 +48,7 @@ const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUse
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_DATA_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ID_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateAccessToken

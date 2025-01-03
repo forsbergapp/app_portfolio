@@ -115,31 +115,31 @@ const bffService = await import('./bff.service.js');
     bffService.bff(bff_parameters);
 };
 /**
- * @name bffAppData
- * @description Backend for frontend (BFF) APP_DATA
+ * @name bffAppId
+ * @description Backend for frontend (BFF) APP_ID
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
  * @returns {*}
  */
- const bffAppData = (req, res) =>{
+ const bffAppId = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'APP_DATA', 
+    const bff_parameters = {endpoint:'APP_ID', 
                             ...bffCommon(req, res)
                             };
     bffService.bff(bff_parameters);
 };
 /**
- * @name bffAppSignup
- * @description Backend for frontend (BFF) APP_SIGNUP
+ * @name bffAppIdSignup
+ * @description Backend for frontend (BFF) APP_ID_SIGNUP
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
  * @returns {*}
  */
- const bffAppSignup = (req, res) =>{
+ const bffAppIdSignup = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'APP_SIGNUP', 
+    const bff_parameters = {endpoint:'APP_ID_SIGNUP', 
                             ...bffCommon(req, res)
                             };
     bffService.bff(bff_parameters);
@@ -251,7 +251,7 @@ const bffIAMAdmin = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 
-export{ bffInit, bffStart, bffApp, bffAppData, bffAppSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
         bffIAMAdmin, bffIAMUser, bffIAMProvider};</code></pre>
         </div>
     </div>

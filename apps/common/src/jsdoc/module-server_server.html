@@ -2119,8 +2119,8 @@ returns disallow for robots.txt and empty favicon.ico
 *	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled
 and to admin subdomain if first time,
 responds to SSL verification if enabled
-/bff/app_data/v1*                           all     iam.iamAuthenticateIdToken                  bffAppData
-/bff/app_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
+/bff/app_id/v1*                           all     iam.iamAuthenticateIdToken                  bffAppId
+/bff/app_id_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppIdSignup
 /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
 /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
 /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
