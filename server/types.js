@@ -167,7 +167,7 @@
 
 /** 
  * BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_DATA'|'APP_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
+ * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
  *           'SERVER_APP'|'SERVER_REPORT'|'SERVER_SOCKET'|'SERVER_MAIL'} server_bff_endpoint_type
  */
 
@@ -576,7 +576,7 @@
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
  *              common_name:string,
- *              common_role:'APP_DATA'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'',
+ *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'',
  *              common_path:string,
  *              common_description:string}} server_db_file_app_module
  */

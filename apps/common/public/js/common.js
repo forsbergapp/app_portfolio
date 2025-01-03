@@ -111,7 +111,7 @@ Object.seal(COMMON_ICONS);
  *                      data4:string,
  *                      data5:string}[]>}
  */
-const commonMiscDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_DATA'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+const commonMiscDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 /**
  * @name commonMiscElementId
  * @description Finds recursive parent id. Use when current element can be an image or svg attached to an event element
@@ -1541,7 +1541,7 @@ const commonProfileUpdateStat = async () => {
        commonFFB({path:`/server-db/user_account-profile/${profile_id.textContent}`, 
             query:`id=${profile_id.textContent}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
             method:'GET', 
-            authorization_type:'APP_DATA'})
+            authorization_type:'APP_ID'})
         .then(result=>{
             const user_stat = JSON.parse(result)[0];
             COMMON_DOCUMENT.querySelector('#common_profile_info_view_count').textContent = user_stat.count_views;
@@ -1924,7 +1924,7 @@ const commonUserSignup = () => {
                             ...commonMiscUservariables()
                             };
            
-       commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
+       commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_ID_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
         .then(result=>{
             const signup = JSON.parse(result);
             COMMON_GLOBAL.token_at = signup.accessToken;
@@ -1977,7 +1977,7 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                                 verification_type:  verification_type,
                                 ...commonMiscUservariables()
                             };
-               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_dialogue_iam_verify_email_icon'})
+               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_ID', body:json_data, spinner_id:'common_dialogue_iam_verify_email_icon'})
                 .then(result=>{
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
@@ -2173,7 +2173,7 @@ const commonUserForgot = async () => {
                     email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email')
                     })==true){
         
-       commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_DATA', body:json_data, spinner_id:'common_dialogue_iam_start_forgot_button'})
+       commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_ID', body:json_data, spinner_id:'common_dialogue_iam_start_forgot_button'})
         .then(result=>{
             const forgot = JSON.parse(result);
             if (forgot.sent == 1){
@@ -2367,16 +2367,16 @@ const commonFFB = async parameter => {
     parameter.query = parameter.query==null?'':parameter.query;
     parameter.body = parameter.body?parameter.body:null;
     switch (parameter.authorization_type){
-        case 'APP_DATA':{
+        case 'APP_ID':{
             //id token authorization check
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_data`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_id`;
             break;
         }
-        case 'APP_SIGNUP':{
+        case 'APP_ID_SIGNUP':{
             //id token signup authorization check
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_signup`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_id_signup`;
             break;
         }
         case 'APP_ACCESS':{
@@ -2615,7 +2615,7 @@ const commonSocketConnectOnline = async () => {
  * @returns {void}
  */
 const commonSocketConnectOnlineCheck = (div_icon_online, user_account_id) => {
-   commonFFB({path:`/server-socket/socket-status/${user_account_id}`, method:'GET', authorization_type:'APP_DATA'})
+   commonFFB({path:`/server-socket/socket-status/${user_account_id}`, method:'GET', authorization_type:'APP_ID'})
     .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
@@ -2628,7 +2628,7 @@ const commonSocketConnectOnlineCheck = (div_icon_online, user_account_id) => {
  */
 const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
-       commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_DATA'})
+       commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             const json = JSON.parse(result);
             if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
@@ -2649,7 +2649,7 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
  * @returns {Promise.<{latitude:String, longitude:string, place:string}>}
  */
 const commonMicroserviceGeolocationIp = async ip => {
-    return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_DATA'})
+    return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             return {
                 latitude:JSON.parse(result).geoplugin_latitude,
@@ -2743,7 +2743,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                     options: await commonFFB({
                                                 path:'/app-module-function/COMMON_LOCALE', 
                                                 query:`lang_code=${COMMON_GLOBAL.user_locale}`, 
-                                                method:'POST', authorization_type:'APP_DATA',
+                                                method:'POST', authorization_type:'APP_ID',
                                                 body:{data_app_id : COMMON_GLOBAL.common_app_id}
                                             })
                                             .then((/**@type{string}*/result)=>JSON.parse(result).rows),

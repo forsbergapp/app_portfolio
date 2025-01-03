@@ -385,8 +385,8 @@ const serverUtilAppLine = () =>{
  *	            *	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled 
  *				            			                                                                                        and to admin subdomain if first time, 
  *							                                                                                                    responds to SSL verification if enabled
- *              /bff/app_data/v1*                           all     iam.iamAuthenticateIdToken                  bffAppData
- *              /bff/app_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppSignup
+ *              /bff/app_id/v1*                           all     iam.iamAuthenticateIdToken                  bffAppId
+ *              /bff/app_id_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppIdSignup
  *              /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
  *              /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
  *              /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
@@ -429,7 +429,7 @@ const serverUtilAppLine = () =>{
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bff.js')} */
-    const { bffInit, bffStart, bffApp, bffAppData, bffAppSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+    const { bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
             bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bff.js`);
     //auth
     /**@type{import('./iam.js')} */
@@ -448,8 +448,8 @@ const serverUtilAppLine = () =>{
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
     app.route('/bff/app/v1/app-module*').get                    (bffApp);
-    app.route('/bff/app_data/v1*').all                          (iam.iamAuthenticateIdToken,                bffAppData);
-    app.route('/bff/app_signup/v1*').post                       (iam.iamAuthenticateIdTokenRegistration,    bffAppSignup);
+    app.route('/bff/app_id/v1*').all                          (iam.iamAuthenticateIdToken,                bffAppId);
+    app.route('/bff/app_id_signup/v1*').post                       (iam.iamAuthenticateIdTokenRegistration,    bffAppIdSignup);
     app.route('/bff/app_access/v1*').all                        (iam.iamAuthenticateAccessToken,            bffAppAccess);
     app.route('/bff/app_external/v1/app-module-function*').post (iam.iamAuthenticateExternal,               bffAppExternal);
     app.route('/bff/admin/v1*').all                             (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
@@ -492,7 +492,7 @@ const serverJs = async () => {
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('./bff.js')} */
-    const { bffApp, bffAppData, bffAppSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+    const { bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
         bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bff.js`);
 
     /**
@@ -518,17 +518,17 @@ const serverJs = async () => {
                     bffApp(req, res);
                     break;
                 }
-                case req.path.startsWith('/bff/app_data/v1'):{
-                    req.route.path = '/bff/app_data/v1*';
+                case req.path.startsWith('/bff/app_id/v1'):{
+                    req.route.path = '/bff/app_id/v1*';
                     await iam.iamAuthenticateIdToken(req, res, () =>
-                        bffAppData(req, res)
+                        bffAppId(req, res)
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/app_signup/v1') &&req.method=='POST':{
-                    req.route.path = '/bff/app_signup/v1*';
+                case req.path.startsWith('/bff/app_id_signup/v1') &&req.method=='POST':{
+                    req.route.path = '/bff/app_id_signup/v1*';
                     await iam.iamAuthenticateIdTokenRegistration(req, res, () =>
-                            bffAppSignup(req, res)
+                            bffAppIdSignup(req, res)
                     );
                     break;
                 }
@@ -943,24 +943,24 @@ const serverJs = async () => {
             switch (true){
                 //server routes
                 //app data open routes to apps that got id token at start
-                case route({url:`/bff/app_data/v1/app-common/${resource_id_string}`, method:'GET'}):{
+                case route({url:`/bff/app_id/v1/app-common/${resource_id_string}`, method:'GET'}):{
                     resolve(app_common.commonAppsGet({app_id:routesparameters.app_id, 
                                                       resource_id:resource_id_get_number(), 
                                                       locale:app_query?.get('lang_code') ??'en'})
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-socket/socket-status/${resource_id_string}`, method:'GET', required:true}):{
+                case route({url:`/bff/app_id/v1/server-socket/socket-status/${resource_id_string}`, method:'GET', required:true}):{
                     resolve(iso_return_message(socket.CheckOnline({resource_id:resource_id_get_number()}), true));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/server-db/identity_provider', method:'GET'}):{
+                case route({url:'/bff/app_id/v1/server-db/identity_provider', method:'GET'}):{
                     resolve(dbModelIdentityProvider.get({app_id:routesparameters.app_id})
                                 .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 //app settings all values with or without translations including all common app id settings if requested setting is empty
-                case route({url:'/bff/app_data/v1/server-db/app_settings', method:'GET'}):{
+                case route({url:'/bff/app_id/v1/server-db/app_settings', method:'GET'}):{
                     resolve(dbModelAppSetting.get({ app_id:routesparameters.app_id, 
                                                     data:{setting_type:app_query?.get('setting_type')??''}, 
                                                     locale:app_query?.get('lang_code')??'en'})
@@ -968,7 +968,7 @@ const serverJs = async () => {
                     break;
                 }
                 //app settings without translations and only value if specified
-                case route({url:'/bff/app_data/v1/server-db/app_settings_display', method:'GET'}):{
+                case route({url:'/bff/app_id/v1/server-db/app_settings_display', method:'GET'}):{
                     resolve(dbModelAppSetting.getDisplayData({app_id:routesparameters.app_id, 
                                                                 data:{setting_type:app_query?.get('setting_type'),
                                                                       data_app_id:app_query?.get('data_app_id'),
@@ -978,7 +978,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, false)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-db/user_account-activate/${resource_id_string}`, method:'PUT', 
+                case route({url:`/bff/app_id/v1/server-db/user_account-activate/${resource_id_string}`, method:'PUT', 
                             resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
                     resolve(iam_service.iamAuthenticateUserActivate({   app_id:routesparameters.app_id, 
                                                                         /**@ts-ignore */
@@ -992,7 +992,7 @@ const serverJs = async () => {
                                                                         res:routesparameters.res}));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/server-db/user_account-forgot', method:'POST'}):{
+                case route({url:'/bff/app_id/v1/server-db/user_account-forgot', method:'POST'}):{
                     resolve(iam_service.iamAuthenticateUserForgot({ app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
                                                                     user_agent:routesparameters.user_agent, 
@@ -1001,13 +1001,13 @@ const serverJs = async () => {
                                                                     data:routesparameters.body}));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/server-db/user_account-profile-stat', method:'GET'}):{
+                case route({url:'/bff/app_id/v1/server-db/user_account-profile-stat', method:'GET'}):{
                     resolve(dbModelUserAccount.getProfileStat({ app_id:routesparameters.app_id, 
                                                                 data:{statchoice:app_query?.get('statchoice')}})
                                 .then(result=>iso_return_message(result, false)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-db/user_account-profile-name/${resource_id_string}`, method:'GET'}):{
+                case route({url:`/bff/app_id/v1/server-db/user_account-profile-name/${resource_id_string}`, method:'GET'}):{
                     resolve(dbModelUserAccount.getProfile({ app_id:routesparameters.app_id, 
                                                             resource_id:resource_id_get_string(),
                                                             ip:routesparameters.ip, 
@@ -1024,7 +1024,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, resource_id_get_string()!=null)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-db/user_account-profile/${resource_id_string}`, method:'GET'}):{
+                case route({url:`/bff/app_id/v1/server-db/user_account-profile/${resource_id_string}`, method:'GET'}):{
                     resolve(dbModelUserAccount.getProfile({ app_id:routesparameters.app_id, 
                                                             resource_id:resource_id_get_number(), 
                                                             ip:routesparameters.ip, 
@@ -1041,7 +1041,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'GET', required:true}):{
+                case route({url:`/bff/app_id/v1/server-db/user_account_app_data_post/${resource_id_string}`, method:'GET', required:true}):{
                     resolve(dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:routesparameters.app_id, 
                                                                                 resource_id:resource_id_get_number(), 
                                                                                 locale:app_query?.get('lang_code') ??'en', 
@@ -1049,7 +1049,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, true)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_string}`, method:'GET', required: true}):{
+                case route({url:`/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_string}`, method:'GET', required: true}):{
                     resolve(dbModelUserAccountAppDataPost.getProfileStatLike({  app_id:routesparameters.app_id, 
                                                                                 resource_id:resource_id_get_number(), 
                                                                                 locale:app_query?.get('lang_code') ??'en', 
@@ -1057,7 +1057,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, true)));
                     break;
                 }
-                case route({url:`/bff/app_data/v1/server-db/user_account_app_data_post-profile/${resource_id_string}`, method:'GET',required:true}):{
+                case route({url:`/bff/app_id/v1/server-db/user_account_app_data_post-profile/${resource_id_string}`, method:'GET',required:true}):{
                     resolve(dbModelUserAccountAppDataPost.getProfileUserPosts({app_id:routesparameters.app_id, 
                                                                                 resource_id:resource_id_get_number(), 
                                                                                 data:{id_current_user:app_query?.get('id_current_user')},
@@ -1066,7 +1066,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, true)));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/server-db/user_account_app_data_post-profile-stat', method:'GET'}):{
+                case route({url:'/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat', method:'GET'}):{
                     resolve(dbModelUserAccountAppDataPost.getProfileStatPost({  app_id:routesparameters.app_id, 
                                                                                 data:{statchoice:app_query?.get('statchoice')},
                                                                                 locale:   app_query?.get('lang_code') ??'en', 
@@ -1145,8 +1145,8 @@ const serverJs = async () => {
                     break;
                 }                
                 //server module of type FUNCTION  for app_data, app_external or app_access
-                case route({url:`/bff/app_data/v1/app-module-function/${resource_id_string}`, method:'POST', 
-                            resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_DATA'}):
+                case route({url:`/bff/app_id/v1/app-module-function/${resource_id_string}`, method:'POST', 
+                            resource_validate_app_data_app_id: routesparameters.body.data_app_id, required:true, validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_ID'}):
                 case route({url:`/bff/app_external/v1/app-module-function/${resource_id_string}`, method:'POST', 
                             validate_app_function:resource_id_get_string(), validate_app_function_role:'APP_EXTERNAL'}):
                 case route({url:`/bff/app_access/v1/app-module-function/${resource_id_string}`, method:'POST', 
@@ -1743,7 +1743,7 @@ const serverJs = async () => {
                     break;
                 }
                 // app_signup route
-                case route({url:'/bff/app_signup/v1/server-db/user_account-signup', method:'POST'}):{
+                case route({url:'/bff/app_id_signup/v1/server-db/user_account-signup', method:'POST'}):{
                     resolve(iam_service.iamAuthenticateUserSignup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
                     break;
                 }
@@ -1792,7 +1792,7 @@ const serverJs = async () => {
                     break;
                 }
                 //microservice routes
-                case route({url:'/bff/app_data/v1/geolocation/ip', method:'GET'}) ||
+                case route({url:'/bff/app_id/v1/geolocation/ip', method:'GET'}) ||
                     (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
                         resolve(call_microservice({ app_id:routesparameters.app_id,
                                                     path:routesparameters.route_path, 
@@ -1801,7 +1801,7 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, true)));
                     break;
                 }
-                case route({url:'/bff/app_data/v1/geolocation/place', method:'GET'}):{
+                case route({url:'/bff/app_id/v1/geolocation/place', method:'GET'}):{
                     resolve(call_microservice(  {   app_id:routesparameters.app_id,
                                                     path:routesparameters.route_path, 
                                                     query:URI_query,

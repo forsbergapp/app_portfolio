@@ -107,7 +107,7 @@ const component = async props => {
 
     //Fetch settings with direction, timezone and arabic script
     /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_DATA'})
+    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({path:'/server-db/app_settings_display', query:`data_app_id=${props.data.data_app_id}`, method:'GET', authorization_type:'APP_ID'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
@@ -117,7 +117,7 @@ const component = async props => {
     const locales = await props.methods.commonFFB({
                                                     path:'/app-module-function/COMMON_LOCALE', 
                                                     query:`lang_code=${props.data.user_locale}`, 
-                                                    method:'POST', authorization_type:'APP_DATA',
+                                                    method:'POST', authorization_type:'APP_ID',
                                                     body:{data_app_id : props.data.common_app_id}
                                                 })
                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
