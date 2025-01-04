@@ -2,7 +2,7 @@
 
 /**
  * @import {server_db_file_result_fileFsRead} from '../server/types.js'
- * @import {microservice_config_service_record} from './types.js'
+ * @import {microservice_config_service_record,microservice_registry_service} from './types.js'
  */
 
 /**@type{import('../server/db/file.js')} */
@@ -60,7 +60,7 @@ const registryMicroServiceServer = async (service) =>{
  * @name registryMicroserviceApiVersion
  * @description Get microservice API version
  * @function
- * @param {'GEOLOCATION'|'WORLDCITIES'|'MAIL'} service 
+ * @param {microservice_registry_service} service 
  * @returns {number}
  */
 const registryMicroserviceApiVersion = service =>{

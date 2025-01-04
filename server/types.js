@@ -168,7 +168,7 @@
 /** 
  * BFF server_bff_endpoint_type
  * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
- *           'SERVER_APP'|'SERVER_REPORT'|'SERVER_SOCKET'|'SERVER_MAIL'} server_bff_endpoint_type
+ *           'SERVER'} server_bff_endpoint_type
  */
 
 /**
@@ -2055,7 +2055,7 @@
  *              host:string,
  *              url:string,
  *              route_path:string,
- *              method: string,
+ *              method: server_req_method,
  *              parameters: string,
  *              body:*,
  *              authorization:string,
@@ -2070,7 +2070,9 @@
  * @typedef {*} server_server_req_verbose
  * 
  */
-
+/**
+ * @typedef {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'|string} server_req_method
+ */
 /**
  * SERVER server_server_req
  * @typedef {Object} server_server_req
@@ -2081,7 +2083,7 @@
  * @property {string} url
  * @property {string} originalUrl
  * @property {string} ip
- * @property {string} method
+ * @property {server_req_method} method
  * @property {function} get
  * @property {string} protocol
  * @property {string} httpVersion

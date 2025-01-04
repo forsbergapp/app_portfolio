@@ -58,5 +58,8 @@
  * @property {object}   headers
  * @property {string}   headers.location
  */
-
+/**
+ * Registry services
+ * @typedef {'GEOLOCATION'|'WORLDCITIES'|'MAIL'|string} microservice_registry_service
+ */
 export {};
