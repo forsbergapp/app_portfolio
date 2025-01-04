@@ -139,9 +139,9 @@ const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language
                                     .catch((/**@type{server_server_error}*/error)=>{throw error;});
         
     /**@type{server_bff_parameters}*/
-    const parameters = {endpoint:'SERVER_MAIL',
+    const parameters = {endpoint:'SERVER',
                         host:null,
-                        url:'/mail/sendemail',
+                        url:'/bff/admin/v1/mail/sendemail',
                         route_path:'/mail/sendemail',
                         method:'POST', 
                         query:'',
@@ -235,7 +235,7 @@ const commonGeodata = async parameters =>{
     /**@type{server_bff_parameters}*/
     const parametersBFF = { endpoint:parameters.endpoint,
                             host:null,
-                            url:'/geolocation/ip',
+                            url:'/bff/app_id/v1/geolocation/ip',
                             route_path:'/geolocation/ip',
                             method:'GET', 
                             query:`ip=${parameters.ip}`,
@@ -595,7 +595,7 @@ const commonModuleGet = async parameters => {
                 //ID token is created but not used in report
                 await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
                 const result_geodata =  await commonGeodata({   app_id:parameters.app_id, 
-                                                                endpoint:'SERVER_APP', 
+                                                                endpoint:'SERVER', 
                                                                 ip:parameters.ip, 
                                                                 user_agent:parameters.user_agent ??'', 
                                                                 accept_language:parameters.locale??''});
@@ -775,7 +775,7 @@ const commonComponentCreate = async parameters =>{
     //geodata for APP
     const result_geodata = parameters.type=='APP'?
                                 await commonGeodata({   app_id:parameters.app_id, 
-                                                        endpoint:'SERVER_APP', 
+                                                        endpoint:'SERVER', 
                                                         ip:parameters.componentParameters.ip, 
                                                         user_agent:parameters.componentParameters.user_agent ??'', 
                                                         accept_language:parameters.componentParameters.locale??''}):

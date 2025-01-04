@@ -55,7 +55,7 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
             /**@type{import('../server/bff.service.js')} */
             const bff = await import(`file://${process.cwd()}/server/bff.service.js`);
             /**@type{server_bff_parameters}*/
-            const parametersBFF = { endpoint:'SERVER_APP',
+            const parametersBFF = { endpoint:'SERVER',
                 host:null,
                 url:'/bff/app_id/v1/geolocation/ip',
                 route_path:'/geolocation/ip',

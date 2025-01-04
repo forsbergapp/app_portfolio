@@ -13,19 +13,20 @@
  */
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
-
+/**@type{import('../server.js')} */
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**
  * @name get
  * @description Get records for given appid
  * @function
  * @param {{app_id:Number,
  *          resource_id:number|null,
- *          data:{data_app_id:number|null},
+ *          data:{data_app_id?:string|number|null},
  *          res:server_server_res|null}} parameters
  * @returns {server_db_file_app_module[]}
  */
 const get = parameters => {
-    const result = fileDBGet(parameters.app_id, 'APP_MODULE',parameters.resource_id, parameters.data.data_app_id);
+    const result = fileDBGet(parameters.app_id, 'APP_MODULE',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
     if (result.length>0 || parameters.resource_id==null)
         return result;
     else

@@ -83,22 +83,27 @@ const template = props => ` &lt;div class='menu_apps_detail_row'>
  */
 const component = async props => {
     let path = '';
+    let query = '';
     switch (props.data.detail){
         case 'menu_apps_detail_parameter':{
+            //APP_PARAMETER uses one record for all parameters for each app
             path = `/app-common-app-parameter/${props.data.app_id_data}`;
             break;
         }
         case 'menu_apps_detail_module':{
-            path = `/app-common-app-module/${props.data.app_id_data}`;
+            //APP_MODULE saves records for each app
+            path = '/app-common-app-module/';
+            query = `data_app_id=${props.data.app_id_data}`;
             break;
         }
         case 'menu_apps_detail_secret':{
+            //APP_SECRET uses one record for all secrets for each app
             path = `/app-common-app-secret/${props.data.app_id_data}`;
             break;
         }
     }
-    const app_detail = await props.methods.commonFFB({path:path, method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>props.data.detail=='menu_apps_detail_module'?JSON.parse(result):JSON.parse(result)[0]);
+    const app_detail = await props.methods.commonFFB({path:path, query:query, method:'GET', authorization_type:'ADMIN'})
+                            .then((/**@type{string}*/result)=>props.data.detail=='menu_apps_detail_module'?JSON.parse(result).rows:JSON.parse(result)[0]);
     return {
        lifecycle:   null,
        data:        null,
