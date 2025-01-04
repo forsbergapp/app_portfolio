@@ -117,8 +117,8 @@ const dbInstallGetFiles = async (install_type) =>{
  * @name dbInstall
  * @description Install db and sends server side events of progress
  * @function
- * @param {{app_id:Number,
- *          data:{client_id?:string|null}}} parameters
+ * @param {{app_id:number,
+ *          iam:string,}} parameters
  * @returns {Promise.<{info: {}[]}>}
  */
  const dbInstall = async parameters => {
@@ -132,6 +132,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
+    /**@type{import('../iam.service.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     /**@type{import('../security.js')} */
 	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
@@ -181,7 +183,7 @@ const dbInstallGetFiles = async (install_type) =>{
     for (const file of files){
         socketAdminSend({   app_id:parameters.app_id,
                             data:{app_id:null,
-                                client_id:serverUtilNumberValue(parameters.data.client_id),
+                                client_id:serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id')),
                                 client_id_current:null,
                                 broadcast_type:'PROGRESS',
                                 broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))}});
@@ -353,8 +355,8 @@ const dbInstallGetFiles = async (install_type) =>{
   * @name dbUninstall
   * @description Uninstall database installation
   * @function
-  * @param {{app_id:Number,
-  *          data:{client_id?:string|null}}} parameters
+  * @param {{app_id:number,
+  *          iam:string}} parameters
   * @returns {Promise.<server_db_database_install_uninstall_result>} 
   */
  const dbUninstall = async parameters => {
@@ -372,7 +374,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
-    
+    /**@type{import('../iam.service.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
 
     const fs = await import('node:fs');
 
@@ -393,7 +396,7 @@ const dbInstallGetFiles = async (install_type) =>{
         for (const file of  files){
             socketAdminSend({app_id:parameters.app_id, 
                                 data:{  app_id:null, 
-                                        client_id:serverUtilNumberValue(parameters.data.client_id),
+                                        client_id:serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id')),
                                         client_id_current:null,
                                         broadcast_type:'PROGRESS',
                                         broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))
@@ -458,9 +461,9 @@ const dbInstallGetFiles = async (install_type) =>{
  *              Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
  *              Returns log about records created
  * @function
- * @param {{app_id:Number,
- *          data:{  demo_password?:string|null,
- *                  client_id?:string|null}}} parameters
+ * @param {{app_id:number,
+ *          iam:string,
+ *          data:{  demo_password?:string|null}}} parameters
  * @returns {Promise.<{info: {}[]}>}
  */
  const dbDemoInstall = async parameters=> {
@@ -502,7 +505,9 @@ const dbInstallGetFiles = async (install_type) =>{
 
     /**@type{import('../security.js')} */
     const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
-    
+    /**@type{import('../iam.service.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     const fs = await import('node:fs');
     /**@type{server_db_database_install_result} */
     const install_result = [];
@@ -677,7 +682,7 @@ const dbInstallGetFiles = async (install_type) =>{
     //Use same for all demo users since key creation can be slow
     socketAdminSend({   app_id:parameters.app_id, 
                         data:{  app_id:null,
-                                client_id:serverUtilNumberValue(parameters.data.client_id),
+                                client_id:serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id')),
                                 client_id_current:null,
                                 broadcast_type:'PROGRESS',
                                 broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))
@@ -689,7 +694,7 @@ const dbInstallGetFiles = async (install_type) =>{
     for (const demo_user of demo_users){
         socketAdminSend({app_id:parameters.app_id, 
                             data:{  app_id:null,
-                                    client_id:serverUtilNumberValue(parameters.data.client_id),
+                                    client_id:serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))
@@ -969,7 +974,7 @@ const dbInstallGetFiles = async (install_type) =>{
     for (const social_type of social_types){
         socketAdminSend({app_id:parameters.app_id, 
                             data:{  app_id:null,
-                                    client_id:serverUtilNumberValue(parameters.data.client_id),
+                                    client_id:serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id')),
                                     client_id_current:null,
                                     broadcast_type:'PROGRESS',
                                     broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))
@@ -1076,7 +1081,7 @@ const dbInstallGetFiles = async (install_type) =>{
  *              Deletes all demo users and send server side events of progress
  * @function
  * @param {{app_id:number,
- *          data:{client_id?:string|null}}}parameters
+ *          iam:string}} parameters
  * @returns {Promise.<{info: {}[]}>}
  */
 const dbDemoUninstall = async parameters => {
@@ -1086,6 +1091,9 @@ const dbDemoUninstall = async parameters => {
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./dbModelUserAccount.js')} */
 	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    /**@type{import('../iam.service.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+
     return new Promise((resolve, reject)=>{
         userDemoGet(parameters.app_id)
         .then(result_demo_users=>{
@@ -1095,7 +1103,7 @@ const dbDemoUninstall = async parameters => {
                     for (const user of result_demo_users){
                         socketAdminSend({   app_id:parameters.app_id, 
                                             data:{  app_id:null,
-                                                    client_id:serverUtilNumberValue(parameters.data.client_id),
+                                                    client_id:serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id')),
                                                     client_id_current:null,
                                                     broadcast_type:'PROGRESS',
                                                     broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))

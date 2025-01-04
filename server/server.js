@@ -1520,17 +1520,6 @@ const serverJs = async () => {
                             .then(result=>iso_return_message(result, false)));
                     break;
                 }
-                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'POST'}):{
-                    resolve(dbModelDatabase.dbDemoInstall({ app_id:routesparameters.app_id, 
-                                                            data:routesparameters.body
-                                                        }));
-                    break;
-                }
-                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'DELETE'}):{
-                    resolve(dbModelDatabase.dbDemoUninstall({app_id:routesparameters.app_id, 
-                                                            data:routesparameters.body}));
-                    break;
-                }
                 case route({url:'/bff/admin/v1/app-common', method:'GET'}):{
                     //return all apps
                     resolve(iso_return_message(fileModelApp.get({app_id:routesparameters.app_id, resource_id:null, res:routesparameters.res}), false));
@@ -1639,6 +1628,18 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, true)));
                     break;
                 }
+                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'POST'}):{
+                    resolve(dbModelDatabase.dbDemoInstall({ app_id:routesparameters.app_id, 
+                                                            iam:routesparameters.res.req.query.iam,
+                                                            data:routesparameters.body
+                                                        }));
+                    break;
+                }
+                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'DELETE'}):{
+                    resolve(dbModelDatabase.dbDemoUninstall({app_id:routesparameters.app_id, 
+                                                            iam:routesparameters.res.req.query.iam}));
+                    break;
+                }
                 case route({url:'/bff/admin/v1/server-db_admin/database-installation', method:'GET'}):{
                     resolve(dbModelDatabase.dbInstalledCheck({app_id:routesparameters.app_id})
                                 .then(result=>iso_return_message(result, true)));
@@ -1661,12 +1662,12 @@ const serverJs = async () => {
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database', method:'POST'}):{
                     resolve(dbModelDatabase.dbInstall({ app_id:routesparameters.app_id, 
-                                                        data:{client_id:app_query?.get('client_id')}}));
+                                                        iam:routesparameters.res.req.query.iam}));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database', method:'DELETE'}):{
                     resolve(dbModelDatabase.dbUninstall({   app_id:routesparameters.app_id, 
-                                                            data:{client_id:app_query?.get('client_id')}}));
+                                                            iam:routesparameters.res.req.query.iam}));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-log/log', method:'GET'}):{
