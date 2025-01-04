@@ -732,9 +732,7 @@ const serverJs = async () => {
  */
  const serverREST_API = async (routesparameters) =>{
     /**@type{import('../microservice/microservice.js')} */
-    const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.js`);
-    /**@type{import('../microservice/registry.js')} */
-    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/microservice/registry.js`);
+    const microservice = await import(`file://${process.cwd()}/microservice/microservice.js`);
 
     /**@type{import('../apps/common/src/common.js')} */
     const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -902,43 +900,7 @@ const serverJs = async () => {
                 else
                     return false;
             };
-                            
-            /**
-             * Calls microservice using client_id and client_secret defined for given app
-             * microservice REST API syntax:
-             * [microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query]
-             * @param {{app_id:number,
-             *          path:string,
-             *          query:string|null,
-             *          data:{}|null}} parameters
-             */
-            const call_microservice = async parameters => {
-                const microservice = parameters.path.split('/')[1].toUpperCase();
-                if ((microservice == 'GEOLOCATION' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
-                    microservice != 'GEOLOCATION'){
-                    //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                    const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
-                                                                    fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
-                    return microserviceRequest(microservice,
-                                                parameters.app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
-                                                /**@ts-ignore */
-                                                `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
-                                                Buffer.from(parameters.query + `&app_id=${parameters.app_id}`).toString('base64'), 
-                                                parameters.data,
-                                                routesparameters.method,
-                                                routesparameters.ip, 
-                                                authorization, 
-                                                routesparameters.user_agent, 
-                                                routesparameters.accept_language, 
-                                                routesparameters.endpoint == 'SERVER_APP')
-                            .then(result=>JSON.parse(result))
-                            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-                }
-                else
-                    return '';
-            };
-        
-            
+                                        
             //using switch (true) pattern
             switch (true){
                 //server routes
@@ -1799,29 +1761,20 @@ const serverJs = async () => {
                     break;
                 }
                 //microservice routes
-                case route({url:'/bff/app_id/v1/geolocation/ip', method:'GET'}) ||
-                    (routesparameters.endpoint.startsWith('SERVER') && routesparameters.route_path=='/geolocation/ip'):{
-                        resolve(call_microservice({ app_id:routesparameters.app_id,
-                                                    path:routesparameters.route_path, 
-                                                    query:URI_query,
-                                                    data:null})
+                case route({url:'/bff/app_id/v1/geolocation/ip', method:'GET'}):
+                case route({url:'/bff/app_id/v1/geolocation/place', method:'GET'}):
+                case route({url:'/bff/admin/v1/mail/sendemail', method:'POST'}):{
+                        resolve(microservice.microserviceRequest({  app_id:routesparameters.app_id,
+                                                                    path:routesparameters.route_path, 
+                                                                    method:routesparameters.method,
+                                                                    query:URI_query,
+                                                                    data:routesparameters.body,
+                                                                    ip:routesparameters.ip,
+                                                                    user_agent:routesparameters.user_agent,
+                                                                    accept_language:routesparameters.accept_language,
+                                                                    endpoint:routesparameters.endpoint
+                                                                })
                                 .then(result=>iso_return_message(result, true)));
-                    break;
-                }
-                case route({url:'/bff/app_id/v1/geolocation/place', method:'GET'}):{
-                    resolve(call_microservice(  {   app_id:routesparameters.app_id,
-                                                    path:routesparameters.route_path, 
-                                                    query:URI_query,
-                                                    data:null})
-                            .then(result=>iso_return_message(result, true)));
-                    break;
-                }
-                case routesparameters.route_path=='/mail/sendemail' && routesparameters.endpoint.startsWith('SERVER'):{
-                    //mail can only be sent from server
-                    resolve(call_microservice({ app_id:routesparameters.app_id, 
-                                                path:routesparameters.route_path, 
-                                                query:null,
-                                                data: routesparameters.body}));
                     break;
                 }
                 default:{

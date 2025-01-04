@@ -34,6 +34,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -70,6 +72,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -100,6 +104,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -136,6 +142,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -184,6 +192,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -218,6 +228,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -248,6 +260,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -284,6 +298,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -350,6 +366,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -416,6 +434,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -452,6 +472,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -488,6 +510,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -530,6 +554,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -566,6 +592,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -608,6 +636,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -656,6 +686,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -704,6 +736,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -740,6 +774,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -774,6 +810,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -810,6 +848,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -852,6 +892,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -888,6 +930,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -924,6 +968,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -960,6 +1006,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -996,6 +1044,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -1032,6 +1082,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -1068,6 +1120,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -1102,6 +1156,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -1136,6 +1192,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -1172,6 +1230,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -1214,6 +1274,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -1250,6 +1312,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1284,6 +1348,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1320,6 +1386,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1354,6 +1422,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1390,6 +1460,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -1424,6 +1496,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1458,6 +1532,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1494,6 +1570,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -1536,6 +1614,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -1566,6 +1646,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1602,6 +1684,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -1636,6 +1720,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -1672,6 +1758,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1706,6 +1794,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1748,6 +1838,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -1802,6 +1894,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -1868,6 +1962,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -1902,6 +1998,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1936,6 +2034,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -1966,6 +2066,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2038,6 +2140,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -2072,6 +2176,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2106,6 +2212,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2136,6 +2244,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2238,6 +2348,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -2272,6 +2384,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2306,6 +2420,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2336,6 +2452,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2384,6 +2502,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2468,6 +2588,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -2516,6 +2638,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -2546,6 +2670,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -2588,6 +2714,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -2660,6 +2788,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -2690,6 +2820,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -2726,6 +2858,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -2768,6 +2902,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -2802,6 +2938,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -2838,6 +2976,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -2872,6 +3012,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -2908,6 +3050,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -2942,6 +3086,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -2972,6 +3118,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3032,6 +3180,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3068,6 +3218,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -3122,6 +3274,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3156,6 +3310,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3186,6 +3342,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3216,6 +3374,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -3244,6 +3404,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
@@ -3274,6 +3436,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3304,6 +3468,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3334,6 +3500,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3364,6 +3532,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3392,6 +3562,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3420,6 +3592,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3516,6 +3690,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3546,6 +3722,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3612,6 +3790,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3642,6 +3822,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3678,6 +3860,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -3712,6 +3896,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -3760,6 +3946,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":false}
                 ],
@@ -3790,6 +3978,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -3820,6 +4010,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -3853,6 +4045,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -3883,6 +4077,8 @@
                         {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -3919,6 +4115,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
@@ -3949,6 +4147,8 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
@@ -3979,12 +4179,110 @@
                         {"server_function_parameter_locale":true},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_id/v1/geolocation/ip": {
+            "get": {
+                "summary": "",
+                "operationId": "microservice.microserviceRequest",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":true},
+                        {"server_function_parameter_query":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/app_id/v1/geolocation/place": {
+            "get": {
+                "summary": "",
+                "operationId": "microservice.microserviceRequest",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":true},
+                        {"server_function_parameter_query":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
+        "/bff/admin/v1/mail/sendemail": {
+            "post": {
+                "summary": "",
+                "operationId": "microservice.microserviceRequest",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":true},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":true},
+                        {"server_function_parameter_query":true},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
