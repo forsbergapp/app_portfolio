@@ -1736,10 +1736,10 @@ const serverJs = async () => {
                     resolve(socket.socketConnect(   {
                                                     app_id:routesparameters.app_id,
                                                     iam:routesparameters.res.req.query.iam,
-                                                    headers_user_agent:routesparameters.user_agent,
-                                                    headers_accept_language:routesparameters.accept_language,
+                                                    user_agent:routesparameters.user_agent,
+                                                    accept_language:routesparameters.accept_language,
                                                     ip:routesparameters.ip,
-                                                    response:routesparameters.res
+                                                    res:routesparameters.res
                                                     }));
                     break;
                 }
