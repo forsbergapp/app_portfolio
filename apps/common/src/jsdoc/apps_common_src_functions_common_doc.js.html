@@ -226,10 +226,16 @@ const markdownRender = async parameters =>{
                                             }).join('\n'));
                     }
                     case 'PATHS':{
+                        const roleOrder = ['app_id', 'app_id_signup', 'app', 'app_access', 'admin', 'app_external', 'iam_user', 'iam_provider', 'iam_admin', 'socket'];
+                        /**
+                         * Sort paths by defined role order
+                         * @param {*[]} paths
+                         */
+                        const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
                         return  HEADER.replace('@{TITLE}',type) + '\n' +
                                 ALIGNMENT + '\n' +
                                 ROW.replace( ROW,
-                                Object.entries(CONFIG_REST_API[type])
+                                sortByRole(Object.entries(CONFIG_REST_API[type]))
                                             .map(row=>{
                                                 if (details)
                                                     return Object.keys(row[1]).map(method=>(ROW
