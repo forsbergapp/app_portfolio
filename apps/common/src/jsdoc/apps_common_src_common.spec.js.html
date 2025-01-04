@@ -79,7 +79,7 @@ describe('Spy test, commonApp as called from bff', ()=> {
               url:'/',
               query:null,
               /**@ts-ignore */
-              res:{}};
+              res:{type:()=>null}};
         await app_common.commonApp(parameters);
         
         expect (filterCount_APP_SECRET).toBeGreaterThan(0);

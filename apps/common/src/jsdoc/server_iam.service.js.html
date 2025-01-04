@@ -630,14 +630,14 @@ const iamAuthenticateUserProvider = async parameters =>{
 /**
  * @name iamAuthenticateUserSignup
  * @description IAM Authenticates user signup
- * @function
- * @param {number} app_id 
- * @param {string} ip 
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {*} query 
- * @param {*} data 
- * @param {server_server_res} res 
+ * @function 
+ * @param {{app_id:number,
+ *          ip:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          locale:string,
+ *          data:server_db_sql_parameter_user_account_create,
+ *          res:server_server_res}} parameters
  * @return {Promise.&lt;{
 *              accessToken:string|null,
 *              exp:number,
@@ -646,7 +646,7 @@ const iamAuthenticateUserProvider = async parameters =>{
 *              id:number,
 *              data:server_db_sql_result_user_account_create}>}
 */
-const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language, query, data, res) =>{
+const iamAuthenticateUserSignup = async parameters =>{
     /**@type{import('../apps/common/src/common.js')} */
     const {commonMailSend} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
@@ -658,43 +658,43 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
 
     return new Promise((resolve, reject)=>{
        /**@type{server_db_sql_parameter_user_account_create} */
-       const data_body = { bio:                    data.bio,
-                           private:                data.private,
-                           user_level:             data.user_level,
-                           username:               data.username,
+       const data_body = { bio:                    parameters.data.bio,
+                           private:                parameters.data.private,
+                           user_level:             parameters.data.user_level,
+                           username:               parameters.data.username,
                            password:               null,
-                           password_new:           data.password,
-                           password_reminder:      data.password_reminder,
-                           email:                  data.email,
+                           password_new:           parameters.data.password,
+                           password_reminder:      parameters.data.password_reminder,
+                           email:                  parameters.data.email,
                            email_unverified:       null,
-                           avatar:                 data.avatar,
-                           verification_code:      data.provider_id?null:iamUtilVerificationCode(),
-                           active:                 serverUtilNumberValue(data.active) ?? 0,
-                           identity_provider_id:   serverUtilNumberValue(data.identity_provider_id),
-                           provider_id:            data.provider_id ?? null,
-                           provider_first_name:    data.provider_first_name,
-                           provider_last_name:     data.provider_last_name,
-                           provider_image:         data.provider_image,
-                           provider_image_url:     data.provider_image_url,
-                           provider_email:         data.provider_email,
+                           avatar:                 parameters.data.avatar,
+                           verification_code:      parameters.data.provider_id?null:iamUtilVerificationCode(),
+                           active:                 serverUtilNumberValue(parameters.data.active) ?? 0,
+                           identity_provider_id:   serverUtilNumberValue(parameters.data.identity_provider_id),
+                           provider_id:            parameters.data.provider_id ?? null,
+                           provider_first_name:    parameters.data.provider_first_name,
+                           provider_last_name:     parameters.data.provider_last_name,
+                           provider_image:         parameters.data.provider_image,
+                           provider_image_url:     parameters.data.provider_image_url,
+                           provider_email:         parameters.data.provider_email,
                            admin:                  0
                        };
-        userPost(app_id, data_body)
+        userPost(parameters.app_id, data_body)
         .then(result_create=>{
-            if (data.provider_id == null ) {
+            if (parameters.data.provider_id == null ) {
                 //send email for local users only
                 //send email SIGNUP
-                commonMailSend( app_id, 
+                commonMailSend( parameters.app_id, 
                                 fileModelAppSecret.get({app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-                                                        res:res})[0].service_mail_type_signup, 
-                                ip, 
-                                user_agent,
-                                accept_language,
+                                                        res:parameters.res})[0].service_mail_type_signup, 
+                                parameters.ip, 
+                                parameters.user_agent,
+                                parameters.accept_language,
                                 result_create.insertId, 
                                 data_body.verification_code, 
                                 data_body.email ?? '')
                 .then(()=>{
-                    const jwt_data = iamAuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
+                    const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {id:result_create.insertId, name:parameters.data.username??'', ip:parameters.ip, scope:'USER'});
                     resolve({
                        accessToken: jwt_data.token,
                        exp:jwt_data.exp,
@@ -707,7 +707,7 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
                 .catch((/**@type{server_server_error}*/error)=>reject(error));
             }
             else{
-                const jwt_data = iamAuthorizeToken(app_id, 'APP_ACCESS', {id:result_create.insertId, name:data.username, ip:ip, scope:'USER'});
+                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {id:result_create.insertId, name:parameters.data.username??'', ip:parameters.ip, scope:'USER'});
                 resolve({
                    accessToken: jwt_data.token,
                    exp:jwt_data.exp,
@@ -720,7 +720,7 @@ const iamAuthenticateUserSignup = async (app_id, ip, user_agent, accept_language
                
         })
         .catch((/**@type{server_server_error}*/error)=>{
-            dbCommonCheckedError(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+            dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };

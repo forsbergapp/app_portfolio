@@ -739,9 +739,7 @@ const serverJs = async () => {
  */
  const serverREST_API = async (routesparameters) =>{
     /**@type{import('../microservice/microservice.js')} */
-    const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.js`);
-    /**@type{import('../microservice/registry.js')} */
-    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/microservice/registry.js`);
+    const microservice = await import(`file://${process.cwd()}/microservice/microservice.js`);
 
     /**@type{import('../apps/common/src/common.js')} */
     const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -909,43 +907,7 @@ const serverJs = async () => {
                 else
                     return false;
             };
-                            
-            /**
-             * Calls microservice using client_id and client_secret defined for given app
-             * microservice REST API syntax:
-             * [microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version configured for each service][resource]/[optional resource id]?[base64 encoded URI query]
-             * @param {{app_id:number,
-             *          path:string,
-             *          query:string|null,
-             *          data:{}|null}} parameters
-             */
-            const call_microservice = async parameters => {
-                const microservice = parameters.path.split('/')[1].toUpperCase();
-                if ((microservice == 'GEOLOCATION' &amp;&amp; serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
-                    microservice != 'GEOLOCATION'){
-                    //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                    const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
-                                                                    fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
-                    return microserviceRequest(microservice,
-                                                parameters.app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin
-                                                /**@ts-ignore */
-                                                `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
-                                                Buffer.from(parameters.query + `&amp;app_id=${parameters.app_id}`).toString('base64'), 
-                                                parameters.data,
-                                                routesparameters.method,
-                                                routesparameters.ip, 
-                                                authorization, 
-                                                routesparameters.user_agent, 
-                                                routesparameters.accept_language, 
-                                                routesparameters.endpoint == 'SERVER_APP')
-                            .then(result=>JSON.parse(result))
-                            .catch((/**@type{server_server_error}*/error)=>{throw error;});
-                }
-                else
-                    return '';
-            };
-        
-            
+                                        
             //using switch (true) pattern
             switch (true){
                 //server routes
@@ -1309,7 +1271,7 @@ const serverJs = async () => {
                     resolve(dbModelUserAccountAppDataPost.getProfileUserPostDetail({app_id:routesparameters.app_id, 
                                                                                     /**@ts-ignore */
                                                                                     resource_id:resource_id_get_number(), 
-                                                                                    data:{detailchoice:routesparameters.body},
+                                                                                    data:{detailchoice:app_query?.get('detailchoice')},
                                                                                     locale:app_query?.get('lang_code') ??'en', 
                                                                                     res:routesparameters.res})
                                 .then(result=>iso_return_message(result, resource_id_get_number()!=null)));
@@ -1527,17 +1489,6 @@ const serverJs = async () => {
                             .then(result=>iso_return_message(result, false)));
                     break;
                 }
-                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'POST'}):{
-                    resolve(dbModelDatabase.dbDemoInstall({ app_id:routesparameters.app_id, 
-                                                            data:routesparameters.body
-                                                        }));
-                    break;
-                }
-                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'DELETE'}):{
-                    resolve(dbModelDatabase.dbDemoUninstall({app_id:routesparameters.app_id, 
-                                                            data:routesparameters.body}));
-                    break;
-                }
                 case route({url:'/bff/admin/v1/app-common', method:'GET'}):{
                     //return all apps
                     resolve(iso_return_message(fileModelApp.get({app_id:routesparameters.app_id, resource_id:null, res:routesparameters.res}), false));
@@ -1551,10 +1502,10 @@ const serverJs = async () => {
                                                 res:routesparameters.res}));
                     break;
                 }
-                case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'GET', required:true}):{
+                case route({url:`/bff/admin/v1/app-common-app-module/${resource_id_string}`, method:'GET'}):{
                     resolve(iso_return_message(fileModelAppModule.get(
                                                     {app_id:routesparameters.app_id, 
-                                                    data:{data_app_id:null},
+                                                    data:{data_app_id:app_query?.get('data_app_id')},
                                                     resource_id:resource_id_get_number(),
                                                     res:routesparameters.res}),
                                                     resource_id_get_number()!=null));
@@ -1646,6 +1597,18 @@ const serverJs = async () => {
                                 .then(result=>iso_return_message(result, true)));
                     break;
                 }
+                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'POST'}):{
+                    resolve(dbModelDatabase.dbDemoInstall({ app_id:routesparameters.app_id, 
+                                                            iam:routesparameters.res.req.query.iam,
+                                                            data:routesparameters.body
+                                                        }));
+                    break;
+                }
+                case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'DELETE'}):{
+                    resolve(dbModelDatabase.dbDemoUninstall({app_id:routesparameters.app_id, 
+                                                            iam:routesparameters.res.req.query.iam}));
+                    break;
+                }
                 case route({url:'/bff/admin/v1/server-db_admin/database-installation', method:'GET'}):{
                     resolve(dbModelDatabase.dbInstalledCheck({app_id:routesparameters.app_id})
                                 .then(result=>iso_return_message(result, true)));
@@ -1668,12 +1631,12 @@ const serverJs = async () => {
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database', method:'POST'}):{
                     resolve(dbModelDatabase.dbInstall({ app_id:routesparameters.app_id, 
-                                                        data:{client_id:app_query?.get('client_id')}}));
+                                                        iam:routesparameters.res.req.query.iam}));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database', method:'DELETE'}):{
                     resolve(dbModelDatabase.dbUninstall({   app_id:routesparameters.app_id, 
-                                                            data:{client_id:app_query?.get('client_id')}}));
+                                                            iam:routesparameters.res.req.query.iam}));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-log/log', method:'GET'}):{
@@ -1742,16 +1705,22 @@ const serverJs = async () => {
                     resolve(socket.socketConnect(   {
                                                     app_id:routesparameters.app_id,
                                                     iam:routesparameters.res.req.query.iam,
-                                                    headers_user_agent:routesparameters.user_agent,
-                                                    headers_accept_language:routesparameters.accept_language,
+                                                    user_agent:routesparameters.user_agent,
+                                                    accept_language:routesparameters.accept_language,
                                                     ip:routesparameters.ip,
-                                                    response:routesparameters.res
+                                                    res:routesparameters.res
                                                     }));
                     break;
                 }
                 // app_signup route
                 case route({url:'/bff/app_id_signup/v1/server-db/user_account-signup', method:'POST'}):{
-                    resolve(iam_service.iamAuthenticateUserSignup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    resolve(iam_service.iamAuthenticateUserSignup({ app_id:routesparameters.app_id, 
+                                                                    ip:routesparameters.ip, 
+                                                                    user_agent:routesparameters.user_agent, 
+                                                                    accept_language:routesparameters.accept_language, 
+                                                                    locale:app_query?.get('lang_code') ??'en', 
+                                                                    data:routesparameters.body, 
+                                                                    res:routesparameters.res}));
                     break;
                 }
                 //iam routes, for login and logout
@@ -1799,29 +1768,20 @@ const serverJs = async () => {
                     break;
                 }
                 //microservice routes
-                case route({url:'/bff/app_id/v1/geolocation/ip', method:'GET'}) ||
-                    (routesparameters.endpoint.startsWith('SERVER') &amp;&amp; routesparameters.route_path=='/geolocation/ip'):{
-                        resolve(call_microservice({ app_id:routesparameters.app_id,
-                                                    path:routesparameters.route_path, 
-                                                    query:URI_query,
-                                                    data:null})
+                case route({url:'/bff/app_id/v1/geolocation/ip', method:'GET'}):
+                case route({url:'/bff/app_id/v1/geolocation/place', method:'GET'}):
+                case route({url:'/bff/admin/v1/mail/sendemail', method:'POST'}):{
+                        resolve(microservice.microserviceRequest({  app_id:routesparameters.app_id,
+                                                                    path:routesparameters.route_path, 
+                                                                    method:routesparameters.method,
+                                                                    query:URI_query,
+                                                                    data:routesparameters.body,
+                                                                    ip:routesparameters.ip,
+                                                                    user_agent:routesparameters.user_agent,
+                                                                    accept_language:routesparameters.accept_language,
+                                                                    endpoint:routesparameters.endpoint
+                                                                })
                                 .then(result=>iso_return_message(result, true)));
-                    break;
-                }
-                case route({url:'/bff/app_id/v1/geolocation/place', method:'GET'}):{
-                    resolve(call_microservice(  {   app_id:routesparameters.app_id,
-                                                    path:routesparameters.route_path, 
-                                                    query:URI_query,
-                                                    data:null})
-                            .then(result=>iso_return_message(result, true)));
-                    break;
-                }
-                case routesparameters.route_path=='/mail/sendemail' &amp;&amp; routesparameters.endpoint.startsWith('SERVER'):{
-                    //mail can only be sent from server
-                    resolve(call_microservice({ app_id:routesparameters.app_id, 
-                                                path:routesparameters.route_path, 
-                                                query:null,
-                                                data: routesparameters.body}));
                     break;
                 }
                 default:{

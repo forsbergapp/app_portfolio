@@ -8,8 +8,8 @@
             <pre class="prettyprint source linenums"><code>/** @module microservice/microservice */
 
 /**
- * @import {server_server_req_id_number} from '../server/types.js'
- * @import {microservice_res} from './types.js'
+ * @import {server_bff_endpoint_type, server_server_req_id_number,server_req_method} from '../server/types.js'
+ * @import {microservice_res, microservice_registry_service} from './types.js'
  */
 
 const http = await import('node:http');
@@ -58,24 +58,54 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
 /**
  * @name microserviceRequest
  * @description Request microservice using circuitbreaker
+ *              Uses client_id and client_secret defined for given app
+ *              microservice REST API syntax:
+ *              [microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version]/[resource]/[optional resource id]?[base64 encoded URI query]
  * @function
- * @param {string} service
- * @param {boolean} admin 
- * @param {string} path 
- * @param {string} query
- * @param {{}|null} data
- * @param {string} method 
- * @param {string} client_ip 
- * @param {string} authorization 
- * @param {string} headers_user_agent 
- * @param {string} headers_accept_language 
- * @param {boolean} server_app_timeout
+ * @param {{app_id:number,
+ *          path:string, 
+ *          method:server_req_method,
+ *          query:string,
+ *          data:*,
+ *          ip:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          endpoint:server_bff_endpoint_type
+ *       }} parameters
  */
-const microserviceRequest = async (service, admin, path, query, data,  method,client_ip,authorization, headers_user_agent, headers_accept_language, server_app_timeout) =>{
+const microserviceRequest = async parameters =>{
     /**@type{import('./circuitbreaker.js')} */
     const {circuitBreaker} = await import(`file://${process.cwd()}/microservice/circuitbreaker.js`);
+    /**@type{import('../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('../server/db/fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./registry.js')} */
+    const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/microservice/registry.js`);
 
-    return circuitBreaker.MicroServiceCall(microserviceHttpRequest, service, admin, path, query, data, method,client_ip,authorization, headers_user_agent, headers_accept_language, server_app_timeout);
+    /**@type{microservice_registry_service} */
+    const microservice = parameters.path.split('/')[1].toUpperCase();
+    if ((microservice == 'GEOLOCATION' &amp;&amp; microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
+        microservice != 'GEOLOCATION'){
+        //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
+        const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
+                                                        fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
+        
+        return circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
+                                                microservice, 
+                                                parameters.app_id == microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin, 
+                                                `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
+                                                Buffer.from(parameters.query + `&amp;app_id=${parameters.app_id}`).toString('base64'), 
+                                                parameters.data, 
+                                                parameters.method,
+                                                parameters.ip,
+                                                authorization, 
+                                                parameters.user_agent, 
+                                                parameters.accept_language, 
+                                                parameters.endpoint == 'SERVER');
+        }
+    else
+        return '';
 }; 
 
 /**
@@ -198,7 +228,7 @@ const microserviceHttpRequest = async (service, path, query, body, method, timeo
             });
             res.on('end', ()=>{
                 if (res.statusCode == 200)
-                    resolve (responseBody);
+                    resolve (JSON.parse(responseBody));
                 else
                     reject(JSON.parse(responseBody));
             });

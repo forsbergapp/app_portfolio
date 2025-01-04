@@ -411,7 +411,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="microservice_microservice.js.html">microservice/microservice.js</a>, <a href="microservice_microservice.js.html#line115">line 115</a>
+        <a href="microservice_microservice.js.html">microservice/microservice.js</a>, <a href="microservice_microservice.js.html#line145">line 145</a>
     </div></div></dd>
     
 
@@ -465,7 +465,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>microserviceRequest<span class="signature">(service, admin, path, query, data, method, client_ip, authorization, headers_user_agent, headers_accept_language, server_app_timeout)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>microserviceRequest<span class="signature">(parameters)</span><span class="type-signature"></span></div>
     
 
     
@@ -473,7 +473,10 @@
 
 
 <div class="description">
-    <p>Request microservice using circuitbreaker</p>
+    <p>Request microservice using circuitbreaker
+Uses client_id and client_secret defined for given app
+microservice REST API syntax:
+[microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version]/[resource]/[optional resource id]?[base64 encoded URI query]</p>
 </div>
 
 
@@ -509,246 +512,13 @@
 
         <tr>
             
-                <td class="name"><code>service</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>admin</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>parameters</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">Object</span>
-|
-
-<span class="param-type">null</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>method</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>client_ip</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>authorization</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>headers_user_agent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>headers_accept_language</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>server_app_timeout</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
 
 
             
@@ -1008,7 +778,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="microservice_microservice.js.html">microservice/microservice.js</a>, <a href="microservice_microservice.js.html#line85">line 85</a>
+        <a href="microservice_microservice.js.html">microservice/microservice.js</a>, <a href="microservice_microservice.js.html#line115">line 115</a>
     </div></div></dd>
     
 
@@ -1389,7 +1159,7 @@ so undefined and '' are avoided sending arguement to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="microservice_microservice.js.html">microservice/microservice.js</a>, <a href="microservice_microservice.js.html#line74">line 74</a>
+        <a href="microservice_microservice.js.html">microservice/microservice.js</a>, <a href="microservice_microservice.js.html#line104">line 104</a>
     </div></div></dd>
     
 
