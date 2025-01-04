@@ -42,9 +42,9 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
     const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
     /**@type{server_bff_parameters}*/
-    const parameters = {endpoint:'SERVER_SOCKET',
+    const parameters = {endpoint:'SERVER',
                         host:null,
-                        url:'/geolocation/ip',
+                        url:'/bff/app_id/v1/geolocation/ip',
                         route_path:'/geolocation/ip',
                         method:'GET', 
                         query:`ip=${ip}`,
