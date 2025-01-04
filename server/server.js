@@ -1745,7 +1745,13 @@ const serverJs = async () => {
                 }
                 // app_signup route
                 case route({url:'/bff/app_id_signup/v1/server-db/user_account-signup', method:'POST'}):{
-                    resolve(iam_service.iamAuthenticateUserSignup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, app_query, routesparameters.body, routesparameters.res));
+                    resolve(iam_service.iamAuthenticateUserSignup({ app_id:routesparameters.app_id, 
+                                                                    ip:routesparameters.ip, 
+                                                                    user_agent:routesparameters.user_agent, 
+                                                                    accept_language:routesparameters.accept_language, 
+                                                                    locale:app_query?.get('lang_code') ??'en', 
+                                                                    data:routesparameters.body, 
+                                                                    res:routesparameters.res}));
                     break;
                 }
                 //iam routes, for login and logout
