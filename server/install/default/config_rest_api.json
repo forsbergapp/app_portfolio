@@ -3800,6 +3800,36 @@
                 }
             }
         },
+        "/bff/app_id_signup/v1/server-db/user_account-signup": {
+            "post": {
+                "summary": "",
+                "operationId": "iam_service.iamAuthenticateUserSignup",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
         "/bff/iam_admin/v1/server-iam-login": {
             "post": {
                 "summary": "",
