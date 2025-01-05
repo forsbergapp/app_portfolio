@@ -12,6 +12,7 @@ const {fileCommonRecordNotFound, fileDBGet, fileDBUpdate, fileDBDelete} = await 
  * @name get
  * @description Get records for given appid
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          res:server_server_res|null}} parameters
  * @returns {server_db_file_app_parameter[]}
@@ -40,8 +41,9 @@ const post = async (app_id, resource_id, data, res) => update({app_id:app_id, re
 /**
  * @name update
  * @description Update
- * Table is designed to update one parameter in the same record
+ *              Table is designed to update one parameter in the same record
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  parameter_name:string,

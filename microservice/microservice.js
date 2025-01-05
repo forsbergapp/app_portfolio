@@ -55,6 +55,7 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
  *              microservice REST API syntax:
  *              [microservice protocol]://[microservice host]:[microservice port]/api/v[microservice API version]/[resource]/[optional resource id]?[base64 encoded URI query]
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          path:string, 
  *          method:server_req_method,

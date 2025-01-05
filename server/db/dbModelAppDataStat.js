@@ -18,6 +18,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get stat
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          data:{  id?:string|null,
  *                  data_app_id?:string|null,
@@ -37,6 +38,7 @@ const get = parameters =>
  * @name getLog
  * @description Get stat log
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          data:{  sort?:string|null,
  *                  order_by?:string|null,
@@ -97,6 +99,7 @@ const getLog = parameters =>
  * @name getStatUniqueVisitor
  * @description Get stat unique visitors
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
  *                  year?:string|null,
