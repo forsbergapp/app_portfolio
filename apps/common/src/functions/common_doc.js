@@ -342,7 +342,7 @@ const markdownRender = async parameters =>{
                                                     comment_with_filter:'@namespace REST_API'
                                                 }));
             //Get all REST API functions with @memberof tag
-            for (const directory of ['microservice','server'])
+            for (const directory of ['apps', 'microservice','server'])
                 for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
                     const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
                                                                     file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
