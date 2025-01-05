@@ -12,6 +12,7 @@ const {fileCommonRecordNotFound, SLASH, fileRecord, fileDBGet, fileDBPost, fileD
  * @name get
  * @description Get records for given appid
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          res:server_server_res}} parameters
@@ -30,6 +31,7 @@ const get = parameters =>{
  * @description Get result for given resource_id
  *              (bff controls if file exists)
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
  * @returns {Promise.<{STATIC:Boolean, SENDFILE:String, SENDCONTENT:null}>}

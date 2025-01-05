@@ -11,6 +11,7 @@ const {fileCommonRecordNotFound, fileFsRead, fileDBGet, fileDBUpdate, fileDBDele
  * @name get
  * @description Get records for given appid
  * @function
+ * @memberof REST_API
  * @param {{app_id:number|null,
  *          res:server_server_res|null}} parameters
  * @returns {server_db_file_app_secret[]}
@@ -47,6 +48,7 @@ const post = async (app_id, resource_id, data, res) => update({app_id:app_id, re
  * @name update
  * @description Update
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  parameter_name:string,

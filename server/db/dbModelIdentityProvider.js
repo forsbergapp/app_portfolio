@@ -11,6 +11,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @name get
  * @description Get identity providers
  * @function
+ * @memberof REST_API
  * @param {{app_id :number}} parameters
  * @returns {Promise.<server_db_sql_result_identity_provider_getIdentityProviders[]>}
  */

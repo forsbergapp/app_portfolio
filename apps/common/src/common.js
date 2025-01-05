@@ -529,6 +529,7 @@ const commonAssetfile = parameters =>{
  * @name commonModuleRun
  * @description Router function - run function
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:string,
  *          data: *,
@@ -557,6 +558,7 @@ const commonModuleRun = async parameters => {
  * @name commonModuleGet
  * @description Router function - get module
  * @function
+ * @memberof REST_API
  * @param {{app_id:Number,
  *          resource_id:string,
  *          data:{
@@ -638,6 +640,7 @@ const commonModuleGet = async parameters => {
  * @name commonAppReportQueue
  * @description Runs report in queue
  * @function
+ * @memberof REST_API
  * @param {{app_id:Number,
  *          resource_id:string,
  *          iam:string,
@@ -706,6 +709,7 @@ const commonAppReportQueue = async parameters =>{
  * @name commonModuleMetaDataGet
  * @description Returns all modules with metadata
  * @function
+ * @memberof REST_API
  * @param {{app_id:Number,
  *          data:{type:'REPORT'|'MODULE'|'FUNCTION'},
  *          resource_id:number,
@@ -973,6 +977,7 @@ const commonApp = async parameters =>{
  * @name commonAppsGet
  * @description Get all aps from app registry and translated names and add info to create url links
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          locale:string}} parameters

@@ -15,6 +15,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get master resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_null?:string|null,
@@ -43,6 +44,7 @@ const get = parameters => {
  * @name post
  * @description Create master resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          data:{json_data:{},
  *                user_account_id:number|null,
@@ -69,6 +71,7 @@ const get = parameters => {
  * @name update
  * @description Update master resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *        resource_id:number|null,
  *          data:{json_data:{},
@@ -96,6 +99,7 @@ const get = parameters => {
   * @name deleteRecord
   * @description Delete master resource
   * @function
+  * @memberof REST_API
   * @param {{app_id:number,
   *          resource_id:number|null,
   *          data:{user_account_id:number,

@@ -15,6 +15,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get detail data resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_null?:string|null,
@@ -55,13 +56,14 @@ const get = parameters =>
  * @name post
  * @description Create detail data resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
-*          data:{json_data:{},
-*                user_account_id:string|number|null,
-*                data_app_id:string|number|null,
-*                app_data_resource_detail_id:string|number|null,
-*                app_data_resource_master_attribute_id:string|null
-*                }}} parameters
+ *          data:{json_data:{},
+ *                user_account_id:string|number|null,
+ *                data_app_id:string|number|null,
+ *                app_data_resource_detail_id:string|number|null,
+ *                app_data_resource_master_attribute_id:string|null
+ *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_post>}
  */
 const post = parameters => 
@@ -82,6 +84,7 @@ const post = parameters =>
  * @name update
  * @description Update detail data resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number
  *          data:{json_data:{},
@@ -92,7 +95,7 @@ const post = parameters =>
  *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_update>}
  */
- const update = parameters => 
+const update = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_DATA_UPDATE, 
@@ -111,11 +114,12 @@ const post = parameters =>
  * @name deleteRecord
  * @description Delete detail data resource
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
-*          resource_id:number
-*          data:{user_account_id:string|null,
-*                data_app_id:string|null
-*                }}} parameters
+ *          resource_id:number
+ *          data:{user_account_id:string|null,
+ *                data_app_id:string|null
+ *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_delete>}
  */
 const deleteRecord = parameters => 
