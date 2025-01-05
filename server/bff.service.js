@@ -105,61 +105,74 @@ const bffInit = async (req, res) =>{
             res.end();
         });
     });
-    //access control that stops request if not passing controls
-    /**@type{server_iam_authenticate_request}*/
-    const result = await iamAuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
-                        .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
-    if (result != null){
-        res.statusCode = result.statusCode;
-        res.statusMessage = ' ';
-        res.writeHead(res.statusCode, {
-            'Content-Type': 'text/plain;charset=utf-8',
-            'Content-length':0
-        });
-        return {reason:'REQUEST'};
-    }
-    else{
-
-        //set headers
-        res.setHeader('X-Response-Time', process.hrtime());
-        req.headers['X-Request-Id'] =  securityUUIDCreate().replaceAll('-','');
-        if (req.headers.authorization)
-            req.headers['X-Correlation-Id'] = securityRequestIdCreate();
+    //redirect naked domain to www except for localhost
+    if (req.headers.host.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
+        if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
+            return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
         else
-            req.headers['X-Correlation-Id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
-        res.setHeader('Access-Control-Max-Age','5');
-        res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
-            res.setHeader('content-security-policy', fileModelConfig.get('CONFIG_IAM_POLICY','content-security-policy'));
-        }
-        res.setHeader('cross-origin-opener-policy','same-origin');
-        res.setHeader('cross-origin-resource-policy',	'same-origin');
-        res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
-        res.setHeader('strict-transport-security', `max-age=${180 * 24 * 60 * 60}; includeSubDomains`);
-        res.setHeader('x-content-type-options', 'nosniff');
-        res.setHeader('x-dns-prefetch-control', 'off');
-        res.setHeader('x-download-options', 'noopen');
-        res.setHeader('x-frame-options', 'SAMEORIGIN');
-        res.setHeader('x-permitted-cross-domain-policies', 'none');
-        res.setHeader('x-xss-protection', '0');
-        res.removeHeader('X-Powered-By');
-        //check robots.txt
-        if (req.originalUrl=='/robots.txt'){
-            res.statusMessage = ' ';
-            res.type('text/plain');
-            res.write('User-agent: *\nDisallow: /');
-            return {reason:'ROBOT'};
-        }
+            return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
+    else{
+        //redirect from http to https if https is enabled
+        if (req.protocol=='http' && fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
+            return {reason:'REDIRECT', redirect:`https://${req.headers.host}${req.originalUrl}`};
         else{
-            //browser favorite icon to ignore
-            if (req.originalUrl=='/favicon.ico'){
+            //access control that stops request if not passing controls
+            /**@type{server_iam_authenticate_request}*/
+            const result = await iamAuthenticateRequest(req.ip, req.headers.host, req.method, req.headers['user-agent'], req.headers['accept-language'], req.path)
+                                .catch((/**@type{server_server_error}*/error)=>{return { statusCode: 500, statusMessage: error};});
+            if (result != null){
+                res.statusCode = result.statusCode;
                 res.statusMessage = ' ';
-                res.write('');
-                return {reason:'FAVICON'};
+                res.writeHead(res.statusCode, {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                    'Content-length':0
+                });
+                return {reason:'REQUEST'};
             }
             else{
-                return {reason:null};
+
+                //set headers
+                res.setHeader('X-Response-Time', process.hrtime());
+                req.headers['X-Request-Id'] =  securityUUIDCreate().replaceAll('-','');
+                if (req.headers.authorization)
+                    req.headers['X-Correlation-Id'] = securityRequestIdCreate();
+                else
+                    req.headers['X-Correlation-Id'] = securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
+                res.setHeader('Access-Control-Max-Age','5');
+                res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+                res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+                if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
+                    res.setHeader('content-security-policy', fileModelConfig.get('CONFIG_IAM_POLICY','content-security-policy'));
+                }
+                res.setHeader('cross-origin-opener-policy','same-origin');
+                res.setHeader('cross-origin-resource-policy',	'same-origin');
+                res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
+                res.setHeader('strict-transport-security', `max-age=${180 * 24 * 60 * 60}; includeSubDomains`);
+                res.setHeader('x-content-type-options', 'nosniff');
+                res.setHeader('x-dns-prefetch-control', 'off');
+                res.setHeader('x-download-options', 'noopen');
+                res.setHeader('x-frame-options', 'SAMEORIGIN');
+                res.setHeader('x-permitted-cross-domain-policies', 'none');
+                res.setHeader('x-xss-protection', '0');
+                res.removeHeader('X-Powered-By');
+                //check robots.txt
+                if (req.originalUrl=='/robots.txt'){
+                    res.statusMessage = ' ';
+                    res.type('text/plain');
+                    res.write('User-agent: *\nDisallow: /');
+                    return {reason:'ROBOT'};
+                }
+                else{
+                    //browser favorite icon to ignore
+                    if (req.originalUrl=='/favicon.ico'){
+                        res.statusMessage = ' ';
+                        res.write('');
+                        return {reason:'FAVICON'};
+                    }
+                    else{
+                        return {reason:null};
+                    }
+                }
             }
         }
     }
@@ -178,21 +191,6 @@ const bffInit = async (req, res) =>{
  * @returns Promise.<{reason:'REDIRECT'|'SEND'|null,redirect:string}>
  */
 const bffStart = async (req, res) =>{
-    const check_redirect = () =>{
-        //redirect naked domain to www except for localhost
-        if (req.headers.host.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
-            if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
-                return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
-            else
-                return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
-        else{
-            //redirect from http to https if https is enabled
-            if (req.protocol=='http' && fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
-                return {reason:'REDIRECT', redirect:`https://${req.headers.host}${req.originalUrl}`};
-            else
-                return {reason:null, redirect:null};
-        }
-    };
     //if first time, when no user exists, then redirect everything to admin
     if (fileModelIamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null, null).length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
         return {reason:'REDIRECT', redirect:`http://admin.${fileModelConfig.get('CONFIG_SERVER','SERVER','HOST')}`};
@@ -205,10 +203,10 @@ const bffStart = async (req, res) =>{
                 return {reason:'SEND', redirect:null};
             }
             else
-                return check_redirect();
+                return {reason:null, redirect:null};
         }
         else
-            return check_redirect();
+            return {reason:null, redirect:null};
     }
 };
 /**
