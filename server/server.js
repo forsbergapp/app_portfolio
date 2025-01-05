@@ -705,7 +705,10 @@ const serverJs = async () => {
                 }
             }
             else
-                res.end();
+                if (resultbffInit.redirect)
+                    res.redirect(resultbffInit.redirect);
+                else
+                    res.end();
         }
     };
     return app;
