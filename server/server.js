@@ -715,6 +715,7 @@ const serverJs = async () => {
 };
 /**
  * @name serverREST_API
+ * @namespace REST_API
  * @description Server REST API routes
  *              Validates if user has access to given resource
  *              Validates using IAM token claims if path requires

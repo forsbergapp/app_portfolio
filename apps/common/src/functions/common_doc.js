@@ -6,7 +6,9 @@
  */
 
 /**
- *  Get file and add given suffix to path
+ * @name getFile
+ * @description  Get file and add given suffix to path
+ * @function
  * @param {string} path
  * @param {server_server_res} res
  * @returns {Promise.<string>}
@@ -22,6 +24,156 @@ const getFile = async (path, res) =>{
                 throw iamUtilMesssageNotAuthorized();
             });
 };
+/**
+ * @name getFiles
+ * @description Find all *.js files in given directory and its subdirectories
+ * @function
+ * @param {string} directory
+ * @param {RegExp} filePattern
+ * @returns {Promise.<{id:number, file:string}[]>}
+ */
+const getFiles = async (directory, filePattern) =>{
+    
+    const fs = await import('node:fs');
+    /**@type{{id:number, file:string}[]}*/
+    const fileList = [];
+    let index =0;
+    /**
+     * @param {string} directory
+     * @param {RegExp} pattern
+     * @returns {Promise.<{id:number, file:string}[]>}
+     */
+    const findFiles = async (directory, pattern) =>{
+        const files = await fs.promises.readdir(directory, { withFileTypes: true });
+        
+        for (const file of files){
+            const fullPath = `${directory}/${file.name}`;
+            if (file.isDirectory())
+                await findFiles(fullPath, pattern);
+            else 
+                if (file.isFile() && file.name.match(pattern)){
+                    //remove OS path info, .js suffix and replace \\ with /                
+                    fileList.push({   id: ++index,
+                                        file:fullPath
+                                            .replace(process.cwd(),'')
+                                            .replace('.js','')
+                                            .replaceAll('\\','/')});
+                }
+        }
+        return fileList;
+    };
+    return await findFiles(directory, filePattern);
+};
+/**
+ * @name getFileFunctions
+ * @description
+ * @function
+ * @param {{app_id:Number,
+ *          file:string,
+ *          module:string,
+ *          comment_with_filter:string|null}} parameters
+ * @returns {Promise.<string>}
+ */
+const getFileFunctions = async parameters =>{
+    //replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
+
+    //search all JSDoc comments
+    const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
+
+    const module_functions =[];
+    let match_module_function;
+
+    // module table with variables
+    const HEADER            = '|@{TYPE}         |@{FUNCTION_NAME}                       |';
+    const ALIGNMENT         = '|:---------------|:--------------------------------------|';
+    const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
+    const SOURCE_LINE_TAG   = '|Source line     |[@{MODULE_LINE}](@{SOURCE_LINE_LINK)   |';
+
+    const REGEXP_TAG = /@\w+/g;
+
+    
+    parameters.file = parameters.file?.replaceAll('\r\n','\n') ??'';
+    while ((match_module_function = regexp_module_function.exec(parameters.file ?? '')) !==null){
+        //check if supported comment types and if filter should be used
+        if (commentType(match_module_function[1]) && match_module_function[1].indexOf(parameters.comment_with_filter ?? match_module_function[1])>-1){
+            const function_tags = match_module_function[1].split('\n')
+                    .map(row=>{
+                                //reset regexp so regexp will work in loop
+                                REGEXP_TAG.lastIndex = 0;
+                                const tag = REGEXP_TAG.exec(row)?.[0]??'';
+                                return FUNCTION_TAG
+                                .replace(   '@{FUNCTION_TAG}',
+                                            tag)
+                                .replace(   '@{FUNCTION_TEXT}',
+                                            //check if tag exists
+                                            (tag!='' && row.indexOf(tag)>-1)?
+                                                //return part after tag
+                                                HTMLEntities(row.substring(row
+                                                                .indexOf(tag)+tag.length)
+                                                                .trimStart()):
+                                                    //no tag, return after first '*', remove start space characters
+                                                    HTMLEntities(row
+                                                        .substring(row.indexOf('*')+1)));
+                                })
+                                //remove @name tag (with one space so @namespace remains) presented in title
+                                .filter(row=>row.indexOf('@name ')<0)
+                                //remove tags presented in title
+                                .filter(row=>row.indexOf('@function')<0)
+                                .filter(row=>row.indexOf('@constant')<0)
+                                .filter(row=>row.indexOf('@class')<0)
+                                .join('\n');
+            //calculate source line: row match found + match row length
+            const source_line = (parameters.file?parameters.file.substring(0,parameters.file.indexOf(match_module_function[1])).split('\n').length:0)  + 
+                match_module_function[1].split('\n').length;
+
+            module_functions.push(
+                                    HEADER
+                                        .replace('@{TYPE}',commentType(match_module_function[1])??'')
+                                        .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
+                                                                    match_module_function[1]
+                                                                        .split('\n')
+                                                                        .filter(row=>row.indexOf('@name')>-1)
+                                                                        .map(row=>  row
+                                                                                    .substring( row.indexOf('@name')+'@name'.length)
+                                                                                    .trimStart())[0]:'')
+                                    + '\n' +
+                                    ALIGNMENT+ '\n' +
+                                    function_tags + '\n' +
+                                    SOURCE_LINE_TAG
+                                        .replace('@{MODULE_LINE}',parameters.module ??'')
+                                        .replace('@{SOURCE_LINE_LINK',`${parameters.module}#line${source_line}`));
+        }
+    }
+    //replace all found JSDoc comments with markdown formatted module functions
+    return module_functions.join('\n'+'\n');
+};
+/**
+ * @name HTMLEntities
+ * @description Return supported characters as HTML Entities for tables
+ * @function
+ * @param {string} text
+ * @returns {string}
+ */
+const HTMLEntities = text => text
+                            .replaceAll('|','&vert;')
+                            .replaceAll('[','&#91;')
+                            .replaceAll(']','&#93;')
+                            .replaceAll('<','&lt;')
+                            .replaceAll('>','&gt;');
+
+/**
+ * @name commentType
+ * @description Returns type of comment or null if comment not supported
+ * @function
+ * @param {string} comment
+ * @returns {string|null}
+ */
+const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
+                                comment.indexOf('@function')>-1?'Function':
+                                comment.indexOf('@constant')>-1?'Constant':
+                                comment.indexOf('@class')>-1?'Class':
+                                comment.indexOf('@method')>-1?'Method':null;
+
 /**
  * @name markdownRender
  * @description Renders markdown document from template APP
@@ -41,28 +193,7 @@ const markdownRender = async parameters =>{
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('../../../../server/db/fileModelApp.js')} */
     const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-            
-    /**
-    * Return supported characters as HTML Entities for tables
-    * @param {string} text
-    * @returns {string}
-    */
-    const HTMLEntities = text => text
-                                .replaceAll('|','&vert;')
-                                .replaceAll('[','&#91;')
-                                .replaceAll(']','&#93;')
-                                .replaceAll('<','&lt;')
-                                .replaceAll('>','&gt;');
-    /**
-    * Returns type of comment or null if comment not supported
-    * @param {string} comment
-    * @returns {string|null}
-    */
-    const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
-                                    comment.indexOf('@function')>-1?'Function':
-                                    comment.indexOf('@constant')>-1?'Constant':
-                                    comment.indexOf('@class')>-1?'Class':
-                                    comment.indexOf('@method')>-1?'Method':null;
+    
 
     switch (true){
         case parameters.type.toUpperCase()=='APP':{
@@ -99,92 +230,35 @@ const markdownRender = async parameters =>{
             return markdown.replaceAll('@{SCREENSHOT_END}', app_translation?app_translation.json_data.screenshot_end.join('\n'):'');
         }
         case parameters.type.toUpperCase().startsWith('MODULE'):{
-            //replace variables for MODULE_APPS, MODULE_MICRSOERVICE and MODULE_SERVER
+            //replace variables for MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
             /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
             const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
-            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`, parameters.res);
-            markdown = markdown.replaceAll('@{MODULE_NAME}', parameters.module ?? '');
-            markdown = markdown.replaceAll('@{MODULE}',parameters.module ??'');
-            markdown = markdown.replaceAll('@{SOURCE_LINK}',parameters.module ??'');
+            /**@type{import('../../../../server/db/fileModelConfig.js')} */
+            const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-            //metadata tags                            
-            markdown = markdown.replaceAll('@{SERVER_HOST}',        fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'HOST')??'');
-            markdown = markdown.replaceAll('@{APP_CONFIGURATION}',  fileModelConfig.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION')??'');
-            markdown = markdown.replaceAll('@{APP_COPYRIGHT}',      fileModelAppParameter.get({app_id:parameters.app_id, res:null})[0].app_copyright.value??'');
-
-            //search all JSDoc comments
-            const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
-
-            const module_functions =[];
-            let match_module_function;
-
-            // module table with variables
-            const HEADER            = '|@{TYPE}         |@{FUNCTION_NAME}                       |';
-            const ALIGNMENT         = '|:---------------|:--------------------------------------|';
-            const FUNCTION_TAG      = '|@{FUNCTION_TAG} |@{FUNCTION_TEXT}                       |';
-            const SOURCE_LINE_TAG   = '|Source line     |[@{MODULE_LINE}](@{SOURCE_LINE_LINK)   |';
-
-            const REGEXP_TAG = /@\w+/g;
-
-            let code = await getFile(`${process.cwd()}${parameters.doc}.js`, parameters.res);
-            code = code?.replaceAll('\r\n','\n') ??'';
-            while ((match_module_function = regexp_module_function.exec(code ?? '')) !==null){
-                if (commentType(match_module_function[1])){
-                    const function_tags = match_module_function[1].split('\n')
-                            .map(row=>{
-                                        //reset regexp so regexp will work in loop
-                                        REGEXP_TAG.lastIndex = 0;
-                                        const tag = REGEXP_TAG.exec(row)?.[0]??'';
-                                        return FUNCTION_TAG
-                                        .replace(   '@{FUNCTION_TAG}',
-                                                    tag)
-                                        .replace(   '@{FUNCTION_TEXT}',
-                                                    //check if tag exists
-                                                    (tag!='' && row.indexOf(tag)>-1)?
-                                                        //return part after tag
-                                                        HTMLEntities(row.substring(row
-                                                                        .indexOf(tag)+tag.length)
-                                                                        .trimStart()):
-                                                            //no tag, return after first '*', remove start space characters
-                                                            HTMLEntities(row
-                                                                .substring(row.indexOf('*')+1)));
-                                        })
-                                        //remove @name tag presented in title
-                                        .filter(row=>row.indexOf('@name')<0)
-                                        //remove tags presented in title
-                                        .filter(row=>row.indexOf('@function')<0)
-                                        .filter(row=>row.indexOf('@constant')<0)
-                                        .filter(row=>row.indexOf('@class')<0)
-                                        .join('\n');
-                    //calculate source line: row match found + match row length
-                    const source_line = (code?code.substring(0,code.indexOf(match_module_function[1])).split('\n').length:0)  + 
-                        match_module_function[1].split('\n').length;
-
-                    module_functions.push(
-                                            HEADER
-                                                .replace('@{TYPE}',commentType(match_module_function[1])??'')
-                                                .replace('@{FUNCTION_NAME}',match_module_function[1].split('\n').filter(row=>row.indexOf('@name')>-1).length>0?
-                                                                            match_module_function[1]
-                                                                                .split('\n')
-                                                                                .filter(row=>row.indexOf('@name')>-1)
-                                                                                .map(row=>  row
-                                                                                            .substring( row.indexOf('@name')+'@name'.length)
-                                                                                            .trimStart())[0]:'')
-                                            + '\n' +
-                                            ALIGNMENT+ '\n' +
-                                            function_tags + '\n' +
-                                            SOURCE_LINE_TAG
-                                                .replace('@{MODULE_LINE}',parameters.module ??'')
-                                                .replace('@{SOURCE_LINE_LINK',`${parameters.module}#line${source_line}`));
-                }
-
-            }
+            const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`, parameters.res)
+                        .then(markdown=>
+                                markdown
+                                .replaceAll('@{MODULE_NAME}',       parameters.module ?? '')
+                                .replaceAll('@{MODULE}',            parameters.module ??'')
+                                .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
+                                //metadata tags                            
+                                .replaceAll('@{SERVER_HOST}',       fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'HOST')??'')
+                                .replaceAll('@{APP_CONFIGURATION}', fileModelConfig.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION')??'')
+                                .replaceAll('@{APP_COPYRIGHT}',     fileModelAppParameter.get({app_id:parameters.app_id, res:null})[0].app_copyright.value??'')
+                        );
+            
             //replace all found JSDoc comments with markdown formatted module functions
-            return markdown.replace('@{MODULE_FUNCTION}', module_functions.join('\n'+'\n'));
+            return markdown.replace('@{MODULE_FUNCTION}', 
+                                    await getFileFunctions({app_id:         parameters.app_id,                                                 
+                                                            file:           await getFile(`${process.cwd()}${parameters.doc}.js`, parameters.res),
+                                                            module:         parameters.module,
+                                                            comment_with_filter:null
+                                                        }));
         }
         case parameters.type.toUpperCase()=='REST_API':{
-            const CONFIG_REST_API = fileModelConfig.get('CONFIG_REST_API');
             /**@type{server_db_file_config_rest_api} */
+            const CONFIG_REST_API = fileModelConfig.get('CONFIG_REST_API');
             
             /**
              * @param {'info'|'servers'|'paths'|'components'} type
@@ -257,21 +331,43 @@ const markdownRender = async parameters =>{
                                             }).join('\n'));
                     }
                 }
-            };            
-            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res);
-            //remove all '\r' in '\r\n'
-            markdown = markdown.replaceAll('\r\n','\n');
+            };
+            const filePattern = /\.js$/;
+            /**@type{string[]} */
+            const membersof = [];
+            //Get REST API function with @namespace tag
+            membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
+                                                    file:               await getFile(`${process.cwd()}/server/server.js`, parameters.res),
+                                                    module:             '/server/server',
+                                                    comment_with_filter:'@namespace REST_API'
+                                                }));
+            //Get all REST API functions with @memberof tag
+            for (const directory of ['microservice','server'])
+                for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
+                    const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
+                                                                    file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
+                                                                    module:             file,
+                                                                    comment_with_filter:'@memberof REST_API'
+                                                                });
+                    if (file_functions != '')
+                        membersof.push(file_functions);
+                }
+            //hide details in presentation
             const details = false;
-            //replace with info in config_rest_api.json
-
-            markdown = markdown
-                        .replace('@{CONFIG_REST_API}', 
-                                    (tableRender('info',details) + '\n\n') + 
-                                    (tableRender('servers', details) + '\n\n') + 
-                                    (tableRender('paths', details) + '\n\n') +
-                                    (details?(tableRender('components',details) + '\n\n'):''));
-            
-            return markdown;
+            //return REST API template with documentation using openAPI pattern and list all functions used
+            return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res)
+                        .then(markdown=>
+                                //remove all '\r' in '\r\n'
+                                markdown
+                                .replaceAll('\r\n','\n')
+                                //replace with info in config_rest_api.json
+                                .replace('@{CONFIG_REST_API}', 
+                                                        (tableRender('info',details) + '\n\n') + 
+                                                        (tableRender('servers', details) + '\n\n') + 
+                                                        (tableRender('paths', details) + '\n\n') +
+                                                        (details?(tableRender('components',details) + '\n\n'):''))
+                                .replace('@{REST_API_FUNCTIONS}',membersof.join('\n\n'))
+                            );
         }
         default:{
             return '';
@@ -279,6 +375,9 @@ const markdownRender = async parameters =>{
     }
 };
 /**
+ * @name menuRender
+ * @description Renders the menu with APP, REST_API, GUIDE and MODULE menu items
+ * @function
  * @param {{app_id:number,
  *          res:server_server_res}} parameters
  * @returns {Promise.<string>}
@@ -320,42 +419,9 @@ const menuRender = async parameters =>{
             }
             case menu.type.startsWith('MODULE'):{
                 //return all *.js files in /apps, /microservices and /server directories
-                //remove OS path info, .js suffix and replace \\ with /
-                const fs = await import('node:fs');
-                const path = await import('node:path');
-                /**@type{serverDocumentMenu['menu_sub']} */
-                const jsdoc_menu = [];
                 const filePattern = /\.js$/;
-                let index =0;
-                /**
-                 * @param {string} directory
-                 * @param {RegExp} pattern
-                 */
-                const findFiles = async (directory, pattern) =>{
-                    const files = await fs.promises.readdir(directory, { withFileTypes: true });
-                    
-                    for (const file of files){
-                        const fullPath = path.join(directory, file.name);
-                        if (file.isDirectory())
-                            await findFiles(fullPath, pattern);
-                        else 
-                            if (file.isFile() && file.name.match(pattern)){
-                                
-                                jsdoc_menu.push({id: ++index,
-                                                    menu:fullPath
-                                                        .replace(process.cwd(),'')
-                                                        .replace('.js','')
-                                                        .replaceAll('\\','/'),
-                                                    doc:fullPath
-                                                        .replace(process.cwd(),'')
-                                                        .replace('.js','')
-                                                        .replaceAll('\\','/')});
-                            }
-
-                    }
-                };
-                await findFiles(`${process.cwd()}/${menu.type.substring('MODULE'.length+1).toLowerCase()}`, filePattern);
-                menu.menu_sub = jsdoc_menu;
+                menu.menu_sub = (await getFiles(`${process.cwd()}/${menu.type.substring('MODULE'.length+1).toLowerCase()}`, filePattern))
+                                .map(row=>{return {id:row.id, menu:row.file, doc:row.file};});
             }
         }
     }
