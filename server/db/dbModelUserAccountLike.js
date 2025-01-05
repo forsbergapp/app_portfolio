@@ -15,6 +15,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name post
  * @description Like
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_account_id:number|null}}} parameters
@@ -34,9 +35,10 @@ const post = parameters =>
  * @name deleteRecord
  * @description Unlike
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
-*          resource_id:number|null,
-*          data:{user_account_id:number|null}}} parameters
+ *          resource_id:number|null,
+ *          data:{user_account_id:number|null}}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_like_unlike>}
  */
 const deleteRecord = parameters => 

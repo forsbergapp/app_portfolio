@@ -197,6 +197,7 @@ const socketClientAdd = (newClient) => {
  * @name socketAdminSend
  * @description Socket client send as admin
  * @function
+ * @memberof REST_API
  * @param {{app_id:number|null,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
@@ -241,6 +242,7 @@ const socketClientAdd = (newClient) => {
  * @name socketConnectedList
  * @description Socket connected list
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
  *                  limit?:string|null,
@@ -366,6 +368,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  * @name socketConnectedCount
  * @description Socket connected count
  * @function
+ * @memberof REST_API
  * @param {{data:{  identity_provider_id?:string|null,
  *                  logged_in?:string|null}}} parameters
  * @returns {{count_connected:number}}
@@ -392,6 +395,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  * @description Socket connect
  *              Used by EventSource and leaves connection open
  * @function
+ * @memberof REST_API
  * @param {{app_id:number,
  *          iam:string,
  *          user_agent:string,
@@ -497,6 +501,7 @@ const socketExpiredTokensUpdate = () =>{
  * @name CheckOnline
  * @description Checks if user is online
  * @function
+ * @memberof REST_API
  * @param {{resource_id :number|null}} parameters
  * @returns {{online:1|0}}
  */
