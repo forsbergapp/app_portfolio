@@ -14,8 +14,8 @@
  * @returns {Promise.<string>}
  */
 const getFile = async (path, res) =>{
-    /**@type{import('../../../../server/iam.service.js')} */
-    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../../server/iam.js')} */
+    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const fs = await import('node:fs');
     return fs.promises.readFile(path, 'utf8')
             .then(file=>file.toString())
@@ -245,7 +245,7 @@ const markdownRender = async parameters =>{
                                 //metadata tags                            
                                 .replaceAll('@{SERVER_HOST}',       fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'HOST')??'')
                                 .replaceAll('@{APP_CONFIGURATION}', fileModelConfig.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION')??'')
-                                .replaceAll('@{APP_COPYRIGHT}',     fileModelAppParameter.get({app_id:parameters.app_id, res:null})[0].app_copyright.value??'')
+                                .replaceAll('@{APP_COPYRIGHT}',     fileModelAppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].app_copyright.value??'')
                         );
             
             //replace all found JSDoc comments with markdown formatted module functions
@@ -442,8 +442,8 @@ const menuRender = async parameters =>{
  * @returns {Promise.<[string]>}
  */
 const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
-    /**@type{import('../../../../server/iam.service.js')} */
-    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../../server/iam.js')} */
+    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     
     //check if valid document request
     if (

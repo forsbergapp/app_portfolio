@@ -1,6 +1,6 @@
 /** @module server/db/dbModelUserAccountAppDataPost */
 
-import { iamUtilMesssageNotAuthorized } from '../iam.service.js';
+import { iamUtilMesssageNotAuthorized } from '../iam.js';
 
 /**
  * @import {server_db_sql_result_user_account_app_data_post_deleteUserPost,

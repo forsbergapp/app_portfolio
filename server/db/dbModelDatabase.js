@@ -136,8 +136,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
-    /**@type{import('../iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('../security.js')} */
 	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
@@ -380,8 +380,8 @@ const dbInstallGetFiles = async (install_type) =>{
     const {socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
-    /**@type{import('../iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
     const fs = await import('node:fs');
 
@@ -512,8 +512,8 @@ const dbInstallGetFiles = async (install_type) =>{
 
     /**@type{import('../security.js')} */
     const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
-    /**@type{import('../iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
     const fs = await import('node:fs');
     /**@type{server_db_database_install_result} */
@@ -1099,8 +1099,8 @@ const dbDemoUninstall = async parameters => {
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./dbModelUserAccount.js')} */
 	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-    /**@type{import('../iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
     return new Promise((resolve, reject)=>{
         userDemoGet(parameters.app_id)
@@ -1233,7 +1233,7 @@ const dbStart = async () => {
                 }
                 dba = 0;
                 for (const app  of fileModelApp.get({app_id:null, resource_id:null, res:null})){
-                    const app_secret = fileModelAppSecret.get({app_id:null, res:null}).filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
+                    const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null, res:null}).filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
                     /**@ts-ignore */
                     if (app_secret[`service_db_db${db_use}_app_user`])
                         await DB_POOL(  db_use, 

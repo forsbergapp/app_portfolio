@@ -35,8 +35,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
     const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
-    /**@type{import('../../../../server/iam.service.js')} */
-    const {iamUtilMesssageNotAuthorized, iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../../server/iam.js')} */
+    const {iamUtilMesssageNotAuthorized, iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);

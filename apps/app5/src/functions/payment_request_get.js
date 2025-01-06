@@ -33,8 +33,8 @@ const payment_request_get = async (app_id, data, user_agent, ip, locale, res) =>
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
     const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
-    /**@type{import('../../../../server/iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../../server/iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     const payment_request = await dbModelAppDataResourceMaster.get({app_id:app_id, 
                                                                     resource_id:null, 

@@ -79,7 +79,7 @@ const component = async props => {
     const user_settings_get = async profile_id => {
         return props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile/${profile_id}`, query:`id_current_user=${props.data.user_account_id??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
-                            JSON.parse(result)
+                            JSON.parse(result).rows
                             .map((/**@type{{id:number, 
                                             user_account_app_user_account_id:number, 
                                             liked:number, 

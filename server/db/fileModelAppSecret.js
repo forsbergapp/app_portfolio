@@ -6,18 +6,20 @@
  */
 /**@type{import('./file.js')} */
 const {fileCommonRecordNotFound, fileFsRead, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
-
+/**@type{import('../server.js')} */
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**
  * @name get
  * @description Get records for given appid
  * @function
  * @memberof REST_API
  * @param {{app_id:number|null,
+ *          resource_id:number|null,
  *          res:server_server_res|null}} parameters
  * @returns {server_db_file_app_secret[]}
  */
 const get = parameters => {
-    const result = fileDBGet(parameters.app_id, 'APP_SECRET',null, parameters.app_id);
+    const result = fileDBGet(parameters.app_id, 'APP_SECRET',null, serverUtilNumberValue(parameters.resource_id));
     if (result.length>0)
         return result;
     else
@@ -58,8 +60,8 @@ const post = async (app_id, resource_id, data, res) => update({app_id:app_id, re
  */
 const update = async parameters => {
     if  (parameters.data.parameter_name=='app_id'){
-        /**@type{import('../iam.service.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         if(parameters.res)
             parameters.res.statusCode = 400;
         throw iamUtilMesssageNotAuthorized();

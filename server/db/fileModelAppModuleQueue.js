@@ -76,8 +76,8 @@ const post = async (app_id, data, res) => {
         });
     }
     else{
-        /**@type{import('../iam.service.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         res.statusCode = 400;
         throw iamUtilMesssageNotAuthorized();
     }
@@ -131,8 +131,8 @@ const update = async (app_id, resource_id, data, res) => {
                 throw fileCommonRecordNotFound(res);
         });
     else{
-        /**@type{import('../iam.service.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         if (res)
             res.statusCode = 404;
         throw iamUtilMesssageNotAuthorized();

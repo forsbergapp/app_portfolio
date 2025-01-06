@@ -155,7 +155,7 @@ const timetable = async (timetable_parameters) => {
 	 * @returns 
 	 */
 	
-	const parametersApp = fileModelAppParameter.get({app_id:timetable_parameters.app_id, res:null})[0]; 
+	const parametersApp = fileModelAppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id, res:null})[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.value;
 		/**@ts-ignore */

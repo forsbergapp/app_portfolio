@@ -10,8 +10,8 @@
 /**@type{import('./server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('./iam.service.js')} */
-const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('./iam.js')} */
+const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.js`);
 
 /**@type{import('./db/fileModelAppParameter.js')} */
 const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
@@ -38,8 +38,8 @@ let SOCKET_CONNECTED_CLIENTS = [];
  *               identity_provider_id:number|null}>}
  */
 const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language, res) =>{
-    /**@type{import('./bff.service.js')} */
-    const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    /**@type{import('./bff.js')} */
+    const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
     //get GPS from IP
     /**@type{server_bff_parameters}*/
     const parameters = {endpoint:'SERVER',
@@ -146,14 +146,14 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<void>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
-    /**@type{import('./iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
     const client_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id'));
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
-        /**@type{import('./iam.service.js')} */
-        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('./iam.js')} */
+        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         throw iamUtilResponseNotAuthorized(parameters.res, 401, 'socketConnectedUpdate, authorization', true);
     }
     else
@@ -353,8 +353,8 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<{sent:number}>}
  */
 const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =>{
-    /**@type{import('./iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
     const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iamUtilDecode(iam).get('authorization_bearer'));
     if (client.length == 1){
@@ -405,8 +405,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  * @returns {Promise.<void>}
  */
  const socketConnect = async parameters =>{
-    /**@type{import('./iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
@@ -416,8 +416,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.res.req.headers['sec-fetch-mode']!='cors'){
-        /**@type{import('./iam.service.js')} */
-        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('./iam.js')} */
+        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         throw iamUtilResponseNotAuthorized(parameters.res, 401, 'socketConnect, authorization', true);
     }
     else{
@@ -468,7 +468,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  const socketIntervalCheck = () => {
     //start interval if apps are started
     const app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
-    if (fileModelAppParameter.get({app_id:app_id, res:null})[0].common_app_start.value =='1'){
+    if (fileModelAppParameter.get({app_id:app_id, resource_id:app_id,  res:null})[0].common_app_start.value =='1'){
         setInterval(() => {
             if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
                 socketAdminSend({   app_id:null,

@@ -25,8 +25,8 @@ const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
  * @returns {Promise.<{affectedRows:number}>}
  */
 const post = async (app_id, data) => {
-    /**@type{import('../iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     //check required attributes
     if (app_id!=null &&
         data.app_id != null &&
