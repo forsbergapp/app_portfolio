@@ -11,7 +11,7 @@
  *  JSON_TABLE      json that can be managed as table and implemented using object mapping relation (ORM) pattern
  *                  so each table is mapped to one fileModel*.js
  *                  consists of 3 layers
- *                  *.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.service.js
+ *                  *.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.js
  *                  fileModel*.js   data model API with constraints, ex fileModelIamUser() in /server/db/fileModelIamUser.js
  *                  file.js         file management API, ex fileDBGet() in /server/db/file.js
  *                                  fileDBGet               reads file content from CACHE_CONTENT and should be used by default for performance
@@ -299,8 +299,8 @@ const fileFsRead = async (file, lock=false) =>{
  * @returns {Promise.<string|null>}
  */
 const fileFsWrite = async (file, transaction_id, file_content) =>{
-    /**@type{import('../iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     if (!transaction_id || fileRecord(file).TRANSACTION_ID != transaction_id){
         return (iamUtilMesssageNotAuthorized());
     }
@@ -433,8 +433,8 @@ const fileFsDeleteAdmin = async file => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>{
-    /**@type{import('../iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
     const transaction_id = await fileTransactionStart(file, filepath);

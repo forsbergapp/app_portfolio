@@ -121,18 +121,18 @@ const component = async props => {
             return `/server-db/user_account-profile/${props.data.user_account_id_other ?? ''}`;
         else
             if (props.data.username !== null)
-                return `/server-db/user_account-profile-name/${props.data.username}`;
+                return '/server-db/user_account-profile/';
             else
                 return `/server-db/user_account-profile/${props.data.user_account_id ?? ''}`;
     };
     const profile = await props.methods.commonFFB(
                             {
                                 path:pathInfoGet(), 
-                                query:`id=${props.data.user_account_id ?? ''}&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
+                                query:`id=${props.data.user_account_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
                                 method:'GET', 
                                 authorization_type:'APP_ID'
                             })
-                        .then((/**@type{string}*/result)=>JSON.parse(result)[0]);
+                        .then((/**@type{string}*/result)=>JSON.parse(result).rows?.[0] ?? JSON.parse(result)[0]);
    
     const onMounted = async () => {
         

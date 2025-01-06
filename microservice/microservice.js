@@ -11,8 +11,8 @@ const https = await import('node:https');
 /**@type{import('./registry.js')} */
 const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
-/**@type{import('../server/iam.service.js')} */
-const { iamAuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('../server/iam.js')} */
+const { iamAuthenticateApp } = await import(`file://${process.cwd()}/server/iam.js`);
 
 const MICROSERVICE_MESSAGE_TIMEOUT = '🗺⛔?';
 const MICROSERVICE_RESOURCE_ID_STRING = ':RESOURCE_ID';
@@ -82,8 +82,8 @@ const microserviceRequest = async parameters =>{
     if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
         microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-        const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
-                                                        fileModelAppSecret.get({app_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
+        const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
+                                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
         
         return circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
