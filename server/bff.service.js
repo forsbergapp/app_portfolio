@@ -5,7 +5,7 @@
  */
 
 /**@type{import('./server.js')} */
-const {serverUtilResponseTime, serverResponseErrorSend, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverUtilResponseTime, serverResponseErrorSend, serverUtilCompression, serverUtilNumberValue, serverREST_API, serverREST_APIOpenAPI} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('./db/fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -267,7 +267,7 @@ const bffStart = async (req, res) =>{
             //REST API route
             //REST API requests from client are encoded
             const decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';   
-            serverREST_API({  app_id:app_id, 
+            (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'FRAMEWORK_REST_API'))==1?serverREST_APIOpenAPI:serverREST_API)({  app_id:app_id, 
                             endpoint:bff_parameters.endpoint,
                             method:bff_parameters.method.toUpperCase(), 
                             ip:bff_parameters.ip, 
@@ -392,7 +392,7 @@ const bffStart = async (req, res) =>{
     return new Promise((resolve, reject) => {
         const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
         if (app_id !=null && bff_parameters.endpoint){
-            serverREST_API({  app_id:app_id, 
+            (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'FRAMEWORK_REST_API'))==1?serverREST_APIOpenAPI:serverREST_API)({  app_id:app_id, 
                             endpoint:bff_parameters.endpoint,
                             method:bff_parameters.method.toUpperCase(), 
                             ip:bff_parameters.ip, 
