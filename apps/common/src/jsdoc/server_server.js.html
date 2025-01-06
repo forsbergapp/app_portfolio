@@ -15,7 +15,7 @@
  */
 
 /**
- * @import {server_server_error_stack, server_server_error, server_server_req, server_server_res, server_server_req_id_number,
+ * @import {server_db_file_config_rest_api_methods, server_db_file_config_rest_api,server_server_error_stack, server_server_error, server_server_req, server_server_res, server_server_req_id_number,
  *          server_server_express} from './types.js'
  */
 const zlib = await import('node:zlib');
@@ -712,13 +712,200 @@ const serverJs = async () => {
                 }
             }
             else
-                res.end();
+                if (resultbffInit.redirect)
+                    res.redirect(resultbffInit.redirect);
+                else
+                    res.end();
         }
     };
     return app;
 };
 /**
+ * @name serverREST_APIOpenAPI
+ * @namespace REST_API
+ * @description Server REST API routes using openAPI
+ *              Validates if user has access to given resource
+ *              Validates using IAM token claims if path requires
+ *              Validates calls to circuitbreaker controlled microservices using client_id and client_secret defined for given app
+ *              Uses paths defined in app.route() in serverExpress() function
+ *              Returns single resource result format or ISO20022 format with either list header format or page header metadata
+ *              Returns HTML or {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
+ *              /app-module-report-queue-result
+ *              /bff/admin/v1/app-module-report
+ *              /bff/app/v1/app-module-report
+ *              /bff/app/v1/app-module-module
+ * 
+ *              Returns status 401 if user has not accessed to given resource
+ *              Returns status 404 if route is not found
+ * @function
+ * @param {import('./types.js').server_server_routesparameters} routesparameters
+ * @returns {Promise.&lt;*>}
+ */
+const serverREST_APIOpenAPI = async (routesparameters) =>{
+    /**@type{import('../apps/common/src/common.js')} */
+    const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+    /**@type{import('./iam.service.js')} */
+    const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    const URI_query = routesparameters.parameters;
+    const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
+    const app_query = URI_query?new URLSearchParams(URI_query):null;
+
+    const COMMON_APP_ID = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'));
+    /**
+     * Returns resource id number from URI path or null
+     * @param {string} path
+     * @returns {number|null}
+     */
+    const resource_id_get_number = path => path.endsWith('/${resource_id_number}')?serverUtilNumberValue(URI_path.substring(URI_path.lastIndexOf('/') + 1)):null;
+    /**
+     * Returns resource id string from URI path or null
+     * @param {string} path
+     * @returns {string|null}
+     */
+    const resource_id_get_string = path => path.endsWith('/${resource_id_string}')?URI_path.substring(URI_path.lastIndexOf('/') + 1):null;
+    /**
+     * Return message in ISO20022 format if result contains multi resources
+     * @param {*} result 
+     * @param {boolean} singleresource
+     */
+    const iso_return_message = (result, singleresource) =>{
+        //if singles resource or pagination then return result
+        if (singleresource || result.page_header)
+            return result;
+        else{
+            const list_header = {	total_count:	result.length,
+                                    offset: 		serverUtilNumberValue(app_query?.get('offset'))?serverUtilNumberValue(app_query?.get('offset')):0,
+                                    count:			serverUtilNumberValue(app_query?.get('limit')) ?? result.length
+                                };
+            return {list_header:list_header, rows:result};
+        }
+    };
+    /**
+     * Validates if user has access to given resource
+     * Validates using IAM token claims if path requires
+     * @param {{resource_validate_type?: 'id'|'app_id'|null,
+     *          resource_validate_value?: string|number|null,
+     *          required?: boolean,
+     *          resource_validate_app_data_app_id?: number|null,
+     *          validate_app_function?:string|null,
+     *          validate_app_function_role?:string|null}} params
+     * @returns {boolean}
+     */
+    const validate = params =>{
+        //set default values
+        params.resource_validate_type = params.resource_validate_type ?? null;
+        params.resource_validate_value = params.resource_validate_value ?? null;
+        params.required = params.required ?? false;
+        params.resource_validate_app_data_app_id = params.resource_validate_app_data_app_id ?? null;
+        params.validate_app_function = params.validate_app_function ?? null;
+        params.validate_app_function_role = params.validate_app_function_role ?? null;
+        const APP_ID_VALIDATE = (params.resource_validate_app_data_app_id == COMMON_APP_ID)?COMMON_APP_ID:routesparameters.app_id;
+        //match route path using resource id parameter
+        if (
+            //match required resource id
+            (params.required &amp;&amp; URI_path.substring(URI_path.lastIndexOf('/') + 1) == '')==false &amp;&amp;
+            //match app data app id
+            ((params.resource_validate_app_data_app_id !=null &amp;&amp; params.resource_validate_app_data_app_id == APP_ID_VALIDATE) ||params.resource_validate_app_data_app_id==null) &amp;&amp;
+            //match app function and app function role
+            ((params.validate_app_function &amp;&amp; APP_ID_VALIDATE !=null &amp;&amp; app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
+                params.validate_app_function == null)){
+                if (params.resource_validate_type){
+                    if (iam_service.iamAuthenticateResource({  app_id:routesparameters.app_id, 
+                                                            ip:routesparameters.ip, 
+                                                            authorization:routesparameters.authorization, 
+                                                            resource_id:params.resource_validate_value ?? null, 
+                                                            scope: 'USER',
+                                                            claim_key:params.resource_validate_type}))
+                        return true;
+                    else
+                        return false;
+                }
+                else
+                    return true;
+            }
+        else
+            return false;
+    };
+        
+    const routePath = Object.entries(fileModelConfig.get('CONFIG_REST_API').paths)
+                        .filter(path=>
+                            path[0].replace('/${resource_id_number}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
+                            path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0];
+    if (routePath){
+        /**
+         * @param{string} key
+         */
+        const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key];
+
+        const methodObj = routePath[1][routesparameters.method.toLowerCase()];
+        if (methodObj){
+            if (validate({  resource_validate_type:             getParameter('server_validation_resource_key'),
+                            resource_validate_value:            getParameter('server_validation_resource_value'),
+                            required:                           (getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
+                            resource_validate_app_data_app_id:  getParameter('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
+                            validate_app_function:              getParameter('server_validation_app_function')?resource_id_get_string(routePath[0]):null,
+                            validate_app_function_role:         getParameter('server_validation_app_function')?getParameter('server_validation_app_function_role'):null})){
+
+                //add parameters if used for GET method
+                const get_parameters = routesparameters.method=='GET'?
+                                            methodObj.parameters
+                                                            //exclude keys starting with 'server' and '$ref'
+                                                            .filter((/**@type{*}*/key)=>  Object.keys(key)[0]!='description' &amp;&amp; 
+                                                                                            !Object.keys(key)[0].startsWith('server') &amp;&amp; 
+                                                                                            !Object.keys(key)[0].startsWith('$ref'))
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[Object.keys(key)[0]]:app_query?.get(Object.keys(key)[0])}};},{}):
+                                                null;
+                //read operationId what file to import and what function to execute
+                //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
+                const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
+                                        methodObj.operationId.split('.')[1] + '.js';
+                const functionRESTAPI = methodObj.operationId.split('.')[2];
+                const moduleRESTAPI = await import(`file://${process.cwd()}${filePath}`);
+                
+
+                //return result using ISO20022 format
+                return iso_return_message(await moduleRESTAPI[functionRESTAPI]({
+                                        app_id:         getParameter('server_validation_resource_app_data_app_id')?
+                                                            (routesparameters.body.data_app_id == COMMON_APP_ID?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id):
+                                                                routesparameters.app_id,
+                                        iam:            getParameter('server_function_parameter_iam')?routesparameters.res.req.query.iam:null,
+                                        authorization:  getParameter('server_function_parameter_authorization')?routesparameters.authorization:null,
+                                        user_agent:     getParameter('server_function_parameter_user_agent')?routesparameters.user_agent:null,
+                                        accept_language:getParameter('server_function_parameter_accept_language')?routesparameters.accept_language:null,
+                                        host:           getParameter('server_function_parameter_accept_host')?routesparameters.host:null,
+                                        locale:         getParameter('server_function_parameter_locale')?app_query?.get('lang_code') ??'en':null,
+                                        ip:             getParameter('server_function_parameter_ip')?routesparameters.ip:null,
+                                        path:           getParameter('server_function_parameter_path')?routesparameters.route_path:null,
+                                        query:          getParameter('server_function_parameter_query')?URI_query:null,
+                                        method:         getParameter('server_function_parameter_method')?routesparameters.method:null,
+                                        data:           getParameter('server_function_parameter_body')?routesparameters.body:{...get_parameters},
+                                        endpoint:       getParameter('server_function_parameter_endpoint')?routesparameters.endpoint:null,
+                                        resource_id:    getParameter('server_function_parameter_resource_id')?
+                                                                (getParameter('resource_id_number')?resource_id_get_number(routePath[0]):resource_id_get_string(routePath[0])):
+                                                                    null,
+                                        res:            getParameter('server_function_parameter_res')?routesparameters.res:null
+                                    //return result in rows keys if resource id is empty or return result in the result object
+                                    //exception commonModuleRun used by server functions returning different results should always be multiple
+                                    }),functionRESTAPI=='commonModuleRun'?false:(getParameter('resource_id_number')?resource_id_get_number(routePath[0]):resource_id_get_string(routePath[0]))!=null);
+            }
+            else{
+                routesparameters.res.statusMessage = 'resource id not authorized';
+                routesparameters.res.statusCode =401;
+                throw iam_service.iamUtilMesssageNotAuthorized();
+            }
+        }
+        else{
+            routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
+            routesparameters.res.statusCode =404;
+            throw iam_service.iamUtilMesssageNotAuthorized();
+        }
+    }
+};
+/**
  * @name serverREST_API
+ * @namespace REST_API
  * @description Server REST API routes
  *              Validates if user has access to given resource
  *              Validates using IAM token claims if path requires
@@ -1878,7 +2065,7 @@ const serverStart = async () =>{
 };
 export {serverResponseErrorSend, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppFunction,serverUtilAppLine , 
-        serverREST_API, serverStart };</code></pre>
+        serverREST_API, serverREST_APIOpenAPI, serverStart };</code></pre>
         </div>
     </div>
 
