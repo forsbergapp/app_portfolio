@@ -35,7 +35,10 @@ const bffService = await import('./bff.service.js');
     if (result.reason == null)
         next();
     else
-        res.end();
+        if (result.redirect)
+            res.redirect(result.redirect);
+        else
+            res.end();
 };
 /**
  * @name bffStart
