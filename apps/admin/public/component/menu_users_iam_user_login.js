@@ -81,7 +81,7 @@ const template = props => ` <div id='menu_users_iam_user_login_row_title' class=
  */
 const component = async props => {
     const user_logon = await props.methods.commonFFB({path:'/server-iam/iam_user_login', query:`data_user_account_id=${props.data.user_account_id}&data_app_id=`, method:'GET', authorization_type:'ADMIN'})
-                                    .then((/**@type{string}*/result)=>JSON.parse(result));
+                                    .then((/**@type{string}*/result)=>JSON.parse(result).rows);
  
     return {
         lifecycle:  null,

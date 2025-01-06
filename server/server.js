@@ -408,8 +408,8 @@ const serverUtilAppLine = () =>{
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    /**@type{import('./iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const {default:express} = await import('express');
     
     /**@type{server_server_express} */
@@ -428,12 +428,12 @@ const serverUtilAppLine = () =>{
     
     //ROUTES MIDDLEWARE
     //apps
-    /**@type{import('./bff.js')} */
+    /**@type{import('./bffMiddleware.js')} */
     const { bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
-            bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bff.js`);
+            bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
     //auth
-    /**@type{import('./iam.js')} */
-    const iam = await import(`file://${process.cwd()}/server/iam.js`);
+    /**@type{import('./iamMiddleware.js')} */
+    const iam = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
     
     //ROUTES 
     //logs EventSource and response when closed, authenticates request and will end request if not passing controls, 
@@ -485,15 +485,15 @@ const serverJs = async () => {
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    /**@type{import('./iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
-
     /**@type{import('./iam.js')} */
-    const iam = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
-    /**@type{import('./bff.js')} */
+    /**@type{import('./iamMiddleware.js')} */
+    const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
+
+    /**@type{import('./bffMiddleware.js')} */
     const { bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
-        bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bff.js`);
+        bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
 
     /**
      * @param {server_server_req} req
@@ -520,63 +520,63 @@ const serverJs = async () => {
                 }
                 case req.path.startsWith('/bff/app_id/v1'):{
                     req.route.path = '/bff/app_id/v1*';
-                    await iam.iamAuthenticateIdToken(req, res, () =>
+                    await iamMiddleware.iamAuthenticateIdToken(req, res, () =>
                         bffAppId(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/app_id_signup/v1') &&req.method=='POST':{
                     req.route.path = '/bff/app_id_signup/v1*';
-                    await iam.iamAuthenticateIdTokenRegistration(req, res, () =>
+                    await iamMiddleware.iamAuthenticateIdTokenRegistration(req, res, () =>
                             bffAppIdSignup(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/app_access/v1') :{
                     req.route.path = '/bff/app_access/v1*';
-                    await iam.iamAuthenticateAccessToken(req, res, () =>
+                    await iamMiddleware.iamAuthenticateAccessToken(req, res, () =>
                         bffAppAccess(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/app_external/v1/app-module-function') && req.method=='POST':{
                     req.route.path = '/bff/app_external/v1/app-module-function*';
-                    iam.iamAuthenticateExternal(req, res, () =>
+                    iamMiddleware.iamAuthenticateExternal(req, res, () =>
                         bffAppExternal(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/admin/v1') :{
                     req.route.path = '/bff/admin/v1*';
-                    await iam.iamAuthenticateAccessTokenAdmin(req, res, () =>
+                    await iamMiddleware.iamAuthenticateAccessTokenAdmin(req, res, () =>
                         bffAdmin(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/socket/v1') && req.method=='GET':{
                     req.route.path = '/bff/socket/v1*';
-                    iam.iamAuthenticateSocket(req, res, () =>
+                    iamMiddleware.iamAuthenticateSocket(req, res, () =>
                         bffSocket(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
                     req.route.path = '/bff/iam_admin/v1/server-iam-login';
-                    await iam.iamAuthenticateAdmin(req, res, () =>
+                    await iamMiddleware.iamAuthenticateAdmin(req, res, () =>
                         bffIAMAdmin(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/iam_user/v1') && req.method=='POST':{
                     req.route.path = '/bff/iam_user/v1*';
-                    await iam.iamAuthenticateUser(req, res, () =>
+                    await iamMiddleware.iamAuthenticateUser(req, res, () =>
                         bffIAMUser(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/iam_provider/v1') && req.method=='POST':{
                     req.route.path = '/bff/iam_provider/v1*';
-                    await iam.iamAuthenticateProvider(req, res, () =>
+                    await iamMiddleware.iamAuthenticateProvider(req, res, () =>
                         bffIAMProvider(req, res)
                     );
                     break;
@@ -685,8 +685,8 @@ const serverJs = async () => {
                 res.writeHead(301, {'Location':url});
                 res.end();
             };
-            /**@type{import('./bff.service.js')} */
-            const bffService = await import('./bff.service.js');
+            /**@type{import('./bff.js')} */
+            const bffService = await import('./bff.js');
             const resultbffInit = await bffService.bffInit(req, res);
             if (resultbffInit.reason == null){
                 const resultbffStart = req.method=='GET'?await bffService.bffStart(req, res):{reason:null};
@@ -737,8 +737,8 @@ const serverJs = async () => {
 const serverREST_APIOpenAPI = async (routesparameters) =>{
     /**@type{import('../apps/common/src/common.js')} */
     const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('./iam.service.js')} */
-    const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./iam.js')} */
+    const iam = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     const URI_query = routesparameters.parameters;
@@ -757,7 +757,9 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
      * @param {string} path
      * @returns {string|null}
      */
-    const resource_id_get_string = path => path.endsWith('/${resource_id_string}')?URI_path.substring(URI_path.lastIndexOf('/') + 1):null;
+    const resource_id_get_string = path => path.endsWith('/${resource_id_string}')?
+                                                (URI_path.substring(URI_path.lastIndexOf('/') + 1)==''?null:URI_path.substring(URI_path.lastIndexOf('/') + 1)):
+                                                    null;
     /**
      * Return message in ISO20022 format if result contains multi resources
      * @param {*} result 
@@ -778,7 +780,8 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
     /**
      * Validates if user has access to given resource
      * Validates using IAM token claims if path requires
-     * @param {{resource_validate_type?: 'id'|'app_id'|null,
+     * @param {{config_path:string,
+     *          resource_validate_key?: 'id'|'app_id'|null,
      *          resource_validate_value?: string|number|null,
      *          required?: boolean,
      *          resource_validate_app_data_app_id?: number|null,
@@ -788,7 +791,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
      */
     const validate = params =>{
         //set default values
-        params.resource_validate_type = params.resource_validate_type ?? null;
+        params.resource_validate_key = params.resource_validate_key ?? null;
         params.resource_validate_value = params.resource_validate_value ?? null;
         params.required = params.required ?? false;
         params.resource_validate_app_data_app_id = params.resource_validate_app_data_app_id ?? null;
@@ -804,13 +807,20 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
             //match app function and app function role
             ((params.validate_app_function && APP_ID_VALIDATE !=null && app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
                 params.validate_app_function == null)){
-                if (params.resource_validate_type){
-                    if (iam_service.iamAuthenticateResource({  app_id:routesparameters.app_id, 
+                if (params.resource_validate_key){
+                    if (iam.iamAuthenticateResource({  app_id:routesparameters.app_id, 
                                                             ip:routesparameters.ip, 
                                                             authorization:routesparameters.authorization, 
-                                                            resource_id:params.resource_validate_value ?? null, 
+                                                            resource_id:params.resource_validate_value?
+                                                                            //valid values: null, 'resource_id_string', 'resource_id_number' or a key in iam
+                                                                            params.resource_validate_value=='resource_id_number'?
+                                                                                resource_id_get_number(params.config_path):
+                                                                                    params.resource_validate_value=='resource_id_string'?
+                                                                                        resource_id_get_string(params.config_path):
+                                                                                            (routesparameters.method=='GET'?app_query?.get(params.resource_validate_value.toString()):routesparameters.body[params.resource_validate_value]):
+                                                                                                null, 
                                                             scope: 'USER',
-                                                            claim_key:params.resource_validate_type}))
+                                                            claim_key:params.resource_validate_key}))
                         return true;
                     else
                         return false;
@@ -822,23 +832,24 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
             return false;
     };
         
-    const routePath = Object.entries(fileModelConfig.get('CONFIG_REST_API').paths)
+    const configPath = Object.entries(fileModelConfig.get('CONFIG_REST_API').paths)
                         .filter(path=>
                             path[0].replace('/${resource_id_number}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0];
-    if (routePath){
+    if (configPath){
         /**
          * @param{string} key
          */
         const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key];
 
-        const methodObj = routePath[1][routesparameters.method.toLowerCase()];
+        const methodObj = configPath[1][routesparameters.method.toLowerCase()];
         if (methodObj){
-            if (validate({  resource_validate_type:             getParameter('server_validation_resource_key'),
+            if (validate({  config_path:                        configPath[0],
+                            resource_validate_key:              getParameter('server_validation_resource_key'),
                             resource_validate_value:            getParameter('server_validation_resource_value'),
                             required:                           (getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
                             resource_validate_app_data_app_id:  getParameter('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
-                            validate_app_function:              getParameter('server_validation_app_function')?resource_id_get_string(routePath[0]):null,
+                            validate_app_function:              getParameter('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
                             validate_app_function_role:         getParameter('server_validation_app_function')?getParameter('server_validation_app_function_role'):null})){
 
                 //add parameters if used for GET method
@@ -857,12 +868,22 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 const functionRESTAPI = methodObj.operationId.split('.')[2];
                 const moduleRESTAPI = await import(`file://${process.cwd()}${filePath}`);
                 
-
+                /**
+                 *  Return single resource in result object or multiple resource in rows keys
+                 *  Rules: 
+                 *  server functions: return false
+                 *  method not GET: true
+                 *  metho GET: if resource id (string or number)  is empty return false else true
+                 * @returns {boolean}
+                 */
+                const singleResource = () => functionRESTAPI=='commonModuleRun'?
+                                                false:
+                                                    routesparameters.method!='GET'?
+                                                        true:
+                                                            (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
                 //return result using ISO20022 format
                 return iso_return_message(await moduleRESTAPI[functionRESTAPI]({
-                                        app_id:         getParameter('server_validation_resource_app_data_app_id')?
-                                                            (routesparameters.body.data_app_id == COMMON_APP_ID?COMMON_APP_ID ?? routesparameters.app_id:routesparameters.app_id):
-                                                                routesparameters.app_id,
+                                        app_id:         routesparameters.app_id,
                                         iam:            getParameter('server_function_parameter_iam')?routesparameters.res.req.query.iam:null,
                                         authorization:  getParameter('server_function_parameter_authorization')?routesparameters.authorization:null,
                                         user_agent:     getParameter('server_function_parameter_user_agent')?routesparameters.user_agent:null,
@@ -876,23 +897,21 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                                         data:           getParameter('server_function_parameter_body')?routesparameters.body:{...get_parameters},
                                         endpoint:       getParameter('server_function_parameter_endpoint')?routesparameters.endpoint:null,
                                         resource_id:    getParameter('server_function_parameter_resource_id')?
-                                                                (getParameter('resource_id_number')?resource_id_get_number(routePath[0]):resource_id_get_string(routePath[0])):
+                                                                (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0])):
                                                                     null,
                                         res:            getParameter('server_function_parameter_res')?routesparameters.res:null
-                                    //return result in rows keys if resource id is empty or return result in the result object
-                                    //exception commonModuleRun used by server functions returning different results should always be multiple
-                                    }),functionRESTAPI=='commonModuleRun'?false:(getParameter('resource_id_number')?resource_id_get_number(routePath[0]):resource_id_get_string(routePath[0]))!=null);
+                                    }), singleResource());
             }
             else{
                 routesparameters.res.statusMessage = 'resource id not authorized';
                 routesparameters.res.statusCode =401;
-                throw iam_service.iamUtilMesssageNotAuthorized();
+                throw iam.iamUtilMesssageNotAuthorized();
             }
         }
         else{
             routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
             routesparameters.res.statusCode =404;
-            throw iam_service.iamUtilMesssageNotAuthorized();
+            throw iam.iamUtilMesssageNotAuthorized();
         }
     }
 };
@@ -924,8 +943,8 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
     /**@type{import('../apps/common/src/common.js')} */
     const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-    /**@type{import('./iam.service.js')} */
-    const iam_service = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('./iam.js')} */
+    const iam = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('./info.js')} */
     const info = await import(`file://${process.cwd()}/server/info.js`);
@@ -1069,7 +1088,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     ((params.validate_app_function && APP_ID_VALIDATE !=null && app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
                         params.validate_app_function == null)){
                     if (params.resource_validate_type){
-                        if (iam_service.iamAuthenticateResource({  app_id:routesparameters.app_id, 
+                        if (iam.iamAuthenticateResource({  app_id:routesparameters.app_id, 
                                                                 ip:routesparameters.ip, 
                                                                 authorization:routesparameters.authorization, 
                                                                 resource_id:params.resource_validate_value ?? null, 
@@ -1129,7 +1148,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:`/bff/app_id/v1/server-db/user_account-activate/${resource_id_string}`, method:'PUT', 
                             resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                    resolve(iam_service.iamAuthenticateUserActivate({   app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUserActivate({   app_id:routesparameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         resource_id:resource_id_get_number(),
                                                                         ip:routesparameters.ip, 
@@ -1142,7 +1161,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     break;
                 }
                 case route({url:'/bff/app_id/v1/server-db/user_account-forgot', method:'POST'}):{
-                    resolve(iam_service.iamAuthenticateUserForgot({ app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUserForgot({ app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
                                                                     user_agent:routesparameters.user_agent, 
                                                                     accept_language:routesparameters.accept_language, 
@@ -1156,29 +1175,12 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                                 .then(result=>iso_return_message(result, false)));
                     break;
                 }
-                case route({url:`/bff/app_id/v1/server-db/user_account-profile-name/${resource_id_string}`, method:'GET'}):{
-                    resolve(dbModelUserAccount.getProfile({ app_id:routesparameters.app_id, 
-                                                            resource_id:resource_id_get_string(),
-                                                            ip:routesparameters.ip, 
-                                                            user_agent:routesparameters.user_agent, 
-                                                            data: { resource_id_type:'string',
-                                                                    id:app_query?.get('id'),
-                                                                    search:app_query?.get('search'),
-                                                                    client_latitude:app_query?.get('client_latitude'),
-                                                                    client_longitude:app_query?.get('client_longitude'),
-                                                                    POST_ID:app_query?.get('POST_ID')
-                                                            },
-                                                            locale:app_query?.get('lang_code') ??'en', 
-                                                            res:routesparameters.res})
-                                .then(result=>iso_return_message(result, resource_id_get_string()!=null)));
-                    break;
-                }
                 case route({url:`/bff/app_id/v1/server-db/user_account-profile/${resource_id_string}`, method:'GET'}):{
                     resolve(dbModelUserAccount.getProfile({ app_id:routesparameters.app_id, 
                                                             resource_id:resource_id_get_number(), 
                                                             ip:routesparameters.ip, 
                                                             user_agent:routesparameters.user_agent, 
-                                                            data: { resource_id_type:'number',
+                                                            data: { name:app_query?.get('name'),
                                                                     id:app_query?.get('id'),
                                                                     search:app_query?.get('search'),
                                                                     client_latitude:app_query?.get('client_latitude'),
@@ -1195,7 +1197,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                                                                                 resource_id:resource_id_get_number(), 
                                                                                 locale:app_query?.get('lang_code') ??'en', 
                                                                                 res:routesparameters.res})
-                                .then(result=>iso_return_message(result, true)));
+                                .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case route({url:`/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_string}`, method:'GET', required: true}):{
@@ -1332,7 +1334,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                             resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
                 case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'PATCH', 
                             resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                    resolve(iam_service.iamAuthenticateUserUpdate({app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUserUpdate({app_id:routesparameters.app_id, 
                                                                     /**@ts-ignore */
                                                                     resource_id:resource_id_get_number(), 
                                                                     ip:routesparameters.ip, 
@@ -1366,7 +1368,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:`/bff/app_access/v1/server-db/user_account/${resource_id_string}`, method:'DELETE', 
                             resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
-                    resolve(iam_service.iamAuthenticateUserDelete({app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUserDelete({app_id:routesparameters.app_id, 
                                                                     /**@ts-ignore */
                                                                     resource_id:resource_id_get_number(), 
                                                                     data:routesparameters.body, 
@@ -1701,8 +1703,8 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:`/bff/admin/v1/app-common-app-parameter/${resource_id_string}`, method:'GET', required:true}):{
                     resolve(iso_return_message(fileModelAppParameter.get(
-                                                        /**@ts-ignore */
-                                                        {app_id:resource_id_get_number(), 
+                                                        {app_id:routesparameters.app_id,
+                                                        resource_id:resource_id_get_number(), 
                                                         res:routesparameters.res}),
                                                         resource_id_get_number()!=null));
                     break;
@@ -1717,8 +1719,8 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:`/bff/admin/v1/app-common-app-secret/${resource_id_string}`, method:'GET', required:true}):{
                     resolve(iso_return_message(fileModelAppSecret.get(
-                                                            /**@ts-ignore */
-                                                            {app_id:resource_id_get_number(),
+                                                            {app_id:routesparameters.app_id,
+                                                            resource_id:resource_id_get_number(),
                                                             res:routesparameters.res}),
                                                             resource_id_get_number()!=null));
                     break;
@@ -1774,7 +1776,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:'/bff/admin/v1/server/info', method:'GET'}):{
                     resolve(info.info()
-                                .then(result=>iso_return_message(result, true)));
+                                .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database-demo', method:'POST'}):{
@@ -1791,7 +1793,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database-installation', method:'GET'}):{
                     resolve(dbModelDatabase.dbInstalledCheck({app_id:routesparameters.app_id})
-                                .then(result=>iso_return_message(result, true)));
+                                .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database-space', method:'GET'}):{
@@ -1801,12 +1803,12 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database-spacesum', method:'GET'}):{
                     resolve(dbModelDatabase.dbInfoSpaceSum({app_id:routesparameters.app_id})
-                                .then(result=>iso_return_message(result, true)));
+                                .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database', method:'GET'}):{
                     resolve(dbModelDatabase.dbInfo({app_id:routesparameters.app_id})
-                                .then(result=>iso_return_message(result, true)));
+                                .then(result=>iso_return_message(result, false)));
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-db_admin/database', method:'POST'}):{
@@ -1857,7 +1859,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     break;
                 }
                 case route({url:`/bff/admin/v1/server-iam/user/${resource_id_string}`, method:'GET'}):{
-                    resolve(iam_service.iamUserGet({app_id:routesparameters.app_id,
+                    resolve(iam.iamUserGet({app_id:routesparameters.app_id,
                                                     /**@ts-ignore */
                                                     resource_id:resource_id_get_number(), 
                                                     res:routesparameters.res})
@@ -1865,7 +1867,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     break;
                 }
                 case route({url:`/bff/admin/v1/server-iam/user/${resource_id_string}`, method:'PATCH'}):{
-                    resolve(iam_service.iamUserUpdate(
+                    resolve(iam.iamUserUpdate(
                                                     {app_id:routesparameters.app_id,
                                                     /**@ts-ignore */
                                                     resource_id:resource_id_get_number(),
@@ -1874,7 +1876,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     break;
                 }
                 case route({url:'/bff/admin/v1/server-iam/iam_user_login', method:'GET'}):{
-                    resolve(iso_return_message(iam_service.iamUserLoginGet({app_id:routesparameters.app_id, 
+                    resolve(iso_return_message(iam.iamUserLoginGet({app_id:routesparameters.app_id, 
                                                                             data:{  data_user_account_id:app_query?.get('data_user_account_id'),
                                                                                     data_app_id:app_query?.get('data_app_id')}}), true));
                     break;
@@ -1894,7 +1896,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 // app_signup route
                 case route({url:'/bff/app_id_signup/v1/server-db/user_account-signup', method:'POST'}):{
-                    resolve(iam_service.iamAuthenticateUserSignup({ app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUserSignup({ app_id:routesparameters.app_id, 
                                                                     ip:routesparameters.ip, 
                                                                     user_agent:routesparameters.user_agent, 
                                                                     accept_language:routesparameters.accept_language, 
@@ -1905,7 +1907,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 //iam routes, for login and logout
                 case route({url:'/bff/iam_admin/v1/server-iam-login', method:'POST'}):{
-                    resolve(iam_service.iamAuthenticateAdmin({  app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateAdmin({  app_id:routesparameters.app_id, 
                                                                 iam:routesparameters.res.req.query.iam, 
                                                                 authorization:routesparameters.authorization, 
                                                                 ip:routesparameters.ip, 
@@ -1915,7 +1917,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     break;
                 }
                 case route({url:'/bff/iam_user/v1/server-iam-login', method:'POST'}):{
-                    resolve(iam_service.iamAuthenticateUser({   app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUser({   app_id:routesparameters.app_id, 
                                                                 iam:routesparameters.res.req.query.iam, 
                                                                 ip:routesparameters.ip, 
                                                                 user_agent:routesparameters.user_agent, 
@@ -1925,7 +1927,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                     break;
                 }
                 case route({url:`/bff/iam_provider/v1/server-iam-login/${resource_id_string}`, method:'POST', required:true}):{
-                    resolve(iam_service.iamAuthenticateUserProvider( {  app_id:routesparameters.app_id, 
+                    resolve(iam.iamAuthenticateUserProvider( {  app_id:routesparameters.app_id, 
                                                                         iam:routesparameters.res.req.query.iam, 
                                                                         /**@ts-ignore */
                                                                         resource_id:resource_id_get_number(), 
@@ -1939,7 +1941,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 }
                 case route({url:'/bff/app_access/v1/server-iam-logout', method:'DELETE'}):
                 case route({url:'/bff/admin/v1/server-iam-logout', method:'DELETE'}):{
-                    resolve(iam_service.iamUserLogout({ app_id:routesparameters.app_id, 
+                    resolve(iam.iamUserLogout({ app_id:routesparameters.app_id, 
                                                         authorization:routesparameters.authorization, 
                                                         ip:routesparameters.ip, 
                                                         user_agent:routesparameters.user_agent, 
@@ -1973,7 +1975,7 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                         routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
                         routesparameters.res.statusCode =404;
                     }
-                    reject(iam_service.iamUtilMesssageNotAuthorized());
+                    reject(iam.iamUtilMesssageNotAuthorized());
                     break;
                 }
             }

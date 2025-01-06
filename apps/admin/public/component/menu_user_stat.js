@@ -64,7 +64,7 @@ const component = async props => {
      */
     const get_count = async (identity_provider_id, logged_in) => {
         return props.methods.commonFFB({path:'/server-socket/socket-stat', query:`identity_provider_id=${identity_provider_id}&logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
-                .then((/**@type{string}*/result)=>JSON.parse(result));
+                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     };
     /**@type{[{identity_provider_id:string, provider_name:String, count_users:number, count_connected:number}]} */
     const user_stat = await props.methods.commonFFB({path:'/server-db_admin/user_account-stat', method:'GET', authorization_type:'ADMIN'})

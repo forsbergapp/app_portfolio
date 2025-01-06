@@ -63,8 +63,8 @@ const post = async (app_id, data, res) => {
         });
     }
     else{
-        /**@type{import('../iam.service.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         res.statusCode = 400;
         throw iamUtilMesssageNotAuthorized();
     }
@@ -92,8 +92,8 @@ const post = async (app_id, data, res) => {
  * @returns {Promise.<{affectedRows:number}>}
  */
 const update = async parameters => {
-    /**@type{import('../iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     if (parameters.app_id!=null){
         /**@type{server_db_file_app} */

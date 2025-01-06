@@ -56,7 +56,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) ?? 0;
-    const limit = serverUtilNumberValue(fileModelAppParameter.get({app_id:common_app_id, res:res})[0].common_app_limit_records.value) ?? 0;
+    const limit = serverUtilNumberValue(fileModelAppParameter.get({app_id:app_id, resource_id:common_app_id, res:res})[0].common_app_limit_records.value) ?? 0;
 
     cities = cities.filter((city)=>{if ((count_limit<limit || limit==0) && (match(city.city, data.search)||
                                                                             match(city.city_ascii, data.search)||
