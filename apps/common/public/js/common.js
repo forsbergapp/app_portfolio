@@ -1470,9 +1470,7 @@ const commonProfileSearch = click_function => {
     commonComponentRender({
         mountDiv:   'common_profile_search_list_wrap',
         data:       {
-                    user_account_id:COMMON_GLOBAL.user_account_id,
-                    client_latitude:COMMON_GLOBAL.client_latitude,
-                    client_longitude:COMMON_GLOBAL.client_longitude
+                    user_account_id:COMMON_GLOBAL.user_account_id
                     },
         methods:    {
                     commonMiscInputControl:commonMiscInputControl,
@@ -1512,8 +1510,6 @@ const commonProfileShow = async (user_account_id_other = null, username = null) 
         mountDiv:   'common_dialogue_profile_content',
         data:       {   
                     user_account_id:COMMON_GLOBAL.user_account_id,
-                    client_latitude:COMMON_GLOBAL.client_latitude,
-                    client_longitude:COMMON_GLOBAL.client_longitude,
                     user_account_id_other:user_account_id_other,
                     username:username
                     },
@@ -1539,7 +1535,7 @@ const commonProfileUpdateStat = async () => {
         const profile_id = COMMON_DOCUMENT.querySelector('#common_profile_id');
         //get updated stat for given user
        commonFFB({path:`/server-db/user_account-profile/${profile_id.textContent}`, 
-            query:`id=${profile_id.textContent}&client_latitude=${COMMON_GLOBAL.client_latitude}&client_longitude=${COMMON_GLOBAL.client_longitude}`, 
+            query:`id=${profile_id.textContent}`, 
             method:'GET', 
             authorization_type:'APP_ID'})
         .then(result=>{
