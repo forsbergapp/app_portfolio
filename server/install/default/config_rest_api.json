@@ -1587,7 +1587,7 @@
         "/bff/app_access/v1/server-db/user_account_app_data_post/${resource_id_number}": {
             "put": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPostLike.post",
+                "operationId": "server_db.dbModelUserAccountAppDataPost.updateUserPost",
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1623,7 +1623,7 @@
             },
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPostLike.deleteRecord",
+                "operationId": "server_db.dbModelUserAccountAppDataPost.deleteUserPost",
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1661,7 +1661,7 @@
         "/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_number}": {
             "post": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.createUserPost",
+                "operationId": "server_db.dbModelUserAccountAppDataPostLike.post",
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1697,7 +1697,7 @@
             },
             "delete": {
                 "summary": "",
-                "operationId": "dbModelUserAccountAppDataPostLike.deleteRecord",
+                "operationId": "server_db.dbModelUserAccountAppDataPostLike.deleteRecord",
                 "parameters": [
                         {"description": "parameters"},
                         {
