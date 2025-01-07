@@ -872,13 +872,13 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                  *  Return single resource in result object or multiple resource in rows keys
                  *  Rules: 
                  *  server functions: return false
-                 *  method not GET: true
+                 *  method not GET or microservice request: true
                  *  metho GET: if resource id (string or number)  is empty return false else true
                  * @returns {boolean}
                  */
                 const singleResource = () => functionRESTAPI=='commonModuleRun'?
                                                 false:
-                                                    routesparameters.method!='GET'?
+                                                    (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
                                                         true:
                                                             (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
                 //return result using ISO20022 format
