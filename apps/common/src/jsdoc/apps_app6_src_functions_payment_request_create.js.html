@@ -48,8 +48,8 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
-    /**@type{import('../../../../server/iam.service.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../../server/iam.js')} */
+    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
