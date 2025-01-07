@@ -322,6 +322,12 @@
                                 "required":false
                             }
                         },
+                        {"id":{
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }},
                         {"name":{
                             "required":false,
                             "schema":{
@@ -450,7 +456,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_string":{
+                            "resource_id_number":{
                                 "required":true
                             }
                         },
@@ -1245,7 +1251,7 @@
             },
             "delete": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountFollow.post",
+                "operationId": "server_db.dbModelUserAccountFollow.deleteRecord",
                 "parameters": [
                         {"description": "parameters"},
                         {
