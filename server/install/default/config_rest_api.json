@@ -204,7 +204,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account-activate/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account-activate/${resource_id_number}": {
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
