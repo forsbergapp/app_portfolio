@@ -85,11 +85,11 @@ const dbCommonAppCodeGet = error => {
 	
     return new Promise((resolve)=>{
 		const app_code = dbCommonAppCodeGet(err);
-		if (app_code != null){
+		if (app_code != null ||err.errorNum!=null){
 			getDisplayData({app_id:app_id,
 							data:{	data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
 									setting_type:'MESSAGE',
-									value:app_code}
+									value:app_code ?? err.errorNum}
 							})
 			.then(result_message=>{
 				res.statusCode = 400;
@@ -241,15 +241,17 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CO
 			pagination = true;
 			sql = sql.replaceAll('&lt;APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
 			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get( {	app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
+				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0,
+																						resource_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
 																						res:null})[0].common_app_limit_records.value);
 		}
 		//manage limit records
 		if (sql.indexOf('&lt;APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
 			sql = sql.replaceAll('&lt;APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get( {app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-																									res:null})[0].common_app_limit_records.value)}};
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0,
+																										resource_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
+																										res:null})[0].common_app_limit_records.value)}};
 		}
 
 		dbSQL(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, dba)

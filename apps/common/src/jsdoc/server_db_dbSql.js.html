@@ -1024,9 +1024,9 @@ const USER_ACCOUNT_SELECT_PROFILE =
         FROM &lt;DB_SCHEMA/>.user_account u
        WHERE ((:search IS NOT NULL AND (u.username LIKE :search OR u.provider_first_name LIKE :search))
                 OR
-                (:resource_id_type=='string' AND u.username = :user_value)
+                (u.username = :name)
                 OR
-                (:resource_id_type=='number' AND u.id = :user_value)
+                (u.id = :id)
             )        
          AND u.active = 1`;
 const USER_ACCOUNT_SELECT_PROFILE_DETAIL =

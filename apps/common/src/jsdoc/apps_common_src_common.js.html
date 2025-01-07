@@ -66,7 +66,7 @@ const commonMailCreate = async (app_id, data) =>{
     const {default:ComponentCreate} = await import('./component/common_mail.js');
     const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'));
-    const secrets       = fileModelAppSecret.get({app_id:common_app_id, res:null})[0];
+    const secrets       = fileModelAppSecret.get({app_id:app_id, resource_id:common_app_id, res:null})[0];
     //email type 1-4 implemented are emails with verification code
     if (parseInt(data.emailtype)==1 || 
         parseInt(data.emailtype)==2 || 
@@ -123,8 +123,8 @@ const commonMailCreate = async (app_id, data) =>{
  * @returns {Promise.&lt;*>}
  */
 const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
-    /**@type{import('../../../server/bff.service.js')} */
-    const {bffServer} = await import(`file://${process.cwd()}/server/bff.service.js`);
+    /**@type{import('../../../server/bff.js')} */
+    const {bffServer} = await import(`file://${process.cwd()}/server/bff.js`);
     /**@type{import('../../../server/db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
@@ -167,7 +167,7 @@ const commonAppStart = async (app_id=null) =>{
         const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
         const NO_MAINTENANCE = fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE')==0;
         const DB_START = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
-        const APP_START = fileModelAppParameter.get({app_id:common_app_id, res:null})[0].common_app_start.value=='1';
+        const APP_START = fileModelAppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id, res:null})[0].common_app_start.value=='1';
         /**@ts-ignore */
         const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, res:null})[0][`service_db_db${db_use}_app_user`];
         const DB5_USE_AND_INSTALLED = db_use==5 &amp;&amp; await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>app_id?result[0].installed:true).catch(()=>false);
@@ -229,8 +229,8 @@ const commonClientLocale = accept_language =>{
  * @returns {Promise.&lt;*>}
  */
 const commonGeodata = async parameters =>{
-    /**@type{import('../../../server/bff.service.js')} */
-    const { bffServer } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    /**@type{import('../../../server/bff.js')} */
+    const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
     //get GPS from IP
     /**@type{server_bff_parameters}*/
     const parametersBFF = { endpoint:parameters.endpoint,
@@ -348,8 +348,8 @@ const commonBFE = async parameters =>{
         });
     }
     else{
-        /**@type{import('../../../server/iam.service.js')} */
-        const { iamUtilMesssageNotAuthorized } = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../../../server/iam.js')} */
+        const { iamUtilMesssageNotAuthorized } = await import(`file://${process.cwd()}/server/iam.js`);
         throw iamUtilMesssageNotAuthorized();
     }
 };
@@ -390,8 +390,8 @@ const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
         const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
         if (common_app_id!=null){
-            const app_cache_control = fileModelAppParameter.get({app_id:common_app_id, res:null})[0].common_app_cache_control.value;
-            const app_cache_control_font = fileModelAppParameter.get({app_id:common_app_id, res:null})[0].common_app_cache_control_font.value;
+            const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control.value;
+            const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control_font.value;
             switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
                 case '.css':{
                     parameters.res.type('text/css; charset=utf-8');
@@ -539,7 +539,7 @@ const commonAssetfile = parameters =>{
  * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: *,
+ *          data: {data_app_id:number},
  *          user_agent:string,
  *          ip:string,
  *          locale:string,
@@ -548,7 +548,7 @@ const commonAssetfile = parameters =>{
  * @returns {Promise.&lt;void>}
  */
 const commonModuleRun = async parameters => {
-    const module = commonRegistryAppModule(parameters.app_id, {type:'FUNCTION', name:parameters.resource_id,role:parameters.endpoint});
+    const module = commonRegistryAppModule(parameters.data.data_app_id, {type:'FUNCTION', name:parameters.resource_id,role:parameters.endpoint});
     if (module){
         const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
         return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
@@ -592,8 +592,8 @@ const commonModuleGet = async parameters => {
             }
             else{
                 //report
-                /**@type{import('../../../server/iam.service.js')} */
-                const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+                /**@type{import('../../../server/iam.js')} */
+                const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
                 //ID token is created but not used in report
                 await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
                 const result_geodata =  await commonGeodata({   app_id:parameters.app_id, 
@@ -636,8 +636,8 @@ const commonModuleGet = async parameters => {
         }
     }
     else{
-        /**@type{import('../../../server/iam.service.js')} */
-        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../../../server/iam.js')} */
+        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         if (parameters.res)
             parameters.res.statusCode = 400;
         throw iamUtilMesssageNotAuthorized();
@@ -667,8 +667,8 @@ const commonAppReportQueue = async parameters =>{
     /**@type{import('../../../server/db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
-    /**@type{import('../../../server/iam.service.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../server/iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
                    
     const {id} = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                     {
@@ -738,8 +738,8 @@ const commonModuleMetaDataGet = async parameters =>{
         return modules;
     }
     else{
-        /**@type{import('../../../server/iam.service.js')} */
-        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.service.js`);
+        /**@type{import('../../../server/iam.js')} */
+        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         if (parameters.res)
             parameters.res?.statusCode==400;
         throw iamUtilMesssageNotAuthorized();
@@ -768,8 +768,8 @@ const commonModuleMetaDataGet = async parameters =>{
  * @returns {Promise.&lt;string>}
  */
 const commonComponentCreate = async parameters =>{
-    /**@type{import('../../../server/iam.service.js')} */
-    const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    /**@type{import('../../../server/iam.js')} */
+    const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
 
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
     //id token for APP and MAINTENANCE
@@ -804,9 +804,7 @@ const commonComponentCreate = async parameters =>{
                 first_time:             admin_only==1?(fileModelIamUser.get(parameters.app_id, null, null).length==0?1:0):0
             };
             /**@type{server_db_file_app_parameter_common} */
-            const common_parameter = fileModelAppParameter.get({/**@ts-ignore */
-                                                                app_id:common_app_id, 
-                                                                res:null})[0];
+            const common_parameter = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id, res:null})[0];
             //return only used parameters
             delete common_parameter.app_copyright;
             delete common_parameter.app_email;
@@ -817,7 +815,7 @@ const commonComponentCreate = async parameters =>{
             delete common_parameter.common_app_log;
             delete common_parameter.common_app_start;
 
-            const APP_PARAMETERS  = {   APP:        fileModelAppParameter.get({app_id:parameters.app_id, res:null})[0], 
+            const APP_PARAMETERS  = {   APP:        fileModelAppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0], 
                                         COMMON:     common_parameter,
                                         INFO:       app_service_parameters};
             const componentParameter = {data:   {
@@ -1051,7 +1049,7 @@ const commonRegistryAppSecretDBReset = async app_id => {
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{server_db_file_app_secret[]}*/
-    const APP_SECRETS = fileModelAppSecret.get({app_id:app_id, res:null});
+    const APP_SECRETS = fileModelAppSecret.get({app_id:app_id, resource_id:app_id, res:null});
     
     const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
     for (const app_secret of APP_SECRETS){
