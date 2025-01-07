@@ -47,8 +47,8 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../iam.service.js')} */
-const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.service.js`);
+/**@type{import('../iam.js')} */
+const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.js`);
 
 /**@type{import('../db/common.js')} */
 const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.js`);
@@ -190,7 +190,7 @@ const data_validation = data => {
 							return {'errorNum' : 20105};
 						}
 						else
-							if (data.email_unverified != null &amp;&amp; email_ok(data.email_unverified)==false){
+							if (data.email_unverified != '' &amp;&amp; data.email_unverified != null &amp;&amp; email_ok(data.email_unverified)==false){
 								//'not valid email'
 								return {'errorNum' : 20105};
 							}
@@ -389,7 +389,7 @@ const userGetEmail = async (app_id, email) =>
  *          resource_id:number|string|null,
  *          ip:string,
  *          user_agent:string,
- *          data:{  resource_id_type:'string'|'number',
+ *          data:{  name?:string|null,
  *                  id?:string|null,
  *                  search?:string|null,
  *                  client_latitude?:string|null,
@@ -432,9 +432,9 @@ const getProfile = parameters =>{
                             dbSql.USER_ACCOUNT_SELECT_PROFILE,
                             {
                                 user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
-                                user_value: parameters.resource_id,
+                                id: parameters.resource_id,
                                 search:parameters.data.search + '%',
-                                resource_id_type:parameters.data.resource_id_type
+                                name:parameters.data.name
                             },
                             null, 
                             null))
@@ -558,7 +558,7 @@ const userUpdateAdmin = async (app_id, id, data) =>{
  *          data:{  username:string,
  *                  bio:string,
  *                  email:string,
- *                  email_unverified:string,
+ *                  email_unverified:string|null,
  *                  password_new:string,
  *                  password_reminder:string,
  *                  active:number,
@@ -582,7 +582,7 @@ const updateAdmin = parameters =>{
                                 username:           parameters.data.username,
                                 bio:                parameters.data.bio,
                                 email:              parameters.data.email,
-                                email_unverified:   parameters.data.email_unverified,
+                                email_unverified:   parameters.data.email_unverified==''?null:parameters.data.email_unverified,
                                 password:           null,
                                 password_new:       parameters.data.password_new==''?null:parameters.data.password_new,
                                 password_reminder:  parameters.data.password_reminder,
@@ -746,7 +746,7 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                                     password_new: password,
                                     password_reminder: data.password_reminder,
                                     email: data.email,
-                                    email_unverified: data.email_unverified,
+                                    email_unverified: data.email_unverified==''?null:data.email_unverified,
                                     avatar: data.avatar,
                                     verification_code: data.verification_code,
                                     id: search_id,

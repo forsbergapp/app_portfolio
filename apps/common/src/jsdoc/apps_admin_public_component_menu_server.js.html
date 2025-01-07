@@ -117,7 +117,7 @@ const component = async props => {
         return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
     };
     const server_info = await props.methods.commonFFB({path:'/server/info', method:'GET', authorization_type:'ADMIN'})
-                            .then((/**@type{string}*/result)=>JSON.parse(result));
+                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
    
    return {

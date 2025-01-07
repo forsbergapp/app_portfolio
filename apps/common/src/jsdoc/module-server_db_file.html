@@ -23,7 +23,7 @@ uses fileFsRead and fileFsWrite by admin and config files
 JSON_TABLE      json that can be managed as table and implemented using object mapping relation (ORM) pattern
 so each table is mapped to one fileModel*.js
 consists of 3 layers
-<em>.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.service.js
+<em>.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.js
 fileModel</em>.js   data model API with constraints, ex fileModelIamUser() in /server/db/fileModelIamUser.js
 file.js         file management API, ex fileDBGet() in /server/db/file.js
 fileDBGet               reads file content from CACHE_CONTENT and should be used by default for performance
