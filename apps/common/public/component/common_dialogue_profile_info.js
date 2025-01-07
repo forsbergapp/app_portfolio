@@ -95,8 +95,6 @@ const template = props =>`  <div id='common_profile_main'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      user_account_id:number,
- *                      client_latitude:string,
- *                      client_longitude:string,
  *                      user_account_id_other:number,
  *                      username:string
  *                      },

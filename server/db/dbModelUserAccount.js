@@ -385,108 +385,113 @@ const userGetEmail = async (app_id, email) =>
  *          data:{  name?:string|null,
  *                  id?:string|null,
  *                  search?:string|null,
- *                  client_latitude?:string|null,
- *                  client_longitude?:string|null,
  *                  POST_ID?:string |null},
  *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getProfileUser[]>}
  */
-const getProfile = parameters =>{
-    return new Promise((resolve, reject)=>{
-        /**
-         * Clear private data if private
-         * @param {server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
-         * @returns {server_db_sql_result_user_account_getProfileUser[]}
-         */
-        const clear_private = result_getProfileUser =>
-            result_getProfileUser.map(row=>{
-                if (row.id ==parameters.resource_id){
-                    //profile of current logged in user should always be displayed
-                    row.private = null;
-                }
-                else
-                    if ((row.private==1 && row.friends==null) || parameters.data.search!=null){
-                        //private and not friends or anonymous visit, remove stats
-                        row.count_following = null;
-                        row.count_followed = null;
-                        row.count_likes = null;
-                        row.count_liked = null;
-                    }
-                    else
-                        if (row.private==1 && row.friends==1){
-                            //private and friends, remove private
-                            row.private = null;
-                        }
-                return row;
-            });
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_SELECT_PROFILE,
-                            {
-                                user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
-                                id: parameters.resource_id,
-                                search:parameters.data.search + '%',
-                                name:parameters.data.name
-                            },
-                            null, 
-                            null))
-        .then(result_getProfileUser=>{
-            if (parameters.data.search){
-                //searching, return result
-                import(`file://${process.cwd()}/server/db/dbModelAppDataStat.js`)
-                .then((/**@type{import('./dbModelAppDataStat.js')} */{ post }) => {
-                    /**@type{server_db_sql_parameter_app_data_stat_post} */
-                    const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id,
-                                                                                                client_ip:          parameters.ip,
-                                                                                                client_user_agent:  parameters.user_agent,
-                                                                                                client_longitude:   parameters.data.client_longitude,
-                                                                                                client_latitude:    parameters.data.client_latitude},
-                                        //if user logged not logged in then save resource on app
-                                        app_id:                                             serverUtilNumberValue(parameters.data.id)?null:parameters.app_id,
-                                        user_account_id:                                    null,
-                                        //save user account if logged in else set null in both user account app columns
-                                        user_account_app_user_account_id:                   serverUtilNumberValue(parameters.data.id) ?? null,
-                                        user_account_app_app_id:                            serverUtilNumberValue(parameters.data.id)?parameters.app_id:null,
-                                        app_data_resource_master_id:                        null,
-                                        app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
-                                        app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
-                                        app_data_entity_resource_app_data_entity_id:        1   //COMMON
-                                        };
-                    post(parameters.app_id, data_insert)
-                    .then(()=>{
-                        resolve(clear_private(result_getProfileUser));
-                    })
-                    .catch((/**@type{server_server_error}*/error)=>reject(error));
-                });
+const getProfile = async parameters =>{
+    /**@type{import('../../server/bff.js')} */
+    const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
+    /**
+     * Clear private data if private
+     * @param {server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
+     * @returns {server_db_sql_result_user_account_getProfileUser[]}
+     */
+    const clear_private = result_getProfileUser =>
+        result_getProfileUser.map(row=>{
+            if (row.id ==parameters.resource_id){
+                //profile of current logged in user should always be displayed
+                row.private = null;
             }
             else
-                if (result_getProfileUser[0]){
-                    //always save stat who is viewing, same user, none or someone else
-                    import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`)
-                    .then((/**@type{import('./dbModelUserAccountView.js')} */dbModelUserAccountView) => {
-                        const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
-                                            user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
-                                            client_ip:              parameters.ip,
-                                            client_user_agent:      parameters.user_agent,
-                                            client_longitude:       parameters.data.client_longitude??'',
-                                            client_latitude:        parameters.data.client_latitude??''};
-                        dbModelUserAccountView.post(parameters.app_id, data_body)
-                        .then(()=>{
-                            resolve(clear_private(result_getProfileUser));
-                        })
-                        .catch((/**@type{server_server_error}*/error)=>reject(error));
-                    });
+                if ((row.private==1 && row.friends==null) || parameters.data.search!=null){
+                    //private and not friends or anonymous visit, remove stats
+                    row.count_following = null;
+                    row.count_followed = null;
+                    row.count_likes = null;
+                    row.count_liked = null;
                 }
-                else{
-                    import(`file://${process.cwd()}/server/db/common.js`)
-                    .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
-                    });
-                }
-        })
-        .catch((/**@type{server_server_error}*/error)=>reject(error));
-    });
+                else
+                    if (row.private==1 && row.friends==1){
+                        //private and friends, remove private
+                        row.private = null;
+                    }
+            return row;
+        });
+    /**@type{import('./common.js')} */
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
+    const result_getProfileUser = await  dbCommonExecute(parameters.app_id, 
+                                            dbSql.USER_ACCOUNT_SELECT_PROFILE,
+                                            {
+                                                user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
+                                                id: parameters.resource_id,
+                                                search:parameters.data.search + '%',
+                                                name:parameters.data.name
+                                            },
+                                            null, 
+                                            null);
+    //get GPS from IP
+    /**@type{server_bff_parameters}*/
+    const parametersBFF = { endpoint:'SERVER',
+                            host:null,
+                            url:'/bff/app_id/v1/geolocation/ip',
+                            route_path:'/geolocation/ip',
+                            method:'GET', 
+                            query:`ip=${parameters.ip}`,
+                            body:{},
+                            authorization:null,
+                            ip:parameters.ip, 
+                            user_agent:parameters.user_agent, 
+                            accept_language:'*',
+                            /**@ts-ignore */
+                            res:null};
+    const result_gps = await bffServer(parameters.app_id, parametersBFF).catch(()=>null);
+    const result_geodata = {
+        latitude :   result_gps?.geoplugin_latitude,
+        longitude:   result_gps?.geoplugin_longitude
+    };
+    if (parameters.data.search){
+        //searching, return result
+        /**@type{import('./dbModelAppDataStat.js')} */
+        const { post } = await import(`file://${process.cwd()}/server/db/dbModelAppDataStat.js`);
+        /**@type{server_db_sql_parameter_app_data_stat_post} */
+        const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id,
+                                                                                    client_ip:          parameters.ip,
+                                                                                    client_user_agent:  parameters.user_agent,
+                                                                                    client_longitude:   result_geodata.longitude,
+                                                                                    client_latitude:    result_geodata.latitude},
+                            //if user logged is not logged in then save resource on app
+                            app_id:                                             serverUtilNumberValue(parameters.data.id)?null:parameters.app_id,
+                            user_account_id:                                    null,
+                            //save user account if logged in else set null in both user account app columns
+                            user_account_app_user_account_id:                   serverUtilNumberValue(parameters.data.id) ?? null,
+                            user_account_app_app_id:                            serverUtilNumberValue(parameters.data.id)?parameters.app_id:null,
+                            app_data_resource_master_id:                        null,
+                            app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
+                            app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
+                            app_data_entity_resource_app_data_entity_id:        1   //COMMON
+                            };
+        return await post(parameters.app_id, data_insert).then(()=>clear_private(result_getProfileUser));
+    }
+    else
+        if (result_getProfileUser[0]){
+            //always save stat who is viewing, same user, none or someone else
+            /**@type{import('./dbModelUserAccountView.js')} */
+            const dbModelUserAccountView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`);
+            const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
+                                user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+                                client_ip:              parameters.ip,
+                                client_user_agent:      parameters.user_agent,
+                                client_longitude:       result_geodata.longitude??'',
+                                client_latitude:        result_geodata.latitude??''};
+            return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>clear_private(result_getProfileUser));
+        }
+        else{
+            /**@type{import('../db/common.js')} */
+            const {dbCommonRecordNotFound} = await import(`file://${process.cwd()}/server/db/common.js`);
+            return await dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+        }
 };
 /**
  * @name getProfileStat

@@ -1183,8 +1183,6 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                                                             data: { name:app_query?.get('name'),
                                                                     id:app_query?.get('id'),
                                                                     search:app_query?.get('search'),
-                                                                    client_latitude:app_query?.get('client_latitude'),
-                                                                    client_longitude:app_query?.get('client_longitude'),
                                                                     POST_ID:app_query?.get('POST_ID')
                                                             },
                                                             locale:app_query?.get('lang_code') ??'en', 

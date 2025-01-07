@@ -39,9 +39,7 @@ const template = props =>`  ${props.records.length>0?
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_account_id:number,
- *                      client_latitude:string,
- *                      client_longitude:string},
+ *                      user_account_id:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
@@ -67,8 +65,7 @@ const component = async props => {
     const records = commonMiscInputControl?await props.methods.commonFFB(
                                                 {
                                                     path:   '/server-db/user_account-profile/', 
-                                                    query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}` +
-                                                            `&client_latitude=${props.data.client_latitude}&client_longitude=${props.data.client_longitude}`, 
+                                                    query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}`, 
                                                     method: 'GET', 
                                                     authorization_type:'APP_ID'
                                                 })
