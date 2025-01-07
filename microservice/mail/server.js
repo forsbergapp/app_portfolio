@@ -59,28 +59,28 @@ const serverStart = async () =>{
 				if (authenticate){
 					switch (true){
 						case microserviceRouteMatch('/api/v1/mail/sendemail' , 'POST', URI_path, req.method):{
-							if (req.body.email_host && 
-								microserviceUtilNumberValue(req.body.email_port) && 
-								microserviceUtilNumberValue(req.body.email_secure) &&
-								req.body.email_auth_user && 
-								req.body.email_auth_pass &&
-								req.body.email_from &&
-								req.body.email_to && 
-								req.body.email_subject &&
-								req.body.email_html){
+							if (req.body.host && 
+								microserviceUtilNumberValue(req.body.port) && 
+								microserviceUtilNumberValue(req.body.secure) &&
+								req.body.auth_user && 
+								req.body.auth_pass &&
+								req.body.from &&
+								req.body.to && 
+								req.body.subject &&
+								req.body.html){
 								/**@type{import('./types.js').microservice_mail_data} */
 								const data = {
-									email_host:         req.body.email_host,
+									email_host:         req.body.host,
 									/**@ts-ignore */
-									email_port:         microserviceUtilNumberValue(req.body.email_port),
+									email_port:         microserviceUtilNumberValue(req.body.port),
 									/**@ts-ignore */
-									email_secure:       microserviceUtilNumberValue(req.body.email_secure),
-									email_auth_user:    req.body.email_auth_user,
-									email_auth_pass:    req.body.email_auth_pass,
-									from:               req.body.email_from,
-									to:                 req.body.email_to,
-									subject:            req.body.email_subject,
-									html:               req.body.email_html};
+									email_secure:       microserviceUtilNumberValue(req.body.secure),
+									email_auth_user:    req.body.auth_user,
+									email_auth_pass:    req.body.auth_pass,
+									from:               req.body.from,
+									to:                 req.body.to,
+									subject:            req.body.subject,
+									html:               req.body.html};
 								service.sendEmail(data)
 								.then((result)=>microserviceResultReturn(200, null, result, res))
 								.catch((error) =>microserviceResultReturn(500, error, null, res));
