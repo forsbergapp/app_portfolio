@@ -87,15 +87,15 @@ const commonMailCreate = async (app_id, data) =>{
             }
         }
         return {
-            'email_host':         secrets.service_mail_host,
-            'email_port':         secrets.service_mail_port,
-            'email_secure':       secrets.service_mail_secure,
-            'email_auth_user':    secrets.service_mail_username,
-            'email_auth_pass':    secrets.service_mail_password,
-            'from':               email_from,
-            'to':                 data.to,
-            'subject':            '❂❂❂❂❂❂',
-            'html':               email_html
+            host:         secrets.service_mail_host,
+            port:         secrets.service_mail_port,
+            secure:       secrets.service_mail_secure,
+            auth_user:    secrets.service_mail_username,
+            auth_pass:    secrets.service_mail_password,
+            from:               email_from,
+            to:                 data.to,
+            subject:            '❂❂❂❂❂❂',
+            html:               email_html
         };
     }
     else

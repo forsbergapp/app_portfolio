@@ -1093,10 +1093,10 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                     mountDiv:   'common_dialogue_iam_verify',
                     data:       {
                                 user_verification_type:user_verification_type,
-                                username_login:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent,
-                                password_login:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent,
-                                username_signup:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username').textContent,
-                                password_signup:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
+                                username_login:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username')?.textContent,
+                                password_login:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password')?.textContent,
+                                username_signup:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_username')?.textContent,
+                                password_signup:COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password')?.textContent,
                                 title: title
                                 },
                     methods:    {data_function:click_cancel_event},
@@ -1973,7 +1973,7 @@ const commonUserVerifyCheckInput = async (item, nextField, login_function) => {
                                 verification_type:  verification_type,
                                 ...commonMiscUservariables()
                             };
-               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_ID', body:json_data, spinner_id:'common_dialogue_iam_verify_email_icon'})
+               commonFFB({path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PUT', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_verify_email_icon'})
                 .then(result=>{
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {

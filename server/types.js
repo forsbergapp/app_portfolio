@@ -16,11 +16,11 @@
 /**
  * APP server_apps_email_return_createMail
  * @typedef {object} server_apps_email_return_createMail
- * @property {string} email_host
- * @property {string} email_port
- * @property {string} email_secure
- * @property {string} email_auth_user
- * @property {string} email_auth_pass
+ * @property {string} host
+ * @property {string} port
+ * @property {string} secure
+ * @property {string} auth_user
+ * @property {string} auth_pass
  * @property {string} from
  * @property {string} to
  * @property {string} subject
