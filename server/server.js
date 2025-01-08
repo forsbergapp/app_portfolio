@@ -1146,12 +1146,15 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                                 .then(result=>iso_return_message(result, false)));
                     break;
                 }
+                case route({url:`/bff/app_access/v1/server-db/user_account-activate/${resource_id_string}`, method:'PUT', 
+                    resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):
                 case route({url:`/bff/app_id/v1/server-db/user_account-activate/${resource_id_string}`, method:'PUT', 
                             resource_validate_type:'id', resource_validate_value:resource_id_get_number(), required:true}):{
                     resolve(iam.iamAuthenticateUserActivate({   app_id:routesparameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         resource_id:resource_id_get_number(),
                                                                         ip:routesparameters.ip, 
+                                                                        authorization:routesparameters.authorization,
                                                                         user_agent:routesparameters.user_agent, 
                                                                         accept_language:routesparameters.accept_language, 
                                                                         host:routesparameters.host, 
@@ -1940,8 +1943,8 @@ const serverREST_APIOpenAPI = async (routesparameters) =>{
                 case route({url:'/bff/app_access/v1/server-iam-logout', method:'DELETE'}):
                 case route({url:'/bff/admin/v1/server-iam-logout', method:'DELETE'}):{
                     resolve(iam.iamUserLogout({ app_id:routesparameters.app_id, 
-                                                        authorization:routesparameters.authorization, 
                                                         ip:routesparameters.ip, 
+                                                        authorization:routesparameters.authorization,
                                                         user_agent:routesparameters.user_agent, 
                                                         accept_language:routesparameters.accept_language, 
                                                         res:routesparameters.res}));

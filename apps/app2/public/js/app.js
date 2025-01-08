@@ -163,20 +163,7 @@ const appEventKeyUp = event => {
                     }        
                     break;
                 }
-                //dialogue verify
-                case 'common_dialogue_iam_verify_verification_char1':
-                case 'common_dialogue_iam_verify_verification_char2':
-                case 'common_dialogue_iam_verify_verification_char3':
-                case 'common_dialogue_iam_verify_verification_char4':
-                case 'common_dialogue_iam_verify_verification_char5':{
-                    common.commonUserVerifyCheckInput( COMMON_DOCUMENT.querySelector(`#${event_target_id}`), 
-                                                    'common_dialogue_iam_verify_verification_char' + (Number(event_target_id.substring(event_target_id.length-1))+1), appUserLogin);
-                    break;
-                }
-                case 'common_dialogue_iam_verify_verification_char6':{
-                    common.commonUserVerifyCheckInput(COMMON_DOCUMENT.querySelector(`#${event_target_id}`), '', appUserLogin);
-                    break;
-                }
+                
             }
         });
     }
