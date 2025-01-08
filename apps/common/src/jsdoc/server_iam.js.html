@@ -737,11 +737,12 @@ const iamAuthenticateUserSignup = async parameters =>{
  * @param {{app_id:number,  
  *          resource_id:number,
  *          ip:string,
+ *          authorization:string,
  *          user_agent:string,
  *          accept_language:string,
  *          host:string 
  *          locale:string,
- *          data:{  verification_type:string,
+ *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET, 4 NEW EMAIL
  *                  verification_code:string,
  *                  user_language: string,
  *                  user_timezone: string,
@@ -767,95 +768,106 @@ const iamAuthenticateUserActivate = async parameters =>{
     const { userUpdateActivate} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./db/dbModelUserAccountEvent.js')} */
     const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
-    return new Promise((resolve, reject)=>{
-        /**@type{string|null} */
-        let auth_password_new = null;
-        if (serverUtilNumberValue(parameters.data.verification_type) == 3){
-            //reset password
-            auth_password_new = iamUtilVerificationCode();
+    /**@type{string|null} */
+    let auth_password_new = null;
+    if (serverUtilNumberValue(parameters.data.verification_type) == 3){
+        //reset password
+        auth_password_new = iamUtilVerificationCode();
+    }
+    const result_activate = await  userUpdateActivate(parameters.app_id, parameters.resource_id, serverUtilNumberValue(parameters.data.verification_type), parameters.data.verification_code, auth_password_new)
+                                    .catch((/**@type{server_server_error}*/error)=>
+                                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
+    if (auth_password_new == null){
+        if (result_activate.affectedRows==1 &amp;&amp; (serverUtilNumberValue(parameters.data.verification_type)==1 ||
+            serverUtilNumberValue(parameters.data.verification_type)==4))
+            await iamUserLogout({app_id:parameters.app_id,
+                            ip:parameters.ip,
+                            authorization:parameters.authorization,
+                            user_agent:parameters.user_agent,
+                            accept_language:parameters.accept_language,
+                            res:parameters.res});
+        if (result_activate.affectedRows==1 &amp;&amp; serverUtilNumberValue(parameters.data.verification_type)==4){
+            //new email verified
+            /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
+            const eventData = {
+                user_account_id: parameters.resource_id,
+                event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                event_status: 'SUCCESSFUL',
+                user_language: parameters.data.user_language,
+                user_timezone: parameters.data.user_timezone,
+                user_number_system: parameters.data.user_number_system,
+                user_platform: parameters.data.user_platform,
+                server_remote_addr : parameters.ip,
+                server_user_agent : parameters.user_agent,
+                server_http_host : parameters.host,
+                server_http_accept_language : parameters.accept_language,
+                client_latitude : parameters.data.client_latitude,
+                client_longitude : parameters.data.client_longitude
+            };
+            const result_insert = await dbModelUserAccountEvent.post(parameters.app_id, eventData);
+            return {
+                    count: result_insert.affectedRows,
+                    auth: null,
+                    accessToken: null,
+                    exp:null,
+                    iat:null,
+                    tokentimestamp:null,
+                    items: Array(result_insert)
+                };
         }
-        userUpdateActivate(parameters.app_id, parameters.resource_id, serverUtilNumberValue(parameters.data.verification_type), parameters.data.verification_code, auth_password_new)
-        .then(result_activate=>{
-            if (auth_password_new == null){
-                if (result_activate.affectedRows==1 &amp;&amp; serverUtilNumberValue(parameters.data.verification_type)==4){
-                    //new email verified
-                    /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                    const eventData = {
-                        user_account_id: parameters.resource_id,
-                        event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                        event_status: 'SUCCESSFUL',
-                        user_language: parameters.data.user_language,
-                        user_timezone: parameters.data.user_timezone,
-                        user_number_system: parameters.data.user_number_system,
-                        user_platform: parameters.data.user_platform,
-                        server_remote_addr : parameters.ip,
-                        server_user_agent : parameters.user_agent,
-                        server_http_host : parameters.host,
-                        server_http_accept_language : parameters.accept_language,
-                        client_latitude : parameters.data.client_latitude,
-                        client_longitude : parameters.data.client_longitude
-                    };
-                    dbModelUserAccountEvent.post(parameters.app_id, eventData)
-                    .then(result_insert=>{
-                        resolve({
-                           count: result_insert.affectedRows,
-                           auth: null,
-                           accessToken: null,
-                           exp:null,
-                           iat:null,
-                           tokentimestamp:null,
-                           items: Array(result_insert)
-                        });
-                    })
-                    .catch((/**@type{server_server_error}*/error)=>reject(error));
-                }
-                else
-                    resolve({
-                       count: result_activate.affectedRows,
-                       auth: null,
-                       accessToken: null,
-                       exp:null,
-                       iat:null,
-                       tokentimestamp:null,
-                       items: Array(result_activate)
+        else
+            return {
+                count: result_activate.affectedRows,
+                auth: null,
+                accessToken: null,
+                exp:null,
+                iat:null,
+                tokentimestamp:null,
+                items: Array(result_activate)
+            };
+    }
+    else{
+        if (result_activate.affectedRows==1){
+            //verification type 3 FORGOT/ PASSWORD RESET
+            const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {id:parameters.resource_id, name:'', ip:parameters.ip, scope:'USER'});
+            //email was verified and activated with id token, but now the password will be updated
+            //return accessToken and authentication code
+            /**@type{server_db_file_iam_user_login_insert} */
+            const data_body = { 
+                iam_user_id:parameters.resource_id,
+                app_id:     parameters.app_id,
+                user:       '',
+                db:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                res:        1,
+                token:      jwt_data.token,
+                ip:         parameters.ip,
+                ua:         parameters.user_agent,
+                long:       parameters.data.client_longitude ?? null,
+                lat:        parameters.data.client_latitude ?? null};
+            return fileModelIamUserLogin.post(parameters.app_id, data_body)
+                    .then(()=>{
+                        return {
+                            count: result_activate.affectedRows,
+                            auth: auth_password_new,
+                            accessToken: jwt_data.token,
+                            exp:jwt_data.exp,
+                            iat:jwt_data.iat,
+                            tokentimestamp:jwt_data.tokentimestamp,
+                            items: Array(result_activate)
+                        };
                     });
-            }
-            else{
-                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {id:parameters.resource_id, name:'', ip:parameters.ip, scope:'USER'});
-                //return accessToken since PASSWORD_RESET is in progress
-                //email was verified and activated with id token, but now the password will be updated
-                //using accessToken and authentication code
-                /**@type{server_db_file_iam_user_login_insert} */
-                const data_body = { 
-                    iam_user_id:parameters.resource_id,
-                    app_id:     parameters.app_id,
-                    user:       '',
-                    db:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                    res:        1,
-                    token:      jwt_data.token,
-                    ip:         parameters.ip,
-                    ua:         parameters.user_agent,
-                    long:       parameters.data.client_longitude ?? null,
-                    lat:        parameters.data.client_latitude ?? null};
-                fileModelIamUserLogin.post(parameters.app_id, data_body)
-                .then(()=>{
-                    resolve({
-                       count: result_activate.affectedRows,
-                       auth: auth_password_new,
-                       accessToken: jwt_data.token,
-                       exp:jwt_data.exp,
-                       iat:jwt_data.iat,
-                       tokentimestamp:jwt_data.tokentimestamp,
-                       items: Array(result_activate)
-                    });
-                })
-                .catch((/**@type{server_server_error}*/error)=>reject(error));
-            }
-        })
-        .catch((/**@type{server_server_error}*/error)=>{
-            dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
-        });
-    });
+        }
+        else
+            return {
+                count: result_activate.affectedRows,
+                auth: null,
+                accessToken: null,
+                exp:null,
+                iat:null,
+                tokentimestamp:null,
+                items: Array(result_activate)
+            };
+    }
 };
 
 /**
@@ -1105,7 +1117,42 @@ const iamAuthenticateUserUpdate = async parameters => {
         }
     });
 };
-
+/**
+ * @name iamAuthenticateUserUpdatePassword
+ * @description IAM Authenticates user update password
+ * @function
+ * @memberof REST_API
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          ip:string,
+ *          authorization:string,
+ *          user_agent:string,
+ *          host:string,
+ *          accept_language:string,
+ *          data:{  password_new:string,
+ *                  auth:string,
+ *                  user_language:string,
+ *                  user_timezone:string,
+ *                  user_number_system:string,
+ *                  user_platform:string,
+ *                  client_latitude:string,
+ *                  client_longitude:string},
+ *          locale:string,
+ *          res:server_server_res}} parameters
+ * @returns {Promise.&lt;void>}
+ */
+const iamAuthenticateUserUpdatePassword = async parameters => {
+    /**@type{import('./db/dbModelUserAccount.js')} */
+    const { updatePassword} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    
+    await updatePassword(parameters);
+    await iamUserLogout({app_id:parameters.app_id,
+        authorization:parameters.authorization,
+        ip:parameters.ip,
+        user_agent:parameters.user_agent,
+        accept_language:parameters.accept_language,
+        res:parameters.res});
+};
 /**
  * @name iamAuthenticateUserDelete
  * @description IAM Authenticates user delete
@@ -1927,11 +1974,11 @@ const iamUserUpdate = async parameters =>{
 const iamUserLogout = async parameters =>{
     /**@type{import('./socket.js')} */
     const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
-    
-    //set token expired
+
+        //set token expired after user is logged out in app
     await iamUtilTokenExpiredSet(parameters.app_id, parameters.authorization, parameters.ip, parameters.res);
     
-    //remove token
+    //remove token from connected list
     socketConnectedUpdate(parameters.app_id, 
         {   iam:parameters.res.req.query.iam,
             user_account_id:null,
@@ -1944,6 +1991,7 @@ const iamUserLogout = async parameters =>{
             headers_user_agent:parameters.user_agent,
             headers_accept_language:parameters.accept_language,
             res: parameters.res});
+            
 };
 
 export{ iamUtilMesssageNotAuthorized,
@@ -1957,6 +2005,7 @@ export{ iamUtilMesssageNotAuthorized,
         iamAuthenticateUserActivate,
         iamAuthenticateUserForgot,
         iamAuthenticateUserUpdate,
+        iamAuthenticateUserUpdatePassword,
         iamAuthenticateUserDelete,
         iamAuthenticateSocket,
         iamAuthenticateUserCommon,
