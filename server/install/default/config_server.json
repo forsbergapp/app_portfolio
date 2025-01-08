@@ -11,7 +11,6 @@
         {"JSON_LIMIT": "10MB", "COMMENT": ""},
         {"APP_COMMON_APP_ID": "0", "COMMENT": "admin and common app id"},
         {"FRAMEWORK": "1", "COMMENT": "1=JS,2=Express"},
-        {"FRAMEWORK_REST_API": "1","COMMENT": "1=use openAPI REST API source, 0=use hardcoded REST API rules"},
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"}
     ],
     "SERVICE_IAM":[
