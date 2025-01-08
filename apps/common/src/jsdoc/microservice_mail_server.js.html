@@ -66,28 +66,28 @@ const serverStart = async () =>{
 				if (authenticate){
 					switch (true){
 						case microserviceRouteMatch('/api/v1/mail/sendemail' , 'POST', URI_path, req.method):{
-							if (req.body.email_host &amp;&amp; 
-								microserviceUtilNumberValue(req.body.email_port) &amp;&amp; 
-								microserviceUtilNumberValue(req.body.email_secure) &amp;&amp;
-								req.body.email_auth_user &amp;&amp; 
-								req.body.email_auth_pass &amp;&amp;
-								req.body.email_from &amp;&amp;
-								req.body.email_to &amp;&amp; 
-								req.body.email_subject &amp;&amp;
-								req.body.email_html){
+							if (req.body.host &amp;&amp; 
+								microserviceUtilNumberValue(req.body.port) &amp;&amp; 
+								microserviceUtilNumberValue(req.body.secure) &amp;&amp;
+								req.body.auth_user &amp;&amp; 
+								req.body.auth_pass &amp;&amp;
+								req.body.from &amp;&amp;
+								req.body.to &amp;&amp; 
+								req.body.subject &amp;&amp;
+								req.body.html){
 								/**@type{import('./types.js').microservice_mail_data} */
 								const data = {
-									email_host:         req.body.email_host,
+									email_host:         req.body.host,
 									/**@ts-ignore */
-									email_port:         microserviceUtilNumberValue(req.body.email_port),
+									email_port:         microserviceUtilNumberValue(req.body.port),
 									/**@ts-ignore */
-									email_secure:       microserviceUtilNumberValue(req.body.email_secure),
-									email_auth_user:    req.body.email_auth_user,
-									email_auth_pass:    req.body.email_auth_pass,
-									from:               req.body.email_from,
-									to:                 req.body.email_to,
-									subject:            req.body.email_subject,
-									html:               req.body.email_html};
+									email_secure:       microserviceUtilNumberValue(req.body.secure),
+									email_auth_user:    req.body.auth_user,
+									email_auth_pass:    req.body.auth_pass,
+									from:               req.body.from,
+									to:                 req.body.to,
+									subject:            req.body.subject,
+									html:               req.body.html};
 								service.sendEmail(data)
 								.then((result)=>microserviceResultReturn(200, null, result, res))
 								.catch((error) =>microserviceResultReturn(500, error, null, res));
