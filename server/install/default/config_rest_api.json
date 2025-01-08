@@ -204,9 +204,45 @@
                 }
             }
         },
+        "/bff/app_id/v1/server-db/user_account-activate/${resource_id_number}": {
+            "put": {
+                "summary": "Activates account after signup when user is still not logged in using app_id",
+                "operationId": "server.iam.iamAuthenticateUserActivate",
+                "parameters": [
+                        {"description": "parameters"},
+                        {"$ref": "#/components/parameters/resource_id_number"},
+                        {"resource_id_number":{
+                            "required":true
+                        }},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":true},
+                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":true},
+                        {"server_function_parameter_path":false},
+                        {"server_function_parameter_query":false},
+                        {"server_function_parameter_body":true},
+                        {"server_function_parameter_res":true}
+                ],
+                "responses": {
+                    "200":{
+                        "$ref": "#/components/responses/200"
+                    }
+                }
+            }
+        },
         "/bff/app_access/v1/server-db/user_account-activate/${resource_id_number}": {
             "put": {
-                "summary": "",
+                "summary": "Activate user after user logged in using app_access",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
                 "parameters": [
                         {"description": "parameters"},
@@ -220,8 +256,8 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
-                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},
@@ -947,7 +983,7 @@
         "/bff/app_access/v1/server-db/user_account-password/${resource_id_number}": {
             "patch": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.updatePassword",
+                "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -962,8 +998,8 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
-                        {"server_function_parameter_authorization":false},
+                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},

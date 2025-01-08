@@ -1477,7 +1477,7 @@
 /** 
  * DB SQL USER ACCOUNT server_db_sql_result_user_account_getUsersAdmin
  * @typedef {{  id:number,
- *              avatar:string,
+ *              avatar:string|null,
  *              active:number,
  *              user_level:number,
  *              private:number,
@@ -1605,7 +1605,7 @@
  *              user_level:string,
  *              date_created:string,
  *              username:string, 
- *              avatar:string,
+ *              avatar:string|null,
  *              identity_provider_id:number|null,
  *              provider_id:string|null,
  *              provider_first_name:string|null,
@@ -1626,7 +1626,7 @@
  * @typedef {{  detail:string,
  *              id:number,
  *              provider_id:string,
- *              avatar:string,
+ *              avatar:string|null,
  *              provider_image:string,
  *              provider_image_url:string,
  *              username:string,
@@ -1640,7 +1640,7 @@
  *              id:number,
  *              identity_provider_id:number|null,
  *              provider_id:string|null,
- *              avatar:string,
+ *              avatar:string|null,
  *              provider_image:string|null,
  *              provider_image_url:string|null,
  *              username:string,
@@ -1675,7 +1675,7 @@
  *              password_reminder:string|null,
  *              email:string,
  *              email_unverified:string|null,
- *              avatar:string,
+ *              avatar:string|null,
  *              verification_code:string|null,
  *              provider_id:string|null,
  *              admin:number}} server_db_sql_parameter_user_account_updateUserLocal
@@ -1716,7 +1716,7 @@
  *              password:string,
  *              email:string,
  *              active:number,
- *              avatar:string}} server_db_sql_result_user_account_userLogin
+ *              avatar:string|null}} server_db_sql_result_user_account_userLogin
  */
 
 /**
@@ -1732,7 +1732,7 @@
  *              password:string, 
  *              password_reminder:string, 
  *              email:string, 
- *              avatar:string,
+ *              avatar:string|null,
  *              verification_code:string, 
  *              active:number, 
  *              identity_provider_id:number|null,
@@ -1852,7 +1852,7 @@
  *              id:number,
  *              identity_provider_id:number,
  *              provider_id:string,
- *              avatar:string,
+ *              avatar:string|null,
  *              provider_image:string,
  *              provider_image_url:string,
  *              username:string,
@@ -1866,7 +1866,7 @@
  *              id:number,
  *              iidentity_provider_id:number,
  *              provider_id:string,
- *              avatar:string,
+ *              avatar:string|null,
  *              provider_image:string,
  *              provider_image_url:string,
  *              username:string,
