@@ -353,7 +353,7 @@ const markdownRender = async parameters =>{
                         membersof.push(file_functions);
                 }
             //hide details in presentation
-            const details = false;
+            const details = true;
             //return REST API template with documentation using openAPI pattern and list all functions used
             return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res)
                         .then(markdown=>
