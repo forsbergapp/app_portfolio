@@ -227,7 +227,7 @@ const socketClientAdd = (newClient) => {
         return {sent:sent};
     }
     else
-        if (parameters.data.broadcast_type=='CHAT' || parameters.data.broadcast_type=='PROGRESS'){
+        if (parameters.data.broadcast_type=='CHAT' || parameters.data.broadcast_type=='PROGRESS'|| parameters.data.broadcast_type=='SESSION_EXPIRED'){
             //broadcast CHAT to specific client
             for (const client of SOCKET_CONNECTED_CLIENTS){
                 if (client.id == parameters.data.client_id){

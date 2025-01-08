@@ -44,7 +44,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.js`);
 
 /**@type{import('../db/common.js')} */
-const { dbCommonCheckedError } = await import(`file://${process.cwd()}/server/db/common.js`);
+const { dbCommonExecute, dbCommonCheckedError, dbCommonRecordNotFound } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**@type{import('./dbModelUserAccountEvent.js')} */
 const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
@@ -209,14 +209,13 @@ const data_validation = data => {
  * @returns {Promise.<server_db_sql_result_user_account_userLogin[]>}
  */
 const userGetUsername = (app_id, data) =>
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_USERNAME,
                         {
                             username: data.username
                         },
                         null, 
-                        null));
+                        null);
 
 /**
  * @name userGetProvider
@@ -228,7 +227,6 @@ const userGetUsername = (app_id, data) =>
  * @returns {Promise.<server_db_sql_result_user_account_providerSignIn[]>}
  */
 const userGetProvider = async (app_id, identity_provider_id, search_id) =>
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_PROVIDER,
                         {
@@ -236,7 +234,7 @@ const userGetProvider = async (app_id, identity_provider_id, search_id) =>
                             identity_provider_id: identity_provider_id
                         },
                         null, 
-                        null));
+                        null);
 /**
  * @name updateUserVerificationCode
  * @description Update verification code
@@ -247,7 +245,6 @@ const userGetProvider = async (app_id, identity_provider_id, search_id) =>
  * @returns {Promise.<server_db_sql_result_user_account_updateUserVerificationCode>}
  */
 const updateUserVerificationCode = async (app_id, id, verification_code) => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_UPDATE_VERIFICATION_CODE,
                         {
@@ -255,7 +252,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
                             id: id   
                         },
                         null, 
-                        null));
+                        null);
 
 /**
  * @name userUpdateProvider
@@ -269,8 +266,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
 const userUpdateProvider = async (app_id, id, data) => {
     const error_code = data_validation(data);
     if (error_code==null)
-        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(app_id, 
+        return dbCommonExecute(app_id, 
                             dbSql.USER_ACCOUNT_UPDATE_PROVIDER,
                             {
                                 identity_provider_id: data.identity_provider_id,
@@ -284,7 +280,7 @@ const userUpdateProvider = async (app_id, id, data) => {
                                 DB_CLOB: ['provider_image']
                             },
                             null, 
-                            null));
+                            null);
     else
         throw error_code;
 };
@@ -300,8 +296,7 @@ const userUpdateProvider = async (app_id, id, data) => {
 const userPost = async (app_id, data) =>{ 
     const error_code = data_validation(data);
     if (error_code==null)
-        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            set_password(data.password_new)
+        return set_password(data.password_new)
             .then(password=>dbCommonExecute(app_id, 
                                             dbSql.USER_ACCOUNT_INSERT,
                                             {
@@ -312,7 +307,7 @@ const userPost = async (app_id, data) =>{
                                                 password_new: password,
                                                 password_reminder: data.password_reminder,
                                                 email: data.email,
-                                                avatar: data.avatar,
+                                                avatar: (data.avatar==''||data.avatar=='null')?null:data.avatar,
                                                 verification_code: data.verification_code,
                                                 active: data.active,
                                                 identity_provider_id: data.identity_provider_id,
@@ -326,7 +321,7 @@ const userPost = async (app_id, data) =>{
                                                 DB_CLOB: ['avatar', 'provider_image']
                                             },
                                             null, 
-                                            null)));
+                                            null));
     else
         throw error_code;
 };
@@ -343,7 +338,6 @@ const userPost = async (app_id, data) =>{
  * @returns {Promise.<server_db_sql_result_user_account_activateUser>}
  */
 const userUpdateActivate = async (app_id, id, verification_type, verification_code, auth) => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_UPDATE_ACTIVATE,
                         {
@@ -353,7 +347,7 @@ const userUpdateActivate = async (app_id, id, verification_type, verification_co
                             verification_code: verification_code
                         },
                         null, 
-                        null));
+                        null);
     
 /**
  * @name userGetEmail
@@ -363,15 +357,13 @@ const userUpdateActivate = async (app_id, id, verification_type, verification_co
  * @param {string} email 
  * @returns {Promise.<server_db_sql_result_user_account_getEmailUser[]>}
  */
-const userGetEmail = async (app_id, email) => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+const userGetEmail = async (app_id, email) => dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_EMAIL,
                         {
                             email: email
                         },
                         null, 
-                        null));
+                        null);
 
 /**
  * @name getProfile
@@ -419,8 +411,6 @@ const getProfile = async parameters =>{
                     }
             return row;
         });
-    /**@type{import('./common.js')} */
-    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
     const result_getProfileUser = await  dbCommonExecute(parameters.app_id, 
                                             dbSql.USER_ACCOUNT_SELECT_PROFILE,
                                             {
@@ -487,11 +477,8 @@ const getProfile = async parameters =>{
                                 client_latitude:        result_geodata.latitude??''};
             return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>clear_private(result_getProfileUser));
         }
-        else{
-            /**@type{import('../db/common.js')} */
-            const {dbCommonRecordNotFound} = await import(`file://${process.cwd()}/server/db/common.js`);
+        else
             return await dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
-        }
 };
 /**
  * @name getProfileStat
@@ -503,7 +490,6 @@ const getProfile = async parameters =>{
  * @returns {Promise.<server_db_sql_result_user_account_getProfileStat[]>}
  */
 const getProfileStat = parameters => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_SELECT_PROFILE_STAT,
                         {
@@ -511,7 +497,7 @@ const getProfileStat = parameters =>
                             app_id: parameters.app_id
                         },
                         null, 
-                        null));
+                        null);
 
 /**
  * @name userUpdateAdmin
@@ -525,8 +511,7 @@ const getProfileStat = parameters =>
 const userUpdateAdmin = async (app_id, id, data) =>{
 	const error_code = data_validation(data);
 	if (error_code==null)
-        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            set_password(data.password_new)
+        return set_password(data.password_new)
             .then(password=>dbCommonExecute(app_id, 
                                             dbSql.USER_ACCOUNT_UPDATE,
                                             {id: id,
@@ -542,7 +527,7 @@ const userUpdateAdmin = async (app_id, id, data) =>{
                                                 verification_code: data.verification_code==''?null:data.verification_code
                                                 },
                                             null, 
-                                            null)));
+                                            null));
     else
         throw error_code;
 };
@@ -586,7 +571,7 @@ const updateAdmin = parameters =>{
                                 password_reminder:  parameters.data.password_reminder,
                                 verification_code:  parameters.data.verification_code,
                                 provider_id:        result_user.provider_id,
-                                avatar:             result_user.avatar,
+                                avatar:             (result_user.avatar==''||result_user.avatar=='null')?null:result_user.avatar,
                                 admin:              1};
                 userUpdateAdmin(parameters.app_id, parameters.resource_id, body)
                 .then(result_update=>{
@@ -596,12 +581,8 @@ const updateAdmin = parameters =>{
                     dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-            else{
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
+            else
+                dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
         })
         .catch((/**@type{server_server_error}*/error)=>reject(error));
     });
@@ -620,7 +601,6 @@ const updateAdmin = parameters =>{
  * @returns {Promise.<server_db_sql_result_user_account_getUsersAdmin[]>}
  */
 const getUsersAdmin = parameters => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_SELECT
                         .replace('<SORT/>', parameters.data.sort ?? '')
@@ -630,8 +610,7 @@ const getUsersAdmin = parameters =>
 							limit:  serverUtilNumberValue(parameters.data.limit)
 							},
                         null, 
-                        null));
-
+                        null);
 /**
  * @name getStatCountAdmin
  * @description Get user stat
@@ -641,18 +620,15 @@ const getUsersAdmin = parameters =>
  * @returns {Promise.<server_db_sql_result_user_account_getStatCountAdmin[]>}
  */
 const getStatCountAdmin = parameters => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_SELECT_STAT_COUNT,
                         {},
                         null, 
-                        null));
- 
+                        null);
 /**
  * @name updatePassword
  * @description Update user password
  * @function
- * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          ip:string,
@@ -674,10 +650,12 @@ const getStatCountAdmin = parameters =>
  const updatePassword = async parameters => {
     const error_code = data_validation_password(parameters.data);
     if (error_code==null){
-        import(`file://${process.cwd()}/server/db/common.js`)
-            .then((/**@type{import('./common.js')} */{dbCommonExecute})=>{
-                set_password(parameters.data.password_new)
-                .then(password=>dbCommonExecute(parameters.app_id, 
+        const password = await  set_password(parameters.data.password_new)
+                                .catch((/**@type{server_server_error}*/error)=>
+                                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res)
+                                        .then((/**@type{string}*/message)=>{throw message;}));
+
+        const result_update = await  dbCommonExecute(parameters.app_id, 
                                 dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
                                 {
                                     password_new: password,
@@ -685,37 +663,29 @@ const getStatCountAdmin = parameters =>
                                     auth: parameters.data.auth
                                 },
                                 null, 
-                                null))
-                .then(result_update=>{
-                    if (result_update) {
-                        /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                        const eventData = {
-                            /**@ts-ignore */
-                            user_account_id: parameters.resource_id,
-                            event: 'PASSWORD_RESET',
-                            event_status: 'SUCCESSFUL',
-                            user_language: parameters.data.user_language,
-                            user_timezone: parameters.data.user_timezone,
-                            user_number_system: parameters.data.user_number_system,
-                            user_platform: parameters.data.user_platform,
-                            server_remote_addr : parameters.ip,
-                            server_user_agent : parameters.user_agent,
-                            server_http_host : parameters.host,
-                            server_http_accept_language : parameters.accept_language,
-                            client_latitude : parameters.data.client_latitude,
-                            client_longitude : parameters.data.client_longitude
-                        };
-                        dbModelUserAccountEvent.post(parameters.app_id, eventData);
-                    }
-                    else{
-                        return import(`file://${process.cwd()}/server/db/common.js`)
-                        .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) =>
-                            dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
-                    }
-                })
-                .catch((/**@type{server_server_error}*/error)=>
-                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
-            });
+                                null);
+        if (result_update) {
+            /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
+            const eventData = {
+                /**@ts-ignore */
+                user_account_id: parameters.resource_id,
+                event: 'PASSWORD_RESET',
+                event_status: 'SUCCESSFUL',
+                user_language: parameters.data.user_language,
+                user_timezone: parameters.data.user_timezone,
+                user_number_system: parameters.data.user_number_system,
+                user_platform: parameters.data.user_platform,
+                server_remote_addr : parameters.ip,
+                server_user_agent : parameters.user_agent,
+                server_http_host : parameters.host,
+                server_http_accept_language : parameters.accept_language,
+                client_latitude : parameters.data.client_latitude,
+                client_longitude : parameters.data.client_longitude
+            };
+            dbModelUserAccountEvent.post(parameters.app_id, eventData);
+        }
+        else
+            dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
     }
     else
         throw error_code;
@@ -732,9 +702,7 @@ const getStatCountAdmin = parameters =>
 const userUpdateLocal = async (app_id, data, search_id) =>{
     const error_code = data_validation(data);
     if (error_code==null)
-        return import(`file://${process.cwd()}/server/db/common.js`)
-            .then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                set_password(data.password_new)
+        return set_password(data.password_new)
                 .then(password=>dbCommonExecute(app_id, 
                                 dbSql.USER_ACCOUNT_UPDATE_LOCAL,
                                 {
@@ -745,13 +713,13 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                                     password_reminder: data.password_reminder,
                                     email: data.email,
                                     email_unverified: data.email_unverified==''?null:data.email_unverified,
-                                    avatar: data.avatar,
+                                    avatar: (data.avatar==''||data.avatar=='null')?null:data.avatar,
                                     verification_code: data.verification_code,
                                     id: search_id,
                                     DB_CLOB: ['avatar']
                                 },
                                 null, 
-                                null)));
+                                null));
     else
         throw error_code;
 };
@@ -768,12 +736,10 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_updateUserCommon>}
  */
- const updateUserCommon = parameters => {
+ const updateUserCommon = async parameters => {
     const error_code = data_validation_common(parameters.data);
-	if (error_code==null)
-        return new Promise((resolve, reject)=>{
-            import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-                dbCommonExecute(parameters.app_id, 
+	if (error_code==null){
+        const result_update = await dbCommonExecute(parameters.app_id, 
                                 dbSql.USER_ACCOUNT_UPDATE_COMMON,
                                 {	username: parameters.data.username,
                                     bio: parameters.data.bio,
@@ -781,21 +747,15 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                                     id: parameters.resource_id
                                 },
                                 null, 
-                                null))
-            .then(result_update=>{
-                if (result_update)
-                    resolve(result_update);
-                else{
-                    import(`file://${process.cwd()}/server/db/common.js`)
-                    .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
-                    });
-                }
-            })
-            .catch((/**@type{server_server_error}*/error)=>{
-                dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
-            });
-        });
+                                null)
+                                .catch((/**@type{server_server_error}*/error)=>{
+                                    dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+                                });
+        if (result_update)
+            return result_update;
+        else
+            return dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+    }
     else
         throw error_code;
 };
@@ -810,27 +770,17 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getUserByUserId>}
  */
-const getUserByUserId = parameters => {
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_SELECT_ID,
-                            {id: parameters.resource_id},
-                            null, 
-                            null))
-            .then(result=>{
-                if (result[0]){
-                    resolve({...result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}});
-                }
-                else{
-                    import(`file://${process.cwd()}/server/db/common.js`)
-                    .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
-                    });
-                }
-            })
-            .catch((/**@type{server_server_error}*/error)=>reject(error));
-    });
+const getUserByUserId = async parameters => {
+    const result = await dbCommonExecute(   parameters.app_id, 
+                                            dbSql.USER_ACCOUNT_SELECT_ID,
+                                            {id: parameters.resource_id},
+                                            null, 
+                                            null);
+    if (result[0]){
+        return {...result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}};
+    }
+    else
+        return dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
 };
 
 /**
@@ -842,12 +792,11 @@ const getUserByUserId = parameters => {
  * @returns {Promise.<server_db_sql_result_user_account_checkPassword[]>}
  */
 const userGetPassword = async (app_id, id) => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_PASWORD,
                         {id: id},
                         null, 
-                        null));
+                        null);
 
 /**
  * @name userDelete
@@ -858,12 +807,11 @@ const userGetPassword = async (app_id, id) =>
  * @returns {Promise.<server_db_sql_result_user_account_deleteUser>}
  */
 const userDelete = async (app_id, id) =>
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_DELETE,
                         {id: id},
                         null, 
-                        null));
+                        null);
 /**
  * @name getProfileDetail
  * @description Get user profile detail
@@ -876,29 +824,19 @@ const userDelete = async (app_id, id) =>
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getProfileDetail[]>}
  */
- const getProfileDetail = parameters => {
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
+ const getProfileDetail = async parameters => {
+    const result = await dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_PROFILE_DETAIL,
                             {
                                 user_account_id: parameters.resource_id,
                                 detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
                             },
                             null, 
-                            null))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else {
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('../db/common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-            }
-        });
-    });
-    
+                            null);
+    if (result)
+        return result;
+    else
+        return dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
 };
 /**
  * @name userDemoGet
@@ -908,14 +846,13 @@ const userDelete = async (app_id, id) =>
  * @returns {Promise.<server_db_sql_result_user_account_getDemousers[]>}
  */
 const userDemoGet = async app_id => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_DEMO,
                         {
                             demo_level: 2
                         },
                         null, 
-                        null));
+                        null);
                         
 export {userGetUsername,
         userGetProvider,
