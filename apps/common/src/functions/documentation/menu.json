@@ -69,6 +69,10 @@
                 {   "id":1,
                     "menu":"",
                     "doc":"6.restapi"
+                },
+                {   "id":2,
+                    "menu":"",
+                    "doc":"6.restapiFunctions"
                 }]
     },
     {
