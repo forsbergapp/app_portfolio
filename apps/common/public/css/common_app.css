@@ -249,6 +249,7 @@ body.rtl{
 	width: calc(100% - 25px);
 	min-height: 1em;
 	overflow: hidden;
+	line-height: 1em;
 }
 .common_select_dropdown_icon::after{
 	content: var(--common_app_icon_select);
