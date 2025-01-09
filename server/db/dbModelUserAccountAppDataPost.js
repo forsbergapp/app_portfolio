@@ -45,7 +45,6 @@ const getUserPost = async (app_id, id) =>
  * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          locale:string,
  *          res:server_server_res|null}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]>}
  */
@@ -67,7 +66,7 @@ const getUserPostsByUserId = parameters =>{
                 if (parameters.res)
                     import(`file://${process.cwd()}/server/db/common.js`)
                     .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });
                 else
                     resolve(result);
@@ -82,7 +81,6 @@ const getUserPostsByUserId = parameters =>{
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{id_current_user?:string|null},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileUserPosts[]>}
  */
@@ -104,7 +102,7 @@ const getProfileUserPosts = parameters =>{
             else
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -116,7 +114,6 @@ const getProfileUserPosts = parameters =>{
  * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          locale:string,
  *          res:server_server_res}} parameters
  * 
  * @returns {Promise.<server_db_sql_result_user_account_data_post_getProfileStatLike[]>}
@@ -138,7 +135,7 @@ const getProfileUserPosts = parameters =>{
             else
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -150,7 +147,6 @@ const getProfileUserPosts = parameters =>{
  * @memberof REST_API
  * @param {{app_id:number,
  *         data:{statchoice?:string|null},
- *         locale:string,
  *         res:server_server_res
  *       }} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileStatPost[]>}
@@ -177,7 +173,7 @@ const getProfileStatPost = parameters =>{
                 else
                     import(`file://${process.cwd()}/server/db/common.js`)
                     .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });
             });
         });
@@ -190,7 +186,6 @@ const getProfileStatPost = parameters =>{
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{detailchoice?:string|null},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[]>}
  */
@@ -212,7 +207,7 @@ const getProfileUserPostDetail = parameters => {
             else
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -223,7 +218,6 @@ const getProfileUserPostDetail = parameters => {
  * @function
  * @memberof REST_API
  * @param {{app_id:Number,
- *          locale:string,
  *          data:{  initial:number,
  *                  description:string,
  *                  json_data:*,
@@ -259,7 +253,6 @@ const createUserPost = parameters => {
         if (serverUtilNumberValue(parameters.data?.initial)==1){
             getUserPostsByUserId({  app_id:parameters.app_id, 
                                     resource_id:serverUtilNumberValue(parameters.data?.user_account_id), 
-                                    locale:parameters.locale,
                                     res:null})
             .then(result=>{
                 if (result.length==0){
@@ -289,7 +282,6 @@ const createUserPost = parameters => {
  *          data:{  description:string,
  *                  json_data:string,
  *                  user_account_id:number},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_data_post_updateUserPost>}
  */
@@ -314,7 +306,7 @@ const updateUserPost = parameters => {
             else
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -327,7 +319,6 @@ const updateUserPost = parameters => {
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  user_account_id:number},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_data_post_deleteUserPost>}
  */
@@ -347,7 +338,7 @@ const deleteUserPost = parameters => {
             else
                 import(`file://${process.cwd()}/server/db/common.js`)
                 .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });

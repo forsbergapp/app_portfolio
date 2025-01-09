@@ -225,7 +225,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -261,7 +261,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -393,7 +393,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -431,7 +431,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -469,7 +469,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -513,7 +513,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -551,7 +551,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":false},
@@ -769,7 +769,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1003,7 +1003,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1041,7 +1041,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1079,7 +1079,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1115,7 +1115,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1151,7 +1151,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1189,7 +1189,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1573,7 +1573,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1605,7 +1605,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":false},
@@ -1643,7 +1643,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -1679,7 +1679,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -3177,7 +3177,7 @@
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":true},
                         {"server_function_parameter_path":false},
@@ -4074,7 +4074,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":false},
@@ -4106,7 +4106,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":false},
@@ -4138,7 +4138,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":false},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":false},
@@ -4170,7 +4170,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":true},
@@ -4203,7 +4203,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":true},
@@ -4236,7 +4236,7 @@
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
                         {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
+                        {"server_function_parameter_locale":false},
                         {"server_function_parameter_endpoint":true},
                         {"server_function_parameter_resource_id":false},
                         {"server_function_parameter_path":true},
@@ -4263,6 +4263,7 @@
         "parameters":{
             "resource_id_number":{
                 "name":	"resource_id_number",
+                "in":"path",
                 "required":true,
                 "schema":{
                     "type": "number"
@@ -4270,6 +4271,7 @@
             },
             "resource_id_string":{
                 "name":	"resource_id_string",
+                "in":"path",
                 "required":true,
                 "schema":{
                     "type": "string"
@@ -4277,6 +4279,7 @@
             },
             "locale":{
                 "name":	"locale",
+                "in":"query",
                 "required":false,
                 "schema":{
                     "type": "string"
@@ -4284,6 +4287,7 @@
             },
             "iam":{
                 "name":	"iam",
+                "in":"query",
                 "required":false,
                 "schema":{
                     "type": "string"
@@ -4311,15 +4315,61 @@
                         }
                     }
                 },
-            "401": {
-                    "description": "Unauthorized",
-                    "headers":{
-                        "WWW-Authenticate":{
-                            "description":"", 
+            "301": {
+                    "description": "Redirect if user account or path not found",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "*"
+                            }
+                        }
+                    }
+                },
+            "400": {
+                    "description": "⛔",
+                    "content":{
+                        "application/json":{
+                            "description":"Bad request", 
                             "type":"string"
                         }
                     }
+                },
+            "401": {
+                    "description": "⛔",
+                    "headers":{
+                        "application/json":{
+                            "description":"Not authorized", 
+                            "type":"string"
+                        }
+                    }
+                },
+            "404": {
+                "description": "⛔",
+                "headers":{
+                    "application/json":{
+                        "description":"Not found", 
+                        "type":"string"
+                    }
                 }
+            },
+            "500": {
+                "description": "Error",
+                "headers":{
+                    "application/json":{
+                        "description":"Server error", 
+                        "type":"string"
+                    }
+                }
+            },
+            "503": {
+                "description": "Error",
+                "headers":{
+                    "application/json":{
+                        "description":"BFF error", 
+                        "type":"string"
+                    }
+                }
+            }
         }
     }
   }

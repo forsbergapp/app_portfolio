@@ -369,7 +369,8 @@
  *              server_db_file_app[]|
  *              server_db_file_app_module[]|
  *              server_db_file_app_parameter[]|
- *              server_db_file_app_secret[]} server_db_file_config_files
+ *              server_db_file_app_secret[]|
+ *              server_db_file_app_translation[]} server_db_file_config_files
  */
 
 
@@ -2095,11 +2096,11 @@
  * @property {number} params.user_account_id                        - Admin parameter
  * @property {string} params.info                                   - Info parameter
  * @property {string} params.sub                                    - App showparam parameter
- * @property {string} params.id                                     - app portfolio parameter
- * @property {string} params.lang_code                              - app portfolio parameter
- * @property {string} params.app_id                                 - app portfolio parameter
- * @property {string} params.code                                   - app portfolio parameter
- * @property {string} params.statchoice                             - app portfolio parameter
+ * @property {string} params.id                                     
+ * @property {string} params.locale                                 
+ * @property {string} params.app_id                                 
+ * @property {string} params.code                                   
+ * @property {string} params.statchoice                             
  * route
  * @property {object} route
  * @property {string} route.path
@@ -2114,49 +2115,49 @@
  * @property {server_socket_broadcast_type_all} body.broadcast_type        - Socket parameter
  * @property {string} body.broadcast_message                        - Socket parameter
  * @property {string} body.demo_password                            - Admin parameter
- * @property {string} body.app_name                                 - app portfolio parameter
- * @property {string} body.url                                      - app portfolio parameter
- * @property {string} body.logo                                     - app portfolio parameter
- * @property {string} body.enabled                                  - app portfolio parameter
- * @property {string} body.parameter_value                          - app portfolio parameter
- * @property {string} body.parameter_comment                        - app portfolio parameter
- * @property {string} body.parameter_name                           - app portfolio parameter
- * @property {number} body.active                                   - app portfolio parameter
- * @property {number} body.user_level                               - app portfolio parameter
- * @property {number} body.private                                  - app portfolio parameter
- * @property {string} body.username                                 - app portfolio parameter
- * @property {string} body.bio                                      - app portfolio parameter
- * @property {string} body.email                                    - app portfolio parameter
- * @property {string} body.email_unverified                         - app portfolio parameter
+ * @property {string} body.app_name                                 
+ * @property {string} body.url                                      
+ * @property {string} body.logo                                     
+ * @property {string} body.enabled                                  
+ * @property {string} body.parameter_value                          
+ * @property {string} body.parameter_comment                        
+ * @property {string} body.parameter_name                           
+ * @property {number} body.active                                   
+ * @property {number} body.user_level                               
+ * @property {number} body.private                                  
+ * @property {string} body.username                                 
+ * @property {string} body.bio                                      
+ * @property {string} body.email                                    
+ * @property {string} body.email_unverified                         
  * @property {string} body.password
  * @property {string|null} body.password_new
- * @property {string} body.password_reminder                        - app portfolio parameter
- * @property {string} body.new_email                                - app portfolio parameter
- * @property {string} body.avatar                                   - app portfolio parameter
- * @property {string} body.user_language                            - app portfolio parameter
- * @property {string} body.user_timezone                            - app portfolio parameter
- * @property {string} body.user_number_system                       - app portfolio parameter
- * @property {string} body.user_platform                            - app portfolio parameter
- * @property {string} body.client_latitude                          - app portfolio parameter
- * @property {string} body.client_longitude                         - app portfolio parameter
- * @property {number} body.user_account_id                          - app portfolio parameter
- * @property {number} body.identity_provider_id                     - app portfolio parameter
- * @property {string} body.provider_first_name                      - app portfolio parameter
- * @property {string} body.provider_last_name                       - app portfolio parameter
- * @property {string} body.provider_image                           - app portfolio parameter
- * @property {string} body.provider_image_url                       - app portfolio parameter
- * @property {string} body.provider_email                           - app portfolio parameter
- * @property {string|null} body.provider_id                         - app portfolio parameter
- * @property {string} body.verification_code                        - app portfolio parameter
- * @property {string} body.verification_type                        - app portfolio parameter
- * @property {string} body.auth                                     - app portfolio parameter
- * @property {number} body.app_setting_preference_direction_id      - app portfolio parameter
- * @property {number} body.app_setting_preference_arabic_script_id  - app portfolio parameter
- * @property {number} body.app_setting_preference_timezone_id       - app portfolio parameter
- * @property {string} body.preference_locale                        - app portfolio parameter
- * @property {string} body.description                              - app portfolio parameter
- * @property {object} body.json_data                                - app portfolio parameter
- * @property {number} body.user_account_app_data_post_id                          - app portfolio parameter
+ * @property {string} body.password_reminder                        
+ * @property {string} body.new_email                                
+ * @property {string} body.avatar                                   
+ * @property {string} body.user_language                            
+ * @property {string} body.user_timezone                            
+ * @property {string} body.user_number_system                       
+ * @property {string} body.user_platform                            
+ * @property {string} body.client_latitude                          
+ * @property {string} body.client_longitude                         
+ * @property {number} body.user_account_id                          
+ * @property {number} body.identity_provider_id                     
+ * @property {string} body.provider_first_name                      
+ * @property {string} body.provider_last_name                       
+ * @property {string} body.provider_image                           
+ * @property {string} body.provider_image_url                       
+ * @property {string} body.provider_email                           
+ * @property {string|null} body.provider_id                         
+ * @property {string} body.verification_code                        
+ * @property {string} body.verification_type                        
+ * @property {string} body.auth                                     
+ * @property {number} body.app_setting_preference_direction_id      
+ * @property {number} body.app_setting_preference_arabic_script_id  
+ * @property {number} body.app_setting_preference_timezone_id       
+ * @property {string} body.preference_locale                        
+ * @property {string} body.description                              
+ * @property {object} body.json_data                                
+ * @property {number} body.user_account_app_data_post_id                          
  * query
  * @property {object} query
  * @property {(string|number|*)} query.id
@@ -2177,7 +2178,7 @@
  * @property {(string|number|*)} query.app_user_id
  * @property {(string|number|*)} query.client_id
  * @property {(string|number|*)} query.user_account_id
- * @property {string} query.lang_code
+ * @property {string} query.locale
  * @property {string} query.authorization                           - EventSource parameter
  * @property {string} query.latitude                                - Socket and geolocation parameter
  * @property {string} query.longitude                               - Socket and geolocation parameter
@@ -2190,15 +2191,15 @@
  * @property {string|*} query.parameters
  * @property {string} query.iam                                     - encoded string
  *                                                                  - content:authorization_bearer=[string]&user_id=[number]&admin=[string]&service=[string]&app_id=[number]
- * @property {number} query.PATCH_ID                                - app portfolio parameter
- * @property {number} query.data_app_id                             - app portfolio parameter
- * @property {string} query.object                                  - app portfolio parameter
- * @property {string} query.object_name                             - app portfolio parameter
- * @property {string} query.setting_type                            - app portfolio parameter
- * @property {string} query.detailchoice                            - app portfolio parameter
- * @property {number} query.initial                                 - app portfolio parameter
+ * @property {number} query.PATCH_ID                                
+ * @property {number} query.data_app_id                             
+ * @property {string} query.object                                  
+ * @property {string} query.object_name                             
+ * @property {string} query.setting_type                            
+ * @property {string} query.detailchoice                            
+ * @property {number} query.initial                                 
  * @property {string} query.parameter                               - Server parameter
- * @property {string} query.admin                            - app portfolio parameter
+ * @property {string} query.admin                            
  * @property {number} query.identity_provider_id
  * @property {0|1|2|3|4|5|6} query.config_type_no                   - Server parameter
  * @property {server_db_file_config_server_group} query.server_config_group                      - Server parameter

@@ -67,11 +67,10 @@ const dbCommonAppCodeGet = error => {
  * @description	Displays message for error
  * @function
  * @param {number} app_id 
- * @param {string} lang_code 
  * @param {server_server_error} err 
  * @param {server_server_res} res
  */
- const dbCommonCheckedError = async (app_id, lang_code, err, res) =>{
+ const dbCommonCheckedError = async (app_id, err, res) =>{
 	/**@type{import('./dbModelAppSetting.js')} */
 	const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
 
@@ -102,12 +101,10 @@ const dbCommonAppCodeGet = error => {
  * @name dbCommonRecordNotFound
  * @description	Displays DB message for record not found for single resource DB
  * @function
- * @param {number} app_id 
- * @param {string} lang_code
  * @param {server_server_res|null} res
  * @returns {Promise.<string>}
  */
-const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
+const dbCommonRecordNotFound = async res => {
 	/**@type{import('./file.js')} */
 	const {fileCommonRecordNotFound} = await import(`file://${process.cwd()}/server/db/file.js`);
 	return fileCommonRecordNotFound(res);
@@ -119,29 +116,29 @@ const dbCommonRecordNotFound = async (app_id, lang_code, res) => {
  * 				2 = ex zh-hant from zh-hant-cn
  * 				3 = ex zh from zh-hant-cn
  * @function
- * @param {string} lang_code 
+ * @param {string} locale 
  * @param {number} part 
  * @returns {string|null}
  */
-const dbCommonLocaleGet = (lang_code, part) => {
-	if (lang_code==null)
+const dbCommonLocaleGet = (locale, part) => {
+	if (locale==null)
 		return null;
 	else
 		switch (part){
 			case 1:{
-				return lang_code;
+				return locale;
 			}
 			case 2:{
-				if (lang_code.indexOf('-',lang_code.indexOf('-')+1) >-1)
-					return lang_code.substring(0,lang_code.indexOf('-',lang_code.indexOf('-')+1));
+				if (locale.indexOf('-',locale.indexOf('-')+1) >-1)
+					return locale.substring(0,locale.indexOf('-',locale.indexOf('-')+1));
 				else
-					return lang_code;
+					return locale;
 			}
 			case 3:{
-				if (lang_code.indexOf('-')>-1)
-					return lang_code.substring(0,lang_code.indexOf('-'));
+				if (locale.indexOf('-')>-1)
+					return locale.substring(0,locale.indexOf('-'));
 				else
-					return lang_code;
+					return locale;
 			}
 			default:
 				return null;
