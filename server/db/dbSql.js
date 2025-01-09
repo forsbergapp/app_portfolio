@@ -426,12 +426,12 @@ const APP_SETTING_SELECT =
                     <DB_SCHEMA/>.app_translation str
             WHERE l.id = str.language_id
                 AND str.app_setting_id = s.id
-                AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+                AND l.locale = (SELECT COALESCE(MAX(l1.locale),'en')
                                     FROM <DB_SCHEMA/>.app_translation str1,
                                         <DB_SCHEMA/>.language l1
                                     WHERE l1.id  = str1.language_id
                                     AND str1.app_setting_id = str.app_setting_id
-                                    AND l1.lang_code IN (<LOCALE/>)
+                                    AND l1.locale IN (<LOCALE/>)
                                     )
             ) "text"
       FROM <DB_SCHEMA/>.app_setting s
