@@ -20,7 +20,7 @@
  * }} props
  * @returns {string}
  */
-const template = props => ` <div id='about_logo' style='background-image:url(${props.about_logo})'></div>
+const template = props => ` <div id='about_logo' style='${props.about_logo==null?'':`background-image:url(${props.about_logo});`}'></div>
                             <div id='app_copyright'>${props.app_copyright}</div>
                             <div id='app_link' class='common_link'>${props.app_link_title}</div>
                             <div id='info_link1' class='common_link'>${props.info_link1}</div>

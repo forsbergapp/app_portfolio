@@ -19,7 +19,7 @@
  *          }} props
  * @returns {string}
  */
-const template = props =>`  <div class='common_document_header' style='background-image:url("${props.app_logo}")'>${props.app_name}</div>
+const template = props =>`  <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
                                <div class='common_document_article ${props.document_class ?? ''}'>${props.document}</div>
                            <div class='common_document_footer'>${props.app_copyright}</div>`;
 /**

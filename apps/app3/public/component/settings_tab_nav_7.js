@@ -13,7 +13,7 @@
  * @param {{avatar:string|null}} props
  * @returns {string}
  */
-const template = props => `<div id='user_setting_avatar_img' class='common_image' style='background-image:url(${props.avatar?props.avatar:''})'></div>`;
+const template = props => `<div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>`;
 /**
  * @name component
  * @description Component
