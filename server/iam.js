@@ -552,7 +552,7 @@ const iamAuthenticateUserProvider = async parameters =>{
                         .catch((/**@type{server_server_error}*/error)=>reject(error));
                     })
                     .catch((/**@type{server_server_error}*/error)=>{
-                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });    
                 })
                 .catch((/**@type{server_server_error}*/error)=>reject(error));
@@ -717,7 +717,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                
         })
         .catch((/**@type{server_server_error}*/error)=>{
-            dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
+            dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -769,7 +769,7 @@ const iamAuthenticateUserActivate = async parameters =>{
     }
     const result_activate = await  userUpdateActivate(parameters.app_id, parameters.resource_id, serverUtilNumberValue(parameters.data.verification_type), parameters.data.verification_code, auth_password_new)
                                     .catch((/**@type{server_server_error}*/error)=>
-                                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
+                                        dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>{throw message;}));
     if (auth_password_new == null){
         if (result_activate.affectedRows==1 && (serverUtilNumberValue(parameters.data.verification_type)==1 ||
             serverUtilNumberValue(parameters.data.verification_type)==4))
@@ -1011,7 +1011,7 @@ const iamAuthenticateUserUpdate = async parameters => {
     /**@type{import('./db/dbModelUserAccountEvent.js')} */
     const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
 
-    const result_user = await getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, locale:parameters.locale, res:parameters.res});
+    const result_user = await getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, res:parameters.res});
     
     /**@type{server_db_sql_result_user_account_event_getLastUserEvent[]}*/
     const result_user_event = await dbModelUserAccountEvent.getLastUserEvent(parameters.app_id, parameters.resource_id, 'EMAIL_VERIFIED_CHANGE_EMAIL');
@@ -1087,12 +1087,12 @@ const iamAuthenticateUserUpdate = async parameters => {
                         else{
                             import(`file://${process.cwd()}/server/db/common.js`)
                             .then((/**@type{import('./db/common.js')} */{dbCommonRecordNotFound}) => {
-                                dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                                dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
                     })
                     .catch((/**@type{server_server_error}*/error)=>{
-                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                        dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
                     });
                 } 
                 else {
@@ -1167,7 +1167,7 @@ const iamAuthenticateUserDelete = async parameters => {
     const { getUserByUserId, userDelete, userGetPassword} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
 
     return new Promise((resolve, reject)=>{
-        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, locale:parameters.locale, res:parameters.res})
+        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, res:parameters.res})
         .then(result_user=>{
             if (result_user) {
                 if (result_user.provider_id !=null){
@@ -1178,7 +1178,7 @@ const iamAuthenticateUserDelete = async parameters => {
                         else{
                             import(`file://${process.cwd()}/server/db/common.js`)
                             .then((/**@type{import('./db/common.js')} */{dbCommonRecordNotFound}) => {
-                                dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                                dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
                     })
@@ -1197,7 +1197,7 @@ const iamAuthenticateUserDelete = async parameters => {
                                         else{
                                             import(`file://${process.cwd()}/server/db/common.js`)
                                             .then((/**@type{import('./db/common.js')} */{dbCommonRecordNotFound}) => {
-                                                dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                                                dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
                                             });
                                         }
                                     })

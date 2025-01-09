@@ -99,7 +99,6 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
     const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
     return getUserPostsByUserId({app_id:app_id, 
 								resource_id:user_account_id,
-								locale:'en',
 								res:null})
 	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts) {

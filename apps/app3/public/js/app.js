@@ -355,9 +355,8 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
         const uid_view = common.COMMON_GLOBAL.user_account_id==null?'':common.COMMON_GLOBAL.user_account_id;
         module_parameters += `&uid_view=${uid_view}`;
     }
-    const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
     const service_parameter = `&format=${format}&ps=${papersize}`;
-    const encodedurl = common.commonWindowToBase64( module_parameters + language_parameter + service_parameter);
+    const encodedurl = common.commonWindowToBase64( module_parameters + service_parameter);
     //url query parameters are decoded in report module and in report service
     return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-report/${APP_GLOBAL.app_report_timetable}?parameters=${common.commonWindowToBase64(`type=REPORT&reportid=${encodedurl}`)}`;
     

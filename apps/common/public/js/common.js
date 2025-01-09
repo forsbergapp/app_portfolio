@@ -2406,7 +2406,7 @@ const commonFFB = async parameter => {
     }
     
     //add common query parameter
-    parameter.query += `&lang_code=${COMMON_GLOBAL.user_locale}`;
+    parameter.query += `&locale=${COMMON_GLOBAL.user_locale}`;
     //encode query parameters
     const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
@@ -2734,7 +2734,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                     default_value:'',
                     options: await commonFFB({
                                                 path:'/app-module-function/COMMON_LOCALE', 
-                                                query:`lang_code=${COMMON_GLOBAL.user_locale}`, 
+                                                query:`locale=${COMMON_GLOBAL.user_locale}`, 
                                                 method:'POST', authorization_type:'APP_ID',
                                                 body:{data_app_id : COMMON_GLOBAL.common_app_id}
                                             })

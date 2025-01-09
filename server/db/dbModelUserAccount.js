@@ -378,7 +378,6 @@ const userGetEmail = async (app_id, email) => dbCommonExecute(app_id,
  *                  id?:string|null,
  *                  search?:string|null,
  *                  POST_ID?:string |null},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getProfileUser[]>}
  */
@@ -478,7 +477,7 @@ const getProfile = async parameters =>{
             return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>clear_private(result_getProfileUser));
         }
         else
-            return await dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+            return await dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
 };
 /**
  * @name getProfileStat
@@ -548,14 +547,13 @@ const userUpdateAdmin = async (app_id, id, data) =>{
  *                  user_level:number,
  *                  private:number,
  *                  verification_code:string},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_updateAdmin>}
  */
 const updateAdmin = parameters =>{
     return new Promise((resolve, reject)=>{
         // get avatar and provider column used to validate
-        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, locale:parameters.locale, res:parameters.res})
+        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, res:parameters.res})
         .then(result_user=>{
             if (result_user) {
                 /**@type{server_db_sql_parameter_user_account_updateAdmin} */
@@ -578,11 +576,11 @@ const updateAdmin = parameters =>{
                     resolve(result_update);
                 })
                 .catch((/**@type{server_server_error}*/error)=>{
-                    dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                    dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
             else
-                dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>reject(message));
+                dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
         })
         .catch((/**@type{server_server_error}*/error)=>reject(error));
     });
@@ -643,7 +641,6 @@ const getStatCountAdmin = parameters =>
  *                  user_platform:string,
  *                  client_latitude:string,
  *                  client_longitude:string},
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<void>}
  */
@@ -652,7 +649,7 @@ const getStatCountAdmin = parameters =>
     if (error_code==null){
         const password = await  set_password(parameters.data.password_new)
                                 .catch((/**@type{server_server_error}*/error)=>
-                                        dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res)
+                                        dbCommonCheckedError(parameters.app_id, error, parameters.res)
                                         .then((/**@type{string}*/message)=>{throw message;}));
 
         const result_update = await  dbCommonExecute(parameters.app_id, 
@@ -685,7 +682,7 @@ const getStatCountAdmin = parameters =>
             dbModelUserAccountEvent.post(parameters.app_id, eventData);
         }
         else
-            dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+            dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
     }
     else
         throw error_code;
@@ -732,7 +729,6 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_sql_parameter_user_account_updateUserCommon,
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_updateUserCommon>}
  */
@@ -749,12 +745,12 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                                 null, 
                                 null)
                                 .catch((/**@type{server_server_error}*/error)=>{
-                                    dbCommonCheckedError(parameters.app_id, parameters.locale, error, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+                                    dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>{throw message;});
                                 });
         if (result_update)
             return result_update;
         else
-            return dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+            return dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
     }
     else
         throw error_code;
@@ -766,7 +762,6 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @memberof REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getUserByUserId>}
  */
@@ -780,7 +775,7 @@ const getUserByUserId = async parameters => {
         return {...result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}};
     }
     else
-        return dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+        return dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
 };
 
 /**
@@ -820,7 +815,6 @@ const userDelete = async (app_id, id) =>
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{detailchoice?:string|null},
- *          locale:String,
  *          res:server_server_res}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getProfileDetail[]>}
  */
@@ -836,7 +830,7 @@ const userDelete = async (app_id, id) =>
     if (result)
         return result;
     else
-        return dbCommonRecordNotFound(parameters.app_id, parameters.locale, parameters.res).then((/**@type{string}*/message)=>{throw message;});
+        return dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
 };
 /**
  * @name userDemoGet

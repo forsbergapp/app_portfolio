@@ -65,7 +65,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                     result_geodata.geoplugin_countryName):'';
     /**@type{import('./db/dbModelUserAccount.js')} */
     const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-    const identity_provider_id = user_account_id?await getUserByUserId({app_id:app_id, resource_id:user_account_id, locale:'en',res:res})
+    const identity_provider_id = user_account_id?await getUserByUserId({app_id:app_id, resource_id:user_account_id, res:res})
                                                     .then(result=>result.identity_provider_id)
                                                     .catch(()=>null):null;
     return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
