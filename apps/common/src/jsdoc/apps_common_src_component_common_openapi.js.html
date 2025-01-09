@@ -1,0 +1,166 @@
+
+
+
+
+    
+    <div class='section'>
+        <div class='article'>
+            <pre class="prettyprint source linenums"><code>/**
+ * Displays openAPI from JSON source
+ *         
+ * @module apps/common/component/common_openapi
+ */
+/**
+ * @import {server_db_file_config_rest_api}  from '../../../../server/types.js'
+ */
+
+/**
+ * @name template
+ * @description Template
+ * @function
+ * @param {{openapi :server_db_file_config_rest_api,
+ *          sortByRole:function,
+ *          }} props
+ * @returns {string}
+ */
+const template = props =>`
+                            &lt;div class='common_markdown_table common_markdown_table_no_odd_event'>
+                                &lt;div class='common_markdown_table_row common_markdown_table_row_title'>
+                                    &lt;div class='common_markdown_table_col'>${Object.entries(props.openapi)[0][0]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div>
+                                &lt;div class='common_markdown_table_row '>
+                                    &lt;div class='common_markdown_table_col'>${Object.keys(Object.entries(props.openapi)[0][1])[0]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>${Object.values(Object.entries(props.openapi)[0][1])[0]}&lt;/div> 
+                                &lt;/div> 
+                                &lt;div class='common_markdown_table_row '>
+                                    &lt;div class='common_markdown_table_col'>${Object.keys(Object.entries(props.openapi)[0][1])[1]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>${Object.values(Object.entries(props.openapi)[0][1])[1]}&lt;/div> 
+                                &lt;/div> 
+                                &lt;div class='common_markdown_table_row '>
+                                    &lt;div class='common_markdown_table_col'>${Object.keys(Object.entries(props.openapi)[0][1])[2]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>${Object.values(Object.entries(props.openapi)[0][1])[2]}&lt;/div> 
+                                &lt;/div>
+                                &lt;div class='common_markdown_table_row'>
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div>
+                                &lt;div class='common_markdown_table_row common_markdown_table_row_title'>
+                                    &lt;div class='common_markdown_table_col'>${Object.entries(props.openapi)[1][0]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div> 
+                                ${Object.entries(props.openapi.servers).map(key => `
+                                    &lt;div class='common_markdown_table_row'>
+                                        &lt;div class='common_markdown_table_col'>${Object.keys(key[1])[0]}&lt;/div> 
+                                        &lt;div class='common_markdown_table_col'>${Object.values(key[1])[0]}&lt;/div> 
+                                    &lt;/div> 
+                                `).join('')}
+                                &lt;div class='common_markdown_table_row'>
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div>
+                                &lt;div class='common_markdown_table_row common_markdown_table_row_title'>
+                                    &lt;div class='common_markdown_table_col'>${Object.entries(props.openapi)[2][0]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div> 
+                                ${props.sortByRole(Object.entries(props.openapi.paths)).map((/**@type{*}*/path) => `
+                                    ${Object.entries(path[1]).map(method => `
+                                        &lt;div class='common_markdown_table_row'>
+                                            &lt;div class='common_markdown_table_row_master common_markdown_table_row_title'>
+                                                &lt;div class='common_markdown_table_row_master_method common_markdown_table_col'>${method[0].toUpperCase()}&lt;/div>&lt;div class='common_markdown_table_row_master_path common_markdown_table_col'>${path[0]}&lt;/div>
+                                            &lt;/div>
+                                            &lt;div class='common_markdown_table_row_detail_master'>
+                                                &lt;div class='common_markdown_table_row_detail'>
+                                                    &lt;div class='common_markdown_table_col'>Summary&lt;/div>
+                                                    &lt;div class='common_markdown_table_col'>${method[1].summary}&lt;/div>
+                                                &lt;/div>
+                                                &lt;div class='common_markdown_table_row_detail'>
+                                                    &lt;div class='common_markdown_table_col'>operationId&lt;/div>
+                                                    &lt;div class='common_markdown_table_col'>${method[1].operationId}&lt;/div>
+                                                &lt;/div>
+                                                &lt;div class='common_markdown_table_row_detail'>
+                                                    &lt;div class='common_markdown_table_col common_markdown_title_h3'>Parameters&lt;/div>
+                                                    &lt;div class='common_markdown_table_col'>&lt;/div>
+                                                &lt;/div>
+                                                ${method[1].parameters.map((/**@type{*}*/param) => `
+                                                    &lt;div class='common_markdown_table_row_detail'>
+                                                        &lt;div class='common_markdown_table_col'>${Object.keys(param)[0]}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_content_json'>${Object.values(param)[0]?.constructor==Object?JSON.stringify(Object.values(param)[0], undefined,2):Object.values(param)[0]}&lt;/div>
+                                                    &lt;/div>
+                                                `).join('')}
+                                                &lt;div class='common_markdown_table_row_detail'>
+                                                    &lt;div class='common_markdown_table_col common_markdown_title_h3'>Responses&lt;/div>
+                                                    &lt;div class='common_markdown_table_col'>&lt;/div>
+                                                &lt;/div>
+                                                ${Object.entries(method[1].responses).map(([status, response]) => `
+                                                    &lt;div class='common_markdown_table_row_detail'>
+                                                        &lt;div class='common_markdown_table_col'>${status}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col'>${JSON.stringify(response, undefined,2)}&lt;/div>
+                                                    &lt;/div>
+                                                `).join('')}
+                                            &lt;/div>
+                                        &lt;/div>
+                                    `).join('')}
+                                `).join('')}
+                                &lt;div class='common_markdown_table_row'>
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div>
+                                &lt;div class='common_markdown_table_row common_markdown_table_row_title'>
+                                    &lt;div class='common_markdown_table_col'>${Object.entries(props.openapi)[3][0]}&lt;/div> 
+                                    &lt;div class='common_markdown_table_col'>&lt;/div> 
+                                &lt;/div> 
+                                ${Object.entries(props.openapi.components).map(key => `
+                                    &lt;div class='common_markdown_table_row '>
+                                        &lt;div class='common_markdown_table_col'>${key[0]}&lt;/div> 
+                                        &lt;div class='common_markdown_table_col common_markdown_table_content_json'>${JSON.stringify(key[1], undefined,2)}&lt;/div> 
+                                    &lt;/div> 
+                                `).join('')}
+                            &lt;/div>
+                           `;
+/**
+* @name component
+* @description Component
+* @function
+* @param {{data:        {app_id:number},
+*          methods:     {
+*                       fileModelApp:import('../../../../server/db/fileModelApp.js'),
+*                       fileModelConfig:import('../../../../server/db/fileModelConfig.js'),
+*                       serverUtilNumberValue:import('../../../../server/server.js')['serverUtilNumberValue']
+*                       }}} props
+* @returns {Promise.&lt;string>}
+*/
+const component = async props => {
+    const HTTPS_ENABLE = props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+    const HOST = props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+    const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                    props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                        props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+
+    const roleOrder = ['app_id', 'app_id_signup', 'app', 'app_access', 'admin', 'app_external', 'iam_user', 'iam_provider', 'iam_admin', 'socket'];
+    /**
+     * Sort paths by defined role order
+     * @param {*[]} paths
+     * @returns []
+     */
+    const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
+    const CONFIG_REST_API = props.methods.fileModelConfig.get('CONFIG_REST_API');
+    //return object with 'servers key modified with list from configuration
+    CONFIG_REST_API.servers = props.methods.fileModelApp.get({app_id:props.data.app_id, resource_id:null, res:null})
+                        .map(row=>{
+                            return {url:(HTTPS_ENABLE? 'https://':'http://') + 
+                                                                        row.subdomain + '.' +
+                                                                        HOST +
+                                                                        ((PORT==80||PORT==443)?'':`/:${PORT}`)
+                                    };
+                        });
+    return template({   openapi:CONFIG_REST_API,
+                        sortByRole:sortByRole
+                   });
+};
+export default component;</code></pre>
+        </div>
+    </div>
+
+
+

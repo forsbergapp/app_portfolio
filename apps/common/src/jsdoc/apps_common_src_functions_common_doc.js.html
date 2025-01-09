@@ -196,8 +196,6 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
 const markdownRender = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    /**@type{import('../../../../server/db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('../../../../server/db/fileModelApp.js')} */
     const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
     
@@ -263,118 +261,44 @@ const markdownRender = async parameters =>{
                                                             comment_with_filter:null
                                                         }));
         }
-        case parameters.type.toUpperCase()=='REST_API':{
-            /**@type{server_db_file_config_rest_api} */
-            const CONFIG_REST_API = fileModelConfig.get('CONFIG_REST_API');
-            
-            /**
-             * @param {'info'|'servers'|'paths'|'components'} type
-             * @param {boolean} details
-             */
-            const tableRender = (type,details) =>{
-                // module table with variables
-                const HEADER            = '|@{TITLE}        |                                       |';
-                const ALIGNMENT         = '|:---------------|:--------------------------------------|';
-                const ROW               = '|@{KEY}          |@{VALUE}                               |';
-                switch (type.toUpperCase()){
-                    case 'SERVERS':{
-
-                                const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-                                const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
-                                const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                                fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                                                    fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
-                        return  HEADER.replace('@{TITLE}',type) + '\n' +
-                                ALIGNMENT + '\n' +
-                                ROW.replace( ROW,
-                                            fileModelApp.get({app_id:parameters.app_id, resource_id:null, res:null})
-                                            .map(row=>{
-                                                return ROW
-                                                        /**@ts-ignore*/
-                                                        .replace('@{KEY}','url')
-                                                        /**@ts-ignore*/
-                                                        .replace('@{VALUE}',(HTTPS_ENABLE? 'https://':'http://') + 
-                                                                                            row.subdomain + '.' +
-                                                                                            HOST +
-                                                                                            ((PORT==80||PORT==443)?'':`/:${PORT}`));
-                                            }).join('\n'));
+        case parameters.type.toUpperCase()=='REST_API':{           
+            if (parameters.doc=='6.restapi'){
+                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res)
+                            .then(markdown=>
+                                    //remove all '\r' in '\r\n'
+                                    markdown
+                                    .replaceAll('\r\n','\n')
+                                );
+            }
+            else{
+                const filePattern = /\.js$/;
+                /**@type{string[]} */
+                const membersof = [];
+                //Get REST API function with @namespace tag
+                membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
+                                                        file:               await getFile(`${process.cwd()}/server/server.js`, parameters.res),
+                                                        module:             '/server/server',
+                                                        comment_with_filter:'@namespace REST_API'
+                                                    }));
+                //Get all REST API functions with @memberof tag
+                for (const directory of ['apps', 'microservice','server'])
+                    for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
+                        const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
+                                                                        file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
+                                                                        module:             file,
+                                                                        comment_with_filter:'@memberof REST_API'
+                                                                    });
+                        if (file_functions != '')
+                            membersof.push(file_functions);
                     }
-                    case 'PATHS':{
-                        const roleOrder = ['app_id', 'app_id_signup', 'app', 'app_access', 'admin', 'app_external', 'iam_user', 'iam_provider', 'iam_admin', 'socket'];
-                        /**
-                         * Sort paths by defined role order
-                         * @param {*[]} paths
-                         */
-                        const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
-                        return  HEADER.replace('@{TITLE}',type) + '\n' +
-                                ALIGNMENT + '\n' +
-                                ROW.replace( ROW,
-                                sortByRole(Object.entries(CONFIG_REST_API[type]))
-                                            .map(row=>{
-                                                if (details)
-                                                    return Object.keys(row[1]).map(method=>(ROW
-                                                                                            .replace('@{KEY}',method.toUpperCase())
-                                                                                            .replace('@{VALUE}',row[0])
-                                                                                            + '\n') +
-                                                                                            ROW
-                                                                                            .replace('@{KEY}','')
-                                                                                            .replace('@{VALUE}',JSON.stringify(row[1][method]))).join('\n');
-                                                else{
-                                                    return Object.keys(row[1]).map(method=>ROW
-                                                                                            .replace('@{KEY}',method.toUpperCase())
-                                                                                            .replace('@{VALUE}',row[0])).join('\n');
-                                                }
-                                            }).join('\n'));
-                    }
-                    default:{
-                        return  HEADER.replace('@{TITLE}',type) + '\n' +
-                                ALIGNMENT + '\n' +
-                                ROW.replace( ROW,
-                                Object.entries(CONFIG_REST_API[type])
-                                            .map(row=>{
-                                                return ROW
-                                                        .replace('@{KEY}',row[0])
-                                                        .replace('@{VALUE}',JSON.stringify(row[1]));
-                                            }).join('\n'));
-                    }
-                }
-            };
-            const filePattern = /\.js$/;
-            /**@type{string[]} */
-            const membersof = [];
-            //Get REST API function with @namespace tag
-            membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
-                                                    file:               await getFile(`${process.cwd()}/server/server.js`, parameters.res),
-                                                    module:             '/server/server',
-                                                    comment_with_filter:'@namespace REST_API'
-                                                }));
-            //Get all REST API functions with @memberof tag
-            for (const directory of ['apps', 'microservice','server'])
-                for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
-                    const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
-                                                                    file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
-                                                                    module:             file,
-                                                                    comment_with_filter:'@memberof REST_API'
-                                                                });
-                    if (file_functions != '')
-                        membersof.push(file_functions);
-                }
-            //hide details in presentation
-            const details = true;
-            //return REST API template with documentation using openAPI pattern and list all functions used
-            return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res)
-                        .then(markdown=>
-                                //remove all '\r' in '\r\n'
-                                markdown
-                                .replaceAll('\r\n','\n')
-                                //replace with info in config_rest_api.json
-                                .replace('@{CONFIG_REST_API}', 
-                                                        (tableRender('info',details) + '\n\n') + 
-                                                        (tableRender('servers', details) + '\n\n') + 
-                                                        (tableRender('paths', details) + '\n\n') +
-                                                        (details?(tableRender('components',details) + '\n\n'):''))
-                                .replace('@{REST_API_FUNCTIONS}',membersof.join('\n\n'))
-                            );
+                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapiFunctions.md`, parameters.res)
+                    .then(markdown=>
+                            //remove all '\r' in '\r\n'
+                            markdown
+                            .replaceAll('\r\n','\n')
+                            .replace('@{REST_API_FUNCTIONS}',membersof.join('\n\n'))
+                        );
+            }
         }
         default:{
             return '';
@@ -476,9 +400,16 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
             case data.type=='REST_API':
             case data.type.startsWith('MODULE') &amp;&amp;
                 (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server')||data.doc.startsWith('/test')):{
-                const {default:ComponentCreate} = await import('../component/common_markdown.js');      
+                const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
+                const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
+                /**@type{import('../../../../server/server.js')} */
+                const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+                /**@type{import('../../../../server/db/fileModelConfig.js')} */
+                const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+                /**@type{import('../../../../server/db/fileModelApp.js')} */
+                const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
                 //guide documents in separate files, app and modules use templates
-                return [await ComponentCreate({ data:{  
+                return [(await ComponentMarkdown({ data:{  
                                                         markdown: data.type.toUpperCase()=='GUIDE'?
                                                                     await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${data.doc}.md`, res):
                                                                         await markdownRender({  app_id:app_id,
@@ -487,7 +418,18 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                                                                                 module:data.doc,
                                                                                                 locale:locale,
                                                                                                 res:res})},
-                                                methods:null})];
+                                                methods:null}))
+                                        .replace(data.doc=='6.restapi'?'@{CONFIG_REST_API}':'',data.doc=='6.restapi'?
+                                                await ComponentOpenAPI({data:   {  
+                                                                                app_id: app_id
+                                                                                },
+                                                                        methods:{
+                                                                                fileModelApp:fileModelApp,
+                                                                                fileModelConfig:fileModelConfig,
+                                                                                serverUtilNumberValue:serverUtilNumberValue
+                                                                                }
+                                                                        }):'')
+                            ];
             }
             default:{
                 res.statusCode = 400;
