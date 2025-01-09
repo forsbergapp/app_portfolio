@@ -178,7 +178,6 @@
 
 /*Icons markdown*/
 .common_markdown_note::before{											content:'!'}
-
 body{
 	font-size: 16px;
 	margin: 0;
@@ -1551,19 +1550,19 @@ body.rtl{
     font-weight: bold;
 }
 .common_markdown_title_h3{
+	margin-top: 0.5em;
     font-size: 1.1em;
     font-weight: bold;
-    font-style: italic;
 }
 .common_markdown_title_h4{
+	margin-top: 0.5em;
     font-size: 1em;
     font-weight: bold;
-    font-style: italic;
 }
 .common_markdown_title_h5{
+	margin-top: 0.5em;
     font-size: 1em;
     font-weight: bold;
-    font-style: italic;
 }
 .common_markdown_code {
     border: 1px solid;
@@ -1606,6 +1605,24 @@ body.rtl{
 .common_markdown_table_row{
 	display: flex;
 	width: 100%;
+}
+.common_markdown_table_row_master div{
+	display: inline-block;	
+}
+.common_markdown_table_row_master {
+	cursor: pointer;
+}
+.common_markdown_table_row_detail{
+	margin-inline-start: 5em;
+}
+.common_markdown_table_row_detail .common_markdown_table_col{
+	min-width:30em;
+}
+.common_markdown_table_row_detail_master.show{
+	display:inline-block;
+}
+.common_markdown_table_row_detail_master{
+	display:none;
 }
 .common_markdown_table_row_title{
 	font-weight: bold;
