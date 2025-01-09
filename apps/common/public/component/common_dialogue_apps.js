@@ -26,7 +26,7 @@ const template = props => `
                                 ${props.apps.map(row=>
                                     `<div class='common_dialogue_apps_app_link_row common_row'>
                                         <div class='common_dialogue_apps_app_link_col'>
-                                            <div data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}'class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='background-image:url("${row.logo}");'></div>
+                                            <div data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}'class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='${row.logo==null?'':`background-image:url(${row.logo});`}'></div>
                                         </div>
                                         <div class='common_dialogue_apps_app_link_col'>
                                             <div class='common_dialogue_apps_app_name'>${row.app_name_translation}</div>
