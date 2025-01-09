@@ -918,7 +918,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
         return new Promise((resolve, reject) => {
-            getUserPostsByUserId({app_id:app_id, resource_id:user1,locale:'en',res:null})
+            getUserPostsByUserId({app_id:app_id, resource_id:user1,res:null})
             .then(result_posts=>{
                 const random_posts_index = Math.floor(1 + Math.random() * result_posts.length - 1 );
                 user_account_app_data_post_like.post({  app_id:app_id, 
@@ -948,7 +948,7 @@ const dbInstallGetFiles = async (install_type) =>{
      */
     const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
         return new Promise((resolve, reject) => {
-            getUserPostsByUserId({app_id:app_id, resource_id:user1, locale:'en',res:null})
+            getUserPostsByUserId({app_id:app_id, resource_id:user1, res:null})
             .then(result_posts=>{
                 //choose random post from user
                         const random_index = Math.floor(1 + Math.random() * result_posts.length -1);

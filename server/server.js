@@ -886,7 +886,7 @@ const serverREST_API = async (routesparameters) =>{
                                         user_agent:     getParameter('server_function_parameter_user_agent')?routesparameters.user_agent:null,
                                         accept_language:getParameter('server_function_parameter_accept_language')?routesparameters.accept_language:null,
                                         host:           getParameter('server_function_parameter_accept_host')?routesparameters.host:null,
-                                        locale:         getParameter('server_function_parameter_locale')?app_query?.get('lang_code') ??'en':null,
+                                        locale:         getParameter('server_function_parameter_locale')?app_query?.get('locale') ??'en':null,
                                         ip:             getParameter('server_function_parameter_ip')?routesparameters.ip:null,
                                         path:           getParameter('server_function_parameter_path')?routesparameters.route_path:null,
                                         query:          getParameter('server_function_parameter_query')?URI_query:null,
