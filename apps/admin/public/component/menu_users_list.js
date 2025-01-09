@@ -63,7 +63,7 @@ const template = props => ` <div class='menu_users_list_row'>
                             </div>
                             ${props.users.map(user=>
                                 `<div data-changed-record='0' data-user_account_id='${user.id}' class='menu_users_list_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
-                                    <div data-column='avatar' class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='background-image:url("${user.avatar}");'></div>
+                                    <div data-column='avatar' class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='${user.avatar==null?'':`background-image:url(${user.avatar});`}'></div>
                                     <div data-column='id' class='menu_users_list_col list_readonly'>${user.id}</div>
                                     <div data-column='active' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.active ?? ''}</div>
                                     <div data-column='user_level' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.user_level ?? ''}</div>
@@ -80,7 +80,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                     <div data-column='provider_id' class='menu_users_list_col common_input list_readonly' >${user.provider_id ?? ''}</div>
                                     <div data-column='provider_first_name' class='menu_users_list_col common_input list_readonly' >${user.provider_first_name ?? ''}</div>
                                     <div data-column='provider_last_name' class='menu_users_list_col common_input list_readonly' >${user.provider_last_name ?? ''}</div>
-                                    <div data-column='provider_image' class='menu_users_list_col common_image common_image_avatar_list list_readonly' style='background-image:url("${user.provider_image}");'></div>
+                                    <div data-column='provider_image' class='menu_users_list_col common_image common_image_avatar_list list_readonly' style='${user.provider_image==null?'':`background-image:url(${user.provider_image});`}'></div>
                                     <div data-column='provider_image_url' class='menu_users_list_col list_readonly'>${user.provider_image_url ?? ''}</div>
                                     <div data-column='provider_email' class='menu_users_list_col list_readonly'>${user.provider_email ?? ''}</div>
                                     <div data-column='date_created' class='menu_users_list_col list_readonly'>${user.date_created ?? ''}</div>
