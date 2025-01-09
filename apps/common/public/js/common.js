@@ -3213,6 +3213,14 @@ const commonEvent = async (event_type,event=null) =>{
                             commonComponentRemove('common_broadcast');
                             break;
                         }
+                        //markdown show/hide details
+                        case (event.target.classList.contains('common_markdown_table_row_master_method')||event.target.classList.contains('common_markdown_table_row_master_path'))?event_target_id:null:{
+                            if (commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.contains('show'))
+                                commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.remove('show');
+                            else
+                                commonMiscElementRow(event.target, 'common_markdown_table_row').querySelector('.common_markdown_table_row_detail_master')?.classList?.add('show');
+                            break;
+                        }
                         //module leaflet
                         case 'common_module_leaflet_search_icon':{
                             COMMON_DOCUMENT.querySelector('#common_module_leaflet_search_input').focus();
