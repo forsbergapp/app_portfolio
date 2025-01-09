@@ -221,13 +221,13 @@ ALTER TABLE <DB_SCHEMA/>.identity_provider ADD CONSTRAINT identity_provider_orde
 
 CREATE TABLE <DB_SCHEMA/>.language (
     id         INT NOT NULL AUTO_INCREMENT,
-    lang_code  VARCHAR(10) NOT NULL,
+    locale     VARCHAR(10) NOT NULL,
 	CONSTRAINT language_pk PRIMARY KEY ( id )
 );
 
-CREATE INDEX lang_code_index ON
+CREATE INDEX locale_index ON
     <DB_SCHEMA/>.language (
-        lang_code
+        locale
     ASC );
 
 GRANT SELECT ON <DB_SCHEMA/>.language TO app_portfolio_role_app_common;

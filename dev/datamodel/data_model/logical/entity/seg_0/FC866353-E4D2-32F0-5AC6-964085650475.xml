@@ -28,7 +28,7 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="lang_code" id="DF3EF49B-C9D5-E9B1-2E5E-46BC0CD08E24">
+<Attribute name="locale" id="DF3EF49B-C9D5-E9B1-2E5E-46BC0CD08E24">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-06 04:59:49 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

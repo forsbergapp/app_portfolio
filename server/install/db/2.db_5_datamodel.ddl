@@ -248,12 +248,12 @@ CREATE TABLE <DB_SCHEMA/>.identity_provider (
 
 CREATE TABLE <DB_SCHEMA/>.language (
     id         INTEGER NOT NULL CONSTRAINT language_pk PRIMARY KEY AUTOINCREMENT,
-    lang_code  VARCHAR(10) NOT NULL
+    locale     VARCHAR(10) NOT NULL
 );
 
-CREATE INDEX <DB_SCHEMA/>.lang_code_index ON
+CREATE INDEX <DB_SCHEMA/>.locale_index ON
     language (
-        lang_code
+        locale
     ASC );
 
 CREATE TABLE <DB_SCHEMA/>.user_account (

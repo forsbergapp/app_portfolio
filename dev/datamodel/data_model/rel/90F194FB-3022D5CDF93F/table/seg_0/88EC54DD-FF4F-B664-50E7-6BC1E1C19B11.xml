@@ -25,7 +25,7 @@
 <autoIncrementCache>30</autoIncrementCache>
 <autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
 </Column>
-<Column name="lang_code" id="4F6A63FA-A709-FEE3-5804-60613C9A3F0A">
+<Column name="locale" id="4F6A63FA-A709-FEE3-5804-60613C9A3F0A">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-07 00:02:25 UTC</createdTime>
 <generatorID>DF3EF49B-C9D5-E9B1-2E5E-46BC0CD08E24</generatorID>
@@ -51,7 +51,7 @@
 <colUsage columnID="56940672-7C78-C6EE-33E8-AEFCAAA604F1"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="86D54E1A-4469-1668-98F9-1276F64A75E4" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="lang_code_index">
+<ind_PK_UK id="86D54E1A-4469-1668-98F9-1276F64A75E4" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="locale_index">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-09 21:53:43 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
