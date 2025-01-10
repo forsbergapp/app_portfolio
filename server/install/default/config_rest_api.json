@@ -16,9 +16,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -54,9 +52,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null},
                         {"server_validation_resource_value":null},
@@ -122,12 +118,14 @@
                 "operationId": "server_db.dbModelAppSetting.get",
                 "parameters": [
                         {"description": "parameters"},
-                        {"setting_type":{
+                        {
+                            "name":"setting_type",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -160,24 +158,30 @@
                 "operationId": "server_db.dbModelAppSetting.getDisplayData",
                 "parameters": [
                         {"description": "parameters"},
-                        {"setting_type":{
+                        {
+                            "name":"setting_type",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"value":{
+                        },
+                        {
+                            "name":"value",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -210,10 +214,10 @@
                 "operationId": "server.iam.iamAuthenticateUserActivate",
                 "parameters": [
                         {"description": "parameters"},
-                        {"$ref": "#/components/parameters/resource_id_number"},
-                        {"resource_id_number":{
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -246,10 +250,10 @@
                 "operationId": "server.iam.iamAuthenticateUserActivate",
                 "parameters": [
                         {"description": "parameters"},
-                        {"$ref": "#/components/parameters/resource_id_number"},
-                        {"resource_id_number":{
+                        {
+                            "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        }},
+                        },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
                         {"server_validation_resource_app_data_app_id":null},
@@ -314,12 +318,14 @@
                 "operationId": "server_db.dbModelUserAccount.getProfileStat",
                 "parameters": [
                         {"description": "parameters"},
-                        {"statchoice":{
+                        {
+                            "name":"statchoice",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -354,34 +360,40 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"id":{
+                        {
+                            "name":"id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"name":{
+                        },
+                        {
+                            "name":"name",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"search":{
+                        },
+                        {
+                            "name":"search",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"POST_ID":{
+                        },
+                        {
+                            "name":"POST_ID",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -416,9 +428,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -454,9 +464,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -492,16 +500,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"id_current_user":{
+                        {
+                            "name":"id_current_user",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -534,12 +542,14 @@
                 "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileStatPost",
                 "parameters": [
                         {"description": "parameters"},
-                        {"statchoice":{
+                        {
+                            "name":"statchoice",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -574,16 +584,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"type":{
+                        {
+                            "name":"type",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -618,22 +628,24 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"type":{
+                        {
+                            "name":"type",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"reportid":{
+                        },
+                        {
+                            "name":"reportid",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -668,22 +680,24 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"type":{
+                        {
+                            "name":"type",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"reportid":{
+                        },
+                        {
+                            "name":"reportid",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -718,9 +732,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -754,9 +766,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -792,9 +802,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -830,16 +838,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"type":{
+                        {
+                            "name":"type",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -874,9 +882,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -912,9 +918,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -950,9 +954,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"user_account_id"},
@@ -988,9 +990,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1026,9 +1026,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1064,9 +1062,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1100,9 +1096,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1136,9 +1130,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1174,9 +1166,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1212,16 +1202,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"detailchoice":{
+                        {
+                            "name":"detailchoice",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -1256,9 +1246,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1292,9 +1280,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1330,9 +1316,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1366,9 +1350,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1404,9 +1386,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1440,9 +1420,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1476,9 +1454,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1514,9 +1490,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -1552,16 +1526,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"detailchoice":{
+                        {
+                            "name":"detailchoice",
+                            "in":"query",
                             "required":true,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -1628,9 +1602,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"user_account_id"},
@@ -1664,9 +1636,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"user_account_id"},
@@ -1702,9 +1672,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1738,9 +1706,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
@@ -1776,16 +1742,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"data_app_id":{
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -1820,28 +1786,32 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"entity_id":{
+                        {
+                            "name":"entity_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"resource_name":{
+                        },
+                        {
+                            "name":"resource_name",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -1876,40 +1846,48 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"user_null":{
+                        {
+                            "name":"user_null",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"entity_id":{
+                        },
+                        {
+                            "name":"entity_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"user_account_id":{
+                        },
+                        {
+                            "name":"user_account_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"resource_name":{
+                        },
+                        {
+                            "name":"resource_name",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -1942,9 +1920,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -1978,9 +1954,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2048,46 +2022,56 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"user_null":{
+                        {
+                            "name":"user_null",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"master_id":{
+                        },
+                        {
+                            "name":"master_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"entity_id":{
+                        },
+                        {
+                            "name":"entity_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"user_account_id":{
+                        },
+                        {
+                            "name":"user_account_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"resource_name":{
+                        },
+                        {
+                            "name":"resource_name",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -2120,9 +2104,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2156,9 +2138,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2226,76 +2206,96 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"user_null":{
+                        {
+                            "name":"user_null",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"app_data_detail_id":{
+                        },
+                        {
+                            "name":"app_data_detail_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"user_account_id":{
+                        },
+                        {
+                            "name":"user_account_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"resource_name_type":{
+                        },
+                        {
+                            "name":"resource_name_type",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"resource_name":{
+                        },
+                        {
+                            "name":"resource_name",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"resource_name_master_attribute_type":{
+                        },
+                        {
+                            "name":"resource_name_master_attribute_type",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"resource_name_master_attribute":{
+                        },
+                        {
+                            "name":"resource_name_master_attribute",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"resource_name_master_data_master_attribute_type":{
+                        },
+                        {
+                            "name":"resource_name_master_data_master_attribute_type",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"resource_name_data_master_attribute":{
+                        },
+                        {
+                            "name":"resource_name_data_master_attribute",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"entity_id":{
+                        },
+                        {
+                            "name":"entity_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -2328,9 +2328,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2364,9 +2362,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2431,24 +2427,30 @@
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.get",
                 "parameters": [
-                        {"id":{
+                        {
+                            "name":"id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"resource_name":{
+                        },
+                        {
+                            "name":"resource_name",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2481,60 +2483,78 @@
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.getLog",
                 "parameters": [
-                        {"sort":{
+                        {
+                            "name":"sort",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"order_by":{
+                        },
+                        {
+                            "name":"order_by",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"select_app_id":{
+                        },
+                        {
+                            "name":"select_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"year":{
+                        },
+                        {
+                            "name":"year",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"month":{
+                        },
+                        {
+                            "name":"month",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"day":{
+                        },
+                        {
+                            "name":"day",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"offset":{
+                        },
+                        {
+                            "name":"offset",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"limit":{
+                        },
+                        {
+                            "name":"limit",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2567,24 +2587,30 @@
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.getStatUniqueVisitor",
                 "parameters": [
-                        {"select_app_id":{
+                        {
+                            "name":"select_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"year":{
+                        },
+                        {
+                            "name":"year",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"month":{
+                        },
+                        {
+                            "name":"month",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2650,18 +2676,22 @@
                 "operationId": "server.socket.socketConnectedCount",
                 "parameters": [
                         {"description": "parameters"},
-                        {"identity_provider_id":{
+                        {
+                            "name":"identity_provider_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"logged_in":{
+                        },
+                        {
+                            "name":"logged_in",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -2694,48 +2724,62 @@
                 "operationId": "server.socket.socketConnectedList",
                 "parameters": [
                         {"description": "parameters"},
-                        {"select_app_id":{
+                        {
+                            "name":"select_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"offset":{
+                        },
+                        {
+                            "name":"offset",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"year":{
+                        },
+                        {
+                            "name":"year",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"month":{
+                        },
+                        {
+                            "name":"month",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"day":{
+                        },
+                        {
+                            "name":"day",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"order_by":{
+                        },
+                        {
+                            "name":"order_by",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"sort":{
+                        },
+                        {
+                            "name":"sort",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -2802,9 +2846,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2840,16 +2882,16 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"data_app_id":{
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -2882,9 +2924,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2920,9 +2960,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2956,9 +2994,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -2994,9 +3030,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -3030,9 +3064,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -3098,36 +3130,46 @@
                 "operationId": "server_db.dbModelUserAccount.getUsersAdmin",
                 "parameters": [
                         {"description": "parameters"},
-                        {"sort":{
+                        {
+                            "name":"sort",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"order_by":{
+                        },
+                        {
+                            "name":"order_by",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"search":{
+                        },
+                        {
+                            "name":"search",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"offset":{
+                        },
+                        {
+                            "name":"offset",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"limit":{
+                        },
+                        {
+                            "name":"limit",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -3162,9 +3204,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -3200,28 +3240,32 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
-                        {"config_group":{
+                        {
+                            "name":"config_group",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"parameter":{
+                        },
+                        {
+                            "name":"parameter",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"saved":{
+                        },
+                        {
+                            "name":"saved",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -3254,9 +3298,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "resource_id_string":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -3572,72 +3614,94 @@
                 "operationId": "server_db.fileModelLog.get",
                 "parameters": [
                         {"description": "parameters"},
-                        {"select_app_id":{
+                        {
+                            "name":"select_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"logscope":{
+                        },
+                        {
+                            "name":"logscope",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"loglevel":{
+                        },
+                        {
+                            "name":"loglevel",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"search":{
+                        },
+                        {
+                            "name":"search",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"sort":{
+                        },
+                        {
+                            "name":"sort",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"order_by":{
+                        },
+                        {
+                            "name":"order_by",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"year":{
+                        },
+                        {
+                            "name":"year",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"month":{
+                        },
+                        {
+                            "name":"month",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"day":{
+                        },
+                        {
+                            "name":"day",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"limit":{
+                        },
+                        {
+                            "name":"limit",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"offset":{
+                        },
+                        {
+                            "name":"offset",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -3702,42 +3766,54 @@
                 "operationId": "server_db.fileModelLog.getStat",
                 "parameters": [
                         {"description": "parameters"},
-                        {"select_app_id":{
+                        {
+                            "name":"select_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"statGroup":{
+                        },
+                        {
+                            "name":"statGroup",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"unique":{
+                        },
+                        {
+                            "name":"unique",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"statValue":{
+                        },
+                        {
+                            "name":"statValue",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "string"
                             }    
-                        }},
-                        {"year":{
+                        },
+                        {
+                            "name":"year",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"month":{
+                        },
+                        {
+                            "name":"month",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -3804,9 +3880,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -3840,9 +3914,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
@@ -3878,22 +3950,24 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":false
-                            }
+                            "required":false
                         },
-                        {"data_user_account_id":{
+                        {
+                            "name":"data_user_account_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
-                        {"data_app_id":{
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
                             "required":false,
                             "schema":{
                                 "type": "number"
                             }    
-                        }},
+                        },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":null},
@@ -4059,9 +4133,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "resource_id_number":{
-                                "required":true
-                            }
+                            "required":true
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
