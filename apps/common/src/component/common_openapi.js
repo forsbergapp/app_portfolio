@@ -143,7 +143,7 @@ const component = async props => {
             while ((match = regexp_module_function.exec(file ?? '')) !==null){
                 if (match[1].indexOf(`@name ${functionRESTAPI}`)>-1 && 
                     match[1].indexOf('@function')>-1 &&
-                    match[1].indexOf('@memberof REST_API')>-1)
+                    match[1].indexOf('@memberof ROUTE_REST_API')>-1)
                     return match[1]
                             .split('@')
                             .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)

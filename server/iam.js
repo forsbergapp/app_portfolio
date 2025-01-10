@@ -168,7 +168,7 @@ const iamUtilVerificationCode = () => {
  * @name iamAuthenticateAdmin
  * @description IAM Authenticates admin login
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          iam:string,
  *          authorization:string,
@@ -281,7 +281,7 @@ const iamAuthenticateAdmin = async parameters =>{
  * @name iamAuthenticateUser
  * @description IAM Authenticates user login
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          iam:string,
  *          ip:string,
@@ -440,7 +440,7 @@ const iamAuthenticateUser = async parameters =>{
  * @name iamAuthenticateUserProvider
  * @description IAM Authenticates user provider login
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          iam:string,
  *          resource_id:number,
@@ -627,7 +627,7 @@ const iamAuthenticateUserProvider = async parameters =>{
  * @name iamAuthenticateUserSignup
  * @description IAM Authenticates user signup
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          ip:string,
  *          user_agent:string,
@@ -725,10 +725,10 @@ const iamAuthenticateUserSignup = async parameters =>{
 /**
  * @name iamAuthenticateUserActivate
  * @description IAM Authenticates user activate
- *              Activates account after signup when user is still not logged in using APP_ID role
+ *              Activates user after signup when user is still not logged in using APP_ID role
  *              Activates user after user logged in using APP_ACCESS role
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,  
  *          resource_id:number,
  *          ip:string,
@@ -869,7 +869,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  * @name iamAuthenticateUserForgot
  * @description IAM Authenticates user password forgot
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number, 
  *          ip:string, 
  *          user_agent:string, 
@@ -969,7 +969,7 @@ const iamAuthenticateUserForgot = async parameters =>{
  * @name iamAuthenticateUserUpdate
  * @description IAM Authenticates user update
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          ip:string,
@@ -1116,7 +1116,7 @@ const iamAuthenticateUserUpdate = async parameters => {
  * @name iamAuthenticateUserUpdatePassword
  * @description IAM Authenticates user update password
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          ip:string,
@@ -1152,7 +1152,7 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
  * @name iamAuthenticateUserDelete
  * @description IAM Authenticates user delete
  * @function 
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{password:string},
@@ -1830,7 +1830,7 @@ const iamAuthenticateResource = parameters =>  {
  * @name iamUserLoginGet
  * @description Get user login records
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          data:{  data_user_account_id?:string|null,
  *                  data_app_id?:string|null}}} parameters
@@ -1878,7 +1878,7 @@ const iamUserCreate = async (app_id, data, res) => {
  * @name iamUserGet
  * @description User get
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          res:server_server_res}} parameters
@@ -1927,7 +1927,7 @@ const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserLogin.get(app_id, nul
  * @name iamUserUpdate
  * @description User update
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_file_iam_user_update,
@@ -1956,7 +1956,7 @@ const iamUserUpdate = async parameters =>{
  * @name iamUserLogout
  * @description User logout
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          authorization:string,
  *          ip:string,

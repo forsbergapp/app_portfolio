@@ -63,14 +63,18 @@
     },
     {
         "id":6,
-        "menu":"6 REST API",
-        "type":"REST_API",
+        "menu":"6 Routes",
+        "type":"ROUTE",
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
-                    "doc":"6.restapi"
+                    "doc":"6.appRoutes"
                 },
                 {   "id":2,
+                    "menu":"",
+                    "doc":"6.restapi"
+                },
+                {   "id":3,
                     "menu":"",
                     "doc":"6.restapiFunctions"
                 }]

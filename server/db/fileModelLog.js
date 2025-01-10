@@ -416,7 +416,7 @@ const postAppE = async (app_id, app_filename, app_function_name, app_line, logte
  * @description Get logs with page navigation support using limit and offset parameters
  *              and returns in ISO20022 format
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
  *                  logscope?:string|null,
@@ -579,7 +579,7 @@ const get = async parameters => {
  *                  100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
  *                  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @returns {Promise.<object>}
  */
 const getStatusCodes = async () =>{
@@ -593,7 +593,7 @@ const getStatusCodes = async () =>{
  * @name getStat
  * @description Get log stat
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
  *                  statGroup?:string|null,
@@ -735,7 +735,7 @@ const getStat = async parameters => {
  * @name getFiles
  * @description Get log files
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @returns{Promise.<[server_log_result_logFilesGet]|[]>}
  */
 const getFiles = async () => {

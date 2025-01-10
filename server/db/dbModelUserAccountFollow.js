@@ -15,7 +15,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name post
  * @description Follow
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{user_account_id?:number|null}}} parameters
@@ -35,7 +35,7 @@ const post = parameters =>
  * @name deleteRecord
  * @description Unfollow
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_account_id:number|null}}} parameters

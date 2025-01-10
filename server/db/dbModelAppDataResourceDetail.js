@@ -16,7 +16,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get detail resource
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_null?:string|null,
@@ -47,7 +47,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name post
  * @description Create detail resource
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{json_data:{},
  *                app_data_resource_master_id:string|null,
@@ -80,7 +80,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name update
  * @description Update detail resource
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{json_data:{},
@@ -114,7 +114,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name deleteRecord
  * @description Delete detail resource
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{json_data:{},

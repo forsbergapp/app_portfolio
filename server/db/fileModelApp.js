@@ -12,7 +12,7 @@ const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDele
  * @name get
  * @description Get records for given appid
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
  *          resource_id:number|null,
  *          res:server_server_res|null}} parameters
@@ -73,7 +73,7 @@ const post = async (app_id, data, res) => {
  * @name update
  * @description Update
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:number,
  *          data:{  name:string,

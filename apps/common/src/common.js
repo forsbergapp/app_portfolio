@@ -349,7 +349,8 @@ const commonBFE = async parameters =>{
 
 /**
  * @name commonAssetfile
- * @description Router function - get asset file
+ * @memberof ROUTE_APP
+ * @description Get asset file
  *              Supported
  *              .css files
  *              .js files       
@@ -527,9 +528,9 @@ const commonAssetfile = parameters =>{
 
 /**
  * @name commonModuleRun
- * @description Router function - run function
+ * @description Run function for given app and role
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
  *          data: {data_app_id:number},
@@ -556,9 +557,10 @@ const commonModuleRun = async parameters => {
 };
 /**
  * @name commonModuleGet
- * @description Router function - get module
+ * @description Get module of type REPORT or MODULE for given role
+ *              REPORT returns component template with specified report using with parameters from app or report queue
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:string,
  *          data:{
@@ -640,7 +642,7 @@ const commonModuleGet = async parameters => {
  * @name commonAppReportQueue
  * @description Runs report in queue
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:string,
  *          iam:string,
@@ -709,7 +711,7 @@ const commonAppReportQueue = async parameters =>{
  * @name commonModuleMetaDataGet
  * @description Returns all modules with metadata
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          data:{type:'REPORT'|'MODULE'|'FUNCTION'},
  *          resource_id:number,
@@ -740,6 +742,7 @@ const commonModuleMetaDataGet = async parameters =>{
 }; 
 /**
  * @name commonComponentCreate
+ * @memberof ROUTE_APP
  * @description Creates server component and returns to client
  *              app
  *              reports
@@ -882,7 +885,8 @@ const commonAppHost = host =>{
  };
 /**
  * @name commonApp
- * @description Router function - App: get app asset, common asset, app info page, app report, app module or app
+ * @namespace ROUTE_APP
+ * @description Get app asset, common asset, app info page, app report, app module or app
  * @function
  * @param {{ip:string,
  *          host:string,
@@ -975,7 +979,7 @@ const commonApp = async parameters =>{
  * @name commonAppsGet
  * @description Get all aps from app registry and translated names and add info to create url links
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          locale:string}} parameters

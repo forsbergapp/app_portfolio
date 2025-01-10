@@ -194,7 +194,7 @@ const configInit = async () => {
  * @name getFile
  * @description Config get saved
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{resource_id:server_db_file_db_name,
  *          data:{  config_group?:string|null,
  *                  parameter?:string|null,
@@ -221,7 +221,7 @@ const getFile = async parameters => {
  * @name update
  * @description Config save
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{resource_id:server_db_file_db_name,
  *          data:{  config: server_db_file_config_server|
  *                          server_db_file_app[]|
