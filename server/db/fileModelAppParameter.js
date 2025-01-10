@@ -14,7 +14,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get records for given appid
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          res:server_server_res|null}} parameters
@@ -46,7 +46,7 @@ const post = async (app_id, resource_id, data, res) => update({app_id:app_id, re
  * @description Update
  *              Table is designed to update one parameter in the same record
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  parameter_name:string,

@@ -42,7 +42,7 @@ const getUserPost = async (app_id, id) =>
  * @name getUserPostsByUserId
  * @description Get user post by id
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          res:server_server_res|null}} parameters
@@ -77,7 +77,7 @@ const getUserPostsByUserId = parameters =>{
  * @name getProfileUserPosts
  * @description Get user profile post
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{id_current_user?:string|null},
@@ -111,7 +111,7 @@ const getProfileUserPosts = parameters =>{
  * @name getProfileStatLike
  * @description Get profile stat like
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          res:server_server_res}} parameters
@@ -144,7 +144,7 @@ const getProfileUserPosts = parameters =>{
  * @name getProfileStatPost
  * @description Get profile post stat
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *         data:{statchoice?:string|null},
  *         res:server_server_res
@@ -182,7 +182,7 @@ const getProfileStatPost = parameters =>{
  * @name getProfileUserPostDetail
  * @description Get profile user detail post
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{detailchoice?:string|null},
@@ -216,7 +216,7 @@ const getProfileUserPostDetail = parameters => {
  * @name createUserPost
  * @description Create user post
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          data:{  initial:number,
  *                  description:string,
@@ -276,7 +276,7 @@ const createUserPost = parameters => {
  * @name updateUserPost
  * @description Update user post
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  description:string,
@@ -315,7 +315,7 @@ const updateUserPost = parameters => {
  * @name deleteUserPost
  * @description Delete user post
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  user_account_id:number},

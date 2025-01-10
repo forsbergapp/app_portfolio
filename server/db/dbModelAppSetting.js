@@ -17,7 +17,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get setting with translation text
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{setting_type:string|null},
  *          locale:string}} parameters
@@ -38,7 +38,7 @@ const get = parameters =>
  * @name getDisplayData
  * @description Get setting display data without translation
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  setting_type?:string|null,
  *                  data_app_id?:string|number|null,
