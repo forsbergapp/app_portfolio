@@ -369,7 +369,7 @@ const userGetEmail = async (app_id, email) => dbCommonExecute(app_id,
  * @name getProfile
  * @description Get user profile
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:number|string|null,
  *          ip:string,
@@ -483,7 +483,7 @@ const getProfile = async parameters =>{
  * @name getProfileStat
  * @description Get profile stat
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{statchoice?:string|null}}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_getProfileStat[]>}
@@ -534,7 +534,7 @@ const userUpdateAdmin = async (app_id, id, data) =>{
  * @name updateAdmin
  * @description Gets user and updates user by admin
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id :number,
  *          resource_id:number,
  *          data:{  username:string,
@@ -589,7 +589,7 @@ const updateAdmin = parameters =>{
  * @name getUsersAdmin
  * @description Get users by admin
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  sort?:string|null,
  *                  order_by?:string|null,
@@ -613,7 +613,7 @@ const getUsersAdmin = parameters =>
  * @name getStatCountAdmin
  * @description Get user stat
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_user_account_getStatCountAdmin[]>}
  */
@@ -725,7 +725,7 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @name updateUserCommon
  * @description Update user common
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_sql_parameter_user_account_updateUserCommon,
@@ -759,7 +759,7 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @name getUserByUserId
  * @description Get user by id
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          res:server_server_res}} parameters
@@ -811,7 +811,7 @@ const userDelete = async (app_id, id) =>
  * @name getProfileDetail
  * @description Get user profile detail
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{detailchoice?:string|null},

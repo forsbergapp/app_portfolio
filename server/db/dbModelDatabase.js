@@ -42,7 +42,7 @@ const DB_APP_UNINSTALL          = 'uninstall_database.json';
  * @name dbInfo
  * @description Database info
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_admin_DBInfo[]>}
  */
@@ -58,7 +58,7 @@ const dbInfo = parameters => import(`file://${process.cwd()}/server/db/common.js
  * @name dbInfoSpace
  * @description Database info space
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpace[]>}
  */
@@ -74,7 +74,7 @@ const dbInfoSpace = parameters =>import(`file://${process.cwd()}/server/db/commo
  * @name dbInfoSpaceSum
  * @description Database info space sum
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
  * @returns {Promise.<server_db_sql_result_admin_DBInfoSpaceSum[]>}
  */
@@ -120,7 +120,7 @@ const dbInstallGetFiles = async (install_type) =>{
  * @name dbInstall
  * @description Install db and sends server side events of progress
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          iam:string,}} parameters
  * @returns {Promise.<{info: {}[]}>}
@@ -342,7 +342,7 @@ const dbInstallGetFiles = async (install_type) =>{
   * @name dbInstalledCheck
   * @description Checks if database is installed
   * @function
-  * @memberof REST_API
+  * @memberof ROUTE_REST_API
   * @param {{app_id:number|null}}parameters
   * @returns {Promise.<server_db_database_install_db_check>}
   */
@@ -360,7 +360,7 @@ const dbInstallGetFiles = async (install_type) =>{
   * @name dbUninstall
   * @description Uninstall database installation
   * @function
-  * @memberof REST_API
+  * @memberof ROUTE_REST_API
   * @param {{app_id:number,
   *          iam:string}} parameters
   * @returns {Promise.<server_db_database_install_uninstall_result>} 
@@ -467,7 +467,7 @@ const dbInstallGetFiles = async (install_type) =>{
  *              Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
  *              Returns log about records created
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          iam:string,
  *          data:{  demo_password?:string|null}}} parameters
@@ -1087,7 +1087,7 @@ const dbInstallGetFiles = async (install_type) =>{
  * @description Demo uninstall
  *              Deletes all demo users and send server side events of progress
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          iam:string}} parameters
  * @returns {Promise.<{info: {}[]}>}

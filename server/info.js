@@ -8,7 +8,7 @@
  * @name info
  * @description Info about operating system and process
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @returns {Promise.<server_info_result_Info>}
  */
  const info = async () => {

@@ -19,7 +19,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get user account app
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
  * @returns {Promise.<server_db_sql_result_user_account_app_getUserAccountApp[]>}
@@ -39,7 +39,7 @@ const get = parameters =>
  * @name getApps
  * @description Get user account app apps
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          locale:string}} parameters
@@ -86,7 +86,7 @@ const post = async (app_id, user_account_id) =>
  * @name update
  * @description Update user account app
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{  preference_locale:string,
@@ -114,7 +114,7 @@ const update = parameters =>
  * @name deleteRecord
  * @description Delete record
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{delete_app_id:number}}} parameters

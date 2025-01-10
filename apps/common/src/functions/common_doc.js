@@ -254,7 +254,7 @@ const markdownRender = async parameters =>{
                                                             comment_with_filter:null
                                                         }));
         }
-        case parameters.type.toUpperCase()=='REST_API':{           
+        case parameters.type.toUpperCase()=='ROUTE':{           
             if (parameters.doc=='6.restapi'){
                 return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res)
                             .then(markdown=>
@@ -264,33 +264,45 @@ const markdownRender = async parameters =>{
                                 );
             }
             else{
-                const filePattern = /\.js$/;
-                /**@type{string[]} */
-                const membersof = [];
-                //Get REST API function with @namespace tag
-                membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
-                                                        file:               await getFile(`${process.cwd()}/server/server.js`, parameters.res),
-                                                        module:             '/server/server',
-                                                        comment_with_filter:'@namespace REST_API'
-                                                    }));
-                //Get all REST API functions with @memberof tag
-                for (const directory of ['apps', 'microservice','server'])
-                    for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
-                        const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
-                                                                        file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
-                                                                        module:             file,
-                                                                        comment_with_filter:'@memberof REST_API'
-                                                                    });
-                        if (file_functions != '')
-                            membersof.push(file_functions);
-                    }
-                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapiFunctions.md`, parameters.res)
-                    .then(markdown=>
-                            //remove all '\r' in '\r\n'
-                            markdown
-                            .replaceAll('\r\n','\n')
-                            .replace('@{REST_API_FUNCTIONS}',membersof.join('\n\n'))
-                        );
+                /**
+                 * @param {string} tag
+                 * @param {string} routePath
+                 * @param {string[]} routeDirectories
+                 * @param {string} file
+                 */
+                const renderRouteFuntions = async (tag, routePath, routeDirectories, file) =>{
+                    const filePattern = /\.js$/;
+                    /**@type{string[]} */
+                    const membersof = [];
+                    //Get REST API function with @namespace tag
+                    membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
+                                                            file:               await getFile(`${process.cwd()}${routePath}.js`, parameters.res),
+                                                            module:             routePath,
+                                                            comment_with_filter:`@namespace ${tag}`
+                                                        }));
+                    //Get all REST API functions with @memberof tag
+                    for (const directory of routeDirectories)
+                        for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
+                            const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
+                                                                            file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
+                                                                            module:             file,
+                                                                            comment_with_filter:`@memberof ${tag}`
+                                                                        });
+                            if (file_functions != '')
+                                membersof.push(file_functions);
+                        }
+                    return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${file}.md`, parameters.res)
+                        .then(markdown=>
+                                //remove all '\r' in '\r\n'
+                                markdown
+                                .replaceAll('\r\n','\n')
+                                .replace('@{ROUTE_FUNCTIONS}',membersof.join('\n\n'))
+                            );
+                };
+                if (parameters.doc=='6.appRoutes')
+                    return await renderRouteFuntions('ROUTE_APP', '/apps/common/src/common', ['apps'], parameters.doc);
+                else
+                    return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'microservice','server'], parameters.doc);
             }
         }
         default:{
@@ -300,7 +312,7 @@ const markdownRender = async parameters =>{
 };
 /**
  * @name menuRender
- * @description Renders the menu with APP, REST_API, GUIDE and MODULE menu items
+ * @description Renders the menu with APP, ROUTE, GUIDE and MODULE menu items
  * @function
  * @param {{app_id:number,
  *          res:server_server_res}} parameters
@@ -325,7 +337,7 @@ const menuRender = async parameters =>{
                     });
                 break;
             }
-            case menu.type=='REST_API':
+            case menu.type=='ROUTE':
             case menu.type=='GUIDE':{
                 //return menu with updated first title from the documents
                 for (const menu_sub of menu.menu_sub??[]){
@@ -390,7 +402,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
             }
             case data.type=='GUIDE':
             case data.type=='APP':
-            case data.type=='REST_API':
+            case data.type=='ROUTE':
             case data.type.startsWith('MODULE') &&
                 (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server')||data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');

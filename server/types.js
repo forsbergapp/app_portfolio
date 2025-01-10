@@ -123,7 +123,7 @@
 
 /**
  * APP commonDocumentType
- * @typedef {'MENU'|'APP'|'GUIDE'|'REST_API'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
+ * @typedef {'MENU'|'APP'|'GUIDE'|'ROUTE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
  */
 
 /**
@@ -2266,12 +2266,6 @@
  * @property {function} set
  * @property {function} route
  * @property {function} listen
- * 
- */
-
-/**
- * SERVER server_server_error_stack
- * @typedef {string} server_server_error_stack
  * 
  */
 

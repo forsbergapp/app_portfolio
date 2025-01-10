@@ -8,8 +8,7 @@
  */
 
 /**
- * @import {server_db_file_config_rest_api_methods, server_db_file_config_rest_api,server_server_error_stack, server_server_error, server_server_req, server_server_res, server_server_req_id_number,
- *          server_server_express} from './types.js'
+ * @import {server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
  */
 const zlib = await import('node:zlib');
 /**
@@ -330,31 +329,6 @@ const serverUtilResponseTime = (res) => {
 const serverUtilAppFilename = module =>{
     const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
     return module.substring(from_app_root);
-};
-/**
- * @name serverUtilAppFunction
- * @description Returns function used
- * @function
- * @param{server_server_error_stack} stack
- * @returns {string}
- */
-const serverUtilAppFunction = stack => {
-    const e = stack.split('at ');
-    let functionName;
-    //loop from last to first
-    //ES6 rest parameter to avoid mutating array
-    for (const line of [...e].reverse()) {
-        //ES6 startsWith and includes
-        if ((line.startsWith('file')==false && 
-            line.includes('node_modules')==false &&
-            line.includes('node:internal')==false &&
-            line.startsWith('Query')==false)||
-            line.startsWith('router')){
-                functionName = line.split(' ')[0];
-                break;
-        }
-    }
-    return functionName ?? '';
 };
 /**
  * @name serverUtilAppLine
@@ -715,7 +689,7 @@ const serverJs = async () => {
 };
 /**
  * @name serverREST_API
- * @namespace REST_API
+ * @namespace ROUTE_REST_API
  * @description Server REST API routes using openAPI where paths, methods, validation rules, operationId and function parameters are defined
  *              OperationId syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
  *              Returns single resource result format or ISO20022 format with either list header format or page header metadata
@@ -1001,5 +975,5 @@ const serverStart = async () =>{
     
 };
 export {serverResponseErrorSend, serverUtilCompression,
-        serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppFunction,serverUtilAppLine , 
+        serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverREST_API, serverStart };

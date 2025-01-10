@@ -12,7 +12,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get records for given appid
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:number|null,
  *          data:{data_app_id?:string|number|null},
@@ -67,7 +67,7 @@ const post = async (app_id, data, res) => {
  * @name update
  * @description Update record
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_file_app_module,
