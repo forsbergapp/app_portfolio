@@ -19,16 +19,16 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_null?:string|null,
- *                app_data_detail_id?:string|number|null,
- *                user_account_id?:string|number|null,
- *                data_app_id?:string|number|null,
+ *                app_data_detail_id?:number|null,
+ *                user_account_id?:number|null,
+ *                data_app_id?:number|null,
  *                resource_name_type?:string|null,
  *                resource_name?:string|null,
  *                resource_name_master_attribute_type?:string|null,
  *                resource_name_master_attribute?:string|null,
  *                resource_name_data_master_attribute_type?:string|null,
  *                resource_name_data_master_attribute?:string|null,
- *                entity_id?:string|null
+ *                entity_id?:number|null
  *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_get[]>}
  */
@@ -59,10 +59,10 @@ const get = parameters =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{json_data:{},
- *                user_account_id:string|number|null,
- *                data_app_id:string|number|null,
- *                app_data_resource_detail_id:string|number|null,
- *                app_data_resource_master_attribute_id:string|null
+ *                user_account_id:number|null,
+ *                data_app_id:number|null,
+ *                app_data_resource_detail_id:number|null,
+ *                app_data_resource_master_attribute_id:number|null
  *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_post>}
  */
@@ -88,10 +88,10 @@ const post = parameters =>
  * @param {{app_id:number,
  *          resource_id:number
  *          data:{json_data:{},
- *                user_account_id:string|null,
- *                data_app_id:string|null,
- *                app_data_resource_detail_id:string|null,
- *                app_data_resource_master_attribute_id:string|null
+ *                user_account_id:number|null,
+ *                data_app_id:number|null,
+ *                app_data_resource_detail_id:number|null,
+ *                app_data_resource_master_attribute_id:number|null
  *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_update>}
  */
@@ -117,8 +117,8 @@ const update = parameters =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number
- *          data:{user_account_id:string|null,
- *                data_app_id:string|null
+ *          data:{user_account_id:number|null,
+ *                data_app_id:number|null
  *                }}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_detail_data_delete>}
  */

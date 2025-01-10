@@ -327,9 +327,18 @@
  *                                  parameters: [
  *                                      {[key:string]:boolean|string|{}}
  *                                  ],
+ *                                  requestBody: {
+ *                                      "description":"",
+ *                                      "required":true,
+ *                                      "content":{
+ *                                          [key:string]: {
+ *                                              [key:string]: string|boolean
+ *                                          }
+ *                                      }
+ *                                  },
  *                                  responses: {
  *                                      [key:string]: {
- *                                          "$ref": string
+ *                                          [key:string]: string
  *                                      }
  *                                  }
  *                              }
@@ -1534,13 +1543,13 @@
 
 /**
  * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_create
- * @typedef {{  bio:string|null,
- *              private: number|null,
- *              user_level:number|null,
- *              username:string|null,
+ * @typedef {{  username:string|null,
  *              password:null,
  *              password_new:string|null,
  *              password_reminder:string|null,
+ *              bio:string|null,
+ *              private: number|null,
+ *              user_level:number|null,
  *              email:string|null,
  *              email_unverified:string|null,
  *              avatar:string|null,

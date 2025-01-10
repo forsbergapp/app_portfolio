@@ -19,10 +19,10 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_null?:string|null,
- *                user_account_id?:string|number|null,
- *                data_app_id?:string|number|null,
+ *                user_account_id?:number|null,
+ *                data_app_id?:number|null,
  *                resource_name?:string|null,
- *                entity_id?:string|null}}} parameters
+ *                entity_id?:number|null}}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_resource_master_get[]>}
  */
 const get = parameters => {

@@ -80,7 +80,26 @@ const template = props =>`
                                                         <div class='common_markdown_table_col'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}</div>
                                                         <div class='common_markdown_table_col common_markdown_table_content_preserve'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}</div>
                                                     </div>
-                                                `).join('')}
+                                                `).join('')
+                                                }
+                                                ${method[1]?.requestBody?
+                                                    `<div class='common_markdown_table_row_detail'>
+                                                        <div class='common_markdown_table_col common_markdown_title_h3'>Request body</div>
+                                                        <div class='common_markdown_table_col'></div>
+                                                    </div>
+                                                    <div class='common_markdown_table_row_detail'>
+                                                        <div class='common_markdown_table_col'>Description</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${method[1]?.requestBody.description}</div>
+                                                    </div>
+                                                    <div class='common_markdown_table_row_detail'>
+                                                        <div class='common_markdown_table_col'>Required</div>
+                                                        <div class='common_markdown_table_col'>${method[1]?.requestBody.required}</div>
+                                                    </div>
+                                                    <div class='common_markdown_table_row_detail'>
+                                                        <div class='common_markdown_table_col'>Content</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(method[1]?.requestBody.content, undefined,2)}</div>
+                                                    </div>`:''
+                                                }
                                                 <div class='common_markdown_table_row_detail'>
                                                     <div class='common_markdown_table_col common_markdown_title_h3'>Responses</div>
                                                     <div class='common_markdown_table_col'></div>
@@ -90,7 +109,8 @@ const template = props =>`
                                                         <div class='common_markdown_table_col'>${status}</div>
                                                         <div class='common_markdown_table_col'>${JSON.stringify(response, undefined,2)}</div>
                                                     </div>
-                                                `).join('')}
+                                                `).join('')
+                                                }
                                             </div>
                                         </div>
                                     `).join('')}
