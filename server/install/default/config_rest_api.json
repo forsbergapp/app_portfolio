@@ -210,7 +210,7 @@
         },
         "/bff/app_id/v1/server-db/user_account-activate/${resource_id_number}": {
             "put": {
-                "summary": "Activates account after signup when user is still not logged in using app_id",
+                "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
                 "parameters": [
                         {"description": "parameters"},
@@ -246,7 +246,7 @@
         },
         "/bff/app_access/v1/server-db/user_account-activate/${resource_id_number}": {
             "put": {
-                "summary": "Activate user after user logged in using app_access",
+                "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
                 "parameters": [
                         {"description": "parameters"},

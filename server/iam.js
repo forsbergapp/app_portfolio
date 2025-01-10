@@ -725,6 +725,8 @@ const iamAuthenticateUserSignup = async parameters =>{
 /**
  * @name iamAuthenticateUserActivate
  * @description IAM Authenticates user activate
+ *              Activates account after signup when user is still not logged in using APP_ID role
+ *              Activates user after user logged in using APP_ACCESS role
  * @function
  * @memberof REST_API
  * @param {{app_id:number,  
