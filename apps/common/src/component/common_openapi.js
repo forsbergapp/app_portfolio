@@ -77,8 +77,8 @@ const template = props =>`
                                                 </div>
                                                 ${method[1].parameters.map((/**@type{*}*/param) => `
                                                     <div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col'>${Object.keys(param)[0]}</div>
-                                                        <div class='common_markdown_table_col common_markdown_table_content_json'>${Object.values(param)[0]?.constructor==Object?JSON.stringify(Object.values(param)[0], undefined,2):Object.values(param)[0]}</div>
+                                                        <div class='common_markdown_table_col'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_content_json'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}</div>
                                                     </div>
                                                 `).join('')}
                                                 <div class='common_markdown_table_row_detail'>

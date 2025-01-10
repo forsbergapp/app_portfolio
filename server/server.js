@@ -835,28 +835,38 @@ const serverREST_API = async (routesparameters) =>{
                             path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0];
     if (configPath){
         /**
+         * Get server validation parameter for either keys starting with server
+         * or resource_id_number or resource_id_string that all should use '$ref' and match components path
+         * All paths should specify required key if this is used for the path
+         * @example {
+                        "$ref": "#/components/parameters/resource_id_number",
+                        "required":false
+                    }
          * @param{string} key
+         * @returns {*}
          */
-        const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key];
+        const getParameterValidation = key => key.startsWith('server')?
+                                        methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key]:
+                                            methodObj.parameters.filter((/**@type{*}*/parameter)=>
+                                                    Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
+        
 
         const methodObj = configPath[1][routesparameters.method.toLowerCase()];
         if (methodObj){
             if (validate({  config_path:                        configPath[0],
-                            resource_validate_key:              getParameter('server_validation_resource_key'),
-                            resource_validate_value:            getParameter('server_validation_resource_value'),
-                            required:                           (getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
-                            resource_validate_app_data_app_id:  getParameter('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
-                            validate_app_function:              getParameter('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
-                            validate_app_function_role:         getParameter('server_validation_app_function')?getParameter('server_validation_app_function_role'):null})){
+                            resource_validate_key:              getParameterValidation('server_validation_resource_key'),
+                            resource_validate_value:            getParameterValidation('server_validation_resource_value'),
+                            required:                           (getParameterValidation('resource_id_string') ?? getParameterValidation('resource_id_number'))?.required ?? false,
+                            resource_validate_app_data_app_id:  getParameterValidation('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
+                            validate_app_function:              getParameterValidation('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
+                            validate_app_function_role:         getParameterValidation('server_validation_app_function')?getParameterValidation('server_validation_app_function_role'):null})){
 
                 //add parameters if used for GET method
                 const get_parameters = routesparameters.method=='GET'?
                                             methodObj.parameters
-                                                            //exclude keys starting with 'server' and '$ref'
-                                                            .filter((/**@type{*}*/key)=>  Object.keys(key)[0]!='description' && 
-                                                                                            !Object.keys(key)[0].startsWith('server') && 
-                                                                                            !Object.keys(key)[0].startsWith('$ref'))
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[Object.keys(key)[0]]:app_query?.get(Object.keys(key)[0])}};},{}):
+                                                            //include all parameters.in=query
+                                                            .filter((/**@type{*}*/parameter)=>parameter.in =='query')
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}):
                                                 null;
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
@@ -877,26 +887,30 @@ const serverREST_API = async (routesparameters) =>{
                                                 false:
                                                     (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
                                                         true:
-                                                            (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
+                                                            (getParameterValidation('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
                 //return result using ISO20022 format
+                //send only parameters to the function if declared true
                 return iso_return_message(await moduleRESTAPI[functionRESTAPI]({
                                         app_id:         routesparameters.app_id,
-                                        iam:            getParameter('server_function_parameter_iam')?routesparameters.res.req.query.iam:null,
-                                        authorization:  getParameter('server_function_parameter_authorization')?routesparameters.authorization:null,
-                                        user_agent:     getParameter('server_function_parameter_user_agent')?routesparameters.user_agent:null,
-                                        accept_language:getParameter('server_function_parameter_accept_language')?routesparameters.accept_language:null,
-                                        host:           getParameter('server_function_parameter_accept_host')?routesparameters.host:null,
-                                        locale:         getParameter('server_function_parameter_locale')?app_query?.get('locale') ??'en':null,
-                                        ip:             getParameter('server_function_parameter_ip')?routesparameters.ip:null,
-                                        path:           getParameter('server_function_parameter_path')?routesparameters.route_path:null,
-                                        query:          getParameter('server_function_parameter_query')?URI_query:null,
-                                        method:         getParameter('server_function_parameter_method')?routesparameters.method:null,
-                                        data:           getParameter('server_function_parameter_body')?routesparameters.body:{...get_parameters},
-                                        endpoint:       getParameter('server_function_parameter_endpoint')?routesparameters.endpoint:null,
-                                        resource_id:    getParameter('server_function_parameter_resource_id')?
-                                                                (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0])):
-                                                                    null,
-                                        res:            getParameter('server_function_parameter_res')?routesparameters.res:null
+                                        ...(getParameterValidation('server_function_parameter_iam')                     && {iam:            routesparameters.res.req.query.iam}),
+                                        ...(getParameterValidation('server_function_parameter_authorization')           && {authorization:  routesparameters.authorization}),
+                                        ...(getParameterValidation('server_function_parameter_user_agent')              && {user_agent:     routesparameters.user_agent}),
+                                        ...(getParameterValidation('server_function_parameter_accept_language')         && {accept_language:routesparameters.accept_language}),
+                                        ...(getParameterValidation('server_function_parameter_accept_host')             && {host:           routesparameters.host}),
+                                        ...(getParameterValidation('server_function_parameter_locale')                  && {locale:         app_query?.get('locale') ??'en'}),
+                                        ...(getParameterValidation('server_function_parameter_ip')                      && {ip:             routesparameters.ip}),
+                                        ...(getParameterValidation('server_function_parameter_path')                    && {path:           routesparameters.route_path}),
+                                        ...(getParameterValidation('server_function_parameter_query')                   && {query:          URI_query}),
+                                        ...(getParameterValidation('server_function_parameter_method')                  && {method:         routesparameters.method}),
+                                        
+                                        ...((getParameterValidation('server_function_parameter_body')                   && {data:           routesparameters.body}) || 
+                                            ((getParameterValidation('server_function_parameter_body')??false)==false   && {data:           {...get_parameters}})),
+
+                                        ...(getParameterValidation('server_function_parameter_endpoint')                && {endpoint:       routesparameters.endpoint}),
+                                        ...(getParameterValidation('server_function_parameter_resource_id')             && {resource_id:    (getParameterValidation('resource_id_number')?
+                                                                                                                                            resource_id_get_number(configPath[0]):
+                                                                                                                                            resource_id_get_string(configPath[0]))}),
+                                        ...(getParameterValidation('server_function_parameter_res')                     && {res:            routesparameters.res})
                                     }), singleResource());
             }
             else{
