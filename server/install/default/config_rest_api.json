@@ -237,6 +237,43 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "verification_type":{
+                                                "type":"string"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            },
+                                            "user_language":{
+                                                "type":"string"
+                                            },
+                                            "user_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_number_system":{
+                                                "type":"string"
+                                            },
+                                            "user_platform":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longitude":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -273,6 +310,43 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "verification_type":{
+                                                "type":"string"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            },
+                                            "user_language":{
+                                                "type":"string"
+                                            },
+                                            "user_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_number_system":{
+                                                "type":"string"
+                                            },
+                                            "user_platform":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longitude":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -305,6 +379,40 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "user_language":{
+                                                "type":"string"
+                                            },
+                                            "user_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_number_system":{
+                                                "type":"string"
+                                            },
+                                            "user_platform":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longitude":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -787,6 +895,25 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "ps":{
+                                                "type":"string"
+                                            },
+                                            "report_parameters":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -903,6 +1030,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "data_app_id":{
+                                                "type":"string"
+                                            }
+                                        },
+                                        "additionalProperties":true
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -939,6 +1083,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "data_app_id":{
+                                                "type":"string"
+                                            }
+                                        },
+                                        "additionalProperties":true
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -975,6 +1136,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "data_app_id":{
+                                                "type":"string"
+                                            }
+                                        },
+                                        "additionalProperties":true
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -1011,6 +1189,43 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "auth":{
+                                                "type":"string"
+                                            },
+                                            "user_language":{
+                                                "type":"string"
+                                            },
+                                            "user_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_number_system":{
+                                                "type":"string"
+                                            },
+                                            "user_platform":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longitude":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -1047,6 +1262,69 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "password_reminder":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "private":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "new_email":{
+                                                "type":"string"
+                                            },
+                                            "user_language":{
+                                                "type":"string"
+                                            },
+                                            "user_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_number_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_platform":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longtitude":{
+                                                "type":"string"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1083,6 +1361,69 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "password_reminder":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "private":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "new_email":{
+                                                "type":"string"
+                                            },
+                                            "user_language":{
+                                                "type":"string"
+                                            },
+                                            "user_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_number_timezone":{
+                                                "type":"string"
+                                            },
+                                            "user_platform":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longtitude":{
+                                                "type":"string"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1151,6 +1492,23 @@
                         {"server_function_parameter_body":false},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1187,6 +1545,29 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "private":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1267,6 +1648,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -1301,6 +1699,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1337,6 +1752,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -1371,6 +1803,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1441,6 +1890,33 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "preference_locale":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "app_setting_preference_timezone_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            },
+                                            "app_setting_preference_direction_id":{
+                                                "type":"number"
+                                            },
+                                            "app_setting_preference_arabic_script_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1475,6 +1951,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "delete_app_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1587,6 +2080,32 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "initial":{
+                                                "type":"number"
+                                            },
+                                            "description":{
+                                                "type":"string"
+                                            },
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -1623,6 +2142,29 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "description":{
+                                                "type":"string"
+                                            },
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1657,6 +2199,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1693,6 +2252,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_app_data_post_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -1727,6 +2303,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_app_data_post_id":{
+                                                "required":true,
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1941,6 +2534,34 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_app_data_entity_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -1975,6 +2596,25 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2007,6 +2647,37 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "user_account_app_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_app_data_entity_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2125,6 +2796,43 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "app_data_resource_master_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_id":{
+                                                "type":"number"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_app_data_entity_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_resource_master_attribute_id":{
+                                                "type":"number"
+                                            },
+                                            "entity_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2159,6 +2867,28 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2191,9 +2921,46 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "app_data_resource_master_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_id":{
+                                                "type":"number"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_entity_resource_app_data_entity_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_resource_master_attribute_id":{
+                                                "type":"number"
+                                            },
+                                            "entity_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
@@ -2349,6 +3116,34 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_resource_detail_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_resource_master_attribute_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2383,6 +3178,25 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2415,15 +3229,43 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "json_data":{
+                                                "type":"string"
+                                            },
+                                            "user_account_id":{
+                                                "type":"number"
+                                            },
+                                            "data_app_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_resource_detail_id":{
+                                                "type":"number"
+                                            },
+                                            "app_data_resource_master_attribute_id":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
         },
         "/bff/admin/v1/server-db/app_data_stat": {
-            "post": {
+            "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.get",
                 "parameters": [
@@ -2663,9 +3505,37 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "app_id":{
+                                                "type":"number"
+                                            },
+                                            "client_id":{
+                                                "type":"number"
+                                            },
+                                            "client_id_current":{
+                                                "type":"number"
+                                            },
+                                            "broadcast_type":{
+                                                "type":"string"
+                                            },
+                                            "broadcast_message":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
@@ -2867,6 +3737,55 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "name":{
+                                                "type":"string"
+                                            },
+                                            "subdomain":{
+                                                "type":"string"
+                                            },
+                                            "path":{
+                                                "type":"string"
+                                            },
+                                            "logo":{
+                                                "type":"string"
+                                            },
+                                            "showparam":{
+                                                "type":"number"
+                                            },
+                                            "manifest":{
+                                                "type":"string"
+                                            },
+                                            "js":{
+                                                "type":"string"
+                                            },
+                                            "css":{
+                                                "type":"string"
+                                            },
+                                            "css_report":{
+                                                "type":"string"
+                                            },
+                                            "favicon_32x32":{
+                                                "type":"string"
+                                            },
+                                            "favicon_192x192":{
+                                                "type":"string"
+                                            },
+                                            "status":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -2945,6 +3864,40 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "id":{
+                                                "type":"number"
+                                            },
+                                            "app_id":{
+                                                "type":"number"
+                                            },
+                                            "commmon_type":{
+                                                "type":"string"
+                                            },
+                                            "commmon_name":{
+                                                "type":"string"
+                                            },
+                                            "commmon_role":{
+                                                "type":"string"
+                                            },
+                                            "commmon_path":{
+                                                "type":"string"
+                                            },
+                                            "commmon_description":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -3015,6 +3968,28 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "parameter_name":{
+                                                "type":"string"
+                                            },
+                                            "parameter_value":{
+                                                "type":"string"
+                                            },
+                                            "parameter_comment":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -3085,6 +4060,25 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "parameter_name":{
+                                                "type":"string"
+                                            },
+                                            "parameter_value":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -3225,6 +4219,49 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "email_unverified":{
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "password_reminder":{
+                                                "type":"string"
+                                            },
+                                            "active":{
+                                                "type":"number"
+                                            },
+                                            "user_level":{
+                                                "type":"number"
+                                            },
+                                            "private":{
+                                                "type":"number"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -3319,6 +4356,31 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "config":{
+                                                "type":"string"
+                                            },
+                                            "maintenance":{
+                                                "type":"string"
+                                            },
+                                            "comment":{
+                                                "type":"string"
+                                            },
+                                            "configuration":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -3383,6 +4445,23 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":false}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "demo_password":{
+                                                "required":true,
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -3935,6 +5014,42 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "email_unverified":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "200":{
                         "$ref": "#/components/responses/200"
@@ -4051,9 +5166,84 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "password_reminder":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "private":{
+                                                "type":"number"
+                                            },
+                                            "user_level":{
+                                                "type":"number"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "email_unverified":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            },
+                                            "active":{
+                                                "type":"number"
+                                            },
+                                            "identity_provider_id":{
+                                                "type":"number"
+                                            },
+                                            "provider_id":{
+                                                "type":"string"
+                                            },
+                                            "provider_first_name":{
+                                                "type":"string"
+                                            },
+                                            "provider_last_name":{
+                                                "type":"string"
+                                            },
+                                            "provider_image":{
+                                                "type":"string"
+                                            },
+                                            "provider_image_url":{
+                                                "type":"string"
+                                            },
+                                            "provider_email":{
+                                                "type":"string"
+                                            },
+                                            "admin":{
+                                                "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
+                    "201":{
+                        "$ref": "#/components/responses/201"
                     }
                 }
             }
@@ -4118,6 +5308,33 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_logntitude":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -4154,6 +5371,49 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "identity_provider_id":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
+                                            },
+                                            "provider_id":{
+                                                "type":"string"
+                                            },
+                                            "provider_first_name":{
+                                                "type":"string"
+                                            },
+                                            "provider_last_name":{
+                                                "type":"string"
+                                            },
+                                            "provider_image":{
+                                                "type":"string"
+                                            },
+                                            "provider_image_url":{
+                                                "type":"string"
+                                            },
+                                            "provider_email":{
+                                                "type":"string"
+                                            },
+                                            "client_latitude":{
+                                                "type":"string"
+                                            },
+                                            "client_longitude":{
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -4317,6 +5577,55 @@
                         {"server_function_parameter_body":true},
                         {"server_function_parameter_res":true}
                 ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{                                            
+                                            "host":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "port":{
+                                                "required":true,
+                                                "type":"number"
+                                            },
+                                            "secure":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "auth_user":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "auth_pass":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "from":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "to":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "subject":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "html":{
+                                                "required":true,
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
                 "responses": {
                     "201":{
                         "$ref": "#/components/responses/201"
@@ -4345,6 +5654,76 @@
                 "name":	"resource_id_string",
                 "in":"path",
                 "required":true,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "ip":{
+                "name":	"ip",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "authorization":{
+                "description":"req.headers.authorization",
+                "name":	"authorization",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "user_agent":{
+                "description":"req.headers['user-agent']",
+                "name":	"user_agent",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "accept_language":{
+                "description":"req.headers['accept-language']",
+                "name":	"accept_language",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "host":{
+                "description":"req.headers.host",
+                "name":	"host",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "method":{
+                "name":	"method",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "route_path":{
+                "description":"Route path after * and ? or full path for app route using logic: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length)",
+                "name":	"route_path",
+                "in":"path",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "endpoint":{
+                "description":"Derived from route path: 'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|'SERVER'",
+                "name":	"endpoint",
+                "in":"path",
+                "required":false,
                 "schema":{
                     "type": "string"
                 }
