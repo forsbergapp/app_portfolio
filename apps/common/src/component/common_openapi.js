@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{openapi :server_db_file_config_rest_api,
- *          sortByRole:function,
+ *          sortByRole:function
  *          }} props
  * @returns {string}
  */
@@ -65,7 +65,7 @@ const template = props =>`
                                             <div class='common_markdown_table_row_detail_master'>
                                                 <div class='common_markdown_table_row_detail'>
                                                     <div class='common_markdown_table_col'>Summary</div>
-                                                    <div class='common_markdown_table_col'>${method[1].summary}</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_content_preserve'>${method[1].summary}</div>
                                                 </div>
                                                 <div class='common_markdown_table_row_detail'>
                                                     <div class='common_markdown_table_col'>operationId</div>
@@ -78,7 +78,7 @@ const template = props =>`
                                                 ${method[1].parameters.map((/**@type{*}*/param) => `
                                                     <div class='common_markdown_table_row_detail'>
                                                         <div class='common_markdown_table_col'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}</div>
-                                                        <div class='common_markdown_table_col common_markdown_table_content_json'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}</div>
                                                     </div>
                                                 `).join('')}
                                                 <div class='common_markdown_table_row_detail'>
@@ -106,7 +106,7 @@ const template = props =>`
                                 ${Object.entries(props.openapi.components).map(key => `
                                     <div class='common_markdown_table_row '>
                                         <div class='common_markdown_table_col'>${key[0]}</div> 
-                                        <div class='common_markdown_table_col common_markdown_table_content_json'>${JSON.stringify(key[1], undefined,2)}</div> 
+                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(key[1], undefined,2)}</div> 
                                     </div> 
                                 `).join('')}
                             </div>
@@ -124,6 +124,38 @@ const template = props =>`
 * @returns {Promise.<string>}
 */
 const component = async props => {
+    const fs = await import('node:fs');
+    /**
+     * Return description tag for given operationId
+     * @param{string} operationId
+     * @returns {Promise.<string>}
+     */
+    const getDescription = async operationId =>{
+            //read operationId what file to import and what function to execute
+            //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
+            const filePath = '/' + operationId.split('.')[0].replaceAll('_','/') + '/' +
+                                   operationId.split('.')[1] + '.js';
+            const functionRESTAPI = operationId.split('.')[2];
+            const file = await fs.promises.readFile(`${process.cwd()}${filePath}`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'))
+                                .catch(()=>null);
+            const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
+            let match;
+            while ((match = regexp_module_function.exec(file ?? '')) !==null){
+                if (match[1].indexOf(`@name ${functionRESTAPI}`)>-1 && 
+                    match[1].indexOf('@function')>-1 &&
+                    match[1].indexOf('@memberof REST_API')>-1)
+                    return match[1]
+                            .split('@')
+                            .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)
+                                                                            .trimStart()
+                                                                            .split('\n')
+                                                                            .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                                                            .join('\n');
+            }
+            return '';
+            
+    };
+
     const HTTPS_ENABLE = props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
     const HOST = props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
     const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
@@ -147,6 +179,10 @@ const component = async props => {
                                                                         ((PORT==80||PORT==443)?'':`/:${PORT}`)
                                     };
                         });
+    for (const path of Object.entries(CONFIG_REST_API.paths))
+        for (const method of Object.entries(path[1]))
+            method[1].summary = await getDescription(method[1].operationId);
+
     return template({   openapi:CONFIG_REST_API,
                         sortByRole:sortByRole
                    });

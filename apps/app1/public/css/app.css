@@ -259,7 +259,7 @@ thead tr
 .common_markdown_table_no_odd_event{
     white-space: initial;
 }
-.common_markdown_table_no_odd_event .common_markdown_table_content_json{
+.common_markdown_table_no_odd_event .common_markdown_table_content_preserve{
     white-space: pre-wrap;
 }
 .common_markdown_table_no_odd_event .common_markdown_table_row{
