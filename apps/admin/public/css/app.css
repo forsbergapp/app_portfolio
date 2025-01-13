@@ -73,7 +73,7 @@
 #menu_config_save::before{															content:var(--common_app_icon_save)}
 
 #menu_monitor_connected::before{													content:var(--common_app_icon_user_connections)  ' '  var(--common_app_icon_log)}
-#menu_monitor_app_log::before{														content:var(--common_app_icon_apps) ' ' var(--common_app_icon_log)}
+#menu_monitor_app_data_stat::before{												content:var(--common_app_icon_apps) ' ' var(--common_app_icon_log)}
 #menu_monitor_server_log::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_log)}
 #menu_monitor_detail_filesearch::before{											content:var(--common_app_icon_lov)}
 
@@ -683,7 +683,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	flex-direction: column;
 	height: 100%;
 }
-#menu_monitor_detail_app_log_form{
+#menu_monitor_detail_app_data_stat_form{
 	display:flex;
 	flex-direction: column;
 	height: 100%;
@@ -710,20 +710,20 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display:grid;
 	grid-template-columns: 9em 14em 4em 7em 9em 10em 8em 10em 7em 7em 15em 15em 12em 8em !important
 }
-#menu_monitor_detail_app_log, #menu_monitor_detail_connected{
+#menu_monitor_detail_app_data_stat, #menu_monitor_detail_connected{
 	border-radius: var(--common_app_css_border_radius);
 }
-.menu_monitor_detail_app_log_row, .menu_monitor_detail_connected_row{
+.menu_monitor_detail_app_data_stat_row, .menu_monitor_detail_connected_row{
 	height: auto;
 	padding-top:4px;
 	padding-inline-start: 5px;
 	text-align: start;
 }   
-.menu_monitor_detail_app_log_row {
+.menu_monitor_detail_app_data_stat_row {
 	display:grid;
-	grid-template-columns: 12em 9em 4em 7em 10em 30em 30em 9em 7em 7em 7em 12em 12em 12em 12em 50em 15em !important
+	grid-template-columns: 12em 9em 12em 23em 20em 100em !important
 }
-.menu_monitor_detail_app_log_col, .menu_monitor_detail_connected_col{
+.menu_monitor_detail_app_data_stat_col, .menu_monitor_detail_connected_col{
 	display:inline-block;
 	margin-inline-end: 10px;
 }
@@ -764,7 +764,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 
 .menu_monitor_detail_server_log_request_log_col:nth-child(1),
 .menu_monitor_detail_server_log_col:nth-child(1),
-.menu_monitor_detail_server_log_app_log_col:nth-child(1),
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(1),
 .menu_monitor_detail_server_log_service_log_col:nth-child(1),
 .menu_monitor_detail_server_log_db_log_col:nth-child(1)
 {
@@ -815,16 +815,16 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 .menu_monitor_detail_server_log_request_log_col:nth-child(16){
 	width:80px;
 }
-.menu_monitor_detail_server_log_app_log_col:nth-child(2){
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(2){
 	width:30px;
 }
-.menu_monitor_detail_server_log_app_log_col:nth-child(3){
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(3){
 	width:120px;
 }
-.menu_monitor_detail_server_log_app_log_col:nth-child(4){
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(4){
 	width:90px;
 }
-.menu_monitor_detail_server_log_app_log_col:nth-child(5){
+.menu_monitor_detail_server_log_app_data_stat_col:nth-child(5){
 	width:20px;
 }
 .menu_monitor_detail_server_log_service_log_col:nth-child(2){
@@ -1467,7 +1467,7 @@ body{
 .menu_db_info_space_detail_row:nth-child(odd),
 .menu_user_stat_row:nth-child(odd),
 .list_lov_row:nth-child(odd),
-.menu_monitor_detail_app_log_row:nth-child(odd),
+.menu_monitor_detail_app_data_stat_row:nth-child(odd),
 .menu_monitor_detail_connected_row:nth-child(odd),
 .menu_monitor_detail_server_log_row:nth-of-type(odd),
 .menu_report_queue_row:nth-of-type(odd){
@@ -1478,7 +1478,7 @@ body{
 .menu_db_info_space_detail_row:nth-child(even),
 .menu_user_stat_row:nth-child(even),
 .list_lov_row:nth-child(even),
-.menu_monitor_detail_app_log_row:nth-child(even),
+.menu_monitor_detail_app_data_stat_row:nth-child(even),
 .menu_monitor_detail_connected_row:nth-child(even),
 .menu_monitor_detail_server_log_row:nth-of-type(even),
 .menu_report_queue_row:nth-of-type(even){
@@ -1499,7 +1499,7 @@ body{
 .menu_users_iam_user_login_row,
 .menu_apps_row,
 .menu_apps_detail_row,
-.menu_monitor_detail_app_log_row,
+.menu_monitor_detail_app_data_stat_row,
 .menu_monitor_detail_connected_row,
 .menu_monitor_detail_server_log_row,
 .menu_config_detail_row{
@@ -1521,7 +1521,7 @@ body{
 }
 #menu_db_info_space_detail,
 #lov_list,
-#menu_monitor_detail_app_log,
+#menu_monitor_detail_app_data_stat,
 #menu_monitor_detail_connected,
 #menu_monitor_detail_server_log,
 #menu_config_detail_edit{

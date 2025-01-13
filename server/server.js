@@ -844,11 +844,11 @@ const serverREST_API = async (routesparameters) =>{
                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}):
                                             //all other methods use body to send data
                                             //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
-                                            methodObj.requestBody.content['application/json'].schema.additionalProperties?
+                                            (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json'].schema.additionalProperties)?
                                                 {...routesparameters.body,...Object.entries(methodObj.requestBody.content['application/json'].schema.properties)
                                                                                 .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{})}:
-                                                    Object.entries(methodObj.requestBody.content['application/json'].schema.properties)
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{});
+                                                            (methodObj.requestBody?.content?Object.entries(methodObj.requestBody?.content['application/json'].schema.properties)
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{}):{});
                             
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]

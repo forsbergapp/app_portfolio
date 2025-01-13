@@ -22,17 +22,7 @@ const post = async (app_id, data) =>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_EVENT_INSERT, 
                         {
-                            user_account_id : data.user_account_id, 
-                            user_language: data.user_language,
-                            user_timezone: data.user_timezone,
-                            user_number_system : data.user_number_system, 
-                            user_platform : data.user_platform,
-                            client_latitude : data.client_latitude, 
-                            client_longitude : data.client_longitude,
-                            server_remote_addr : data.server_remote_addr,
-                            server_user_agent : data.server_user_agent,
-                            server_http_host : data.server_http_host, 
-                            server_http_accept_language : data.server_http_accept_language,
+                            user_account_id : data.user_account_id,
                             event : data.event,
                             event_status : data.event_status
                         },

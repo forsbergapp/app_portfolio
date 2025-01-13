@@ -40,8 +40,6 @@ const post = async (app_id, data, res) => {
         return fileDBPost(app_id, 'IAM_CONTROL_OBSERVE', {  id:id, 
                                                             app_id:data.app_id,
                                                             ip:data.ip, 
-                                                            lat:data.lat,
-                                                            lng:data.lng,
                                                             user_agent:data.user_agent,
                                                             host:data.host,
                                                             accept_language:data.accept_language,
@@ -85,10 +83,6 @@ const update = async (app_id, resource_id, data, res) => {
                 data_update.app_id = data.app_id;
             if (data.ip!=null)
                 data_update.ip = data.ip;
-            if (data.lat!=null)
-                data_update.lat = data.lat;
-            if (data.lng!=null)
-                data_update.lng = data.lng;
             if (data.user_agent!=null)
                 data_update.user_agent = data.user_agent;
             if (data.host!=null)

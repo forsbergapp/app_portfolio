@@ -957,13 +957,11 @@ const dbInstallGetFiles = async (install_type) =>{
                             user_account_id = user2;
                         else
                             user_account_id = null;
-                            dbModelUserAccountAppDataPostView.post(app_id, {  user_account_id: user_account_id,
-                                                    user_account_app_data_post_id: result_posts[random_index].id,
-                                                    client_ip: null,
-                                                    client_user_agent: null,
-                                                    client_longitude: null,
-                                                    client_latitude: null
-                                                            })
+                            dbModelUserAccountAppDataPostView.post(app_id, {user_account_id: user_account_id,
+                                                                            user_account_app_data_post_id: result_posts[random_index].id,
+                                                                            client_ip: null,
+                                                                            client_user_agent: null
+                                                                            })
                     .then(result=>{
                         if (result.affectedRows == 1)
                                 records_user_account_app_data_post_view++;
@@ -1022,9 +1020,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                                         {   user_account_id: user1,
                                                             user_account_id_view: user2,
                                                             client_ip: null,
-                                                            client_user_agent: null,
-                                                            client_longitude: null,
-                                                            client_latitude: null
+                                                            client_user_agent: null
                                                         });
                         break;
                     }
@@ -1034,9 +1030,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                                             user_account_id: null,
                                                             user_account_id_view: user1,
                                                             client_ip: null,
-                                                            client_user_agent: null,
-                                                            client_longitude: null,
-                                                            client_latitude: null
+                                                            client_user_agent: null
                                                         });
                         break;
                     }

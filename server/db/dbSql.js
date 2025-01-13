@@ -346,15 +346,18 @@ const APP_DATA_STAT_SELECT =
         AND (as.app_setting_type_app_setting_type_name = :resource_name_entity OR :resource_name_entity IS NULL)`;
 
 const APP_DATA_STAT_SELECT_LOG =
-    `SELECT app_id "app_id",
-            json_data "json_data",
-            date_created "date_created",
-            count(*) over() "total_rows"
+    `SELECT app_id                                          "app_id",
+            app_data_entity_resource_id                     "app_data_entity_resource_id",
+            app_data_entity_resource_app_data_entity_app_id "app_data_entity_resource_app_data_entity_app_id",
+            app_data_entity_resource_app_data_entity_id     "app_data_entity_resource_app_data_entity_id",
+            json_data                                       "json_data",
+            date_created                                    "date_created",
+            count(*) over()                                 "total_rows"
        FROM <DB_SCHEMA/>.app_data_stat
       WHERE ((app_id = :app_id) OR :app_id IS NULL)
-        AND app_data_entity_resource_id = :app_data_entity_resource_id
-        AND app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id
-        AND app_data_entity_resource_app_data_entity_id = :app_data_entity_resource_app_data_entity_id
+        AND (app_data_entity_resource_id = :app_data_entity_resource_id OR :app_data_entity_resource_id IS NULL)
+        AND (app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id OR :app_data_entity_resource_app_data_entity_app_id IS NULL)
+        AND (app_data_entity_resource_app_data_entity_id = :app_data_entity_resource_app_data_entity_id OR :app_data_entity_resource_app_data_entity_id IS NULL)
         AND <DATE_PERIOD_YEAR/> = :year
         AND <DATE_PERIOD_MONTH/> = :month
         AND <DATE_PERIOD_DAY/> = :day
@@ -496,16 +499,12 @@ const USER_ACCOUNT_APP_DATA_POST_VIEW_INSERT =
     `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post_view(
             client_ip,
             client_user_agent,
-            client_longitude, 
-            client_latitude, 
             date_created,
             user_account_app_user_account_id,
             user_account_app_data_post_id,
             user_account_app_app_id)
     VALUES( :client_ip,
             :client_user_agent,
-            :client_longitude,
-            :client_latitude,
             CURRENT_TIMESTAMP,
             :user_account_id,
             :user_account_app_data_post_id,
@@ -750,15 +749,9 @@ const USER_ACCOUNT_APP_DELETE =
 const USER_ACCOUNT_EVENT_INSERT =
     `INSERT INTO <DB_SCHEMA/>.user_account_event(
                 user_account_id, event_id, event_status_id,
-                date_created, date_modified,
-                user_language, user_timezone, user_number_system, user_platform,
-                client_latitude, client_longitude,
-                server_remote_addr,server_user_agent, server_http_host, server_http_accept_language)
+                date_created, date_modified)
      SELECT :user_account_id, e.id, es.id, 
             CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
-            :user_language, :user_timezone, :user_number_system, :user_platform, 
-            :client_latitude, :client_longitude,
-            :server_remote_addr, :server_user_agent, :server_http_host, :server_http_accept_language
        FROM <DB_SCHEMA/>.event e,
             <DB_SCHEMA/>.event_status es
       WHERE e.event_name = :event
@@ -803,8 +796,8 @@ const USER_ACCOUNT_LIKE_DELETE =
        AND user_account_id_like = :user_account_id_like `;
 const USER_ACCOUNT_VIEW_INSERT =
     `INSERT INTO <DB_SCHEMA/>.user_account_view(
-            user_account_id, user_account_id_view, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
-     VALUES(:user_account_id,:user_account_id_view,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP) `;
+            user_account_id, user_account_id_view, client_ip, client_user_agent, date_created)
+     VALUES(:user_account_id,:user_account_id_view,:client_ip,:client_user_agent, CURRENT_TIMESTAMP) `;
 const USER_ACCOUNT_SELECT = 
     `SELECT ua.id "id",
             ua.avatar "avatar",

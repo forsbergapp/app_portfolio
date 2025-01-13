@@ -23,8 +23,6 @@ const post = async (app_id, data) =>
                         {
                             client_ip: data.client_ip,
                             client_user_agent: data.client_user_agent,
-                            client_longitude: data.client_longitude,
-                            client_latitude: data.client_latitude,
                             user_account_id: data.user_account_id,
                             user_account_app_data_post_id: data.user_account_app_data_post_id,
                             app_id: app_id

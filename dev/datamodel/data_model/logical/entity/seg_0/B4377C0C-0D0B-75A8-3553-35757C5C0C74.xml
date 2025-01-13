@@ -89,28 +89,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="long" id="F1E5B8ED-155D-542D-D943-07F1BFDAE76C">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:36:39 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="lat" id="DC8C20C7-11D6-C432-055C-587FEB7BAEB7">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:36:44 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="created" id="F81F0D69-FA45-F0CB-55AA-EF29DB54F22E">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:36:47 UTC</createdTime>

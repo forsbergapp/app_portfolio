@@ -238,24 +238,6 @@
                                             },
                                             "verification_code":{
                                                 "type":"string"
-                                            },
-                                            "user_language":{
-                                                "type":"string"
-                                            },
-                                            "user_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_number_system":{
-                                                "type":"string"
-                                            },
-                                            "user_platform":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longitude":{
-                                                "type":"string"
                                             }
                                         }
                                     }
@@ -309,24 +291,6 @@
                                             },
                                             "verification_code":{
                                                 "type":"string"
-                                            },
-                                            "user_language":{
-                                                "type":"string"
-                                            },
-                                            "user_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_number_system":{
-                                                "type":"string"
-                                            },
-                                            "user_platform":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longitude":{
-                                                "type":"string"
                                             }
                                         }
                                     }
@@ -372,24 +336,6 @@
                                         "type":"object" ,
                                         "properties":{
                                             "email":{
-                                                "type":"string"
-                                            },
-                                            "user_language":{
-                                                "type":"string"
-                                            },
-                                            "user_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_number_system":{
-                                                "type":"string"
-                                            },
-                                            "user_platform":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longitude":{
                                                 "type":"string"
                                             }
                                         }
@@ -1152,24 +1098,6 @@
                                             },
                                             "auth":{
                                                 "type":"string"
-                                            },
-                                            "user_language":{
-                                                "type":"string"
-                                            },
-                                            "user_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_number_system":{
-                                                "type":"string"
-                                            },
-                                            "user_platform":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longitude":{
-                                                "type":"string"
                                             }
                                         }
                                     }
@@ -1245,24 +1173,6 @@
                                                 "type":"string"
                                             },
                                             "new_email":{
-                                                "type":"string"
-                                            },
-                                            "user_language":{
-                                                "type":"string"
-                                            },
-                                            "user_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_number_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_platform":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longtitude":{
                                                 "type":"string"
                                             },
                                             "verification_code":{
@@ -1342,24 +1252,6 @@
                                                 "type":"string"
                                             },
                                             "new_email":{
-                                                "type":"string"
-                                            },
-                                            "user_language":{
-                                                "type":"string"
-                                            },
-                                            "user_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_number_timezone":{
-                                                "type":"string"
-                                            },
-                                            "user_platform":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longtitude":{
                                                 "type":"string"
                                             },
                                             "verification_code":{
@@ -3270,7 +3162,23 @@
                             }    
                         },
                         {
-                            "name":"data_app_id",
+                            "name":"app_data_entity_resource_id",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        },
+                        {
+                            "name":"app_data_entity_resource_app_data_entity_app_id",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        },
+                        {
+                            "name":"app_data_entity_resource_app_data_entity_id",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -5148,12 +5056,6 @@
                                             "password":{
                                                 "required":true,
                                                 "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longitude":{
-                                                "type":"string"
                                             }
                                         }
                                     }
@@ -5224,12 +5126,6 @@
                                                 "type":"string"
                                             },
                                             "provider_email":{
-                                                "type":"string"
-                                            },
-                                            "client_latitude":{
-                                                "type":"string"
-                                            },
-                                            "client_longitude":{
                                                 "type":"string"
                                             }
                                         }

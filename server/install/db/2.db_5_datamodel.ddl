@@ -345,8 +345,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_like (
 CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_view (
     client_ip                           VARCHAR(1000),
     client_user_agent                   VARCHAR(1000),
-    client_longitude                    VARCHAR(100),
-    client_latitude                     VARCHAR(100),
     date_created                        DATETIME NOT NULL,
     user_account_app_data_post_id       INTEGER NOT NULL,
     user_account_app_user_account_id    INTEGER,
@@ -367,16 +365,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_event (
     event_status_id             INTEGER NOT NULL,
     date_created                DATETIME NOT NULL,
     date_modified               DATETIME,
-    user_language               VARCHAR(1000),
-    user_timezone               VARCHAR(1000),
-    user_number_system          VARCHAR(100),
-    user_platform               VARCHAR(1000),
-    client_latitude             VARCHAR(100),
-    client_longitude            VARCHAR(100),
-    server_remote_addr          VARCHAR(1000),
-    server_user_agent           VARCHAR(1000),
-    server_http_host            VARCHAR(1000),
-    server_http_accept_language VARCHAR(1000),
     CONSTRAINT user_account_event_event_fk FOREIGN KEY ( event_id )
         REFERENCES event ( id ),
     CONSTRAINT user_account_event_event_status_fk FOREIGN KEY ( event_status_id )
@@ -415,8 +403,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_like (
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),
-    client_longitude      VARCHAR(100),
-    client_latitude       VARCHAR(100),
     date_created          DATETIME NOT NULL,
     user_account_id       INTEGER,
     user_account_id_view  INTEGER NOT NULL,

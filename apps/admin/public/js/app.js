@@ -712,8 +712,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                                     COMMON_DOCUMENT.querySelector('#menu_monitor_connected').click();
                                     break;
                                 }
-                                case 'menu_monitor_app_log':{
-                                    COMMON_DOCUMENT.querySelector('#menu_monitor_app_log').click();
+                                case 'menu_monitor_app_data_stat':{
+                                    COMMON_DOCUMENT.querySelector('#menu_monitor_app_data_stat').click();
                                     break;
                                 }
                                 default:{
@@ -778,10 +778,10 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorShow('CONNECTED', '', 'connection_date', 'desc');
                     break;
                 }
-                case 'menu_monitor_app_log':{
+                case 'menu_monitor_app_data_stat':{
                     COMMON_DOCUMENT.querySelector('.list_nav_selected_tab')?.classList.remove('list_nav_selected_tab');
-                    COMMON_DOCUMENT.querySelector('#menu_monitor_app_log').classList.add('list_nav_selected_tab');
-                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorShow('APP_LOG', 0, 'date_created', 'desc');
+                    COMMON_DOCUMENT.querySelector('#menu_monitor_app_data_stat').classList.add('list_nav_selected_tab');
+                    APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorShow('APP_DATA_STAT', 0, 'date_created', 'desc');
                     break;
                 }
                 case 'menu_monitor_server_log':{

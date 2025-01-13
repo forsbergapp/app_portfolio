@@ -210,9 +210,7 @@ const iamAuthenticateAdmin = async parameters =>{
                                 res:		result,
                                 token:      jwt_data.token,
                                 ip:         parameters.ip,
-                                ua:         null,
-                                long:       null,
-                                lat:        null};
+                                ua:         null};
         await fileModelIamUserLogin.post(parameters.app_id, file_content);
         if (result == 1){
             return await socketConnectedUpdate(parameters.app_id, 
@@ -288,9 +286,7 @@ const iamAuthenticateAdmin = async parameters =>{
  *          user_agent:string,
  *          accept_language:string,
  *          data:{   username:string,
- *                   password:string,
- *                   client_latitude:string|null,
- *                   client_longitude:string|null},
+ *                   password:string},
  *          res:server_server_res}} parameters
  * @return {Promise.<{
  *                  accessToken:string|null,
@@ -328,9 +324,7 @@ const iamAuthenticateUser = async parameters =>{
                                res:         0,
                                token:       null,
                                ip:          parameters.ip,
-                               ua:          parameters.user_agent,
-                               long:        parameters.data.client_longitude ?? null,
-                               lat:         parameters.data.client_latitude ?? null
+                               ua:          parameters.user_agent
                            };
            if (result_login[0]) {
                securityPasswordCompare(parameters.data.password, result_login[0].password).then((result_password)=>{
@@ -455,9 +449,7 @@ const iamAuthenticateUser = async parameters =>{
  *                   provider_last_name:string,
  *                   provider_image:string,
  *                   provider_image_url:string,
- *                   provider_email:string,
- *                   client_latitude:string|null,
- *                   client_longitude:string|null},
+ *                   provider_email:string},
  *          res:server_server_res}} parameters
  * @return {Promise.<{
  *                  accessToken:string|null,
@@ -515,9 +507,7 @@ const iamAuthenticateUserProvider = async parameters =>{
                     res:            1,
                     token:          jwt_data_exists.token,
                     ip:             parameters.ip,
-                    ua:             parameters.user_agent,
-                    long:           parameters.data.client_longitude,
-                    lat:            parameters.data.client_latitude
+                    ua:             parameters.user_agent
                 };
                 fileModelIamUserLogin.post(parameters.app_id, data_login)
                 .then(()=>{
@@ -577,9 +567,7 @@ const iamAuthenticateUserProvider = async parameters =>{
                         res:        1,
                         token:      jwt_data_new.token,
                         ip:         parameters.ip,
-                        ua:         parameters.user_agent,
-                        long:       parameters.data.client_longitude,
-                        lat:        parameters.data.client_latitude
+                        ua:         parameters.user_agent
                     };
                     fileModelIamUserLogin.post(parameters.app_id, data_login)
                     .then(()=>{
@@ -738,13 +726,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          host:string 
  *          locale:string,
  *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET, 4 NEW EMAIL
- *                  verification_code:string,
- *                  user_language: string,
- *                  user_timezone: string,
- *                  user_number_system: string,
- *                  user_platform: string,
- *                  client_latitude:string,
- *                  client_longitude:string},
+ *                  verification_code:string},
  *          res:server_server_res}} parameters
  * @return {Promise.<{
  *              count: number,
@@ -787,17 +769,7 @@ const iamAuthenticateUserActivate = async parameters =>{
             const eventData = {
                 user_account_id: parameters.resource_id,
                 event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                event_status: 'SUCCESSFUL',
-                user_language: parameters.data.user_language,
-                user_timezone: parameters.data.user_timezone,
-                user_number_system: parameters.data.user_number_system,
-                user_platform: parameters.data.user_platform,
-                server_remote_addr : parameters.ip,
-                server_user_agent : parameters.user_agent,
-                server_http_host : parameters.host,
-                server_http_accept_language : parameters.accept_language,
-                client_latitude : parameters.data.client_latitude,
-                client_longitude : parameters.data.client_longitude
+                event_status: 'SUCCESSFUL'
             };
             const result_insert = await dbModelUserAccountEvent.post(parameters.app_id, eventData);
             return {
@@ -836,9 +808,7 @@ const iamAuthenticateUserActivate = async parameters =>{
                 res:        1,
                 token:      jwt_data.token,
                 ip:         parameters.ip,
-                ua:         parameters.user_agent,
-                long:       parameters.data.client_longitude ?? null,
-                lat:        parameters.data.client_latitude ?? null};
+                ua:         parameters.user_agent};
             return fileModelIamUserLogin.post(parameters.app_id, data_body)
                     .then(()=>{
                         return {
@@ -875,13 +845,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  *          user_agent:string, 
  *          accept_language:string, 
  *          host:string, 
- *          data:{  email:string,
- *                  user_language: string,
- *                  user_timezone: string,
- *                  user_number_system: string,
- *                  user_platform: string,
- *                  client_latitude:string,
- *                  client_longitude:string}}} parameters
+ *          data:{  email:string}}} parameters
  * @returns {Promise.<{sent: number,id?: number}>}
  */
 const iamAuthenticateUserForgot = async parameters =>{
@@ -912,17 +876,7 @@ const iamAuthenticateUserForgot = async parameters =>{
                             const eventData = {
                                                 user_account_id: result_emailuser[0].id,
                                                 event: 'PASSWORD_RESET',
-                                                event_status: 'INPROGRESS',
-                                                user_language: parameters.data.user_language,
-                                                user_timezone: parameters.data.user_timezone,
-                                                user_number_system: parameters.data.user_number_system,
-                                                user_platform: parameters.data.user_platform,
-                                                server_remote_addr : parameters.ip,
-                                                server_user_agent : parameters.user_agent,
-                                                server_http_host : parameters.host,
-                                                server_http_accept_language : parameters.accept_language,
-                                                client_latitude : parameters.data.client_latitude,
-                                                client_longitude : parameters.data.client_longitude
+                                                event_status: 'INPROGRESS'
                                             };
                             dbModelUserAccountEvent.post(parameters.app_id, eventData)
                             .then(()=>{
@@ -985,12 +939,6 @@ const iamAuthenticateUserForgot = async parameters =>{
  *                  avatar:string,
  *                  email:string,
  *                  new_email:string,
- *                  user_language:string,
- *                  user_timezone:string,
- *                  user_number_system:string,
- *                  user_platform:string,
- *                  client_latitude:string,
- *                  client_longitude:string,
  *                  verification_code:string},
  *          locale:string,
  *          res:server_server_res}} parameters
@@ -1052,17 +1000,7 @@ const iamAuthenticateUserUpdate = async parameters => {
                                 const eventData = {
                                     user_account_id: parameters.resource_id,
                                     event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                                    event_status: 'INPROGRESS',
-                                    user_language: parameters.data.user_language,
-                                    user_timezone: parameters.data.user_timezone,
-                                    user_number_system: parameters.data.user_number_system,
-                                    user_platform: parameters.data.user_platform,
-                                    server_remote_addr : parameters.ip,
-                                    server_user_agent : parameters.user_agent,
-                                    server_http_host : parameters.host,
-                                    server_http_accept_language : parameters.accept_language,
-                                    client_latitude : parameters.data.client_latitude,
-                                    client_longitude : parameters.data.client_longitude
+                                    event_status: 'INPROGRESS'
                                 };
                                 dbModelUserAccountEvent.post(parameters.app_id, eventData)
                                 .then(()=>{
@@ -1125,13 +1063,7 @@ const iamAuthenticateUserUpdate = async parameters => {
  *          host:string,
  *          accept_language:string,
  *          data:{  password_new:string,
- *                  auth:string,
- *                  user_language:string,
- *                  user_timezone:string,
- *                  user_number_system:string,
- *                  user_platform:string,
- *                  client_latitude:string,
- *                  client_longitude:string},
+ *                  auth:string},
  *          locale:string,
  *          res:server_server_res}} parameters
  * @returns {Promise.<void>}
@@ -1514,8 +1446,6 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
         //set record with app_id or empty app_id
         const record = {    app_id:app_id,
                             ip:ip_v4, 
-                            lat:null, 
-                            lng:null, 
                             user_agent:user_agent, 
                             host:host, 
                             accept_language:accept_language, 
@@ -1757,9 +1687,7 @@ const iamAuthenticateResource = parameters =>  {
                             res:		1,
                             token:   	jwt_data.token,
                             ip:         ip ?? '',
-                            ua:         null,
-                            long:       null,
-                            lat:        null};
+                            ua:         null};
     return await fileModelIamAppToken.post(app_id, file_content).then(()=>jwt_data.token);
  };
 /**

@@ -591,11 +591,6 @@ const commonModuleGet = async parameters => {
                 const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
                 //ID token is created but not used in report
                 await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
-                const result_geodata =  await commonGeodata({   app_id:parameters.app_id, 
-                                                                endpoint:'SERVER', 
-                                                                ip:parameters.ip, 
-                                                                user_agent:parameters.user_agent ??'', 
-                                                                accept_language:parameters.locale??''});
                 const {default:ComponentCreate} = await import('./component/common_report.js');
                 
                 const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
@@ -607,9 +602,7 @@ const commonModuleGet = async parameters => {
                                 reportid:       parameters.data.reportid ?? '',
                                 ip:             parameters.ip,
                                 user_agent:     parameters.user_agent ?? '',
-                                accept_language:parameters.locale ?? '',
-                                latitude:       result_geodata?.latitude,
-                                longitude:      result_geodata?.longitude
+                                accept_language:parameters.locale ?? ''
                                 };
                 return ComponentCreate({data:   {
                                                 CONFIG_APP: {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0]},

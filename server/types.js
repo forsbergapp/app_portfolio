@@ -79,8 +79,6 @@
  * @property {string}       ip
  * @property {string}       user_agent
  * @property {string}       accept_language
- * @property {string}       latitude
- * @property {string}       longitude
  */
 /**
  * APP server_apps_module_metadata
@@ -415,8 +413,6 @@
  * * @typedef {{id?:number,
  *              app_id:number|null, 
  *              ip:string, 
- *              lat:string|null, 
- *              lng:string|null, 
  *              user_agent:string 
  *              host:string, 
  *              accept_language:string, 
@@ -732,8 +728,6 @@
  *   	        token:   	string,
  *		        ip:         string,
  *		        ua:         string|null,
- *		        long:       string|null,
- *		        lat:        string|null,
  *		        created:    string}} server_db_file_iam_app_token
  */
 /** 
@@ -742,9 +736,7 @@
  *		        res:		0|1,
  *   	        token:   	string,
  *		        ip:         string,
- *		        ua:         string|null,
- *		        long:       string|null,
- *		        lat:        string|null}} server_db_file_iam_app_token_insert
+ *		        ua:         string|null,}} server_db_file_iam_app_token_insert
  */
 
 /**
@@ -758,8 +750,6 @@
  *   	        token:          string|null,
  *		        ip:             string,
  *		        ua:             string|null,
- *		        long:           string|null,
- *		        lat:            string|null,
  *		        created:        string,
  *              modified?:      string}} server_db_file_iam_user_login
  */
@@ -773,9 +763,7 @@
   *             res:	        0|1|2,          //0=fail, 1=success, 2=invalidated
   *   	        token:          string|null,
   *		        ip:             string,
-  *		        ua:             string|null,
-  *		        long:           string|null,
-  *		        lat:            string|null}} server_db_file_iam_user_login_insert
+  *		        ua:             string|null}} server_db_file_iam_user_login_insert
   */
 
  /** 
@@ -1421,17 +1409,7 @@
  *              app_module_type : string,
  *              app_module_request : string|null,
  *              app_module_result : string,
- *              app_user_id : null,
- *              user_language : string,
- *              user_timezone : string,
- *              user_number_system : null,
- *              user_platform : null,
- *              server_remote_addr : string,
- *              server_user_agent : string,
- *              server_http_host : string,
- *              server_http_accept_language : string,
- *              client_latitude : string,
- *              client_longitude : string}} server_db_sql_parameter_app_data_stat_createLog
+ *              app_user_id : null}} server_db_sql_parameter_app_data_stat_createLog
  */
 
 /**
@@ -1915,9 +1893,7 @@
 /**
  * DB SQL USER ACCOUNT APP DATA POST VIEW server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  * @typedef {{  client_ip:string|null,
- *              client_user_agent:string|null,
- *              client_longitude:string|null,
- *              client_latitude:string|null,
+ *              client_user_agent:string|null
  *              user_account_id:number|null,
  *              user_account_app_data_post_id:number|null}} server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  */
@@ -1930,16 +1906,6 @@
 /**
  * DB SQL USER ACCOUNT EVENT server_db_sql_parameter_user_account_event_insertUserEvent
  * @typedef {{  user_account_id:number,
- *              user_language:string,
- *              user_timezone:string,
- *              user_number_system:string,
- *              user_platform:string,
- *              client_latitude:string,
- *              client_longitude:string,
- *              server_remote_addr:string,
- *              server_user_agent:string,
- *              server_http_host:string,
- *              server_http_accept_language:string,
  *              event:string,
  *              event_status:string}} server_db_sql_parameter_user_account_event_insertUserEvent
  */
@@ -1986,9 +1952,7 @@
  * @typedef {{  user_account_id:number|null,
  *              user_account_id_view:number,
  *              client_ip:string|null,
- *              client_user_agent:string|null,
- *              client_longitude:string|null,
- *              client_latitude:string|null}} server_db_sql_parameter_user_account_view_insertUserAccountView
+ *              client_user_agent:string|null}} server_db_sql_parameter_user_account_view_insertUserAccountView
  */
 
 /**
@@ -2143,12 +2107,6 @@
  * @property {string} body.password_reminder                        
  * @property {string} body.new_email                                
  * @property {string} body.avatar                                   
- * @property {string} body.user_language                            
- * @property {string} body.user_timezone                            
- * @property {string} body.user_number_system                       
- * @property {string} body.user_platform                            
- * @property {string} body.client_latitude                          
- * @property {string} body.client_longitude                         
  * @property {number} body.user_account_id                          
  * @property {number} body.identity_provider_id                     
  * @property {string} body.provider_first_name                      

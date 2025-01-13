@@ -17,7 +17,7 @@
 const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor' class='list_nav'>
                                     <div id='menu_monitor_connected' class='list_nav_list list_button common_icon'></div>
-                                    <div id='menu_monitor_app_log' class='list_nav_list list_button common_icon'></div>
+                                    <div id='menu_monitor_app_data_stat' class='list_nav_list list_button common_icon'></div>
                                     <div id='menu_monitor_server_log' class='list_nav_list list_button common_icon'></div>
                                 </div>
                                 <div id='menu_monitor_sample'>
@@ -181,7 +181,7 @@ const component = async props => {
     
     /**
      * Monitor show
-     * @param {'CONNECTED'|'APP_LOG'|'SERVER_LOG'} list_detail
+     * @param {'CONNECTED'|'APP_DATA_STAT'|'SERVER_LOG'} list_detail
      * @param {number} offset
      * @param {string} sort 
      * @param {string} order_by 
