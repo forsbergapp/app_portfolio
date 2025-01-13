@@ -53,10 +53,10 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
                 url:'/bff/app_id/v1/geolocation/ip',
                 route_path:'/geolocation/ip',
                 method:'GET', 
-                query:'',
+                query:'ip=127.0.0.1',
                 body:{},
                 authorization:null,
-                ip:'::1', 
+                ip:'127.0.0.1', 
                 user_agent:'*', 
                 accept_language:'',
                 /**@ts-ignore */

@@ -835,13 +835,21 @@ const serverREST_API = async (routesparameters) =>{
                             validate_app_function:              getParameterValidation('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
                             validate_app_function_role:         getParameterValidation('server_validation_app_function')?getParameterValidation('server_validation_app_function_role'):null})){
 
-                //add parameters if used for GET method
-                const get_parameters = routesparameters.method=='GET'?
+                //add parameters using tree shaking pattern
+                //so only defined parameters defined using openAPI pattern are sent to functions
+                const parametersData = routesparameters.method=='GET'?
                                             methodObj.parameters
                                                             //include all parameters.in=query
                                                             .filter((/**@type{*}*/parameter)=>parameter.in =='query')
                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}):
-                                                null;
+                                            //all other methods use body to send data
+                                            //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
+                                            methodObj.requestBody.content['application/json'].schema.additionalProperties?
+                                                {...routesparameters.body,...Object.entries(methodObj.requestBody.content['application/json'].schema.properties)
+                                                                                .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{})}:
+                                                    Object.entries(methodObj.requestBody.content['application/json'].schema.properties)
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{});
+                            
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
                 const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -874,12 +882,8 @@ const serverREST_API = async (routesparameters) =>{
                                         ...(getParameterValidation('server_function_parameter_locale')                  && {locale:         app_query?.get('locale') ??'en'}),
                                         ...(getParameterValidation('server_function_parameter_ip')                      && {ip:             routesparameters.ip}),
                                         ...(getParameterValidation('server_function_parameter_path')                    && {path:           routesparameters.route_path}),
-                                        ...(getParameterValidation('server_function_parameter_query')                   && {query:          URI_query}),
                                         ...(getParameterValidation('server_function_parameter_method')                  && {method:         routesparameters.method}),
-                                        
-                                        ...((getParameterValidation('server_function_parameter_body')                   && {data:           routesparameters.body}) || 
-                                            ((getParameterValidation('server_function_parameter_body')??false)==false   && {data:           {...get_parameters}})),
-
+                                        ...(Object.keys(parametersData)?.length>0                                       && {data:           {...parametersData}}),
                                         ...(getParameterValidation('server_function_parameter_endpoint')                && {endpoint:       routesparameters.endpoint}),
                                         ...(getParameterValidation('server_function_parameter_resource_id')             && {resource_id:    (getParameterValidation('resource_id_number')?
                                                                                                                                             resource_id_get_number(configPath[0]):
