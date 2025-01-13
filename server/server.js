@@ -8,9 +8,193 @@
  */
 
 /**
- * @import {server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
+ * @import {server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
  */
 const zlib = await import('node:zlib');
+
+/**
+ *  Returns response to client
+ *  Uses host parameter for errors in requests or unknown route paths
+ *  Returns result using ISO20022 format
+ *  Error
+ *           http:          statusCode,
+ *           code:          optional app Code,
+ *           text:          error,
+ *           developerText: optional text,
+ *           moreInfo:      optionlal text
+ *  Result
+ *          Single resource format supported return types
+ *             JSON, HTML, CSS, JS, WEBP, PNG, WOFF, TTF
+ *             can be returned as result or using sendfile key with file path that validates path before returned
+ * 
+ *          Multiple resources in JSON format:
+ *              list_header : {	total_count:	number of records,
+ *                              offset: 		offset parameter or 0,
+ *                              count:			limit parameter or number of records
+ *                            }
+ *              rows        : array of anything
+ *          Pagination result
+ *              page_header : {	total_count:	number of records or 0,
+ *								offset: 		offset parameter or 0,
+ *								count:			least number of limit parameter and number of records
+ *                            }
+ *              rows        : array of anything
+ * 
+ *  @param {{app_id?:number|null,
+ *          host?:string|null,
+ *          route:'APP'|'REST_API'|null,
+ *          http?:number,
+ *          code?:number|null,
+ *          text?:string|null,
+ *          developerText?:string|null,
+ *          moreInfo?:string|null,
+ *          result?:*,
+ *          sendfile?:string|null,
+ *          type:server_server_response_type,
+ *          res:server_server_res,
+ *          singleResource?:boolean,
+ *          offset?:number|null,
+ *          limit?:number|null}} parameters
+ */
+const serverResponse = async parameters =>{
+    /**@type{import('./db/fileModelAppParameter.js')} */
+    const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+    /**
+     * Sets response type
+     * @param {server_server_response_type} type
+     */
+    const setType = type => {
+        
+        const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control.value;
+        const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control_font.value;
+        switch (type){
+            case 'JSON':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('application/json; charset=utf-8');
+                break;
+            }
+            case 'HTML':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('text/html; charset=utf-8');
+                break;
+            }
+            case 'CSS':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('text/css; charset=utf-8');
+                break;
+            }
+            case 'JS':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('text/javascript; charset=utf-8');
+                break;
+            }
+            case 'WEBP':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('image/webp; charset=utf-8');
+                break;
+            }
+            case 'PNG':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('image/png; charset=utf-8');
+                break;
+            }
+            case 'WOFF':{
+                if (app_cache_control_font !='')
+                    parameters.res.set('Cache-Control', app_cache_control_font);
+                parameters.res.type('font/woff; charset=utf-8');
+                break;
+            }
+            case 'TTF':{
+                if (app_cache_control_font !='')
+                    parameters.res.set('Cache-Control', app_cache_control_font);
+                parameters.res.type('text/font/ttf; charset=utf-8');
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+    };
+    if (parameters.code){
+        /**@type{import('./db/fileModelLog.js')} */
+        const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+
+        /**@type{import('../apps/common/src/common.js')} */
+        const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+        const app_id_host = app_common.commonAppHost((parameters.host??'').substring(0,(parameters.host??'').indexOf(':')==-1?
+                                                (parameters.host??'').length:
+                                                    (parameters.host??'').indexOf(':')));
+        await fileModelLog.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.http ?? '').toString(), parameters.code.toString(), parameters.text??'');
+        //ISO20022 error format
+        const message = {error:{
+                                http:parameters.http, 
+                                code:parameters.code, 
+                                //return SERVER ERROR if status code starts with 5
+                                text:parameters.http?.toString().startsWith('5')?'SERVER ERROR':parameters.text, 
+                                developer_text:parameters.developerText, 
+                                more_info:parameters.moreInfo}};
+        //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
+        parameters.res.statusMessage = '';
+        parameters.res.statusCode = parameters.http ?? 500;
+        parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
+        parameters.res.write(JSON.stringify(message), 'utf8');
+        parameters.res.end();
+    }
+    else
+        if (parameters.route=='APP' && parameters.res.statusCode==301){
+            //result from APP can request to redirect
+            parameters.res.redirect('/');
+        }
+        else 
+            if (parameters.route=='APP' && parameters.res.statusCode==404){
+                //result from APP can return not found for a path
+                if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
+                    parameters.res.redirect(`https://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`);
+                else
+                    parameters.res.redirect(`http://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`);
+            }
+            else{
+                if (parameters.sendfile){
+                    const fs = await import('node:fs');
+                    /**@type{import('./db/fileModelLog.js')} */
+                    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+                    await fs.promises.access(parameters.sendfile)
+                    .then(()=>{
+                        setType(parameters.type);
+                        parameters.res?parameters.res.sendFile(parameters.sendfile):null;
+                        parameters.res?parameters.res.status(200):null;
+                    })
+                    .catch(error=>fileModelLog.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.sendfile ?? '', error));
+                }
+                else{
+                    setType(parameters.type);
+                    if (parameters.type=='JSON'){
+                        if (parameters.singleResource || parameters.result.page_header)
+                            parameters.res.write(JSON.stringify(parameters.result), 'utf8');
+                        else{
+                            const list_header = {	total_count:	parameters.result.length,
+                                                    offset: 		serverUtilNumberValue(parameters.offset) ?? 0,
+                                                    count:			serverUtilNumberValue(parameters.limit) ?? parameters.result.length
+                                                };
+                            parameters.res.write(JSON.stringify({list_header:list_header, rows:parameters.result}), 'utf8');
+                        }    
+                    }
+                    else
+                        parameters.res.write(parameters.result, 'utf8');
+                    parameters.res.end();
+                }        
+            }
+        
+};
 /**
  * @name serverResponseErrorSend
  * @description Sends ISO 20022 error format
@@ -438,12 +622,15 @@ const serverUtilAppLine = () =>{
     //ERROR LOGGING
     app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res) => {
         fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
-            serverResponseErrorSend( res, 
-                err?.name=='PayloadTooLargeError'?400:500,
-                null, 
-                err?.name=='PayloadTooLargeError'?iamUtilMesssageNotAuthorized():'SERVER ERROR', 
-                null, 
-                null);
+            serverResponse({host:req.headers.host,
+                            route:null,
+                            http:err?.name=='PayloadTooLargeError'?400:500, 
+                            code:null, 
+                            text:err?.name=='PayloadTooLargeError'?iamUtilMesssageNotAuthorized():'SERVER ERROR',
+                            developerText:'',
+                            moreInfo:'',
+                            type:'HTML',
+                            res:res});
         });
     });
     return app;
@@ -562,12 +749,15 @@ const serverJs = async () => {
                     break;
                 }
                 default:{
-                    serverResponseErrorSend( res, 
-                        400,
-                        null, 
-                        iamUtilMesssageNotAuthorized(), 
-                        null, 
-                        null);
+                    serverResponse({host:req.headers.host,
+                                    route:null,
+                                    http:400, 
+                                    code:null, 
+                                    text:iamUtilMesssageNotAuthorized(), 
+                                    developerText:'',
+                                    moreInfo:'',
+                                    type:'HTML',
+                                    res:res});
                 }
             }
         };
@@ -607,12 +797,15 @@ const serverJs = async () => {
                 (serverUtilNumberValue((fileModelConfig.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
             //log error
             fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
-                serverResponseErrorSend( res, 
-                    400,
-                    null, 
-                    iamUtilMesssageNotAuthorized(), 
-                    null, 
-                    null);
+                serverResponse({host:req.headers.host,
+                    route:null,
+                    http:400, 
+                    code:null, 
+                    text:iamUtilMesssageNotAuthorized(), 
+                    developerText:'',
+                    moreInfo:'',
+                    type:'HTML',
+                    res:res});
             });
         }
         else{
@@ -978,6 +1171,6 @@ const serverStart = async () =>{
     }
     
 };
-export {serverResponseErrorSend, serverUtilCompression,
+export {serverResponse, serverResponseErrorSend, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverREST_API, serverStart };

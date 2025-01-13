@@ -5,7 +5,7 @@
  */
 
 /**@type{import('./server.js')} */
-const {serverUtilResponseTime, serverResponseErrorSend, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverResponse, serverUtilResponseTime, serverResponseErrorSend, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('./db/fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -216,51 +216,30 @@ const bffStart = async (req, res) =>{
  *              APP can request server shared modules or reports using REST API
  * @function
  * @param {server_bff_parameters} bff_parameters
- * @returns {*}
+ * @returns {Promise<*>}
  */
- const bff = (bff_parameters) =>{
+ const bff = async (bff_parameters) =>{
     const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
-    const app_id = app_common.commonAppHost(bff_parameters.host ?? '');
+    const app_id = app_common.commonAppHost((bff_parameters.host??'').substring(0,(bff_parameters.host??'').indexOf(':')==-1?
+                                                (bff_parameters.host??'').length:
+                                                    (bff_parameters.host??'').indexOf(':')));
     
     if (app_id !=null){
         serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
         if (bff_parameters.endpoint == 'APP' && bff_parameters.method.toUpperCase() == 'GET' && !bff_parameters.url?.startsWith('/bff')){
             //App route for app asset, common asset, app info page and app
-            app_common.commonApp({  
-                                    ip:bff_parameters.ip, 
-                                    host:bff_parameters.host ?? '', 
-                                    user_agent:bff_parameters.user_agent, 
-                                    accept_language:bff_parameters.accept_language, 
-                                    url:bff_parameters.url ?? '', 
-                                    query:null, 
-                                    res:bff_parameters.res})
-            .then(result=>{
-                if (result!=null && result.STATIC){
-                    if (result.SENDFILE){
-                        bffSendFile(app_id, bff_parameters, service, result.SENDFILE);
-                    }
-                    else{
-                        bff_parameters.res?bff_parameters.res.status(200):null;
-                        bff_parameters.res?bff_parameters.res.send(result.SENDCONTENT):null;
-                    }
-                }
-                else{
-                    //result from APP can request to redirect
-                    if (bff_parameters.res.statusCode==301)
-                        bff_parameters.res.redirect('/');
-                    else 
-                        if (bff_parameters.res.statusCode==404){
-                            if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
-                                bff_parameters.res.redirect(`https://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`);
-                            else
-                                bff_parameters.res.redirect(`http://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`);
-                        }
-                        else{
-                            //html or files are returned
-                            bff_parameters.res.send(result);
-                        }
-                }
-            })
+            /**@ts-ignore */
+            serverResponse({...await app_common.commonApp({  app_id:app_id,
+                                                        ip:bff_parameters.ip, 
+                                                        host:bff_parameters.host ?? '', 
+                                                        user_agent:bff_parameters.user_agent, 
+                                                        accept_language:bff_parameters.accept_language, 
+                                                        url:bff_parameters.url ?? '', 
+                                                        query:null})
+                                                    ,
+                            ...{app_id:app_id,
+                                route : 'APP',
+                                res:bff_parameters.res}})
             .catch(()=>serverError({data:null, methods:null}));
         }
         else{

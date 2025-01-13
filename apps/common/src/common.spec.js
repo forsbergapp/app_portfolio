@@ -55,24 +55,23 @@ describe('Spy test, commonApp as called from bff', ()=> {
         //        app_common.commonAppStart() => fileModelAppSecret.get   1 time =>
         //          file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
         
-
         /**
-         * @type{{ip:string,
+         * @type{{  app_id:number,
+         *          ip:string,
          *          host:string,
          *          user_agent:string,
          *          accept_language:string,
          *          url:string,
-         *          query:*,
-         *          res:server_server_res|null}}
+         *          query:*}}
          */
-        const parameters = {ip:'::1',
-              host:'localhost',
-              user_agent:'Jasmine test',
-              accept_language:'*',
-              url:'/',
-              query:null,
-              /**@ts-ignore */
-              res:{type:()=>null}};
+        const parameters = {
+            app_id:app_common.commonAppHost('localhost') ?? 0,
+            ip:'::1',
+            host:'localhost',
+            user_agent:'Jasmine test',
+            accept_language:'*',
+            url:'/',
+            query:null};
         await app_common.commonApp(parameters);
         
         expect (filterCount_APP_SECRET).toBeGreaterThan(0);
