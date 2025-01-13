@@ -382,8 +382,6 @@ const userGetEmail = async (app_id, email) => dbCommonExecute(app_id,
  * @returns {Promise.<server_db_sql_result_user_account_getProfileUser[]>}
  */
 const getProfile = async parameters =>{
-    /**@type{import('../../server/bff.js')} */
-    const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
     /**
      * Clear private data if private
      * @param {server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
@@ -420,26 +418,6 @@ const getProfile = async parameters =>{
                                             },
                                             null, 
                                             null);
-    //get GPS from IP
-    /**@type{server_bff_parameters}*/
-    const parametersBFF = { endpoint:'SERVER',
-                            host:null,
-                            url:'/bff/app_id/v1/geolocation/ip',
-                            route_path:'/geolocation/ip',
-                            method:'GET', 
-                            query:`ip=${parameters.ip}`,
-                            body:{},
-                            authorization:null,
-                            ip:parameters.ip, 
-                            user_agent:parameters.user_agent, 
-                            accept_language:'*',
-                            /**@ts-ignore */
-                            res:null};
-    const result_gps = await bffServer(parameters.app_id, parametersBFF).catch(()=>null);
-    const result_geodata = {
-        latitude :   result_gps?.geoplugin_latitude,
-        longitude:   result_gps?.geoplugin_longitude
-    };
     if (parameters.data.search){
         //searching, return result
         /**@type{import('./dbModelAppDataStat.js')} */
@@ -447,9 +425,7 @@ const getProfile = async parameters =>{
         /**@type{server_db_sql_parameter_app_data_stat_post} */
         const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id,
                                                                                     client_ip:          parameters.ip,
-                                                                                    client_user_agent:  parameters.user_agent,
-                                                                                    client_longitude:   result_geodata.longitude,
-                                                                                    client_latitude:    result_geodata.latitude},
+                                                                                    client_user_agent:  parameters.user_agent},
                             //if user logged is not logged in then save resource on app
                             app_id:                                             serverUtilNumberValue(parameters.data.id)?null:parameters.app_id,
                             user_account_id:                                    null,
@@ -471,9 +447,7 @@ const getProfile = async parameters =>{
             const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
                                 user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
                                 client_ip:              parameters.ip,
-                                client_user_agent:      parameters.user_agent,
-                                client_longitude:       result_geodata.longitude??'',
-                                client_latitude:        result_geodata.latitude??''};
+                                client_user_agent:      parameters.user_agent};
             return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>clear_private(result_getProfileUser));
         }
         else
@@ -634,13 +608,7 @@ const getStatCountAdmin = parameters =>
  *          host:string,
  *          accept_language:string,
  *          data:{  password_new:string,
- *                  auth:string,
- *                  user_language:string,
- *                  user_timezone:string,
- *                  user_number_system:string,
- *                  user_platform:string,
- *                  client_latitude:string,
- *                  client_longitude:string},
+ *                  auth:string},
  *          res:server_server_res}} parameters
  * @returns {Promise.<void>}
  */
@@ -667,17 +635,7 @@ const getStatCountAdmin = parameters =>
                 /**@ts-ignore */
                 user_account_id: parameters.resource_id,
                 event: 'PASSWORD_RESET',
-                event_status: 'SUCCESSFUL',
-                user_language: parameters.data.user_language,
-                user_timezone: parameters.data.user_timezone,
-                user_number_system: parameters.data.user_number_system,
-                user_platform: parameters.data.user_platform,
-                server_remote_addr : parameters.ip,
-                server_user_agent : parameters.user_agent,
-                server_http_host : parameters.host,
-                server_http_accept_language : parameters.accept_language,
-                client_latitude : parameters.data.client_latitude,
-                client_longitude : parameters.data.client_longitude
+                event_status: 'SUCCESSFUL'
             };
             dbModelUserAccountEvent.post(parameters.app_id, eventData);
         }

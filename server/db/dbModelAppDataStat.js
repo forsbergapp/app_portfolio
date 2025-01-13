@@ -48,8 +48,9 @@ const get = parameters =>
  *                  day?:string|null,
  *                  offset?:string|null,
  *                  limit?:string|null,
- *                  data_app_id?:string|null,
- *                  resource_name_entity?:string|null}}} parameters
+ *                  app_data_entity_resource_id?:number|null,
+ *                  app_data_entity_resource_app_data_entity_app_id?:number|null,
+ *                  app_data_entity_resource_app_data_entity_id?:number|null}}} parameters
  * @returns {Promise.<server_db_sql_result_app_data_stat_logGet[]>}
  */
 const getLog = parameters => 
@@ -64,9 +65,9 @@ const getLog = parameters =>
                             day:serverUtilNumberValue(parameters.data.day),
                             offset:serverUtilNumberValue(parameters.data.offset),
                             limit:serverUtilNumberValue(parameters.data.limit),
-                            app_data_entity_resource_id: 0,
-                            app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
-                            app_data_entity_resource_app_data_entity_id : 0},
+                            app_data_entity_resource_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_id),
+                            app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_app_id),
+                            app_data_entity_resource_app_data_entity_id :  serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_id)},
                         null, 
                         null))
         .then(result =>{

@@ -727,28 +727,6 @@ const commonMiscTimezoneOffset = (local_timezone) =>{
     return (local-utc) / 1000 / 60 / 60;
 };
 /**
- * @name commonMiscUservariables
- * @description Get user variables
- * @function
- * @returns {{  user_language:string,
- *              user_timezone:string,
- *              user_number_system:string,
- *              user_platform:string,
- *              client_latitude:string,
- *              client_longitude:string,
- *              client_place:string}}
- */
-const commonMiscUservariables = () => {
-   return {    user_language:      commonWindowNavigatorLocale(),
-               user_timezone:      COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone,
-               user_number_system: COMMON_WINDOW.Intl.NumberFormat().resolvedOptions().numberingSystem,
-               user_platform:      commonWindowUserAgentPlatform(COMMON_WINDOW.navigator.userAgent),
-               client_latitude:    COMMON_GLOBAL.client_latitude,
-               client_longitude:   COMMON_GLOBAL.client_longitude,
-               client_place:       COMMON_GLOBAL.client_place
-           };
-};
-/**
  * @name commonWindowHostname
  * @description Get hostname with protocol and port
  * @function
@@ -1568,8 +1546,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
         current_dialogue = 'common_dialogue_iam_start';
         // ES6 object spread operator for user variables
         json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username').textContent),
-                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent),
-                        ...commonMiscUservariables()
+                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent)
         };
         path = '/server-iam-login';
         authorization_type = 'IAM_ADMIN';
@@ -1612,8 +1589,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                             provider_last_name:     provider_data.profile_last_name,
                             provider_image:         profile_image?COMMON_WINDOW.btoa(profile_image):null,
                             provider_image_url:     provider_data.profile_image_url,
-                            provider_email:         provider_data.profile_email,
-                            ...commonMiscUservariables()
+                            provider_email:         provider_data.profile_email
                         };
             path = `/server-iam-login/${provider_data.profile_id}`;
             authorization_type = 'IAM_PROVIDER';
@@ -1625,8 +1601,7 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
                                                 COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent),
                             password:  encodeURI(password_verify?
                                             COMMON_DOCUMENT.querySelector(`#${password_verify}`).textContent:
-                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
-                            ...commonMiscUservariables()
+                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent)
             };
             path = '/server-iam-login';
             authorization_type = 'IAM_USER';
@@ -1860,8 +1835,7 @@ const commonUserUpdate = async () => {
                                 password_reminder:  password_reminder,
                                 email:              email,
                                 new_email:          new_email==''?null:new_email,
-                                avatar:             avatar,
-                                ...commonMiscUservariables()
+                                avatar:             avatar
                             };
                 path = `/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`;
             }
@@ -1913,8 +1887,7 @@ const commonUserSignup = () => {
                             password:           COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password').textContent,
                             password_reminder:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_signup_password_reminder').textContent,
                             email:              email,
-                            active:             0,
-                            ...commonMiscUservariables()
+                            active:             0
                             };
            
        commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_ID_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
@@ -1974,8 +1947,7 @@ const commonUserVerifyCheckInput = async (item, nextField) => {
     
                 //activate user
                 json_data = {   verification_code:  verification_code,
-                                verification_type:  verification_type,
-                                ...commonMiscUservariables()
+                                verification_type:  verification_type
                             };
                commonFFB({  path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, 
                             method:'PUT', 
@@ -2157,9 +2129,7 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
  */
 const commonUserForgot = async () => {
     const email = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email').textContent;
-    const json_data = { email: email,
-                        ...commonMiscUservariables()
-                    };
+    const json_data = { email: email};
     if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                     {
                     email: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_forgot_email')
@@ -2185,8 +2155,7 @@ const commonUserUpdatePassword = () => {
     const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_password').textContent;
     const user_password_new_auth = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_auth').textContent;
     const json_data = { password_new:   password_new,
-                        auth:           user_password_new_auth,
-                        ...commonMiscUservariables()
+                        auth:           user_password_new_auth
                      };
     if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                      {

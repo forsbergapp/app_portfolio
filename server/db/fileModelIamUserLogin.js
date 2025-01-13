@@ -1,7 +1,7 @@
 /** @module server/db/fileModelIamUserLogin */
 
 /**
- * @import {server_db_file_iam_user_login} from '../types.js'
+ * @import {server_db_file_iam_user_login_insert, server_db_file_iam_user_login} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -22,7 +22,7 @@ const get = (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resourc
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {*} data
+ * @param {server_db_file_iam_user_login_insert} data
  * @returns {Promise.<{affectedRows:number}>}
  */
 const post = async (app_id, data) =>{
@@ -51,10 +51,6 @@ const post = async (app_id, data) =>{
                 data_new.db = data.db;    
             if (data.ua!=null)
                 data_new.ua = data.ua;
-            if (data.long!=null)
-                data_new.long = data.long;
-            if (data.lat!=null)
-                data_new.lat = data.lat;
             data_new.created = new Date().toISOString();
             return fileDBPost(app_id, 'IAM_USER_LOGIN',data_new).then((result)=>{
                 if (result.affectedRows>0)
