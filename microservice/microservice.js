@@ -59,7 +59,6 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
  * @param {{app_id:number,
  *          path:string, 
  *          method:server_req_method,
- *          query:string,
  *          data:*,
  *          ip:string,
  *          user_agent:string,
@@ -84,12 +83,15 @@ const microserviceRequest = async parameters =>{
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
         const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
                                                         fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
-        
+        //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
+        const query = Buffer.from((parameters.method=='GET'?Object.entries(parameters.data).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
+                                    + `app_id=${parameters.app_id}`
+                                ).toString('base64');
         return circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
                                                 parameters.app_id == microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
-                                                Buffer.from(parameters.query + `&app_id=${parameters.app_id}`).toString('base64'), 
+                                                query, 
                                                 parameters.data, 
                                                 parameters.method,
                                                 parameters.ip,
