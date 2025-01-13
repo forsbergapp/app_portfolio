@@ -15,6 +15,7 @@
  *          server_bff_endpoint_type,
  *          server_bff_parameters,
  *          server_server_error,
+ *          server_server_response_type,
  *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
  */
 
@@ -376,28 +377,21 @@ const commonBFE = async parameters =>{
  * @function
  * @param {{app_id:Number,
  *          url:String,
- *          basepath:string,
- *          res:server_server_res}} parameters
- * @returns {Promise.<{STATIC:Boolean, SENDFILE:string|null, SENDCONTENT?:string}>}
+ *          basepath:string}} parameters
+ * @returns {Promise.<{ type:server_server_response_type,
+ *                      sendfile?:string|null, 
+ *                      sendcontent?:string}>}
  */
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
         const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
         if (common_app_id!=null){
-            const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control.value;
-            const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control_font.value;
             switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
                 case '.css':{
-                    parameters.res.type('text/css; charset=utf-8');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'CSS', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.js':{
-                    parameters.res.type('text/javascript; charset=utf-8');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
                     switch (parameters.url){
                         case '/modules/react/react-dom.development.js':
                         case '/modules/react/react.development.js':{
@@ -415,14 +409,14 @@ const commonAssetfile = parameters =>{
                                     modulefile = modulefile + 'export {React}';
                                 }
                                 
-                                resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
                             });
                             break;
                         }
                         case '/modules/leaflet/leaflet-src.esm.js':{
                             fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                                resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
                             });
                             break;
                         }
@@ -440,7 +434,7 @@ const commonAssetfile = parameters =>{
                                 
     
                                 modulefile = modulefile + 'export{QRCode}';
-                                resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
                             });
                             break;
                         }
@@ -452,76 +446,55 @@ const commonAssetfile = parameters =>{
                                 modulefile = modulefile.replace(  'if (typeof window === "object")','if (1==2)');
                                 modulefile = modulefile.replace(  'if (typeof module === "object" && typeof module.exports === "object")','if (1==2)');
                                 modulefile = modulefile + 'export{ctx}';
-                                resolve({STATIC:true, SENDFILE:null, SENDCONTENT:modulefile});
+                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
                             });
                             break;
                         }
                         case '/apps/common_types.js':{
                             //in development another path is used, return correct path in app
-                            resolve({STATIC:true, SENDFILE:`${process.cwd()}/apps/common_types.js`});
+                            resolve({type:'JS', sendfile:`${process.cwd()}/apps/common_types.js`});
                             break;
                         }
                         default:
-                            resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                            resolve({type:'JS', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     }
                     break;
                 }
                 case '.html':{
-                    parameters.res.type('text/html; charset=utf-8');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'HTML', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.webp':{
-                    parameters.res.type('image/webp');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'WEBP', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.png':{
-                    parameters.res.type('image/png');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'PNG', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.woff2':{
-                    parameters.res.type('font/woff');
-                    if (app_cache_control_font !='')
-                        parameters.res.set('Cache-Control', app_cache_control_font);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'WOFF', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.ttf':{
-                    parameters.res.type('font/ttf');
-                    if (app_cache_control_font !='')
-                        parameters.res.set('Cache-Control', app_cache_control_font);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'TTF', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 case '.json':{
-                    parameters.res.type('application/json; charset=utf-8');
-                    if (app_cache_control !='')
-                        parameters.res.set('Cache-Control', app_cache_control);
-                    resolve({STATIC:true, SENDFILE:`${process.cwd()}${parameters.basepath}${parameters.url}`});
+                    resolve({type:'JSON', sendfile:`${process.cwd()}${parameters.basepath}${parameters.url}`});
                     break;
                 }
                 default:{
                     fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
                     .then(()=>{
-                        parameters.res.statusCode = 403;
-                        parameters.res.statusMessage = null;
-                        reject(null);
+                        reject({code:403});
+
                     });
                 }
             }
         }
         else{
-            parameters.res.statusCode = 500;
-            parameters.res.statusMessage = null;
-            reject(null);
+            reject({code:500});
         }
     });
 };
@@ -881,90 +854,112 @@ const commonAppHost = host =>{
  * @namespace ROUTE_APP
  * @description Get app asset, common asset, app info page, app report, app module or app
  * @function
- * @param {{ip:string,
+ * @param {{app_id:number|null,
+ *          ip:string,
  *          host:string,
  *          user_agent:string,
  *          accept_language:string,
  *          url:string,
- *          query:*,
- *          res:server_server_res|null}} parameters
- * @returns {Promise.<*>}
+ *          query:*}} parameters
+ * @returns {Promise.<{ http?:number|null,
+ *                      code?:number|null,
+ *                      text?:string|null,
+ *                      developerText?:string|null,
+ *                      moreInfo?:string|null,
+ *                      result?:*,
+ *                      sendfile?:string|null,
+ *                      sendcontent?:string,
+ *                      type:server_server_response_type}>}
  */
 const commonApp = async parameters =>{
-    const host_no_port = parameters.host.substring(0,parameters.host.indexOf(':')==-1?parameters.host.length:parameters.host.indexOf(':'));
-    const app_id = commonAppHost(host_no_port);
-    if (app_id==null || parameters.res==null ){
-        //function not called from client or host not found
-        if (parameters.res)
-            parameters.res.statusCode = 404;
-        return null;
-    }
+
+    if (parameters.app_id==null)
+        return {http:404,
+                code:null,
+                text:null,
+                developerText:'commonApp',
+                moreInfo:null,
+                result:null,
+                sendfile:null,
+                type:'HTML'};
     else
         switch (true){
             case (parameters.url.toLowerCase().startsWith('/maintenance')):{
-                return await commonAssetfile({app_id:app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public', res:parameters.res})
-                        .catch(()=>null);
+                return await commonAssetfile({app_id:parameters.app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public'})
+                                    .then(result=>result)
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
-            case (app_id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) && await commonAppStart(app_id) ==false):{
-                parameters.res?.type('text/html; charset=utf-8');
-                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
+            case (parameters.app_id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) && await commonAppStart(parameters.app_id) ==false):{
+                /**@ts-ignore */
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'})
+                                    .then(result=>{return {result:result, type:'HTML'};})
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url.toLowerCase().startsWith('/common')):{
-                return await commonAssetfile({app_id:app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public', res:parameters.res}).catch(()=>null);
+                /**@ts-ignore */
+                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'}).catch(()=>null)
+                                    .then(result=>result)
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url == '/sw.js'):{
-                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:'/apps/common/public', res:parameters.res}).catch(()=>null);
+                /**@ts-ignore */
+                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public'}).catch(()=>null)
+                                    .then(result=>result)
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url.toLowerCase().startsWith('/css')):
             case (parameters.url.toLowerCase().startsWith('/component')):
             case (parameters.url.toLowerCase().startsWith('/images')):
             case (parameters.url.toLowerCase().startsWith('/js')):
             case (parameters.url == '/apps/common_types.js'): {
-                return await commonAssetfile({app_id:app_id, url:parameters.url, basepath:fileModelApp.get({app_id:app_id, resource_id:app_id, res:null})[0].path, res:parameters.res}).catch(()=>null);
+                /**@ts-ignore */
+                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].path}).catch(()=>null)
+                                    .then(result=>result)
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url.toLowerCase().startsWith('/info/about')):{
-                return '';
+                return {result:'', type:'HTML'};
             }
             case (parameters.url.toLowerCase().startsWith('/info/disclaimer')):{
-                parameters.res?.type('text/html; charset=utf-8');
-                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'});
+                /**@ts-ignore */
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'})
+                                    .then(result=>{return {result:result, type:'HTML'};})
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url.toLowerCase().startsWith('/info/privacy_policy')):{
-                parameters.res?.type('text/html; charset=utf-8');
-                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'});
+                /**@ts-ignore */
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'})
+                                    .then(result=>{return {result:result, type:'HTML'};})
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url.toLowerCase().startsWith('/info/terms')):{
-                parameters.res?.type('text/html; charset=utf-8');
-                return await commonComponentCreate({app_id:app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
+                /**@ts-ignore */
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'})
+                                    .then(result=>{return {result:result, type:'HTML'};})
+                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
             }
             case (parameters.url == '/'):
-            case ((fileModelApp.get({app_id:app_id, resource_id:app_id, res:null})[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
-                parameters.res?.type('text/html; charset=utf-8');
-                return await commonComponentCreate({app_id:app_id, componentParameters:{param:          parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
-                                                                                        ip:             parameters.ip, 
-                                                                                        user_agent:     parameters.user_agent,
-                                                                                        locale:         commonClientLocale(parameters.accept_language),
-                                                                                        host:           parameters.host},type:'APP'})
-                                .then((app)=>{
-                                    if (app == null)
-                                        if (parameters.res)
-                                            parameters.res.statusCode = 301;
-                                    return app;
-                                })
-                                .catch((/**@type{server_server_error}*/err)=>{
-                                    fileModelLog.postAppE(app_id, serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), err)
-                                    .then(()=>{
-                                        if (parameters.res){
-                                            parameters.res.statusCode = 500;
-                                            parameters.res.statusMessage = 'SERVER ERROR';
-                                        }
-                                        return 'SERVER ERROR';
+            case ((fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
+                /**@ts-ignore */
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{param:          parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
+                                                    ip:             parameters.ip, 
+                                                    user_agent:     parameters.user_agent,
+                                                    locale:         commonClientLocale(parameters.accept_language),
+                                                    host:           parameters.host},type:'APP'})
+                                    .then(app=>{return app==null?{code:301, type:'HTML'}:{result:app, type:'HTML'};})
+                                    .catch((error)=>{
+                                        
+                                        fileModelLog.postAppE(
+                                                /**@ts-ignore */
+                                                parameters.app_id, 
+                                                serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), error)
+                                        .then(()=>{
+                                            return {http:500, code:null, text:'SERVER ERROR', developerText:'commonApp', moreInfo:null, type:'HTML'};
+                                        });
                                     });
-                                });
             }
             default:{
-                parameters.res.statusCode = 301;
-                return null;
+                return {http:301, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};
             }
         }
 };

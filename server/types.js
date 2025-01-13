@@ -2220,6 +2220,11 @@
  */
 
 /**
+ * SERVER server_server_response_type
+ * @typedef {'JSON'|'HTML'|'CSS'|'JS'|'WEBP'|'PNG'|'WOFF'|'TTF'} server_server_response_type
+ */
+
+/**
  * SERVER server_server_req_id_number
  * @typedef {string|number|null|undefined} server_server_req_id_number
  */
