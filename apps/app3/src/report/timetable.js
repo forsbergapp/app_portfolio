@@ -173,8 +173,6 @@ const timetable = async (timetable_parameters) => {
 		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */
 		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
 								client_user_agent:  			timetable_parameters.user_agent,
-								client_longitude:  				timetable_parameters.longitude,
-								client_latitude:    			timetable_parameters.latitude,
 								user_account_id:    			uid_view,
 								user_account_app_data_post_id:  serverUtilNumberValue(user_account_app_data_post_id)};
 		

@@ -1,7 +1,7 @@
 /** @module server/db/fileModelIamAppToken */
 
 /**
- * @import {server_db_file_iam_app_token} from '../types.js'
+ * @import {server_db_file_iam_app_token_insert, server_db_file_iam_app_token} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -21,7 +21,7 @@ const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {*} data
+ * @param {server_db_file_iam_app_token_insert} data
  * @returns {Promise.<{affectedRows:number}>}
  */
 const post = async (app_id, data) => {
@@ -45,10 +45,6 @@ const post = async (app_id, data) => {
             //optional
             if (data.ua!=null)
                 data_new.ua = data.ua;
-            if (data.long!=null)
-                data_new.long = data.long;
-            if (data.lat!=null)
-                data_new.lat = data.lat;
             data_new.created = new Date().toISOString();
             return fileDBPost(app_id, 'IAM_APP_TOKEN',data_new).then((result)=>{
                 if (result.affectedRows>0)

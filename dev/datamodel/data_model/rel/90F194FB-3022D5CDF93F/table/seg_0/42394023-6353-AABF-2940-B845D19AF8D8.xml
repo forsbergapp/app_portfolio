@@ -34,32 +34,6 @@
 <ownDataTypeParameters>1000,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="client_longitude" id="9E7323FA-3E8D-FC62-CBFD-FD78C885198E">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>E5C4252F-9945-E592-0DF6-96A44401D335</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="client_latitude" id="A3F62136-EBB0-2B6B-34B6-5DC1D3E76037">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 02:51:53 UTC</createdTime>
-<generatorID>30718534-180B-74C9-0B2B-88C543051A0D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="date_created" id="E6E096D6-029F-E90E-0043-93171EF1099B">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-13 02:51:53 UTC</createdTime>

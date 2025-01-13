@@ -43,34 +43,6 @@
 <dataTypeSize>500</dataTypeSize>
 <ownDataTypeParameters>500,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="client_longitude" id="8C7171E1-11FD-67B9-7970-64FCB304D559">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:37:15 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="client_latitude" id="F000F8EF-E761-3C74-1F93-E6C90FF1A0B2">
-<createdBy>admin</createdBy>
-<createdTime>2021-04-13 01:37:27 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="date_created" id="BC80E2C7-656D-ECDA-D675-EAC83B8622F4">
 <createdBy>admin</createdBy>
 <createdTime>2021-04-13 01:37:43 UTC</createdTime>

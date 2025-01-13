@@ -172,22 +172,22 @@ const template = props => ` ${  /*
                             }
                             ${props.logscope=='APP'?
                                 `<div class='menu_monitor_detail_server_log_row'>
-                                    <div data-column='logdate' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
+                                    <div data-column='logdate' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE
                                     </div>
-                                    <div data-column='app_id' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                    <div data-column='app_id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                         APP ID
                                     </div>
-                                    <div data-column='filename' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('filename')}'>
+                                    <div data-column='filename' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('filename')}'>
                                         FILENAME
                                     </div>
-                                    <div data-column='function' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('function')}'>
+                                    <div data-column='function' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('function')}'>
                                         FUNCTION
                                     </div>
-                                    <div data-column='line' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('line')}'>
+                                    <div data-column='line' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('line')}'>
                                         LINE
                                     </div>
-                                    <div data-column='logtext' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    <div data-column='logtext' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
                                         LOG TEXT
                                     </div>
                                 </div>
@@ -199,22 +199,22 @@ const template = props => ` ${  /*
                                                             logtext:string
                                                             }}*/log)=>
                                     `<div class='menu_monitor_detail_server_log_row'>
-                                        <div class='menu_monitor_detail_server_log_app_log_col'>
+                                        <div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.logdate}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_app_log_col'>
+                                        <div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.app_id}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_app_log_col common_wide_list_column'>
+                                        <div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
                                             ${log.app_filename}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_app_log_col common_wide_list_column'>
+                                        <div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
                                             ${log.app_function_name}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_app_log_col'>
+                                        <div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.app_app_line}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_app_log_col common_wide_list_column'>
+                                        <div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
                                             ${log.logtext}
                                         </div>
                                     </div>`
