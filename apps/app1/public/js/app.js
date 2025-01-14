@@ -141,13 +141,7 @@ const appInit = async () => {
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework,
-                                                    font_default:   true,
-                                                    font_arabic:    true,
-                                                    font_asian:     true,
-                                                    font_prio1:     true,
-                                                    font_prio2:     true,
-                                                    font_prio3:     true
+                                                    framework:      common.COMMON_GLOBAL.app_framework
                                                     },
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
@@ -156,6 +150,17 @@ const appInit = async () => {
         data:       {app_id:common.COMMON_GLOBAL.common_app_id},
         methods:    {commonFFB:common.commonFFB},
         path:       '/component/app.js'});
+    await common.commonComponentRender({mountDiv:   'common_fonts',
+        data:       {
+                    font_default:   true,
+                    font_arabic:    true,
+                    font_asian:     true,
+                    font_prio1:     true,
+                    font_prio2:     true,
+                    font_prio3:     true
+                    },
+        methods:    null,
+        path:       '/common/component/common_fonts.js'});
     //show first menu at start
     COMMON_DOCUMENT.querySelector('#title').click();
 

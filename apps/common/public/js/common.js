@@ -855,7 +855,7 @@ const commonWindowOpen = url => COMMON_WINDOW.open(url, '_blank');
  * @description Opens an window prompt with given text
  * @function
  * @param {string} text
- * @returns {void}
+ * @returns {string}
  */
 const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
 

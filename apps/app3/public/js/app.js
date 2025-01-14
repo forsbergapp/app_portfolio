@@ -2362,13 +2362,7 @@ const appInit = async parameters => {
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework,
-                                                    font_default:   true,
-                                                    font_arabic:    true,
-                                                    font_asian:     true,
-                                                    font_prio1:     true,
-                                                    font_prio2:     true,
-                                                    font_prio3:     true
+                                                    framework:      common.COMMON_GLOBAL.app_framework
                                                     },
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
@@ -2481,18 +2475,25 @@ const appInit = async parameters => {
 
     //show dialogue about using mobile and scan QR code after 5 seconds
     common.commonWindowSetTimeout(() => {appDialogueShow('SCAN');}, 5000);
-    appUserSettingDefaultSet().then(() => {
-        const show_start = async () => {
-            //show default startup
-            await appToolbarButton(APP_GLOBAL.app_default_startup_page);
-            const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
-            if (user && user !='') {
-                //show profile for user entered in url
-                common.commonProfileShow(null, user);
-            }
-        };
-        show_start();
-    });
+    await appUserSettingDefaultSet();
+    //show default startup
+    await appToolbarButton(APP_GLOBAL.app_default_startup_page);
+    const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
+    if (user && user !='') {
+        //show profile for user entered in url
+        common.commonProfileShow(null, user);
+    }
+    await common.commonComponentRender({mountDiv:   'common_fonts',
+        data:       {
+                    font_default:   true,
+                    font_arabic:    true,
+                    font_asian:     true,
+                    font_prio1:     true,
+                    font_prio2:     true,
+                    font_prio3:     true
+                    },
+        methods:    null,
+        path:       '/common/component/common_fonts.js'});
 };
 /**
  * @name appCommonInit

@@ -342,13 +342,7 @@ const appInit = async () => {
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework,
-                                                    font_default:   true,
-                                                    font_arabic:    false,
-                                                    font_asian:     false,
-                                                    font_prio1:     false,
-                                                    font_prio2:     false,
-                                                    font_prio3:     false
+                                                    framework:      common.COMMON_GLOBAL.app_framework
                                                     },
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
@@ -372,6 +366,17 @@ const appInit = async () => {
                     },
         path:'/component/page_start.js'});
     appProductUpdate();
+    await common.commonComponentRender({mountDiv:   'common_fonts',
+        data:       {
+                    font_default:   true,
+                    font_arabic:    false,
+                    font_asian:     false,
+                    font_prio1:     false,
+                    font_prio2:     false,
+                    font_prio3:     false
+                    },
+        methods:    null,
+        path:       '/common/component/common_fonts.js'});
 };
 /**
  * @name appCommonInit
