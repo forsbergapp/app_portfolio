@@ -34,10 +34,10 @@ const get = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<{STATIC:Boolean, SENDFILE:String, SENDCONTENT:null}>}
+ * @returns {Promise.<{static:Boolean, sendfile:String, sendcontent:null}>}
  */
 const getResult = async parameters => {
-    return {STATIC:true, SENDFILE:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${parameters.resource_id}.html`, SENDCONTENT:null};
+    return {static:true, sendfile:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${parameters.resource_id}.html`, sendcontent:null};
 };
 /**
  * @name post

@@ -15,6 +15,7 @@
  *          server_bff_endpoint_type,
  *          server_bff_parameters,
  *          server_server_error,
+ *          server_server_response,
  *          server_server_response_type,
  *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
  */
@@ -380,7 +381,7 @@ const commonBFE = async parameters =>{
  *          basepath:string}} parameters
  * @returns {Promise.<{ type:server_server_response_type,
  *                      sendfile?:string|null, 
- *                      sendcontent?:string}>}
+ *                      result?:string}>}
  */
 const commonAssetfile = parameters =>{
     return new Promise((resolve, reject)=>{
@@ -409,14 +410,14 @@ const commonAssetfile = parameters =>{
                                     modulefile = modulefile + 'export {React}';
                                 }
                                 
-                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
+                                resolve({type:'JS', result:modulefile});
                             });
                             break;
                         }
                         case '/modules/leaflet/leaflet-src.esm.js':{
                             fs.promises.readFile(`${process.cwd()}${parameters.basepath}${parameters.url}`, 'utf8').then((modulefile)=>{
                                 modulefile = modulefile.replace(  '//# sourceMappingURL=','//');
-                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
+                                resolve({type:'JS', result:modulefile});
                             });
                             break;
                         }
@@ -434,7 +435,7 @@ const commonAssetfile = parameters =>{
                                 
     
                                 modulefile = modulefile + 'export{QRCode}';
-                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
+                                resolve({type:'JS', result:modulefile});
                             });
                             break;
                         }
@@ -446,7 +447,7 @@ const commonAssetfile = parameters =>{
                                 modulefile = modulefile.replace(  'if (typeof window === "object")','if (1==2)');
                                 modulefile = modulefile.replace(  'if (typeof module === "object" && typeof module.exports === "object")','if (1==2)');
                                 modulefile = modulefile + 'export{ctx}';
-                                resolve({type:'JS', sendfile:null, sendcontent:modulefile});
+                                resolve({type:'JS', result:modulefile});
                             });
                             break;
                         }
@@ -556,7 +557,7 @@ const commonModuleGet = async parameters => {
             if (parameters.data.type=='MODULE'){
                 const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
                 parameters.res?.type('text/javascript; charset=utf-8');
-                return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {STATIC:true, SENDFILE:module, SENDCONTENT:null};});
+                return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {static:true, sendfile:module, sendcontent:null};});
             }
             else{
                 //report
@@ -592,7 +593,7 @@ const commonModuleGet = async parameters => {
             .then(()=>{
                 if (parameters.res)
                     parameters.res.statusCode = 404;
-                return {STATIC:true, SENDFILE:null, SENDCONTENT:''};
+                return {static:true, sendfile:null, sendcontent:''};
             });
         }
     }
@@ -861,15 +862,7 @@ const commonAppHost = host =>{
  *          accept_language:string,
  *          url:string,
  *          query:*}} parameters
- * @returns {Promise.<{ http?:number|null,
- *                      code?:number|null,
- *                      text?:string|null,
- *                      developerText?:string|null,
- *                      moreInfo?:string|null,
- *                      result?:*,
- *                      sendfile?:string|null,
- *                      sendcontent?:string,
- *                      type:server_server_response_type}>}
+ * @returns {Promise.<server_server_response>}
  */
 const commonApp = async parameters =>{
 
