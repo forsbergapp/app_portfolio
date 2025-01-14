@@ -886,7 +886,7 @@ const serverJs = async () => {
  * @description Server REST API routes using openAPI where paths, methods, validation rules, operationId and function parameters are defined
  *              OperationId syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
  *              Returns single resource result format or ISO20022 format with either list header format or page header metadata
- *              Returns HTML or {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
+ *              Returns HTML or {static:boolean, sendfile:string|null, sendcontent:string}
  *              /app-module-report-queue-result
  *              /bff/admin/v1/app-module-report
  *              /bff/app/v1/app-module-report

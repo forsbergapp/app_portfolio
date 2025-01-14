@@ -2225,6 +2225,19 @@
  */
 
 /**
+ * SERVER server_server_response
+ * @typedef {{  http?:number|null,
+ *              code?:number|null,
+ *              text?:string|null,
+ *              developerText?:string|null,
+ *              moreInfo?:string|null,
+ *              result?:*,
+ *              sendfile?:string|null,
+ *              sendcontent?:string,
+ *              type:server_server_response_type}} server_server_response
+ */
+
+/**
  * SERVER server_server_req_id_number
  * @typedef {string|number|null|undefined} server_server_req_id_number
  */
