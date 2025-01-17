@@ -5,7 +5,8 @@
 /**
  * 
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{message:string}[]}} paymentRequestGetStatus
+ * @typedef {server_server_response & {result?:{message:string}}} paymentRequestGetStatus
+ * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
  * @name paymentRequestGetStatus
@@ -49,7 +50,9 @@ const paymentRequestGetStatus = async parameters =>{
                                                                         resource_name:'MERCHANT',
                                                                         user_null:'0'
                                                                 }})
-                           .then(result=>result.result.map(merchant=>JSON.parse(merchant.json_data)).filter(merchant=>merchant.merchant_id==parameters.data.id)[0]);
+                           .then(result=>result.result
+                                                .map((/**@type{merchant}*/merchant)=>JSON.parse(merchant.json_data))
+                                                .filter((/**@type{merchant}*/merchant)=>merchant.merchant_id==parameters.data.id)[0]);
     if (merchant){
         /** 
         * @type {{  api_secret:             string,
@@ -64,8 +67,8 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                         resource_name:'PAYMENT_REQUEST',
                                                                                         user_null:'0'
                                                                                 }})
-                                            .then(result=>result.result.map(payment_request=>JSON.parse(payment_request.json_data)));
-            const payment_request = payment_requests.filter(payment_request=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0];
+                                            .then(result=>result.result.map((/**@type{payment_request}*/payment_request)=>JSON.parse(payment_request.json_data??'')));
+            const payment_request = payment_requests.filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0];
             /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
             const token_decoded = jwt.verify(payment_request.token, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
             
@@ -86,7 +89,7 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                             resource_name:'ACCOUNT',
                                                                                             user_null:'0'
                                                                                     }})
-                                                    .then(result=>result.result.filter(result=>result.bank_account_vpa == payment_request.payerid)[0]);
+                                                    .then(result=>result.result.filter((/**@type{bank_account}*/result)=>result.bank_account_vpa == payment_request.payerid)[0]);
                     if (account_payer){
                         //if status is still pending then send server side event message to customer
                         if (payment_request.status=='PENDING'){
@@ -107,7 +110,7 @@ const paymentRequestGetStatus = async parameters =>{
                                 socketClientSend(user_connected.response, btoa(JSON.stringify(message)), 'APP_FUNCTION');    
                             }
                         }
-                        return {result:[{message:data_encrypted}], type:'JSON'};
+                        return {result:{message:data_encrypted}, type:'JSON'};
                     }
                     else
                         return {http:404,

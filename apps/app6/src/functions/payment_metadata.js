@@ -4,7 +4,7 @@
 
 /**
  * @import {server_server_response, server_db_sql_result_app_data_resource_master_get} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}} transactionMetadata
+ * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}} paymentMetadata
  */
 /**
  * @name paymentMetadata

@@ -3,7 +3,7 @@
  */
 /**
  * @import {server_server_response, server_db_sql_result_app_data_resource_master_get} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}} customerGet
+ * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}} customerMetadata
  * 
  */
 /**
@@ -23,13 +23,12 @@ const customerMetadata = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
-    return await dbModelAppDataResourceMaster.get({ app_id:parameters.app_id, 
+    return dbModelAppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                     resource_id:parameters.data.resource_id, 
                                                     data:{  user_account_id:parameters.data.user_account_id,
                                                             data_app_id:parameters.data.data_app_id,
                                                             resource_name:'CUSTOMER',
-                                                            entity_id:parameters.data.entity_id,
-                                                            user_null:'1'
-                                                    }});
+                                                            user_null:'1'}
+                                                });
 };
 export default customerMetadata;

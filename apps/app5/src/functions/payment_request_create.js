@@ -4,34 +4,8 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{message:string}[]}} paymentRequestCreate
- * @typedef {{  title:                  string,
- *              merchant_id:            string,
- *              merchant_name:          string,
- *              merchant_url:           string,
- *              merchant_email:         string,
- *              merchant_longitude:     string,
- *              merchant_latitude:      string,
- *              merchant_logo:          string,
- *              merchant_type:          string,
- *              merchant_api_url_payment_request_create:    string,
- *              merchant_api_url_payment_request_get_status:string,
- *              merchant_api_secret:    string,
- *              merchant_public_key:    string,
- *              merchant_private_key:   string,
- *              merchant_vpa:           string,
- *              id:                                 number,                 
- *              user_account_app_user_account_id:   number,
- *              user_account_app_app_id:            number}} merchant
- * @typedef {{title:string;
- *            bank_account_iban:string;
- *            bank_account_number:string;
- *            bank_account_balance:string;
- *            bank_account_secret:string;
- *            bank_account_vpa:string;
- *            currency:string;
- *            currency_name:string,
- *            json_data:string}} bank_account
+ * @typedef {server_server_response & {result?:{message:string}}} paymentRequestCreate
+ * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
  * @name paymentRequestCreate
@@ -97,8 +71,7 @@ const paymentRequestCreate = async parameters =>{
                                                                         id:                                 result.id,
                                                                         user_account_app_user_account_id:   result.user_account_app_user_account_id,
                                                                         user_account_app_app_id:            result.user_account_app_app_id};})
-                            /**@ts-ignore */
-                            .filter(merchant=>merchant.merchant_id==parameters.data.id)[0]);
+                            .filter((/**@type{merchant}*/merchant)=>merchant.merchant_id==parameters.data.id)[0]);
     if (merchant){
         /** 
         * @type {{ api_secret:      string,
@@ -149,6 +122,7 @@ const paymentRequestCreate = async parameters =>{
                                                                         ip:             parameters.ip,
                                                                         scope:          'APP_CUSTOM'}, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_payment_request_expire);
                 const payment_request_id = securityUUIDCreate();
+                /**@type{payment_request} */
                 const data_payment_request = {
                                                 merchant_id:    parameters.data.id,
                                                 payment_request_id:payment_request_id,
@@ -164,7 +138,7 @@ const paymentRequestCreate = async parameters =>{
                                                 token:          jwt_data.token,
                                                 status:         'PENDING'
                                             };
-    
+                
                 const data_new_payment_request = {
                                                 json_data                                   : data_payment_request,
                                                 user_account_id                             : merchant.user_account_app_user_account_id,

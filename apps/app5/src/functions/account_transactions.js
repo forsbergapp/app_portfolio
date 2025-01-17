@@ -3,11 +3,8 @@
  */
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{timestamp:string, 
- *                                              logo:string, 
- *                                              origin:string, 
- *                                              amount_deposit:number|null, 
- *                                              amount_withdrawal:number|null}}} getTransactions
+ * @import {bank_transaction} from './types.js'
+ * @typedef {server_server_response & {result?:bank_transaction}} getTransactions
  */
 /**
  * @name getTransacions

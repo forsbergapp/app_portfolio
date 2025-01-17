@@ -34,7 +34,7 @@ const createBankAccount = async parameters =>{
             bank_account_secret :createBankAccountSecret(),
             bank_account_vpa    :createBankAccountVPA()
     };
-    return await post({app_id:parameters.app_id, data:parameters.data});
+    return post({app_id:parameters.app_id, data:parameters.data});
 };
 
 export default createBankAccount;
