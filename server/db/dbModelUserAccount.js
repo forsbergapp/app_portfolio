@@ -3,24 +3,19 @@
 /**
  * @import {server_db_sql_result_user_account_getDemousers,
  *          server_db_sql_result_user_account_getProfileDetail,
- *          server_db_sql_result_user_account_deleteUser,
+ *          server_db_common_result_delete,
+ *          server_db_common_result_update,
+ *          server_db_common_result_insert,
  *          server_db_sql_result_user_account_checkPassword,
  *          server_db_sql_result_user_account_getUserByUserId,
- *          server_db_sql_result_user_account_updateUserCommon,
- *          server_db_sql_result_user_account_updateUserLocal,
  *          server_db_sql_parameter_user_account_event_insertUserEvent,
  *          server_db_sql_result_user_account_getStatCountAdmin,
  *          server_db_sql_result_user_account_getUsersAdmin,
- *          server_db_sql_result_user_account_updateAdmin,
- *          server_db_sql_result_user_account_getProfileStat, 
- *          server_server_error,
+ *          server_db_sql_result_user_account_getProfileStat,
  *          server_db_sql_parameter_app_data_stat_post,
- *          server_db_sql_result_user_account_getProfileUser,server_server_res,
+ *          server_db_sql_result_user_account_getProfileUser,
  *          server_db_sql_result_user_account_getEmailUser,
- *          server_db_sql_result_user_account_activateUser,
- *          server_db_sql_result_user_account_create,
- *          server_db_sql_result_user_account_updateSigninProvider,
- *          server_db_sql_result_user_account_updateUserVerificationCode,
+ *          server_server_response,
  *          server_db_sql_result_user_account_providerSignIn,
  *          server_db_sql_parameter_user_account_userLogin,
  *          server_db_sql_result_user_account_userLogin,
@@ -28,6 +23,26 @@
  *          server_db_sql_parameter_user_account_create,
  * 			server_db_sql_parameter_user_account_updateUserLocal,
  *         	server_db_sql_parameter_user_account_updateAdmin} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_userLogin[] }} userGetUsername
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_providerSignIn[] }} userGetProvider
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} updateUserVerificationCode
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateProvider
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} userPost
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateActivate
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getEmailUser[] }} userGetEmail
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getProfileUser[] }} getProfile
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getProfileStat[] }} getProfileStat
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateAdmin
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} updateAdmin
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getUsersAdmin[] }} getUsersAdmin
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getStatCountAdmin[] }} getStatCountAdmin
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateLocal
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} updateUserCommon
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getUserByUserId }} getUserByUserId
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_checkPassword[] }} userGetPassword
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} userDelete
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getProfileDetail[] }} getProfileDetail
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getDemousers[] }} userDemoGet
  */
 
 
@@ -44,7 +59,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.js`);
 
 /**@type{import('../db/common.js')} */
-const { dbCommonExecute, dbCommonCheckedError, dbCommonRecordNotFound } = await import(`file://${process.cwd()}/server/db/common.js`);
+const { dbCommonExecute, dbCommonRecordErrorAsync } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**@type{import('./dbModelUserAccountEvent.js')} */
 const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
@@ -206,7 +221,7 @@ const data_validation = data => {
  * @function
  * @param {number} app_id
  * @param {server_db_sql_parameter_user_account_userLogin} data
- * @returns {Promise.<server_db_sql_result_user_account_userLogin[]>}
+ * @returns {Promise.<userGetUsername>}
  */
 const userGetUsername = (app_id, data) =>
         dbCommonExecute(app_id, 
@@ -224,7 +239,7 @@ const userGetUsername = (app_id, data) =>
  * @param {number} app_id 
  * @param {number|null} identity_provider_id 
  * @param {number} search_id
- * @returns {Promise.<server_db_sql_result_user_account_providerSignIn[]>}
+ * @returns {Promise.<userGetProvider>}
  */
 const userGetProvider = async (app_id, identity_provider_id, search_id) =>
         dbCommonExecute(app_id, 
@@ -242,7 +257,7 @@ const userGetProvider = async (app_id, identity_provider_id, search_id) =>
  * @param {number} app_id 
  * @param {number} id 
  * @param {string} verification_code 
- * @returns {Promise.<server_db_sql_result_user_account_updateUserVerificationCode>}
+ * @returns {Promise.<updateUserVerificationCode>}
  */
 const updateUserVerificationCode = async (app_id, id, verification_code) => 
         dbCommonExecute(app_id, 
@@ -261,7 +276,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
  * @param {number} app_id 
  * @param {number} id 
  * @param {server_db_sql_parameter_user_account_create} data
- * @returns {Promise.<server_db_sql_result_user_account_updateSigninProvider>}
+ * @returns {Promise.<userUpdateProvider>}
  */
 const userUpdateProvider = async (app_id, id, data) => {
     const error_code = data_validation(data);
@@ -282,7 +297,7 @@ const userUpdateProvider = async (app_id, id, data) => {
                             null, 
                             null);
     else
-        throw error_code;
+       return dbCommonRecordErrorAsync(app_id, 400, error_code);
 };
 
 /**
@@ -291,7 +306,7 @@ const userUpdateProvider = async (app_id, id, data) => {
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_create} data 
- * @returns {Promise.<server_db_sql_result_user_account_create>}
+ * @returns {Promise.<userPost>}
  */
 const userPost = async (app_id, data) =>{ 
     const error_code = data_validation(data);
@@ -323,7 +338,7 @@ const userPost = async (app_id, data) =>{
                                             null, 
                                             null));
     else
-        throw error_code;
+        return dbCommonRecordErrorAsync(app_id, 400, error_code);
 };
 
 /**
@@ -335,7 +350,7 @@ const userPost = async (app_id, data) =>{
  * @param {number|null} verification_type 
  * @param {string} verification_code 
  * @param {string|null} auth 
- * @returns {Promise.<server_db_sql_result_user_account_activateUser>}
+ * @returns {Promise.<userUpdateActivate>}
  */
 const userUpdateActivate = async (app_id, id, verification_type, verification_code, auth) => 
         dbCommonExecute(app_id, 
@@ -355,7 +370,7 @@ const userUpdateActivate = async (app_id, id, verification_type, verification_co
  * @function
  * @param {number} app_id 
  * @param {string} email 
- * @returns {Promise.<server_db_sql_result_user_account_getEmailUser[]>}
+ * @returns {Promise.<userGetEmail>}
  */
 const userGetEmail = async (app_id, email) => dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_EMAIL,
@@ -377,9 +392,8 @@ const userGetEmail = async (app_id, email) => dbCommonExecute(app_id,
  *          data:{  name?:string|null,
  *                  id?:string|null,
  *                  search?:string|null,
- *                  POST_ID?:string |null},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_getProfileUser[]>}
+ *                  POST_ID?:string |null}}} parameters
+ * @returns {Promise.<getProfile>}
  */
 const getProfile = async parameters =>{
     /**
@@ -437,21 +451,21 @@ const getProfile = async parameters =>{
                             app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
                             app_data_entity_resource_app_data_entity_id:        1   //COMMON
                             };
-        return await post(parameters.app_id, data_insert).then(()=>clear_private(result_getProfileUser));
+        return await post(parameters.app_id, data_insert).then(()=>{return {result:clear_private(result_getProfileUser.result), type:'JSON'};});
     }
     else
-        if (result_getProfileUser[0]){
+        if (result_getProfileUser.result[0]){
             //always save stat who is viewing, same user, none or someone else
             /**@type{import('./dbModelUserAccountView.js')} */
             const dbModelUserAccountView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`);
             const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
-                                user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+                                user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser.result[0].id, //viewed account
                                 client_ip:              parameters.ip,
                                 client_user_agent:      parameters.user_agent};
-            return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>clear_private(result_getProfileUser));
+            return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>{return {result:clear_private(result_getProfileUser.result), type:'JSON'};});
         }
         else
-            return await dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
+            return result_getProfileUser.http?result_getProfileUser:dbCommonRecordErrorAsync(parameters.app_id, 404);
 };
 /**
  * @name getProfileStat
@@ -460,7 +474,7 @@ const getProfile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{statchoice?:string|null}}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_getProfileStat[]>}
+ * @returns {Promise.<getProfileStat>}
  */
 const getProfileStat = parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -471,7 +485,6 @@ const getProfileStat = parameters =>
                         },
                         null, 
                         null);
-
 /**
  * @name userUpdateAdmin
  * @description Updates user by admin
@@ -479,7 +492,7 @@ const getProfileStat = parameters =>
  * @param {number} app_id 
  * @param {number} id 
  * @param {server_db_sql_parameter_user_account_updateAdmin} data 
- * @returns {Promise.<server_db_sql_result_user_account_updateAdmin>}
+ * @returns {Promise.<userUpdateAdmin>}
  */
 const userUpdateAdmin = async (app_id, id, data) =>{
 	const error_code = data_validation(data);
@@ -502,7 +515,7 @@ const userUpdateAdmin = async (app_id, id, data) =>{
                                             null, 
                                             null));
     else
-        throw error_code;
+        return dbCommonRecordErrorAsync(app_id, 400, error_code);
 };
 /**
  * @name updateAdmin
@@ -520,16 +533,15 @@ const userUpdateAdmin = async (app_id, id, data) =>{
  *                  active:number,
  *                  user_level:number,
  *                  private:number,
- *                  verification_code:string},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_updateAdmin>}
+ *                  verification_code:string}}} parameters
+ * @returns {Promise.<updateAdmin>}
  */
 const updateAdmin = parameters =>{
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve)=>{
         // get avatar and provider column used to validate
-        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id, res:parameters.res})
+        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id})
         .then(result_user=>{
-            if (result_user) {
+            if (result_user.result) {
                 /**@type{server_db_sql_parameter_user_account_updateAdmin} */
                 const body = {  active:             serverUtilNumberValue(parameters.data.active),
                                 user_level:         serverUtilNumberValue(parameters.data.user_level),
@@ -542,21 +554,15 @@ const updateAdmin = parameters =>{
                                 password_new:       parameters.data.password_new==''?null:parameters.data.password_new,
                                 password_reminder:  parameters.data.password_reminder,
                                 verification_code:  parameters.data.verification_code,
-                                provider_id:        result_user.provider_id,
-                                avatar:             (result_user.avatar==''||result_user.avatar=='null')?null:result_user.avatar,
+                                provider_id:        result_user.result.provider_id,
+                                avatar:             (result_user.result.avatar==''||result_user.result.avatar=='null')?null:result_user.result.avatar,
                                 admin:              1};
                 userUpdateAdmin(parameters.app_id, parameters.resource_id, body)
-                .then(result_update=>{
-                    resolve(result_update);
-                })
-                .catch((/**@type{server_server_error}*/error)=>{
-                    dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
+                .then(result_update=>resolve(result_update));
             }
             else
-                dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-        })
-        .catch((/**@type{server_server_error}*/error)=>reject(error));
+                resolve(dbCommonRecordErrorAsync(parameters.app_id, 404));
+        });
     });
 };
 /**
@@ -570,7 +576,7 @@ const updateAdmin = parameters =>{
  *                  search?:string|null,
  *                  offset?:string|null,
  *                  limit?:string|null}}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_getUsersAdmin[]>}
+ * @returns {Promise.<getUsersAdmin>}
  */
 const getUsersAdmin = parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -589,7 +595,7 @@ const getUsersAdmin = parameters =>
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server_db_sql_result_user_account_getStatCountAdmin[]>}
+ * @returns {Promise.<getStatCountAdmin>}
  */
 const getStatCountAdmin = parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -608,28 +614,24 @@ const getStatCountAdmin = parameters =>
  *          host:string,
  *          accept_language:string,
  *          data:{  password_new:string,
- *                  auth:string},
- *          res:server_server_res}} parameters
- * @returns {Promise.<void>}
+ *                  auth:string}}} parameters
+ * @returns {Promise.<server_server_response>}
  */
  const updatePassword = async parameters => {
     const error_code = data_validation_password(parameters.data);
     if (error_code==null){
-        const password = await  set_password(parameters.data.password_new)
-                                .catch((/**@type{server_server_error}*/error)=>
-                                        dbCommonCheckedError(parameters.app_id, error, parameters.res)
-                                        .then((/**@type{string}*/message)=>{throw message;}));
-
-        const result_update = await  dbCommonExecute(parameters.app_id, 
-                                dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
-                                {
-                                    password_new: password,
-                                    id: parameters.resource_id,
-                                    auth: parameters.data.auth
-                                },
-                                null, 
-                                null);
-        if (result_update) {
+        const result_update = await  set_password(parameters.data.password_new)
+                                    .then(password=>
+                                                    dbCommonExecute(parameters.app_id, 
+                                                    dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
+                                                    {
+                                                        password_new: password,
+                                                        id: parameters.resource_id,
+                                                        auth: parameters.data.auth
+                                                    },
+                                                    null, 
+                                                    null));
+        if (result_update.result) {
             /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
             const eventData = {
                 /**@ts-ignore */
@@ -637,13 +639,13 @@ const getStatCountAdmin = parameters =>
                 event: 'PASSWORD_RESET',
                 event_status: 'SUCCESSFUL'
             };
-            dbModelUserAccountEvent.post(parameters.app_id, eventData);
+            return dbModelUserAccountEvent.post(parameters.app_id, eventData);
         }
         else
-            dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
+            return result_update.http?result_update:dbCommonRecordErrorAsync(parameters.app_id, 404);
     }
     else
-        throw error_code;
+        return dbCommonRecordErrorAsync(parameters.app_id, 400, error_code);
 };
 /**
  * @name userUpdateLocal
@@ -652,7 +654,7 @@ const getStatCountAdmin = parameters =>
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_updateUserLocal} data 
  * @param {number} search_id
- * @returns {Promise.<server_db_sql_result_user_account_updateUserLocal>}
+ * @returns {Promise.<userUpdateLocal>}
  */
 const userUpdateLocal = async (app_id, data, search_id) =>{
     const error_code = data_validation(data);
@@ -676,7 +678,7 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                                 null, 
                                 null));
     else
-        throw error_code;
+        return dbCommonRecordErrorAsync(app_id, 400, error_code);
 };
 
 /**
@@ -686,9 +688,8 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_sql_parameter_user_account_updateUserCommon,
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_updateUserCommon>}
+ *          data:server_db_sql_parameter_user_account_updateUserCommon}} parameters
+ * @returns {Promise.<updateUserCommon>}
  */
  const updateUserCommon = async parameters => {
     const error_code = data_validation_common(parameters.data);
@@ -701,17 +702,14 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
                                     id: parameters.resource_id
                                 },
                                 null, 
-                                null)
-                                .catch((/**@type{server_server_error}*/error)=>{
-                                    dbCommonCheckedError(parameters.app_id, error, parameters.res).then((/**@type{string}*/message)=>{throw message;});
-                                });
-        if (result_update)
+                                null);
+        if (result_update.result)
             return result_update;
         else
-            return dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
+            return result_update.http?result_update:dbCommonRecordErrorAsync(parameters.app_id, 404);
     }
     else
-        throw error_code;
+        return dbCommonRecordErrorAsync(parameters.app_id, 400, error_code);
 };
 /**
  * @name getUserByUserId
@@ -719,9 +717,8 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number,
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_getUserByUserId>}
+ *          resource_id:number}} parameters
+ * @returns {Promise.<getUserByUserId>}
  */
 const getUserByUserId = async parameters => {
     const result = await dbCommonExecute(   parameters.app_id, 
@@ -729,11 +726,11 @@ const getUserByUserId = async parameters => {
                                             {id: parameters.resource_id},
                                             null, 
                                             null);
-    if (result[0]){
-        return {...result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}};
+    if (result.result[0]){
+        return {result:{...result.result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}}, type:'JSON'};
     }
     else
-        return dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
+        return result.http?result:dbCommonRecordErrorAsync(parameters.app_id, 404);
 };
 
 /**
@@ -742,7 +739,7 @@ const getUserByUserId = async parameters => {
  * @function
  * @param {number} app_id 
  * @param {number} id
- * @returns {Promise.<server_db_sql_result_user_account_checkPassword[]>}
+ * @returns {Promise.<userGetPassword>}
  */
 const userGetPassword = async (app_id, id) => 
         dbCommonExecute(app_id, 
@@ -757,7 +754,7 @@ const userGetPassword = async (app_id, id) =>
  * @function
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<server_db_sql_result_user_account_deleteUser>}
+ * @returns {Promise.<userDelete>}
  */
 const userDelete = async (app_id, id) =>
         dbCommonExecute(app_id, 
@@ -772,30 +769,27 @@ const userDelete = async (app_id, id) =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:{detailchoice?:string|null},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_getProfileDetail[]>}
+ *          data:{detailchoice?:string|null}}} parameters
+ * @returns {Promise.<getProfileDetail>}
  */
- const getProfileDetail = async parameters => {
-    const result = await dbCommonExecute(parameters.app_id, 
+ const getProfileDetail = async parameters => 
+        dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_PROFILE_DETAIL,
                             {
                                 user_account_id: parameters.resource_id,
                                 detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
                             },
                             null, 
-                            null);
-    if (result)
-        return result;
-    else
-        return dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>{throw message;});
-};
+                            null)
+                            .then(result=>result.result?
+                                            result:
+                                                result.http?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
 /**
  * @name userDemoGet
  * @description Get demo users
  * @function
  * @param {number} app_id
- * @returns {Promise.<server_db_sql_result_user_account_getDemousers[]>}
+ * @returns {Promise.<userDemoGet>}
  */
 const userDemoGet = async app_id => 
         dbCommonExecute(app_id, 

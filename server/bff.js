@@ -5,7 +5,7 @@
  */
 
 /**@type{import('./server.js')} */
-const {serverResponse, serverUtilResponseTime, serverResponseErrorSend, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
+const {serverResponse, serverUtilResponseTime, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('./db/fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -26,57 +26,6 @@ const {default:serverError} = await import('../apps/common/src/component/common_
 
 const fs = await import('node:fs');
 
-/**
- * @name bffSendFile
- * @description Bff send file if found or return error
- * @function
- * @param {number} app_id
- * @param {server_bff_parameters} bff_parameters
- * @param {string} service
- * @param {string} filePath
- * @returns {Promise.<void>}
- */
-const bffSendFile = async (app_id, bff_parameters, service, filePath) => {
-    await fs.promises.access(filePath)
-          .then(()=>{
-            bff_parameters.res?bff_parameters.res.sendFile(filePath):null;
-            bff_parameters.res?bff_parameters.res.status(200):null;
-        })
-          .catch((error)=>{
-            bffErrorLog(app_id, bff_parameters, service, error);
-        });
-};
-/**
- * @name bffErrorLog
- * @description Logs error and returns error
- * @function
- * @param {number} app_id 
- * @param {server_bff_parameters} bff_parameters
- * @param {string} service
- * @param {server_server_error} error 
- * @returns {*}
- */
-const bffErrorLog = (app_id, bff_parameters, service, error) =>{
-    fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
-        if (bff_parameters.res){
-            const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-            if (error.error && error.error.code=='MICROSERVICE')
-                serverResponseErrorSend( bff_parameters.res, 
-                                error.error.http,
-                                error.error.code, 
-                                `MICROSERVICE ${bff_parameters.route_path.split('/')[1].toUpperCase()} ERROR`, 
-                                error.error.developer_text, 
-                                error.error.more_info);
-            else
-                serverResponseErrorSend( bff_parameters.res, 
-                                statusCode, 
-                                null, 
-                                error, 
-                                null, 
-                                null);
-        }
-    });
-};
 
 /**
  * @name bffInit
@@ -192,7 +141,7 @@ const bffInit = async (req, res) =>{
  */
 const bffStart = async (req, res) =>{
     //if first time, when no user exists, then redirect everything to admin
-    if (fileModelIamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null, null).length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+    if (fileModelIamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
         return {reason:'REDIRECT', redirect:`http://admin.${fileModelConfig.get('CONFIG_SERVER','SERVER','HOST')}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
@@ -228,133 +177,55 @@ const bffStart = async (req, res) =>{
         serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
         if (bff_parameters.endpoint == 'APP' && bff_parameters.method.toUpperCase() == 'GET' && !bff_parameters.url?.startsWith('/bff')){
             //App route for app asset, common asset, app info page and app
-            /**@ts-ignore */
-            serverResponse({...await app_common.commonApp({  app_id:app_id,
+            serverResponse({result_request:await app_common.commonApp({  app_id:app_id,
                                                         ip:bff_parameters.ip, 
                                                         host:bff_parameters.host ?? '', 
                                                         user_agent:bff_parameters.user_agent, 
                                                         accept_language:bff_parameters.accept_language, 
                                                         url:bff_parameters.url ?? '', 
-                                                        query:null})
-                                                    ,
-                            ...{app_id:app_id,
-                                route : 'APP',
-                                res:bff_parameters.res}})
+                                                        query:null}),
+                            app_id:app_id,
+                            route : 'APP',
+                            res:bff_parameters.res})
             .catch(()=>serverError({data:null, methods:null}));
         }
         else{
             //REST API route
             //REST API requests from client are encoded
             const decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';   
-            serverREST_API({  app_id:app_id, 
-                            endpoint:bff_parameters.endpoint,
-                            method:bff_parameters.method.toUpperCase(), 
-                            ip:bff_parameters.ip, 
-                            host:bff_parameters.host ?? '', 
-                            url:bff_parameters.url ?? '',
-                            route_path:bff_parameters.route_path,
-                            user_agent:bff_parameters.user_agent, 
-                            accept_language:bff_parameters.accept_language, 
-                            authorization:bff_parameters.authorization ?? '', 
-                            parameters:decodedquery, 
-                            body:bff_parameters.body, 
-                            res:bff_parameters.res})
-            .then((/**@type{*}*/result_service) => {
-                const log_result = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-                fileModelLog.postServiceI(app_id, service, bff_parameters.query, log_result).then(()=>{
-                    if (bff_parameters.endpoint=='SOCKET'){
-                        //This endpoint only allowed for EventSource so no more update of response
-                        null;
-                    }
-                    else{
-                        if (bff_parameters.res){
-                            /**
-                             * @param {number} status
-                             * @param {*} result
-                             */
-                            const return_result =(status, result) =>{
-                                bff_parameters.res.statusCode = status;
-                                if (bff_parameters.endpoint=='APP' || (result && result.static && result.sendfile)){
-                                    //APP can request server shared modules or reports using REST API
-                                    //APP_ID can return JSDoc files using result.static and result.sendfile and REST API
-                                    if (result!=null && result.static){
-                                        if (result.sendfile){
-                                            bffSendFile(app_id, bff_parameters, service, result.sendfile);
-                                        }
-                                        else{
-                                            bff_parameters.res?bff_parameters.res.status(200):null;
-                                            bff_parameters.res?bff_parameters.res.send(result.sendcontent):null;
-                                        }
-                                            
-                                    }
-                                    else
-                                        bff_parameters.res.send(result);
-                                }
-                                else{
-                                    if (result==null)
-                                        bff_parameters.res.write('');
-                                    else{
-                                        //al REST API should return object or numerical value
-                                        bff_parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
-                                        bff_parameters.res.write(JSON.stringify(result), 'utf8');
-                                    } 
-                                    bff_parameters.res.end();
-                                }
-                            };
-                            if (bff_parameters.method.toUpperCase() == 'POST' && !bff_parameters.route_path.toLowerCase().startsWith('/app-module-function'))
-                                return_result(201,result_service);
-                            else{
-                                bff_parameters.res.statusCode = 200;
-                                if (decodedquery && new URLSearchParams(decodedquery).get('fields')){
-                                    if (result_service.rows){
-                                        //limit fields/keys in rows
-                                        const limit_fields = result_service.rows.map((/**@type{*}*/row)=>{
-                                            const row_new = {};
-                                            /**@ts-ignore */
-                                            for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
-                                                /**@ts-ignore */
-                                                row_new[field] = row[field];
-                                            }
-                                            return row_new;
-                                        });
-                                        result_service.rows = limit_fields;
-                                        return_result(200, result_service);
-                                        
-                                    }
-                                    else{
-                                        //limit fields/keys in object
-                                        const result_service_fields = {};
-                                        /**@ts-ignore */
-                                        for (const field of new URLSearchParams(decodedquery).get('fields').split(',')){
-                                            /**@ts-ignore */
-                                            result_service_fields[field] = result_service[field];
-                                        }
-                                        return_result(200, result_service_fields);
-                                    }
-                                }
-                                else{
-                                    return_result(200, result_service ?? '');
-                                }
-                            }
-                        }
-                        else{
-                            //function called from server return result
-                            return result_service;
-                        }
-                    }  
-                });
-            })
-            .catch((/**@type{server_server_error}*/error) => {
-                bffErrorLog(app_id, bff_parameters, service, error);
-            });
+            
+            serverResponse({result_request:await serverREST_API({   app_id:app_id, 
+                                                                    endpoint:bff_parameters.endpoint,
+                                                                    method:bff_parameters.method.toUpperCase(), 
+                                                                    ip:bff_parameters.ip, 
+                                                                    host:bff_parameters.host ?? '', 
+                                                                    url:bff_parameters.url ?? '',
+                                                                    route_path:bff_parameters.route_path,
+                                                                    user_agent:bff_parameters.user_agent, 
+                                                                    accept_language:bff_parameters.accept_language, 
+                                                                    authorization:bff_parameters.authorization ?? '', 
+                                                                    parameters:decodedquery, 
+                                                                    body:bff_parameters.body,
+                                                                    res:bff_parameters.res})
+                                                    .then((/**@type{*}*/result_service) => {
+                                                        const log_result = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
+                                                        return fileModelLog.postServiceI(app_id, service, bff_parameters.query, log_result).then(result_log=>result_log.http?result_log:result_service);
+                                                    })
+                                                    .catch((/**@type{server_server_error}*/error) => {
+                                                        return fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
+                                                            return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
+                                                        });
+                                                    }), 
+                            route:'REST_API',
+                            endpoint:bff_parameters.endpoint, 
+                            method:bff_parameters.method, 
+                            decodedquery:decodedquery, 
+                            res:bff_parameters.res});
         }
     }
     else{
         //unknown appid, domain or subdomain, redirect to hostname
-        if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
-            bff_parameters.res?bff_parameters.res.redirect(`https://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`):null;
-        else
-            bff_parameters.res?bff_parameters.res.redirect(`http://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`):null;
+        bff_parameters.res?bff_parameters.res.redirect(`${bff_parameters.res.req.protocol}://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`):null;
     }
 };
 /**
@@ -367,7 +238,7 @@ const bffStart = async (req, res) =>{
  */
  const bffServer = async (app_id, bff_parameters) => {
     /**@type{import('./iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     return new Promise((resolve, reject) => {
         const service = (bff_parameters.route_path?bff_parameters.route_path.split('/')[1]:'').toUpperCase();
         if (app_id !=null && bff_parameters.endpoint){
@@ -382,9 +253,9 @@ const bffStart = async (req, res) =>{
                             accept_language:bff_parameters.accept_language, 
                             authorization:bff_parameters.authorization ?? '', 
                             parameters:bff_parameters.query, 
-                            body:bff_parameters.body, 
+                            body:bff_parameters.body,
                             res:bff_parameters.res})
-            .then((/**@type{string}*/result)=>resolve(result))
+            .then(result=>resolve(result))
             .catch((/**@type{server_server_error}*/error)=>{
                 fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
                     reject(error);
@@ -394,7 +265,7 @@ const bffStart = async (req, res) =>{
         else{
             //required parameters not provided
             reject({
-                message: iamUtilMesssageNotAuthorized()
+                message: iamUtilMessageNotAuthorized()
             });
         }
     });

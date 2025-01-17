@@ -20,9 +20,9 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
     const { getUserPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
 	/**@ts-ignore */
 	return getUserPost(app_id, user_account_app_data_post_id)
-	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
+	.then(result_user_account_app_data_post=>{
 		/**@type{import('../types.js').APP_user_setting_record}*/
-		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post[0].json_data);
+		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post.result[0].json_data);
 		return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
 					timezone            	: user_account_app_data_post.regional_timezone,
 					number_system       	: user_account_app_data_post.regional_number_system,
@@ -98,10 +98,9 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
     const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
     return getUserPostsByUserId({app_id:app_id, 
-								resource_id:user_account_id,
-								res:null})
-	.then((/**@type{import('../../../../server/types.js').server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
-		for (const user_account_app_data_post of result_user_account_app_data_posts) {
+								resource_id:user_account_id})
+	.then(result_user_account_app_data_posts=>{
+		for (const user_account_app_data_post of result_user_account_app_data_posts.result) {
 			//use settings that can be used on a day timetable showing different user settings
 			//would be difficult to consider all settings on same page using
 			//different texts, images, second languages, directions, column titles, 
@@ -154,7 +153,7 @@ const timetable = async (timetable_parameters) => {
 	 * @returns 
 	 */
 	
-	const parametersApp = fileModelAppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id, res:null})[0]; 
+	const parametersApp = fileModelAppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.value;
 		/**@ts-ignore */

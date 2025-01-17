@@ -191,8 +191,8 @@ const component = async props => {
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
     const CONFIG_REST_API = props.methods.fileModelConfig.get('CONFIG_REST_API');
     //return object with 'servers key modified with list from configuration
-    CONFIG_REST_API.servers = props.methods.fileModelApp.get({app_id:props.data.app_id, resource_id:null, res:null})
-                        .map(row=>{
+    CONFIG_REST_API.servers = props.methods.fileModelApp.get({app_id:props.data.app_id, resource_id:null}).result
+                        .map((/**@type{server_db_file_app}*/row)=>{
                             return {url:(HTTPS_ENABLE? 'https://':'http://') + 
                                                                         row.subdomain + '.' +
                                                                         HOST +

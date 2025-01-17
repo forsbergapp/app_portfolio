@@ -353,7 +353,7 @@ const component = async props => {
                 }
                 if (this._finished % this._stageCount === 0) {
                     if (props.queue_parameters.appModuleQueueId)
-                        fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / this.requests)}, null);
+                        fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / this.requests)});
                 }})
             .catch(()=>{
                 this._errors++;
@@ -395,7 +395,7 @@ const component = async props => {
 
     const report = await new Benchmark({  concurrency: Number(props.queue_parameters.concurrency),
                                     requests: Number(props.queue_parameters.requests),
-                                    name:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
+                                    name:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).result.common_name
                                     }).run();
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=old;

@@ -1,11 +1,17 @@
 /** @module server/db/fileModelIamUserLogin */
 
 /**
- * @import {server_db_file_iam_user_login_insert, server_db_file_iam_user_login} from '../types.js'
+ * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,
+ *          server_db_file_iam_user_login_insert, server_db_file_iam_user_login} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_file_iam_user_login[] }} get
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} update
  */
 
 /**@type{import('./file.js')} */
-const {fileCommonRecordNotFound, fileDBPost, fileDBGet, fileDBUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBPost, fileDBGet, fileDBUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('../db/common.js')} */
+const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name get
@@ -13,28 +19,31 @@ const {fileCommonRecordNotFound, fileDBPost, fileDBGet, fileDBUpdate} = await im
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_db_file_iam_user_login[]}
+ * @returns {get}
  */
-const get = (app_id, resource_id) => fileDBGet(app_id, 'IAM_USER_LOGIN', resource_id, null);
-
+const get = (app_id, resource_id) =>{
+    const result = fileDBGet(app_id, 'IAM_USER_LOGIN',null, resource_id);
+    if (result.rows.length>0)
+        return {result:result.rows, type:'JSON'};
+    else
+        return dbCommonRecordError(app_id, 404);
+};
 /**
  * @name post
  * @description Add record
  * @function
  * @param {number} app_id 
  * @param {server_db_file_iam_user_login_insert} data
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<post>}
  */
 const post = async (app_id, data) =>{
-    /**@type{import('../iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     //check required attributes
     if (app_id!=null &&
         data.app_id != null &&
         data.res != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IAM_USER_LOGIN', null, null).filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token && data.token !=null).length==0){
+        if (fileDBGet(app_id, 'IAM_USER_LOGIN', null, null).rows.filter((/**@type{server_db_file_iam_user_login} */row)=>row.token==data.token && data.token !=null).length==0){
             /**@type{server_db_file_iam_user_login} */
             const data_new = {};
             data_new.id =  Date.now();
@@ -53,20 +62,21 @@ const post = async (app_id, data) =>{
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
             return fileDBPost(app_id, 'IAM_USER_LOGIN',data_new).then((result)=>{
-                if (result.affectedRows>0)
-                    return result;
+                if (result.affectedRows>0){
+                    result.insertId=data_new.id;
+                    return {result:result,type:'JSON'};
+                }
                 else
-                    throw fileCommonRecordNotFound(null);
+                    return dbCommonRecordError(app_id, 404);
             });
         }
         else{
             //token already used, user can not login
-            throw iamUtilMesssageNotAuthorized();
+            return dbCommonRecordError(app_id, 401);
         }
-            
     }
     else
-        throw iamUtilMesssageNotAuthorized();
+        return dbCommonRecordError(app_id, 400);
 }; 
 
 /**
@@ -76,11 +86,9 @@ const post = async (app_id, data) =>{
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} data
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<update>}
  */
 const update = async (app_id, resource_id, data) =>{
-    /**@type{import('../iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     //check required attributes
     if (app_id!=null && resource_id != null){
         /**@type{server_db_file_iam_user_login} */
@@ -92,15 +100,15 @@ const update = async (app_id, resource_id, data) =>{
         if (Object.entries(data_update).length>1){
             const result = await fileDBUpdate(app_id, 'IAM_USER_LOGIN',resource_id, null, data);
             if (result.affectedRows>0)
-                return result;
+                return {result:result, type:'JSON'};
             else
-                throw fileCommonRecordNotFound(null);    
+                return dbCommonRecordError(app_id, 404);
         }
         else
-            throw iamUtilMesssageNotAuthorized();
+            return dbCommonRecordError(app_id, 400);
     }
     else
-        throw iamUtilMesssageNotAuthorized();
+        return dbCommonRecordError(app_id, 400);
 };
 
 export {get, post, update};

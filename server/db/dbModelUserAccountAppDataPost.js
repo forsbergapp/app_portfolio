@@ -1,19 +1,25 @@
 /** @module server/db/dbModelUserAccountAppDataPost */
 
-import { iamUtilMesssageNotAuthorized } from '../iam.js';
-
 /**
- * @import {server_db_sql_result_user_account_app_data_post_deleteUserPost,
- *          server_db_sql_result_user_account_app_data_post_updateUserPost,
- *          server_db_sql_result_user_account_app_data_post_createUserPost,
+ * @import {server_server_response,
+ *          server_db_common_result_delete,
+ *          server_db_common_result_update,
+ *          server_db_common_result_insert,
  *          server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail,
  *          server_db_sql_result_user_account_app_data_post_getProfileStatPost,
  *          server_db_sql_result_user_account_data_post_getProfileStatLike,
  *          server_db_sql_result_user_account_app_data_post_getProfileUserPosts,
- *          server_server_res,
  *          server_db_sql_result_user_account_app_data_post_getUserPostsByUserId,
- *          server_server_error,
  *          server_db_sql_result_user_account_app_data_post_getUserPost} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPost[] }} getUserPost
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[] }} getUserPostsByUserId
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPosts[] }} getProfileUserPosts
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_data_post_getProfileStatLike[] }} getProfileStatLike
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileStatPost[] }} getProfileStatPost
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[] }} getProfileUserPostDetail
+ * @typedef {server_server_response & {result?:{id:number|null,data: server_db_common_result_insert|null} }} createUserPost
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} updateUserPost
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteUserPost
  */
 
 /**@type{import('./dbSql.js')} */
@@ -22,6 +28,8 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+/**@type{import('../db/common.js')} */
+const { dbCommonExecute, dbCommonRecordErrorAsync } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name getUserPost
@@ -29,50 +37,34 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getUserPost[]>}
+ * @returns {Promise.<getUserPost>}
  */
 const getUserPost = async (app_id, id) => 
-    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_ID, 
                         {id: id},
                         null, 
-                        null));
+                        null);
 /**
  * @name getUserPostsByUserId
  * @description Get user post by id
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null,
- *          res:server_server_res|null}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[]>}
+ *          resource_id:number|null}} parameters
+ * @returns {Promise.<getUserPostsByUserId>}
  */
-const getUserPostsByUserId = parameters =>{
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER, 
-                            {
-                                user_account_id: parameters.resource_id,
-                                app_id: parameters.app_id
-                            },
-                            null, 
-                            null))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else
-                if (parameters.res)
-                    import(`file://${process.cwd()}/server/db/common.js`)
-                    .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                    });
-                else
-                    resolve(result);
-        });
-    });
-};
+const getUserPostsByUserId = async parameters =>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER, 
+                        {
+                            user_account_id: parameters.resource_id,
+                            app_id: parameters.app_id
+                        },
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                                
 /**
  * @name getProfileUserPosts
  * @description Get user profile post
@@ -80,104 +72,63 @@ const getUserPostsByUserId = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{id_current_user?:string|null},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileUserPosts[]>}
+ *          data:{id_current_user?:string|null}}} parameters
+ * @returns {Promise.<getProfileUserPosts>}
  */
-const getProfileUserPosts = parameters =>{
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE, 
-                            {
-                                user_account_id_current: serverUtilNumberValue(parameters.data?.id_current_user),
-                                user_account_id: parameters.resource_id,
-                                app_id: parameters.app_id
-                                },
-                            null, 
-                            null))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
+const getProfileUserPosts = async parameters =>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE, 
+                        {
+                            user_account_id_current: serverUtilNumberValue(parameters.data?.id_current_user),
+                            user_account_id: parameters.resource_id,
+                            app_id: parameters.app_id
+                            },
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
 /**
  * @name getProfileStatLike
  * @description Get profile stat like
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null,
- *          res:server_server_res}} parameters
- * 
- * @returns {Promise.<server_db_sql_result_user_account_data_post_getProfileStatLike[]>}
+ *          resource_id:number|null}} parameters
+ * @returns {Promise.<getProfileStatLike>}
  */
- const getProfileStatLike = parameters =>{
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_LIKE, 
-                            {
-                                id: parameters.resource_id,
-                                app_id: parameters.app_id
-                            },
-                            null, 
-                            null))
-        .then(result=>{
-            if (result[0])
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
+ const getProfileStatLike = async parameters =>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_LIKE, 
+                        {
+                            id: parameters.resource_id,
+                            app_id: parameters.app_id
+                        },
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result[0])?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
 /**
  * @name getProfileStatPost
  * @description Get profile post stat
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *         data:{statchoice?:string|null},
- *         res:server_server_res
+ *         data:{statchoice?:string|null}
  *       }} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileStatPost[]>}
+ * @returns {Promise.<getProfileStatPost>}
  */
-const getProfileStatPost = parameters =>{
-    if (parameters.data.statchoice==null){
-        parameters.res.statusCode=400;
-        throw iamUtilMesssageNotAuthorized();
-    }
-    else
-        return new Promise((resolve, reject)=>{
-            import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+const getProfileStatPost = async parameters =>
+        parameters.data.statchoice==null?
+            dbCommonRecordErrorAsync(parameters.app_id, 400):
                 dbCommonExecute(parameters.app_id, 
-                                dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST, 
-                                {
-                                    app_id: parameters.app_id,
-                                    statchoice: serverUtilNumberValue(parameters.data?.statchoice)
-                                },
-                                null, 
-                                null))
-            .then(result=>{
-                if (result)
-                    resolve(result); 
-                else
-                    import(`file://${process.cwd()}/server/db/common.js`)
-                    .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                        dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                    });
-            });
-        });
-};
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST, 
+                        {
+                            app_id: parameters.app_id,
+                            statchoice: serverUtilNumberValue(parameters.data?.statchoice)
+                        },
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+
+
 /**
  * @name getProfileUserPostDetail
  * @description Get profile user detail post
@@ -185,33 +136,20 @@ const getProfileStatPost = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{detailchoice?:string|null},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[]>}
+ *          data:{detailchoice?:string|null}}} parameters
+ * @returns {Promise.<getProfileUserPostDetail>}
  */
-const getProfileUserPostDetail = parameters => {
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL, 
-                            {
-                                user_account_id: parameters.resource_id,
-                                app_id: parameters.app_id,
-                                detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
-                            },
-                            null, 
-                            null))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
+const getProfileUserPostDetail = async parameters =>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL, 
+                        {
+                            user_account_id: parameters.resource_id,
+                            app_id: parameters.app_id,
+                            detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
+                        },
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
 /**
  * @name createUserPost
  * @description Create user post
@@ -222,13 +160,11 @@ const getProfileUserPostDetail = parameters => {
  *                  description:string,
  *                  json_data:*,
  *                  user_account_id:number}}} parameters
- * @returns {Promise.<{ id:number|null,
- *                      data: server_db_sql_result_user_account_app_data_post_createUserPost|null}>}
+ * @returns {Promise.<createUserPost>}
  */
 const createUserPost = parameters => {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve)=>{
         const create = ()=> {
-            import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
                 dbCommonExecute(parameters.app_id, 
                                 dbSql.USER_ACCOUNT_APP_DATA_POST_INSERT, 
                                 {
@@ -240,32 +176,33 @@ const createUserPost = parameters => {
                                     DB_CLOB: ['json_data']
                                 },
                                 null, 
-                                null))
-            .then(result=>{
-                resolve({
-                    id: result.insertId,
-                    data: result
-                });
-            })
-            .catch((/**@type{server_server_error}*/error)=>reject(error));
+                                null)
+                                .then(result=>resolve({ result:{
+                                                                id: result.result.insertId,
+                                                                data: result.result
+                                                                },
+                                                        type:'JSON'}));
+                                
         };
         //Check if first time
         if (serverUtilNumberValue(parameters.data?.initial)==1){
             getUserPostsByUserId({  app_id:parameters.app_id, 
-                                    resource_id:serverUtilNumberValue(parameters.data?.user_account_id), 
-                                    res:null})
+                                    resource_id:serverUtilNumberValue(parameters.data?.user_account_id)})
             .then(result=>{
-                if (result.length==0){
-                    //no user settings found, ok to create initial user setting
-                    create();
-                }
+                if (result.result)
+                    if (result.result.length==0){
+                        //no user settings found, ok to create initial user setting
+                        create();
+                    }
+                    else
+                        resolve({result:{
+                                        id: null,
+                                        data: null
+                                        },
+                                type:'JSON'});
                 else
-                    resolve({
-                        id: null,
-                        data: null
-                    });
-            })
-            .catch((/**@type{server_server_error}*/error)=>reject(error));
+                    resolve(result);
+            });
         }
         else
             create();
@@ -281,36 +218,23 @@ const createUserPost = parameters => {
  *          resource_id:number,
  *          data:{  description:string,
  *                  json_data:string,
- *                  user_account_id:number},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_updateUserPost>}
+ *                  user_account_id:number}}} parameters
+ * @returns {Promise.<updateUserPost>}
  */
-const updateUserPost = parameters => {
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_APP_DATA_POST_UPDATE, 
-                            {
-                                description: parameters.data?.description,
-                                json_data: JSON.stringify(parameters.data?.json_data),
-                                user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
-                                app_id: parameters.app_id,
-                                id: parameters.resource_id,
-                                DB_CLOB: ['json_data']
-                            },
-                            null, 
-                            null))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
+const updateUserPost = parameters =>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_UPDATE, 
+                        {
+                            description: parameters.data?.description,
+                            json_data: JSON.stringify(parameters.data?.json_data),
+                            user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
+                            app_id: parameters.app_id,
+                            id: parameters.resource_id,
+                            DB_CLOB: ['json_data']
+                        },
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
 /**
  * @name deleteUserPost
  * @description Delete user post
@@ -318,31 +242,18 @@ const updateUserPost = parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:{  user_account_id:number},
- *          res:server_server_res}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_data_post_deleteUserPost>}
+ *          data:{  user_account_id:number}}} parameters
+ * @returns {Promise.<deleteUserPost>}
  */
-const deleteUserPost = parameters => {
-    return new Promise((resolve, reject)=>{
-        import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            dbCommonExecute(parameters.app_id, 
-                            dbSql.USER_ACCOUNT_APP_DATA_POST_DELETE, 
-                            {   id: parameters.resource_id,
-                                user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
-                                app_id:parameters.app_id},
-                            null, 
-                            null))
-        .then(result=>{
-            if (result)
-                resolve(result);
-            else
-                import(`file://${process.cwd()}/server/db/common.js`)
-                .then((/**@type{import('./common.js')} */{dbCommonRecordNotFound}) => {
-                    dbCommonRecordNotFound(parameters.res).then((/**@type{string}*/message)=>reject(message));
-                });
-        });
-    });
-};
+const deleteUserPost = parameters =>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.USER_ACCOUNT_APP_DATA_POST_DELETE, 
+                        {   id: parameters.resource_id,
+                            user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
+                            app_id:parameters.app_id},
+                        null, 
+                        null)
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
 
 export{ getUserPost, getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
         getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost};

@@ -3,7 +3,8 @@
 */
 
 /**
- * @import {commonWorldCitiesCity} from '../../../../server/types.js'
+ * @import {server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:commonWorldCitiesCity[]}} appFunction
  */
 
 /**
@@ -13,17 +14,17 @@
  *              Searches without diacritics and uses lower case
  *              Uses localcompare as collation method when sorting
  * @function
- * @param {number} app_id
- * @param {{search:string}} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<commonWorldCitiesCity[]>}
+ * @param {{app_id:number,
+ *          data:{search:string},
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<appFunction>}
  */
-const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
+const appFunction = async parameters =>{
     const fs = await import('node:fs');
-    res;
     /**
      *  Get file
      * @returns {Promise.<commonWorldCitiesCity[]>}
@@ -56,12 +57,12 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) ?? 0;
-    const limit = serverUtilNumberValue(fileModelAppParameter.get({app_id:app_id, resource_id:common_app_id, res:res})[0].common_app_limit_records.value) ?? 0;
+    const limit = serverUtilNumberValue(fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0].common_app_limit_records.value) ?? 0;
 
-    cities = cities.filter((city)=>{if ((count_limit<limit || limit==0) && (match(city.city, data.search)||
-                                                                            match(city.city_ascii, data.search)||
-                                                                            match(city.country, data.search)||
-                                                                            match(city.admin_name, data.search))){
+    cities = cities.filter((city)=>{if ((count_limit<limit || limit==0) && (match(city.city, parameters.data.search)||
+                                                                            match(city.city_ascii, parameters.data.search)||
+                                                                            match(city.country, parameters.data.search)||
+                                                                            match(city.admin_name, parameters.data.search))){
                                         count_limit++;
                                         return true;
                                     }
@@ -69,16 +70,16 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                         return false;});
     //sort and return
     //Uses localcompare as collation method when sorting
-    return cities.sort((first, second)=>{
-        const first_sort = first.country.toLowerCase() +  first.city.toLowerCase() + first.admin_name.toLowerCase();
-        const second_sort = second.country.toLowerCase() + second.city.toLowerCase() + second.admin_name.toLowerCase();
-        //using localeCompare as collation method
-        if (first_sort.localeCompare(second_sort)<0 )
-            return -1;
-        else if (first_sort.localeCompare(second_sort)>0 )
-            return 1;
-        else
-            return 0;
-    });
+    return {result:cities.sort((first, second)=>{
+                    const first_sort = first.country.toLowerCase() +  first.city.toLowerCase() + first.admin_name.toLowerCase();
+                    const second_sort = second.country.toLowerCase() + second.city.toLowerCase() + second.admin_name.toLowerCase();
+                    //using localeCompare as collation method
+                    if (first_sort.localeCompare(second_sort)<0 )
+                        return -1;
+                    else if (first_sort.localeCompare(second_sort)>0 )
+                        return 1;
+                    else
+                        return 0;}), 
+            type:'JSON'};
 };
 export default appFunction;

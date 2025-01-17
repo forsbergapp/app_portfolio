@@ -1158,38 +1158,36 @@
 
 /**
  * DB SQL result INSERT
- * @typedef {{  insertId:number, 
- *              rows:[], 
+ * @typedef {{  insertId?:number, 
  *              affectedRows:number, 
- *              rowsAffected:number,
- *              length:number}}  server_db_common_result_insert
+ *              rowsAffected?:number,
+ *              length?:number}}  server_db_common_result_insert
  */
 
 /**
  * DB SQL result DELETE
- * @typedef {{  rows:[], 
- *              affectedRows:number, 
- *              rowsAffected:number,
- *              length:number}}  server_db_common_result_delete
+ * @typedef {{  affectedRows:number, 
+ *              rowsAffected?:number,
+ *              length?:number}}  server_db_common_result_delete
  */
 
 /**
  * DB SQL result UPDATE
- * @typedef {{  rows:[], 
- *              affectedRows:number, 
- *              rowsAffected:number,
- *              length:number}}  server_db_common_result_update
+ * @typedef {{  affectedRows:number, 
+ *              rowsAffected?:number,
+ *              length?:number}}  server_db_common_result_update
  */
 
 /**
  * DB SQL result SELECT
- * @typedef {{  rows:[], 
- *              affectedRows:number,
- *              rowsAffected:number,
- *              page_header : {	total_count:	number,
+ * @typedef {{  rows:*[], 
+ *              list_header? : {	total_count:	number,
  *                              offset: 		number,
  *                              count:			number},
- *              length:number}}  server_db_common_result_select
+ *              page_header? : {	total_count:	number,
+ *                              offset: 		number,
+ *                              count:			number},
+ *              length?:number}}  server_db_common_result_select
  */
 
 /**
@@ -1254,20 +1252,6 @@
  *              resource_metadata:string}} server_db_sql_result_app_data_resource_master_get
  */
 
-/**
- * DB SQL APP_DATA_RESOURCE_MASTER server_db_sql_result_app_data_resource_master_post
- * @typedef {server_db_common_result_insert} server_db_sql_result_app_data_resource_master_post
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_ASTER server_db_sql_result_app_data_resource_master_update
- * @typedef {server_db_common_result_update} server_db_sql_result_app_data_resource_master_update
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_ASTER server_db_sql_result_app_data_resource_master_delete
- * @typedef {server_db_common_result_delete} server_db_sql_result_app_data_resource_master_delete
- */
 
 /**
  * DB SQL APP_DATA_RESOURCE_DETAIL server_db_sql_result_app_data_resource_detail_get
@@ -1297,21 +1281,6 @@
  *              app_setting_value:string,
  *              app_setting_display_data:string,
  *              resource_metadata:string}} server_db_sql_result_app_data_resource_detail_get
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_DETAIL server_db_sql_result_app_data_resource_detail_post
- * @typedef {server_db_common_result_insert} server_db_sql_result_app_data_resource_detail_post
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_DETAIL server_db_sql_result_app_data_resource_detail_update
- * @typedef {server_db_common_result_update} server_db_sql_result_app_data_resource_detail_update
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_DETAIL server_db_sql_result_app_data_resource_detail_delete
- * @typedef {server_db_common_result_delete} server_db_sql_result_app_data_resource_detail_delete
  */
 
 /**
@@ -1348,21 +1317,6 @@
  */
 
 /**
- * DB SQL APP_DATA_RESOURCE_DETAIL_DATA server_db_sql_result_app_data_resource_detail_data_post
- * @typedef {server_db_common_result_insert} server_db_sql_result_app_data_resource_detail_data_post
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_DETAIL_DATA server_db_sql_result_app_data_resource_detail_data_update
- * @typedef {server_db_common_result_update} server_db_sql_result_app_data_resource_detail_data_update
- */
-
-/**
- * DB SQL APP_DATA_RESOURCE_DETAIL_DATA server_db_sql_result_app_data_resource_detail_data_delete
- * @typedef {server_db_common_result_delete} server_db_sql_result_app_data_resource_detail_data_delete
- */
-
-/**
  * DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_get
  * @typedef {{  app_id:                                                                     number|null,
  *				json_data:                                                                  string,
@@ -1396,11 +1350,6 @@
  *              app_data_entity_resource_id:                        number,
  *              app_data_entity_resource_app_data_entity_app_id:    number,
  *              app_data_entity_resource_app_data_entity_id:        number}} server_db_sql_parameter_app_data_stat_post
- */
-
-/**
- * DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_post
- * @typedef {server_db_common_result_insert} server_db_sql_result_app_data_stat_post
  */
 
 /**
@@ -1515,11 +1464,6 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_updateAdmin
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateAdmin
- */
-
-/**
  * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_create
  * @typedef {{  username:string|null,
  *              password:null,
@@ -1543,20 +1487,6 @@
  *              admin:number}} server_db_sql_parameter_user_account_create
  */
 
-/**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_create
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_create
- */
-
-/**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_activateUser
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_activateUser
- */
-
-/**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_updateUserVerificationCode
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateUserVerificationCode
- */
 
 /**
  * DB SQL USER ACCOUNT server_db_sql_result_user_account_getUserByUserId
@@ -1649,11 +1579,6 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_updatePassword
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updatePassword
- */
-
-/**
  * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserLocal
  * @typedef {{  bio:string,
  *              private:number,
@@ -1670,26 +1595,12 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_updateUserLocal
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateUserLocal
- */
-
-/**
  * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserCommon
  * @typedef {{  bio:string|null,
  *              private: number|null,
  *              username:string|null}} server_db_sql_parameter_user_account_updateUserCommon
  */
 
-/**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_updateUserCommon
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateUserCommon
- */
-
-/**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_deleteUser
- * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_deleteUser
- */
 
 /**
  * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_userLogin
@@ -1705,11 +1616,6 @@
  *              email:string,
  *              active:number,
  *              avatar:string|null}} server_db_sql_result_user_account_userLogin
- */
-
-/**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_updateSigninProvider
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_updateSigninProvider
  */
 
 /**
@@ -1746,11 +1652,6 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_createUserAccountApp
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_app_createUserAccountApp
- */
-
-/**
  * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps
  * @typedef {{  app_id:number,
  *              date_created:string}} server_db_sql_result_user_account_app_getUserAccountApps
@@ -1774,25 +1675,10 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_updateUserAccountApp
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_app_updateUserAccountApp
- */
-
-/**
- * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_deleteUserAccountApp
- * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_app_deleteUserAccountApp
- */
-
-/**
  * DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_createUserPost
  * @typedef {{  description:string,
  *              json_data:object,
  *              user_account_id:number|null}} server_db_sql_parameter_user_account_app_data_post_createUserPost
- */
-
-/**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_createUserPost
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_app_data_post_createUserPost
  */
 
 /**
@@ -1871,26 +1757,6 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_updateUserPost
- * @typedef {   server_db_common_result_update} server_db_sql_result_user_account_app_data_post_updateUserPost
- */
-
-/**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_deleteUserPost
- * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_app_data_post_deleteUserPost
- */
-
-/**
- * DB SQL USER ACCOUNT APP DATA POST LIKE server_db_sql_result_user_account_app_data_post_like_like
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_app_data_post_like_like
- */
-
-/**
- * DB SQL USER ACCOUNT APP DATA POST LIKE server_db_sql_result_user_account_app_data_post_like_unlike
- * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_app_data_post_like_unlike
- */
-
-/**
  * DB SQL USER ACCOUNT APP DATA POST VIEW server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  * @typedef {{  client_ip:string|null,
  *              client_user_agent:string|null
@@ -1899,20 +1765,10 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST VIEW server_db_sql_result_user_account_app_data_post_view_insertUserPostView
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_app_data_post_view_insertUserPostView
- */
-
-/**
  * DB SQL USER ACCOUNT EVENT server_db_sql_parameter_user_account_event_insertUserEvent
  * @typedef {{  user_account_id:number,
  *              event:string,
  *              event_status:string}} server_db_sql_parameter_user_account_event_insertUserEvent
- */
-
-/**
- * DB SQL USER ACCOUNT EVENT server_db_sql_result_user_account_event_insertUserEvent
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_event_insertUserEvent
  */
 
 /**
@@ -1927,25 +1783,6 @@
  *              current_timestamp:string}} server_db_sql_result_user_account_event_getLastUserEvent
  */
 
-/**
- * DB SQL USER ACCOUNT FOLLOW server_db_sql_result_user_account_follow_follow
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_follow_follow
- */
-
-/**
- * DB SQL USER ACCOUNT FOLLOW server_db_sql_result_user_account_follow_unfollow
- * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_follow_unfollow
- */
-
-/**
- * DB SQL USER ACCOUNT LIKE server_db_sql_result_user_account_like_like
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_like_like
- */
-
-/**
- * DB SQL USER ACCOUNT LIKE server_db_sql_result_user_account_like_unlike
- * @typedef {   server_db_common_result_delete} server_db_sql_result_user_account_like_unlike
- */
 
 /**
  * DB SQL USER ACCOUNT VIEW server_db_sql_parameter_user_account_view_insertUserAccountView
@@ -1955,10 +1792,6 @@
  *              client_user_agent:string|null}} server_db_sql_parameter_user_account_view_insertUserAccountView
  */
 
-/**
- * DB SQL USER ACCOUNT VIEW server_db_sql_result_user_account_view_insertUserAccountView
- * @typedef {   server_db_common_result_insert} server_db_sql_result_user_account_view_insertUserAccountView
- */
 /**
  * IAM server_iam_access_token_claim_scope_type
  * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_CUSTOM'} server_iam_access_token_claim_scope_type
@@ -2023,7 +1856,7 @@
 
 
 /**
- * SERVER server_server_routesparameters
+ * SERVER server_REST_API_parameters
  * @typedef {{  app_id: number,
  *              endpoint: server_bff_endpoint_type,
  *              host:string,
@@ -2036,7 +1869,7 @@
  *              ip: string,
  *              user_agent:string,
  *              accept_language:string,
- *              res: server_server_res}} server_server_routesparameters
+ *              res:server_server_res}} server_REST_API_parameters
  */
 
 /**
@@ -2052,7 +1885,7 @@
  * @typedef {Object} server_server_req
  * @property {string} baseUrl
  * @property {string} hostname
- * @property {string} host                                          - Admin log parameter
+ * @property {string} host
  * @property {string} path
  * @property {string} url
  * @property {string} originalUrl
@@ -2064,118 +1897,21 @@
  * @property {[string]} rawHeaders
  * @property {object} client
  * @property {number} client.localPort
- * params
- * @property {object} params
- * @property {number} params.user_account_id                        - Admin parameter
- * @property {string} params.info                                   - Info parameter
- * @property {string} params.sub                                    - App showparam parameter
- * @property {string} params.id                                     
- * @property {string} params.locale                                 
- * @property {string} params.app_id                                 
- * @property {string} params.code                                   
- * @property {string} params.statchoice                             
  * route
  * @property {object} route
  * @property {string} route.path
  * body
  * @property {object} body
- * @property {string} body.value                                    - Server parameter
- * @property {string} body.config_no                                - Server parameter
- * @property {server_db_file_config_files} body.config_json                - Server parameter
- * @property {number} body.app_id
- * @property {number} body.client_id                                - Socket parameter
- * @property {number} body.client_id_current                        - Socket parameter
- * @property {server_socket_broadcast_type_all} body.broadcast_type        - Socket parameter
- * @property {string} body.broadcast_message                        - Socket parameter
- * @property {string} body.demo_password                            - Admin parameter
- * @property {string} body.app_name                                 
- * @property {string} body.url                                      
- * @property {string} body.logo                                     
- * @property {string} body.enabled                                  
- * @property {string} body.parameter_value                          
- * @property {string} body.parameter_comment                        
- * @property {string} body.parameter_name                           
- * @property {number} body.active                                   
- * @property {number} body.user_level                               
- * @property {number} body.private                                  
- * @property {string} body.username                                 
- * @property {string} body.bio                                      
- * @property {string} body.email                                    
- * @property {string} body.email_unverified                         
- * @property {string} body.password
- * @property {string|null} body.password_new
- * @property {string} body.password_reminder                        
- * @property {string} body.new_email                                
- * @property {string} body.avatar                                   
- * @property {number} body.user_account_id                          
- * @property {number} body.identity_provider_id                     
- * @property {string} body.provider_first_name                      
- * @property {string} body.provider_last_name                       
- * @property {string} body.provider_image                           
- * @property {string} body.provider_image_url                       
- * @property {string} body.provider_email                           
- * @property {string|null} body.provider_id                         
- * @property {string} body.verification_code                        
- * @property {string} body.verification_type                        
- * @property {string} body.auth                                     
- * @property {number} body.app_setting_preference_direction_id      
- * @property {number} body.app_setting_preference_arabic_script_id  
- * @property {number} body.app_setting_preference_timezone_id       
- * @property {string} body.preference_locale                        
- * @property {string} body.description                              
- * @property {object} body.json_data                                
- * @property {number} body.user_account_app_data_post_id                          
  * query
  * @property {object} query
- * @property {(string|number|*)} query.id
- * @property {(string|number|*)} query.app_id
- * @property {number} query.select_app_id                           - Admin parameter
- * @property {number} query.year                                    - Admin parameter
- * @property {number} query.month                                   - Admin parameter
- * @property {string} query.day                                     - Admin parameter
- * @property {number} query.limit                                   - Admin parameter
- * @property {string} query.order_by                                - Admin parameter
- * @property {server_socket_connected_list_sort} query.sort                               - Admin parameter
- * @property {string} query.count_logged_in                         - Admin parameter
- * @property {server_log_scope} query.logscope                      - Admin log parameter
- * @property {server_log_level} query.loglevel                      - Admin log parameter
- * @property {string} query.offset                                  - Admin log parameter
- * @property {string} query.search                                  - Admin log parameter
- * @property {string} query.code                                    - Admin log parameter
- * @property {(string|number|*)} query.app_user_id
- * @property {(string|number|*)} query.client_id
- * @property {(string|number|*)} query.user_account_id
- * @property {string} query.locale
- * @property {string} query.authorization                           - EventSource parameter
- * @property {string} query.latitude                                - Socket and geolocation parameter
- * @property {string} query.longitude                               - Socket and geolocation parameter
- * @property {string} query.reportid                                - Report parameter
- * @property {string} query.service                                 - Report parameter
- * @property {string} query.messagequeue                            - Report parameter
- * @property {string} query.ps                                      - Report parameter
- * @property {boolean} query.hf                                     - Report parameter
- * @property {number|null} query.uid_view                           - Report parameter
- * @property {string|*} query.parameters
- * @property {string} query.iam                                     - encoded string
- *                                                                  - content:authorization_bearer=[string]&user_id=[number]&admin=[string]&service=[string]&app_id=[number]
- * @property {number} query.PATCH_ID                                
- * @property {number} query.data_app_id                             
- * @property {string} query.object                                  
- * @property {string} query.object_name                             
- * @property {string} query.setting_type                            
- * @property {string} query.detailchoice                            
- * @property {number} query.initial                                 
- * @property {string} query.parameter                               - Server parameter
- * @property {string} query.admin                            
- * @property {number} query.identity_provider_id
- * @property {0|1|2|3|4|5|6} query.config_type_no                   - Server parameter
- * @property {server_db_file_config_server_group} query.server_config_group                      - Server parameter
- * 
+ * @property {string} query.parameters
+ 
  * @property {{ authorization: string, 
  *              'user-agent': string, 
  *              'accept-language': string, 
  *              'content-type': string, 
  *              host:string, 
+ *              'sec-fetch-mode':string,
  *              accept:string, 
  *              referer:string,
  *              'X-Request-Id':string,
@@ -2210,13 +1946,7 @@
  * @property {function} writeHead
  * @property {string}   _header         --user for response compression
  * @property {function} _implicitHeader --used for response compression
- * @property {object}   req
- * @property {{'sec-fetch-mode':string,
- *              accept:string}}   req.headers - Used for EventSource and compression control of EventSource
- * @property {string}   req.hostname
- * @property {string}   req.protocol
- * @property {object}   req.query
- * @property {string}   req.query.iam
+ * @property {server_server_req}   req
  */
 
 /**
@@ -2227,7 +1957,7 @@
 /**
  * SERVER server_server_response
  * @typedef {{  http?:number|null,
- *              code?:number|null,
+ *              code?:number|string|null,
  *              text?:string|null,
  *              developerText?:string|null,
  *              moreInfo?:string|null,

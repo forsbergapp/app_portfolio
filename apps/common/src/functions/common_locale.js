@@ -1,6 +1,10 @@
 /**
  * @module apps/common/src/functions/common_locale
 */
+/**
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:{locale: string, text:string}[]}} appFunction
+ */
 
 /**
  * @name formatLocale
@@ -54,17 +58,17 @@ const formatLocale = locale =>{
  * @name appFunction
  * @description Get locales using ISO 639-1 for language code and ISO 3166-1 for country code
  * @function
- * @param {number} app_id
- * @param {*} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<{locale: string, text:string}[]>}
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<appFunction>}
  */
-const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
+const appFunction = async parameters =>{
     const fs = await import('node:fs');
-    res;
     /**
      *  Get locale from locale.json 
      * @param {string} locale
@@ -76,23 +80,23 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
         const FILE = 'locales.json';
         return fs.promises.readFile(`${PATH}${formatLocale(locale)}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
     };
-    const locales = await getFile(locale).catch(()=>getFile('en'));
+    const locales = await getFile(parameters.locale).catch(()=>getFile('en'));
     //format result and order by text
-    return Object.entries(locales)
-            .map(locale => {
-                return { locale:locale[0].replaceAll('_','-').toLowerCase(), text:locale[1]};
-            })
-            .sort((first, second)=>{
-                const first_sort = first.text.toLowerCase();
-                const second_sort = second.text.toLowerCase();
-                //using localeCompare as collation method
-                if (first_sort.localeCompare(second_sort)<0 )
-                    return -1;
-                else if (first_sort.localeCompare(second_sort)>0 )
-                    return 1;
-                else
-                    return 0;
-            });
+    return {result:Object.entries(locales)
+                        .map(locale => {
+                            return { locale:locale[0].replaceAll('_','-').toLowerCase(), text:locale[1]};
+                        })
+                        .sort((first, second)=>{
+                            const first_sort = first.text.toLowerCase();
+                            const second_sort = second.text.toLowerCase();
+                            //using localeCompare as collation method
+                            if (first_sort.localeCompare(second_sort)<0 )
+                                return -1;
+                            else if (first_sort.localeCompare(second_sort)>0 )
+                                return 1;
+                            else
+                                return 0;
+                        }), type:'JSON'};
 };
 export {formatLocale};
 export default appFunction;

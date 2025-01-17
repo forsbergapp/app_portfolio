@@ -1,30 +1,35 @@
 /**
  * @module apps/app5/src/functions/customer_get
  */
+/**
+ * @import {server_server_response, server_db_sql_result_app_data_resource_master_get} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}} customerGet
+ */
 
 /**
- * @name customer_get
+ * @name customerGet
  * @description Customer get
  * @function
- * @param {number} app_id
- * @param {*} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<import('../../../../server/types.js').server_db_sql_result_app_data_resource_master_get[]>}
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<customerGet>}
  */
-const customer_get = async (app_id, data, user_agent, ip, locale, res) =>{
+const customerGet = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
-    return await dbModelAppDataResourceMaster.get({ app_id:app_id, 
-                                                    resource_id:data.resource_id, 
-                                                    data:{  user_account_id:data.user_account_id,
-                                                            data_app_id:data.data_app_id,
+    return dbModelAppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                    resource_id:parameters.data.resource_id, 
+                                                    data:{  user_account_id:parameters.data.user_account_id,
+                                                            data_app_id:parameters.data.data_app_id,
                                                             resource_name:'CUSTOMER',
-                                                            entity_id:data.entity_id,
+                                                            entity_id:parameters.data.entity_id,
                                                             user_null:'0'
                                                     }});
 };
-export default customer_get;
+export default customerGet;
