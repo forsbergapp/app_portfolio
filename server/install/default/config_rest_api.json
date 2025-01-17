@@ -5027,7 +5027,7 @@
                                         "type":"object" ,
                                         "properties":{
                                             "identity_provider_id":{
-                                                "type":"string"
+                                                "type":"number"
                                             },
                                             "avatar":{
                                                 "type":"string"
