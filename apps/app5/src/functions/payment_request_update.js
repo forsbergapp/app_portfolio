@@ -5,6 +5,7 @@
 /**
  * @import {server_server_response} from '../../../../server/types.js'
  * @typedef {server_server_response & {result?:{status:string}[]}} paymentRequestUpdate
+ * @import {payment_request, bank_account, bank_transaction} from './types.js'
  */
 /**
  * @name paymentRequestUpdate
@@ -54,7 +55,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                             user_null:'0'
                                                                     }})
                                     .then(result=>result.result
-                                            .filter(payment_request=>payment_request.payment_request_id==parameters.data.payment_request_id)[0]);
+                                            .filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==parameters.data.payment_request_id)[0]);
 
     if (customer && payment_request && (serverUtilNumberValue(parameters.data.status)==1 || serverUtilNumberValue(parameters.data.status)==0)){
         let status ='PENDING';
@@ -84,7 +85,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                                                         resource_name_master_attribute:'CUSTOMER',
                                                                                                         user_null:'0'
                                                                                                 }})
-                                                            .then(result=>result.result.reduce((/**@type{number}*/balance, current_row)=>balance += 
+                                                            .then(result=>result.result.reduce((/**@type{number}*/balance, /**@type{bank_transaction}*/current_row)=>balance += 
                                                                                                         (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0));
                     if ((account_payer_saldo - payment_request.amount) <0)
                         status='NO FUNDS';
@@ -101,14 +102,14 @@ const paymentRequestUpdate = async parameters =>{
                                             };
                         //create DEBIT transaction PAYERID resource TRANSACTION
                         await dbModelAppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-
+                        
                         const account_payee         =  await dbModelAppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                                                                 resource_id:null, 
                                                                                                 data:{  data_app_id:parameters.data.data_app_id,
                                                                                                         resource_name:'ACCOUNT',
                                                                                                         user_null:'0'
                                                                                                 }})
-                                                                .then(result=>result.result.filter(account=>account.bank_account_vpa == payment_request.payeeid)[0]);
+                                                                .then(result=>result.result.filter((/**@type{bank_account}*/account)=>account.bank_account_vpa == payment_request.payeeid)[0]);
                         const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
                                                                                             logo:'',
                                                                                             origin:payment_request.reference,
@@ -140,7 +141,7 @@ const paymentRequestUpdate = async parameters =>{
         data_payment_request.json_data.status = status;
         //update payment request
         await dbModelAppDataResourceMaster.update({app_id:parameters.app_id, resource_id:payment_request.id, data:data_payment_request});
-        return {result:{status:status}, type:'JSON'};
+        return {result:[{status:status}], type:'JSON'};
    }
    else
         return {http:404,

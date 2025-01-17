@@ -9,24 +9,25 @@
 /**
  * @name getFile
  * @description  Get file and add given suffix to path
+ *               If file not found
+ *                  fileRequest=false (system file):throw 500
+ *                  fileRequest=true  (request file):return iamUtilMessageNotAuthorized()
  * @function
  * @param {string} path
+ * @param {boolean} [fileRequest]
  * @returns {Promise.<string>}
  */
-const getFile = async (path) =>{
+const getFile = async (path, fileRequest=false) =>{
     /**@type{import('../../../../server/iam.js')} */
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const fs = await import('node:fs');
     return fs.promises.readFile(path, 'utf8')
             .then(file=>file.toString())
-            .catch(()=>{
-                return {http:400,
-                    code:'DOC',
-                    text:iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+            .catch(error=>{
+                if (fileRequest)
+                    return iamUtilMessageNotAuthorized();
+                else
+                    throw error;
             });
 };
 /**
@@ -204,6 +205,7 @@ const markdownRender = async parameters =>{
             const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
             
             const app_translation = fileModelAppTranslation.get(parameters.app_id,null, parameters.locale, 
+                                                                /**@ts-ignore */
                                                                 serverUtilNumberValue(parameters.doc)).result[0];
             const app = fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.doc)}).result[0];
 
@@ -252,7 +254,7 @@ const markdownRender = async parameters =>{
             //replace all found JSDoc comments with markdown formatted module functions
             return markdown.replace('@{MODULE_FUNCTION}', 
                                     await getFileFunctions({app_id:         parameters.app_id,                                                 
-                                                            file:           await getFile(`${process.cwd()}${parameters.doc}.js`),
+                                                            file:           await getFile(`${process.cwd()}${parameters.doc}.js`, true),
                                                             module:         parameters.module,
                                                             comment_with_filter:null
                                                         }));
@@ -343,7 +345,7 @@ const menuRender = async parameters =>{
             case menu.type=='GUIDE':{
                 //return menu with updated first title from the documents
                 for (const menu_sub of menu.menu_sub??[]){
-                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
+                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`, true)
                             .then(result=>{
                                 try {
                                     menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
@@ -384,7 +386,11 @@ const menuRender = async parameters =>{
 const appFunction = async parameters =>{
     /**@type{import('../../../../server/iam.js')} */
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-    
+    /**@type{import('../../../../server/db/fileModelApp.js')} */
+    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    /**@type{import('../../../../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+
     //check if valid document request
     if (
         ((parameters.data.type.toUpperCase()=='GUIDE' ||parameters.data.type.toUpperCase()=='APP'||parameters.data.type.toUpperCase()=='JSDOC') && parameters.data?.doc == null) ||
@@ -404,28 +410,25 @@ const appFunction = async parameters =>{
             }
             case parameters.data.type=='MODULE_CODE' && 
             (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
-                return {result:await getFile(`${process.cwd()}${parameters.data.doc}.js`), type:'JS'};
+                return {result:await getFile(`${process.cwd()}${parameters.data.doc}.js`, true), type:'JS'};
             }
             case parameters.data.type=='JSDOC':{
-                return {result:await getFile(`${process.cwd()}/apps/common/src/jsdoc/${parameters.data.doc}`), type:'HTML'};
+                return {result:await getFile(`${process.cwd()}/apps/common/src/jsdoc/${parameters.data.doc}`, true), type:'HTML'};
             }
             case parameters.data.type=='GUIDE':
-            case parameters.data.type=='APP':
+            case parameters.data.type=='APP' && fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
             case parameters.data.type=='ROUTE':
             case parameters.data.type.startsWith('MODULE') &&
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
-                /**@type{import('../../../../server/server.js')} */
-                const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+                
                 /**@type{import('../../../../server/db/fileModelConfig.js')} */
                 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-                /**@type{import('../../../../server/db/fileModelApp.js')} */
-                const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
                 //guide documents in separate files, app and modules use templates
                 return {result:(await ComponentMarkdown({ data:{  
                                                         markdown: parameters.data.type.toUpperCase()=='GUIDE'?
-                                                                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.data.doc}.md`):
+                                                                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.data.doc}.md`, true):
                                                                         await markdownRender({  app_id:parameters.app_id,
                                                                                                 type:parameters.data.type,
                                                                                                 doc:parameters.data.doc,

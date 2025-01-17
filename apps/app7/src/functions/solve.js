@@ -4,7 +4,7 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @import {APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
+ * @import {APP_FUNCTION_cube_solution_model,APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
  * @typedef {server_server_response & {result?:APP_FUNCTION_cube_solve_return[]}} cubeSolve
  */
 
@@ -64,6 +64,8 @@ const cubeSolve = async parameters =>{
 		//Only robot can solve to given goal state at the moment
 		if (parameters.data.cube_goalstate)
 			parameters.data.model = 0;
+		/**@type{APP_FUNCTION_cube_solution_model} */
+		const model = parameters.data.model;
 		switch (parameters.data.model){
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
@@ -106,18 +108,18 @@ const cubeSolve = async parameters =>{
 						return {result:[{cube_solution:			solution1.split(' ').length<solution2.split(' ').length?solution1:solution2, 
 										cube_solution_time:		solution1.split(' ').length<solution2.split(' ').length?timer2-timer1:timer3-timer2, 
 										cube_solution_length:	solution1.split(' ').length<solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
-										cube_solution_model:	0}], type:'JSON'};
+										cube_solution_model:	model}], type:'JSON'};
 					}
 					else{
 						//return all solutions
 						return {result:[{	cube_solution:			solution1, 
 											cube_solution_time:		timer2-timer1, 
 											cube_solution_length:	solution1.split(' ').length,
-											cube_solution_model:	0},
+											cube_solution_model:	model},
 										{	cube_solution:			solution2, 
 											cube_solution_time:		timer3-timer2, 
 											cube_solution_length:	solution2.split(' ').length,
-											cube_solution_model:	0}], 
+											cube_solution_model:	model}], 
 								type:'JSON'};
 					}
 				}
@@ -161,7 +163,7 @@ const cubeSolve = async parameters =>{
 										cube_solution:			solution.solution_string, 
 										cube_solution_time:		timer_finished-timer_start,
 										cube_solution_length:	solution.solution_string.split(' ').length,
-										cube_solution_model:	1}], 
+										cube_solution_model:	model}], 
 								type:'JSON'};
 				}
 			}

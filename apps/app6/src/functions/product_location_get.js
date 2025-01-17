@@ -3,9 +3,7 @@
  */
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{stock:[ {key_name:string, key_value:string, key_type:string}, 
- *                                                      {key_name:string, key_value:string, key_type:string}, 
- *                                                      {key_name:string, key_value:string, key_type:string}]}}} productLocationGet
+ * @typedef {server_server_response & {result?:{stock:{key_name:string, key_value:string, key_type:string}[][]}[] }} productLocationGet
  */
 /**
  * @name productLocationGet

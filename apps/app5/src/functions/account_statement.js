@@ -4,13 +4,14 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
+ * @import {bank_transaction} from './types.js'
  * @typedef {server_server_response & {result?:{title_sub	        :string,
  *                                              title	            :string,
  *                                              bank_account_iban	:string,
  *                                              bank_account_number :string,
  *                                              currency            :string,
  *                                              currency_name       :string,
- *                                              bank_account_balance:number}}} getStatement
+ *                                              bank_account_balance:number}[]}} getStatement
  */
 /**
  * @name IBAN_mod97
@@ -146,23 +147,16 @@ const getStatement = async parameters =>{
                                                                         }})
                                         .then(result=>JSON.parse(result.result[0].json_data));
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_ID json_data content
-    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{   timestamp:string, 
-                                                                                        logo:string, 
-                                                                                        origin:string, 
-                                                                                        amount_deposit:number|null, 
-                                                                                        amount_withdrawal:number|null}}*/current_row)=>balance += 
+    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{bank_transaction}*/current_row)=>balance += 
                                                                     (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource
                     title_sub	            :Entity.name,
                     //ACCOUNT resource
-                    /**@ts-ignore */
                     title	                :AccountMetaData.filter((/**@type{*}*/row)=>'title' in row)[0].title.default_text,
                     bank_account_iban	    :IBAN_compose(Entity.country_code, Entity.bank_id, CustomerAccount.bank_account_number, true),
                     bank_account_number     :CustomerAccount.bank_account_number,
-                    /**@ts-ignore */
                     currency                :currency.currency_symbol,
-                    /**@ts-ignore */
                     currency_name           :currency.currency_name,
                     bank_account_balance    :Number(balance)
             }], type:'JSON'};
