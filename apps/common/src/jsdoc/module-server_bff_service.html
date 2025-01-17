@@ -139,7 +139,7 @@ Redirects from http to https if https is enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line180">line 180</a>
+        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line129">line 129</a>
     </div></div></dd>
     
 
@@ -341,7 +341,7 @@ Redirects from http to https if https is enabled</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>bff<span class="signature">(bff_parameters)</span><span class="type-signature"> &rarr; {*}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>bff<span class="signature">(bff_parameters)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
     
 
     
@@ -444,7 +444,7 @@ APP can request server shared modules or reports using REST API</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line212">line 212</a>
+        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line161">line 161</a>
     </div></div></dd>
     
 
@@ -480,231 +480,7 @@ APP can request server shared modules or reports using REST API</p>
     </dt>
     <dd>
         
-<span class="param-type">*</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(inner) </span>bffErrorLog<span class="signature">(app_id, bff_parameters, service, error)</span><span class="type-signature"> &rarr; {*}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Logs error and returns error</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>app_id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bff_parameters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_bff_parameters</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>service</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>error</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_server_error</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line49">line 49</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">*</span>
+<span class="param-type">Promise.&lt;*></span>
 
 
     </dd>
@@ -852,7 +628,7 @@ Returns a reason if response should be closed</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line81">line 81</a>
+        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line30">line 30</a>
     </div></div></dd>
     
 
@@ -902,230 +678,6 @@ Returns a reason if response should be closed</p>
 |
 
 <span class="param-type">null</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(inner) </span>bffSendFile<span class="signature">(app_id, bff_parameters, service, filePath)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Bff send file if found or return error</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>app_id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>bff_parameters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_bff_parameters</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>service</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>filePath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line29">line 29</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;void></span>
 
 
     </dd>
@@ -1270,7 +822,7 @@ Returns a reason if response should be closed</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line381">line 381</a>
+        <a href="server_bff.js.html">server/bff.js</a>, <a href="server_bff.js.html#line231">line 231</a>
     </div></div></dd>
     
 

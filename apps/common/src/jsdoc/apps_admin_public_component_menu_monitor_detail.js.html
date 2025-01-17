@@ -11,7 +11,7 @@
  * Connected
  *      menu_monitor_detail_connected          contains records
  * App log
- *      menu_monitor_detail_app_log            contains records
+ *      menu_monitor_detail_app_data_stat            contains records
  *      list_app_pagination     contains page navigation buttons
  * Server log 
  *      menu_monitor_detail_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
@@ -30,7 +30,7 @@
  * @function
  * @param {{
  *          service_socket_client_ID:number,
- *          monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
+ *          monitor_detail:'CONNECTED'|'APP_DATA_STAT'|'SERVER_LOG',
  *          function_commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *          function_get_order_by:function,
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
@@ -163,135 +163,54 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 &lt;/div>`:
                                 ''
                             }
-                            ${props.monitor_detail=='APP_LOG'?`
-                                &lt;div id='menu_monitor_detail_app_log_form'>
-                                    &lt;div id='menu_monitor_detail_app_log' class='common_list_scrollbar'>
-                                        &lt;div class='menu_monitor_detail_app_log_row'>
-                                            &lt;div data-column='date_created' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
+                            ${props.monitor_detail=='APP_DATA_STAT'?`
+                                &lt;div id='menu_monitor_detail_app_data_stat_form'>
+                                    &lt;div id='menu_monitor_detail_app_data_stat' class='common_list_scrollbar'>
+                                        &lt;div class='menu_monitor_detail_app_data_stat_row'>
+                                            &lt;div data-column='date_created' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
                                                 DATE
                                             &lt;/div>
-                                            &lt;div data-column='server_http_host' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_http_host')}'>
-                                                HOST
-                                            &lt;/div>
-                                            &lt;div  data-column='app_id' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                            &lt;div  data-column='app_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                                 APP ID
                                             &lt;/div>
-                                            &lt;div data-column='app_module' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module')}'>
-                                                MODULE
+                                            &lt;div data-column='app_data_entity_resource_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_data_entity_resource_id')}'>
+                                                ENTITY RESOURCE ID
                                             &lt;/div>
-                                            &lt;div data-column='app_module_type' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_type')}'>
-                                                MODULE TYPE
+                                            &lt;div data-column='app_data_entity_resource_app_data_entity_app_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_data_entity_resource_app_data_entity_app_id')}'>
+                                                ENTITY RESOURCE APP DATA ENTITY APP ID
                                             &lt;/div>
-                                            &lt;div data-column='app_module_request' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_request')}'>
-                                                MODULE REQUEST
+                                            &lt;div data-column='app_data_entity_resource_app_data_entity_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_data_entity_resource_app_data_entity_id')}'>
+                                                ENTITY RESOURCE APP DATA ENTITY ID
                                             &lt;/div>
-                                            &lt;div data-column='app_module_result' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_module_result')}'>
-                                                MODULE RESULT
-                                            &lt;/div>
-                                            &lt;div data-column='app_user_id' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('app_user_id')}'>
-                                                USER ID
-                                            &lt;/div>
-                                            &lt;div data-column='server_remote_addr' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_remote_addr')}'>
-                                                IP
-                                            &lt;/div>
-                                            &lt;div data-column='client_latitude' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('client_latitude')}'>
-                                                GPS LAT
-                                            &lt;/div>
-                                            &lt;div data-column='client_longitude' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('client_longitude')}'>
-                                                GPS LONG
-                                            &lt;/div>
-                                            &lt;div data-column='user_language' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_language')}'>
-                                                USER LANGUAGE
-                                            &lt;/div>
-                                            &lt;div data-column='user_timezone' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_timezone')}'>
-                                                USER TIMEZONE
-                                            &lt;/div>
-                                            &lt;div data-column='user_number_system' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_number_system')}'>
-                                                USER NUMBER_SYSTEM
-                                            &lt;/div>
-                                            &lt;div data-column='user_platform' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('user_platform')}'>
-                                                USER PLATFORM
-                                            &lt;/div>
-                                            &lt;div data-column='server_user_agent' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('server_user_agent')}'>
-                                                USER AGENT
-                                            &lt;/div>
-                                            &lt;div data-column='http_accept_language' class='menu_monitor_detail_app_log_col list_sort_click list_title ${props.function_get_order_by('http_accept_language')}'>
-                                                ACCEPT LANGUAGE
+                                            &lt;div data-column='json_data' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('json_data')}'>
+                                                JSON DATA
                                             &lt;/div>
                                         &lt;/div>
                                         ${props.logs.map((/**@type{{date_created:string,
-                                                                    server_http_host:string,
                                                                     app_id:number,
-                                                                    app_module:string,
-                                                                    app_module_type:string,
-                                                                    app_module_request:string,
-                                                                    app_module_result:string,
-                                                                    app_user_id:number,
-                                                                    server_remote_addr:string,
-                                                                    client_latitude:string,
-                                                                    client_longitude:string,
-                                                                    user_language:string
-                                                                    user_timezone:string
-                                                                    user_number_system:string,
-                                                                    user_platform:string,
-                                                                    server_user_agent:string,
-                                                                    server_http_accept_language:string
+                                                                    app_data_entity_resource_id:number|null,
+                                                                    app_data_entity_resource_app_data_entity_app_id:number|null,
+                                                                    app_data_entity_resource_app_data_entity_id:number|null,
+                                                                    json_data:string
                                                                     }}*/log)=>
-                                            `&lt;div class='menu_monitor_detail_app_log_row'>
-                                                &lt;div class='menu_monitor_detail_app_log_col'>
+                                            `&lt;div class='menu_monitor_detail_app_data_stat_row'>
+                                                &lt;div class='menu_monitor_detail_app_data_stat_col'>
                                                     ${log.date_created}
                                                 &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.server_http_host}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col'>
+                                                &lt;div class='menu_monitor_detail_app_data_stat_col'>
                                                     ${log.app_id}
                                                 &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col'>
-                                                    ${log.app_module}
+                                                &lt;div class='menu_monitor_detail_app_data_stat_col'>
+                                                    ${log.app_data_entity_resource_id}
                                                 &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col'>
-                                                    ${log.app_module_type}
+                                                &lt;div class='menu_monitor_detail_app_data_stat_col'>
+                                                    ${log.app_data_entity_resource_app_data_entity_app_id}
                                                 &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.app_module_request}
+                                                &lt;div class='menu_monitor_detail_app_data_stat_col common_wide_list_column'>
+                                                    ${log.app_data_entity_resource_app_data_entity_id}
                                                 &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.app_module_result}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col'>
-                                                    ${log.app_user_id}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col'>
-                                                    ${log.server_remote_addr.replace('::ffff:','')}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col gps_click'
-                                                    data-latitude='${log.client_latitude ?? ''}'
-                                                    data-longitude='${log.client_longitude ?? ''}'>
-                                                    ${log.client_latitude ?? ''}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col gps_click'
-                                                    data-latitude='${log.client_latitude ?? ''}'
-                                                    data-longitude='${log.client_longitude ?? ''}'>
-                                                    ${log.client_longitude ?? ''}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.user_language}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.user_timezone}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.user_number_system}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.user_platform}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.server_user_agent}
-                                                &lt;/div>
-                                                &lt;div class='menu_monitor_detail_app_log_col common_wide_list_column'>
-                                                    ${log.server_http_accept_language}
+                                                &lt;div class='menu_monitor_detail_app_data_stat_col common_wide_list_column'>
+                                                    ${log.json_data}
                                                 &lt;/div>
                                             &lt;/div>`
                                             ).join('')
@@ -342,7 +261,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  * @param {{ data:       {
  *                       commonMountdiv:string,
  *                       app_id:number,
- *                       monitor_detail:'CONNECTED'|'APP_LOG'|'SERVER_LOG',
+ *                       monitor_detail:'CONNECTED'|'APP_DATA_STAT'|'SERVER_LOG',
  *                       offset:number,
  *                       sort:string,
  *                       order_by:string,
@@ -412,11 +331,16 @@ const component = async props => {
         const day  = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_day .common_select_dropdown_value').getAttribute('data-value');
         
         switch (list_detail){
-            case 'CONNECTED':
-            case 'APP_LOG':{
+            case 'CONNECTED':{
                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
                 return `select_app_id=${app_id}&amp;year=${year}&amp;month=${month}&amp;day=${day}&amp;sort=${sort}&amp;order_by=${order_by}&amp;offset=${offset}&amp;limit=${props.data.LIMIT}`;
+            }
+            case 'APP_DATA_STAT':{
+                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
+                //search month + 1 for CONNECTED
+                return `select_app_id=${app_id}&amp;year=${year}&amp;month=${month}&amp;day=${day}&amp;sort=${sort}&amp;order_by=${order_by}&amp;offset=${offset}&amp;limit=${props.data.LIMIT}` +
+                        'app_data_entity_resource_id=&amp;app_data_entity_resource_app_data_entity_app_id=&amp;app_data_entity_resource_app_data_entity_id=';
             }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
@@ -458,14 +382,14 @@ const component = async props => {
             path = '/server-socket/socket';
             break;
         }
-        case 'APP_LOG':{
+        case 'APP_DATA_STAT':{
             path = '/server-db_admin/app_data_stat-log';
             break;
         }
     }
     //fetch logs except for SERVER_LOG
     const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
-    if (props.data.monitor_detail=='APP_LOG'||props.data.monitor_detail=='CONNECTED'){
+    if (props.data.monitor_detail=='APP_DATA_STAT'||props.data.monitor_detail=='CONNECTED'){
         page_last = logs.rows.length>0?(Math.ceil(logs.page_header.total_count/props.data.LIMIT)):0;
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
@@ -486,8 +410,8 @@ const component = async props => {
          */
         const get_sort = (order_by=0) => {
             const sort = '';
-            if (props.data.monitor_detail=='APP_LOG')
-                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_app_log .list_title')){
+            if (props.data.monitor_detail=='APP_DATA_STAT')
+                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_app_data_stat .list_title')){
                     if (col_title.classList.contains('asc'))
                         if (order_by==0)
                             return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -545,8 +469,8 @@ const component = async props => {
         }
         if (props.data.monitor_detail=='CONNECTED')
             props.methods.monitorShow('CONNECTED',  (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
-        if (props.data.monitor_detail=='APP_LOG')
-            props.methods.monitorShow('APP_LOG',    (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+        if (props.data.monitor_detail=='APP_DATA_STAT')
+            props.methods.monitorShow('APP_DATA_STAT',    (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
         if (props.data.monitor_detail=='SERVER_LOG')
             monitorDetailShowServerLog(             (page==1?0:page-1) * props.data.LIMIT,props.data.sort, props.data.order_by);
 
@@ -562,8 +486,8 @@ const component = async props => {
      */
     const monitorDetailClickSort = (list, sortcolumn, order_by) => {
         switch (list){
-            case 'menu_monitor_detail_app_log':{
-                props.methods.monitorShow('APP_LOG', 0,  sortcolumn, order_by);
+            case 'menu_monitor_detail_app_data_stat':{
+                props.methods.monitorShow('APP_DATA_STAT', 0,  sortcolumn, order_by);
                 break;
             }
             case 'menu_monitor_detail_connected':{

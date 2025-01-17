@@ -90,7 +90,7 @@ const component = async props => {
             method = 'POST', 
             lov_column = 'text';
             path = '/app-module-function/COMMON_COUNTRY';
-            query= `lang_code=${props.data.user_locale}`;
+            query= `locale=${props.data.user_locale}`;
             token_type = 'APP_ID';
             body = {data_app_id : props.data.common_app_id};
             break;
