@@ -288,7 +288,7 @@ const component = async props => {
                                 await props.methods.commonFFB({   path:props.data.detail_path, 
                                                             query:props.data.detail_query, 
                                                             method:props.data.detail_method, authorization_type:props.data.detail_token_type, body:props.data.detail_body})
-                                        .then((/**@type{*}*/result)=>JSON.parse(result).rows):
+                                        .then((/**@type{*}*/result)=>(JSON.parse(result).rows)?.[0]?JSON.parse(result).rows:[]):
                                 [];
     
     if (props.data.new_resource==false){

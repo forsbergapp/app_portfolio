@@ -9,10 +9,16 @@
  * @module apps/app7/src/functions/solve
  */
 
+/**
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @import {APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
+ * @typedef {server_server_response &amp; {result?:APP_FUNCTION_cube_solve_return[]}} cubeSolve
+ */
+
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
 
 /**
- * @name cube_solve
+ * @name cubeSolve
  * @description Solves Rubiks cube using generative AI pattern
  * 				Model: 		Robot
  * 							Using Kociemba and Thistlewaite algorithms
@@ -29,17 +35,20 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  * 
  * 				Returns Singmaster notation with moves, time, length and model for each solution
  * @function
- * @param {number} app_id
- * @param {import('./types.js').APP_FUNCTION_cube_solve_data} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.&lt;import('./types.js').APP_FUNCTION_cube_solve_return[]>}
+ * @param {{app_id:number,
+ *          data:APP_FUNCTION_cube_solve_data,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ * 			iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.&lt;cubeSolve>}
  */
-const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
-	if ((data.model ==0 || data.model ==1) &amp;&amp; data.preamble == 0 &amp;&amp; (data.temperature == 0 || data.temperature == 1) &amp;&amp; 
-		data.cube_currentstate !=''){
+const cubeSolve = async parameters =>{
+	/**@type{import('../../../../server/iam.js')} */
+	const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+	if ((parameters.data.model ==0 || parameters.data.model ==1) &amp;&amp; parameters.data.preamble == 0 &amp;&amp; (parameters.data.temperature == 0 || parameters.data.temperature == 1) &amp;&amp; 
+		parameters.data.cube_currentstate !=''){
 		//Algorithm information:
 		//https://en.wikipedia.org/wiki/Optimal_solutions_for_the_Rubik's_Cube
 		//https://en.wikipedia.org/wiki/CFOP_method
@@ -60,9 +69,9 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 		/**@type{import('./solver3/index.js')} */
 		const {default:cuberSolver3} = await import('./solver3/index.js');
 		//Only robot can solve to given goal state at the moment
-		if (data.cube_goalstate)
-			data.model = 0;
-		switch (data.model){
+		if (parameters.data.cube_goalstate)
+			parameters.data.model = 0;
+		switch (parameters.data.model){
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
 				/**@type{import('../../../../server/socket.js')} */
@@ -72,19 +81,22 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 				const solver2 = new cuberSolver2.RubiksCubeSolver();	
 				//use Thistlewaite algorithm to solve from solved to given state
 				
-				const solver2_moves_from_solved = solver2.solve(data.cube_goalstate?data.cube_goalstate.join(' '):GOAL_SOLVE.join(' '), data.cube_currentstate.split(' '));
+				const solver2_moves_from_solved = solver2.solve(parameters.data.cube_goalstate?parameters.data.cube_goalstate.join(' '):GOAL_SOLVE.join(' '), parameters.data.cube_currentstate.split(' '));
 				if (solver2_moves_from_solved=='')
-						return [];
+						return {result:[], type:'JSON'};
 				else{
-					await socketAppServerFunctionSend(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
+					await socketAppServerFunctionSend(parameters.app_id, parameters.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
 					/**
 					 * @param {string} moves
 					 */
 					const solve1 = async moves =>{
 						const { Worker } = await import('node:worker_threads');
-						/**@ts-ignore */
-						const worker = new Worker(import.meta.dirname.replace('C:','') +  '/solver1/worker.js', { workerData: moves});
+						
+						const worker = new Worker(
+											/**@ts-ignore */
+											import.meta.dirname
+											.replace('C:','') +  '/solver1/worker.js', { workerData: moves});
 						return new Promise(resolve => {
 							worker.on('message', result => {
 								resolve(result);
@@ -92,27 +104,28 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 						});
 					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
-					await socketAppServerFunctionSend(app_id, res.req.query.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
+					await socketAppServerFunctionSend(parameters.app_id, parameters.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
 					const timer2 = Date.now();
-					const solution2 = solver2.solve(data.cube_currentstate, data.cube_goalstate ?? GOAL_SOLVE);
+					const solution2 = solver2.solve(parameters.data.cube_currentstate, parameters.data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();
-					if (data.temperature ==0){
+					if (parameters.data.temperature ==0){
 						//return best solution
-						return [{	cube_solution:solution1.split(' ').length&lt;solution2.split(' ').length?solution1:solution2, 
-									cube_solution_time:solution1.split(' ').length&lt;solution2.split(' ').length?timer2-timer1:timer3-timer2, 
-									cube_solution_length:solution1.split(' ').length&lt;solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
-									cube_solution_model:0}];
+						return {result:[{cube_solution:			solution1.split(' ').length&lt;solution2.split(' ').length?solution1:solution2, 
+										cube_solution_time:		solution1.split(' ').length&lt;solution2.split(' ').length?timer2-timer1:timer3-timer2, 
+										cube_solution_length:	solution1.split(' ').length&lt;solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
+										cube_solution_model:	0}], type:'JSON'};
 					}
 					else{
 						//return all solutions
-						return [{	cube_solution:solution1, 
-									cube_solution_time:timer2-timer1, 
-									cube_solution_length:solution1.split(' ').length,
-									cube_solution_model:0},
-								{	cube_solution:solution2, 
-									cube_solution_time:timer3-timer2, 
-									cube_solution_length:solution2.split(' ').length,
-									cube_solution_model:0}];
+						return {result:[{	cube_solution:			solution1, 
+											cube_solution_time:		timer2-timer1, 
+											cube_solution_length:	solution1.split(' ').length,
+											cube_solution_model:	0},
+										{	cube_solution:			solution2, 
+											cube_solution_time:		timer3-timer2, 
+											cube_solution_length:	solution2.split(' ').length,
+											cube_solution_model:	0}], 
+								type:'JSON'};
 					}
 				}
 			}
@@ -122,7 +135,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 				//0-1 2-3 4-5 6-7 8-9 10-11 12-13 14-15 16-17 18-19 20-21 22-23 24-25-26 27-28-29 30-31-32 33-34-35 36-37-38 39-40-41 42-43-44 45-46-47
 				//UF  UR  UB  UL  DF   DR    DB   DL    FR    FL     BR    BL     UFR      URB      UBL      ULF      DRF      DFL      DLB      DBR
 				const timer_start = Date.now();
-				const cs = data.cube_currentstate.replaceAll(' ', '');
+				const cs = parameters.data.cube_currentstate.replaceAll(' ', '');
 				const cubstate_solver3 = [
 					cs[35] + cs[1] + cs[25] + cs[18] + 'F' + cs[16] + cs[40] + cs[9]  + cs[38],	//front
 					cs[26] + cs[3] + cs[28] + cs[17] + 'R' + cs[21] + cs[37] + cs[11] + cs[47],	//right
@@ -133,7 +146,7 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 				].join('').toLowerCase();  
 				const solution = cuberSolver3(cubstate_solver3, { partitioned: false });
 				if (solution.solution_string=='')
-					return [];
+					return {result:[], type:'JSON'};
 				else{
 					//replace PRIME word with '
 					solution.solution_string =  solution.solution_string.toUpperCase().replaceAll('PRIME', '\'');
@@ -143,30 +156,40 @@ const cube_solve = async (app_id, data, user_agent, ip, locale, res) =>{
 					if (solution.solution_string.toUpperCase().indexOf('M')>-1 ||
 						solution.solution_string.toUpperCase().indexOf('E')>-1 ||
 						solution.solution_string.toUpperCase().indexOf('S')>-1)
-							throw ('Not supported');
+						return {http:400,
+								code:'CUBE_SOLVE',
+								text:'Not supported',
+								developerText:null,
+								moreInfo:null,
+								type:'JSON'
+							};
 					else
-						return [{	
-							cube_solution:solution.solution_string, 
-							cube_solution_time:timer_finished-timer_start,
-							cube_solution_length:solution.solution_string.split(' ').length,
-							cube_solution_model:1}];
+						return {result:[{	
+										cube_solution:			solution.solution_string, 
+										cube_solution_time:		timer_finished-timer_start,
+										cube_solution_length:	solution.solution_string.split(' ').length,
+										cube_solution_model:	1}], 
+								type:'JSON'};
 				}
 			}
 		}
-		
+
 	}
 	else{
-		if (data.cube_currentstate &amp;&amp; data.cube_currentstate == '' )
-			return [];
+		if (parameters.data.cube_currentstate &amp;&amp; parameters.data.cube_currentstate == '' )
+			return {result:[], type:'JSON'};
 		else{
-			/**@type{import('../../../../server/iam.js')} */
-			const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-			res.statusCode = 400;
-			throw iamUtilMesssageNotAuthorized();
+			return {http:400,
+				code:'CUBE_SOLVE',
+				text:iamUtilMessageNotAuthorized(),
+				developerText:null,
+				moreInfo:null,
+				type:'JSON'
+			};
 		}
 	}
 };
-export default cube_solve;
+export default cubeSolve;
 
 
 </code></pre>

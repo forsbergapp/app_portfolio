@@ -179,22 +179,22 @@ const template = props => ` ${  /*
                             }
                             ${props.logscope=='APP'?
                                 `&lt;div class='menu_monitor_detail_server_log_row'>
-                                    &lt;div data-column='logdate' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
+                                    &lt;div data-column='logdate' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE
                                     &lt;/div>
-                                    &lt;div data-column='app_id' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
+                                    &lt;div data-column='app_id' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                         APP ID
                                     &lt;/div>
-                                    &lt;div data-column='filename' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('filename')}'>
+                                    &lt;div data-column='filename' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('filename')}'>
                                         FILENAME
                                     &lt;/div>
-                                    &lt;div data-column='function' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('function')}'>
+                                    &lt;div data-column='function' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('function')}'>
                                         FUNCTION
                                     &lt;/div>
-                                    &lt;div data-column='line' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('line')}'>
+                                    &lt;div data-column='line' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('line')}'>
                                         LINE
                                     &lt;/div>
-                                    &lt;div data-column='logtext' class='menu_monitor_detail_server_log_app_log_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
+                                    &lt;div data-column='logtext' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('logtext')}'>
                                         LOG TEXT
                                     &lt;/div>
                                 &lt;/div>
@@ -206,22 +206,22 @@ const template = props => ` ${  /*
                                                             logtext:string
                                                             }}*/log)=>
                                     `&lt;div class='menu_monitor_detail_server_log_row'>
-                                        &lt;div class='menu_monitor_detail_server_log_app_log_col'>
+                                        &lt;div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.logdate}
                                         &lt;/div>
-                                        &lt;div class='menu_monitor_detail_server_log_app_log_col'>
+                                        &lt;div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.app_id}
                                         &lt;/div>
-                                        &lt;div class='menu_monitor_detail_server_log_app_log_col common_wide_list_column'>
+                                        &lt;div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
                                             ${log.app_filename}
                                         &lt;/div>
-                                        &lt;div class='menu_monitor_detail_server_log_app_log_col common_wide_list_column'>
+                                        &lt;div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
                                             ${log.app_function_name}
                                         &lt;/div>
-                                        &lt;div class='menu_monitor_detail_server_log_app_log_col'>
+                                        &lt;div class='menu_monitor_detail_server_log_app_data_stat_col'>
                                             ${log.app_app_line}
                                         &lt;/div>
-                                        &lt;div class='menu_monitor_detail_server_log_app_log_col common_wide_list_column'>
+                                        &lt;div class='menu_monitor_detail_server_log_app_data_stat_col common_wide_list_column'>
                                             ${log.logtext}
                                         &lt;/div>
                                     &lt;/div>`

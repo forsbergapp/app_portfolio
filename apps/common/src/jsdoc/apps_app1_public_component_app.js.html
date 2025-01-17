@@ -77,7 +77,6 @@ const component = async props => {
                                     method:'POST', 
                                     authorization_type:'APP_ID', 
                                     body:{type:'JSDOC', data_app_id:props.data.app_id, doc:'nav.html'}})
-                .then(result=>JSON.parse(result).rows[0])
                 .catch(()=>null);
     const onMounted =()=>{
         //add common_link to JSDoc generated menu so they will get default hover effect

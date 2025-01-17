@@ -33,7 +33,7 @@ const template = props => `
                                 ${props.apps.map(row=>
                                     `&lt;div class='common_dialogue_apps_app_link_row common_row'>
                                         &lt;div class='common_dialogue_apps_app_link_col'>
-                                            &lt;div data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}'class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='background-image:url("${row.logo}");'>&lt;/div>
+                                            &lt;div data-url='${row.protocol}${row.subdomain}.${row.host}:${row.port}'class='common_dialogue_apps_app_logo common_image common_image_logo_start' style='${row.logo==null?'':`background-image:url(${row.logo});`}'>&lt;/div>
                                         &lt;/div>
                                         &lt;div class='common_dialogue_apps_app_link_col'>
                                             &lt;div class='common_dialogue_apps_app_name'>${row.app_name_translation}&lt;/div>
