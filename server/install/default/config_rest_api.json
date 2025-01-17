@@ -3573,25 +3573,22 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "id":{
-                                                "type":"number"
-                                            },
                                             "app_id":{
                                                 "type":"number"
                                             },
-                                            "commmon_type":{
+                                            "common_type":{
                                                 "type":"string"
                                             },
-                                            "commmon_name":{
+                                            "common_name":{
                                                 "type":"string"
                                             },
-                                            "commmon_role":{
+                                            "common_role":{
                                                 "type":"string"
                                             },
-                                            "commmon_path":{
+                                            "common_path":{
                                                 "type":"string"
                                             },
-                                            "commmon_description":{
+                                            "common_description":{
                                                 "type":"string"
                                             }
                                         }
