@@ -541,7 +541,7 @@ const commonModuleRun = async parameters => {
                                                                                             app.common_role == parameters.endpoint)[0];
         if (module){
             const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
-            return await RunFunction({app_id:parameters.app_id, host:parameters.host, data:parameters.data, user_agent:parameters.user_agent, ip:parameters.ip, locale:parameters.locale});
+            return await RunFunction({app_id:parameters.app_id, data:parameters.data, ip:parameters.ip, host:parameters.host, iam:parameters.iam, user_agent:parameters.user_agent, locale:parameters.locale});
         }
         else{
             /**@type{import('../../../server/iam.js')} */
