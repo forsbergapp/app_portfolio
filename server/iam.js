@@ -491,7 +491,7 @@ const iamAuthenticateUser = async parameters =>{
  *          user_agent:string,
  *          accept_language:string,
  *          locale:string,
- *          data:{   identity_provider_id:string|null,
+ *          data:{   identity_provider_id:number|null,
  *                   avatar:string|null,
  *                   provider_id:string,
  *                   provider_first_name:string,

@@ -647,7 +647,7 @@
  *              app_id: number,
  *			    locale: string,
  *			    text: string,			            //simple text
- *			    json_data: {[key:string]:*} //complex text
+ *			    json_data: string                   //complex text
  *}} server_db_file_app_translation		
 */
 
@@ -1084,7 +1084,7 @@
  *              app_data_entity_resource_app_data_entity_app_id:number, 
  *              app_data_entity_resource_app_data_entity_id:    number, 
  *              app_data_entity_resource_id:                    number, 
- *              json_data:{},
+ *              json_data:string,
  *              resource_detail:[{  app_data_resource_master_id:number,
  *                                  app_data_entity_resource_id: number,
  *                                  user_account_id:number|null,
@@ -1092,13 +1092,13 @@
  *                                  data_app_id:number,
  *                                  app_data_entity_resource_app_data_entity_id:number,
  *                                  app_data_resource_master_attribute_id:number|null,
- *                                  json_data:{},
+ *                                  json_data:string,
  *                                  resource_detail_data:[{ app_data_resource_detail_id: number,
  *                                                          user_account_id:number|null,
  *                                                          user_account_app_id:number|null,
  *                                                          data_app_id:number,
  *                                                          app_data_resource_master_attribute_id:number,
- *                                                          json_data: {}}
+ *                                                          json_data: string}
  *                                                       ]}
  *                              ]}[]} resource_master
  */
@@ -1341,7 +1341,7 @@
 
 /**
  * DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_post
- * @typedef {{  json_data:                                          object,
+ * @typedef {{  json_data:                                          string,
  *              app_id:                                             number|null,
  *              user_account_id:                                    number|null,
  *              user_account_app_user_account_id:                   number|null,
@@ -1677,7 +1677,7 @@
 /**
  * DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_createUserPost
  * @typedef {{  description:string,
- *              json_data:object,
+ *              json_data:string,
  *              user_account_id:number|null}} server_db_sql_parameter_user_account_app_data_post_createUserPost
  */
 
@@ -1752,7 +1752,7 @@
 /**
  * DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_updateUserPost
  * @typedef {{  description:string,
- *              json_data:object,
+ *              json_data:string,
  *              user_account_id:number|null}} server_db_sql_parameter_user_account_app_data_post_updateUserPost
  */
 
