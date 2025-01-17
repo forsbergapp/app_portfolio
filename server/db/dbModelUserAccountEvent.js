@@ -1,9 +1,12 @@
 /** @module server/db/dbModelUserAccountEvent */
 
 /**
- * @import {server_db_sql_result_user_account_event_getLastUserEvent,
- *          server_db_sql_result_user_account_event_insertUserEvent,
+ * @import {server_server_response,
+ *          server_db_sql_result_user_account_event_getLastUserEvent,
+ *          server_db_common_result_insert,
  *          server_db_sql_parameter_user_account_event_insertUserEvent} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_event_getLastUserEvent[] }} getLastUserEvent
  */
 
 /**@type{import('./dbSql.js')} */
@@ -15,7 +18,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_event_insertUserEvent} data 
- * @returns {Promise.<server_db_sql_result_user_account_event_insertUserEvent>}
+ * @returns {Promise.<post>}
  */
 const post = async (app_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -35,7 +38,7 @@ const post = async (app_id, data) =>
  * @param {number} app_id 
  * @param {number|null} user_account_id 
  * @param {string} event 
- * @returns {Promise.<server_db_sql_result_user_account_event_getLastUserEvent[]>}
+ * @returns {Promise.<getLastUserEvent>}
  */
 const getLastUserEvent = async (app_id, user_account_id, event) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

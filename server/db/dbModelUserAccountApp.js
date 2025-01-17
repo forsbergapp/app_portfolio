@@ -1,13 +1,18 @@
 /** @module server/db/dbModelUserAccountApp */
 
 /**
- * @import {server_db_sql_result_user_account_app_deleteUserAccountApp,
+ * @import {server_server_response,
  *          server_db_sql_result_user_account_app_getUserAccountApps,
  *          server_config_apps_with_db_columns,
  *          server_db_sql_result_user_account_app_getUserAccountApp,
- *          server_db_sql_result_user_account_app_updateUserAccountApp,
- *          server_db_sql_parameter_user_account_app_updateUserAccountApp,
- *          server_db_sql_result_user_account_app_createUserAccountApp} from '../types.js'
+ *          server_db_common_result_delete,
+ *          server_db_common_result_update,
+ *          server_db_common_result_insert} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_getUserAccountApp[] }} get
+ * @typedef {server_server_response & {result?:server_config_apps_with_db_columns[] }} getApps
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} update
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
@@ -22,7 +27,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_getUserAccountApp[]>}
+ * @returns {Promise.<get>}
  */
 const get = parameters => 
    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -43,14 +48,15 @@ const get = parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          locale:string}} parameters
- * @returns {Promise.<server_config_apps_with_db_columns[]>}
+ * @returns {Promise.<getApps>}
  */
 const getApps = async parameters => {
 
    /**@type{import('../../apps/common/src/common.js')} */
    const {commonAppsGet} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
    
-   /**@type{server_db_sql_result_user_account_app_getUserAccountApps[]} */
+   /**@typedef {server_server_response & {result?:server_db_sql_result_user_account_app_getUserAccountApps[] }} apps_db*/
+   /**@type{apps_db} */
    const apps_db = await import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
        dbCommonExecute(parameters.app_id, 
                        dbSql.USER_ACCOUNT_APP_SELECT_USER_APPS,
@@ -60,8 +66,13 @@ const getApps = async parameters => {
                        null, 
                        null));
 
-
-   return (await commonAppsGet({app_id:parameters.app_id, resource_id:parameters.app_id, locale:parameters.locale})).filter(app=>app.app_id == apps_db.filter(app_db=>app_db.app_id==app.app_id)[0].app_id);
+    if (apps_db.result)
+        return {result:(await commonAppsGet({app_id:parameters.app_id, resource_id:parameters.app_id, locale:parameters.locale})).result
+                    .filter((/**@type{server_config_apps_with_db_columns}*/app)=>app.app_id == apps_db.result
+                                                    .filter((/**@type{server_db_sql_result_user_account_app_getUserAccountApps}*/app_db)=>app_db.app_id==app.app_id)[0].app_id), 
+                type:'JSON'};
+    else
+        return apps_db;
 };
 
 /**
@@ -70,7 +81,7 @@ const getApps = async parameters => {
  * @function
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns {Promise.<server_db_sql_result_user_account_app_createUserAccountApp>}
+ * @returns {Promise.<post>}
  */
 const post = async (app_id, user_account_id) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -93,7 +104,7 @@ const post = async (app_id, user_account_id) =>
  *                  app_setting_preference_timezone_id:number,
  *                  app_setting_preference_direction_id:number|null,
  *                  app_setting_preference_arabic_script_id:number|null}}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_updateUserAccountApp>}
+ * @returns {Promise.<update>}
  */
 const update = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -118,7 +129,7 @@ const update = parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{delete_app_id:number}}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_app_deleteUserAccountApp>}
+ * @returns {Promise.<deleteRecord>}
  */
 const deleteRecord = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

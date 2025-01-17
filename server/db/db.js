@@ -27,9 +27,6 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 /**@type{import('./fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-/**@type{import('./file.js')} */
-const {filePath} = await import(`file://${process.cwd()}/server/db/file.js`);
-
 //mysql module used for both MariaDB and MySQL
 const MYSQL               = await import('mysql');
 const {default: PG}       = await import('pg');
@@ -109,6 +106,8 @@ const dbPoolDeleteAll = (db)=>{
  * @returns {Promise.<null>}
  */
 const dbPoolStart = async (dbparameters) =>{
+   /**@type{import('./file.js')} */
+   const {filePath} = await import(`file://${process.cwd()}/server/db/file.js`);
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case 1:

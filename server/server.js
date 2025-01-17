@@ -8,7 +8,7 @@
  */
 
 /**
- * @import {server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
+ * @import {server_req_method, server_bff_endpoint_type, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
  */
 const zlib = await import('node:zlib');
 
@@ -41,20 +41,22 @@ const zlib = await import('node:zlib');
  *              rows        : array of anything
  * 
  *  @param {{app_id?:number|null,
- *          host?:string|null,
- *          route:'APP'|'REST_API'|null,
- *          http?:number,
- *          code?:number|null,
- *          text?:string|null,
- *          developerText?:string|null,
- *          moreInfo?:string|null,
- *          result?:*,
- *          sendfile?:string|null,
- *          type:server_server_response_type,
- *          res:server_server_res,
- *          singleResource?:boolean,
- *          offset?:number|null,
- *          limit?:number|null}} parameters
+ *           host?:string|null,
+ *           route:'APP'|'REST_API'|null,
+ *           result_request:{   http?:number|null,
+ *                              code?:number|string|null,
+ *                              text?:string|null,
+ *                              developerText?:string|null,
+ *                              moreInfo?:string|null,
+ *                              result?:*,
+ *                              sendfile?:string|null,
+ *                              type:server_server_response_type,
+ *                              singleResource?:boolean},
+ *          endpoint?:server_bff_endpoint_type,
+ *          method?:server_req_method,
+ *          decodedquery?:string|null,
+ *          res:server_server_res}} parameters
+ *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
     /**@type{import('./db/fileModelAppParameter.js')} */
@@ -68,8 +70,8 @@ const serverResponse = async parameters =>{
      */
     const setType = type => {
         
-        const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control.value;
-        const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id, res:null})[0].common_app_cache_control_font.value;
+        const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control.value;
+        const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control_font.value;
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -124,7 +126,7 @@ const serverResponse = async parameters =>{
             }
         }
     };
-    if (parameters.code){
+    if (parameters.result_request.http){
         /**@type{import('./db/fileModelLog.js')} */
         const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
 
@@ -133,95 +135,113 @@ const serverResponse = async parameters =>{
         const app_id_host = app_common.commonAppHost((parameters.host??'').substring(0,(parameters.host??'').indexOf(':')==-1?
                                                 (parameters.host??'').length:
                                                     (parameters.host??'').indexOf(':')));
-        await fileModelLog.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.http ?? '').toString(), parameters.code.toString(), parameters.text??'');
+        await fileModelLog.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.result_request.http ?? '').toString(), parameters.result_request.code?.toString()??'', parameters.result_request.text??'');
         //ISO20022 error format
         const message = {error:{
-                                http:parameters.http, 
-                                code:parameters.code, 
-                                //return SERVER ERROR if status code starts with 5
-                                text:parameters.http?.toString().startsWith('5')?'SERVER ERROR':parameters.text, 
-                                developer_text:parameters.developerText, 
-                                more_info:parameters.moreInfo}};
+                                http:parameters.result_request.http, 
+                                code:parameters.result_request.code, 
+                                //return SERVER ERROR if status code starts with 5 and not admin app or show full error
+                                text:(common_app_id!=app_id_host && parameters.result_request.http?.toString().startsWith('5'))?'SERVER ERROR':parameters.result_request.text, 
+                                developer_text:parameters.result_request.developerText, 
+                                more_info:parameters.result_request.moreInfo}};
         //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
         parameters.res.statusMessage = '';
-        parameters.res.statusCode = parameters.http ?? 500;
-        parameters.res.setHeader('Content-Type',  'application/json; charset=utf-8');
+        parameters.res.statusCode = parameters.result_request.http ?? 500;
+        setType('JSON');
         parameters.res.write(JSON.stringify(message), 'utf8');
         parameters.res.end();
     }
-    else
-        if (parameters.route=='APP' && parameters.res.statusCode==301){
-            //result from APP can request to redirect
-            parameters.res.redirect('/');
+    else{
+        if (parameters.endpoint=='SOCKET'){
+            //This endpoint only allowed for EventSource so no more update of response
+            null;
         }
-        else 
-            if (parameters.route=='APP' && parameters.res.statusCode==404){
-                //result from APP can return not found for a path
-                if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
-                    parameters.res.redirect(`https://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`);
-                else
-                    parameters.res.redirect(`http://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`);
+        else{
+            if (parameters.route=='APP' && parameters.res.statusCode==301){
+                //result from APP can request to redirect
+                parameters.res.redirect('/');
             }
             else{
-                if (parameters.sendfile){
+                if (parameters.method?.toUpperCase() == 'POST')
+                    parameters.res.statusCode =201;
+                else
+                    parameters.res.statusCode =200;
+                if (parameters.result_request?.sendfile){
                     const fs = await import('node:fs');
                     /**@type{import('./db/fileModelLog.js')} */
                     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-                    await fs.promises.access(parameters.sendfile)
+                    /**@type{import('./iam.js')} */
+                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    await fs.promises.access(parameters.result_request.sendfile)
                     .then(()=>{
-                        setType(parameters.type);
-                        parameters.res?parameters.res.sendFile(parameters.sendfile):null;
-                        parameters.res?parameters.res.status(200):null;
+                        setType(parameters.result_request.type);
+                        parameters.res.sendFile(parameters.result_request.sendfile);
                     })
-                    .catch(error=>fileModelLog.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.sendfile ?? '', error));
+                    .catch(error=>{
+                        fileModelLog.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.result_request.sendfile ?? '', error)
+                        .then(result=>{if (result.http)
+                            parameters.res.statusCode =400;
+                            parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
+                            parameters.res.end();
+                        });
+                    });
                 }
                 else{
-                    setType(parameters.type);
-                    if (parameters.type=='JSON'){
-                        if (parameters.singleResource || parameters.result.page_header)
-                            parameters.res.write(JSON.stringify(parameters.result), 'utf8');
-                        else{
-                            const list_header = {	total_count:	parameters.result.length,
-                                                    offset: 		serverUtilNumberValue(parameters.offset) ?? 0,
-                                                    count:			serverUtilNumberValue(parameters.limit) ?? parameters.result.length
-                                                };
-                            parameters.res.write(JSON.stringify({list_header:list_header, rows:parameters.result}), 'utf8');
-                        }    
+                    if(parameters.result_request.type){
+                        setType(parameters.result_request.type);
+                        if (parameters.result_request?.type=='JSON'){
+                            if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).get('fields')){
+                                if (parameters.result_request.result[0]){
+                                    //limit fields/keys in rows
+                                    const limit_fields = parameters.result_request.result.map((/**@type{*}*/row)=>{
+                                        const row_new = {};
+                                        /**@ts-ignore */
+                                        for (const field of new URLSearchParams(parameters.decodedquery).get('fields').split(',')){
+                                            /**@ts-ignore */
+                                            row_new[field] = row[field];
+                                        }
+                                        return row_new;
+                                    });
+                                    parameters.result_request.result = limit_fields;
+                                }
+                                else{
+                                    //limit fields/keys in object
+                                    const result_service_fields = {};
+                                    /**@ts-ignore */
+                                    for (const field of new URLSearchParams(parameters.decodedquery).get('fields').split(',')){
+                                        /**@ts-ignore */
+                                        result_service_fields[field] = parameters.result_request.result[field];
+                                    }
+                                    parameters.result_request.result = result_service_fields;
+                                }
+                            }
+                            if (parameters.result_request.singleResource || parameters.result_request.result.page_header)
+                                parameters.res.write(JSON.stringify(parameters.result_request.result), 'utf8');
+                            else{
+                                const offset = parameters.decodedquery?serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset')):null;
+                                const limit = parameters.decodedquery?serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('limit')):null;
+
+                                const list_header = {	total_count:	parameters.result_request.result.length,
+                                                        offset: 		offset ?? 0,
+                                                        count:			limit ?? parameters.result_request.result.length
+                                                    };
+                                parameters.res.write(JSON.stringify({list_header:list_header, rows:parameters.result_request.result}), 'utf8');
+                            }    
+                        }
+                        else
+                            parameters.res.write(parameters.result_request.result, 'utf8');
                     }
-                    else
-                        parameters.res.write(parameters.result, 'utf8');
+                    else{
+                        /**@type{import('./iam.js')} */
+                        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                        parameters.res.statusCode =500;
+                        parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
+                    }
                     parameters.res.end();
                 }        
-            }
-        
-};
-/**
- * @name serverResponseErrorSend
- * @description Sends ISO 20022 error format
- * @function
- * @param {server_server_res} res 
- * @param {number} http 
- * @param {string|null} code 
- * @param {string|number|object|null} text 
- * @param {string|null} developer_text 
- * @param {string|null} more_info 
- * @returns {void}
- */
- const serverResponseErrorSend = (res, http, code, text, developer_text, more_info) => {
-    //ISO20022 error format
-    const message = {error:{
-                        http:http, 
-                        code:code, 
-                        //return SERVER ERROR if status code starts with 5
-                        text:http?.toString().startsWith('5')?'SERVER ERROR':text, 
-                        developer_text:developer_text, 
-                        more_info:more_info}};
-    //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
-    res.statusMessage = '';
-    res.statusCode = http;
-    res.setHeader('Content-Type',  'application/json; charset=utf-8');
-    res.write(JSON.stringify(message), 'utf8');
-    res.end();
+            }    
+        }   
+    }
 };
 /**
  * @name serverUtilNumberValue
@@ -238,7 +258,7 @@ const serverResponse = async parameters =>{
   * @name serverUtilCompression
   * @description Compression of response for supported requests
   * @function
-  * @param {server_server_res['req']} req
+  * @param {server_server_req} req
   * @param {server_server_res} res
   */
  const serverUtilCompression = (req,res) =>{
@@ -567,7 +587,7 @@ const serverUtilAppLine = () =>{
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('./iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const {default:express} = await import('express');
     
     /**@type{server_server_express} */
@@ -624,12 +644,12 @@ const serverUtilAppLine = () =>{
         fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
             serverResponse({host:req.headers.host,
                             route:null,
-                            http:err?.name=='PayloadTooLargeError'?400:500, 
-                            code:null, 
-                            text:err?.name=='PayloadTooLargeError'?iamUtilMesssageNotAuthorized():'SERVER ERROR',
-                            developerText:'',
-                            moreInfo:'',
-                            type:'HTML',
+                            result_request:{http:err?.name=='PayloadTooLargeError'?400:500, 
+                                            code:null, 
+                                            text:err?.name=='PayloadTooLargeError'?iamUtilMessageNotAuthorized():'SERVER ERROR',
+                                            developerText:'',
+                                            moreInfo:'',
+                                            type:'HTML'},
                             res:res});
         });
     });
@@ -647,7 +667,7 @@ const serverJs = async () => {
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('./iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('./iamMiddleware.js')} */
     const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
@@ -751,12 +771,12 @@ const serverJs = async () => {
                 default:{
                     serverResponse({host:req.headers.host,
                                     route:null,
-                                    http:400, 
-                                    code:null, 
-                                    text:iamUtilMesssageNotAuthorized(), 
-                                    developerText:'',
-                                    moreInfo:'',
-                                    type:'HTML',
+                                    result_request:{http:400, 
+                                                    code:null, 
+                                                    text:iamUtilMessageNotAuthorized(), 
+                                                    developerText:'',
+                                                    moreInfo:'',
+                                                    type:'HTML'},
                                     res:res});
                 }
             }
@@ -799,12 +819,12 @@ const serverJs = async () => {
             fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
                 serverResponse({host:req.headers.host,
                     route:null,
-                    http:400, 
-                    code:null, 
-                    text:iamUtilMesssageNotAuthorized(), 
-                    developerText:'',
-                    moreInfo:'',
-                    type:'HTML',
+                    result_request:{http:400, 
+                                    code:null, 
+                                    text:iamUtilMessageNotAuthorized(), 
+                                    developerText:'',
+                                    moreInfo:'',
+                                    type:'HTML'},
                     res:res});
             });
         }
@@ -843,7 +863,7 @@ const serverJs = async () => {
                 readStream.on ('error', streamErr =>{
                     streamErr;
                     res.writeHead(500);
-                    res.end(iamUtilMesssageNotAuthorized());
+                    res.end(iamUtilMessageNotAuthorized());
                 });
                 /**@ts-ignore */
                 readStream.pipe(res);
@@ -895,8 +915,8 @@ const serverJs = async () => {
  *              Returns status 401 if not authorized
  *              Returns status 404 if route is not found
  * @function
- * @param {import('./types.js').server_server_routesparameters} routesparameters
- * @returns {Promise.<*>}
+ * @param {server_REST_API_parameters} routesparameters
+ * @returns {Promise.<server_server_response>}
  */
 const serverREST_API = async (routesparameters) =>{
     /**@type{import('../apps/common/src/common.js')} */
@@ -924,23 +944,6 @@ const serverREST_API = async (routesparameters) =>{
     const resource_id_get_string = path => path.endsWith('/${resource_id_string}')?
                                                 (URI_path.substring(URI_path.lastIndexOf('/') + 1)==''?null:URI_path.substring(URI_path.lastIndexOf('/') + 1)):
                                                     null;
-    /**
-     * Return message in ISO20022 format if result contains multi resources
-     * @param {*} result 
-     * @param {boolean} singleresource
-     */
-    const iso_return_message = (result, singleresource) =>{
-        //if singles resource or pagination then return result
-        if (singleresource || result.page_header)
-            return result;
-        else{
-            const list_header = {	total_count:	result.length,
-                                    offset: 		serverUtilNumberValue(app_query?.get('offset'))?serverUtilNumberValue(app_query?.get('offset')):0,
-                                    count:			serverUtilNumberValue(app_query?.get('limit')) ?? result.length
-                                };
-            return {list_header:list_header, rows:result};
-        }
-    };
     /**
      * Validates if user has access to given resource
      * Validates using IAM token claims if path requires
@@ -1031,10 +1034,12 @@ const serverREST_API = async (routesparameters) =>{
                 //add parameters using tree shaking pattern
                 //so only defined parameters defined using openAPI pattern are sent to functions
                 const parametersData = routesparameters.method=='GET'?
-                                            methodObj.parameters
+                                            {...methodObj.parameters
                                                             //include all parameters.in=query
                                                             .filter((/**@type{*}*/parameter)=>parameter.in =='query')
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}):
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}),
+                                            //if EventSource then add res
+                                            ...(methodObj.responses?.[200]?.content?.['text/event-stream'] && {res:routesparameters.res})}:
                                             //all other methods use body to send data
                                             //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
                                             (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json'].schema.additionalProperties)?
@@ -1042,7 +1047,7 @@ const serverREST_API = async (routesparameters) =>{
                                                                                 .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{})}:
                                                             (methodObj.requestBody?.content?Object.entries(methodObj.requestBody?.content['application/json'].schema.properties)
                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{}):{});
-                            
+                
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
                 const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -1065,37 +1070,50 @@ const serverREST_API = async (routesparameters) =>{
                                                             (getParameterValidation('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
-                return iso_return_message(await moduleRESTAPI[functionRESTAPI]({
-                                        app_id:         routesparameters.app_id,
-                                        ...(getParameterValidation('server_function_parameter_iam')                     && {iam:            routesparameters.res.req.query.iam}),
-                                        ...(getParameterValidation('server_function_parameter_authorization')           && {authorization:  routesparameters.authorization}),
-                                        ...(getParameterValidation('server_function_parameter_user_agent')              && {user_agent:     routesparameters.user_agent}),
-                                        ...(getParameterValidation('server_function_parameter_accept_language')         && {accept_language:routesparameters.accept_language}),
-                                        ...(getParameterValidation('server_function_parameter_accept_host')             && {host:           routesparameters.host}),
-                                        ...(getParameterValidation('server_function_parameter_locale')                  && {locale:         app_query?.get('locale') ??'en'}),
-                                        ...(getParameterValidation('server_function_parameter_ip')                      && {ip:             routesparameters.ip}),
-                                        ...(getParameterValidation('server_function_parameter_path')                    && {path:           routesparameters.route_path}),
-                                        ...(getParameterValidation('server_function_parameter_method')                  && {method:         routesparameters.method}),
-                                        ...(Object.keys(parametersData)?.length>0                                       && {data:           {...parametersData}}),
-                                        ...(getParameterValidation('server_function_parameter_endpoint')                && {endpoint:       routesparameters.endpoint}),
-                                        ...(getParameterValidation('server_function_parameter_resource_id')             && {resource_id:    (getParameterValidation('resource_id_number')?
-                                                                                                                                            resource_id_get_number(configPath[0]):
-                                                                                                                                            resource_id_get_string(configPath[0]))}),
-                                        ...(getParameterValidation('server_function_parameter_res')                     && {res:            routesparameters.res})
-                                    }), singleResource());
+                const result = await  moduleRESTAPI[functionRESTAPI]({
+                                app_id:         routesparameters.app_id,
+                                ...(getParameterValidation('server_function_parameter_iam')                     && {iam:            app_query?.get('iam')}),
+                                ...(getParameterValidation('server_function_parameter_authorization')           && {authorization:  routesparameters.authorization}),
+                                ...(getParameterValidation('server_function_parameter_user_agent')              && {user_agent:     routesparameters.user_agent}),
+                                ...(getParameterValidation('server_function_parameter_accept_language')         && {accept_language:routesparameters.accept_language}),
+                                ...(getParameterValidation('server_function_parameter_host')                    && {host:           routesparameters.host}),
+                                ...(getParameterValidation('server_function_parameter_locale')                  && {locale:         app_query?.get('locale') ??'en'}),
+                                ...(getParameterValidation('server_function_parameter_ip')                      && {ip:             routesparameters.ip}),
+                                ...(getParameterValidation('server_function_parameter_path')                    && {path:           routesparameters.route_path}),
+                                ...(getParameterValidation('server_function_parameter_method')                  && {method:         routesparameters.method}),
+                                ...(Object.keys(parametersData)?.length>0                                       && {data:           {...parametersData}}),
+                                ...(getParameterValidation('server_function_parameter_endpoint')                && {endpoint:       routesparameters.endpoint}),
+                                ...(getParameterValidation('server_function_parameter_resource_id')             && {resource_id:    (getParameterValidation('resource_id_number')?
+                                                                                                                                    resource_id_get_number(configPath[0]):
+                                                                                                                                    resource_id_get_string(configPath[0]))})});
+                return { ...result,
+                            ...{singleResource:singleResource()
+                                }
+                        };
             }
-            else{
-                routesparameters.res.statusMessage = 'resource id not authorized';
-                routesparameters.res.statusCode =401;
-                throw iam.iamUtilMesssageNotAuthorized();
-            }
+            else
+                return 	{http:401,
+                        code:'SERVER',
+                        text:iam.iamUtilMessageNotAuthorized(),
+                        developerText:'serverREST_API',
+                        moreInfo:null,
+                        type:'JSON'};
         }
-        else{
-            routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
-            routesparameters.res.statusCode =404;
-            throw iam.iamUtilMesssageNotAuthorized();
-        }
+        else                
+            return 	{http:404,
+                    code:'SERVER',
+                    text:iam.iamUtilMessageNotAuthorized(),
+                    developerText:'serverREST_API',
+                    moreInfo:null,
+                    type:'JSON'};
     }
+    else
+        return 	{http:404,
+                code:'SERVER',
+                text:iam.iamUtilMessageNotAuthorized(),
+                developerText:'serverREST_API',
+                moreInfo:null,
+                type:'JSON'};
 };
 
 /**
@@ -1171,6 +1189,6 @@ const serverStart = async () =>{
     }
     
 };
-export {serverResponse, serverResponseErrorSend, serverUtilCompression,
+export {serverResponse, serverUtilCompression,
         serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverREST_API, serverStart };

@@ -1,33 +1,41 @@
 /**
  * @module apps/app5/src/functions/account_transactions
  */
-
+/**
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:{timestamp:string, 
+ *                                              logo:string, 
+ *                                              origin:string, 
+ *                                              amount_deposit:number|null, 
+ *                                              amount_withdrawal:number|null}}} getTransactions
+ */
 /**
  * @name getTransacions
  * @description Get bank account transactions
  * @function
- * @param {number} app_id 
- * @param {*} data 
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<getTransactions>}
  */
-const getTransacions = async (app_id, data, user_agent, ip, locale, res) =>{
+const getTransacions = async parameters =>{
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
-    const transactions = await dbModelAppDataResourceDetailData.get({app_id:app_id, 
+    return dbModelAppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
-                                                                    data:{user_account_id:data.user_account_id,
-                                                                            data_app_id:data.data_app_id,
+                                                                    data:{user_account_id:parameters.data.user_account_id,
+                                                                            data_app_id:parameters.data.data_app_id,
                                                                             resource_name_type:'RESOURCE_TYPE',
                                                                             resource_name:'ACCOUNT',
                                                                             resource_name_master_attribute_type:'RESOURCE_TYPE',
                                                                             resource_name_master_attribute:'CUSTOMER',
                                                                             user_null:'0'
                                                                     }});
-    return transactions;
 }; 
 export default getTransacions;

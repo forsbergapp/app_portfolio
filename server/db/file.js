@@ -42,6 +42,7 @@
 
 /**
  * @import {server_db_file_result_fileFsRead,
+ *          server_db_common_result_select, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete,
  *          server_server_error, server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
  */
 
@@ -300,9 +301,9 @@ const fileFsRead = async (file, lock=false) =>{
  */
 const fileFsWrite = async (file, transaction_id, file_content) =>{
     /**@type{import('../iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     if (!transaction_id || fileRecord(file).TRANSACTION_ID != transaction_id){
-        return (iamUtilMesssageNotAuthorized());
+        return (iamUtilMessageNotAuthorized());
     }
     else{
         const filepath = fileRecord(file).PATH + fileRecord(file).FILENAME;
@@ -331,7 +332,7 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
             if (fileTransactionCommit(file, transaction_id))
                 return null;
             else
-                throw (iamUtilMesssageNotAuthorized());
+                throw (iamUtilMessageNotAuthorized());
         })
         .catch((error)=>{
             if (fileTransactionRollback(file, transaction_id))
@@ -380,13 +381,11 @@ const fileFsAccessMkdir = async () => {
  * @function
  * @param {server_db_file_db_name} file 
  * @param {server_db_file_config_files} file_content 
+ * @returns {Promise.<void>}
  */
 const fileFsWriteAdmin = async (file, file_content) =>{
     const filepath = fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
     await fs.promises.writeFile(process.cwd() + filepath, file_content?JSON.stringify(file_content, undefined, 2):'',  'utf8')
-    .then(() => {
-        return null;
-    })
     .catch((error)=> {
         throw error;
     });
@@ -397,6 +396,7 @@ const fileFsWriteAdmin = async (file, file_content) =>{
  * @description Delete a file
  * @function
  * @param {server_db_file_db_name} file 
+ * @returns {Promise.<void>}
  */
 const fileFsDeleteAdmin = async file => {
     const filepath = process.cwd() + fileRecord(file).PATH + (fileRecord(file).FILENAME?fileRecord(file).FILENAME:'');
@@ -414,13 +414,13 @@ const fileFsDeleteAdmin = async file => {
   * @param {number|null} resource_id
   * @param {string|null} filesuffix 
   * @param {string|null} sample
-  * @returns {Promise.<*>}
+  * @returns {Promise.<server_db_common_result_select>}
   */
  const fileFsDBLogGet = async (app_id, file, resource_id, filesuffix=null, sample=null) =>{
     
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, sample)}`;
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');
-    return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id));
+    return {rows:fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id))};
 };
 /**
  * @name fileFsDBLogPost
@@ -430,11 +430,11 @@ const fileFsDeleteAdmin = async file => {
  * @param {server_db_file_db_name} file
  * @param {object} file_content 
  * @param {string|null} filesuffix
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<server_db_common_result_insert>}
  */
 const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>{
     /**@type{import('../iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     const filepath = `${fileRecord(file).PATH}${fileRecord(file).FILENAME}${fileSuffix(filesuffix, null)}`;
     const transaction_id = await fileTransactionStart(file, filepath);
@@ -444,13 +444,13 @@ const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>
         if (fileTransactionCommit(file, transaction_id))
             return {affectedRows:1};
         else
-            throw (iamUtilMesssageNotAuthorized());
+            throw (iamUtilMessageNotAuthorized());
     })
     .catch((error)=>{
         if (fileTransactionRollback(file, transaction_id))
             throw(error);
         else
-            throw(iamUtilMesssageNotAuthorized() + ' ' + error);
+            throw(iamUtilMessageNotAuthorized() + ' ' + error);
     });
 };
 /**
@@ -463,18 +463,18 @@ const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
- * @returns {*}
+ * @returns {server_db_common_result_select}
  */
 const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
     try {
         const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
         if (records.length>0)
-            return records;
+            return {rows:records};
         else{
-            return [];
+            return {rows:[]};
         }    
     } catch (error) {
-        return [];
+        return {rows:[]};
     }
     
 };
@@ -486,14 +486,14 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
  * @param {number} app_id
  * @param {server_db_file_db_name} table
  * @param {*} data
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<server_db_common_result_insert>}
  */
 const fileDBPost = async (app_id, table, data) =>{
     if (app_id!=null){
         /**@type{server_db_file_result_fileFsRead} */
         const file = await fileFsRead(table, true);
         await fileFsWrite(table, file.transaction_id, file.file_content.concat(data))
-        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+                .catch((/**@type{server_server_error}*/error)=>{throw error;});
         return {affectedRows:1};
     }
     else{
@@ -512,7 +512,7 @@ const fileDBPost = async (app_id, table, data) =>{
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
  * @param {*} data
- * @returns {Promise<*>}
+ * @returns {Promise<server_db_common_result_update>}
  */
 const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
     /**@type{server_db_file_result_fileFsRead} */
@@ -530,7 +530,7 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
         }
     if (update){
         await fileFsWrite(table, file.transaction_id, file.file_content)
-        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+                .catch((/**@type{server_server_error}*/error)=>{throw error;});
         return {affectedRows:count};
     }
     else
@@ -546,7 +546,7 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
  * @param {server_db_file_db_name} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
- * @returns {Promise<{affectedRows:number}>}
+ * @returns {Promise<server_db_common_result_delete>}
  */
 const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
     /**@type{server_db_file_result_fileFsRead} */
@@ -557,7 +557,7 @@ const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
                             file.file_content
                             //filter unique id
                             .filter((/**@type{*}*/row)=>row.id!=resource_id))
-        .catch((/**@type{server_server_error}*/error)=>{throw error;});
+                .catch((/**@type{server_server_error}*/error)=>{throw error;});
         //should return 1 record deleted or wrong data is saved in file
         return {affectedRows:   file.file_content
                                 .filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == (data_app_id ?? row.app_id)).length -
@@ -569,23 +569,6 @@ const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
     else
         return {affectedRows:0};    
 };
-/**
- * @name fileCommonRecordNotFound
- * @description Displays FILE message for record not found for single resource
- * @function
- * @param {server_server_res|null} res
- * @returns {string}
- */
-const fileCommonRecordNotFound = (res) => {
-    const message = '?!';
-    if (res){
-        res.statusCode = 404;
-        res.statusMessage = message;
-    }
-    return message;
-};
-
 export {SLASH, fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileFsCacheSet, fileFsWrite, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
         fileFsDBLogGet, fileFsDBLogPost,
-        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete,
-        fileCommonRecordNotFound};
+        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete};

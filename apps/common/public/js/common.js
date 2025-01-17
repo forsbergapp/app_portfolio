@@ -2374,17 +2374,18 @@ const commonFFB = async parameter => {
         }
     }
     
-    //add common query parameter
-    parameter.query += `&locale=${COMMON_GLOBAL.user_locale}`;
-    //encode query parameters
-    const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
+   
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
     const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&iam_user_id=${COMMON_GLOBAL.user_account_id ?? COMMON_GLOBAL.iam_user_id}` + 
                                     `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                                     `&app_id=${COMMON_GLOBAL.app_id??''}`);
+    //add common query parameter
+    parameter.query += `&locale=${COMMON_GLOBAL.user_locale}&iam=${iam}`;
 
-    const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${parameter.path}?parameters=${encodedparameters}&iam=${iam}`;
+    //encode query parameters
+    const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
+    const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${parameter.path}?parameters=${encodedparameters}`;
 
     if (parameter.authorization_type=='SOCKET'){
         return new COMMON_WINDOW.EventSource(url);

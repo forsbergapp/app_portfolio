@@ -3,25 +3,56 @@
  */
 
 /**
- * @name payment_request_create
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:{message:string}[]}} paymentRequestCreate
+ * @typedef {{  title:                  string,
+ *              merchant_id:            string,
+ *              merchant_name:          string,
+ *              merchant_url:           string,
+ *              merchant_email:         string,
+ *              merchant_longitude:     string,
+ *              merchant_latitude:      string,
+ *              merchant_logo:          string,
+ *              merchant_type:          string,
+ *              merchant_api_url_payment_request_create:    string,
+ *              merchant_api_url_payment_request_get_status:string,
+ *              merchant_api_secret:    string,
+ *              merchant_public_key:    string,
+ *              merchant_private_key:   string,
+ *              merchant_vpa:           string,
+ *              id:                                 number,                 
+ *              user_account_app_user_account_id:   number,
+ *              user_account_app_app_id:            number}} merchant
+ * @typedef {{title:string;
+ *            bank_account_iban:string;
+ *            bank_account_number:string;
+ *            bank_account_balance:string;
+ *            bank_account_secret:string;
+ *            bank_account_vpa:string;
+ *            currency:string;
+ *            currency_name:string,
+ *            json_data:string}} bank_account
+ */
+/**
+ * @name paymentRequestCreate
  * @description Create payment request
  * @function
- * @param {number} app_id
- * @param {{id:string,
- *          message:string}} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<{message:string}[]>}
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<paymentRequestCreate>}
  */
-const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
+const paymentRequestCreate = async parameters =>{
    
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
-    /**@type{import('../../../../server/db/file.js')} */
-    const {fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
     const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
@@ -36,46 +67,38 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
 
     /**@type{import('../../../../server/iam.js')} */
-    const {iamUtilMesssageNotAuthorized, iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.js`);
+    const {iamUtilMessageNotAuthorized, iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
 
-    const currency = await dbModelAppDataResourceMaster.get({   app_id:app_id, 
+    const currency = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  data_app_id:app_id,
+                                                                data:{  data_app_id:parameters.app_id,
                                                                         resource_name:'CURRENCY',
                                                                         user_null:'1'
                                                                 }})
-                            .then(result=>JSON.parse(result[0].json_data));
+                            .then(result=>JSON.parse(result.result[0].json_data));
     
-    const merchant = await dbModelAppDataResourceMaster.get({   app_id:app_id, 
+    const merchant = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  data_app_id:app_id,
+                                                                data:{  data_app_id:parameters.app_id,
                                                                         resource_name:'MERCHANT',
                                                                         user_null:'0'
                                                                 }})
-                            .then(result=>result.map(result=>{return {  /**@ts-ignore */
+                            .then(result=>result.result.map((/**@type{merchant}*/result)=>{return {  
                                                                         merchant_id:                        result.merchant_id,
-                                                                        /**@ts-ignore */
-                                                                        merchant_private:                   result.merchant_private,
-                                                                        /**@ts-ignore */
                                                                         merchant_vpa:                       result.merchant_vpa,
-                                                                        /**@ts-ignore */
                                                                         merchant_url:                       result.merchant_url,
-                                                                        /**@ts-ignore */
                                                                         merchant_name:                      result.merchant_name,
-                                                                        /**@ts-ignore */
                                                                         merchant_public_key:                result.merchant_public_key,
-                                                                        /**@ts-ignore */
                                                                         merchant_private_key:               result.merchant_private_key,
-                                                                        /**@ts-ignore */
-                                                                        merchant_api_secret:               result.merchant_api_secret,
+                                                                        merchant_api_secret:                result.merchant_api_secret,
                                                                         id:                                 result.id,
                                                                         user_account_app_user_account_id:   result.user_account_app_user_account_id,
                                                                         user_account_app_app_id:            result.user_account_app_app_id};})
                             /**@ts-ignore */
-                            .filter(merchant=>merchant.merchant_id==data.id)[0]);
+                            .filter(merchant=>merchant.merchant_id==parameters.data.id)[0]);
     if (merchant){
         /** 
         * @type {{ api_secret:      string,
@@ -87,26 +110,30 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         *          message:         string,
         *          origin:          string}}
         */
-        const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, data.message));
+        const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, parameters.data.message));
     
-        const merchant_bankaccount = await dbModelAppDataResourceDetail.get({   app_id:app_id, 
+        const merchant_bankaccount = await dbModelAppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  master_id:merchant.id,
                                                                                         user_account_id:merchant.user_account_app_user_account_id,
-                                                                                        data_app_id:app_id,
+                                                                                        data_app_id:parameters.app_id,
                                                                                         resource_name:'ACCOUNT',
                                                                                         user_null:'0'
                                                                                     }
                                                                                 })
-                                            .then(result=>result.map(account=>JSON.parse(account.json_data)).filter(account=>account.bank_account_vpa==merchant.merchant_vpa)[0]);
-        const bankaccount_payer = await dbModelAppDataResourceDetail.get({  app_id:app_id, 
+                                            .then(result=>result.result
+                                                                    .map((/**@type{bank_account}*/account)=>JSON.parse(account.json_data))
+                                                                    .filter((/**@type{bank_account}*/account)=>account.bank_account_vpa==merchant.merchant_vpa)[0]);
+        const bankaccount_payer = await dbModelAppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 
-                                                                            data:{  data_app_id:app_id,
+                                                                            data:{  data_app_id:parameters.app_id,
                                                                                     resource_name:'ACCOUNT',
                                                                                     user_null:'0'
                                                                                 }
                                                                             })
-                                            .then(result=>result.map(account=>JSON.parse(account.json_data)).filter(account=>account.bank_account_vpa==body_decrypted.payerid)[0]);
+                                            .then(result=>result.result
+                                                                    .map((/**@type{bank_account}*/account)=>JSON.parse(account.json_data))
+                                                                    .filter((/**@type{bank_account}*/account)=>account.bank_account_vpa==body_decrypted.payerid)[0]);
         if (merchant.merchant_api_secret==body_decrypted.api_secret && 
             merchant.merchant_vpa == body_decrypted.payeeid && 
             merchant.merchant_url == body_decrypted.origin && 
@@ -117,14 +144,13 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             if (body_decrypted.currency_code==currency.currency_code){
                 // payment request uses ID Token and SECRET.APP_ID_SECRET  parameter since no user is logged in
                 // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
-                const jwt_data = iamAuthorizeToken(app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
+                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
                                                                         name:           '',
-                                                                        ip:             ip,
-                                                                        scope:          'APP_CUSTOM'}, fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].app_payment_request_expire);
-    
+                                                                        ip:             parameters.ip,
+                                                                        scope:          'APP_CUSTOM'}, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_payment_request_expire);
                 const payment_request_id = securityUUIDCreate();
                 const data_payment_request = {
-                                                merchant_id:    data.id,
+                                                merchant_id:    parameters.data.id,
                                                 payment_request_id:payment_request_id,
                                                 reference:      body_decrypted.reference,
                                                 payeeid:        body_decrypted.payeeid,
@@ -143,17 +169,17 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                                 json_data                                   : data_payment_request,
                                                 user_account_id                             : merchant.user_account_app_user_account_id,
                                                 user_account_app_id                         : merchant.user_account_app_app_id,
-                                                data_app_id                                 : app_id,
-                                                app_data_entity_resource_app_data_entity_id : await dbModelAppDataEntity.get({  app_id:app_id, 
+                                                data_app_id                                 : parameters.app_id,
+                                                app_data_entity_resource_app_data_entity_id : await dbModelAppDataEntity.get({  app_id:parameters.app_id, 
                                                                                                                                 resource_id:null, 
-                                                                                                                                data:{data_app_id:app_id}}).then(result=>result[0].id),
-                                                app_data_entity_resource_id                 : await dbModelAppDataEntityResource.get({  app_id:app_id, 
+                                                                                                                                data:{data_app_id:parameters.app_id}}).then(result=>result.result[0].id),
+                                                app_data_entity_resource_id                 : await dbModelAppDataEntityResource.get({  app_id:parameters.app_id, 
                                                                                                                                         resource_id:null, 
-                                                                                                                                        data:{  data_app_id:app_id,
+                                                                                                                                        data:{  data_app_id:parameters.app_id,
                                                                                                                                                 resource_name:'PAYMENT_REQUEST'
-                                                                                                                                        }}).then(result=>result[0].id)
+                                                                                                                                        }}).then(result=>result.result[0].id)
                                                 };
-                await dbModelAppDataResourceMaster.post({app_id:app_id, data:data_new_payment_request});
+                await dbModelAppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
     
     
                 /**
@@ -181,22 +207,34 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
                                         currency_symbol:        currency.currency_symbol
                                     };
                 const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
-                return [{message:data_encrypted}];
+                return {result:{message:data_encrypted}, type:'JSON'};
             }
-            else{
-                res.statusCode = 400;
-                throw iamUtilMesssageNotAuthorized();
-            }
+            else
+                return {http:400,
+                        code:'PAYMENT_REQUEST_CREATE',
+                        text:iamUtilMessageNotAuthorized(),
+                        developerText:null,
+                        moreInfo:null,
+                        type:'JSON'
+                    };
         }
-        else{
-            res.statusCode = 404;
-            throw iamUtilMesssageNotAuthorized();
-        }
+        else
+            return {http:404,
+                code:'PAYMENT_REQUEST_CREATE',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:null,
+                moreInfo:null,
+                type:'JSON'
+            };
     }
-    else{
-        res.statusCode = 404;
-        throw iamUtilMesssageNotAuthorized();
-    }
+    else
+        return {http:404,
+            code:'PAYMENT_REQUEST_CREATE',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
 
 };
-export default payment_request_create;
+export default paymentRequestCreate;

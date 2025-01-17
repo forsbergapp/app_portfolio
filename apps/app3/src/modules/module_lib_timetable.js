@@ -3,22 +3,27 @@
  */
 
 /**
- * @name module_timetable_lib
+ * @import {server_server_response} from '../../../../server/types.js'
+ */
+
+/**
+ * @name moduleTimetableLib
  * @description Module timetable
  * @function
- * @param {number} app_id
- * @param {*} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<string>}
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<server_server_response>}
  */
-const module_timetable_lib = async (app_id, data, user_agent, ip, locale, res) =>{
+const moduleTimetableLib = async parameters =>{
     /**@ts-ignore */
     const path = import.meta.dirname.replaceAll('\\', '/');
     
-    return `${path.replace('/modules','/report')}/lib_timetable.js`;
+    return {sendfile:`${path.replace('/modules','/report')}/lib_timetable.js`,type:'JS'};
 };
 
-export default module_timetable_lib;
+export default moduleTimetableLib;

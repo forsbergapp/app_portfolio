@@ -1,12 +1,15 @@
 /** @module server/config */
 
 /**
- * @import {server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
+ * @import {server_server_response,server_db_common_result_update,
+ *          server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
  *          server_db_file_config_server,server_db_file_config_rest_api, server_db_file_config_iam_policy,
  *          server_db_file_config_server_server, server_db_file_config_server_service_iam,
  *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,
  *          server_db_file_app_translation} from '../types.js'
  * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
+ * @typedef {server_server_response & {result?:* }} getFile
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} update
  */
 
 /**@type{import('./file.js')} */
@@ -199,23 +202,21 @@ const configInit = async () => {
  *          data:{  config_group?:string|null,
  *                  parameter?:string|null,
  *                  saved?:string|null}|null}} parameters
- * @returns {Promise.<*>}
+ * @returns {Promise.<getFile>}
  */
 const getFile = async parameters => {
     const config_group = parameters.data?.config_group?parameters.data.config_group:null;
     const parameter = parameters.data?.parameter?parameters.data.parameter:null;
     const config = serverUtilNumberValue(parameters.data?.saved)?await fileFsRead(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):fileCache(parameters.resource_id);
-    return await new Promise((resolve) => {
-        if (config_group)
-            if (config_group =='METADATA')
-                resolve(parameter?config[config_group][parameter]:config[config_group]);
-            else
-                resolve(parameter?config[config_group].filter((/**@type{*}*/row)=>row[parameter])[0][parameter]:config[config_group]);
-        else{
-            //no filters, return whole config
-            resolve(config);
-        }
-    });
+    if (config_group)
+        if (config_group =='METADATA')
+            return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};
+        else
+            return {result:parameter?config[config_group].filter((/**@type{*}*/row)=>row[parameter])[0][parameter]:config[config_group], type:'JSON'};
+    else{
+        //no filters, return whole config
+        return {result:config, type:'JSON'};
+    }
 };
 /**
  * @name update
@@ -231,7 +232,7 @@ const getFile = async parameters => {
  *                  maintenance:string,
  *                  comment:string,
  *                  configuration:string}}} parameters
- * @returns {Promise.<void>}
+ * @returns {Promise.<update>}
  */
 const update = async parameters => {
     const maintenance = serverUtilNumberValue(parameters.data.maintenance);
@@ -256,5 +257,6 @@ const update = async parameters => {
         file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
     }
     await fileFsWrite(parameters.resource_id, file_config.transaction_id, file_config.file_content);
+    return {result:{affectedRows:1}, type:'JSON'};
 };
 export{ getFile, update, get, configInit};

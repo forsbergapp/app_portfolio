@@ -2,7 +2,8 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import { server_db_file_config_rest_api, server_server_res, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
+ * @import {server_server_response, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:string}} appFunction
  */
 
 /**
@@ -10,18 +11,22 @@
  * @description  Get file and add given suffix to path
  * @function
  * @param {string} path
- * @param {server_server_res} res
  * @returns {Promise.<string>}
  */
-const getFile = async (path, res) =>{
+const getFile = async (path) =>{
     /**@type{import('../../../../server/iam.js')} */
-    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const fs = await import('node:fs');
     return fs.promises.readFile(path, 'utf8')
             .then(file=>file.toString())
             .catch(()=>{
-                res.statusCode = 400;
-                throw iamUtilMesssageNotAuthorized();
+                return {http:400,
+                    code:'DOC',
+                    text:iamUtilMessageNotAuthorized(),
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };
             });
 };
 /**
@@ -182,8 +187,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *          type:serverDocumentType,
  *          doc:string,
  *          module:string,
- *          locale:string,
- *          res:server_server_res}} parameters
+ *          locale:string}} parameters
  * @returns {Promise.<string>}
  */
 const markdownRender = async parameters =>{
@@ -200,11 +204,10 @@ const markdownRender = async parameters =>{
             const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
             
             const app_translation = fileModelAppTranslation.get(parameters.app_id,null, parameters.locale, 
-                                                                /**@ts-ignore */
-                                                                serverUtilNumberValue(parameters.doc), null)[0];
-            const app = fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.doc), res:null})[0];
+                                                                serverUtilNumberValue(parameters.doc)).result[0];
+            const app = fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.doc)}).result[0];
 
-            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/2.app.md`, parameters.res);
+            let markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/2.app.md`);
             //remove all '\r' in '\r\n'
             markdown = markdown.replaceAll('\r\n','\n');
             //replace APP_NAME
@@ -234,7 +237,7 @@ const markdownRender = async parameters =>{
             /**@type{import('../../../../server/db/fileModelConfig.js')} */
             const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-            const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`, parameters.res)
+            const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`)
                         .then(markdown=>
                                 markdown
                                 .replaceAll('@{MODULE_NAME}',       parameters.module ?? '')
@@ -243,20 +246,20 @@ const markdownRender = async parameters =>{
                                 //metadata tags                            
                                 .replaceAll('@{SERVER_HOST}',       fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'HOST')??'')
                                 .replaceAll('@{APP_CONFIGURATION}', fileModelConfig.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION')??'')
-                                .replaceAll('@{APP_COPYRIGHT}',     fileModelAppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].app_copyright.value??'')
+                                .replaceAll('@{APP_COPYRIGHT}',     fileModelAppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_copyright.value??'')
                         );
             
             //replace all found JSDoc comments with markdown formatted module functions
             return markdown.replace('@{MODULE_FUNCTION}', 
                                     await getFileFunctions({app_id:         parameters.app_id,                                                 
-                                                            file:           await getFile(`${process.cwd()}${parameters.doc}.js`, parameters.res),
+                                                            file:           await getFile(`${process.cwd()}${parameters.doc}.js`),
                                                             module:         parameters.module,
                                                             comment_with_filter:null
                                                         }));
         }
         case parameters.type.toUpperCase()=='ROUTE':{           
             if (parameters.doc=='6.restapi'){
-                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`, parameters.res)
+                return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/6.restapi.md`)
                             .then(markdown=>
                                     //remove all '\r' in '\r\n'
                                     markdown
@@ -276,7 +279,7 @@ const markdownRender = async parameters =>{
                     const membersof = [];
                     //Get REST API function with @namespace tag
                     membersof.push(await getFileFunctions({ app_id:             parameters.app_id, 
-                                                            file:               await getFile(`${process.cwd()}${routePath}.js`, parameters.res),
+                                                            file:               await getFile(`${process.cwd()}${routePath}.js`),
                                                             module:             routePath,
                                                             comment_with_filter:`@namespace ${tag}`
                                                         }));
@@ -284,14 +287,14 @@ const markdownRender = async parameters =>{
                     for (const directory of routeDirectories)
                         for (const file of (await getFiles(`${process.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
                             const file_functions = await getFileFunctions({ app_id:             parameters.app_id, 
-                                                                            file:               await getFile(`${process.cwd()}${file}.js`, parameters.res),
+                                                                            file:               await getFile(`${process.cwd()}${file}.js`),
                                                                             module:             file,
                                                                             comment_with_filter:`@memberof ${tag}`
                                                                         });
                             if (file_functions != '')
                                 membersof.push(file_functions);
                         }
-                    return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${file}.md`, parameters.res)
+                    return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${file}.md`)
                         .then(markdown=>
                                 //remove all '\r' in '\r\n'
                                 markdown
@@ -314,8 +317,7 @@ const markdownRender = async parameters =>{
  * @name menuRender
  * @description Renders the menu with APP, ROUTE, GUIDE and MODULE menu items
  * @function
- * @param {{app_id:number,
- *          res:server_server_res}} parameters
+ * @param {{app_id:number}} parameters
  * @returns {Promise.<string>}
  */
 const menuRender = async parameters =>{
@@ -323,12 +325,12 @@ const menuRender = async parameters =>{
     const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
 
     /**@type{serverDocumentMenu[]} */
-    const markdown_menu_docs = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/menu.json`, parameters.res).then((/**@type{string}*/result)=>JSON.parse(result));
+    const markdown_menu_docs = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
     for (const menu of markdown_menu_docs){
         switch (true){
             case menu.type=='APP':{
                 //return menu for app with updated id and app name
-                menu.menu_sub = fileModelApp.get({app_id:parameters.app_id, resource_id:null, res:null}).map(app=>{
+                menu.menu_sub = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result.map((/**@type{server_db_file_app}*/app)=>{
                     return { 
                             id:app.id,
                             menu:app.name,
@@ -341,7 +343,7 @@ const menuRender = async parameters =>{
             case menu.type=='GUIDE':{
                 //return menu with updated first title from the documents
                 for (const menu_sub of menu.menu_sub??[]){
-                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`, parameters.res)
+                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${menu_sub.doc}.md`)
                             .then(result=>{
                                 try {
                                     menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
@@ -366,45 +368,52 @@ const menuRender = async parameters =>{
 /**
  * @name appFunction
  * @description Get documentation menu, guide, app, module or jsdoc documentation
+ *              Returns JS, HTML or JSON content
  * @function
- * @param {number} app_id
- * @param {{    type:serverDocumentType,
- *              data_app_id:number,
- *              doc:string}} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {server_server_res} res
- * @returns {Promise.<[string]>}
+ * @param {{app_id:number,
+ *          data:{  type:serverDocumentType,
+ *                  data_app_id:number,
+ *                  doc:string},
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<appFunction>}
  */
-const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
+const appFunction = async parameters =>{
     /**@type{import('../../../../server/iam.js')} */
-    const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     
     //check if valid document request
     if (
-        ((data.type.toUpperCase()=='GUIDE' ||data.type.toUpperCase()=='APP'||data.type.toUpperCase()=='JSDOC') && data?.doc == null) ||
-        data?.doc && (data.doc.indexOf('\\')>-1||data.doc.indexOf('..')>-1 ||data.doc.indexOf(' ')>-1)){
-        res.statusCode = 400;
-        throw iamUtilMesssageNotAuthorized();
+        ((parameters.data.type.toUpperCase()=='GUIDE' ||parameters.data.type.toUpperCase()=='APP'||parameters.data.type.toUpperCase()=='JSDOC') && parameters.data?.doc == null) ||
+        parameters.data?.doc && (parameters.data.doc.indexOf('\\')>-1||parameters.data.doc.indexOf('..')>-1 ||parameters.data.doc.indexOf(' ')>-1)){
+            return {http:400,
+                code:'DOC',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:null,
+                moreInfo:null,
+                type:'JSON'
+            };
     }
     else{
         switch (true){
-            case data.type=='MENU':{
-                return [await menuRender({app_id:app_id, res:res})];
+            case parameters.data.type=='MENU':{
+                return {result:await menuRender({app_id:parameters.app_id}), type:'JSON'};
             }
-            case data.type=='MODULE_CODE' && 
-            (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server')||data.doc.startsWith('/test')):{
-                return [await getFile(`${process.cwd()}${data.doc}.js`, res)];
+            case parameters.data.type=='MODULE_CODE' && 
+            (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
+                return {result:await getFile(`${process.cwd()}${parameters.data.doc}.js`), type:'JS'};
             }
-            case data.type=='JSDOC':{
-                return [await getFile(`${process.cwd()}/apps/common/src/jsdoc/${data.doc}`, res)];   
+            case parameters.data.type=='JSDOC':{
+                return {result:await getFile(`${process.cwd()}/apps/common/src/jsdoc/${parameters.data.doc}`), type:'HTML'};
             }
-            case data.type=='GUIDE':
-            case data.type=='APP':
-            case data.type=='ROUTE':
-            case data.type.startsWith('MODULE') &&
-                (data.doc.startsWith('/apps') || data.doc.startsWith('/microservice')||data.doc.startsWith('/server')||data.doc.startsWith('/test')):{
+            case parameters.data.type=='GUIDE':
+            case parameters.data.type=='APP':
+            case parameters.data.type=='ROUTE':
+            case parameters.data.type.startsWith('MODULE') &&
+                (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
                 /**@type{import('../../../../server/server.js')} */
@@ -414,31 +423,35 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                 /**@type{import('../../../../server/db/fileModelApp.js')} */
                 const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
                 //guide documents in separate files, app and modules use templates
-                return [(await ComponentMarkdown({ data:{  
-                                                        markdown: data.type.toUpperCase()=='GUIDE'?
-                                                                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${data.doc}.md`, res):
-                                                                        await markdownRender({  app_id:app_id,
-                                                                                                type:data.type,
-                                                                                                doc:data.doc,
-                                                                                                module:data.doc,
-                                                                                                locale:locale,
-                                                                                                res:res})},
+                return {result:(await ComponentMarkdown({ data:{  
+                                                        markdown: parameters.data.type.toUpperCase()=='GUIDE'?
+                                                                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.data.doc}.md`):
+                                                                        await markdownRender({  app_id:parameters.app_id,
+                                                                                                type:parameters.data.type,
+                                                                                                doc:parameters.data.doc,
+                                                                                                module:parameters.data.doc,
+                                                                                                locale:parameters.locale})},
                                                 methods:null}))
-                                        .replace(data.doc=='6.restapi'?'@{CONFIG_REST_API}':'',data.doc=='6.restapi'?
+                                        .replace(parameters.data.doc=='6.restapi'?'@{CONFIG_REST_API}':'',parameters.data.doc=='6.restapi'?
                                                 await ComponentOpenAPI({data:   {  
-                                                                                app_id: app_id
+                                                                                app_id: parameters.app_id
                                                                                 },
                                                                         methods:{
                                                                                 fileModelApp:fileModelApp,
                                                                                 fileModelConfig:fileModelConfig,
                                                                                 serverUtilNumberValue:serverUtilNumberValue
                                                                                 }
-                                                                        }):'')
-                            ];
+                                                                        }):''),
+                        type:'HTML'};
             }
             default:{
-                res.statusCode = 400;
-                throw iamUtilMesssageNotAuthorized();
+                return {http:400,
+                    code:'DOC',
+                    text:iamUtilMessageNotAuthorized(),
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };
             }
         }
     }

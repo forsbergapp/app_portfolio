@@ -1,15 +1,16 @@
 /** @module server/info */
 
 /**
- * @import {server_info_result_Info} from './types.js'
-*/
+ * @import {server_server_response,server_info_result_Info} from './types.js'
+ * @typedef {server_server_response & {result?:server_info_result_Info }} info
+ */
 
 /**
  * @name info
  * @description Info about operating system and process
  * @function
  * @memberof ROUTE_REST_API
- * @returns {Promise.<server_info_result_Info>}
+ * @returns {Promise.<info>}
  */
  const info = async () => {
     const os = await import('node:os');
@@ -40,6 +41,6 @@
                             start_arg_0 : process.argv[0],
                             start_arg_1 : process.argv[1]
                         };
-    return {os: os_json,process: process_json};
+    return {result:{os: os_json,process: process_json}, type:'JSON'};
 };
 export{info};

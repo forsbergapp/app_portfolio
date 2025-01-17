@@ -1,12 +1,23 @@
 /** @module server/db/fileModelAppModuleQueue */
 
 /**
- * @import {server_server_res,server_db_file_app_module_queue_status,
+ * @import {server_server_response,server_server_res,server_db_file_app_module_queue_status,
+ *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_file_app_module_queue} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_file_app_module_queue[] }} get
+ * @typedef {server_server_response & {result?:{sendfile:String} }} getResult
+ * @typedef {server_server_response & {result?:server_db_file_app_module_queue }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} postResult
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} update
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 
 /**@type{import('./file.js')} */
-const {fileCommonRecordNotFound, SLASH, fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {SLASH, fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+
+/**@type{import('../db/common.js')} */
+const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+
 
 /**
  * @name get
@@ -14,16 +25,15 @@ const {fileCommonRecordNotFound, SLASH, fileRecord, fileDBGet, fileDBPost, fileD
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null,
- *          res:server_server_res}} parameters
- * @returns {server_db_file_app_module_queue[]}
+ *          resource_id:number|null}} parameters
+ * @returns {get}
  */
 const get = parameters =>{ 
     const result = fileDBGet(parameters.app_id, 'APP_MODULE_QUEUE',parameters.resource_id, parameters.app_id);
-    if (result.length>0 || parameters.resource_id==null)
-        return result;
+    if (result.rows.length>0 || parameters.resource_id==null)
+        return  {result:result.rows, type:'JSON'};
     else
-        throw fileCommonRecordNotFound(parameters.res);
+        return dbCommonRecordError(parameters.app_id, 404);
 };
 
 /**
@@ -34,10 +44,10 @@ const get = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<{static:Boolean, sendfile:String, sendcontent:null}>}
+ * @returns {Promise.<getResult>}
  */
 const getResult = async parameters => {
-    return {static:true, sendfile:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${parameters.resource_id}.html`, sendcontent:null};
+    return {sendfile:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${parameters.resource_id}.html`, type:'HTML'};
 };
 /**
  * @name post
@@ -48,10 +58,9 @@ const getResult = async parameters => {
  *          name:string,
  *          parameters:string,
  *          user:string}} data
- * @param {server_server_res} res
- * @returns {Promise.<server_db_file_app_module_queue>}
+ * @returns {Promise.<post>}
  */
-const post = async (app_id, data, res) => {
+const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.type!=null && data.name!=null && data.parameters!=null && data.user!=null){
         /**@type{server_db_file_app_module_queue} */
@@ -70,17 +79,13 @@ const post = async (app_id, data, res) => {
                         };
         return fileDBPost(app_id, 'APP_MODULE_QUEUE', job).then((result)=>{
             if (result.affectedRows>0)
-                return job;
+                return  {result:job, type:'JSON'};
             else
-                throw fileCommonRecordNotFound(res);
+                return dbCommonRecordError(app_id, 404);
         });
     }
-    else{
-        /**@type{import('../iam.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        res.statusCode = 400;
-        throw iamUtilMesssageNotAuthorized();
-    }
+    else
+        return dbCommonRecordError(app_id, 400);
 };
 /**
  * @name postResult
@@ -89,12 +94,13 @@ const post = async (app_id, data, res) => {
  * @param {number} app_id
  * @param {number} id
  * @param {string} result
- * @returns {Promise.<void>}
+ * @returns {Promise.<postResult>}
  */
 const postResult = async (app_id, id, result) =>{
     const fs = await import('node:fs');
     const filepath = `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${id}.html`;
     await fs.promises.writeFile(process.cwd() + filepath, result,  'utf8');
+    return {result:{affectedRows:1}, type:'JSON'};
 };
 /**
  * @name update
@@ -107,10 +113,9 @@ const postResult = async (app_id, id, result) =>{
  *          progress?:number|null,
  *          status?:server_db_file_app_module_queue_status,
  *          message?:string|null}} data
- * @param {server_server_res|null} res
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<update>}
  */
-const update = async (app_id, resource_id, data, res) => {
+const update = async (app_id, resource_id, data) => {
     const data_update = {};
     //allowed parameters to update:
     if (data.start!=null)
@@ -126,17 +131,12 @@ const update = async (app_id, resource_id, data, res) => {
     if (Object.entries(data_update).length>0)
         return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, null, data_update).then((result)=>{
             if (result.affectedRows>0)
-                return result;
+                return {result:result, type:'JSON'};
             else
-                throw fileCommonRecordNotFound(res);
+                return dbCommonRecordError(app_id, 404);
         });
-    else{
-        /**@type{import('../iam.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        if (res)
-            res.statusCode = 404;
-        throw iamUtilMesssageNotAuthorized();
-    }
+    else
+        return dbCommonRecordError(app_id, 400);
 };
 
 /**
@@ -145,15 +145,14 @@ const update = async (app_id, resource_id, data, res) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_server_res} res
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<deleteRecord>}
  */
-const deleteRecord = async (app_id, resource_id, res) => {
+const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, null).then((result)=>{
         if (result.affectedRows>0)
-            return result;
+            return {result:result, type:'JSON'};
         else
-            throw fileCommonRecordNotFound(res);
+            return dbCommonRecordError(app_id, 404);
     });
 };
                    

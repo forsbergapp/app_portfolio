@@ -1,20 +1,24 @@
 /** @module server/db/fileModelIamAppToken */
 
 /**
- * @import {server_db_file_iam_app_token_insert, server_db_file_iam_app_token} from '../types.js'
+ * @import {server_server_response,server_db_common_result_insert, server_db_file_iam_app_token_insert, server_db_file_iam_app_token} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_file_iam_app_token[] }} get
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
  */
 
 /**@type{import('./file.js')} */
-const {fileCommonRecordNotFound, fileDBPost, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBPost, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('../db/common.js')} */
+const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name get
  * @description Get user
  * @function
  * @param {number} app_id
- * @returns {server_db_file_iam_app_token[]}
+ * @returns {get}
  */
-const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
+const get = app_id => {return {result:fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).rows, type:'JSON'};};
 
 /**
  * @name post
@@ -22,11 +26,9 @@ const get = app_id => fileDBGet(app_id, 'IAM_APP_TOKEN', null, null);
  * @function
  * @param {number} app_id 
  * @param {server_db_file_iam_app_token_insert} data
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<post>}
  */
 const post = async (app_id, data) => {
-    /**@type{import('../iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     //check required attributes
     if (app_id!=null &&
         data.app_id != null &&
@@ -34,7 +36,7 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).filter((/**@type{server_db_file_iam_app_token} */row)=>row.token==data.token).length==0){
+        if (fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).rows.filter((/**@type{server_db_file_iam_app_token} */row)=>row.token==data.token).length==0){
             /**@type{server_db_file_iam_app_token} */
             const data_new = {};
             //required
@@ -48,16 +50,16 @@ const post = async (app_id, data) => {
             data_new.created = new Date().toISOString();
             return fileDBPost(app_id, 'IAM_APP_TOKEN',data_new).then((result)=>{
                 if (result.affectedRows>0)
-                    return result;
+                    return {result:result, type:'JSON'};
                 else
-                    throw fileCommonRecordNotFound(null);
+                    return dbCommonRecordError(app_id, 404);
             });
         }
         else
-            throw iamUtilMesssageNotAuthorized();
+            return dbCommonRecordError(app_id, 401);
     }
     else
-        throw iamUtilMesssageNotAuthorized();
+        return dbCommonRecordError(app_id, 400);
 };
 
 export {get, post};
