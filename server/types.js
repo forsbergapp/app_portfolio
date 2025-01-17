@@ -1,10 +1,10 @@
 /** 
- * Declaration of all types used in server
+ * @description Declaration of all types used in server
  * @module server/types 
  */
 
 /**
- * APP server_apps_email_param_data
+ * @description APP server_apps_email_param_data
  * @typedef {object} server_apps_email_param_data
  * @property {string} emailtype         - [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
  * @property {string|null} host              
@@ -14,7 +14,7 @@
  */
 
 /**
- * APP server_apps_email_return_createMail
+ * @description APP server_apps_email_return_createMail
  * @typedef {object} server_apps_email_return_createMail
  * @property {string} host
  * @property {string} port
@@ -28,7 +28,7 @@
  */
 
 /**
- * APP server_apps_app_info
+ * @description APP server_apps_app_info
  * @typedef {object} server_apps_app_info   - app info
  * @property {number} app_id                - app id
  * @property {string} locale                - locale
@@ -43,7 +43,7 @@
 
 
 /**
- * APP server_apps_app_service_parameters
+ * @description APP server_apps_app_service_parameters
  * @typedef {object}        server_apps_app_service_parameters
  * @property {number}       app_id
  * @property {string}       app_logo
@@ -60,7 +60,7 @@
  */
 
 /**
- * APP server_apps_report_query_parameters
+ * @description APP server_apps_report_query_parameters
  * @typedef {object} server_apps_report_query_parameters
  * @property {string} module
  * @property {number} uid_view
@@ -71,7 +71,7 @@
  */
 
 /**
- * APP server_apps_report_create_parameters
+ * @description APP server_apps_report_create_parameters
  * @typedef {object}        server_apps_report_create_parameters
  * @property {number}       app_id
  * @property {Object}       [queue_parameters]
@@ -81,11 +81,11 @@
  * @property {string}       accept_language
  */
 /**
- * APP server_apps_module_metadata
+ * @description APP server_apps_module_metadata
  * @typedef {{param:{name:string, text:string, default:string|number}}} server_apps_module_metadata
  */
 /**
- * APP server_apps_module_with_metadata
+ * @description APP server_apps_module_with_metadata
  * @typedef {{  id:number,
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
@@ -95,12 +95,12 @@
  *              common_description:string}} server_apps_module_with_metadata
  */
 /**
- * APP server_config_apps_status
+ * @description APP server_config_apps_status
  * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
 
 /**
- * APP server_config_apps_with_db_columns
+ * @description APP server_config_apps_with_db_columns
  * @typedef  {object} server_config_apps_with_db_columns
  * @property {number} app_id
  * @property {string} name
@@ -113,19 +113,19 @@
  */
 
 /**
- * APP serverComponentLifecycle
+ * @description APP serverComponentLifecycle
  * @typedef  {{ onBeforeMounted?:function|null,
  *              onMounted?:function|null, 
  *              onUnmounted?:function|null}|null} serverComponentLifecycle
  */
 
 /**
- * APP commonDocumentType
+ * @description APP commonDocumentType
  * @typedef {'MENU'|'APP'|'GUIDE'|'ROUTE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
  */
 
 /**
- * APP commonDocumentMenu
+ * @description APP commonDocumentMenu
  * @typedef{{   id:number, 
  *              menu:string,
  *              type:serverDocumentType,
@@ -135,7 +135,7 @@
  */
 
 /**
- * APP commonWorldCitiesCity
+ * @description APP commonWorldCitiesCity
  * Database content:
  *        {
  *           "city":         [city with diacritics],
@@ -164,13 +164,13 @@
 */
 
 /** 
- * BFF server_bff_endpoint_type
+ * @description BFF server_bff_endpoint_type
  * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
  *           'SERVER'} server_bff_endpoint_type
  */
 
 /**
- * BFF server_bff_parameters
+ * @description BFF server_bff_parameters
  * @typedef {{
  *          endpoint: server_bff_endpoint_type,
  *          host:string|null,
@@ -188,12 +188,12 @@
  */
 
 /**
- * DB FILE server_db_file_config_server_group
+ * @description DB FILE server_db_file_config_server_group
  * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'|'METADATA'} server_db_file_config_server_group
  */
 
 /**
- * DB FILE server_db_file_config_server_server
+ * @description DB FILE server_db_file_config_server_server
  * @typedef {{   HTTPS_KEY:string,
  *               HTTPS_CERT:string,
  *               PORT:string,
@@ -210,7 +210,7 @@
  */
 
 /**
- * DB FILE server_db_file_config_server_service_iam
+ * @description DB FILE server_db_file_config_server_service_iam
  * @typedef {{ AUTHENTICATE_REQUEST_ENABLE:string,
  *             AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
  *             AUTHENTICATE_REQUEST_IP:string,
@@ -225,12 +225,12 @@
  */
 
 /**
- * DB FILE server_db_file_config_server_service_socket
+ * @description DB FILE server_db_file_config_server_service_socket
  * @typedef {{CHECK_INTERVAL:string}} server_db_file_config_server_service_socket
  */
 
 /**
- * DB FILE server_db_file_config_server_service_db
+ * @description DB FILE server_db_file_config_server_service_db
  * @typedef {{   START:string,
  *               USE:string,
  *               DB1_DBA_USER:string,
@@ -266,7 +266,7 @@
  */
 
 /**
- * DB FILE server_db_file_config_server_service_log
+ * @description DB FILE server_db_file_config_server_service_log
  * @typedef {{  SCOPE_REQUEST:string,
  *              SCOPE_SERVER:string,
  *              SCOPE_APP:string,
@@ -283,7 +283,7 @@
  */
 
 /**
- * DB FILE server_db_file_config_server_metadata
+ * @description DB FILE server_db_file_config_server_metadata
  * @typedef  {{ MAINTENANCE:number,
  *              CONFIGURATION:string,
  *              COMMENT:string,
@@ -292,7 +292,7 @@
  */
 
 /**
- * DB FILE server_db_file_config_server
+ * @description DB FILE server_db_file_config_server
  * @typedef  {{ ['SERVER']:[server_db_file_config_server_server], 
  *              ['SERVICE_IAM']:[server_db_file_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_file_config_server_service_socket],
@@ -301,16 +301,16 @@
  *              ['METADATA']:server_db_file_config_server_metadata}} server_db_file_config_server
  */
 /**
- * DB FILE server_db_file_config_rest_api_methods
+ * @description DB FILE server_db_file_config_rest_api_methods
  * @typedef {'get'|'post'|'delete'|'patch'|'put'} server_db_file_config_rest_api_methods
  */
 /**
- * DB FILE server_db_file_config_rest_api_content
+ * @description DB FILE server_db_file_config_rest_api_content
  * @typedef {'application/json'} server_db_file_config_rest_api_content
  */
 
 /**
- * DB FILE server_db_file_config_rest_api following Open API syntax
+ * @description DB FILE server_db_file_config_rest_api following Open API syntax
  * @typedef  {{ info: {
  *                      title: string,
  *                      version: string,
@@ -366,7 +366,7 @@
  */
 
 /**
- * DB FILE server_db_file_config_files
+ * @description DB FILE server_db_file_config_files
  * @typedef {   server_db_file_config_server|
  *              server_db_file_config_rest_api|
  *              server_db_file_config_iam_policy|
@@ -382,18 +382,18 @@
 
 
 /**
- * DB FILE server_db_file_config_iam_policy
+ * @description DB FILE server_db_file_config_iam_policy
  * @typedef {{'content-security-policy':string}} server_db_file_config_iam_policy
  */
 
 /**
- * DB FILE server_db_file_iam_control_user_agent
+ * @description DB FILE server_db_file_iam_control_user_agent
  * @typedef {{  id:number,
  *              name:string, 
  *              user_agent:string}} server_db_file_iam_control_user_agent
  */
 /**
- * DB FILE server_db_file_iam_control_ip
+ * @description DB FILE server_db_file_iam_control_ip
  * * @typedef {{id:number, 
  *              app_id:number|null,
  *              from:string, 
@@ -405,11 +405,11 @@
  *              action:string}} server_db_file_iam_control_ip
  */
 /**
- * DB FILE server_db_file_iam_control_observe_type
+ * @description DB FILE server_db_file_iam_control_observe_type
  * @typedef {'SUBDOMAIN'|'ROUTE'|'HOST'|'HOST_IP'|'USER_AGENT'|'URI_DECODE'|'METHOD'|'BLOCK_IP'} server_db_file_iam_control_observe_type
  */
 /**
- * DB FILE server_db_file_iam_control_observe
+ * @description DB FILE server_db_file_iam_control_observe
  * * @typedef {{id?:number,
  *              app_id:number|null, 
  *              ip:string, 
@@ -423,7 +423,7 @@
  */
 
 /**
- * DB FILE server_db_file_iam_user
+ * @description DB FILE server_db_file_iam_user
  * @typedef {{
  *          id:number, 
  *          username:string, 
@@ -441,7 +441,7 @@
  *          modified:string}} server_db_file_iam_user
  */
 /**
- * DB FILE server_db_file_iam_user_new
+ * @description DB FILE server_db_file_iam_user_new
  * @typedef {{
 *          id?:number, 
 *          username:string, 
@@ -459,7 +459,7 @@
 *          modified?:string}} server_db_file_iam_user_new
 */
 /**
- * DB FILE server_db_file_iam_user_get
+ * @description DB FILE server_db_file_iam_user_get
  * @typedef {{
 *          id:number, 
 *          username:string, 
@@ -476,7 +476,7 @@
 *          modified:string}} server_db_file_iam_user_get
 */
 /**
- * DB FILE server_db_file_iam_user_update
+ * @description DB FILE server_db_file_iam_user_update
  * @typedef {{
  *          username:string, 
  *          password:string,
@@ -488,7 +488,7 @@
  *          avatar:string|null}} server_db_file_iam_user_update
  */
 /**
- * DB FILE server_db_file_db_name
+ * @description DB FILE server_db_file_db_name
  * 
  * @typedef {   server_db_file_db_name_config| 
  *              'DB_FILE'| 
@@ -509,7 +509,7 @@
  */
 
 /**
- * DB FILE server_db_file_db_name_config
+ * @description DB FILE server_db_file_db_name_config
  * 
  * @typedef {   'CONFIG_SERVER'|
  *              'CONFIG_REST_API'|
@@ -518,7 +518,7 @@
  *              'CONFIG_MICROSERVICE_SERVICES'} server_db_file_db_name_config
  */
 /**
- * DB FILE server_db_file_db_name_log
+ * @description DB FILE server_db_file_db_name_log
  * 
  * @typedef {  'LOG_APP_INFO'|
  *             'LOG_APP_ERROR'|
@@ -534,7 +534,7 @@
  */
 
 /**
- * DB FILE server_db_file_db_name_message_queue
+ * @description DB FILE server_db_file_db_name_message_queue
  * 
  * @typedef {  'MESSAGE_QUEUE_PUBLISH'|
  *             'MESSAGE_QUEUE_CONSUME'|
@@ -542,7 +542,7 @@
  */
 
 /** 
- * DB FILE server_db_file_db_record
+ * @description DB FILE server_db_file_db_record
  * @typedef {{  NAME:server_db_file_db_name, 
  *              TYPE:'JSON'|'JSON_TABLE'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
  *              LOCK:number, 
@@ -554,13 +554,13 @@
  */
 
 /** 
- * DB FILE server_db_file_result_fileFsRead
+ * @description DB FILE server_db_file_result_fileFsRead
  * @typedef {{  file_content:   *, 
  *              lock:           boolean, 
  *              transaction_id: number|null}} server_db_file_result_fileFsRead
  */
 /**
- * DB FILE server_db_file_app
+ * @description DB FILE server_db_file_app
  * @typedef {{
  *              id: number,
  *              name: string,
@@ -577,7 +577,7 @@
  *              status:'ONLINE'|'OFFLINE'}} server_db_file_app
  */
 /**
- * DB FILE server_db_file_app_module
+ * @description DB FILE server_db_file_app_module
  * @typedef {{  id:number,
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
@@ -588,11 +588,11 @@
  */
  
 /**
- * DB FILE server_db_file_app_module_queue_status
+ * @description DB FILE server_db_file_app_module_queue_status
  * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} server_db_file_app_module_queue_status
  */
 /**
- * DB FILE server_db_file_app_module_queue
+ * @description DB FILE server_db_file_app_module_queue
  * @typedef {{  id:number,
  *              app_id: number,
  *              type:'REPORT',
@@ -607,7 +607,7 @@
  */
 
 /**
- * DB FILE server_db_file_app_parameter
+ * @description DB FILE server_db_file_app_parameter
  * apps should use their own types if adding new parameters
  * @typedef {{  app_id:                             number,
  *              app_text_edit:                      {value:string, comment:string},
@@ -642,7 +642,7 @@
  *              common_image_avatar_width:          {value:string, comment:string}}} server_db_file_app_parameter
  */
 /**
- * DB FILE server_db_file_app_translation
+ * @description DB FILE server_db_file_app_translation
  * @typedef {{  id: number,
  *              app_id: number,
  *			    locale: string,
@@ -652,7 +652,7 @@
 */
 
 /**
- * DB FILE server_db_file_app_parameter
+ * @description DB FILE server_db_file_app_parameter
  * apps should use their own types if adding new parameters
  * @typedef {{ app_id?:                             number,
  *             app_text_edit?:                      {value:string, comment:string},
@@ -688,7 +688,7 @@
  */
 
 /**
- * DB FILE server_db_file_app_secret
+ * @description DB FILE server_db_file_app_secret
  * apps should use their own types if adding new secrets
  * SERVICE_DB* not used by admin app
  * SERVICE_MAIL* only used by admin app
@@ -722,7 +722,7 @@
  *              common_app_access_expire:string}} server_db_file_app_secret
  */
 /** 
- * DB FILE server_db_file_iam_app_token
+ * @description DB FILE server_db_file_iam_app_token
  * @typedef {{	app_id: 	number,
  *		        res:		0|1,
  *   	        token:   	string,
@@ -731,7 +731,7 @@
  *		        created:    string}} server_db_file_iam_app_token
  */
 /** 
- * DB FILE server_db_file_iam_app_token_insert
+ * @description DB FILE server_db_file_iam_app_token_insert
  * @typedef {{	app_id: 	number,
  *		        res:		0|1,
  *   	        token:   	string,
@@ -740,7 +740,7 @@
  */
 
 /**
- * DB FILE server_db_file_iam_user_login
+ * @description DB FILE server_db_file_iam_user_login
  * @typedef {{	id:             number,
  *              iam_user_id:    number,
  *              app_id:         number,
@@ -755,7 +755,7 @@
  */
 
  /**
-  * DB FILE server_db_file_iam_user_login_insert
+  * @description DB FILE server_db_file_iam_user_login_insert
   * @typedef {{	iam_user_id:    number,
   *             app_id:         number,
   *             user:           string,
@@ -767,7 +767,7 @@
   */
 
  /** 
- * DB FILE server_log_data_parameter_logGet
+ * @description DB FILE server_log_data_parameter_logGet
  * @typedef{object}             server_log_data_parameter_logGet
  * @property {number}           app_id
  * @property {number|null}      select_app_id
@@ -784,7 +784,7 @@
  */
 
 /**
- * DB FILE server_log_request_record_keys
+ * @description DB FILE server_log_request_record_keys
  * @typedef {   'logdate'|
 *              'host'|
 *              'ip'|
@@ -805,7 +805,7 @@
 */
 
 /**
-* DB FILE server_db_file_log_request
+* @description DB FILE server_db_file_log_request
 * @typedef {{  logdate:string,
 *              host:string,
 *              ip:string,
@@ -826,13 +826,13 @@
 */
 
 /**
-* DB FILE server_db_file_log_server
+* @description DB FILE server_db_file_log_server
 * @typedef {{  logdate:string,
 *              logtext:string}} server_db_file_log_server
 */
 
 /**
-* DB FILE server_db_file_log_db
+* @description DB FILE server_db_file_log_db
 * @typedef {{   logdate:string,
 *               app_id:number|null,
 *               db:number|null,
@@ -842,7 +842,7 @@
 */
     
 /**
- * DB FILE server_db_file_log_service
+ * @description DB FILE server_db_file_log_service
  * @typedef {{   logdate:string,
  *               app_id:number|null,
  *               service:string,
@@ -851,7 +851,7 @@
  */
 
 /**
- * DB FILE server_db_file_log_app
+ * @description DB FILE server_db_file_log_app
  * @typedef {{   logdate:string,
  *               app_id:number|null,
  *               app_filename:string,
@@ -861,19 +861,19 @@
  */
 
 /**
- * DB FILE server_log_scope
+ * @description DB FILE server_log_scope
  * @typedef {'APP'|'DB'|'REQUEST'|'SERVER'|'SERVICE'} server_log_scope
  */
 
 /**
- * DB FILE server_db_file_message_queue_publish
+ * @description DB FILE server_db_file_message_queue_publish
  * @typedef {{  message_id:number,
  *              created:string,
  *              service:string,
  *              message:object|null}} server_db_file_message_queue_publish
  */
 /**
- * DB FILE server_db_file_message_queue_consume
+ * @description DB FILE server_db_file_message_queue_consume
  * @typedef {{  message_id:number|null,
  *              service:string|null,
  *              message:*,
@@ -882,19 +882,19 @@
  *              result:*}} server_db_file_message_queue_consume
  */
 /**
- * DB FILE server_db_file_message_queue_error
+ * @description DB FILE server_db_file_message_queue_error
  * @typedef {{  message_id:number,
  *              message:*,
  *              result:*}} server_db_file_message_queue_error
  */
 
 /**
- * DB FILE server_log_level
+ * @description DB FILE server_log_level
  * @typedef {'INFO'|'ERROR'} server_log_level
 */
 
 /** 
-* DB FILE server_log_data_parameter_getLogStats
+* @description DB FILE server_log_data_parameter_getLogStats
 * @typedef {object}                server_log_data_parameter_getLogStats
 * @property {number|null}          app_id
 * @property {server_log_request_record_keys} statGroup
@@ -905,7 +905,7 @@
 */
 
 /** 
-* DB FILE server_log_result_logStatGet
+* @description DB FILE server_log_result_logStatGet
 * @typedef {object}                server_log_result_logStatGet
 * @property {number|null}          chart
 * @property {string|number|null}   statValue
@@ -916,18 +916,18 @@
 */
 
 /** 
-* DB FILE server_log_result_logFilesGet
+* @description DB FILE server_log_result_logFilesGet
 * @typedef {{id:number, filename:string}} server_log_result_logFilesGet
 */
 
 
 /**
- * DB POOL server_db_db_pool
+ * @description DB POOL server_db_db_pool
  * @typedef {[1|2|3|4|5, object|null, [object|server_db_db_pool_4|null]|null]} server_db_db_pool
  */
 
 /** 
- * DB POOL server_db_db_pool_parameters
+ * @description DB POOL server_db_db_pool_parameters
  * @typedef {object}        server_db_db_pool_parameters
  * @property {number|null}  use
  * @property {number|null}  pool_id
@@ -949,7 +949,7 @@
  */
 
 /**
- * DB POOL server_db_db_pool_connection_1_2
+ * @description DB POOL server_db_db_pool_connection_1_2
  * @typedef {object}    server_db_db_pool_connection_1_2
  * @property {function} release
  * @property {function} query
@@ -959,19 +959,19 @@
  */
 
 /**
- * DB POOL server_db_db_pool_connection_1_2_result
+ * @description DB POOL server_db_db_pool_connection_1_2_result
  * @typedef {*}         server_db_db_pool_connection_1_2_result
  */
 
 /**
- * DB POOL server_db_db_pool_connection_3
+ * @description DB POOL server_db_db_pool_connection_3
  * @typedef {object}    server_db_db_pool_connection_3
  * @property {function} release
  * @property {function} query
  */
 
 /**
- * DB POOL server_db_db_pool_connection_3_result
+ * @description DB POOL server_db_db_pool_connection_3_result
  * @typedef {object}    server_db_db_pool_connection_3_result
  * @property {string}   command
  * @property {number}   insertId
@@ -982,13 +982,13 @@
  */
 
 /** 
- * DB POOL server_db_db_pool_connection_3_fields
+ * @description DB POOL server_db_db_pool_connection_3_fields
  * @typedef {[{ type:number, 
  *              name:string}]}    server_db_db_pool_connection_3_fields
  */
 
 /** 
- * DB POOL server_db_db_pool_connection_4_result
+ * @description DB POOL server_db_db_pool_connection_4_result
  * @typedef {object}    server_db_db_pool_connection_4_result
  * @property {object}   outBinds
  * @property {[number]} outBinds.insertId
@@ -1000,30 +1000,30 @@
  */
 
 /** 
- * DB POOL server_db_db_pool_4
+ * @description DB POOL server_db_db_pool_4
  * @typedef {object|null}   server_db_db_pool_4
  * @property {string}       pool_id_app
  */
 
 /**
- * DB SQL server_db_database_install_result
+ * @description DB SQL server_db_database_install_result
  * @typedef {object[]}  server_db_database_install_result - Log variable with object with any key
  * 
  */
 
 /**
- * DB SQL server_db_database_install_db_check
+ * @description DB SQL server_db_database_install_db_check
  * @typedef {[{installed:1|0}]}  server_db_database_install_db_check
  */
 
 /**
- * DB SQL server_db_database_install_uninstall_result
+ * @description DB SQL server_db_database_install_uninstall_result
  * @typedef {object}  server_db_database_install_uninstall_result
  * @property {[{count:number}, {count_fail:number}]}    info
  */
 
 /** 
- * DB SQL server_db_database_demo_user
+ * @description DB SQL server_db_database_demo_user
  * @typedef {object}    server_db_database_demo_user
  * @property {number}   id
  * @property {string}   username
@@ -1104,42 +1104,42 @@
  */
 
 /** 
- * DB SQL server_db_database_script_files
+ * @description DB SQL server_db_database_script_files
  * @typedef {   [number|null,
  *              string, 
  *              number|null][]} server_db_database_script_files
  */
 
 /** 
- * DB SQL server_db_database_install_database_script
+ * @description DB SQL server_db_database_install_database_script
  * @typedef {object}        server_db_database_install_database_script
  * @property {number|null}  db                  -if null then execute in all databases
  * @property {string}       script
  */
 
 /**
- * DB SQL server_db_database_uninstall_database_script
+ * @description DB SQL server_db_database_uninstall_database_script
  * @typedef {object}        server_db_database_uninstall_database_script
  * @property {number|null}  db
  * @property {string}       sql
  */
 
 /**
- * DB SQL server_db_database_install_database_app_script
+ * @description DB SQL server_db_database_install_database_app_script
  * @typedef {object}        server_db_database_install_database_app_script
  * @property {number|null}  db
  * @property {string}       sql
  */
 
 /** 
- * DB SQL server_db_database_install_database_app_user_script
+ * @description DB SQL server_db_database_install_database_app_user_script
  * @typedef {object}        server_db_database_install_database_app_user_script
  * @property {number}       db
  * @property {string}       sql
  */
 
 /** 
- * DB SQL server_db_database_uninstall_database_app_script
+ * @description DB SQL server_db_database_uninstall_database_app_script
  * @typedef {object}        server_db_database_uninstall_database_app_script
  * @property {number|null}  db
  * @property {string}       sql
@@ -1147,17 +1147,17 @@
 
 
 /**
- * DB SQL query result
+ * @description DB SQL query result
  * @typedef {   server_db_common_result_insert|server_db_common_result_delete|server_db_common_result_update|server_db_common_result_select}                server_db_common_result
  */
 
 /**
- * DB SQL result error
+ * @description DB SQL result error
  * @typedef {   {code:  string, errorNum:number, errno:number, message:string, db_message:string, stack:string, sqlMessage:string}}     server_db_common_result_error
  */
 
 /**
- * DB SQL result INSERT
+ * @description DB SQL result INSERT
  * @typedef {{  insertId?:number, 
  *              affectedRows:number, 
  *              rowsAffected?:number,
@@ -1165,21 +1165,21 @@
  */
 
 /**
- * DB SQL result DELETE
+ * @description DB SQL result DELETE
  * @typedef {{  affectedRows:number, 
  *              rowsAffected?:number,
  *              length?:number}}  server_db_common_result_delete
  */
 
 /**
- * DB SQL result UPDATE
+ * @description DB SQL result UPDATE
  * @typedef {{  affectedRows:number, 
  *              rowsAffected?:number,
  *              length?:number}}  server_db_common_result_update
  */
 
 /**
- * DB SQL result SELECT
+ * @description DB SQL result SELECT
  * @typedef {{  rows:*[], 
  *              list_header? : {	total_count:	number,
  *                              offset: 		number,
@@ -1191,7 +1191,7 @@
  */
 
 /**
- * DB SQL result DB Info
+ * @description DB SQL result DB Info
  * @typedef {{  database_use:   number,
  *              database_name:  string,
  *              version:        string,
@@ -1202,7 +1202,7 @@
  */
 
 /**
- * DB SQL result DB Info space
+ * @description DB SQL result DB Info space
  * @typedef {{  table_name:     string,
  *              total_size:     number,
  *              data_used:      number,
@@ -1211,7 +1211,7 @@
  */
 
 /**
- * DB SQL result DB Info space sum
+ * @description DB SQL result DB Info space sum
  * @typedef {{  total_size:     number,
  *              data_used:      number,
  *              data_free:      number,
@@ -1219,12 +1219,12 @@
  */
 
 /**
- * DB SQL APP_DATA_ENTITY server_db_sql_result_app_data_entity_get
+ * @description DB SQL APP_DATA_ENTITY server_db_sql_result_app_data_entity_get
  * @typedef {{id:number, app_id:number, json_data:string}} server_db_sql_result_app_data_entity_get
  */
 
 /**
- * DB SQL APP_DATA_ENTITY_RESOURCE server_db_sql_result_app_data_entity_resource_get
+ * @description DB SQL APP_DATA_ENTITY_RESOURCE server_db_sql_result_app_data_entity_resource_get
  * @typedef {{  id:number, 
  *              json_data:string, 
  *              app_setting_id:number, 
@@ -1236,7 +1236,7 @@
  */
 
 /**
- * DB SQL APP_DATA_RESOURCE_MASTER server_db_sql_result_app_data_resource_master_get
+ * @description DB SQL APP_DATA_RESOURCE_MASTER server_db_sql_result_app_data_resource_master_get
  * @typedef {{  id:number, 
  *              json_data:string, 
  *              user_account_app_user_account_id:number|null,
@@ -1254,7 +1254,7 @@
 
 
 /**
- * DB SQL APP_DATA_RESOURCE_DETAIL server_db_sql_result_app_data_resource_detail_get
+ * @description DB SQL APP_DATA_RESOURCE_DETAIL server_db_sql_result_app_data_resource_detail_get
  * @typedef {{  id:number, 
  *              json_data:string, 
  *              app_data_resource_master_id:number,
@@ -1284,7 +1284,7 @@
  */
 
 /**
- * DB SQL APP_DATA_RESOURCE_DETAIL_DATA server_db_sql_result_app_data_resource_detail_data_get
+ * @description DB SQL APP_DATA_RESOURCE_DETAIL_DATA server_db_sql_result_app_data_resource_detail_data_get
  * @typedef {{  id:number, 
  *              json_data:string, 
  *              date_created:string,
@@ -1317,7 +1317,7 @@
  */
 
 /**
- * DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_get
+ * @description DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_get
  * @typedef {{  app_id:                                                                     number|null,
  *				json_data:                                                                  string,
  *              date_created:                                                               string,            
@@ -1340,7 +1340,7 @@
  */
 
 /**
- * DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_post
+ * @description DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_post
  * @typedef {{  json_data:                                          string,
  *              app_id:                                             number|null,
  *              user_account_id:                                    number|null,
@@ -1353,7 +1353,7 @@
  */
 
 /**
- * DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_createLog
+ * @description DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_createLog
  * @typedef {{  app_module:string,
  *              app_module_type : string,
  *              app_module_request : string|null,
@@ -1362,7 +1362,7 @@
  */
 
 /**
- * DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_logGet
+ * @description DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_logGet
  * @typedef {{  id:number,
  *              app_id:number,
  *              json_data:string,
@@ -1371,7 +1371,7 @@
  */
 
 /**
- * DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_getStatUniqueVisitor
+ * @description DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_getStatUniqueVisitor
  * @typedef {{  chart:number, 
  *              app_id:number, 
  *              year:number, 
@@ -1381,7 +1381,7 @@
  */
 
 /**
- * DB SQL APP SETTING server_db_sql_result_app_setting_getSettings
+ * @description DB SQL APP SETTING server_db_sql_result_app_setting_getSettings
  * @typedef {{  id:string,
  *              app_id:number, 
  *              app_setting_type_name:string,
@@ -1394,7 +1394,7 @@
  */
 
 /**
- * DB SQL APP SETTING server_db_sql_result_app_setting_getDisplayData
+ * @description DB SQL APP SETTING server_db_sql_result_app_setting_getDisplayData
  * @typedef {{  id:string,
  *              value:string, 
  *              name:null, 
@@ -1406,13 +1406,13 @@
  */
 
 /**
- * DB SQL IDENTITY PROVIDER server_db_sql_result_identity_provider_getIdentityProviders
+ * @description DB SQL IDENTITY PROVIDER server_db_sql_result_identity_provider_getIdentityProviders
  * @typedef {{  id:string, 
  *              provider_name:string}} server_db_sql_result_identity_provider_getIdentityProviders
  */
 
 /** 
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getUsersAdmin
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getUsersAdmin
  * @typedef {{  id:number,
  *              avatar:string|null,
  *              active:number,
@@ -1439,14 +1439,14 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getStatCountAdmin
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getStatCountAdmin
  * @typedef {{  identity_provider_id:number,
  *              provider_name:string,
  *              count_user:number}} server_db_sql_result_user_account_getStatCountAdmin
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateAdmin
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateAdmin
  * @typedef {{  active:number|null,
  *              user_level:number|null,
  *              private:number|null,
@@ -1464,7 +1464,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_create
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_create
  * @typedef {{  username:string|null,
  *              password:null,
  *              password_new:string|null,
@@ -1489,7 +1489,7 @@
 
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getUserByUserId
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getUserByUserId
  * @typedef {{  id:number,
  *              bio:string|null
  *              private: number|null,
@@ -1515,7 +1515,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileUser
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileUser
  * @typedef {{  id:number,
  *              bio:string|null,
  *              private:number|null,
@@ -1540,7 +1540,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileDetail
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileDetail
  * @typedef {{  detail:string,
  *              id:number,
  *              provider_id:string,
@@ -1553,7 +1553,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileStat
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileStat
  * @typedef {{  top:string,
  *              id:number,
  *              identity_provider_id:number|null,
@@ -1567,19 +1567,19 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_checkPassword
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_checkPassword
  * @typedef {{  password:string}} server_db_sql_result_user_account_checkPassword
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updatePassword
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updatePassword
  * @typedef {{  password_new:string|null,
  *              auth:string|null}} server_db_sql_parameter_user_account_updatePassword
  *
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserLocal
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserLocal
  * @typedef {{  bio:string,
  *              private:number,
  *              username:string,
@@ -1595,7 +1595,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserCommon
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserCommon
  * @typedef {{  bio:string|null,
  *              private: number|null,
  *              username:string|null}} server_db_sql_parameter_user_account_updateUserCommon
@@ -1603,12 +1603,12 @@
 
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_parameter_user_account_userLogin
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_userLogin
  * @typedef {{  username:string}} server_db_sql_parameter_user_account_userLogin
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_userLogin
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_userLogin
  * @typedef {{  id:number,
  *              bio:string|null,
  *              username:string,
@@ -1619,7 +1619,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_providerSignIn
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_providerSignIn
  * @typedef {{  id:number,
  *              bio:string|null,
  *              username:string, 
@@ -1641,24 +1641,24 @@
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getEmailUser
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getEmailUser
  * @typedef {{  id:number,
  *              email:string}} server_db_sql_result_user_account_getEmailUser
  */
 
 /**
- * DB SQL USER ACCOUNT server_db_sql_result_user_account_getDemousers 
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getDemousers 
  * @typedef {{  id:number, username:string}} server_db_sql_result_user_account_getDemousers 
  */
 
 /**
- * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps
+ * @description DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps
  * @typedef {{  app_id:number,
  *              date_created:string}} server_db_sql_result_user_account_app_getUserAccountApps
  */
 
 /**
- * DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApp
+ * @description DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApp
  * @typedef {{  preference_locale:string,
  *              app_setting_preference_timezone_id:number,
  *              app_setting_preference_direction_id:number,
@@ -1667,7 +1667,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP server_db_sql_parameter_user_account_app_updateUserAccountApp
+ * @description DB SQL USER ACCOUNT APP server_db_sql_parameter_user_account_app_updateUserAccountApp
  * @typedef {{  preference_locale:string,
  *              app_setting_preference_timezone_id:number|null,
  *              app_setting_preference_direction_id:number|null,
@@ -1675,14 +1675,14 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_createUserPost
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_createUserPost
  * @typedef {{  description:string,
  *              json_data:string,
  *              user_account_id:number|null}} server_db_sql_parameter_user_account_app_data_post_createUserPost
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getUserPost
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getUserPost
  * @typedef {{  id:number,
  *              description:string,
  *              json_data:string,
@@ -1693,7 +1693,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getUserPostsByUserId
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getUserPostsByUserId
  * @typedef {{  id:number, 
  *              description:string, 
  *              json_data:string, 
@@ -1704,13 +1704,13 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_data_post_getProfileStatLike
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_data_post_getProfileStatLike
  * @typedef {{  count_user_account_app_data_post_likes:number,
  *              count_user_account_app_data_post_liked:number}} server_db_sql_result_user_account_data_post_getProfileStatLike
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileUserPosts
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileUserPosts
  * @typedef {{  id:number,
  *              description:string,
  *              user_account_app_user_account_id:number,
@@ -1721,7 +1721,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail
  * @typedef {{  detail:string,
  *              id:number,
  *              identity_provider_id:number,
@@ -1735,7 +1735,7 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileStatPost
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileStatPost
  * @typedef {{  top:string,
  *              id:number,
  *              iidentity_provider_id:number,
@@ -1750,14 +1750,14 @@
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_updateUserPost
+ * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_parameter_user_account_app_data_post_updateUserPost
  * @typedef {{  description:string,
  *              json_data:string,
  *              user_account_id:number|null}} server_db_sql_parameter_user_account_app_data_post_updateUserPost
  */
 
 /**
- * DB SQL USER ACCOUNT APP DATA POST VIEW server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
+ * @description DB SQL USER ACCOUNT APP DATA POST VIEW server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  * @typedef {{  client_ip:string|null,
  *              client_user_agent:string|null
  *              user_account_id:number|null,
@@ -1765,14 +1765,14 @@
  */
 
 /**
- * DB SQL USER ACCOUNT EVENT server_db_sql_parameter_user_account_event_insertUserEvent
+ * @description DB SQL USER ACCOUNT EVENT server_db_sql_parameter_user_account_event_insertUserEvent
  * @typedef {{  user_account_id:number,
  *              event:string,
  *              event_status:string}} server_db_sql_parameter_user_account_event_insertUserEvent
  */
 
 /**
- * DB SQL USER ACCOUNT EVENT server_db_sql_result_user_account_event_getLastUserEvent
+ * @description DB SQL USER ACCOUNT EVENT server_db_sql_result_user_account_event_getLastUserEvent
  * @typedef {{  user_account_id:number,
  *              event_id:number,
  *              event_name:string,
@@ -1785,7 +1785,7 @@
 
 
 /**
- * DB SQL USER ACCOUNT VIEW server_db_sql_parameter_user_account_view_insertUserAccountView
+ * @description DB SQL USER ACCOUNT VIEW server_db_sql_parameter_user_account_view_insertUserAccountView
  * @typedef {{  user_account_id:number|null,
  *              user_account_id_view:number,
  *              client_ip:string|null,
@@ -1793,11 +1793,11 @@
  */
 
 /**
- * IAM server_iam_access_token_claim_scope_type
+ * @description IAM server_iam_access_token_claim_scope_type
  * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_CUSTOM'} server_iam_access_token_claim_scope_type
  */
 /**
- * IAM server_iam_access_token_claim_type
+ * @description IAM server_iam_access_token_claim_type
  * @typedef {{  app_id:         number,
  *              id:             number|string|null,
  *              name:           string,
@@ -1807,13 +1807,13 @@
  */
 
 /**
- * IAM server_iam_authenticate_request
+ * @description IAM server_iam_authenticate_request
  * @typedef {{statusCode:number,
  *            statusMessage:string}|null} server_iam_authenticate_request
  */
 
 /**
- * INFO server_info_result_Info
+ * @description INFO server_info_result_Info
  * @typedef {{  os:{        hostname:string,
  *                          platform:NodeJS.Platform,
  *                          type:string,
@@ -1856,7 +1856,7 @@
 
 
 /**
- * SERVER server_REST_API_parameters
+ * @description SERVER server_REST_API_parameters
  * @typedef {{  app_id: number,
  *              endpoint: server_bff_endpoint_type,
  *              host:string,
@@ -1873,7 +1873,7 @@
  */
 
 /**
- * SERVER server_server_req_verbose
+ * @description SERVER server_server_req_verbose
  * @typedef {*} server_server_req_verbose
  * 
  */
@@ -1881,7 +1881,7 @@
  * @typedef {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'|string} server_req_method
  */
 /**
- * SERVER server_server_req
+ * @description SERVER server_server_req
  * @typedef {Object} server_server_req
  * @property {string} baseUrl
  * @property {string} hostname
@@ -1926,7 +1926,7 @@
  */
 
 /** 
- * SERVER server_server_res
+ * @description SERVER server_server_res
  * @typedef {Object} server_server_res
  * @property {function} status
  * @property {number} statusCode
@@ -1950,12 +1950,12 @@
  */
 
 /**
- * SERVER server_server_response_type
+ * @description SERVER server_server_response_type
  * @typedef {'JSON'|'HTML'|'CSS'|'JS'|'WEBP'|'PNG'|'WOFF'|'TTF'} server_server_response_type
  */
 
 /**
- * SERVER server_server_response
+ * @description SERVER server_server_response
  * @typedef {{  http?:number|null,
  *              code?:number|string|null,
  *              text?:string|null,
@@ -1968,13 +1968,13 @@
  */
 
 /**
- * SERVER server_server_req_id_number
+ * @description SERVER server_server_req_id_number
  * @typedef {string|number|null|undefined} server_server_req_id_number
  */
 
 
 /**
- * SERVER server_server_express
+ * @description SERVER server_server_express
  * @typedef {object} server_server_express
  * @property {function} use
  * @property {function} get
@@ -1985,16 +1985,16 @@
  */
 
 /**
- * SERVER server_server_error
+ * @description SERVER server_server_error
  * @typedef {Object.<Error | null , undefined>} server_server_error
  */
 /**
- *  SOCKET config_user_parameter
+ * @description SOCKET config_user_parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
  */
 
 /**
- * SOCKET server_socket_connected_list
+ * @description SOCKET server_socket_connected_list
  * @typedef {object} server_socket_connected_list
  * @property {number} id
  * @property {string} connection_date
@@ -2017,7 +2017,7 @@
  */
 
 /**
- * SOCKET server_socket_connected_list_no_res
+ * @description SOCKET server_socket_connected_list_no_res
  * @typedef {{  id:number,
  *              connection_date:string,
  *              app_id:number,
@@ -2036,22 +2036,22 @@
  */
 
 /** 
- * SOCKET server_socket_broadcast_type_all
+ * @description SOCKET server_socket_broadcast_type_all
  * @typedef {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'CONNECTINFO'|'APP_FUNCTION'} server_socket_broadcast_type_all
  */
 
 /**
- * SOCKET server_socket_broadcast_type_admin
+ * @description SOCKET server_socket_broadcast_type_admin
  * @typedef {'ALERT'|'CHAT'|'PROGRESS'} server_socket_broadcast_type_admin
  */
 
 /** 
- * SOCKET server_socket_broadcast_type_app_function
+ * @description SOCKET server_socket_broadcast_type_app_function
  * @typedef {'CHAT'|'PROGRESS'|'SESSION_EXPIRED'|'APP_FUNCTION'} server_socket_broadcast_type_app_function
  */
 
 /**
- * SOCKET server_socket_connected_list_sort
+ * @description SOCKET server_socket_connected_list_sort
  * @typedef {   'id'|
  *              'connection_date'| 
  *              'app_id'|
