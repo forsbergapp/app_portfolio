@@ -1,22 +1,11 @@
 /** @module server/db/common */
 
 /**
- * @import {server_db_common_result, server_db_sql_result_app_setting_getDisplayData, server_server_res, server_server_error, server_db_common_result_error} from '../types.js'
+ * @import {server_server_response, server_db_common_result, server_server_error, server_db_common_result_error} from '../types.js'
 */
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./fileModelLog.js')} */
-const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-
-/**@type{import('./fileModelAppParameter.js')} */
-const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
-
-/**@type{import('./fileModelConfig.js')} */
-const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-
-/**@type{import('./db.js')} */
-const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
 
 /**
  * @name dbCommonAppCodeGet
@@ -31,12 +20,12 @@ const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
  *				Oracle message:
  *					'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  * @function
+ * @param {number|null} db_use
  * @param {server_db_common_result_error} error
  * @returns (string|null)
  * 
  */
-const dbCommonAppCodeGet = error => {
-	const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+const dbCommonAppCodeGet = (db_use, error) => {
 	if (
 		((db_use ==1 ||db_use ==2)&& error.code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
 		(db_use ==3 && error.code=='23505')|| //PostgreSQL
@@ -63,52 +52,79 @@ const dbCommonAppCodeGet = error => {
 	}
 };
 /**
- * @name dbCommonCheckedError
- * @description	Displays message for error
- * @function
- * @param {number} app_id 
- * @param {server_server_error} err 
- * @param {server_server_res} res
+ * Returns database error message in ISO20022 format
+ * Checks database if known app code found
+ * Use error when unknown error occurs for both fileModel and dbModel
+ * If error then returns known error using app setting message or full error
+ * else returns either not found message (404) or not authorized message (400, 401)
+ * @param {number|null} app_id
+ * @param {number} statusCode
+ * @param {*} error
+ * @returns {Promise.<server_server_response>}
  */
- const dbCommonCheckedError = async (app_id, err, res) =>{
-	/**@type{import('./dbModelAppSetting.js')} */
-	const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+const dbCommonRecordErrorAsync = async (app_id, statusCode, error=null) =>{
+	/**@type{import('./fileModelConfig.js')} */
+	const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-	
-    return new Promise((resolve)=>{
-		const app_code = dbCommonAppCodeGet(err);
-		if (app_code != null ||err.errorNum!=null){
-			getDisplayData({app_id:app_id,
-							data:{	data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
-									setting_type:'MESSAGE',
-									value:app_code ?? err.errorNum}
-							})
-			.then(result_message=>{
-				res.statusCode = 400;
-				res.statusMessage = result_message[0].display_data;
-				resolve(result_message[0].display_data);
-			});
-		}
-		else{
-			res.statusCode = 500;
-			res.statusMessage = err;
-			resolve(err);
-		}
-	});
+	const COMMON_APP_ID = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
+	if (error){
+		/**@type{import('./dbModelAppSetting.js')} */
+		const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
+		const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+		//search known error in db error or if not found use errorNum key used by data validation in case used
+		//or return full error
+		const app_code = dbCommonAppCodeGet(DB_USE, error) ?? error.errorNum;
+		return {http:statusCode,
+				code:null,
+				text:app_code?await getDisplayData({app_id:app_id ?? COMMON_APP_ID,
+													data:{	data_app_id:COMMON_APP_ID,
+															setting_type:'MESSAGE',
+															value:app_code}
+													})
+									.then(result=>result.result[0].display_data)
+									.catch(()=>error):error,
+				developerText:null,
+				moreInfo:null,
+				type:'JSON'};
+	}
+	else{
+		return {http:statusCode,
+				code:null,
+				text:error?error:statusCode==404?'?!':'⛔',
+				developerText:null,
+				moreInfo:null,
+				type:'JSON'};
+	}
 };
 
-/** 
- * @name dbCommonRecordNotFound
- * @description	Displays DB message for record not found for single resource DB
- * @function
- * @param {server_server_res|null} res
- * @returns {Promise.<string>}
+/**
+ * Returns database error message in ISO20022 format
+ * Does not check database for known errors
+ * Use error when unknown error occurs for both fileModel and dbModel
+ * @param {number|null} app_id
+ * @param {number} statusCode
+ * @param {*} error
+ * @returns {server_server_response}
  */
-const dbCommonRecordNotFound = async res => {
-	/**@type{import('./file.js')} */
-	const {fileCommonRecordNotFound} = await import(`file://${process.cwd()}/server/db/file.js`);
-	return fileCommonRecordNotFound(res);
+const dbCommonRecordError = (app_id, statusCode, error=null) =>{
+	if (error){
+		return {http:statusCode,
+				code:'DB',
+				text:error,
+				developerText:null,
+				moreInfo:null,
+				type:'JSON'};
+	}
+	else{
+		return {http:statusCode,
+				code:'DB',
+				text:error?error:statusCode==404?'?!':'⛔',
+				developerText:null,
+				moreInfo:null,
+				type:'JSON'};
+	}
 };
+
 /**
  * @name dbCommonLocaleGet
  * @description	Get locale part
@@ -149,11 +165,11 @@ const dbCommonLocaleGet = (locale, part) => {
  * @name dbCommonRowsLimit
  * @description	Sets pagination using limit and offset or limit records on SQL rows
  * @function
+ * @param {number|null} db_use
  * @param {boolean} pagination
  * @returns {string}
  */
-const dbCommonRowsLimit = (pagination = true) => {
-	const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+const dbCommonRowsLimit = (db_use, pagination = true) => {
 	if (db_use == 4)
 		if (pagination)
 			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
@@ -179,10 +195,11 @@ const dbCommonRowsLimit = (pagination = true) => {
  *  				CAST(STRFTIME('%m', date_created) AS INT) = :month
  *  				CAST(STRFTIME('%d', date_created) AS INT) = :day
  * @function
+ * @param {number|null} db_use
  * @param {'YEAR'|'MONTH'|'DAY'} period
  * @returns {string}
  */
-const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
+const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 								` CAST(STRFTIME('%${period=='YEAR'?'Y':period=='MONTH'?'m':period=='DAY'?'d':''}', date_created) AS INT) `:
 								` EXTRACT(${period} from date_created)`;
 														
@@ -204,18 +221,29 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CO
  * @param {*} parameters 
  * @param {number|null} dba 
  * @param {string|null} locale 
- * @returns {Promise.<*>}
+ * @returns {Promise.<server_server_response>}
  */
  const dbCommonExecute = async (app_id, sql, parameters, dba = null, locale=null) =>{
-	return new Promise ((resolve, reject)=>{
+	/**@type{import('./db.js')} */
+	const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
+	/**@type{import('./fileModelLog.js')} */
+	const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+	/**@type{import('./fileModelAppParameter.js')} */
+	const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+	/**@type{import('./fileModelConfig.js')} */
+	const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
+	const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+	const COMMON_APP_ID = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
+	return new Promise ((resolve)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
-		sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '');
+		sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
 		//manage different syntax
 		//syntax in SQL: WHERE '<DATE_PERIOD_YEAR/>' = [bind variable] etc
-		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod('YEAR'));
-		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod('MONTH'));
-		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod('DAY'));
+		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod(DB_USE, 'YEAR'));
+		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod(DB_USE, 'MONTH'));
+		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod(DB_USE, 'DAY'));
 		//manage locale search
 		//syntax in SQL: WHERE [column ] IN ('<LOCALE/>')
 		if (locale && sql.indexOf('<LOCALE/>')>0){
@@ -229,24 +257,22 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CO
 		if (sql.indexOf('<APP_PAGINATION_LIMIT_OFFSET/>')>0){
 			//parameters must contain limit and offset keys
 			pagination = true;
-			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(true));
+			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(DB_USE, true));
 			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0,
-																						resource_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-																						res:null})[0].common_app_limit_records.value);
+				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? COMMON_APP_ID,
+																						resource_id:COMMON_APP_ID}).result[0].common_app_limit_records.value);
 		}
 		//manage limit records
 		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
 			//parameters should not contain any limit or offset keys
-			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0,
-																										resource_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-																										res:null})[0].common_app_limit_records.value)}};
+			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(DB_USE, false));
+			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? COMMON_APP_ID,
+																										resource_id:COMMON_APP_ID}).result[0].common_app_limit_records.value)}};
 		}
 
-		dbSQL(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, dba)
+		dbSQL(app_id, DB_USE, sql, parameters, dba)
 		.then((/**@type{server_db_common_result}*/result)=> {
-			fileModelLog.postDBI(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, result)
+			fileModelLog.postDBI(app_id, DB_USE, sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				try {
@@ -260,46 +286,33 @@ const dbCommonDatePeriod = period=>serverUtilNumberValue(fileModelConfig.get('CO
 						/**@ts-ignore */
 						result.page_header = {	total_count:	result.length>0?result[0].total_rows:0,
 												offset: 		parameters.offset?parameters.offset:0,
-												count:			Math.min(parameters.limit, result.length)};
-						resolve(
-							/**@ts-ignore */
-							{page_header:result.page_header, rows:rows}
-						);
+												count:			Math.min(	parameters.limit, 
+																			/**@ts-ignore */
+																			result.length)};
+						/**@ts-ignore */
+						resolve({result:{page_header:result.page_header, rows:rows}, type:'JSON'});
 					}
 					else
-						resolve(rows ?? result);
+						resolve({result:rows ?? result, type:'JSON'});
 				} catch (error) {
-					return reject(error);
+					return resolve(dbCommonRecordErrorAsync(app_id, 500, error));
 				}
 						
 			});
 		})
 		.catch((/**@type{server_server_error}*/error)=>{
-			const database_error = 'DATABASE ERROR';
 			//add db_message key since message is not saved for SQLite
 			if (error.message)
 				error.db_message = error.message;
-			fileModelLog.postDBE(app_id, serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), sql, parameters, error)
-			.then(()=>{
-				const app_code = dbCommonAppCodeGet(error);
-				if (app_code != null)
-					return reject(error);
-				else{
-					//return full error to admin
-					if (app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))){
-						//SQLite does not display sql in error
-						if (!error.sql)
-							error.sql = sql;
-						reject(error);
-					}
-					else
-						reject(database_error);
-				}
-			});
+			//SQLite does not display sql in error
+			if (!error.sql)
+				error.sql = sql;
+			fileModelLog.postDBE(app_id, DB_USE, sql, parameters, error)
+			.then(()=>resolve(dbCommonRecordErrorAsync(app_id, 500, error)));
 		});
 	});
 };
 
 export{
-		dbCommonCheckedError, dbCommonAppCodeGet, dbCommonRecordNotFound, dbCommonLocaleGet, dbCommonRowsLimit, dbCommonExecute
+		dbCommonRecordErrorAsync, dbCommonRecordError, dbCommonLocaleGet, dbCommonExecute
 };

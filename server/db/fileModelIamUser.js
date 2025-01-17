@@ -1,11 +1,17 @@
 /** @module server/db/fileModelIamUser */
 
 /**
- * @import {server_server_res,
+ * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_file_iam_user} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_file_iam_user[] }} get
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} update
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 /**@type{import('./file.js')} */
-const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('../db/common.js')} */
+const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name get
@@ -13,17 +19,14 @@ const {fileCommonRecordNotFound, fileDBGet, fileDBPost, fileDBUpdate, fileDBDele
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @param {server_server_res|null} res
- * @returns {server_db_file_iam_user[]}
+ * @returns {get}
  */
-const get = (app_id, resource_id, res) =>{
+const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_USER',resource_id, null);
-    if (result.length>0 || resource_id==null)
-        return result;
+    if (result.rows.length>0 || resource_id==null)
+        return {result:result.rows, type:'JSON'};
     else
-        if (res)
-            throw fileCommonRecordNotFound(res);
-        return result;
+        return dbCommonRecordError(app_id, 404);
 };
 
 /**
@@ -32,18 +35,14 @@ const get = (app_id, resource_id, res) =>{
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @param {server_server_res} res
- * @returns {Promise.<{id:number}>}
+ * @returns {Promise.<post>}
  */
-const post = async (app_id, data, res) => {
+const post = async (app_id, data) => {
     //check required attributes
     if (!data.username || !data.password ||
         //check not allowed attributes when creating a user
         data.id||data.user_level ||data.verification_code||data.status||data.created||data.modified){
-        /**@type{import('../iam.js')} */
-        const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        res.statusCode = 400;
-        throw iamUtilMesssageNotAuthorized();
+            return dbCommonRecordError(app_id, 400);
     }
     else{
         /**@type{import('../security.js')} */
@@ -67,10 +66,12 @@ const post = async (app_id, data, res) => {
                                 modified:new Date().toISOString()
                         };
         return fileDBPost(app_id, 'IAM_USER', data_new).then((result)=>{
-            if (result.affectedRows>0)
-                return {id:data_new.id};
+            if (result.affectedRows>0){
+                result.insertId=data_new.id;
+                return {result:result, type:'JSON'};
+            }
             else
-                throw fileCommonRecordNotFound(res);
+                return dbCommonRecordError(app_id, 404);
         });
     }
 };
@@ -81,17 +82,13 @@ const post = async (app_id, data, res) => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
- * @param {server_server_res} res
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<update>}
  */
-const update = async (app_id, resource_id, data, res) => {
-    /**@type{import('../iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+const update = async (app_id, resource_id, data) => {
     /**@type{import('../security.js')} */
-    const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-    
+    const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
     /**@type{server_db_file_iam_user}*/
-    const user = get(app_id, resource_id, null)[0];
+    const user = get(app_id, resource_id).result[0];
     if (user){
         if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
             /**@type{server_db_file_iam_user} */
@@ -115,24 +112,18 @@ const update = async (app_id, resource_id, data, res) => {
             if (Object.entries(data_update).length>0)
                 return fileDBUpdate(app_id, 'IAM_USER', resource_id, null, data_update).then((result)=>{
                     if (result.affectedRows>0)
-                        return result;
+                        return {result:result, type:'JSON'};
                     else
-                        throw fileCommonRecordNotFound(res);
+                        return dbCommonRecordError(app_id, 404);
                 });
-            else{
-                res.statusCode = 404;
-                throw iamUtilMesssageNotAuthorized();
-            }
+            else
+                return dbCommonRecordError(app_id, 400);
         }
-        else{
-            res.statusCode = 400;
-            throw iamUtilMesssageNotAuthorized();
-        }
+        else
+            return dbCommonRecordError(app_id, 400);
     }
-    else{
-        res.statusCode = 404;
-        throw iamUtilMesssageNotAuthorized();
-    }
+    else
+        return dbCommonRecordError(app_id, 404);
 };
 
 /**
@@ -141,15 +132,14 @@ const update = async (app_id, resource_id, data, res) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_server_res} res
- * @returns {Promise.<{affectedRows:number}>}
+ * @returns {Promise.<deleteRecord>}
  */
-const deleteRecord = async (app_id, resource_id, res) => {
+const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'IAM_USER', resource_id, null).then((result)=>{
         if (result.affectedRows>0)
-            return result;
+            return {result:result, type:'JSON'};
         else
-            throw fileCommonRecordNotFound(res);
+            return dbCommonRecordError(app_id, 404);
     });
 };
                    

@@ -2,7 +2,8 @@
 
 
 /**
- * @import {server_db_sql_result_app_data_entity_resource_get} from '../types.js'
+ * @import {server_server_response,server_db_sql_result_app_data_entity_resource_get} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_sql_result_app_data_entity_resource_get[] }} get
  */
 
 /**@type{import('./dbSql.js')} */
@@ -21,10 +22,11 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *          data:{  entity_id?:string|null,
  *                  data_app_id?:string|number|null,
  *                  resource_name?:string|null}}} parameters
- * @returns {Promise.<server_db_sql_result_app_data_entity_resource_get[]>}
+ * @returns {Promise.<get>}
  */
-const get = parameters => import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-    dbCommonExecute(parameters.app_id, 
+const get = parameters => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_ENTITY_RESOURCE_SELECT, 
                     {   resource_id: parameters.resource_id,
                         data_app_id: serverUtilNumberValue(parameters.data?.data_app_id),

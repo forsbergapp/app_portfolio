@@ -53,7 +53,6 @@ const component = async props => {
                                             body:{  type:props.data.type,
                                                     data_app_id:props.data.common_app_id,
                                                     doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
-                            .then(result=>JSON.parse(result).rows[0])
                             .catch(()=>null);
     switch (props.data.type){
         case 'MODULE_CODE':{

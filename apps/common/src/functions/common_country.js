@@ -1,24 +1,30 @@
 /**
  * @module apps/common/src/functions/common_country
  */
+
+/**
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:{value:string,
+ *                                              group_name:string, 
+ *                                              country_code:string, 
+ *                                              flag_emoji:string, 
+ *                                              text:string}[]}} appFunction
+ */
+
 /**
  * @name appFunction
  * @description Get countries using ISO 3166-1 country code and language code using ISO 639-1
  * @function
- * @param {number} app_id
- * @param {*} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.<{ value:String,
- *                      group_name:string, 
- *                      country_code:string, 
- *                      flag_emoji:string, 
- *                      text:string}[]>}
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<appFunction>}
  */
-const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
-    res;
+const appFunction = async parameters =>{
     /**@type{import('./common_locale.js')} */
     const {formatLocale} = await import('./common_locale.js');
 
@@ -307,7 +313,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
      const fs = await import('node:fs');
 
      /**@type {[key:string]} */
-     const countries = await fs.promises.readFile(`${PATH}${formatLocale(locale)}/${FILE}`, 'utf8')
+     const countries = await fs.promises.readFile(`${PATH}${formatLocale(parameters.locale)}/${FILE}`, 'utf8')
                                  .then(file=>JSON.parse(file.toString()));
     //format result and order by group name, country code
      const countries_map = Object.entries(countries)
@@ -333,6 +339,6 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
                                         return 0;
                                 });
     
-     return countries_map;
+     return {result:countries_map, type:'JSON'};
 };
 export default appFunction;

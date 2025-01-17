@@ -1,8 +1,11 @@
 /** @module server/db/dbModelUserAccountFollow */
 
 /**
- * @import {server_db_sql_result_user_account_follow_unfollow,
- *          server_db_sql_result_user_account_follow_follow} from '../types.js'
+ * @import {server_server_response,
+ *          server_db_common_result_delete,
+ *          server_db_common_result_insert} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 
 /**@type{import('./dbSql.js')} */
@@ -19,7 +22,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{user_account_id?:number|null}}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_follow_follow>}
+ * @returns {Promise.<post>}
  */
 const post = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -39,7 +42,7 @@ const post = parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_account_id:number|null}}} parameters
- * @returns {Promise.<server_db_sql_result_user_account_follow_unfollow>}
+ * @returns {Promise.<deleteRecord>}
  */
 const deleteRecord = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

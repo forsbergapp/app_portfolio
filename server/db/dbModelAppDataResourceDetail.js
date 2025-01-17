@@ -2,8 +2,12 @@
 
 
 /**
- * @import {server_db_sql_result_app_data_resource_detail_delete, server_db_sql_result_app_data_resource_detail_update, 
- *          server_db_sql_result_app_data_resource_detail_post, server_db_sql_result_app_data_resource_detail_get} from '../types.js'
+ * @import {server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
+ *          server_server_response,server_db_sql_result_app_data_resource_detail_get} from '../types.js'
+ * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_detail_get[] }} get
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_update }} update
+ * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 
 /**@type{import('./dbSql.js')} */
@@ -26,11 +30,11 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *                resource_name?:string|null,
  *                entity_id?:number|null
  *              }}} parameters
- * @returns {Promise.<server_db_sql_result_app_data_resource_detail_get[]>}
+ * @returns {Promise.<get>}
  */
  const get = parameters => 
-  import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-    dbCommonExecute(parameters.app_id, 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+      dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_SELECT, 
                     {resource_id         : parameters.resource_id ?? null,
                       master_id           : serverUtilNumberValue(parameters.data.master_id),
@@ -58,7 +62,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *                app_data_resource_master_attribute_id:number|null,
  *                entity_id:number|null
  *              }}} parameters
- * @returns {Promise.<server_db_sql_result_app_data_resource_detail_post>}
+ * @returns {Promise.<post>}
  */
  const post = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -92,7 +96,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *                app_data_resource_master_attribute_id:number|null,
  *                entity_id:number|null
  *              }}} parameters
- * @returns {Promise.<server_db_sql_result_app_data_resource_detail_update>}
+ * @returns {Promise.<update>}
  */
  const update = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -121,7 +125,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *                user_account_id:number|null,
  *                data_app_id:number|null
  *              }}} parameters
- * @returns {Promise.<server_db_sql_result_app_data_resource_detail_delete>}
+ * @returns {Promise.<deleteRecord>}
  */
  const deleteRecord = parameters => 
   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

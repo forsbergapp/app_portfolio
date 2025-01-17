@@ -5,19 +5,23 @@
  *          server_db_file_app_secret,
  *          server_db_file_app_module,
  *          server_db_file_app_parameter_common,
+ *          server_db_file_app_translation,
  *          server_config_apps_with_db_columns,
  *          server_apps_report_create_parameters,
  *          server_apps_app_service_parameters,
  *          server_apps_module_with_metadata,
  *          server_apps_module_metadata,
- *          server_server_routesparameters,
  *          server_server_res,
  *          server_bff_endpoint_type,
  *          server_bff_parameters,
  *          server_server_error,
  *          server_server_response,
- *          server_server_response_type,
  *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
+ * @typedef {server_server_response & {result?:server_db_file_app_module }} commonRegistryAppModule
+ * @typedef {server_server_response & {result?:server_apps_module_with_metadata[] }} commonModuleMetaDataGet
+ * @typedef {server_server_response & {result?:string }} commonComponentCreate
+ * @typedef {server_server_response & {result?:server_config_apps_with_db_columns[] }} commonAppsGet
+ * 
  */
 
 /**@type{import('../../../server/db/fileModelApp.js')} */
@@ -61,7 +65,7 @@ const commonMailCreate = async (app_id, data) =>{
     const {default:ComponentCreate} = await import('./component/common_mail.js');
     const email_html    = await ComponentCreate({data:{host:data.host ?? '', verification_code:data.verificationCode ?? ''}, methods:null});
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'));
-    const secrets       = fileModelAppSecret.get({app_id:app_id, resource_id:common_app_id, res:null})[0];
+    const secrets       = fileModelAppSecret.get({app_id:app_id, resource_id:common_app_id}).result[0];
     //email type 1-4 implemented are emails with verification code
     if (parseInt(data.emailtype)==1 || 
         parseInt(data.emailtype)==2 || 
@@ -162,15 +166,14 @@ const commonAppStart = async (app_id=null) =>{
         const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
         const NO_MAINTENANCE = fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE')==0;
         const DB_START = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
-        const APP_START = fileModelAppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id, res:null})[0].common_app_start.value=='1';
-        /**@ts-ignore */
-        const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, res:null})[0][`service_db_db${db_use}_app_user`];
-        const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>app_id?result[0].installed:true).catch(()=>false);
+        const APP_START = fileModelAppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_start.value=='1';
+        const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).result[0][`service_db_db${db_use}_app_user`];
+        const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>app_id?result.result[0].installed:true).catch(()=>false);
         if (NO_MAINTENANCE && DB_START && APP_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
             if (app_id == null)
                 return true;
             else{
-                if (fileModelApp.get({app_id:app_id, resource_id:app_id, res:null})[0].status =='ONLINE')
+                if (fileModelApp.get({app_id:app_id, resource_id:app_id}).result[0].status =='ONLINE')
                     return true;
                 else
                     return false;
@@ -245,13 +248,13 @@ const commonGeodata = async parameters =>{
     const result_gps = await bffServer(parameters.app_id, parametersBFF)
     .catch(()=>null);
     const result_geodata = {};
-    if (result_gps){
-        result_geodata.latitude =   result_gps.geoplugin_latitude;
-        result_geodata.longitude=   result_gps.geoplugin_longitude;
-        result_geodata.place    =   result_gps.geoplugin_city + ', ' +
-                                    result_gps.geoplugin_regionName + ', ' +
-                                    result_gps.geoplugin_countryName;
-        result_geodata.timezone =   result_gps.geoplugin_timezone;
+    if (result_gps.result){
+        result_geodata.latitude =   result_gps.result.geoplugin_latitude;
+        result_geodata.longitude=   result_gps.result.geoplugin_longitude;
+        result_geodata.place    =   result_gps.result.geoplugin_city + ', ' +
+                                    result_gps.result.geoplugin_regionName + ', ' +
+                                    result_gps.result.geoplugin_countryName;
+        result_geodata.timezone =   result_gps.result.geoplugin_timezone;
     }
     else{
         /**@type{server_bff_parameters}*/
@@ -269,7 +272,7 @@ const commonGeodata = async parameters =>{
                                 /**@ts-ignore */
                                 res:{}};
         const result_city = await bffServer(parameters.app_id, parametersBFF)
-                                    .then(result=>result.rows)
+                                    .then(result=>{if (result.http) throw result; else return result.result;})
                                     .catch((/**@type{server_server_error}*/error)=>{throw error;});
         result_geodata.latitude =   result_city.lat;
         result_geodata.longitude=   result_city.lng;
@@ -281,7 +284,7 @@ const commonGeodata = async parameters =>{
 
 /**
  * @name commonBFE
- * @description External request
+ * @description External request with JSON
  * @function
  * @param {{url:string,
  *          method:string,
@@ -290,7 +293,7 @@ const commonGeodata = async parameters =>{
  *          ip:string,
  *          authorization:string|null,
  *          locale:string}} parameters
- * @returns {Promise.<*>}
+ * @returns {Promise.<server_server_response>}
  */
 const commonBFE = async parameters =>{
     if (parameters.url.toLowerCase().startsWith('https://') || parameters.url.toLowerCase().startsWith('http://')){
@@ -298,7 +301,7 @@ const commonBFE = async parameters =>{
         const request_protocol = parameters.url.toLowerCase().startsWith('https')?await import('node:https'):await import('node:http');
         const timeout_message = '🗺⛔?';
         const timeout = 5000;
-        return new Promise((resolve, reject)=>{           
+        return new Promise((resolve)=>{           
             const options = {
                 method: parameters.method,
                 timeout: timeout,
@@ -318,7 +321,7 @@ const commonBFE = async parameters =>{
                     const gunzip = zlib.createGunzip();
                     res.pipe(gunzip);
                     gunzip.on('data', (chunk) =>responseBody += chunk);
-                    gunzip.on('end', () => resolve (responseBody));
+                    gunzip.on('end', () => resolve ({result:JSON.parse(responseBody), type:'JSON'}));
                 }
                 else{
                     res.setEncoding('utf8');
@@ -326,26 +329,40 @@ const commonBFE = async parameters =>{
                         responseBody += chunk;
                     });
                     res.on('end', ()=>{
-                        resolve (responseBody);
+                        resolve ({result:JSON.parse(responseBody), type:'JSON'});
                     });
                 }
                 
             });
+            
             if (parameters.method !='GET')
                 request.write(JSON.stringify(parameters.body));
             request.on('error', error => {
-                reject('EXTERNAL URL ERROR: ' + error);
+                resolve({http:500,
+                        code:'APP',
+                        /**@ts-ignore */
+                        text:error,
+                        developerText:'commonBFE',
+                        moreInfo:null,
+                        type:'JSON'
+                    });
             });
             request.on('timeout', () => {
-                reject(timeout_message);
+                resolve({http:503,
+                    code:'APP',
+                    text:timeout_message,
+                    developerText:'commonBFE',
+                    moreInfo:null,
+                    type:'JSON'
+                });
             });
             request.end();
         });
     }
     else{
         /**@type{import('../../../server/iam.js')} */
-        const { iamUtilMesssageNotAuthorized } = await import(`file://${process.cwd()}/server/iam.js`);
-        throw iamUtilMesssageNotAuthorized();
+        const { iamUtilMessageNotAuthorized } = await import(`file://${process.cwd()}/server/iam.js`);
+        throw iamUtilMessageNotAuthorized();
     }
 };
 
@@ -379,12 +396,10 @@ const commonBFE = async parameters =>{
  * @param {{app_id:Number,
  *          url:String,
  *          basepath:string}} parameters
- * @returns {Promise.<{ type:server_server_response_type,
- *                      sendfile?:string|null, 
- *                      result?:string}>}
+ * @returns {Promise.<server_server_response>}
  */
 const commonAssetfile = parameters =>{
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve)=>{
         const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
         if (common_app_id!=null){
             switch (parameters.url.toLowerCase().substring(parameters.url.lastIndexOf('.'))){
@@ -488,14 +503,14 @@ const commonAssetfile = parameters =>{
                 default:{
                     fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAssetfile()', serverUtilAppLine(), `Invalid file type ${parameters.url}`)
                     .then(()=>{
-                        reject({code:403});
+                        resolve({http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
 
                     });
                 }
             }
         }
         else{
-            reject({code:500});
+            resolve({http:500, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'});
         }
     });
 };
@@ -503,31 +518,39 @@ const commonAssetfile = parameters =>{
 /**
  * @name commonModuleRun
  * @description Run function for given app and role
+ *              Parameters in data should be requried data_app_id plus additional keys
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: {data_app_id:number},
+ *          data: {data_app_id:number, [key:string]:*},
  *          user_agent:string,
  *          ip:string,
+ *          host:string,
  *          locale:string,
- *          endpoint:server_server_routesparameters['endpoint'],
- *          res:server_server_res|null}} parameters
- * @returns {Promise.<void>}
+ *          iam:string,
+ *          endpoint:server_bff_endpoint_type}} parameters
+ * @returns {Promise.<server_server_response>}
  */
 const commonModuleRun = async parameters => {
-    const module = commonRegistryAppModule(parameters.data.data_app_id, {type:'FUNCTION', name:parameters.resource_id,role:parameters.endpoint});
-    if (module){
-        const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
-        return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res);
+    const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.data.data_app_id}})                                           ;
+    if (modules.result){
+        const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
+                                                                                            app.common_type=='FUNCTION' && 
+                                                                                            app.common_name==parameters.resource_id && 
+                                                                                            app.common_role == parameters.endpoint)[0];
+        if (module){
+            const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
+            return await RunFunction({app_id:parameters.app_id, host:parameters.host, data:parameters.data, user_agent:parameters.user_agent, ip:parameters.ip, locale:parameters.locale});
+        }
+        else{
+            /**@type{import('../../../server/iam.js')} */
+            const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+            return {http:404, code:'APP', text:iamUtilMessageNotAuthorized(), developerText:null, moreInfo:null, type:'JSON'};
+        }
     }
-    else{
-        fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleRun()', serverUtilAppLine(), `Function ${parameters.resource_id} not found`)
-        .then(()=>{
-            if (parameters.res)
-                parameters.res.statusCode = 404;
-        });
-    }
+    else
+        return modules;
 };
 /**
  * @name commonModuleGet
@@ -541,69 +564,85 @@ const commonModuleRun = async parameters => {
  *                  ps?:'A4'|'Letter', 
  *                  type:'REPORT'|'MODULE', 
  *                  reportid?:string,
- *                  report_parameters?:string,
  *                  queue_parameters?:{}},
- *          user_agent:string,
+ *          user_agent:string, 
  *          ip:string,
  *          locale:string,
- *          endpoint:server_bff_endpoint_type|'',
- *          res:server_server_res|null}} parameters
- * @returns {Promise.<*>}
+ *          endpoint:server_bff_endpoint_type|''}} parameters
+ * @returns {Promise.<server_server_response>}
  */
 const commonModuleGet = async parameters => {
+    /**@type{import('../../../server/iam.js')} */
+    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     if (parameters.data?.type =='REPORT' || parameters.data?.type =='MODULE'){
-        const module = commonRegistryAppModule(parameters.app_id, {type:parameters.data.type, name:parameters.resource_id,role:parameters.endpoint});
-        if (module && (parameters.data.type=='MODULE' ||parameters.data.type=='REPORT')){
-            if (parameters.data.type=='MODULE'){
-                const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
-                parameters.res?.type('text/javascript; charset=utf-8');
-                return await RunFunction(parameters.app_id, parameters.data, parameters.user_agent, parameters.ip, parameters.locale, parameters.res).then((/**@type{*} */module)=>{return {static:true, sendfile:module, sendcontent:null};});
+        const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}})                                           ;
+        if (modules.result){
+            const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
+                                                                                            app.common_type==parameters.data.type && 
+                                                                                            app.common_name==parameters.resource_id && 
+                                                                                            app.common_role == parameters.endpoint)[0];
+            if (module && parameters.data.type=='MODULE' ||parameters.data.type=='REPORT'){
+                if (parameters.data.type=='MODULE'){
+                    const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
+                    return await RunFunction({app_id: parameters.app_id, 
+                                              data: parameters.data, 
+                                              user_agent:  parameters.user_agent, 
+                                              ip:  parameters.ip, 
+                                              locale: parameters.locale});
+                }
+                else{
+                    //report
+                    /**@type{import('../../../server/iam.js')} */
+                    const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
+                    //ID token is created but not used in report
+                    await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
+                    const {default:ComponentCreate} = await import('./component/common_report.js');
+                    
+                    const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
+        
+                    const pagesize = parameters.data.ps ?? new URLSearchParams(Buffer.from(parameters.data.reportid ?? '', 'base64').toString('utf-8')).get('ps');
+                    /**@type{server_apps_report_create_parameters} */
+                    const data = {  app_id:         parameters.app_id,
+                                    queue_parameters:parameters.data.queue_parameters,
+                                    reportid:       parameters.data.reportid ?? '',
+                                    ip:             parameters.ip,
+                                    user_agent:     parameters.user_agent ?? '',
+                                    accept_language:parameters.locale ?? ''
+                                    };
+                    return {result:await ComponentCreate({data:   {
+                                                    CONFIG_APP: {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
+                                                    data:       data,
+                                                    /**@ts-ignore */
+                                                    papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
+                                                    },
+                                            methods:{function_report:RunReport}}), type:'HTML'};
+                }
+                
             }
             else{
-                //report
-                /**@type{import('../../../server/iam.js')} */
-                const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
-                //ID token is created but not used in report
-                await iamAuthorizeIdToken(parameters.app_id, parameters.ip, 'REPORT');
-                const {default:ComponentCreate} = await import('./component/common_report.js');
-                
-                const {default:RunReport} = await import(`file://${process.cwd()}${module.common_path}`);
-    
-                const pagesize = parameters.data.ps ?? new URLSearchParams(Buffer.from(parameters.data.reportid ?? '', 'base64').toString('utf-8')).get('ps');
-                /**@type{server_apps_report_create_parameters} */
-                const data = {  app_id:         parameters.app_id,
-                                queue_parameters:parameters.data.queue_parameters,
-                                reportid:       parameters.data.reportid ?? '',
-                                ip:             parameters.ip,
-                                user_agent:     parameters.user_agent ?? '',
-                                accept_language:parameters.locale ?? ''
-                                };
-                return ComponentCreate({data:   {
-                                                CONFIG_APP: {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0]},
-                                                data:       data,
-                                                /**@ts-ignore */
-                                                papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
-                                                },
-                                        methods:{function_report:RunReport}});
+                return fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
+                .then((result)=>{          
+                    return result.http?result:{http:404,
+                        code:'APP',
+                        text:iamUtilMessageNotAuthorized(),
+                        developerText:null,
+                        moreInfo:null,
+                        type:'JSON'
+                    };
+                });
             }
-            
         }
-        else{
-            fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonModuleGet()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
-            .then(()=>{
-                if (parameters.res)
-                    parameters.res.statusCode = 404;
-                return {static:true, sendfile:null, sendcontent:''};
-            });
-        }
+        else
+            return modules;
     }
-    else{
-        /**@type{import('../../../server/iam.js')} */
-        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        if (parameters.res)
-            parameters.res.statusCode = 400;
-        throw iamUtilMesssageNotAuthorized();
-    }
+    else
+        return {http:400,
+            code:'APP',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
 };
 /**
  * @name commonAppReportQueue
@@ -620,7 +659,7 @@ const commonModuleGet = async parameters => {
  *          locale:string,
  *          endpoint:server_bff_endpoint_type|'',
  *          res:server_server_res}} parameters
- * @returns {Promise.<void>}
+ * @returns {Promise.<server_server_response|void>}
  */
 const commonAppReportQueue = async parameters =>{
     /**@type{import('../../../server/db/fileModelAppModuleQueue.js')} */
@@ -632,46 +671,54 @@ const commonAppReportQueue = async parameters =>{
     /**@type{import('../../../server/iam.js')} */
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
                    
-    const {id} = await fileModelAppModuleQueue.post(parameters.app_id, 
+    const result_post = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                     {
                                                     type:'REPORT',
                                                     name:parameters.resource_id,
                                                     parameters:parameters.data.report_parameters,
                                                     user:fileModelIamUser.get(  parameters.app_id, 
-                                                                                serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), 
-                                                                                parameters.res)[0].username
-                                                    }, 
-                                                    parameters.res);
-    await fileModelAppModuleQueue.update(parameters.app_id, id, { start:new Date().toISOString(),
-                                                            progress:0, 
-                                                            status:'RUNNING'}, null);
-    //report can update progress and only progress if necessary
-    //add queue id and parameters from parameter from origin
-    commonModuleGet({   app_id:             parameters.app_id,
-                        resource_id:        parameters.resource_id,
-                        data:               {type:'REPORT', 
-                                                ...{ps:parameters.data.ps}, 
-                                                ...{queue_parameters:{appModuleQueueId:id,
-                                                                        ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
-                                                    }
-                                            },
-                        user_agent:         parameters.user_agent,
-                        ip:                 parameters.ip,
-                        locale:             parameters.locale,
-                        endpoint:           parameters.endpoint,
-                        res:                parameters.res})
-    .then(result=>{
-        if (result){
-            fileModelAppModuleQueue.postResult(parameters.app_id, id, result)
-            .then(()=>fileModelAppModuleQueue.update(parameters.app_id, id, {end:new Date().toISOString(), progress:1, status:'SUCCESS'}, null));
-        }
-    })
-    .catch(error=>{
-        fileModelAppModuleQueue.update(parameters.app_id, id, { end:new Date().toISOString(), 
-                                                                progress:1, 
-                                                                status:'FAIL',
-                                                                message:error.message ?? error}, null);
-    });
+                                                                                serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')) ).result[0].username
+                                                    });
+    if (result_post.result){
+        await fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),
+                                                                progress:0, 
+                                                                status:'RUNNING'});
+        //report can update progress and only progress if necessary
+        //add queue id and parameters from parameter from origin
+        commonModuleGet({   app_id:             parameters.app_id,
+                            resource_id:        parameters.resource_id,
+                            data:               {type:'REPORT', 
+                                                    ...{ps:parameters.data.ps}, 
+                                                    ...{queue_parameters:{appModuleQueueId:result_post.result.insertId,
+                                                                            ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
+                                                        }
+                                                },
+                            user_agent:         parameters.user_agent,
+                            ip:                 parameters.ip,
+                            locale:             parameters.locale,
+                            endpoint:           parameters.endpoint})
+        .then(result=>{
+            if (result.result){
+                fileModelAppModuleQueue.postResult( parameters.app_id, 
+                                                    result_post.result.insertId, 
+                                                    result.result)
+                .then((result_fileModelAppModuleQueue)=>
+                    result_fileModelAppModuleQueue.http?result_fileModelAppModuleQueue:fileModelAppModuleQueue.update( parameters.app_id, 
+                                                    result_post.result.insertId, 
+                                                    {end:new Date().toISOString(), progress:1, status:'SUCCESS'}));
+            }
+            else
+                fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { end:new Date().toISOString(), 
+                                                        progress:1, 
+                                                        status:'FAIL',
+                                                        message:result.text});
+        });
+        //do not wait for submitted report
+        return {result:null, type:'JSON'};
+    }
+    else
+        return result_post;
+    
 };
 
 /**
@@ -681,30 +728,34 @@ const commonAppReportQueue = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          data:{type:'REPORT'|'MODULE'|'FUNCTION'},
- *          resource_id:number,
- *          res:server_server_res|null}} parameters
- * @returns {Promise.<server_apps_module_with_metadata[]>}
+ *          resource_id:number}} parameters
+ * @returns {Promise.<commonModuleMetaDataGet>}
  */
 const commonModuleMetaDataGet = async parameters =>{
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
-        /**@type{*[]} */
-        const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}, res:parameters.res})
-        .filter(row=>row.common_type==parameters.data.type);
-        
-        for (const row of modules){
-            const module = await import(`file://${process.cwd()}${row.common_path}`);
-            /**@type{server_apps_module_metadata[]}*/
-            const metadata = module.metadata;
-            row.common_metadata = metadata;
+        const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
+        if (modules.result){
+            for (const row of modules.result.filter((/**@type{server_db_file_app_module}*/row)=>row.common_type==parameters.data.type)){
+                const module = await import(`file://${process.cwd()}${row.common_path}`);
+                /**@type{server_apps_module_metadata[]}*/
+                const metadata = module.metadata;
+                row.common_metadata = metadata;
+            }
+            return modules;
         }
-        return modules;
+        else
+            return modules;
     }
     else{
         /**@type{import('../../../server/iam.js')} */
-        const {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        if (parameters.res)
-            parameters.res?.statusCode==400;
-        throw iamUtilMesssageNotAuthorized();
+        const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        return {http:400,
+            code:'APP',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
     }
 }; 
 /**
@@ -728,7 +779,7 @@ const commonModuleMetaDataGet = async parameters =>{
  *                                  reportid?:          string,
  *                                  host?:              string},
  *          type:'APP'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
- * @returns {Promise.<string>}
+ * @returns {Promise.<commonComponentCreate>}
  */
 const commonComponentCreate = async parameters =>{
     /**@type{import('../../../server/iam.js')} */
@@ -754,7 +805,7 @@ const commonComponentCreate = async parameters =>{
             /**@type{server_apps_app_service_parameters} */
             const app_service_parameters = {   
                 app_id:                 parameters.app_id,
-                app_logo:               fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].logo,
+                app_logo:               fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].logo,
                 app_idtoken:            idtoken ?? '',
                 locale:                 parameters.componentParameters.locale ?? '',
                 admin_only:             admin_only,
@@ -764,10 +815,10 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 rest_resource_bff:      fileModelConfig.get('CONFIG_SERVER','SERVER', 'REST_RESOURCE_BFF'),
-                first_time:             admin_only==1?(fileModelIamUser.get(parameters.app_id, null, null).length==0?1:0):0
+                first_time:             admin_only==1?(fileModelIamUser.get(parameters.app_id, null).result.length==0?1:0):0
             };
             /**@type{server_db_file_app_parameter_common} */
-            const common_parameter = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id, res:null})[0];
+            const common_parameter = fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0];
             //return only used parameters
             delete common_parameter.app_copyright;
             delete common_parameter.app_email;
@@ -778,17 +829,17 @@ const commonComponentCreate = async parameters =>{
             delete common_parameter.common_app_log;
             delete common_parameter.common_app_start;
 
-            const APP_PARAMETERS  = {   APP:        fileModelAppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0], 
+            const APP_PARAMETERS  = {   APP:        fileModelAppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0], 
                                         COMMON:     common_parameter,
                                         INFO:       app_service_parameters};
             const componentParameter = {data:   {
-                                                    APP:            fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0],
+                                                    APP:            fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0],
                                                     APP_PARAMETERS: Buffer.from(JSON.stringify(APP_PARAMETERS)).toString('base64')
                                                 },
                                         methods:null};
 
             const {default:ComponentCreate} = await import('./component/common_app.js');
-            return ComponentCreate(componentParameter);
+            return {result:await ComponentCreate(componentParameter), type:'HTML'};
         }
         case 'MAINTENANCE':{
             //maintenance can be used from all app_id
@@ -800,29 +851,29 @@ const commonComponentCreate = async parameters =>{
             });
 
             const {default:ComponentCreate} = await import('./component/common_maintenance.js');
-            return ComponentCreate({data:   {
-                                            CONFIG_APP:             {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0]},
+            return {result:await ComponentCreate({data:   {
+                                            CONFIG_APP:             {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
                                             ITEM_COMMON_PARAMETERS: Buffer.from(data).toString('base64')},
                                     methods:null
-                                    });
+                                    }), type:'HTML'};
         }
         case 'INFO_DISCLAIMER':{
             const {default:ComponentCreate} = await import('./component/common_info_disclaimer.js');
-            return ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].name},
-                                    methods:null});
+            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name},
+                                    methods:null}), type:'HTML'};
         }
         case 'INFO_PRIVACY_POLICY':{
             const {default:ComponentCreate} = await import('./component/common_info_privacy_policy.js');
-            return ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].name},
-                                    methods:null});
+            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name},
+                                    methods:null}), type:'HTML'};
         }
         case 'INFO_TERMS':{
             const {default:ComponentCreate} = await import('./component/common_info_terms.js');
-            return ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].name},
-                                    methods:null});
+            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name},
+                                    methods:null}), type:'HTML'};
         }
         default:{
-            return '';
+            return {result:'',type:'HTML'};
         }
     }
 };
@@ -839,11 +890,11 @@ const commonAppHost = host =>{
         case fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST'):
         case 'www':{
             //localhost
-            return fileModelApp.get({app_id:null, resource_id:null, res:null}).filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
+            return fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_file_app}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return fileModelApp.get({app_id:null, resource_id:null, res:null}).filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
+                return fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_file_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 return null;
             }
@@ -878,81 +929,59 @@ const commonApp = async parameters =>{
     else
         switch (true){
             case (parameters.url.toLowerCase().startsWith('/maintenance')):{
-                return await commonAssetfile({app_id:parameters.app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public'})
-                                    .then(result=>result)
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonAssetfile({app_id:parameters.app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public'});
             }
             case (parameters.app_id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) && await commonAppStart(parameters.app_id) ==false):{
-                /**@ts-ignore */
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'})
-                                    .then(result=>{return {result:result, type:'HTML'};})
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
             }
             case (parameters.url.toLowerCase().startsWith('/common')):{
-                /**@ts-ignore */
-                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'}).catch(()=>null)
-                                    .then(result=>result)
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url.substring('/common'.length), basepath:'/apps/common/public'});
             }
             case (parameters.url == '/sw.js'):{
-                /**@ts-ignore */
-                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public'}).catch(()=>null)
-                                    .then(result=>result)
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:'/apps/common/public'});
             }
             case (parameters.url.toLowerCase().startsWith('/css')):
             case (parameters.url.toLowerCase().startsWith('/component')):
             case (parameters.url.toLowerCase().startsWith('/images')):
             case (parameters.url.toLowerCase().startsWith('/js')):
             case (parameters.url == '/apps/common_types.js'): {
-                /**@ts-ignore */
-                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].path}).catch(()=>null)
-                                    .then(result=>result)
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonAssetfile({app_id:parameters.app_id, url:parameters.url, basepath:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].path});
             }
             case (parameters.url.toLowerCase().startsWith('/info/about')):{
                 return {result:'', type:'HTML'};
             }
             case (parameters.url.toLowerCase().startsWith('/info/disclaimer')):{
-                /**@ts-ignore */
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'})
-                                    .then(result=>{return {result:result, type:'HTML'};})
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_DISCLAIMER'});
             }
             case (parameters.url.toLowerCase().startsWith('/info/privacy_policy')):{
-                /**@ts-ignore */
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'})
-                                    .then(result=>{return {result:result, type:'HTML'};})
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_PRIVACY_POLICY'});
             }
             case (parameters.url.toLowerCase().startsWith('/info/terms')):{
-                /**@ts-ignore */
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'})
-                                    .then(result=>{return {result:result, type:'HTML'};})
-                                    .catch((error)=>{return {http:error.code, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};});
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'INFO_TERMS'});
             }
             case (parameters.url == '/'):
-            case ((fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
-                /**@ts-ignore */
-                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{param:          parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
+            case ((fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].showparam == 1 && parameters.url.split('/profile/')[1]?.length>1)):{
+                return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{param: parameters.url.split('/profile/')[1]?.length>1?parameters.url.split('/profile/')[1]:null,
                                                     ip:             parameters.ip, 
                                                     user_agent:     parameters.user_agent,
                                                     locale:         commonClientLocale(parameters.accept_language),
                                                     host:           parameters.host},type:'APP'})
-                                    .then(app=>{return app==null?{code:301, type:'HTML'}:{result:app, type:'HTML'};})
+                                    .then(app=>{
+                                        /**@type{server_server_response} */
+                                        const redirect = {http:301, type:'HTML'};
+                                        return app.result==null?redirect:app;})
                                     .catch((error)=>{
-                                        
-                                        fileModelLog.postAppE(
+                                        return fileModelLog.postAppE(
                                                 /**@ts-ignore */
                                                 parameters.app_id, 
                                                 serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), error)
-                                        .then(()=>{
-                                            return {http:500, code:null, text:'SERVER ERROR', developerText:'commonApp', moreInfo:null, type:'HTML'};
+                                        .then((result)=>{
+                                            return result.http?result:{http:500, code:null, text:error, developerText:'commonApp', moreInfo:null, type:'JSON'};
                                         });
                                     });
             }
             default:{
-                return {http:301, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'HTML'};
+                return {http:301, code:null, text:null, developerText:'commonApp', moreInfo:null, type:'JSON'};
             }
         }
 };
@@ -964,36 +993,36 @@ const commonApp = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          locale:string}} parameters
- * @returns {Promise.<server_config_apps_with_db_columns[]>}
+ * @returns {Promise.<commonAppsGet>}
  */
 const commonAppsGet = async parameters =>{
     /**@type{import('../../../server/db/fileModelAppTranslation.js')} */
     const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
     
     /**@type{server_db_file_app[]}*/
-    const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null, res:null});
+    const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result;
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
         app.logo        = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
     }
     const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-    return apps
-    .filter(app=>app.id == (parameters.resource_id ?? app.id))
-    .map(app=>{
-        return {
-                    app_id:app.id,
-                    name:app.name,
-                    subdomain:app.subdomain,
-                    protocol : HTTPS_ENABLE =='1'?'https://':'http://',
-                    host : fileModelConfig.get('CONFIG_SERVER','SERVER','HOST'),
-                    port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                                        fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT')),
-                    app_name_translation : fileModelAppTranslation.get(parameters.app_id,null,parameters.locale, app.id,null).filter(appTranslation=>appTranslation.app_id==app.id)[0].json_data.name,
-                    logo:app.logo
-                };
-    });
+    return {result:apps
+            .filter(app=>app.id == (parameters.resource_id ?? app.id))
+            .map(app=>{
+                return {
+                            app_id:app.id,
+                            name:app.name,
+                            subdomain:app.subdomain,
+                            protocol : HTTPS_ENABLE =='1'?'https://':'http://',
+                            host : fileModelConfig.get('CONFIG_SERVER','SERVER','HOST'),
+                            port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                                                fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                                                    fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT')),
+                            app_name_translation : fileModelAppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result.filter((/**@type{server_db_file_app_translation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
+                            logo:app.logo
+                        };
+            }), type:'JSON'};
 };
 
 /**
@@ -1005,9 +1034,9 @@ const commonAppsGet = async parameters =>{
  * @param {{type:string,
  *          name:string,
  *          role:string|null}} parameters
- * @returns {server_db_file_app_module}
+ * @returns {commonRegistryAppModule}
  */
-const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get({app_id:app_id, resource_id:null, data:{data_app_id:app_id}, res:null})
+const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get({app_id:app_id, resource_id:null, data:{data_app_id:app_id}}).result
                                                            .filter((/**@type{server_db_file_app_module}*/app)=>
                                                                app.common_type==parameters.type && 
                                                                app.common_name==parameters.name && 
@@ -1027,20 +1056,20 @@ const commonRegistryAppSecretDBReset = async app_id => {
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
     /**@type{server_db_file_app_secret[]}*/
-    const APP_SECRETS = fileModelAppSecret.get({app_id:app_id, resource_id:app_id, res:null});
+    const APP_SECRETS = fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result;
     
     const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
     for (const app_secret of APP_SECRETS){
         /**@ts-ignore */
         if (app_secret[`service_db_db${db_use}_app_user`]){
             fileModelAppSecret.update({app_id:app_id, resource_id:app_secret.app_id, data:{  parameter_name:`service_db_db${db_use}_app_user`,
-                                                                        parameter_value:''}, res:null});
+                                                                        parameter_value:''}});
             
         }
         /**@ts-ignore */
         if (app_secret[`service_db_db${db_use}_app_password`]){
             fileModelAppSecret.update({app_id:app_id, resource_id:app_secret.app_id, data:{  parameter_name:`service_db_db${db_use}_app_password`,
-                                                                        parameter_value:''}, res:null});
+                                                                        parameter_value:''}});
         }   
     }
 };

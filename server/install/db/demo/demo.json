@@ -340,7 +340,7 @@
                             "app_data_entity_resource_id":5004, 
                             "json_data":{   "merchant_id":"<DEMO_MERCHANT_ID/>",
                                             "merchant_name":"Shop",
-                                            "merchant_url":"https://app6.<HOST/>",
+                                            "merchant_url":"app6.<HOST/>",
                                             "merchant_email":"",
                                             "merchant_longitude":"",
                                             "merchant_latitude":"",

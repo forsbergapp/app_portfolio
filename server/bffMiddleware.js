@@ -85,7 +85,7 @@ const bffService = await import('./bff.js');
         route_path: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length),
         method: req.method,
         query: req.query?.parameters ?? '',
-        body: req.body, 
+        body: req.body,
         authorization:  req.headers.authorization, 
         //metadata
         ip: req.ip, 

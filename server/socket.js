@@ -1,9 +1,15 @@
 /** @module server/socket */
 
 /**
- * @import {server_socket_broadcast_type_all, server_server_res, server_bff_parameters, 
+ * @import {server_server_response,
+ *          server_socket_broadcast_type_all, server_server_res, server_bff_parameters, 
  *          server_socket_broadcast_type_app_function,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
+ * @typedef {server_server_response & {result?:{sent:number} }} socketAdminSend
+ * @typedef {server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:server_socket_connected_list_no_res[]} }} socketConnectedList
+ * @typedef {server_server_response & {result?:{count_connected:number} }} socketConnectedCount
+ * @typedef {server_server_response & {result?:{online:1|0} }} CheckOnline
+ * 
  */
 
 
@@ -29,15 +35,14 @@ let SOCKET_CONNECTED_CLIENTS = [];
  * @param {number|null} user_account_id 
  * @param {string} ip
  * @param {string} headers_user_agent 
- * @param {string} headers_accept_language 
- * @param {server_server_res} res
+ * @param {string} headers_accept_language
  * @returns {Promise.<{  latitude:string,
  *              longitude:string,
  *               place:string,
  *               timezone:string,
  *               identity_provider_id:number|null}>}
  */
-const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language, res) =>{
+const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
     /**@type{import('./bff.js')} */
     const { bffServer } = await import(`file://${process.cwd()}/server/bff.js`);
     //get GPS from IP
@@ -57,7 +62,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                         res:null};
     
     const result_geodata = await bffServer(app_id, parameters)
-                                    .then((/**@type{*}*/result_gps)=>result_gps)
+                                    .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
                                     .catch(()=>null);
     const place = result_geodata?
                     (result_geodata.geoplugin_city + ', ' +
@@ -65,9 +70,8 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                     result_geodata.geoplugin_countryName):'';
     /**@type{import('./db/dbModelUserAccount.js')} */
     const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-    const identity_provider_id = user_account_id?await getUserByUserId({app_id:app_id, resource_id:user_account_id, res:res})
-                                                    .then(result=>result.identity_provider_id)
-                                                    .catch(()=>null):null;
+    const identity_provider_id = user_account_id?await getUserByUserId({app_id:app_id, resource_id:user_account_id})
+                                                    .then(result=>result.result?.identity_provider_id ?? null):null;
     return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
             longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
             place:place,
@@ -141,25 +145,27 @@ const socketClientAdd = (newClient) => {
  *          token_admin:string|null,
  *          ip:string,
  *          headers_user_agent:string,
- *          headers_accept_language:string,
- *          res: server_server_res}} parameters
- * @returns {Promise.<void>}
+ *          headers_accept_language:string}} parameters
+ * @returns {Promise.<server_server_response>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
     /**@type{import('./iam.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
-
+    const { iamUtilMessageNotAuthorized, iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
     const client_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id'));
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
-        /**@type{import('./iam.js')} */
-        const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        throw iamUtilResponseNotAuthorized(parameters.res, 401, 'socketConnectedUpdate, authorization', true);
+        return {http:401,
+                code:'IAM',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:null,
+                moreInfo:null,
+                type:'JSON'
+        };
     }
-    else
+    else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
             if (connected.id==client_id && connected.authorization_bearer == authorization_bearer){
-                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language, parameters.res);
+                const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                 connected.connection_date = new Date().toISOString();
                 connected.user_account_id = parameters.user_account_id;
                 connected.token_access = parameters.token_access;
@@ -181,6 +187,8 @@ const socketClientAdd = (newClient) => {
                                                     timezone: connectUserData.timezone})), 'CONNECTINFO');
             }
         }
+        return {result:null, type:'JSON'};
+    }
 };
 /**
  * @name socketConnectedGet
@@ -204,7 +212,7 @@ const socketClientAdd = (newClient) => {
  *                  client_id_current:number|null,
  *                  broadcast_type:server_socket_broadcast_type_all,
  *                  broadcast_message:string}}} parameters
- * @returns {{sent:number}}
+ * @returns {socketAdminSend}
  */
  const socketAdminSend = parameters => {
     parameters.data.client_id = serverUtilNumberValue(parameters.data.client_id);
@@ -224,7 +232,7 @@ const socketClientAdd = (newClient) => {
                         sent++;
                     }
         }
-        return {sent:sent};
+        return {result:{sent:sent}, type:'JSON'};
     }
     else
         if (parameters.data.broadcast_type=='CHAT' || parameters.data.broadcast_type=='PROGRESS'|| parameters.data.broadcast_type=='SESSION_EXPIRED'){
@@ -232,11 +240,11 @@ const socketClientAdd = (newClient) => {
             for (const client of SOCKET_CONNECTED_CLIENTS){
                 if (client.id == parameters.data.client_id){
                     socketClientSend(client.response, parameters.data.broadcast_message, parameters.data.broadcast_type);
-                    return {sent:1};
+                    return {result:{sent:1}, type:'JSON'};
                 }
             }
         }
-    return {sent:0};
+    return {result:{sent:0}, type:'JSON'};
 };
 /**
  * @name socketConnectedList
@@ -253,7 +261,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<{page_header:{total_count:number, offset:number, count:number}, rows:server_socket_connected_list_no_res[]}>}
+ * @returns{Promise.<socketConnectedList>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = serverUtilNumberValue(parameters.data.select_app_id);
@@ -325,7 +333,7 @@ const socketClientAdd = (newClient) => {
                     return 0;
             }
         });
-        return { page_header:  {
+        return {result:{ page_header:  {
                                     total_count:	result.length,
                                     offset: 		offset,
                                     count:			result
@@ -339,7 +347,7 @@ const socketClientAdd = (newClient) => {
                                     .filter((client, index)=>offset>0?index+1>=offset:true)
                                     //set limit
                                     .filter((client, index)=>limit>0?index+1<=limit:true)
-                };
+                }, type:'JSON'};
 };
 /**
  * @name socketAppServerFunctionSend
@@ -371,23 +379,23 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  * @memberof ROUTE_REST_API
  * @param {{data:{  identity_provider_id?:string|null,
  *                  logged_in?:string|null}}} parameters
- * @returns {{count_connected:number}}
+ * @returns {socketConnectedCount}
  */
  const socketConnectedCount = parameters => {
     const identity_provider_id = serverUtilNumberValue(parameters.data.identity_provider_id);
     const logged_in = serverUtilNumberValue(parameters.data.logged_in);
     if (logged_in == 1)
-        return {count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
+        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
                                                         identity_provider_id !=null &&
                                                         connected.user_account_id != null)||
                                                         (identity_provider_id ==null &&
                                                         connected.identity_provider_id ==null &&
-                                                        (connected.user_account_id != null ||connected.iam_user_id != null))).length};
+                                                        (connected.user_account_id != null ||connected.iam_user_id != null))).length}, type:'JSON'};
     else
-        return {count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
+        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
                                                     connected.identity_provider_id ==null &&
                                                     connected.user_account_id ==null &&
-                                                    connected.iam_user_id == null).length};
+                                                    connected.iam_user_id == null).length}, type:'JSON'};
 };
 
 /**
@@ -401,7 +409,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  *          user_agent:string,
  *          accept_language:string,
  *          ip:string,
- *          res:server_server_res}} parameters
+ *          data:{res:server_server_res},
+ *          }} parameters
  * @returns {Promise.<void>}
  */
  const socketConnect = async parameters =>{
@@ -411,21 +420,21 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
     const iam_user = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))?
-                    fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')), parameters.res)[0]:
+                    fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))).result?.[0]:
                         null;
     const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.res.req.headers['sec-fetch-mode']!='cors'){
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.data.res.req.headers['sec-fetch-mode']!='cors'){
         /**@type{import('./iam.js')} */
         const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-        throw iamUtilResponseNotAuthorized(parameters.res, 401, 'socketConnect, authorization', true);
+        throw iamUtilResponseNotAuthorized(parameters.data.res, 401, 'socketConnect, authorization', true);
     }
     else{
         const client_id = Date.now();
-        socketClientConnect(parameters.res);
-        socketClientOnClose(parameters.res, client_id);
+        socketClientConnect(parameters.data.res);
+        socketClientOnClose(parameters.data.res, client_id);
     
-        const connectUserData =  await socketConnectedUserDataGet(parameters.app_id, user_account_id, parameters.ip, parameters.user_agent, parameters.accept_language, parameters.res);
+        const connectUserData =  await socketConnectedUserDataGet(parameters.app_id, user_account_id, parameters.ip, parameters.user_agent, parameters.accept_language);
         /**@type{server_socket_connected_list} */
         const newClient = {
                             id:                     client_id,
@@ -445,13 +454,13 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
                             timezone:               connectUserData.timezone,
                             ip:                     parameters.ip,
                             user_agent:             parameters.user_agent,
-                            response:               parameters.res
+                            response:               parameters.data.res
                         };
     
         socketClientAdd(newClient);
         //send message to client with data
         
-        socketClientSend(parameters.res, btoa(JSON.stringify({  client_id: client_id, 
+        socketClientSend(parameters.data.res, btoa(JSON.stringify({  client_id: client_id, 
                                                                 latitude: connectUserData.latitude,
                                                                 longitude: connectUserData.longitude,
                                                                 place: connectUserData.place,
@@ -468,7 +477,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  const socketIntervalCheck = () => {
     //start interval if apps are started
     const app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
-    if (fileModelAppParameter.get({app_id:app_id, resource_id:app_id,  res:null})[0].common_app_start.value =='1'){
+    if (fileModelAppParameter.get({app_id:app_id, resource_id:app_id}).result[0].common_app_start.value =='1'){
         setInterval(() => {
             if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
                 socketAdminSend({   app_id:null,
@@ -503,8 +512,12 @@ const socketExpiredTokensUpdate = () =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{resource_id :number|null}} parameters
- * @returns {{online:1|0}}
+ * @returns {CheckOnline}
  */
-const CheckOnline = parameters =>parameters.resource_id?socketConnectedGet(parameters.resource_id).length>0?{online:1}:{online:0}:{online:0};
+const CheckOnline = parameters => { /**@ts-ignore */
+                                    return { result:parameters.resource_id?
+                                                    (socketConnectedGet(parameters.resource_id).length>0?{online:1}:{online:0}):
+                                                        {online:0}, 
+                                            type:'JSON'};};
 
 export {socketClientSend, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline};

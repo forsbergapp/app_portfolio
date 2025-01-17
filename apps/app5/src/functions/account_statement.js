@@ -3,6 +3,16 @@
  */
 
 /**
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @typedef {server_server_response & {result?:{title_sub	        :string,
+ *                                              title	            :string,
+ *                                              bank_account_iban	:string,
+ *                                              bank_account_number :string,
+ *                                              currency            :string,
+ *                                              currency_name       :string,
+ *                                              bank_account_balance:number}}} getStatement
+ */
+/**
  * @name IBAN_mod97
  * @description IBAN mod 97
  * @function
@@ -73,14 +83,16 @@ const IBAN_validate = iban => {
  * @name getStatement
  * @description Get bank statement
  * @function
- * @param {number} app_id 
- * @param {*} data 
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.<getStatement>}
  */
-const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
+const getStatement = async parameters =>{
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
     const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
@@ -94,50 +106,53 @@ const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
-    const transactions = await dbModelAppDataResourceDetailData.get({app_id:app_id, 
+    const transactions = await dbModelAppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
-                                                                    data:{  user_account_id:data.user_account_id,
-                                                                            data_app_id:data.data_app_id,
+                                                                    data:{  user_account_id:parameters.data.user_account_id,
+                                                                            data_app_id:parameters.data.data_app_id,
                                                                             resource_name_type:'RESOURCE_TYPE',
                                                                             resource_name:'ACCOUNT',
                                                                             resource_name_master_attribute_type:'RESOURCE_TYPE',
                                                                             resource_name_master_attribute:'CUSTOMER',
-                                                                            entity_id:data.entity_id,
+                                                                            entity_id:parameters.data.entity_id,
                                                                             user_null:'0'
                                                                     }});
 
-    const Entity            = await dbModelAppDataEntity.get({  app_id:app_id, 
+    const Entity            = await dbModelAppDataEntity.get({  app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{data_app_id:data.data_app_id}})
-                                        .then(result=>JSON.parse(result[0].json_data));
+                                                                data:{data_app_id:parameters.data.data_app_id}})
+                                        .then(result=>JSON.parse(result.result[0].json_data));
 
-    const AccountMetaData   = await dbModelAppDataResourceMaster.get({  app_id:app_id, 
+    const AccountMetaData   = await dbModelAppDataResourceMaster.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
-                                                                        data:{  data_app_id:data.data_app_id,
+                                                                        data:{  data_app_id:parameters.data.data_app_id,
                                                                                 resource_name:'ACCOUNT', 
                                                                                 user_null:'1'
                                                                         }})
-                                        .then(result=>result.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
-    const CustomerAccount   = await dbModelAppDataResourceDetail.get(   {app_id:app_id, 
+                                        .then(result=>result.result.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
+    const CustomerAccount   = await dbModelAppDataResourceDetail.get(   {app_id:parameters.app_id, 
                                                                          resource_id:null, 
-                                                                         data:{ user_account_id:data.user_account_id,
-                                                                                data_app_id:data.data_app_id,
+                                                                         data:{ user_account_id:parameters.data.user_account_id,
+                                                                                data_app_id:parameters.data.data_app_id,
                                                                                 resource_name:'ACCOUNT',
                                                                                 user_null:'0'
                                                                          }})
-                                        .then(result=>JSON.parse(result[0].json_data));
-    const currency          = await dbModelAppDataResourceMaster.get({  app_id:app_id, 
+                                        .then(result=>JSON.parse(result.result[0].json_data));
+    const currency          = await dbModelAppDataResourceMaster.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
-                                                                        data:{  data_app_id:data.data_app_id,
+                                                                        data:{  data_app_id:parameters.data.data_app_id,
                                                                                 resource_name:'CURRENCY', 
                                                                                 user_null:'1'
                                                                         }})
-                                        .then(result=>JSON.parse(result[0].json_data));
+                                        .then(result=>JSON.parse(result.result[0].json_data));
     //amount_deposit and amount_withdrawal from JSON.parse(json_data) column, each app is responsible for APP_ID json_data content
-    const balance = transactions.reduce((balance, current_row)=>balance += 
-                                                                    /**@ts-ignore */
+    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{   timestamp:string, 
+                                                                                        logo:string, 
+                                                                                        origin:string, 
+                                                                                        amount_deposit:number|null, 
+                                                                                        amount_withdrawal:number|null}}*/current_row)=>balance += 
                                                                     (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0) ?? 0;
-    return [{
+    return {result:[{
                     //ENTITY ACCOUNT resource
                     title_sub	            :Entity.name,
                     //ACCOUNT resource
@@ -150,7 +165,7 @@ const getStatement = async (app_id, data, user_agent, ip, locale, res) =>{
                     /**@ts-ignore */
                     currency_name           :currency.currency_name,
                     bank_account_balance    :Number(balance)
-            }];
+            }], type:'JSON'};
 }; 
 export default getStatement;
 export {IBAN_validate};

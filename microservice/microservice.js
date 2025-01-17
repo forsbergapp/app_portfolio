@@ -1,7 +1,7 @@
 /** @module microservice/microservice */
 
 /**
- * @import {server_bff_endpoint_type, server_server_req_id_number,server_req_method} from '../server/types.js'
+ * @import {server_server_response, server_bff_endpoint_type, server_server_req_id_number,server_req_method} from '../server/types.js'
  * @import {microservice_res, microservice_registry_service} from './types.js'
  */
 
@@ -65,6 +65,7 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
  *          accept_language:string,
  *          endpoint:server_bff_endpoint_type
  *       }} parameters
+ * @returns {Promise.<server_server_response>}
  */
 const microserviceRequest = async parameters =>{
     /**@type{import('./circuitbreaker.js')} */
@@ -81,13 +82,14 @@ const microserviceRequest = async parameters =>{
     if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
         microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-        const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].common_client_id + ':' + 
-                                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id, res:null})[0].common_client_secret,'utf-8').toString('base64')}`;
+        const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
+                                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_secret,'utf-8').toString('base64')}`;
         //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
         const query = Buffer.from((parameters.method=='GET'?Object.entries(parameters.data).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
                                     + `app_id=${parameters.app_id}`
                                 ).toString('base64');
-        return circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
+        /**@ts-ignore */
+        return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
                                                 parameters.app_id == microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
@@ -98,10 +100,31 @@ const microserviceRequest = async parameters =>{
                                                 authorization, 
                                                 parameters.user_agent, 
                                                 parameters.accept_language, 
-                                                parameters.endpoint == 'SERVER');
+                                                parameters.endpoint == 'SERVER')
+                                                .then(result=>{
+                                                    return {result:result, type:'JSON'};
+                                                })
+                                                .catch((error)=>{
+                                                    return {
+                                                            http:500, 
+                                                            code:'MICROSERVICE', 
+                                                            text:error, 
+                                                            developerText:null, 
+                                                            moreInfo:null,
+                                                            type:'JSON'};
+                                                });
         }
-    else
-        return '';
+    else{
+        /**@type{import('../server/iam.js')} */
+        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        return {
+                http:503, 
+                code:'MICROSERVICE', 
+                text:iamUtilMessageNotAuthorized(), 
+                developerText:null, 
+                moreInfo:null,
+                type:'JSON'};
+    }
 }; 
 
 /**
