@@ -4,7 +4,7 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{ status:string}}} paymentRequestGetStatus
+ * @typedef {server_server_response & {result?:{ status:string}[]}} paymentRequestGetStatus
  */
 
 /**

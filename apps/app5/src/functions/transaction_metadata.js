@@ -24,10 +24,11 @@ const transactionMetadata = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     
-    return await dbModelAppDataResourceMaster.get({ app_id:parameters.app_id, 
+    return dbModelAppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{  data_app_id:parameters.data.data_app_id, 
                                                             resource_name:'TRANSACTION_METADATA', 
-                                                            user_null:'1'}});
+                                                            user_null:'1'}
+                                            });
 };
 export default transactionMetadata;

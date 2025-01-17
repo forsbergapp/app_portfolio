@@ -66,7 +66,13 @@ const customerCreate = async parameters =>{
                                             app_data_resource_master_attribute_id       : null
                                             };
                 //create ACCOUNT and return CUSTOMER
-                return createBankAccount({app_id:parameters.app_id, data:post_data_account, user_agent:parameters.user_agent, ip:parameters.ip, locale:parameters.locale})
+                return createBankAccount({  app_id:parameters.app_id, 
+                                            data:post_data_account, 
+                                            user_agent:parameters.user_agent, 
+                                            ip:parameters.ip,
+                                            host:parameters.host,
+                                            iam:parameters.iam,
+                                            locale:parameters.locale})
                         .then(result=>result.http?result:Customer);
             }
             else
