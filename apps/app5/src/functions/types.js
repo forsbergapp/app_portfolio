@@ -2,6 +2,7 @@
  * @module apps/app5/src/functions/types
  */
 /** 
+ * @description merchant
  * @typedef {{  title:                  string,
  *              merchant_id:            string,
  *              merchant_name:          string,
@@ -23,6 +24,7 @@
  *              user_account_app_app_id:            number}} merchant
  */
 /**
+ * @description payment_request
  * @typedef {{  merchant_id:    string,
  *              payment_request_id:string,
  *              reference:      string,
@@ -40,6 +42,7 @@
  */
 
 /** 
+ * @description bank_account
  * @typedef {{title:string;
  *            bank_account_iban:string;
  *            bank_account_number:string;
@@ -51,6 +54,7 @@
  *            json_data:string}} bank_account
  */
 /**
+ * @description bank_transaction
  * @typedef {{  timestamp:string, 
  *              logo:string, 
  *              origin:string, 

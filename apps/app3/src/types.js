@@ -1,57 +1,57 @@
 /** @module apps/app2/src/types */
 
 /**
- * Type APP_user_setting_record
+ * @description Type APP_user_setting_record
  * @typedef {{  id?:number,
-*              description: string,
-*              regional_language_locale: string,
-*              regional_timezone: string,
-*              regional_number_system: string,
-*              regional_layout_direction: string,
-*              regional_second_language_locale: string,
-*              regional_arabic_script: string,
-*              regional_calendar_type: string,
-*              regional_calendar_hijri_type: string,
-*              gps_popular_place_id: number|null,
-*              gps_lat_text: number|null,
-*              gps_long_text: number|null,
-*              design_theme_day_id: string,
-*              design_theme_month_id: string,
-*              design_theme_year_id: string,
-*              design_paper_size: string,
-*              design_row_highlight: string,
-*              design_column_weekday_checked: number,
-*              design_column_calendartype_checked: number,
-*              design_column_notes_checked: number,
-*              design_column_gps_checked: number,
-*              design_column_timezone_checked: number,
-*              image_header_image_img: string,
-*              image_footer_image_img: string,
-*              text_header_1_text: string,
-*              text_header_2_text: string,
-*              text_header_3_text: string,
-*              text_header_align: string|null,
-*              text_footer_1_text: string,
-*              text_footer_2_text: string,
-*              text_footer_3_text: string,
-*              text_footer_align: string|null,
-*              prayer_method: string,
-*              prayer_asr_method: string,
-*              prayer_high_latitude_adjustment: string,
-*              prayer_time_format: string,
-*              prayer_hijri_date_adjustment: number,
-*              prayer_fajr_iqamat: string,
-*              prayer_dhuhr_iqamat: string,
-*              prayer_asr_iqamat: string,
-*              prayer_maghrib_iqamat: string,
-*              prayer_isha_iqamat: string,
-*              prayer_column_imsak_checked: number,
-*              prayer_column_sunset_checked: number,
-*              prayer_column_midnight_checked: number,
-*              prayer_column_fast_start_end: number}} APP_user_setting_record
-*/
+ *              description: string,
+ *              regional_language_locale: string,
+ *              regional_timezone: string,
+ *              regional_number_system: string,
+ *              regional_layout_direction: string,
+ *              regional_second_language_locale: string,
+ *              regional_arabic_script: string,
+ *              regional_calendar_type: string,
+ *              regional_calendar_hijri_type: string,
+ *              gps_popular_place_id: number|null,
+ *              gps_lat_text: number|null,
+ *              gps_long_text: number|null,
+ *              design_theme_day_id: string,
+ *              design_theme_month_id: string,
+ *              design_theme_year_id: string,
+ *              design_paper_size: string,
+ *              design_row_highlight: string,
+ *              design_column_weekday_checked: number,
+ *              design_column_calendartype_checked: number,
+ *              design_column_notes_checked: number,
+ *              design_column_gps_checked: number,
+ *              design_column_timezone_checked: number,
+ *              image_header_image_img: string,
+ *              image_footer_image_img: string,
+ *              text_header_1_text: string,
+ *              text_header_2_text: string,
+ *              text_header_3_text: string,
+ *              text_header_align: string|null,
+ *              text_footer_1_text: string,
+ *              text_footer_2_text: string,
+ *              text_footer_3_text: string,
+ *              text_footer_align: string|null,
+ *              prayer_method: string,
+ *              prayer_asr_method: string,
+ *              prayer_high_latitude_adjustment: string,
+ *              prayer_time_format: string,
+ *              prayer_hijri_date_adjustment: number,
+ *               prayer_fajr_iqamat: string,
+ *              prayer_dhuhr_iqamat: string,
+ *              prayer_asr_iqamat: string,
+ *              prayer_maghrib_iqamat: string,
+ *              prayer_isha_iqamat: string,
+ *              prayer_column_imsak_checked: number,
+ *              prayer_column_sunset_checked: number,
+ *              prayer_column_midnight_checked: number,
+ *              prayer_column_fast_start_end: number}} APP_user_setting_record
+ */
 /**
- * Type APP_REPORT_settings
+ * @description Type APP_REPORT_settings
  * 
  * @typedef {object} 	APP_REPORT_settings
  * @property {string}	locale
@@ -109,7 +109,7 @@
  */
 
 /**
- * Type APP_REPORT_column_titles
+ * @description Type APP_REPORT_column_titles
  * @typedef {object}	APP_REPORT_column_titles
  * @property {string}	day
  * @property {string}	weekday
@@ -132,7 +132,7 @@
  * @property {string}	notes
  */
 /**
- * Type APP_REPORT_times
+ * @description Type APP_REPORT_times
  * @typedef	{{[index: string]:number}}	APP_REPORT_times
  * @property{number}	day
  * @property{number}	fajr
@@ -143,7 +143,7 @@
  * @property{number}	midnight
  */
 /**
- * Type APP_REPORT_day_user_account_app_data_posts
+ * @description Type APP_REPORT_day_user_account_app_data_posts
  * @typedef {object}	APP_REPORT_day_user_account_app_data_posts
  * @property {string}	description
  * @property {string}	regional_language_locale
@@ -160,7 +160,7 @@
  */
 
 /**
- * Type APP_REPORT_GLOBAL
+ * @description Type APP_REPORT_GLOBAL
  * @typedef {{	app_copyright:string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number],
@@ -184,7 +184,7 @@
  * 			}}  APP_REPORT_GLOBAL
  */
 /** 
- * Type APP_PARAMETERS
+ * @description Type APP_PARAMETERS
  * @typedef {{
  *          app_copyright:                                    {value:string, comment:string}
  *          app_default_startup_page:                         {value:string, comment:string}
@@ -252,8 +252,8 @@
  *          }} APP_PARAMETERS
  */
 /**
- * Type timesType
- * added day key for timetables
+ * @description Type timesType
+ *              added day key for timetables
  * @typedef {{day?:number, imsak:number, fajr:number, sunrise:number, dhuhr:number, asr:number, sunset:number, maghrib:number, isha:number, midnight?:number}} timesType
  */
 export{};

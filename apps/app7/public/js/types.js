@@ -2,7 +2,7 @@
  * @module apps/app7/app/types
  */
 /**
- * Type APP_GLOBAL
+ * @description Type APP_GLOBAL
  * @typedef {{  cube:*,
  *              cube_controls:*,
  *              cube_init:function,

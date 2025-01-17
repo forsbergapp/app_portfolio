@@ -1,11 +1,12 @@
 /**
- * App types
+ * @description App types
  * @module apps/app2/app/types
  */
 /**
  * @import {CommonComponentLifecycle} from '../../../common_types.js'
  */
 /**
+ * @description Type CommonModuleLibTimetableParam
  * @typedef {{
  *              data:       {
  * 						    commonMountdiv:null,
@@ -17,7 +18,7 @@
  *              methods:    {COMMON_DOCUMENT:null}}} CommonModuleLibTimetableParam
  */
 /**
- * Type CommonModuleLibTimetable
+ * @description Type CommonModuleLibTimetable
  * @typedef {{  APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
  *              component:{(arg0:CommonModuleLibTimetableParam) : 
  *                                  {   
@@ -30,12 +31,12 @@
  *          }} CommonModuleLibTimetable
  */
 /**
- * Type CommonModuleLibTimetable
+ * @description Type CommonModuleLibTimetable
  * @typedef {{  () : number}} test
  *
  */
 /**
- * Type APP_user_setting_record
+ * @description Type APP_user_setting_record
  * @typedef {{  id?:number,
  *              description: string,
  *              regional_language_locale: string,
@@ -85,22 +86,22 @@
  *              prayer_column_fast_start_end: number}} APP_user_setting_record
  */
 /**
- * Type report APP_user_setting_data
+ * @description Type report APP_user_setting_data
  * @typedef {{   id:number|null, 
  *                      json_data:APP_user_setting_record}} APP_user_setting_data
  */
 /** 
- * Type report APP_user_setting
+ * @description Type report APP_user_setting
  * @typedef {{current_id:number,
  *            data: [APP_user_setting_data]|[]
  *          }} APP_user_setting
  */
 /** 
- * Type APP_place
+ * @description Type APP_place
  * @typedef {{id:string|null, app_id:number|null, app_setting_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} APP_place
  */
 /** 
- * Type APP_GLOBAL
+ * @description Type APP_GLOBAL
  * @typedef {{
 *          app_default_startup_page:number,
 *          app_report_timetable:string,
@@ -168,7 +169,7 @@
 *          }} APP_GLOBAL
 
 /** 
- * Type APP_PARAMETERS
+ * @description Type APP_PARAMETERS
  * @typedef {{
  *          app_default_startup_page:                         {value:string, comment:string},
  *          app_report_timetable:                             {value:string, comment:string},
@@ -236,7 +237,7 @@
  */
 
 /** 
- * Type APP_REPORT_settings
+ * @description Type APP_REPORT_settings
  * @typedef {object} 	APP_REPORT_settings
  * @property {string}	locale
  * @property {string}	timezone
@@ -291,7 +292,7 @@
  * @property {string}	ui_navigation_right
  */
 /** 
- * Type APP_REPORT_column_titles
+ * @description Type APP_REPORT_column_titles
  * @typedef {object}	APP_REPORT_column_titles
  * @property {string}	day
  * @property {string}	weekday
@@ -314,7 +315,7 @@
  * @property {string}	notes
  */
 /**
- * Type APP_REPORT_times
+ * @description Type APP_REPORT_times
  * @typedef	{{[index: string]:number}}	APP_REPORT_times
  * @property{number}	day
  * @property{number}	fajr
@@ -325,7 +326,7 @@
  * @property{number}	midnight
  */
 /**
- * Type APP_REPORT_day_user_account_app_data_posts
+ * @description Type APP_REPORT_day_user_account_app_data_posts
  * @typedef {object}	APP_REPORT_day_user_account_app_data_posts
  * @property {string}	description
  * @property {string}	regional_language_locale
@@ -342,16 +343,16 @@
  */
  
 /**
- * Type APP_REPORT_GLOBAL
+ * @description Type APP_REPORT_GLOBAL
  * @typedef {{	
  * 			app_copyright:string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number],
  * 			CommonModulePrayTimes_methods:{[index:string]:{	name:string,
  *														    params:{fajr:string|number, 
-    *																isha:string|number|null, 
-    *																maghrib?:number, 
-    *																midnight?:string
+ *																      isha:string|number|null, 
+ *																      maghrib?:number, 
+ *																      midnight?:string
  *														    }
  *													}
  *									},

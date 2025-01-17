@@ -2,7 +2,7 @@
  * @module microservice/types
  */
 /**
- * MicroService - Request
+ * @description Microservice - Request
  * @typedef {object}        microservice_req
  * @property {string}       url
  * @property {string}       method
@@ -17,7 +17,7 @@
  */
 
 /** 
- * MicroService Config
+ * @description Microservice Config
  * @typedef {{  PATH_DATA                                   : string,
  *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
  *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
@@ -26,7 +26,7 @@
  */
 
 /** 
- * Microservice config service record
+ * @description Microservice config service record
  * @typedef {{NAME:string, 
  *            HOST:number, 
  *            PORT:number,
@@ -42,12 +42,12 @@
  */
 
 /** 
- * Microservice config service
+ * @description Microservice config service
  * @typedef {{['SERVICES']:microservice_config_service_record[]}} microservice_config_service
  */
 
 /** 
- * MicroService - Response
+ * @description Microservice - Response
  * @typedef {object}    microservice_res
  * @property {function} setHeader
  * @property {function} setEncoding
@@ -59,7 +59,7 @@
  * @property {string}   headers.location
  */
 /**
- * Registry services
+ * @description Registry services
  * @typedef {'GEOLOCATION'|'WORLDCITIES'|'MAIL'|string} microservice_registry_service
  */
 export {};

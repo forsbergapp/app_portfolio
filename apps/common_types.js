@@ -1,5 +1,5 @@
 /** 
- * Declaration of all common types used in apps
+ * @description Declaration of all common types used in apps
  * 
  * BOM Browser Object Model (contains what is used)
  *  COMMON_WINDOW
@@ -59,7 +59,7 @@
 */
 
 /**
- * Type COMMON_WINDOW
+ * @description Type COMMON_WINDOW
  * @typedef {{  console:{ warn:function,
  *                      info:function,
  *                      error:function},
@@ -85,12 +85,12 @@
  *              __VUE__?:*}} COMMON_WINDOW
  */
 /**
- * Type CommonAppEventEventSource
+ * @description Type CommonAppEventEventSource
  * @typedef {{data:string}} CommonAppEventEventSource
  */
 
 /**
- * Type COMMON_DOCUMENT
+ * @description Type COMMON_DOCUMENT
  * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
  *              createElement:function,
  *              addEventListener:function,
@@ -103,7 +103,7 @@
  */
 
 /**
- * Type CommonAppEvent
+ * @description Type CommonAppEvent
  * 
  * events only used on DOM, third party libraries might use events on window in BOM
  * 
@@ -153,7 +153,7 @@
 
 
 /**
- * Type CommonGlobal
+ * @description Type CommonGlobal
  * @typedef {{  common_app_id:number,
  *              app_id:number|null,
  *              app_logo:string|null,
@@ -239,21 +239,21 @@
  */
 
  /**
- * Type CommonIcons
+ * @description Type CommonIcons
  *  @typedef {{ app_maintenance:          string,
  *              app_alert:                string,
  *              infinite:                 string}} CommonIcons
  */
 
 /**
- * Type CommonComponentLifecycle
+ * @description Type CommonComponentLifecycle
  * @typedef  {{ onBeforeMounted?:function|null,
  *              onMounted?:function|null, 
  *              onUnmounted?:function|null}|null} CommonComponentLifecycle
 */
 
 /**
- * Type CommonComponentResult
+ * @description Type CommonComponentResult
  * @typedef  {{ lifecycle:CommonComponentLifecycle,
  *              data:*,
  *              methods:*,
@@ -261,7 +261,7 @@
  */
 
 /**
- * Type CommonErrorMessageISO20022
+ * @description Type CommonErrorMessageISO20022
  * @typedef {{error:{
  *               http:number, 
  *               code:number|null,
@@ -270,7 +270,7 @@
  *               more_info:string|null}}} CommonErrorMessageISO20022
  */
 /**
- * Type CommonAppMenu
+ * @description Type CommonAppMenu
  * @typedef {{  id:number, 
  *              menu:string,
  *              type:'GUIDE'|'APP',
@@ -279,22 +279,22 @@
  *                          doc:string}[]|null}} CommonAppMenu
  */
 /**
- * Type commonDocumentType
+ * @description Type commonDocumentType
  * @typedef {'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'} commonDocumentType
  */
 /**
- * Type CommonRESTAPIMethod
+ * @description Type CommonRESTAPIMethod
  * @typedef{'GET'|'POST'|'PUT'|'PATCH'|'DELETE'} CommonRESTAPIMethod
  */
 
 /**
- * Type CommonRESTAPIMethod
+ * @description Type CommonRESTAPIMethod
  * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
 
 /**
- * Type CommonAppRecord
+ * @description Type CommonAppRecord
  * @typedef {{
  *              id: number,
  *              name: string,
@@ -315,7 +315,7 @@
  *              status:'ONLINE'|'OFFLINE'}} CommonAppRecord
  */
 /**
- * Type commonInitAppParameters
+ * @description Type commonInitAppParameters
  * @typedef {{  APP:    {
  *                      app_id:                             number,
  *                      app_text_edit:                      {value:string, comment:string},
@@ -367,7 +367,7 @@
  *          }} commonInitAppParameters
  */
 /**
-* Type CommonAppParametersRecord
+* @description Type CommonAppParametersRecord
 * @typedef {{  app_id:                             number,
 *              app_text_edit:                      {value:string, comment:string},
 *              app_copyright:                      {value:string, comment:string},
@@ -401,7 +401,7 @@
 *              common_image_avatar_width:          {value:string, comment: string}}} CommonAppParametersRecord
 */
 /**
-* Type CommonAppSecretsRecord
+* @description Type CommonAppSecretsRecord
 * @typedef {{   app_id:                             number,
 *               service_db_db1_app_user:            string,
 *               service_db_db1_app_password:        string,
@@ -419,7 +419,7 @@
 *               common_app_access_expire:           string}} CommonAppSecretsRecord
 */
 /**
- * Type CommonAppModulesRecord
+ * @description Type CommonAppModulesRecord
  * @typedef {{  id:number,
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
@@ -429,11 +429,11 @@
  *              common_description:string}}CommonAppModulesRecord
  */
 /**
- * Type CommonAppModuleMetadata
+ * @description Type CommonAppModuleMetadata
  * @typedef {{param:{name:string, text:string, default:string|number}}} CommonAppModuleMetadata
  */
 /**
- * Type CommonAppModuleWithMetadata
+ * @description Type CommonAppModuleWithMetadata
  * @typedef {{  id:number,
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
@@ -443,7 +443,7 @@
  *              common_description:string}} CommonAppModuleWithMetadata
  */
 /**
- * Type CommonAppModuleQueueStatus
+ * @description Type CommonAppModuleQueueStatus
  * @typedef{'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} CommonAppModuleQueueStatus
  */
 /**
@@ -462,12 +462,12 @@
  */
 
 /**
- * Type CommonCountryType
+ * @description Type CommonCountryType
  * @typedef {{id:number, value:string, display_data:string}} CommonCountryType
  */
 
 /**
- * Type CommonProfileUser
+ * @description Type CommonProfileUser
  * @typedef {{  id:number|null,
  *              bio:string|null,
  *              private:number|null,
@@ -492,33 +492,33 @@
  */
 
 /**
- * Type CommonProfileStatRecord
+ * @description Type CommonProfileStatRecord
  * @typedef {{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}}   CommonProfileStatRecord
  */
 /**
- * Type CommonProvider
+ * @description Type CommonProvider
  * @typedef {{id:number, provider_name:string}} CommonProvider
  */
 
 /**
- * Type CommonProfileSearchRecord
+ * @description Type CommonProfileSearchRecord
  * @typedef {{id:number, avatar:string, provider_image:string, username:string}} CommonProfileSearchRecord
  */
  
 /** 
- * Type 
+ * @description Type 
  * @typedef {*} CommonMasterObjectType
  */
 
 /**
- * Type CommonModuleLeafletEvent
+ * @description Type CommonModuleLeafletEvent
  * @typedef {{  originalEvent:CommonAppEvent,
  *              latlng:{lat:string, 
  *                      lng:string}}} CommonModuleLeafletEvent
  */
 
 /**
- * Type CommonModuleLeafletMapData
+ * @description Type CommonModuleLeafletMapData
  * @typedef {{  _container:{id:string},
  *              doubleClickZoom:{disable:function},
  *              invalidateSize:function,
@@ -531,13 +531,13 @@
  *
  */
 /**
- * Type CommonModuleLeafletMethods
+ * @description Type CommonModuleLeafletMethods
  * @typedef {{  leafletLibrary:*,
  *              leafletContainer: function}} CommonModuleLeafletMethods
  */
 
 /**
- * Type CommonModuleLeafletMapLayer
+ * @description Type CommonModuleLeafletMapLayer
  * @typedef {{  display_data: string, 
  *              value:string, 
  *              data2:string|null, 
@@ -547,36 +547,36 @@
  */
 
 /**
- * Type CommonMicroserviceWorldcitiesRecordType
+ * @description Type CommonMicroserviceWorldcitiesRecordType
  * @typedef {{id:number, city:string, admin_name:string, country:string, lat:string, lng:string}} CommonMicroserviceWorldcitiesRecordType
  */
     
 /**
- * Type CommonModuleCommon
+ * @description Type CommonModuleCommon
  * @typedef {import('./common/public/js/common.js')} CommonModuleCommon
  */
 /**
- * Type CommonModuleEasyQRCode
+ * @description Type CommonModuleEasyQRCode
  * @typedef {{QRCode:*}} CommonModuleEasyQRCode
  */
 /**
- * Type CommonModuleLeaflet
+ * @description Type CommonModuleLeaflet
  * @typedef {import('./common/public/modules/leaflet/leaflet-src.esm.js')} CommonModuleLeaflet
  */
 /**
- * Type CommonModuleRegional
+ * @description Type CommonModuleRegional
  * @typedef {import('./common/public/modules/regional/regional.js')} CommonModuleRegional
  */
 /**
- * Type CommonModuleReact
+ * @description Type CommonModuleReact
  * @typedef {import('./common/public/modules/react/react.development.js')} CommonModuleReact
  */
 /**
- * Type CommonModuleReactDOM
+ * @description Type CommonModuleReactDOM
  * @typedef {import('./common/public/modules/react/react-dom.development.js')} CommonModuleReactDOM
  */
 /**
- * Type CommonModuleVue
+ * @description Type CommonModuleVue
  * @typedef {import('./common/public/modules/vue/vue.esm-browser.js')} CommonModuleVue
  */
 
