@@ -26,7 +26,7 @@
  *          }} props
  * @returns {string}
  */
-const template = props =>`  &lt;div class='common_document_header' style='background-image:url("${props.app_logo}")'>${props.app_name}&lt;/div>
+const template = props =>`  &lt;div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}&lt;/div>
                                &lt;div class='common_document_article ${props.document_class ?? ''}'>${props.document}&lt;/div>
                            &lt;div class='common_document_footer'>${props.app_copyright}&lt;/div>`;
 /**
@@ -60,7 +60,6 @@ const component = async props => {
                                             body:{  type:props.data.type,
                                                     data_app_id:props.data.common_app_id,
                                                     doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
-                            .then(result=>JSON.parse(result).rows[0])
                             .catch(()=>null);
     switch (props.data.type){
         case 'MODULE_CODE':{

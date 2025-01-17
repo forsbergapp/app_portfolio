@@ -28,184 +28,6 @@
     
 
     
-        <div class='title_h3'>Members</div>
-
-        
-            
-<div class='title_h4'><span class="type-signature">(inner, constant) </span>fileModelAppParameter<span class="type-signature"></span></div>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line13">line 13</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<div class='title_h4'><span class="type-signature">(inner, constant) </span>fileModelConfig<span class="type-signature"></span></div>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line16">line 16</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-            
-<div class='title_h4'><span class="type-signature">(inner, constant) </span>fileModelLog<span class="type-signature"></span></div>
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line10">line 10</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-        
-    
 
     
         <div class='title_h3'>Methods</div>
@@ -216,7 +38,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonAppCodeGet<span class="signature">(error)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonAppCodeGet<span class="signature">(db_use, error)</span><span class="type-signature"></span></div>
     
 
     
@@ -265,6 +87,32 @@ Oracle message:
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db_use</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
 
         <tr>
@@ -326,7 +174,7 @@ Oracle message:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line21">line 21</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line10">line 10</a>
     </div></div></dd>
     
 
@@ -372,213 +220,7 @@ Oracle message:
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonCheckedError<span class="signature">(app_id, lang_code, err, res)</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Displays message for error</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>app_id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lang_code</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>err</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_server_error</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_server_res</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line65">line 65</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonDatePeriod<span class="signature">(period)</span><span class="type-signature"> &rarr; {string}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonDatePeriod<span class="signature">(db_use, period)</span><span class="type-signature"> &rarr; {string}</span></div>
     
 
     
@@ -627,6 +269,32 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db_use</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
 
         <tr>
@@ -694,7 +362,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line172">line 172</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line185">line 185</a>
     </div></div></dd>
     
 
@@ -748,7 +416,7 @@ CAST(STRFTIME('%d', date_created) AS INT) = :day</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonExecute<span class="signature">(app_id, sql, parameters, dba, locale)</span><span class="type-signature"> &rarr; {Promise.&lt;*>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonExecute<span class="signature">(app_id, sql, parameters, dba, locale)</span><span class="type-signature"> &rarr; {Promise.&lt;server_server_response>}</span></div>
     
 
     
@@ -959,7 +627,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line192">line 192</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line206">line 206</a>
     </div></div></dd>
     
 
@@ -995,7 +663,7 @@ returns pagination in ISO20022 format if used</p>
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;*></span>
+<span class="param-type">Promise.&lt;server_server_response></span>
 
 
     </dd>
@@ -1013,7 +681,7 @@ returns pagination in ISO20022 format if used</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonLocaleGet<span class="signature">(lang_code, part)</span><span class="type-signature"> &rarr; {string|null}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonLocaleGet<span class="signature">(locale, part)</span><span class="type-signature"> &rarr; {string|null}</span></div>
     
 
     
@@ -1060,7 +728,7 @@ returns pagination in ISO20022 format if used</p>
 
         <tr>
             
-                <td class="name"><code>lang_code</code></td>
+                <td class="name"><code>locale</code></td>
             
 
             <td class="type">
@@ -1140,7 +808,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line115">line 115</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line128">line 128</a>
     </div></div></dd>
     
 
@@ -1197,7 +865,7 @@ returns pagination in ISO20022 format if used</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonRecordNotFound<span class="signature">(app_id, lang_code, res)</span><span class="type-signature"> &rarr; {Promise.&lt;string>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonRecordError<span class="signature">(app_id, statusCode, error)</span><span class="type-signature"> &rarr; {server_server_response}</span></div>
     
 
     
@@ -1205,7 +873,9 @@ returns pagination in ISO20022 format if used</p>
 
 
 <div class="description">
-    <p>Displays DB message for record not found for single resource DB</p>
+    <p>Returns database error message in ISO20022 format
+Does not check database for known errors
+Use error when unknown error occurs for both fileModel and dbModel</p>
 </div>
 
 
@@ -1231,6 +901,8 @@ returns pagination in ISO20022 format if used</p>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -1248,52 +920,6 @@ returns pagination in ISO20022 format if used</p>
             
                 
 <span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>lang_code</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_server_res</span>
 |
 
 <span class="param-type">null</span>
@@ -1304,6 +930,66 @@ returns pagination in ISO20022 format if used</p>
 
             
 
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>statusCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -1347,7 +1033,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line101">line 101</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line109">line 109</a>
     </div></div></dd>
     
 
@@ -1383,7 +1069,7 @@ returns pagination in ISO20022 format if used</p>
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;string></span>
+<span class="param-type">server_server_response</span>
 
 
     </dd>
@@ -1401,7 +1087,231 @@ returns pagination in ISO20022 format if used</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonRowsLimit<span class="signature">(pagination)</span><span class="type-signature"> &rarr; {string}</span></div>
+    <div class='title_h4'><span class="type-signature">(async, inner) </span>dbCommonRecordErrorAsync<span class="signature">(app_id, statusCode, error)</span><span class="type-signature"> &rarr; {Promise.&lt;server_server_response>}</span></div>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns database error message in ISO20022 format
+Checks database if known app code found
+Use error when unknown error occurs for both fileModel and dbModel
+If error then returns known error using app setting message or full error
+else returns either not found message (404) or not authorized message (400, 401)</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <div class='title_h5'>Parameters:</div>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>app_id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>statusCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line65">line 65</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;server_server_response></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <div class='title_h4'><span class="type-signature">(inner) </span>dbCommonRowsLimit<span class="signature">(db_use, pagination)</span><span class="type-signature"> &rarr; {string}</span></div>
     
 
     
@@ -1441,6 +1351,32 @@ returns pagination in ISO20022 format if used</p>
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>db_use</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
     
 
         <tr>
@@ -1502,7 +1438,7 @@ returns pagination in ISO20022 format if used</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line151">line 151</a>
+        <a href="server_db_common.js.html">server/db/common.js</a>, <a href="server_db_common.js.html#line164">line 164</a>
     </div></div></dd>
     
 

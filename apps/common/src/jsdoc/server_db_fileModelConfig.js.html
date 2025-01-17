@@ -8,12 +8,15 @@
             <pre class="prettyprint source linenums"><code>/** @module server/config */
 
 /**
- * @import {server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
+ * @import {server_server_response,server_db_common_result_update,
+ *          server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
  *          server_db_file_config_server,server_db_file_config_rest_api, server_db_file_config_iam_policy,
  *          server_db_file_config_server_server, server_db_file_config_server_service_iam,
  *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,
  *          server_db_file_app_translation} from '../types.js'
  * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
+ * @typedef {server_server_response &amp; {result?:* }} getFile
+ * @typedef {server_server_response &amp; {result?:server_db_common_result_update }} update
  */
 
 /**@type{import('./file.js')} */
@@ -92,18 +95,19 @@ const configDefault = async () => {
     const i = 0;
     //read all default files
 
-    /**@type{[  [server_db_file_db_name, server_db_file_config_server],
-                [server_db_file_db_name, server_db_file_config_rest_api],
-                [server_db_file_db_name, server_db_file_config_iam_policy],
-                [server_db_file_db_name, microservice_config],
-                [server_db_file_db_name, microservice_config_service],
-                [server_db_file_db_name, server_db_file_iam_user[]],
-                [server_db_file_db_name, server_db_file_app[]],
-                [server_db_file_db_name, server_db_file_app_module[]],
-                [server_db_file_db_name, server_db_file_app_parameter[]],
-                [server_db_file_db_name, server_db_file_app_secret[],
-                [server_db_file_db_name, server_db_file_app_translation[]]
-            ]} 
+    /**
+     * @type{[  [server_db_file_db_name, server_db_file_config_server],
+     *           [server_db_file_db_name, server_db_file_config_rest_api],
+     *           [server_db_file_db_name, server_db_file_config_iam_policy],
+     *           [server_db_file_db_name, microservice_config],
+     *           [server_db_file_db_name, microservice_config_service],
+     *           [server_db_file_db_name, server_db_file_iam_user[]],
+     *           [server_db_file_db_name, server_db_file_app[]],
+     *           [server_db_file_db_name, server_db_file_app_module[]],
+     *           [server_db_file_db_name, server_db_file_app_parameter[]],
+     *           [server_db_file_db_name, server_db_file_app_secret[]],
+     *           [server_db_file_db_name, server_db_file_app_translation[]]
+     *       ]}
     */
     const config_obj = [
                             ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
@@ -115,9 +119,8 @@ const configDefault = async () => {
                             ['APP',                             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['APP_MODULE',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_module.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['APP_PARAMETER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_parameter.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_secret.json`).then(filebuffer=>JSON.parse(filebuffer.toString())),
+                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_secret.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_translation.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
-                            ]
                         ]; 
     //set server parameters
     config_obj[0][1].SERVER.map((/**@type{server_db_file_config_server_server}*/row)=>{
@@ -201,34 +204,32 @@ const configInit = async () => {
  * @name getFile
  * @description Config get saved
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{resource_id:server_db_file_db_name,
  *          data:{  config_group?:string|null,
  *                  parameter?:string|null,
  *                  saved?:string|null}|null}} parameters
- * @returns {Promise.&lt;*>}
+ * @returns {Promise.&lt;getFile>}
  */
 const getFile = async parameters => {
     const config_group = parameters.data?.config_group?parameters.data.config_group:null;
     const parameter = parameters.data?.parameter?parameters.data.parameter:null;
     const config = serverUtilNumberValue(parameters.data?.saved)?await fileFsRead(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):fileCache(parameters.resource_id);
-    return await new Promise((resolve) => {
-        if (config_group)
-            if (config_group =='METADATA')
-                resolve(parameter?config[config_group][parameter]:config[config_group]);
-            else
-                resolve(parameter?config[config_group].filter((/**@type{*}*/row)=>row[parameter])[0][parameter]:config[config_group]);
-        else{
-            //no filters, return whole config
-            resolve(config);
-        }
-    });
+    if (config_group)
+        if (config_group =='METADATA')
+            return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};
+        else
+            return {result:parameter?config[config_group].filter((/**@type{*}*/row)=>row[parameter])[0][parameter]:config[config_group], type:'JSON'};
+    else{
+        //no filters, return whole config
+        return {result:config, type:'JSON'};
+    }
 };
 /**
  * @name update
  * @description Config save
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{resource_id:server_db_file_db_name,
  *          data:{  config: server_db_file_config_server|
  *                          server_db_file_app[]|
@@ -238,7 +239,7 @@ const getFile = async parameters => {
  *                  maintenance:string,
  *                  comment:string,
  *                  configuration:string}}} parameters
- * @returns {Promise.&lt;void>}
+ * @returns {Promise.&lt;update>}
  */
 const update = async parameters => {
     const maintenance = serverUtilNumberValue(parameters.data.maintenance);
@@ -263,6 +264,7 @@ const update = async parameters => {
         file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
     }
     await fileFsWrite(parameters.resource_id, file_config.transaction_id, file_config.file_content);
+    return {result:{affectedRows:1}, type:'JSON'};
 };
 export{ getFile, update, get, configInit};</code></pre>
         </div>

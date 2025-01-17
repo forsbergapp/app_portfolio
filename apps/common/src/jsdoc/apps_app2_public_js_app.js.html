@@ -351,6 +351,18 @@ const appInit = async (parameters) => {
 
     appAppsGet();
     
+    await common.commonComponentRender({mountDiv:   'common_fonts',
+        data:       {
+                    font_default:   true,
+                    font_arabic:    true,
+                    font_asian:     true,
+                    font_prio1:     true,
+                    font_prio2:     true,
+                    font_prio3:     true
+                    },
+        methods:    null,
+        path:       '/common/component/common_fonts.js'});
+
     const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
     if (user &amp;&amp; user !='') {
         //show profile for user entered in url

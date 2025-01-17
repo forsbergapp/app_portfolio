@@ -9,6 +9,10 @@
  * @module apps/app5/src/functions/account_create
  */
 
+/**
+ * @import {server_server_response, server_db_common_result_insert} from '../../../../server/types.js'
+ * @typedef {server_server_response &amp; {result?:server_db_common_result_insert}} createBankAccount
+ */
 /**@type{import('../../../../server/security.js')} */
 const {securitySecretCreate, securityUUIDCreate} = await import(`file://${process.cwd()}/server/security.js`);
 
@@ -20,23 +24,24 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  * @name createBankAccount
  * @description Creates bank account
  * @function
- * @param {number} app_id 
- * @param {*} data 
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.&lt;import('../../../../server/types.js').server_db_sql_result_app_data_resource_detail_post>}
+ * @param {{app_id:number,
+ *          data:*,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.&lt;createBankAccount>}
  */
-const createBankAccount = async (app_id, data, user_agent, ip, locale, res) =>{
+const createBankAccount = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
     const {post} = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
-    data.json_data = {
+    parameters.data.json_data = {
             bank_account_number :createBankAccountNumber(),
             bank_account_secret :createBankAccountSecret(),
             bank_account_vpa    :createBankAccountVPA()
     };
-    return await post({app_id:app_id, data:data});
+    return await post({app_id:parameters.app_id, data:parameters.data});
 };
 
 export default createBankAccount;

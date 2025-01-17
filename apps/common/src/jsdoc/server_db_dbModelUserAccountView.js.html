@@ -9,8 +9,10 @@
 
 
 /**
- * @import {server_db_sql_result_user_account_view_insertUserAccountView,
+ * @import {server_server_response,
+ *          server_db_common_result_insert,
  *          server_db_sql_parameter_user_account_view_insertUserAccountView} from '../types.js'
+ * @typedef {server_server_response &amp; {result?:server_db_common_result_insert }} post
  */
 
 /**@type{import('./dbSql.js')} */
@@ -22,7 +24,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_view_insertUserAccountView} data 
- * @returns {Promise.&lt;server_db_sql_result_user_account_view_insertUserAccountView>}
+ * @returns {Promise.&lt;post>}
  */
 const post = async (app_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -32,9 +34,7 @@ const post = async (app_id, data) =>
 							user_account_id: data.user_account_id,
 							user_account_id_view: data.user_account_id_view,
 							client_ip: data.client_ip,
-							client_user_agent: data.client_user_agent,
-							client_longitude: data.client_longitude,
-							client_latitude: data.client_latitude
+							client_user_agent: data.client_user_agent
 						},
                         null, 
                         null));

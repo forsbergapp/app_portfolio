@@ -26,7 +26,7 @@ const iamService = await import(`file://${process.cwd()}/server/iam.js`);
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
- const iamAuthenticateAccessTokenAdmin = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+ const iamAuthenticateAccessTokenAdmin = (req, res, next) => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateIdToken
@@ -37,7 +37,7 @@ const iamService = await import(`file://${process.cwd()}/server/iam.js`);
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ID', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'APP_ID', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateIdTokenRegistration
@@ -48,7 +48,7 @@ const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUse
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ID_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'APP_ID_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateAccessToken
@@ -59,7 +59,7 @@ const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAut
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateAccessToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'APP_ACCESS', req.headers.authorization, req.headers.host, req.ip, res, next);    
+const iamAuthenticateAccessToken = (req, res, next) => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'APP_ACCESS', req.headers.authorization, req.headers.host, req.ip, res, next);    
 
 /**
  * @name iamAuthenticateExternal
@@ -80,7 +80,7 @@ const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateEx
  * @param {function} next
  * @returns {void}
  */
- const iamAuthenticateSocket = (req, res, next) => iamService.iamAuthenticateSocket(req.query.iam, req.originalUrl.substring(req.route.path.indexOf('*')), req.headers.host, req.ip, res, next);    
+ const iamAuthenticateSocket = (req, res, next) => iamService.iamAuthenticateSocket(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', req.originalUrl.substring(req.route.path.indexOf('*')), req.headers.host, req.ip, res, next);    
 
 /**
  * @name iamAuthenticateAdmin
@@ -91,7 +91,7 @@ const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateEx
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateUser
@@ -102,7 +102,7 @@ const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUser
  * @param {function} next
  * @returns {Promise.&lt;void>}
  */
-const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
  /**
   * @name iamAuthenticateProvider
@@ -113,7 +113,7 @@ const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCo
   * @param {function} next
   * @returns {Promise.&lt;void>}
   */
-const iamAuthenticateProvider = (req, res, next) => iamService.iamAuthenticateUserCommon(req.query.iam, 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateProvider = (req, res, next) => iamService.iamAuthenticateUserCommon(new URLSearchParams(Buffer.from(req.query.parameters,'base64').toString('utf-8').toString()).get('iam')??'', 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 export{ iamAuthenticateIdToken, iamAuthenticateIdTokenRegistration,
         iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, 

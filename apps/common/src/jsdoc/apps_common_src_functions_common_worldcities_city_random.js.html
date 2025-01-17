@@ -10,24 +10,25 @@
 */
 
 /**
- * @import {commonWorldCitiesCity} from '../../../../server/types.js'
+ * @import {server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
+ * @typedef {server_server_response &amp; {result?:commonWorldCitiesCity}} appFunction
  */
 
 /**
  * @name appFunction
  * @description Get random city from worldcities db
  * @function
- * @param {number} app_id
- * @param {null} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.&lt;commonWorldCitiesCity>}
+ * @param {{app_id:number,
+ *          data:null,
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string, 
+ *          locale:string}} parameters
+ * @returns {Promise.&lt;appFunction>}
  */
-const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
+const appFunction = async parameters =>{
     const fs = await import('node:fs');
-    res;
     /**
      *  Get file
      * @returns {Promise.&lt;commonWorldCitiesCity[]>}
@@ -38,7 +39,7 @@ const appFunction = async (app_id, data, user_agent, ip, locale, res) =>{
         const FILE = 'worldcities.json';
         return fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
     };
-    return await getFile().then(cities=>cities[Math.floor(Math.random() * cities.length - 1)]);
+    return {result:await getFile().then(cities=>cities[Math.floor(Math.random() * cities.length - 1)]), type:'JSON'};
     
 };
 export default appFunction;</code></pre>

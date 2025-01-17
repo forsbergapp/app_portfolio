@@ -362,9 +362,8 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
         const uid_view = common.COMMON_GLOBAL.user_account_id==null?'':common.COMMON_GLOBAL.user_account_id;
         module_parameters += `&amp;uid_view=${uid_view}`;
     }
-    const language_parameter = `&amp;lang_code=${common.COMMON_GLOBAL.user_locale}`;
     const service_parameter = `&amp;format=${format}&amp;ps=${papersize}`;
-    const encodedurl = common.commonWindowToBase64( module_parameters + language_parameter + service_parameter);
+    const encodedurl = common.commonWindowToBase64( module_parameters + service_parameter);
     //url query parameters are decoded in report module and in report service
     return `${common.commonWindowHostname()}/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-report/${APP_GLOBAL.app_report_timetable}?parameters=${common.commonWindowToBase64(`type=REPORT&amp;reportid=${encodedurl}`)}`;
     
@@ -2370,13 +2369,7 @@ const appInit = async parameters => {
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework,
-                                                    font_default:   true,
-                                                    font_arabic:    true,
-                                                    font_asian:     true,
-                                                    font_prio1:     true,
-                                                    font_prio2:     true,
-                                                    font_prio3:     true
+                                                    framework:      common.COMMON_GLOBAL.app_framework
                                                     },
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
@@ -2489,18 +2482,25 @@ const appInit = async parameters => {
 
     //show dialogue about using mobile and scan QR code after 5 seconds
     common.commonWindowSetTimeout(() => {appDialogueShow('SCAN');}, 5000);
-    appUserSettingDefaultSet().then(() => {
-        const show_start = async () => {
-            //show default startup
-            await appToolbarButton(APP_GLOBAL.app_default_startup_page);
-            const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
-            if (user &amp;&amp; user !='') {
-                //show profile for user entered in url
-                common.commonProfileShow(null, user);
-            }
-        };
-        show_start();
-    });
+    await appUserSettingDefaultSet();
+    //show default startup
+    await appToolbarButton(APP_GLOBAL.app_default_startup_page);
+    const user = common.commonWindowLocationPathname(0).split('/profile/')[1];
+    if (user &amp;&amp; user !='') {
+        //show profile for user entered in url
+        common.commonProfileShow(null, user);
+    }
+    await common.commonComponentRender({mountDiv:   'common_fonts',
+        data:       {
+                    font_default:   true,
+                    font_arabic:    true,
+                    font_asian:     true,
+                    font_prio1:     true,
+                    font_prio2:     true,
+                    font_prio3:     true
+                    },
+        methods:    null,
+        path:       '/common/component/common_fonts.js'});
 };
 /**
  * @name appCommonInit

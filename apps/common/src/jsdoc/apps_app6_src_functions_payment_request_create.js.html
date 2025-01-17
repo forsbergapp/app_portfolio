@@ -8,39 +8,46 @@
             <pre class="prettyprint source linenums"><code>/**
  * @module apps/app6/src/functions/payment_request_create
  */
+
 /**
- * @name payment_request_create
+ * @import {server_server_response} from '../../../../server/types.js'
+ * @typedef {server_server_response &amp; {result?:{token:string,
+ *                                              exp:number,
+ *                                              iat:number,
+ *                                              tokentimestamp:number,
+ *                                              payment_request_id:string,
+ *                                              payment_request_message:string,
+ *                                              status:string,
+ *                                              merchant_name:string
+ *                                              amount:number,
+ *                                              currency_symbol:string,
+ *                                              countdown:string}[]}} paymentRequestCreate
+ */
+
+/**
+ * @name paymentRequestCreate
  * @description Create payment request
  * @function
- * @param {number} app_id
- * @param {{reference:string,
- *          data_app_id: number,
- *          payerid:string,
- *          amount:number,
- *          currency_code:string,
- *          message:string}} data
- * @param {string} user_agent
- * @param {string} ip
- * @param {string} locale
- * @param {import('../../../../server/types.js').server_server_res} res
- * @returns {Promise.&lt;{ token:string,
- *                      exp:number,
- *                      iat:number,
- *                      tokentimestamp:number,
- *                      payment_request_id:string,
- *                      payment_request_message:string,
- *                      status:string,
- *                      merchant_name:string
- *                      amount:number,
- *                      currency_symbol:string,
- *                      countdown:string}[]>}
+ * @param {{app_id:number,
+ *          data:{  reference:string,
+ *                  data_app_id: number,
+ *                  payerid:string,
+ *                  amount:number,
+ *                  currency_code:string,
+ *                  message:string},
+ *          user_agent:string,
+ *          ip:string,
+ *          host:string,
+ *          iam:string,
+ *          locale:string}} parameters
+ * @returns {Promise.&lt;paymentRequestCreate>}
  */
-const payment_request_create = async (app_id, data, user_agent, ip, locale, res) =>{
+const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('../../../../server/db/file.js')} */
-    const {fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
@@ -49,21 +56,21 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
 
     /**@type{import('../../../../server/iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
-    /**@ts-ignore */
-    const url = fileDBGet(app_id, 'APP_SECRET',null, app_id, null)[0].merchant_api_url_payment_request_create;
-    const currency = await dbModelAppDataResourceMaster.get({   app_id:app_id, 
+    
+    const url = fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_url_payment_request_create;
+    const currency = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
-                                                                data:{  data_app_id:data.data_app_id,
+                                                                data:{  data_app_id:parameters.data.data_app_id,
                                                                         resource_name:'CURRENCY',
                                                                         user_null:'1'
                                                                 }})
-                            .then(result=>JSON.parse(result[0].json_data));
+                            .then(result=>JSON.parse(result.result[0].json_data));
     //validate
-	if (data.currency_code==currency.currency_code &amp;&amp; data.payerid !='' &amp;&amp; data.payerid !=null){
+	if (parameters.data.currency_code==currency.currency_code &amp;&amp; parameters.data.payerid !='' &amp;&amp; parameters.data.payerid !=null){
         /** 
         * @type {{ api_secret:     string,
         *          reference:      string,
@@ -74,28 +81,24 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
         *          message:        string,
         *          origin:         string}}
         */
-        const body = {	api_secret:     fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_api_secret,
-                        reference:      data.reference.substring(0,30),
-                        payeeid:        fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_vpa, 
-                        payerid:        data.payerid,
+        const body = {	api_secret:     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_secret,
+                        reference:      parameters.data.reference.substring(0,30),
+                        payeeid:        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_vpa, 
+                        payerid:        parameters.data.payerid,
                         currency_code:  currency.currency_code,
-                        amount:         serverUtilNumberValue(data.amount) ?? 0, 
-                        message:        data.message,
-                        origin:         res.req.protocol + '://' + res.req.hostname
+                        amount:         serverUtilNumberValue(parameters.data.amount) ?? 0, 
+                        message:        parameters.data.message,
+                        origin:         parameters.host
         };
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-        const body_encrypted = {id:     fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_id,
+        const body_encrypted = {id:     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id,
                                 message:securityPublicEncrypt(
-                                                                fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_public_key, 
+                                                                fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_public_key, 
                                                                 JSON.stringify(body))};
         
-        const result_commonBFE = await commonBFE({url:url, method:'POST', body:body_encrypted, user_agent:user_agent, ip:ip, authorization:null, locale:locale}).then(result=>JSON.parse(result));
-        if (result_commonBFE.error){
-            res.statusCode = result_commonBFE.error.http;
-            throw iamUtilMesssageNotAuthorized();
-        }
-        else{
+        const result_commonBFE = await commonBFE({url:url, method:'POST', body:body_encrypted, user_agent:parameters.user_agent, ip:parameters.ip, authorization:null, locale:parameters.locale});
+        if (result_commonBFE.result){
             /**
             * @type {{ token:string,
             *          exp:number,
@@ -108,29 +111,35 @@ const payment_request_create = async (app_id, data, user_agent, ip, locale, res)
             *          currency_symbol:string}}
             */
             const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                    fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_private_key, 
-                                                    result_commonBFE.rows[0].message));
+                                                    fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_private_key, 
+                                                    result_commonBFE.result.rows.message));
 
-            return [{   token:                  body_decrypted.token,
-                        exp:                    body_decrypted.exp,
-                        iat:                    body_decrypted.iat,
-                        tokentimestamp:         body_decrypted.tokentimestamp,
-                        payment_request_id:     body_decrypted.payment_request_id,
-                        payment_request_message:'Check your bank app to authorize this payment',
-                        status:                 body_decrypted.status,
-                        merchant_name:          fileDBGet(app_id, 'APP_SECRET',null, app_id)[0].merchant_name,
-                        amount:			        body_decrypted.amount,
-                        currency_symbol:        currency.currency_symbol,
-                        countdown:              ''
-                    }];
+            return {result:[{token:                  body_decrypted.token,
+                            exp:                    body_decrypted.exp,
+                            iat:                    body_decrypted.iat,
+                            tokentimestamp:         body_decrypted.tokentimestamp,
+                            payment_request_id:     body_decrypted.payment_request_id,
+                            payment_request_message:'Check your bank app to authorize this payment',
+                            status:                 body_decrypted.status,
+                            merchant_name:          fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_name,
+                            amount:			        body_decrypted.amount,
+                            currency_symbol:        currency.currency_symbol,
+                            countdown:              ''
+                        }], type:'JSON'};
         }
+        else
+            return result_commonBFE;
     }
-	else{
-        res.statusCode=400;
-        throw iamUtilMesssageNotAuthorized();
-    }
+	else
+        return {http:400,
+                code:'APP',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:'commonBFE',
+                moreInfo:null,
+                type:'JSON'
+            };
 };
-export default payment_request_create;</code></pre>
+export default paymentRequestCreate;</code></pre>
         </div>
     </div>
 

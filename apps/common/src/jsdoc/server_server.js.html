@@ -15,37 +15,240 @@
  */
 
 /**
- * @import {server_db_file_config_rest_api_methods, server_db_file_config_rest_api,server_server_error_stack, server_server_error, server_server_req, server_server_res, server_server_req_id_number,
- *          server_server_express} from './types.js'
+ * @import {server_req_method, server_bff_endpoint_type, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
  */
 const zlib = await import('node:zlib');
+
 /**
- * @name serverResponseErrorSend
- * @description Sends ISO 20022 error format
- * @function
- * @param {server_server_res} res 
- * @param {number} http 
- * @param {string|null} code 
- * @param {string|number|object|null} text 
- * @param {string|null} developer_text 
- * @param {string|null} more_info 
- * @returns {void}
+ *  Returns response to client
+ *  Uses host parameter for errors in requests or unknown route paths
+ *  Returns result using ISO20022 format
+ *  Error
+ *           http:          statusCode,
+ *           code:          optional app Code,
+ *           text:          error,
+ *           developerText: optional text,
+ *           moreInfo:      optionlal text
+ *  Result
+ *          Single resource format supported return types
+ *             JSON, HTML, CSS, JS, WEBP, PNG, WOFF, TTF
+ *             can be returned as result or using sendfile key with file path that validates path before returned
+ * 
+ *          Multiple resources in JSON format:
+ *              list_header : {	total_count:	number of records,
+ *                              offset: 		offset parameter or 0,
+ *                              count:			limit parameter or number of records
+ *                            }
+ *              rows        : array of anything
+ *          Pagination result
+ *              page_header : {	total_count:	number of records or 0,
+ *								offset: 		offset parameter or 0,
+ *								count:			least number of limit parameter and number of records
+ *                            }
+ *              rows        : array of anything
+ * 
+ *  @param {{app_id?:number|null,
+ *           host?:string|null,
+ *           route:'APP'|'REST_API'|null,
+ *           result_request:{   http?:number|null,
+ *                              code?:number|string|null,
+ *                              text?:string|null,
+ *                              developerText?:string|null,
+ *                              moreInfo?:string|null,
+ *                              result?:*,
+ *                              sendfile?:string|null,
+ *                              type:server_server_response_type,
+ *                              singleResource?:boolean},
+ *          endpoint?:server_bff_endpoint_type,
+ *          method?:server_req_method,
+ *          decodedquery?:string|null,
+ *          res:server_server_res}} parameters
+ *  @returns {Promise.&lt;void>}
  */
- const serverResponseErrorSend = (res, http, code, text, developer_text, more_info) => {
-    //ISO20022 error format
-    const message = {error:{
-                        http:http, 
-                        code:code, 
-                        //return SERVER ERROR if status code starts with 5
-                        text:http?.toString().startsWith('5')?'SERVER ERROR':text, 
-                        developer_text:developer_text, 
-                        more_info:more_info}};
-    //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
-    res.statusMessage = '';
-    res.statusCode = http;
-    res.setHeader('Content-Type',  'application/json; charset=utf-8');
-    res.write(JSON.stringify(message), 'utf8');
-    res.end();
+const serverResponse = async parameters =>{
+    /**@type{import('./db/fileModelAppParameter.js')} */
+    const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+    /**@type{import('./db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+    /**
+     * Sets response type
+     * @param {server_server_response_type} type
+     */
+    const setType = type => {
+        
+        const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control.value;
+        const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control_font.value;
+        switch (type){
+            case 'JSON':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('application/json; charset=utf-8');
+                break;
+            }
+            case 'HTML':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('text/html; charset=utf-8');
+                break;
+            }
+            case 'CSS':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('text/css; charset=utf-8');
+                break;
+            }
+            case 'JS':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('text/javascript; charset=utf-8');
+                break;
+            }
+            case 'WEBP':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('image/webp; charset=utf-8');
+                break;
+            }
+            case 'PNG':{
+                if (app_cache_control !='')
+                    parameters.res.set('Cache-Control', app_cache_control);
+                parameters.res.type('image/png; charset=utf-8');
+                break;
+            }
+            case 'WOFF':{
+                if (app_cache_control_font !='')
+                    parameters.res.set('Cache-Control', app_cache_control_font);
+                parameters.res.type('font/woff; charset=utf-8');
+                break;
+            }
+            case 'TTF':{
+                if (app_cache_control_font !='')
+                    parameters.res.set('Cache-Control', app_cache_control_font);
+                parameters.res.type('text/font/ttf; charset=utf-8');
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+    };
+    if (parameters.result_request.http){
+        /**@type{import('./db/fileModelLog.js')} */
+        const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+
+        /**@type{import('../apps/common/src/common.js')} */
+        const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+        const app_id_host = app_common.commonAppHost((parameters.host??'').substring(0,(parameters.host??'').indexOf(':')==-1?
+                                                (parameters.host??'').length:
+                                                    (parameters.host??'').indexOf(':')));
+        await fileModelLog.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.result_request.http ?? '').toString(), parameters.result_request.code?.toString()??'', parameters.result_request.text??'');
+        //ISO20022 error format
+        const message = {error:{
+                                http:parameters.result_request.http, 
+                                code:parameters.result_request.code, 
+                                //return SERVER ERROR if status code starts with 5 and not admin app or show full error
+                                text:(common_app_id!=app_id_host &amp;&amp; parameters.result_request.http?.toString().startsWith('5'))?'SERVER ERROR':parameters.result_request.text, 
+                                developer_text:parameters.result_request.developerText, 
+                                more_info:parameters.result_request.moreInfo}};
+        //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
+        parameters.res.statusMessage = '';
+        parameters.res.statusCode = parameters.result_request.http ?? 500;
+        setType('JSON');
+        parameters.res.write(JSON.stringify(message), 'utf8');
+        parameters.res.end();
+    }
+    else{
+        if (parameters.endpoint=='SOCKET'){
+            //This endpoint only allowed for EventSource so no more update of response
+            null;
+        }
+        else{
+            if (parameters.route=='APP' &amp;&amp; parameters.res.statusCode==301){
+                //result from APP can request to redirect
+                parameters.res.redirect('/');
+            }
+            else{
+                if (parameters.method?.toUpperCase() == 'POST')
+                    parameters.res.statusCode =201;
+                else
+                    parameters.res.statusCode =200;
+                if (parameters.result_request?.sendfile){
+                    const fs = await import('node:fs');
+                    /**@type{import('./db/fileModelLog.js')} */
+                    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+                    /**@type{import('./iam.js')} */
+                    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                    await fs.promises.access(parameters.result_request.sendfile)
+                    .then(()=>{
+                        setType(parameters.result_request.type);
+                        parameters.res.sendFile(parameters.result_request.sendfile);
+                    })
+                    .catch(error=>{
+                        fileModelLog.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.result_request.sendfile ?? '', error)
+                        .then(result=>{if (result.http)
+                            parameters.res.statusCode =400;
+                            parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
+                            parameters.res.end();
+                        });
+                    });
+                }
+                else{
+                    if(parameters.result_request.type){
+                        setType(parameters.result_request.type);
+                        if (parameters.result_request?.type=='JSON'){
+                            if (parameters.decodedquery &amp;&amp; new URLSearchParams(parameters.decodedquery).get('fields')){
+                                if (parameters.result_request.result[0]){
+                                    //limit fields/keys in rows
+                                    const limit_fields = parameters.result_request.result.map((/**@type{*}*/row)=>{
+                                        const row_new = {};
+                                        /**@ts-ignore */
+                                        for (const field of new URLSearchParams(parameters.decodedquery).get('fields').split(',')){
+                                            /**@ts-ignore */
+                                            row_new[field] = row[field];
+                                        }
+                                        return row_new;
+                                    });
+                                    parameters.result_request.result = limit_fields;
+                                }
+                                else{
+                                    //limit fields/keys in object
+                                    const result_service_fields = {};
+                                    /**@ts-ignore */
+                                    for (const field of new URLSearchParams(parameters.decodedquery).get('fields').split(',')){
+                                        /**@ts-ignore */
+                                        result_service_fields[field] = parameters.result_request.result[field];
+                                    }
+                                    parameters.result_request.result = result_service_fields;
+                                }
+                            }
+                            if (parameters.result_request.singleResource || parameters.result_request.result.page_header)
+                                parameters.res.write(JSON.stringify(parameters.result_request.result), 'utf8');
+                            else{
+                                const offset = parameters.decodedquery?serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset')):null;
+                                const limit = parameters.decodedquery?serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('limit')):null;
+
+                                const list_header = {	total_count:	parameters.result_request.result.length,
+                                                        offset: 		offset ?? 0,
+                                                        count:			limit ?? parameters.result_request.result.length
+                                                    };
+                                parameters.res.write(JSON.stringify({list_header:list_header, rows:parameters.result_request.result}), 'utf8');
+                            }    
+                        }
+                        else
+                            parameters.res.write(parameters.result_request.result, 'utf8');
+                    }
+                    else{
+                        /**@type{import('./iam.js')} */
+                        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                        parameters.res.statusCode =500;
+                        parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
+                    }
+                    parameters.res.end();
+                }        
+            }    
+        }   
+    }
 };
 /**
  * @name serverUtilNumberValue
@@ -62,7 +265,7 @@ const zlib = await import('node:zlib');
   * @name serverUtilCompression
   * @description Compression of response for supported requests
   * @function
-  * @param {server_server_res['req']} req
+  * @param {server_server_req} req
   * @param {server_server_res} res
   */
  const serverUtilCompression = (req,res) =>{
@@ -339,31 +542,6 @@ const serverUtilAppFilename = module =>{
     return module.substring(from_app_root);
 };
 /**
- * @name serverUtilAppFunction
- * @description Returns function used
- * @function
- * @param{server_server_error_stack} stack
- * @returns {string}
- */
-const serverUtilAppFunction = stack => {
-    const e = stack.split('at ');
-    let functionName;
-    //loop from last to first
-    //ES6 rest parameter to avoid mutating array
-    for (const line of [...e].reverse()) {
-        //ES6 startsWith and includes
-        if ((line.startsWith('file')==false &amp;&amp; 
-            line.includes('node_modules')==false &amp;&amp;
-            line.includes('node:internal')==false &amp;&amp;
-            line.startsWith('Query')==false)||
-            line.startsWith('router')){
-                functionName = line.split(' ')[0];
-                break;
-        }
-    }
-    return functionName ?? '';
-};
-/**
  * @name serverUtilAppLine
  * @description Returns function row number from Error stack
  * @function
@@ -416,7 +594,7 @@ const serverUtilAppLine = () =>{
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('./iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const {default:express} = await import('express');
     
     /**@type{server_server_express} */
@@ -471,12 +649,15 @@ const serverUtilAppLine = () =>{
     //ERROR LOGGING
     app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res) => {
         fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
-            serverResponseErrorSend( res, 
-                err?.name=='PayloadTooLargeError'?400:500,
-                null, 
-                err?.name=='PayloadTooLargeError'?iamUtilMesssageNotAuthorized():'SERVER ERROR', 
-                null, 
-                null);
+            serverResponse({host:req.headers.host,
+                            route:null,
+                            result_request:{http:err?.name=='PayloadTooLargeError'?400:500, 
+                                            code:null, 
+                                            text:err?.name=='PayloadTooLargeError'?iamUtilMessageNotAuthorized():'SERVER ERROR',
+                                            developerText:'',
+                                            moreInfo:'',
+                                            type:'HTML'},
+                            res:res});
         });
     });
     return app;
@@ -493,7 +674,7 @@ const serverJs = async () => {
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('./iam.js')} */
-    const  {iamUtilMesssageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('./iamMiddleware.js')} */
     const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
@@ -595,12 +776,15 @@ const serverJs = async () => {
                     break;
                 }
                 default:{
-                    serverResponseErrorSend( res, 
-                        400,
-                        null, 
-                        iamUtilMesssageNotAuthorized(), 
-                        null, 
-                        null);
+                    serverResponse({host:req.headers.host,
+                                    route:null,
+                                    result_request:{http:400, 
+                                                    code:null, 
+                                                    text:iamUtilMessageNotAuthorized(), 
+                                                    developerText:'',
+                                                    moreInfo:'',
+                                                    type:'HTML'},
+                                    res:res});
                 }
             }
         };
@@ -640,12 +824,15 @@ const serverJs = async () => {
                 (serverUtilNumberValue((fileModelConfig.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
             //log error
             fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
-                serverResponseErrorSend( res, 
-                    400,
-                    null, 
-                    iamUtilMesssageNotAuthorized(), 
-                    null, 
-                    null);
+                serverResponse({host:req.headers.host,
+                    route:null,
+                    result_request:{http:400, 
+                                    code:null, 
+                                    text:iamUtilMessageNotAuthorized(), 
+                                    developerText:'',
+                                    moreInfo:'',
+                                    type:'HTML'},
+                    res:res});
             });
         }
         else{
@@ -683,7 +870,7 @@ const serverJs = async () => {
                 readStream.on ('error', streamErr =>{
                     streamErr;
                     res.writeHead(500);
-                    res.end(iamUtilMesssageNotAuthorized());
+                    res.end(iamUtilMessageNotAuthorized());
                 });
                 /**@ts-ignore */
                 readStream.pipe(res);
@@ -722,11 +909,11 @@ const serverJs = async () => {
 };
 /**
  * @name serverREST_API
- * @namespace REST_API
+ * @namespace ROUTE_REST_API
  * @description Server REST API routes using openAPI where paths, methods, validation rules, operationId and function parameters are defined
  *              OperationId syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
  *              Returns single resource result format or ISO20022 format with either list header format or page header metadata
- *              Returns HTML or {STATIC:boolean, SENDFILE:string|null, SENDCONTENT:string}
+ *              Returns HTML or {static:boolean, sendfile:string|null, sendcontent:string}
  *              /app-module-report-queue-result
  *              /bff/admin/v1/app-module-report
  *              /bff/app/v1/app-module-report
@@ -735,8 +922,8 @@ const serverJs = async () => {
  *              Returns status 401 if not authorized
  *              Returns status 404 if route is not found
  * @function
- * @param {import('./types.js').server_server_routesparameters} routesparameters
- * @returns {Promise.&lt;*>}
+ * @param {server_REST_API_parameters} routesparameters
+ * @returns {Promise.&lt;server_server_response>}
  */
 const serverREST_API = async (routesparameters) =>{
     /**@type{import('../apps/common/src/common.js')} */
@@ -764,23 +951,6 @@ const serverREST_API = async (routesparameters) =>{
     const resource_id_get_string = path => path.endsWith('/${resource_id_string}')?
                                                 (URI_path.substring(URI_path.lastIndexOf('/') + 1)==''?null:URI_path.substring(URI_path.lastIndexOf('/') + 1)):
                                                     null;
-    /**
-     * Return message in ISO20022 format if result contains multi resources
-     * @param {*} result 
-     * @param {boolean} singleresource
-     */
-    const iso_return_message = (result, singleresource) =>{
-        //if singles resource or pagination then return result
-        if (singleresource || result.page_header)
-            return result;
-        else{
-            const list_header = {	total_count:	result.length,
-                                    offset: 		serverUtilNumberValue(app_query?.get('offset'))?serverUtilNumberValue(app_query?.get('offset')):0,
-                                    count:			serverUtilNumberValue(app_query?.get('limit')) ?? result.length
-                                };
-            return {list_header:list_header, rows:result};
-        }
-    };
     /**
      * Validates if user has access to given resource
      * Validates using IAM token claims if path requires
@@ -842,29 +1012,49 @@ const serverREST_API = async (routesparameters) =>{
                             path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0];
     if (configPath){
         /**
+         * Get server validation parameter for either keys starting with server
+         * or resource_id_number or resource_id_string that all should use '$ref' and match components path
+         * All paths should specify required key if this is used for the path
+         * @example {
+                        "$ref": "#/components/parameters/resource_id_number",
+                        "required":false
+                    }
          * @param{string} key
+         * @returns {*}
          */
-        const getParameter = key => methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key];
+        const getParameterValidation = key => key.startsWith('server')?
+                                        methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key]:
+                                            methodObj.parameters.filter((/**@type{*}*/parameter)=>
+                                                    Object.keys(parameter)[0]=='$ref' &amp;&amp; Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
+        
 
         const methodObj = configPath[1][routesparameters.method.toLowerCase()];
         if (methodObj){
             if (validate({  config_path:                        configPath[0],
-                            resource_validate_key:              getParameter('server_validation_resource_key'),
-                            resource_validate_value:            getParameter('server_validation_resource_value'),
-                            required:                           (getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
-                            resource_validate_app_data_app_id:  getParameter('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
-                            validate_app_function:              getParameter('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
-                            validate_app_function_role:         getParameter('server_validation_app_function')?getParameter('server_validation_app_function_role'):null})){
+                            resource_validate_key:              getParameterValidation('server_validation_resource_key'),
+                            resource_validate_value:            getParameterValidation('server_validation_resource_value'),
+                            required:                           (getParameterValidation('resource_id_string') ?? getParameterValidation('resource_id_number'))?.required ?? false,
+                            resource_validate_app_data_app_id:  getParameterValidation('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
+                            validate_app_function:              getParameterValidation('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
+                            validate_app_function_role:         getParameterValidation('server_validation_app_function')?getParameterValidation('server_validation_app_function_role'):null})){
 
-                //add parameters if used for GET method
-                const get_parameters = routesparameters.method=='GET'?
-                                            methodObj.parameters
-                                                            //exclude keys starting with 'server' and '$ref'
-                                                            .filter((/**@type{*}*/key)=>  Object.keys(key)[0]!='description' &amp;&amp; 
-                                                                                            !Object.keys(key)[0].startsWith('server') &amp;&amp; 
-                                                                                            !Object.keys(key)[0].startsWith('$ref'))
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[Object.keys(key)[0]]:app_query?.get(Object.keys(key)[0])}};},{}):
-                                                null;
+                //add parameters using tree shaking pattern
+                //so only defined parameters defined using openAPI pattern are sent to functions
+                const parametersData = routesparameters.method=='GET'?
+                                            {...methodObj.parameters
+                                                            //include all parameters.in=query
+                                                            .filter((/**@type{*}*/parameter)=>parameter.in =='query')
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}),
+                                            //if EventSource then add res
+                                            ...(methodObj.responses?.[200]?.content?.['text/event-stream'] &amp;&amp; {res:routesparameters.res})}:
+                                            //all other methods use body to send data
+                                            //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
+                                            (methodObj.requestBody?.content &amp;&amp; methodObj.requestBody?.content['application/json'].schema.additionalProperties)?
+                                                {...routesparameters.body,...Object.entries(methodObj.requestBody.content['application/json'].schema.properties)
+                                                                                .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{})}:
+                                                            (methodObj.requestBody?.content?Object.entries(methodObj.requestBody?.content['application/json'].schema.properties)
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{}):{});
+                
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
                 const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -884,40 +1074,53 @@ const serverREST_API = async (routesparameters) =>{
                                                 false:
                                                     (routesparameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
                                                         true:
-                                                            (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
+                                                            (getParameterValidation('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0]))!=null;
                 //return result using ISO20022 format
-                return iso_return_message(await moduleRESTAPI[functionRESTAPI]({
-                                        app_id:         routesparameters.app_id,
-                                        iam:            getParameter('server_function_parameter_iam')?routesparameters.res.req.query.iam:null,
-                                        authorization:  getParameter('server_function_parameter_authorization')?routesparameters.authorization:null,
-                                        user_agent:     getParameter('server_function_parameter_user_agent')?routesparameters.user_agent:null,
-                                        accept_language:getParameter('server_function_parameter_accept_language')?routesparameters.accept_language:null,
-                                        host:           getParameter('server_function_parameter_accept_host')?routesparameters.host:null,
-                                        locale:         getParameter('server_function_parameter_locale')?app_query?.get('lang_code') ??'en':null,
-                                        ip:             getParameter('server_function_parameter_ip')?routesparameters.ip:null,
-                                        path:           getParameter('server_function_parameter_path')?routesparameters.route_path:null,
-                                        query:          getParameter('server_function_parameter_query')?URI_query:null,
-                                        method:         getParameter('server_function_parameter_method')?routesparameters.method:null,
-                                        data:           getParameter('server_function_parameter_body')?routesparameters.body:{...get_parameters},
-                                        endpoint:       getParameter('server_function_parameter_endpoint')?routesparameters.endpoint:null,
-                                        resource_id:    getParameter('server_function_parameter_resource_id')?
-                                                                (getParameter('resource_id_number')?resource_id_get_number(configPath[0]):resource_id_get_string(configPath[0])):
-                                                                    null,
-                                        res:            getParameter('server_function_parameter_res')?routesparameters.res:null
-                                    }), singleResource());
+                //send only parameters to the function if declared true
+                const result = await  moduleRESTAPI[functionRESTAPI]({
+                                app_id:         routesparameters.app_id,
+                                ...(getParameterValidation('server_function_parameter_iam')                     &amp;&amp; {iam:            app_query?.get('iam')}),
+                                ...(getParameterValidation('server_function_parameter_authorization')           &amp;&amp; {authorization:  routesparameters.authorization}),
+                                ...(getParameterValidation('server_function_parameter_user_agent')              &amp;&amp; {user_agent:     routesparameters.user_agent}),
+                                ...(getParameterValidation('server_function_parameter_accept_language')         &amp;&amp; {accept_language:routesparameters.accept_language}),
+                                ...(getParameterValidation('server_function_parameter_host')                    &amp;&amp; {host:           routesparameters.host}),
+                                ...(getParameterValidation('server_function_parameter_locale')                  &amp;&amp; {locale:         app_query?.get('locale') ??'en'}),
+                                ...(getParameterValidation('server_function_parameter_ip')                      &amp;&amp; {ip:             routesparameters.ip}),
+                                ...(getParameterValidation('server_function_parameter_path')                    &amp;&amp; {path:           routesparameters.route_path}),
+                                ...(getParameterValidation('server_function_parameter_method')                  &amp;&amp; {method:         routesparameters.method}),
+                                ...(Object.keys(parametersData)?.length>0                                       &amp;&amp; {data:           {...parametersData}}),
+                                ...(getParameterValidation('server_function_parameter_endpoint')                &amp;&amp; {endpoint:       routesparameters.endpoint}),
+                                ...(getParameterValidation('server_function_parameter_resource_id')             &amp;&amp; {resource_id:    (getParameterValidation('resource_id_number')?
+                                                                                                                                    resource_id_get_number(configPath[0]):
+                                                                                                                                    resource_id_get_string(configPath[0]))})});
+                return { ...result,
+                            ...{singleResource:singleResource()
+                                }
+                        };
             }
-            else{
-                routesparameters.res.statusMessage = 'resource id not authorized';
-                routesparameters.res.statusCode =401;
-                throw iam.iamUtilMesssageNotAuthorized();
-            }
+            else
+                return 	{http:401,
+                        code:'SERVER',
+                        text:iam.iamUtilMessageNotAuthorized(),
+                        developerText:'serverREST_API',
+                        moreInfo:null,
+                        type:'JSON'};
         }
-        else{
-            routesparameters.res.statusMessage = `route not found: ${routesparameters.endpoint} ${URI_path} ${routesparameters.method}`;
-            routesparameters.res.statusCode =404;
-            throw iam.iamUtilMesssageNotAuthorized();
-        }
+        else                
+            return 	{http:404,
+                    code:'SERVER',
+                    text:iam.iamUtilMessageNotAuthorized(),
+                    developerText:'serverREST_API',
+                    moreInfo:null,
+                    type:'JSON'};
     }
+    else
+        return 	{http:404,
+                code:'SERVER',
+                text:iam.iamUtilMessageNotAuthorized(),
+                developerText:'serverREST_API',
+                moreInfo:null,
+                type:'JSON'};
 };
 
 /**
@@ -993,8 +1196,8 @@ const serverStart = async () =>{
     }
     
 };
-export {serverResponseErrorSend, serverUtilCompression,
-        serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppFunction,serverUtilAppLine , 
+export {serverResponse, serverUtilCompression,
+        serverUtilNumberValue, serverUtilResponseTime, serverUtilAppFilename,serverUtilAppLine , 
         serverREST_API, serverStart };</code></pre>
         </div>
     </div>

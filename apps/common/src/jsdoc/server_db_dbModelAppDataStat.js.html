@@ -8,8 +8,13 @@
             <pre class="prettyprint source linenums"><code>/** @module server/db/dbModelAppDataStat */
 
 /**
- * @import {server_db_sql_result_app_data_stat_post, server_db_sql_result_app_data_stat_getStatUniqueVisitor, 
+ * @import {server_server_response,
+ *          server_db_common_result_insert, server_db_sql_result_app_data_stat_getStatUniqueVisitor, 
  *          server_db_sql_result_app_data_stat_logGet, server_db_sql_result_app_data_stat_get} from '../types.js'
+ * @typedef {server_server_response &amp; {result?:server_db_sql_result_app_data_stat_get[] }} get
+ * @typedef {server_server_response &amp; {result?:server_db_sql_result_app_data_stat_logGet[] }} getLog
+ * @typedef {server_server_response &amp; {result?:server_db_sql_result_app_data_stat_getStatUniqueVisitor[] }} getStatUniqueVisitor
+ * @typedef {server_server_response &amp; {result?:server_db_common_result_insert }} post
  */
 
 /**@type{import('./dbSql.js')} */
@@ -25,12 +30,12 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @name get
  * @description Get stat
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  id?:string|null,
- *                  data_app_id?:string|null,
+ *          data:{  id?:number|null,
+ *                  data_app_id?:number|null,
  *                  resource_name_entity?:string|null}}} parameters
- * @returns {Promise.&lt;server_db_sql_result_app_data_stat_get[]>}
+ * @returns {Promise.&lt;get>}
  */
 const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -45,7 +50,7 @@ const get = parameters =>
  * @name getLog
  * @description Get stat log
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  sort?:string|null,
  *                  order_by?:string|null,
@@ -55,9 +60,10 @@ const get = parameters =>
  *                  day?:string|null,
  *                  offset?:string|null,
  *                  limit?:string|null,
- *                  data_app_id?:string|null,
- *                  resource_name_entity?:string|null}}} parameters
- * @returns {Promise.&lt;server_db_sql_result_app_data_stat_logGet[]>}
+ *                  app_data_entity_resource_id?:number|null,
+ *                  app_data_entity_resource_app_data_entity_app_id?:number|null,
+ *                  app_data_entity_resource_app_data_entity_id?:number|null}}} parameters
+ * @returns {Promise.&lt;getLog>}
  */
 const getLog = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -71,47 +77,48 @@ const getLog = parameters =>
                             day:serverUtilNumberValue(parameters.data.day),
                             offset:serverUtilNumberValue(parameters.data.offset),
                             limit:serverUtilNumberValue(parameters.data.limit),
-                            app_data_entity_resource_id: 0,
-                            app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
-                            app_data_entity_resource_app_data_entity_id : 0},
+                            app_data_entity_resource_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_id),
+                            app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_app_id),
+                            app_data_entity_resource_app_data_entity_id :  serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_id)},
                         null, 
                         null))
         .then(result =>{
-                if (parameters.data.sort!='date_created' &amp;&amp; parameters.data.sort!='app_id'){
-                    //sort json_data columns
-                    /**@ts-ignore*/
-                    result.rows = result.rows.sort((first, second)=>{
-                        //sort column inside json string
-                        /**@ts-ignore */
-                        const first_sort = JSON.parse(first.json_data)[parameters.data.sort]?.toLowerCase();
-                        /**@ts-ignore */
-                        const second_sort = JSON.parse(second.json_data)[parameters.data.sort]?.toLowerCase();
-                        //using localeCompare as collation method for strings
-                        if (first_sort !=null &amp;&amp; second_sort != null &amp;&amp; 
-                            ((  typeof first_sort == 'number' &amp;&amp; first_sort &lt; second_sort) || 
-                            (  typeof first_sort == 'string' &amp;&amp; first_sort.localeCompare(second_sort)&lt;0) ))
-                            return parameters.data.order_by?.toLowerCase()=='asc'?-1:1;
-                        else if (first_sort !=null &amp;&amp; second_sort != null &amp;&amp; 
-                            ((  typeof first_sort == 'number' &amp;&amp; first_sort > second_sort) || 
-                            (  typeof first_sort == 'string' &amp;&amp; first_sort.localeCompare(second_sort)>0) ))
-                            return parameters.data.order_by?.toLowerCase()=='asc'?1:-1;
-                        else
-                            return 0;
-                    });
-                }
-                
+                if (result.result)
+                    if (parameters.data.sort!='date_created' &amp;&amp; parameters.data.sort!='app_id'){
+                        //sort json_data columns
+                        result.result.rows = result.result.rows.sort((
+                                /**@ts-ignore */
+                                first, second)=>{
+                            //sort column inside json string
+                            /**@ts-ignore */
+                            const first_sort = JSON.parse(first.json_data)[parameters.data.sort]?.toLowerCase();
+                            /**@ts-ignore */
+                            const second_sort = JSON.parse(second.json_data)[parameters.data.sort]?.toLowerCase();
+                            //using localeCompare as collation method for strings
+                            if (first_sort !=null &amp;&amp; second_sort != null &amp;&amp; 
+                                ((  typeof first_sort == 'number' &amp;&amp; first_sort &lt; second_sort) || 
+                                (  typeof first_sort == 'string' &amp;&amp; first_sort.localeCompare(second_sort)&lt;0) ))
+                                return parameters.data.order_by?.toLowerCase()=='asc'?-1:1;
+                            else if (first_sort !=null &amp;&amp; second_sort != null &amp;&amp; 
+                                ((  typeof first_sort == 'number' &amp;&amp; first_sort > second_sort) || 
+                                (  typeof first_sort == 'string' &amp;&amp; first_sort.localeCompare(second_sort)>0) ))
+                                return parameters.data.order_by?.toLowerCase()=='asc'?1:-1;
+                            else
+                                return 0;
+                        });
+                    }
                 return result;
         });
 /**
  * @name getStatUniqueVisitor
  * @description Get stat unique visitors
  * @function
- * @memberof REST_API
+ * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
  *                  year?:string|null,
  *                  month?:string|null}}} parameters
- * @returns {Promise.&lt;server_db_sql_result_app_data_stat_getStatUniqueVisitor[]>}
+ * @returns {Promise.&lt;getStatUniqueVisitor>}
  */
 const getStatUniqueVisitor = parameters =>{
     /**
@@ -149,32 +156,34 @@ const getStatUniqueVisitor = parameters =>{
                             null, 
                             null))
             .then(result_logs =>{
-                if (result_logs.length>0){
-                    //use SQL group by and count() in javascript
-                    //save unique server_remote_addr in a set
-                    const log_unique_ip = new Set();
-                    for (const log of result_logs){
-                        log_unique_ip.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${JSON.parse(log.json_data).server_remote_addr}`);
+                if (result_logs.result)
+                    if (result_logs.result.length>0){
+                        //use SQL group by and count() in javascript
+                        //save unique server_remote_addr in a set
+                        const log_unique_ip = new Set();
+                        for (const log of result_logs.result){
+                            log_unique_ip.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${JSON.parse(log.json_data).server_remote_addr}`);
+                        }
+                        //convert to array with objects
+                        const log_unique = to_object(log_unique_ip, false);
+                        //save amount in unique server_remote_addr list in a set
+                        const log_unique_with_amount = new Set();
+                        log_unique.forEach((/**@type{*}*/log)=>{
+                            log_unique_with_amount.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${log_unique.filter((/**@type{*}*/log_amount)=>   
+                                                                                                                                log_amount.chart==log.chart &amp;&amp; 
+                                                                                                                                log_amount.app_id == log.app_id &amp;&amp;
+                                                                                                                                log_amount.year == log.year &amp;&amp;
+                                                                                                                                log_amount.month == log.month &amp;&amp;
+                                                                                                                                log_amount.day == log.day).length}`);
+                        });
+                        //convert to array with objects
+                        const result_getStatUniqueVisitorAdmin = to_object(log_unique_with_amount, true);
+                        result_logs.result = result_getStatUniqueVisitorAdmin;
                     }
-                    //convert to array with objects
-                    const log_unique = to_object(log_unique_ip, false);
-                    //save amount in unique server_remote_addr list in a set
-                    const log_unique_with_amount = new Set();
-                    log_unique.forEach((/**@type{*}*/log)=>{
-                        log_unique_with_amount.add( `${log.chart};${log.app_id};${log.year};${log.month};${log.day};${log_unique.filter((/**@type{*}*/log_amount)=>   
-                                                                                                                            log_amount.chart==log.chart &amp;&amp; 
-                                                                                                                            log_amount.app_id == log.app_id &amp;&amp;
-                                                                                                                            log_amount.year == log.year &amp;&amp;
-                                                                                                                            log_amount.month == log.month &amp;&amp;
-                                                                                                                            log_amount.day == log.day).length}`);
-                    });
-                    //convert to array with objects
-                    const result_getStatUniqueVisitorAdmin = to_object(log_unique_with_amount, true);
-                    resolve(result_getStatUniqueVisitorAdmin);
-                }
-                else{
-                    resolve([]);
-                }
+                    else{
+                        result_logs.result = [];
+                    }
+                resolve(result_logs);
             });
     });
 };
@@ -184,7 +193,7 @@ const getStatUniqueVisitor = parameters =>{
  * @function
  * @param {number}      app_id
  * @param {*}           data
- * @returns {Promise.&lt;server_db_sql_result_app_data_stat_post[]>}
+ * @returns {Promise.&lt;post>}
  */
 const post = async (app_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -203,8 +212,7 @@ const post = async (app_id, data) =>
                         null, 
                         null));
 
-export{get, getLog, getStatUniqueVisitor, post};
-</code></pre>
+export{get, getLog, getStatUniqueVisitor, post};</code></pre>
         </div>
     </div>
 

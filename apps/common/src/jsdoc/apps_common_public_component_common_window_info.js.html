@@ -29,7 +29,7 @@ const template = props => ` &lt;div id='common_window_info_btn_close' class='com
                             ${props.info_type==0?
                                 `&lt;div id='common_window_info_info'>
                                     ${props.info?
-                                        `&lt;div id='common_window_info_info_img' style='background-image:url("${props.info}");'>&lt;/div>`:
+                                        `&lt;div id='common_window_info_info_img' style='${props.info==null?'':`background-image:url(${props.info});`}'>&lt;/div>`:
                                         ''
                                     }
                                 &lt;/div>`:
