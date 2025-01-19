@@ -16,7 +16,7 @@
  *          user_agent:string,
  *          ip:string,
  *          host:string,
- *          iam:string,
+ *          idToken:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response>}
  */
@@ -71,7 +71,7 @@ const customerCreate = async parameters =>{
                                             user_agent:parameters.user_agent, 
                                             ip:parameters.ip,
                                             host:parameters.host,
-                                            iam:parameters.iam,
+                                            idToken:parameters.idToken,
                                             locale:parameters.locale})
                         .then(result=>result.http?result:Customer);
             }

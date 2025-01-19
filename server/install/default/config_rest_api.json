@@ -12,6 +12,9 @@
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppsGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -24,7 +27,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -45,6 +48,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server.socket.CheckOnline",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -57,7 +63,7 @@
                         {"server_validation_app_function":null},
                         {"server_validation_app_function_role":null},
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false},
                         {"server_function_parameter_accept_language":false},
@@ -78,6 +84,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelIdentityProvider.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -86,7 +95,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -107,6 +116,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppSetting.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -123,7 +135,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -144,6 +156,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppSetting.getDisplayData",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -176,7 +191,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -197,6 +212,9 @@
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -209,7 +227,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -249,6 +267,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -261,7 +283,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -301,6 +323,9 @@
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserForgot",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -309,7 +334,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -346,6 +371,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getProfileStat",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -362,7 +390,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -383,6 +411,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getProfile",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -427,7 +458,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -448,6 +479,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.getUserPostsByUserId",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -460,7 +494,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -481,6 +515,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.getUserPostsByUserId",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -493,7 +530,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -514,6 +551,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileUserPosts",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -534,7 +574,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -555,6 +595,9 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileStatPost",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -571,7 +614,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -592,6 +635,10 @@
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleMetaDataGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -612,7 +659,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -633,6 +680,10 @@
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -661,7 +712,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -682,6 +733,9 @@
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -710,7 +764,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -731,6 +785,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppModuleQueue.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -743,7 +801,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -762,6 +820,10 @@
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonAppReportQueue",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -774,7 +836,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -814,6 +876,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppModuleQueue.getResult",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -826,7 +892,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -847,6 +913,9 @@
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -867,7 +936,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -888,6 +957,9 @@
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -900,7 +972,7 @@
                         {"server_validation_app_function":true}, 
                         {"server_validation_app_function_role":"APP_ID"}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -938,6 +1010,9 @@
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -950,7 +1025,7 @@
                         {"server_validation_app_function":true}, 
                         {"server_validation_app_function_role":"APP_EXTERNAL"}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -988,6 +1063,10 @@
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1000,7 +1079,7 @@
                         {"server_validation_app_function":true}, 
                         {"server_validation_app_function_role":"APP_ACCESS"}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":false},
@@ -1038,6 +1117,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1050,7 +1133,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -1090,6 +1173,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1102,7 +1189,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -1168,6 +1255,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1180,7 +1271,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -1244,6 +1335,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getUserByUserId",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1256,7 +1351,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1275,6 +1370,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserDelete",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1287,7 +1386,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1325,6 +1424,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.updateUserCommon",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1337,7 +1440,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1381,6 +1484,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getProfileDetail",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1401,7 +1508,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1422,6 +1529,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountFollow.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1434,7 +1545,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1470,6 +1581,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountFollow.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1482,7 +1597,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1520,6 +1635,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountLike.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1532,7 +1651,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1568,6 +1687,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountLike.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1580,7 +1703,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1618,6 +1741,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountApp.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1630,7 +1757,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1649,6 +1776,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountApp.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1661,7 +1792,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1707,6 +1838,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountApp.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1719,7 +1854,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1757,6 +1892,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountApp.getApps",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1769,7 +1908,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1790,6 +1929,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileUserPostDetail",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1810,7 +1953,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1831,6 +1974,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.createUserPost",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":"id"}, 
@@ -1839,7 +1986,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1886,6 +2033,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.updateUserPost",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1898,7 +2049,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1940,6 +2091,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPost.deleteUserPost",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -1952,7 +2107,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -1990,6 +2145,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPostLike.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2002,7 +2161,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2038,6 +2197,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPostLike.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2050,7 +2213,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2088,6 +2251,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataEntity.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2108,7 +2275,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2129,6 +2296,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataEntityResource.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2165,7 +2336,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2186,6 +2357,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceMaster.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2238,7 +2413,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2257,6 +2432,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceMaster.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2269,7 +2448,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2316,6 +2495,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceMaster.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2328,7 +2511,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2368,6 +2551,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceMaster.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -2376,7 +2563,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2428,6 +2615,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetail.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2488,7 +2679,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2507,6 +2698,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetail.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2519,7 +2714,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2575,6 +2770,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetail.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2587,7 +2786,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2630,6 +2829,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetail.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -2638,7 +2841,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2696,6 +2899,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetailData.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2796,7 +3003,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2815,6 +3022,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetailData.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2827,7 +3038,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2874,6 +3085,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetailData.deleteRecord",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -2886,7 +3101,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2926,6 +3141,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataResourceDetailData.post",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -2934,7 +3153,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -2983,6 +3202,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {
                             "name":"id",
@@ -3015,7 +3238,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3036,6 +3259,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.getLog",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {
                             "name":"sort",
@@ -3132,7 +3359,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3153,6 +3380,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.getStatUniqueVisitor",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {
                             "name":"select_app_id",
@@ -3185,7 +3416,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3206,6 +3437,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server.socket.socketAdminSend",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -3214,7 +3449,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3260,6 +3495,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server.socket.socketConnectedCount",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3284,7 +3523,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3305,6 +3544,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server.socket.socketConnectedList",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3369,7 +3612,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3384,12 +3627,97 @@
                         "$ref": "#/components/responses/200"
                     }
                 }
+            },
+            "post": {
+                "summary": "",
+                "operationId": "server.socket.socketConnect",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_idtoken":true},
+                        {"server_function_parameter_authorization":true},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false}
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "headers":{
+                                "Cache-control":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"no-cache"
+                                    }
+                                },
+                                "Connection":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"keep-alive"
+                                    }
+                                }
+                            },
+                            "content":{
+                                "text/event-stream":{
+                                    "schema":{
+                                        "type":"string"
+                                    }
+                                },
+                                "application/json":{
+                                    "description":"BFF sets res in the body as parameter if response is text/event-stream",
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "res":{
+                                                "required":true,
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+			            },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "text/event-stream": {
+                                "type":"object",
+                                "properties":{
+                                    "data":{
+                                        "description":"Messages use base64",
+                                        "type":"string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/bff/admin/v1/app-common": {
             "get": {
                 "summary": "Gets all apps",
                 "operationId": "server_db.fileModelApp.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "Sends resource_id=null"},
                         {"server_validation_resource_key":null}, 
@@ -3398,7 +3726,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3419,6 +3747,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.fileModelApp.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3431,7 +3763,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3501,6 +3833,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppModule.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3521,7 +3857,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3540,6 +3876,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppModule.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3552,7 +3892,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3604,6 +3944,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppParameter.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3616,7 +3960,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3635,6 +3979,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppParameter.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3647,7 +3995,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3690,6 +4038,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppSecret.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3702,7 +4054,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3721,6 +4073,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppSecret.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3733,7 +4089,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3773,6 +4129,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getStatCountAdmin",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -3781,7 +4141,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3802,6 +4162,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getUsersAdmin",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3850,7 +4214,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3871,6 +4235,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.updateAdmin",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3883,7 +4251,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3947,6 +4315,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelConfig.getFile",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -3983,7 +4355,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4002,6 +4374,10 @@
             "put": {
                 "summary": "",
                 "operationId": "server_db.fileModelConfig.update",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -4014,7 +4390,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4060,6 +4436,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server.info.info",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4068,7 +4448,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4089,6 +4469,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbDemoInstall",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4097,7 +4481,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4133,6 +4517,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbDemoUninstall",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4141,7 +4529,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4162,6 +4550,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInstalledCheck",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4170,7 +4562,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4191,6 +4583,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInfoSpace",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4199,7 +4595,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4220,6 +4616,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInfoSpaceSum",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4228,7 +4628,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4249,6 +4649,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInfo",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4257,7 +4661,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4276,6 +4680,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInstall",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4284,7 +4692,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4303,6 +4711,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbUninstall",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4311,7 +4723,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4332,6 +4744,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.get",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -4428,7 +4844,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4449,6 +4865,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.getStatusCodes",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4457,7 +4877,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4478,6 +4898,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.getStat",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -4534,7 +4958,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4555,6 +4979,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.getFiles",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4563,7 +4991,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4584,6 +5012,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -4596,7 +5028,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4615,6 +5047,10 @@
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamUserUpdate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -4627,7 +5063,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4684,6 +5120,10 @@
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserLoginGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -4712,7 +5152,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -4729,10 +5169,13 @@
                 }
             }
         },
-        "/bff/socket/v1/server-socket/socket": {
-            "get": {
+        "/bff/app_id/v1/server-socket/socket": {
+            "post": {
                 "summary": "",
                 "operationId": "server.socket.socketConnect",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4741,7 +5184,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -4752,10 +5195,32 @@
                         {"server_function_parameter_path":false}
                 ],
                 "requestBody":{
-                            "description":"BFF sets res in the body as parameter if response is text/event-stream",
+                            "description":"",
                             "required":true,
+                            "headers":{
+                                "Cache-control":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"no-cache"
+                                    }
+                                },
+                                "Connection":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"keep-alive"
+                                    }
+                                }
+                            },
                             "content":{
+                                "text/event-stream":{
+                                    "schema":{
+                                        "type":"string"
+                                    }
+                                },
                                 "application/json":{
+                                    "description":"BFF sets res in the body as parameter if response is text/event-stream",
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
@@ -4767,14 +5232,102 @@
                                     }
                                 }
                             }
+                            
 			            },
                 "responses": {
                     "200": {
                         "description": "",
                         "content": {
                             "text/event-stream": {
-                                "schema": {
-                                    "type": "string"
+                                "type":"object",
+                                "properties":{
+                                    "data":{
+                                        "description":"Messages use base64",
+                                        "type":"string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bff/app_access/v1/server-socket/socket": {
+            "post": {
+                "summary": "",
+                "operationId": "server.socket.socketConnect",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {"server_validation_resource_key":null}, 
+                        {"server_validation_resource_value":null},
+                        {"server_validation_resource_app_data_app_id":null},
+                        {"server_validation_app_function":null}, 
+                        {"server_validation_app_function_role":null}, 
+                        {"server_function_parameter_ip":true},
+                        {"server_function_parameter_idtoken":true},
+                        {"server_function_parameter_authorization":true},
+                        {"server_function_parameter_user_agent":true}, 
+                        {"server_function_parameter_accept_language":true},
+                        {"server_function_parameter_host":false},
+                        {"server_function_parameter_locale":false},
+                        {"server_function_parameter_endpoint":false},
+                        {"server_function_parameter_resource_id":false},
+                        {"server_function_parameter_path":false}
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "headers":{
+                                "Cache-control":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"no-cache"
+                                    }
+                                },
+                                "Connection":{
+                                    "description":"",
+                                    "schema":{
+                                        "type":"string",
+                                        "default":"keep-alive"
+                                    }
+                                }
+                            },
+                            "content":{
+                                "text/event-stream":{
+                                    "schema":{
+                                        "type":"string"
+                                    }
+                                },
+                                "application/json":{
+                                    "description":"BFF sets res in the body as parameter if response is text/event-stream",
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "res":{
+                                                "required":true,
+                                                "type":"string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+			            },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "text/event-stream": {
+                                "type":"object",
+                                "properties":{
+                                    "data":{
+                                        "description":"Messages use base64",
+                                        "type":"string"
+                                    }
                                 }
                             }
                         }
@@ -4786,6 +5339,9 @@
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserSignup",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4794,7 +5350,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -4891,8 +5447,9 @@
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateAdmin",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/basicAuth"}
-                ],    
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4901,7 +5458,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -4943,6 +5500,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUser",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -4951,7 +5512,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -4993,6 +5554,10 @@
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserProvider",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -5005,7 +5570,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -5063,6 +5628,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server.iam.iamUserLogout",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -5071,7 +5640,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -5092,6 +5661,10 @@
             "delete": {
                 "summary": "",
                 "operationId": "server.iam.iamUserLogout",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -5100,7 +5673,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":true},
+                        {"server_function_parameter_idtoken":true},
                         {"server_function_parameter_authorization":true},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -5121,6 +5694,9 @@
             "get": {
                 "summary": "",
                 "operationId": "microservice.microservice.microserviceRequest",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -5137,7 +5713,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -5159,6 +5735,9 @@
             "get": {
                 "summary": "",
                 "operationId": "microservice.microservice.microserviceRequest",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {
@@ -5183,7 +5762,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -5205,6 +5784,10 @@
             "post": {
                 "summary": "",
                 "operationId": "microservice.microservice.microserviceRequest",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":null}, 
@@ -5213,7 +5796,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":true},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_idtoken":false},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":true}, 
                         {"server_function_parameter_accept_language":true},
@@ -5400,36 +5983,20 @@
                         "type":"string"
                     }
                 }
-            },
-            "AuthorizationBasic":{
-                "description":"Syntax: Basic [basic 64 encoded username:password]",
-                "type":"string",
-                "in":"header",
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "AuthorizationBearer":{
-                "description":"Syntax: Bearer [app access or admin token using base64], claims: app_id:[APP_ID], id:[USER ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
-                "in":"header",
-                "schema":{
-                    "type": "string"
-                }
             }
         },
         "securitySchemes":{
-            "basicAuth": {
-                "type": "http",
+            "AuthorizationBasic":{
+                "description":"Syntax: Basic [basic 64 encoded username:password]",
+                "type":"http",
                 "scheme":"basic"
-            }
-        },
-        "headers":{
-            "Content-Type":{
-                "description":"",
-                "type":"string",
-                "default":"application/json"
             },
-            "Id-Token":{
+            "AuthorizationBearer":{
+                "description":"Syntax: Bearer [app access or admin token using base64], claims: app_id:[APP_ID], id:[USER ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
+                "type":"http",
+                "schema":"bearer"
+            },
+            "id-token":{
                 "description":"Created when app starts. Should be in all requests. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], id:null, name:[''], ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
                 "type":"string"
             }
@@ -5495,14 +6062,7 @@
                     "type": "string"
                 }
             },
-            "method":{
-                "name":	"method",
-                "in":"header",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
+
             "route_path":{
                 "description":"Route path after * and ? or full path for app route using logic: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length)",
                 "name":	"route_path",

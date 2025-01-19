@@ -177,14 +177,15 @@ const bffStart = async (req, res) =>{
         serverUtilCompression(bff_parameters.res.req,bff_parameters.res);
         if (bff_parameters.endpoint == 'APP' && bff_parameters.method.toUpperCase() == 'GET' && !bff_parameters.url?.startsWith('/bff')){
             //App route for app asset, common asset, app info page and app
-            serverResponse({result_request:await app_common.commonApp({  app_id:app_id,
+            serverResponse({app_id:app_id,
+                            result_request:await app_common.commonApp({  app_id:app_id,
                                                         ip:bff_parameters.ip, 
                                                         host:bff_parameters.host ?? '', 
                                                         user_agent:bff_parameters.user_agent, 
                                                         accept_language:bff_parameters.accept_language, 
                                                         url:bff_parameters.url ?? '', 
                                                         query:null}),
-                            app_id:app_id,
+                            host:bff_parameters.host,
                             route : 'APP',
                             res:bff_parameters.res})
             .catch(()=>serverError({data:null, methods:null}));
@@ -194,7 +195,8 @@ const bffStart = async (req, res) =>{
             //REST API requests from client are encoded
             const decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';   
             
-            serverResponse({result_request:await serverREST_API({   app_id:app_id, 
+            serverResponse({app_id:app_id,
+                            result_request:await serverREST_API({   app_id:app_id, 
                                                                     endpoint:bff_parameters.endpoint,
                                                                     method:bff_parameters.method.toUpperCase(), 
                                                                     ip:bff_parameters.ip, 
@@ -203,6 +205,7 @@ const bffStart = async (req, res) =>{
                                                                     route_path:bff_parameters.route_path,
                                                                     user_agent:bff_parameters.user_agent, 
                                                                     accept_language:bff_parameters.accept_language, 
+                                                                    idToken:bff_parameters.idToken, 
                                                                     authorization:bff_parameters.authorization ?? '', 
                                                                     parameters:decodedquery, 
                                                                     body:bff_parameters.body,
@@ -216,8 +219,8 @@ const bffStart = async (req, res) =>{
                                                             return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
                                                         });
                                                     }), 
+                            host:bff_parameters.host,
                             route:'REST_API',
-                            endpoint:bff_parameters.endpoint, 
                             method:bff_parameters.method, 
                             decodedquery:decodedquery, 
                             res:bff_parameters.res});
@@ -251,6 +254,7 @@ const bffStart = async (req, res) =>{
                             route_path:bff_parameters.route_path,
                             user_agent:bff_parameters.user_agent, 
                             accept_language:bff_parameters.accept_language, 
+                            idToken:bff_parameters.idToken, 
                             authorization:bff_parameters.authorization ?? '', 
                             parameters:bff_parameters.query, 
                             body:bff_parameters.body,

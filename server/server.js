@@ -41,8 +41,6 @@ const zlib = await import('node:zlib');
  *              rows        : array of anything
  * 
  *  @param {{app_id?:number|null,
- *           host?:string|null,
- *           route:'APP'|'REST_API'|null,
  *           result_request:{   http?:number|null,
  *                              code?:number|string|null,
  *                              text?:string|null,
@@ -52,10 +50,11 @@ const zlib = await import('node:zlib');
  *                              sendfile?:string|null,
  *                              type:server_server_response_type,
  *                              singleResource?:boolean},
- *          endpoint?:server_bff_endpoint_type,
- *          method?:server_req_method,
- *          decodedquery?:string|null,
- *          res:server_server_res}} parameters
+ *           host?:string|null,
+ *           route:'APP'|'REST_API'|null,
+ *           method?:server_req_method,
+ *           decodedquery?:string|null,
+ *           res:server_server_res}} parameters
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
@@ -152,8 +151,8 @@ const serverResponse = async parameters =>{
         parameters.res.end();
     }
     else{
-        if (parameters.endpoint=='SOCKET'){
-            //This endpoint only allowed for SSE so no more update of response
+        if (parameters.res.getHeader('Content-Type')?.startsWith('text/event-stream')){
+            //For SSE so no more update of response
             null;
         }
         else{
@@ -448,7 +447,7 @@ const serverResponse = async parameters =>{
         //compress for:
         //not broadcast messages using socket
         //text responses
-        if (req.headers.accept != 'text/event-stream' &&
+        if (!res.getHeader('Content-Type')?.startsWith('text/event-stream') &&
             (res.getHeader('Content-Type')?.startsWith('text') ||
             res.getHeader('Content-Type')?.startsWith('application/json'))){
             const method = 'gzip';
@@ -568,7 +567,6 @@ const serverUtilAppLine = () =>{
  *              /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
  *              /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
  *              /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
- *              /bff/socket/v1*                             get     iam.iamAuthenticateSocket                   bffSocket
  *              /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
  *              /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
  *              /bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
@@ -607,7 +605,7 @@ const serverUtilAppLine = () =>{
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bffMiddleware.js')} */
-    const { bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+    const { bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, 
             bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
     //auth
     /**@type{import('./iamMiddleware.js')} */
@@ -631,7 +629,6 @@ const serverUtilAppLine = () =>{
     app.route('/bff/app_access/v1*').all                        (iam.iamAuthenticateAccessToken,            bffAppAccess);
     app.route('/bff/app_external/v1/app-module-function*').post (iam.iamAuthenticateExternal,               bffAppExternal);
     app.route('/bff/admin/v1*').all                             (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
-    app.route('/bff/socket/v1*').get                            (iam.iamAuthenticateSocket,                 bffSocket);
     app.route('/bff/iam_admin/v1/server-iam-login').post        (iam.iamAuthenticateAdmin,                  bffIAMAdmin);
     app.route('/bff/iam_user/v1*').post                         (iam.iamAuthenticateUser,                   bffIAMUser);
     app.route('/bff/iam_provider/v1*').post                     (iam.iamAuthenticateProvider,               bffIAMProvider);
@@ -642,14 +639,14 @@ const serverUtilAppLine = () =>{
     //ERROR LOGGING
     app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res) => {
         fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
-            serverResponse({host:req.headers.host,
-                            route:null,
-                            result_request:{http:err?.name=='PayloadTooLargeError'?400:500, 
+            serverResponse({result_request:{http:err?.name=='PayloadTooLargeError'?400:500, 
                                             code:null, 
                                             text:err?.name=='PayloadTooLargeError'?iamUtilMessageNotAuthorized():'SERVER ERROR',
                                             developerText:'',
                                             moreInfo:'',
                                             type:'HTML'},
+                            host:req.headers.host,
+                            route:null,
                             res:res});
         });
     });
@@ -673,7 +670,7 @@ const serverJs = async () => {
     const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
 
     /**@type{import('./bffMiddleware.js')} */
-    const { bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+    const { bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, 
         bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
 
     /**
@@ -734,13 +731,6 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/socket/v1') && req.method=='GET':{
-                    req.route.path = '/bff/socket/v1*';
-                    iamMiddleware.iamAuthenticateSocket(req, res, () =>
-                        bffSocket(req, res)
-                    );
-                    break;
-                }
                 case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
                     req.route.path = '/bff/iam_admin/v1/server-iam-login';
                     await iamMiddleware.iamAuthenticateAdmin(req, res, () =>
@@ -769,14 +759,14 @@ const serverJs = async () => {
                     break;
                 }
                 default:{
-                    serverResponse({host:req.headers.host,
-                                    route:null,
-                                    result_request:{http:400, 
+                    serverResponse({result_request:{http:400, 
                                                     code:null, 
                                                     text:iamUtilMessageNotAuthorized(), 
                                                     developerText:'',
                                                     moreInfo:'',
                                                     type:'HTML'},
+                                    host:req.headers.host,
+                                    route:null,
                                     res:res});
                 }
             }
@@ -817,15 +807,16 @@ const serverJs = async () => {
                 (serverUtilNumberValue((fileModelConfig.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
             //log error
             fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
-                serverResponse({host:req.headers.host,
-                    route:null,
-                    result_request:{http:400, 
-                                    code:null, 
-                                    text:iamUtilMessageNotAuthorized(), 
-                                    developerText:'',
-                                    moreInfo:'',
-                                    type:'HTML'},
-                    res:res});
+                serverResponse({
+                                result_request:{http:400, 
+                                                code:null, 
+                                                text:iamUtilMessageNotAuthorized(), 
+                                                developerText:'',
+                                                moreInfo:'',
+                                                type:'HTML'},
+                                host:req.headers.host,
+                                route:null,
+                                res:res});
             });
         }
         else{
@@ -1033,13 +1024,13 @@ const serverREST_API = async (routesparameters) =>{
 
                 //add parameters using tree shaking pattern
                 //so only defined parameters defined using openAPI pattern are sent to functions
-                const parametersData = routesparameters.method=='GET'?
+                const parametersData = 
+                                        routesparameters.method=='GET'?
                                             {...methodObj.parameters
                                                             //include all parameters.in=query
                                                             .filter((/**@type{*}*/parameter)=>parameter.in =='query')
-                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}),
-                                            //if SSE then add res
-                                            ...(methodObj.responses?.[200]?.content?.['text/event-stream'] && {res:routesparameters.res})}:
+                                                            .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{})
+                                            }:
                                             //all other methods use body to send data
                                             //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
                                             (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json'].schema.additionalProperties)?
@@ -1047,7 +1038,10 @@ const serverREST_API = async (routesparameters) =>{
                                                                                 .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{})}:
                                                             (methodObj.requestBody?.content?Object.entries(methodObj.requestBody?.content['application/json'].schema.properties)
                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{}):{});
-                
+                //if SSE then add res
+                if (methodObj.responses?.[200]?.content?.['text/event-stream'])
+                    parametersData.res = routesparameters.res;
+
                 //read operationId what file to import and what function to execute
                 //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
                 const filePath = '/' + methodObj.operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -1072,7 +1066,7 @@ const serverREST_API = async (routesparameters) =>{
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
                                 app_id:         routesparameters.app_id,
-                                ...(getParameterValidation('server_function_parameter_iam')                     && {iam:            app_query?.get('iam')}),
+                                ...(getParameterValidation('server_function_parameter_idtoken')                 && {idToken:        routesparameters.idToken}),
                                 ...(getParameterValidation('server_function_parameter_authorization')           && {authorization:  routesparameters.authorization}),
                                 ...(getParameterValidation('server_function_parameter_user_agent')              && {user_agent:     routesparameters.user_agent}),
                                 ...(getParameterValidation('server_function_parameter_accept_language')         && {accept_language:routesparameters.accept_language}),
@@ -1161,9 +1155,10 @@ const serverStart = async () =>{
             framework(req, res);
         };
         socketIntervalCheck();
+        const NETWORK_INTERFACE = fileModelConfig.get('CONFIG_SERVER','SERVER', 'NETWORK_INTERFACE');
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(app).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), () => {
+        http.createServer(app).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
             fileModelLog.postServerI('HTTP Server up and running on PORT: ' + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
@@ -1178,7 +1173,7 @@ const serverStart = async () =>{
                 cert: HTTPS_CERT.toString()
             };
             /**@ts-ignore*/
-            https.createServer(options,  app).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'), () => {
+            https.createServer(options,  app).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
                 fileModelLog.postServerI('HTTPS Server up and running on PORT: ' + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
