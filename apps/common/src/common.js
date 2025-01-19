@@ -528,7 +528,7 @@ const commonAssetfile = parameters =>{
  *          ip:string,
  *          host:string,
  *          locale:string,
- *          iam:string,
+ *          idToken:string,
  *          endpoint:server_bff_endpoint_type}} parameters
  * @returns {Promise.<server_server_response>}
  */
@@ -541,7 +541,7 @@ const commonModuleRun = async parameters => {
                                                                                             app.common_role == parameters.endpoint)[0];
         if (module){
             const {default:RunFunction} = await import(`file://${process.cwd()}${module.common_path}`);
-            return await RunFunction({app_id:parameters.app_id, data:parameters.data, ip:parameters.ip, host:parameters.host, iam:parameters.iam, user_agent:parameters.user_agent, locale:parameters.locale});
+            return await RunFunction({app_id:parameters.app_id, data:parameters.data, ip:parameters.ip, host:parameters.host, idToken:parameters.idToken, user_agent:parameters.user_agent, locale:parameters.locale});
         }
         else{
             /**@type{import('../../../server/iam.js')} */
@@ -651,7 +651,7 @@ const commonModuleGet = async parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:string,
- *          iam:string,
+ *          authorization:string,
  *          data:{  ps:'A4', 
  *                  report_parameters:string},
  *          user_agent:string,
@@ -677,7 +677,7 @@ const commonAppReportQueue = async parameters =>{
                                                     name:parameters.resource_id,
                                                     parameters:parameters.data.report_parameters,
                                                     user:fileModelIamUser.get(  parameters.app_id, 
-                                                                                serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id')) ).result[0].username
+                                                        serverUtilNumberValue(iamUtilDecode(parameters.authorization).id)).result[0].username
                                                     });
     if (result_post.result){
         await fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),

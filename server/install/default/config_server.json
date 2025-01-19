@@ -11,7 +11,8 @@
         {"JSON_LIMIT": "10MB", "COMMENT": ""},
         {"APP_COMMON_APP_ID": "0", "COMMENT": "admin and common app id"},
         {"FRAMEWORK": "1", "COMMENT": "1=JS,2=Express"},
-        {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"}
+        {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"},
+        {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"}
     ],
     "SERVICE_IAM":[
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
