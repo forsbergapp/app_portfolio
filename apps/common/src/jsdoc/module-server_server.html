@@ -295,7 +295,7 @@ Returns HTML or {static:boolean, sendfile:string|null, sendcontent:string}
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line903">line 903</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line894">line 894</a>
     </div></div></dd>
     
 
@@ -363,7 +363,7 @@ Returns HTML or {static:boolean, sendfile:string|null, sendcontent:string}
 path	                                    method	middleware                                  controller      comment
 /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
 used for shared libraries and open report url
-*	                                        all	                                                bffInit	        logs EventSource and response when closed,
+*	                                        all	                                                bffInit	        logs SSE and response when closed,
 authenticates request and will end request if not passing controls,
 sets headers,
 returns disallow for robots.txt and empty favicon.ico
@@ -375,7 +375,6 @@ responds to SSL verification if enabled
 /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
 /bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
 /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
-/bff/socket/v1*                             get     iam.iamAuthenticateSocket                   bffSocket
 /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
 /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
 /bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
@@ -427,7 +426,7 @@ app
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line551">line 551</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line550">line 550</a>
     </div></div></dd>
     
 
@@ -537,7 +536,7 @@ app
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line658">line 658</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line655">line 655</a>
     </div></div></dd>
     
 
@@ -708,7 +707,7 @@ can be returned as result or using sendfile key with file path that validates pa
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line61">line 61</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line60">line 60</a>
     </div></div></dd>
     
 
@@ -816,7 +815,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1119">line 1119</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line1113">line 1113</a>
     </div></div></dd>
     
 
@@ -953,7 +952,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line526">line 526</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line525">line 525</a>
     </div></div></dd>
     
 
@@ -1059,7 +1058,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line537">line 537</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line536">line 536</a>
     </div></div></dd>
     
 
@@ -1237,7 +1236,7 @@ Start http server and https server if enabled</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line257">line 257</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line256">line 256</a>
     </div></div></dd>
     
 
@@ -1376,7 +1375,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line246">line 246</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line245">line 245</a>
     </div></div></dd>
     
 
@@ -1534,7 +1533,7 @@ so undefined and '' are avoided sending argument to service functions</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line514">line 514</a>
+        <a href="server_server.js.html">server/server.js</a>, <a href="server_server.js.html#line513">line 513</a>
     </div></div></dd>
     
 

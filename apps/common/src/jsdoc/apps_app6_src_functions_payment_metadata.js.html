@@ -11,7 +11,7 @@
 
 /**
  * @import {server_server_response, server_db_sql_result_app_data_resource_master_get} from '../../../../server/types.js'
- * @typedef {server_server_response &amp; {result?:server_db_sql_result_app_data_resource_master_get[]}} transactionMetadata
+ * @typedef {server_server_response &amp; {result?:server_db_sql_result_app_data_resource_master_get[]}} paymentMetadata
  */
 /**
  * @name paymentMetadata
@@ -22,7 +22,7 @@
  *          user_agent:string,
  *          ip:string,
  *          host:string,
- *          iam:string,
+ *          idToken:string,
  *          locale:string}} parameters
  * @returns {Promise.&lt;paymentMetadata>}
  */

@@ -216,7 +216,7 @@
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>socketAppServerFunctionSend<span class="signature">(app_id, iam, message_type, message)</span><span class="type-signature"> &rarr; {Promise.&lt;{sent:number}>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>socketAppServerFunctionSend<span class="signature">(app_id, idToken, message_type, message)</span><span class="type-signature"> &rarr; {Promise.&lt;{sent:number}>}</span></div>
     
 
     
@@ -284,7 +284,7 @@ Used for sending server side event from an app server function</p>
 
         <tr>
             
-                <td class="name"><code>iam</code></td>
+                <td class="name"><code>idToken</code></td>
             
 
             <td class="type">
@@ -387,7 +387,7 @@ Used for sending server side event from an app server function</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line352">line 352</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line359">line 359</a>
     </div></div></dd>
     
 
@@ -542,7 +542,7 @@ Used for sending server side event from an app server function</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line123">line 123</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line133">line 133</a>
     </div></div></dd>
     
 
@@ -605,7 +605,7 @@ Used for sending server side event from an app server function</p>
 
 <div class="description">
     <p>Socket client connect
-Used by EventSource and leaves connection open</p>
+Used by SSE and leaves connection open</p>
 </div>
 
 
@@ -698,7 +698,7 @@ Used by EventSource and leaves connection open</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line96">line 96</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line105">line 105</a>
     </div></div></dd>
     
 
@@ -752,6 +752,149 @@ Used by EventSource and leaves connection open</p>
     
 
     
+    <div class='title_h4'><span class="type-signature">(inner) </span>socketClientGet<span class="signature">(idtoken)</span><span class="type-signature"></span></div>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Socket client get client_id for given id token</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <div class='title_h5'>Parameters:</div>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>idtoken</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line96">line 96</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <div class='title_h4'><span class="type-signature">(inner) </span>socketClientOnClose<span class="signature">(res, client_id)</span><span class="type-signature"> &rarr; {void}</span></div>
     
 
@@ -761,7 +904,7 @@ Used by EventSource and leaves connection open</p>
 
 <div class="description">
     <p>Socket client close
-Used by EventSource and closes connection</p>
+Used by SSE and closes connection</p>
 </div>
 
 
@@ -877,7 +1020,7 @@ Used by EventSource and closes connection</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line108">line 108</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line118">line 118</a>
     </div></div></dd>
     
 
@@ -940,7 +1083,7 @@ Used by EventSource and closes connection</p>
 
 <div class="description">
     <p>Socket client send
-Used by EventSource and closes connection</p>
+Used by SSE and closes connection</p>
 </div>
 
 
@@ -1234,7 +1377,7 @@ Used by EventSource and closes connection</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line193">line 193</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line201">line 201</a>
     </div></div></dd>
     
 
@@ -1407,7 +1550,7 @@ Used by EventSource and closes connection</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line134">line 134</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line144">line 144</a>
     </div></div></dd>
     
 
@@ -1751,7 +1894,7 @@ Used by EventSource and closes connection</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line496">line 496</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line502">line 502</a>
     </div></div></dd>
     
 
@@ -1857,7 +2000,7 @@ Used by EventSource and closes connection</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line471">line 471</a>
+        <a href="server_socket.js.html">server/socket.js</a>, <a href="server_socket.js.html#line477">line 477</a>
     </div></div></dd>
     
 

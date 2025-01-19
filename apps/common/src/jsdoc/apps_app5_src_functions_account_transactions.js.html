@@ -10,11 +10,8 @@
  */
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response &amp; {result?:{timestamp:string, 
- *                                              logo:string, 
- *                                              origin:string, 
- *                                              amount_deposit:number|null, 
- *                                              amount_withdrawal:number|null}}} getTransactions
+ * @import {bank_transaction} from './types.js'
+ * @typedef {server_server_response &amp; {result?:bank_transaction}} getTransactions
  */
 /**
  * @name getTransacions
@@ -25,7 +22,7 @@
  *          user_agent:string,
  *          ip:string,
  *          host:string,
- *          iam:string,
+ *          idToken:string,
  *          locale:string}} parameters
  * @returns {Promise.&lt;getTransactions>}
  */

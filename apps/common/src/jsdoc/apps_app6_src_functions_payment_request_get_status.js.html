@@ -11,7 +11,7 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response &amp; {result?:{ status:string}}} paymentRequestGetStatus
+ * @typedef {server_server_response &amp; {result?:{ status:string}[]}} paymentRequestGetStatus
  */
 
 /**
@@ -24,7 +24,7 @@
  *          user_agent:string,
  *          ip:string,
  *          host:string,
- *          iam:string,
+ *          idToken:string,
  *          locale:string}} parameters
  * @returns {Promise.&lt;paymentRequestGetStatus>}
  */
