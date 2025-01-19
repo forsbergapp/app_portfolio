@@ -84,7 +84,6 @@ const COMMON_GLOBAL = {
                             map_update:                 ()=>null
                         }
                     },
-    service_socket_client_ID:null,
     service_socket_eventsource:null
 };
 Object.seal(COMMON_GLOBAL);
@@ -2378,7 +2377,6 @@ const commonFFB = async parameter => {
     //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
     const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&iam_user_id=${COMMON_GLOBAL.user_account_id ?? COMMON_GLOBAL.iam_user_id}` + 
-                                    `&client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                                     `&app_id=${COMMON_GLOBAL.app_id??''}`);
     //add common query parameter
     parameter.query += `&locale=${COMMON_GLOBAL.user_locale}&iam=${iam}`;
@@ -2490,7 +2488,6 @@ const commonSocketBroadcastShow = (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.service_socket_client_ID =    JSON.parse(COMMON_WINDOW.atob(message)).client_id;
             COMMON_GLOBAL.client_latitude =             JSON.parse(COMMON_WINDOW.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(COMMON_WINDOW.atob(message)).latitude;
             COMMON_GLOBAL.client_longitude =            JSON.parse(COMMON_WINDOW.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(COMMON_WINDOW.atob(message)).longitude;
             COMMON_GLOBAL.client_place =                JSON.parse(COMMON_WINDOW.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(COMMON_WINDOW.atob(message)).place;
