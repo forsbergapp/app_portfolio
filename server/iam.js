@@ -681,8 +681,7 @@ const iamAuthenticateUserProvider = async parameters =>{
  *          user_agent:string,
  *          accept_language:string,
  *          locale:string,
- *          data:server_db_sql_parameter_user_account_create,
- *          res:server_server_res}} parameters
+ *          data:server_db_sql_parameter_user_account_create}} parameters
  * @return {Promise.<iamAuthenticateUserSignup>}
 */
 const iamAuthenticateUserSignup = async parameters =>{
@@ -780,8 +779,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          host:string 
  *          locale:string,
  *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET, 4 NEW EMAIL
- *                  verification_code:string},
- *          res:server_server_res}} parameters
+ *                  verification_code:string}}} parameters
  * @return {Promise.<iamAuthenticateUserActivate>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
@@ -1846,8 +1844,7 @@ const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserLogin.get(app_id, nul
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_file_iam_user_update,
- *          res:server_server_res}} parameters
+ *          data:server_db_file_iam_user_update}} parameters
  * @returns {Promise.<iamUserUpdate>}
  */
 const iamUserUpdate = async parameters =>{
