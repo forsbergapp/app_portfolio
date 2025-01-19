@@ -3214,7 +3214,7 @@
                         {"server_validation_app_function":null}, 
                         {"server_validation_app_function_role":null}, 
                         {"server_function_parameter_ip":false},
-                        {"server_function_parameter_iam":false},
+                        {"server_function_parameter_iam":true},
                         {"server_function_parameter_authorization":false},
                         {"server_function_parameter_user_agent":false}, 
                         {"server_function_parameter_accept_language":false},
@@ -3236,9 +3236,6 @@
                                                 "type":"number"
                                             },
                                             "client_id":{
-                                                "type":"number"
-                                            },
-                                            "client_id_current":{
                                                 "type":"number"
                                             },
                                             "broadcast_type":{
@@ -5285,10 +5282,156 @@
         }
     },
     "components":{
+        "schemas":{
+            "PathResponseSingle":{
+                "properties":"",
+                "$ref": "#/components/responses/200/content/application~1json/schema/SuccessReponseSingleResource/properties"
+            },
+            "PathResponseList":{
+                "items":"",
+                "$ref": "#/components/responses/200/content/application~1json/schema/SuccessReponseList/properties/list_header/properties/rows/items"
+            },
+            "PathResponsePagination":{
+                "items":"",
+                "$ref": "#/components/responses/200/content/application~1json/schema/SuccessReponsePagination/properties/page_header/properties/rows/items"
+            },
+            "PathResponseErrorISO":{
+                "$ref": "#/components/responses/401/content/application~1json/schema/ErrorResponseISO"
+            },
+            "PathResponseErrorSecurity":{
+                "$ref": "#/components/responses/401/content/'application~1json'/schema/ErrorResponseSecurity"
+            },
+            "SuccessReponse":{
+                "oneOf":[
+                    {"$ref":"#/components/schemas/SuccessSingleResource"},
+                    {"$ref":"#/components/schemas/SuccessReponseList"},
+                    {"$ref":"#/components/schemas/SuccessReponsePagination"}
+                ]
+            },
+            "SuccessReponseSingleResource":{
+                "type": "*",
+                "properties":{}
+            },
+            "SuccessReponseList":{
+                "type": "object",
+                "properties":{
+                    "list_header":{
+                        "type":"object",
+                        "properties":{
+                            "total_count":{
+                                "type":"number"
+                            },
+                            "offset":{
+                                "description":"Offset query parameter or 0",
+                                "type":"number"
+                            },
+                            "count":{
+                                "description":"Return limit query parameter or number of records",
+                                "type":"number"
+                            },
+                            "rows":{
+                                "type":"array",
+                                "items":{
+                                    "$ref":""
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "SuccessReponsePagination":{
+                "type": "object",
+                "properties":{
+                    "page_header":{
+                        "type":"object",
+                        "properties":{
+                            "total_count":{
+                                "description":"Total rows of number if records>0 else 0",
+                                "type":"number"
+                            },
+                            "offset":{
+                                "description":"Offset query parameter or 0",
+                                "type":"number"
+                            },
+                            "count":{
+                                "description":"Least of limit query parameter and number of records",
+                                "type":"number"
+                            },
+                            "rows":{
+                                "type":"array",
+                                "items":{}
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorResponse":{
+                    "oneOf":[
+                        {"$ref":"#/components/responses/400"},
+                        {"$ref":"#/components/responses/401"},
+                        {"$ref":"#/components/responses/404"},
+                        {"$ref":"#/components/responses/429"},
+                        {"$ref":"#/components/responses/500"},
+                        {"$ref":"#/components/responses/503"}
+                    ]
+            },
+            "ErrorResponseSecurity":{
+                "type": "string",
+                "message":"⛔"
+            },
+            "ErrorReponseISO":{
+                "type": "object",
+                "properties":{
+                    "http":{
+                        "type":"string"
+                    },
+                    "code":{
+                        "description":"module group APP, IAM, BFF, SERVER, SOCKET, DB, MICROSERVICE or name of server function",
+                        "type":"string"
+                    },
+                    "text":{
+                        "description":"Full error message for admin app or SERVER ERROR is returned if status 500, server log contains full info",
+                        "type":"string"
+                    },
+                    "developer_text":{
+                        "type":"string"
+                    },
+                    "more_info":{
+                        "type":"string"
+                    }
+                }
+            },
+            "AuthorizationBasic":{
+                "description":"Syntax: Basic [basic 64 encoded username:password]",
+                "type":"string",
+                "in":"header",
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "AuthorizationBearer":{
+                "description":"Syntax: Bearer [app access or admin token using base64], claims: app_id:[APP_ID], id:[USER ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
+                "in":"header",
+                "schema":{
+                    "type": "string"
+                }
+            }
+        },
         "securitySchemes":{
             "basicAuth": {
                 "type": "http",
                 "scheme":"basic"
+            }
+        },
+        "headers":{
+            "Content-Type":{
+                "description":"",
+                "type":"string",
+                "default":"application/json"
+            },
+            "Id-Token":{
+                "description":"Created when app starts. Should be in all requests. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], id:null, name:[''], ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
+                "type":"string"
             }
         },
         "parameters":{
@@ -5397,21 +5540,31 @@
         },
         "responses":{
             "200": {
-                    "description": "",
+                    "description": "Success",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "*"
+                                "SuccessResponseSingleResource":{
+                                    "$ref":"#/components/schemas/SuccessResponseSingleResource"
+                                },
+                                "SuccessResponseList":{
+                                    "$ref":"#/components/schemas/SuccessResponseList"
+                                },
+                                "SuccessResponsePagination":{
+                                    "$ref":"#/components/schemas/SuccessResponsePagination"
+                                }
                             }
                         }
                     }
                 },
             "201": {
-                    "description": "",
+                    "description": "Created",
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "*"
+                                "SuccessResponseSingleResource":{
+                                    "$ref":"#/components/schemas/SuccessResponseSingleResource"
+                                }
                             }
                         }
                     }
@@ -5420,8 +5573,10 @@
                     "description": "Redirect if user account or path not found",
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "$ref": "*"
+                            "schema":{
+                                "ErrorResponseSecurity":{
+                                    "$ref":"#/components/schemas/ErrorResponseSecurity"
+                                }
                             }
                         }
                     }
@@ -5431,7 +5586,14 @@
                     "content":{
                         "application/json":{
                             "description":"Bad request", 
-                            "type":"string"
+                            "schema":{
+                                "ErrorResponseSecurity":{
+                                    "$ref":"#/components/schemas/ErrorResponseSecurity"
+                                },
+                                "ErrorResponseISO":{
+                                    "$ref":"#/components/schemas/ErrorResponseISO"
+                                }
+                            }
                         }
                     }
                 },
@@ -5440,7 +5602,14 @@
                     "headers":{
                         "application/json":{
                             "description":"Not authorized", 
-                            "type":"string"
+                            "schema":{
+                                "ErrorResponseSecurity":{
+                                    "$ref":"#/components/schemas/ErrorResponseSecurity"
+                                },
+                                "ErrorResponseISO":{
+                                    "$ref":"#/components/schemas/ErrorResponseISO"
+                                }
+                            }
                         }
                     }
                 },
@@ -5453,12 +5622,32 @@
                     }
                 }
             },
+            "429": {
+                "description": "⛔",
+                "headers":{
+                    "application/json":{
+                        "description":"Too many requests", 
+                        "schema":{
+                            "ErrorResponseSecurity":{
+                                "$ref":"#/components/schemas/ErrorResponseSecurity"
+                            }
+                        }
+                    }
+                }
+            },
             "500": {
                 "description": "Error",
                 "headers":{
                     "application/json":{
                         "description":"Server error", 
-                        "type":"string"
+                        "schema":{
+                            "ErrorResponseSecurity":{
+                                "$ref":"#/components/schemas/ErrorResponseSecurity"
+                            },
+                            "ErrorResponseISO":{
+                                "$ref":"#/components/schemas/ErrorResponseISO"
+                            }
+                        }
                     }
                 }
             },
@@ -5467,7 +5656,11 @@
                 "headers":{
                     "application/json":{
                         "description":"BFF error", 
-                        "type":"string"
+                        "schema":{
+                            "ErrorResponseISO":{
+                                "$ref":"#/components/schemas/ErrorResponseISO"
+                            }
+                        }
                     }
                 }
             }

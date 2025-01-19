@@ -677,7 +677,7 @@ const commonAppReportQueue = async parameters =>{
                                                     name:parameters.resource_id,
                                                     parameters:parameters.data.report_parameters,
                                                     user:fileModelIamUser.get(  parameters.app_id, 
-                                                                                serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id')) ).result[0].username
+                                                                                serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id')) ).result[0].username
                                                     });
     if (result_post.result){
         await fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),

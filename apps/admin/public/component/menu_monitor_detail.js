@@ -22,7 +22,7 @@
  * @description Template
  * @function
  * @param {{
- *          service_socket_client_ID:number,
+ *          iam_user_id:number,
  *          monitor_detail:'CONNECTED'|'APP_DATA_STAT'|'SERVER_LOG',
  *          function_commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *          function_get_order_by:function,
@@ -104,7 +104,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                                     timezone:string,
                                                                     user_agent:string
                                                                     }}*/log)=>
-                                            `<div class='menu_monitor_detail_connected_row ${log.id==props.service_socket_client_ID?'list_current_user_row':''}'>
+                                            `<div class='menu_monitor_detail_connected_row ${log.iam_user_id==props.iam_user_id?'list_current_user_row':''}'>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.id}
                                                 </div>
@@ -260,7 +260,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       order_by:string,
  *                       page:number|null,
  *                       page_last:number|null,
- *                       service_socket_client_ID:number,
+ *                       iam_user_id:number,
  *                       LIMIT:number,
  *                       SERVICE_LOG_FILE_INTERVAL:string,
  *                       SERVICE_LOG_DATA:{parameters:{  SCOPE_REQUEST:string,
@@ -665,7 +665,7 @@ const component = async props => {
                     monitorDetailClickSort:monitorDetailClickSort,
                     monitorDetailClickItem:monitorDetailClickItem
         },
-        template:   template({  service_socket_client_ID:props.data.service_socket_client_ID,
+        template:   template({  iam_user_id:props.data.iam_user_id,
                                 monitor_detail:props.data.monitor_detail,
                                 function_commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                                 function_get_order_by:get_order_by,

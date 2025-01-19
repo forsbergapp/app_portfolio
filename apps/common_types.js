@@ -232,7 +232,6 @@
  *                                          map_update:                 function
  *                                      }
  *                              }
- *              service_socket_client_ID:number|null,
  *              service_socket_eventsource:{onmessage:function,
  *                                       onerror:function,
  *                                       close:function}|null}} CommonGlobal

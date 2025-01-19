@@ -134,7 +134,7 @@ const appSecureMenuShow = menu => {
                 mountDiv:   'secure_menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
-                            service_socket_client_ID: common.COMMON_GLOBAL.service_socket_client_ID,
+                            iam_user_id: common.COMMON_GLOBAL.iam_user_id,
                             client_latitude:common.COMMON_GLOBAL.client_latitude,
                             client_longitude:common.COMMON_GLOBAL.client_longitude,
                             client_place:common.COMMON_GLOBAL.client_place
@@ -262,7 +262,6 @@ const appSecureDialogueSendBroadcastSend = () => {
             
         const json_data ={  app_id:             app_id==''?null:app_id,
                             client_id:          client_id==''?null:client_id,
-                            client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                             broadcast_type:     broadcast_type, 
                             broadcast_message:  common.commonWindowToBase64(broadcast_message)};
         

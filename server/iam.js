@@ -112,14 +112,15 @@ const iamRequestRateLimiterCount = {};
 const iamUtilMessageNotAuthorized = () => '⛔';
 /**
  * @name iamUtilDecode
- * @description IAM util decode base64 in query
+ * @description IAM util decode base64 in iam parameter and removes word "Bearer " for authorization_bearer key
  * @function
- * @param {string} query 
- * @returns {URLSearchParams}
+ * @param {string} iam 
+ * @param {'id'|'app_id'|'iam_user_id'|'name'|'authorization_bearer'|'ip'} key
+ * @returns {*}
  */
- const iamUtilDecode = query =>{
-    return new URLSearchParams(atob(query));
-};
+ const iamUtilDecode = (iam, key) => key=='authorization_bearer'?
+                                        new URLSearchParams(atob(iam)).get(key)?.replace('Bearer ',''):
+                                        new URLSearchParams(atob(iam)).get(key);
 /**
  * @name iamUtilTokenExpired
  * @description IAM util token expired
@@ -1199,8 +1200,8 @@ const iamAuthenticateUserDelete = async parameters => {
  * @returns {void}
  */
 const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
-    if (iam && iamUtilDecode(iam).get('authorization_bearer') && path.startsWith('/server-socket')){
-        iamAuthenticateUserCommon(iam, 'APP_ID', iamUtilDecode(iam).get('authorization_bearer')??'', host, ip, res, next);
+    if (iam && iamUtilDecode(iam, 'authorization_bearer') && path.startsWith('/server-socket')){
+        iamAuthenticateUserCommon(iam, 'APP_ID', 'Bearer ' + iamUtilDecode(iam, 'authorization_bearer'), host, ip, res, next);
     }
     else
         iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateSocket');
@@ -1220,12 +1221,11 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
  */
  const iamAuthenticateUserCommon = async (iam, scope, authorization, host, ip, res, next) =>{
     const app_id_host = commonAppHost(host);
-    //iam required for SOCKET update using iam.client_id that can be changed any moment and not validated here
     if (iam && scope && authorization && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
         // APP_ID uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
         // other requests uses BASIC or BEARER access token in req.headers.authorization and ID token in iam.authorization_bearer
-        const id_token = scope=='APP_ID'?authorization?.split(' ')[1] ?? '':iamUtilDecode(iam).get('authorization_bearer')?.split(' ')[1] ?? '';
+        const id_token = scope=='APP_ID'?authorization?.split(' ')[1] ?? '':iamUtilDecode(iam,'authorization_bearer');
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
@@ -1267,7 +1267,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip &&
-                                access_token_decoded.id == iamUtilDecode(iam).get('iam_user_id')){
+                                access_token_decoded.id == iamUtilDecode(iam, 'iam_user_id')){
                                 /**@type{server_db_file_iam_user_login}*/
                                 const iam_user_login = fileModelIamUserLogin.get(app_id_host, null).result
                                                         .filter((/**@type{server_db_file_iam_user_login}*/row)=>
