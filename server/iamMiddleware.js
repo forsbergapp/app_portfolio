@@ -66,7 +66,7 @@ const iamAuthenticateAccessToken = (req, res, next) => iamService.iamAuthenticat
 const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateExternal('APP_EXTERNAL', req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.ip, req.body, res, next);    
 /**
  * @name iamAuthenticateSocket
- * @description Middleware authenticates socket used for EventSource
+ * @description Middleware authenticates socket used for SSE
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res

@@ -153,7 +153,7 @@ const serverResponse = async parameters =>{
     }
     else{
         if (parameters.endpoint=='SOCKET'){
-            //This endpoint only allowed for EventSource so no more update of response
+            //This endpoint only allowed for SSE so no more update of response
             null;
         }
         else{
@@ -556,7 +556,7 @@ const serverUtilAppLine = () =>{
  *	            path	                                    method	middleware                                  controller      comment
  *              /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
  *                                                                                                                              used for shared libraries and open report url
- *	            *	                                        all	                                                bffInit	        logs EventSource and response when closed, 
+ *	            *	                                        all	                                                bffInit	        logs SSE and response when closed, 
  *                                                                                                                              authenticates request and will end request if not passing controls,
  *                                                                                                                              sets headers, 
  *                                                                                                                              returns disallow for robots.txt and empty favicon.ico
@@ -614,7 +614,7 @@ const serverUtilAppLine = () =>{
     const iam = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
     
     //ROUTES 
-    //logs EventSource and response when closed, authenticates request and will end request if not passing controls, 
+    //logs SSE and response when closed, authenticates request and will end request if not passing controls, 
     //sets headers, returns disallow for robots.txt and empty favicon.ico
     app.route('*').all                          (bffInit);
     
@@ -1038,7 +1038,7 @@ const serverREST_API = async (routesparameters) =>{
                                                             //include all parameters.in=query
                                                             .filter((/**@type{*}*/parameter)=>parameter.in =='query')
                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key.name]:app_query?.get(Object.values(key)[0])}};},{}),
-                                            //if EventSource then add res
+                                            //if SSE then add res
                                             ...(methodObj.responses?.[200]?.content?.['text/event-stream'] && {res:routesparameters.res})}:
                                             //all other methods use body to send data
                                             //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
