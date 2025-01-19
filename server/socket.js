@@ -146,7 +146,7 @@ const socketClientAdd = (newClient) => {
  * @description Socket connected update
  * @function
  * @param {number} app_id,
- * @param {{iam:string,
+ * @param {{idToken:string,
  *          user_account_id:number|null,
  *          iam_user_id:number|null,
  *          iam_user_username:string|null,
@@ -160,9 +160,8 @@ const socketClientAdd = (newClient) => {
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
     /**@type{import('./iam.js')} */
-    const { iamUtilMessageNotAuthorized, iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
-    const authorization_bearer = iamUtilDecode(parameters.iam, 'authorization_bearer');
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length==0){
+    const { iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length==0){
         return {http:401,
                 code:'IAM',
                 text:iamUtilMessageNotAuthorized(),
@@ -173,7 +172,7 @@ const socketClientAdd = (newClient) => {
     }
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
-            if (connected.authorization_bearer == authorization_bearer){
+            if (connected.authorization_bearer == parameters.idToken){
                 const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                 connected.connection_date = new Date().toISOString();
                 connected.user_account_id = parameters.user_account_id;
@@ -216,7 +215,7 @@ const socketClientAdd = (newClient) => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
- *          iam:string,
+ *          idToken:string,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
  *                  broadcast_type:server_socket_broadcast_type_all,
@@ -224,8 +223,6 @@ const socketClientAdd = (newClient) => {
  * @returns {Promise.<socketAdminSend>}
  */
  const socketAdminSend = async parameters => {
-    /**@type{import('./iam.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
     parameters.data.client_id = serverUtilNumberValue(parameters.data.client_id);
 
     if (parameters.data.broadcast_type=='ALERT' || parameters.data.broadcast_type=='MAINTENANCE'){
@@ -233,7 +230,7 @@ const socketClientAdd = (newClient) => {
         //except MAINTENANCE to admin and current user
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
-            if (client.id != socketClientGet(iamUtilDecode(parameters.iam, 'authorization_bearer')))
+            if (client.id != socketClientGet(parameters.idToken))
                 if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')))
                     null;
                 else
@@ -365,16 +362,14 @@ const socketClientAdd = (newClient) => {
  *              Used for sending server side event from an app server function
  * @function
  * @param {number} app_id
- * @param {string} iam
+ * @param {string} idToken
  * @param {server_socket_broadcast_type_app_function} message_type
  * @param {string} message
  * @returns {Promise.<{sent:number}>}
  */
-const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =>{
-    /**@type{import('./iam.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
+const socketAppServerFunctionSend = async (app_id, idToken, message_type, message) =>{
 
-    const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iamUtilDecode(iam, 'authorization_bearer'));
+    const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == idToken);
     if (client.length == 1){
         socketClientSend(client[0].response, message, message_type);
         return {sent:1};
@@ -415,7 +410,8 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          iam:string,
+ *          idToken:string,
+ *          authorization:string,
  *          user_agent:string,
  *          accept_language:string,
  *          ip:string,
@@ -428,13 +424,14 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
-    const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id'));
-    const iam_user = serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id'))?
-                    fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id'))).result?.[0]:
-                        null;
-    const authorization_bearer = iamUtilDecode(parameters.iam, 'authorization_bearer');
+
+    const user_account_id = parameters.authorization?serverUtilNumberValue(iamUtilDecode(parameters.authorization)?.id):null;
+    const iam_user = parameters.authorization?
+                        (serverUtilNumberValue(iamUtilDecode(parameters.authorization)?.id)?
+                            fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.authorization)?.id)).result?.[0]:null):
+                                null;
     //no authorization for repeated request using same id token or requesting from browser
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.data.res.req.headers['sec-fetch-mode']!='cors'){
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.data.res.req.headers['sec-fetch-mode']!='cors'){
         /**@type{import('./iam.js')} */
         const {iamUtilResponseNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         throw iamUtilResponseNotAuthorized(parameters.data.res, 401, 'socketConnect, authorization', true);
@@ -450,7 +447,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
                             id:                     client_id,
                             connection_date:        new Date().toISOString(),
                             app_id:                 parameters.app_id,
-                            authorization_bearer:   authorization_bearer,
+                            authorization_bearer:   parameters.idToken,
                             user_account_id:        user_account_id,
                             token_access:           null,
                             identity_provider_id:   connectUserData.identity_provider_id,
@@ -490,7 +487,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         setInterval(() => {
             if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
                 socketAdminSend({   app_id:null,
-                                    iam:'',
+                                    idToken:'',
                                     data:{app_id:null,
                                         client_id:null,
                                         broadcast_type:'MAINTENANCE',

@@ -70,6 +70,7 @@ const bffService = await import('./bff.js');
  *          method:string,
  *          query:string,
  *          body:server_server_req['body'],
+ *          idToken:string,
  *          authorization:string|null,
  *          ip:string,
  *          user_agent:string,
@@ -86,6 +87,7 @@ const bffService = await import('./bff.js');
         method: req.method,
         query: req.query?.parameters ?? '',
         body: req.body,
+        idToken:  req.headers['id-token']?.replace('Bearer ',''), 
         authorization:  req.headers.authorization, 
         //metadata
         ip: req.ip, 
@@ -185,22 +187,6 @@ const bffAppExternal = (req, res) =>{
                             };
     bffService.bff(bff_parameters);
 };
-
-/**
- * @name bffSocket
- * @description Backend for frontend (BFF) socket
- * @function
- * @param {server_server_req} req - Request
- * @param {server_server_res} res
- * @returns {*}
- */
-const bffSocket = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'SOCKET', 
-                            ...bffCommon(req, res)
-                            };
-    bffService.bff(bff_parameters);
-};
 /**
  * @name bffIAMAdmin
  * @description Backend for frontend (BFF) IAM_ADMIN
@@ -247,5 +233,5 @@ const bffIAMAdmin = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 
-export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, bffSocket, 
+export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, 
         bffIAMAdmin, bffIAMUser, bffIAMProvider};

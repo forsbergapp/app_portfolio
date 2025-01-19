@@ -2321,50 +2321,30 @@ const commonModuleLeafletInit = async parameters => {
 const commonFFB = async parameter => {
     /**@type{number} */
     let status;
-    let authorization_bearer = null;
-    let authorization_basic = null;
+    let authorization = null;
     let service_path;
     parameter.query = parameter.query==null?'':parameter.query;
     parameter.body = parameter.body?parameter.body:null;
     switch (parameter.authorization_type){
-        case 'APP_ID':{
-            //id token authorization check
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_id`;
-            break;
-        }
+        case 'APP_ID':
         case 'APP_ID_SIGNUP':{
-            //id token signup authorization check
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_id_signup`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
             break;
         }
         case 'APP_ACCESS':{
-            //user or admins authorization
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/app_access`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
             break;
         }
         case 'ADMIN':{
-            //admin authorization
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
-            break;
-        }
-        case 'SOCKET':{
-            //broadcast connect authorization
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            //use query to send authorization
-            parameter.body = null;
-            service_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
+            authorization = `Bearer ${COMMON_GLOBAL.token_admin_at}`;
+            service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
             break;
         }
         case 'IAM_ADMIN':
         case 'IAM_PROVIDER':
         case 'IAM_USER':{
-            //user or admin login
-            authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            authorization_basic = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
+            authorization = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && parameter.authorization_type == 'IAM_USER')
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam_admin`;
             else
@@ -2372,23 +2352,21 @@ const commonFFB = async parameter => {
             break;
         }
     }
-    
-   
-    //add and encode IAM parameters, always use Bearer id token in iam to validate SSE connections
-    const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
-    const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&iam_user_id=${COMMON_GLOBAL.user_account_id ?? COMMON_GLOBAL.iam_user_id}` + 
-                                    `&app_id=${COMMON_GLOBAL.app_id??''}`);
     //add common query parameter
-    parameter.query += `&locale=${COMMON_GLOBAL.user_locale}&iam=${iam}`;
+    parameter.query += `&locale=${COMMON_GLOBAL.user_locale}`;
 
     //encode query parameters
     const encodedparameters = parameter.query?commonWindowToBase64(parameter.query):'';
     const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${parameter.path}?parameters=${encodedparameters}`;
 
-    if (parameter.authorization_type=='SOCKET'){
+    if (parameter.path=='/server-socket/socket' && parameter.method=='POST'){
         const options = {
             method: parameter.method,
-            headers: {'Content-Type': 'text/event-stream', 'Cache-control': 'no-cache', 'Connection': 'keep-alive'}
+            headers: {  'Content-Type': 'text/event-stream', 
+                        'Cache-control': 'no-cache', 
+                        'Connection': 'keep-alive',
+                        'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
+                        ...(authorization && {Authorization: authorization})}
         };
         return fetch(url, options);
     }
@@ -2399,7 +2377,8 @@ const commonFFB = async parameter => {
             options = {
                         method: parameter.method,
                         headers: {
-                                    Authorization: authorization_basic ?? authorization_bearer
+                                    'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
+                                    ...(authorization && {Authorization: authorization})
                                 },
                         body: null
                     };
@@ -2408,7 +2387,8 @@ const commonFFB = async parameter => {
                     method: parameter.method,
                     headers: {
                                 'Content-Type': 'application/json',
-                                Authorization: authorization_basic ?? authorization_bearer
+                                'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
+                                ...(authorization && {Authorization: authorization})
                             },
                     body: JSON.stringify(parameter.body)
                 };
@@ -2548,12 +2528,15 @@ const socketReconnect = () => {
 };
 /**
  * @name commonSocketConnectOnline
- * @description Socket connect online
+ * @description Socket connect online, can use id-token or access token
  * @function
  * @returns {Promise.<void>}
  */
 const commonSocketConnectOnline = async () => {
-   commonFFB({path:'/server-socket/socket', method:'GET', authorization_type:'SOCKET'})
+    const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.common_app_id == COMMON_GLOBAL.app_id)?
+                                    'ADMIN':
+                                        COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
+   commonFFB({path:'/server-socket/socket', method:'POST', authorization_type:authorization_type})
     .then((result_SSE)=>{
         COMMON_GLOBAL.service_socket_SSE = result_SSE.body.getReader();
 
@@ -2563,8 +2546,15 @@ const commonSocketConnectOnline = async () => {
                 COMMON_GLOBAL.service_socket_SSE?.read().then(({done,value})=>{                    
                     if (done)
                         null;
-                    else
-                        commonSocketBroadcastShow(new TextDecoder().decode(new Uint8Array(value), {stream:true}).split('data: ')[1]);
+                    else {
+                            try {
+                                const message = new TextDecoder().decode(new Uint8Array(value),{stream:true}).split('\n\n')[0];
+                                if (message.split('data: ')[1])
+                                    commonSocketBroadcastShow(message.split('data: ')[1]);
+                            } catch (error) {
+                                null;
+                            }
+                    }
                     commonWindowSetTimeout(SSERead, 1000);
                 })
                 .catch(()=>{

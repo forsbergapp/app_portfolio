@@ -281,7 +281,7 @@
 
 /**
  * @description Type CommonRESTAPIMethod
- * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
+ * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'ADMIN'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
 

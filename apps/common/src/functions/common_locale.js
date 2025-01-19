@@ -63,7 +63,7 @@ const formatLocale = locale =>{
  *          user_agent:string,
  *          ip:string,
  *          host:string,
- *          iam:string,
+ *          idToken:string,
  *          locale:string}} parameters
  * @returns {Promise.<appFunction>}
  */

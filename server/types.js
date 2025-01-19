@@ -179,6 +179,7 @@
  *          method: string,
  *          query: string,
  *          body:server_server_req['body']|{},
+ *          idToken:  server_server_req['headers']['id-token'], 
  *          authorization:string|null,
  *          ip: string,
  *          user_agent:string,
@@ -1341,7 +1342,7 @@
 
 /**
  * @description DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_post
- * @typedef {{  json_data:                                          string,
+ * @typedef {{  json_data:                                          {},
  *              app_id:                                             number|null,
  *              user_account_id:                                    number|null,
  *              user_account_app_user_account_id:                   number|null,
@@ -1799,7 +1800,7 @@
 /**
  * @description IAM server_iam_access_token_claim_type
  * @typedef {{  app_id:         number,
- *              id:             number|string|null,
+ *              id:             number|string,
  *              name:           string,
  *              ip:             string,
  *              scope:          server_iam_access_token_claim_scope_type,
@@ -1865,6 +1866,7 @@
  *              method: server_req_method,
  *              parameters: string,
  *              body:*,
+ *              idToken:string,
  *              authorization:string,
  *              ip: string,
  *              user_agent:string,
@@ -1906,7 +1908,8 @@
  * @property {object} query
  * @property {string} query.parameters
  
- * @property {{ authorization: string, 
+ * @property {{ 'id-token':string,
+ *              authorization: string, 
  *              'user-agent': string, 
  *              'accept-language': string, 
  *              'content-type': string, 

@@ -112,15 +112,27 @@ const iamRequestRateLimiterCount = {};
 const iamUtilMessageNotAuthorized = () => '⛔';
 /**
  * @name iamUtilDecode
- * @description IAM util decode base64 in iam parameter and removes word "Bearer " for authorization_bearer key
+ * @description IAM util decode idtoken or access token and returns the payload key
  * @function
- * @param {string} iam 
- * @param {'id'|'app_id'|'iam_user_id'|'name'|'authorization_bearer'|'ip'} key
- * @returns {*}
- */
- const iamUtilDecode = (iam, key) => key=='authorization_bearer'?
-                                        new URLSearchParams(atob(iam)).get(key)?.replace('Bearer ',''):
-                                        new URLSearchParams(atob(iam)).get(key);
+ * @param {string} token
+ * @returns {server_iam_access_token_claim_type} 
+*/
+ const iamUtilDecode = token => {
+    
+    const decoded =  jwt.decode(token.replace('Bearer ','').replace('Basic ',''), { complete: true })?.payload;
+    if (decoded){
+        /**@ts-ignore*/
+        return decoded;
+    }
+    else
+        throw  {http:401,
+                code:'IAM',
+                text:iamUtilMessageNotAuthorized(),
+                developerText:iamUtilDecode,
+                moreInfo:null,
+                type:'JSON'
+            };
+};
 /**
  * @name iamUtilTokenExpired
  * @description IAM util token expired
@@ -223,7 +235,7 @@ const iamUtilVerificationCode = () => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          iam:string,
+ *          idToken:string,
  *          authorization:string,
  *          ip:string,
  *          user_agent:string,
@@ -254,7 +266,7 @@ const iamAuthenticateAdmin = async parameters =>{
         await fileModelIamUserLogin.post(parameters.app_id, file_content);
         if (result == 1){
             return await socketConnectedUpdate(parameters.app_id, 
-                {   iam:parameters.iam,
+                {   idToken:parameters.idToken,
                     user_account_id:null,
                     iam_user_id:id,
                     iam_user_username:username,
@@ -329,7 +341,7 @@ const iamAuthenticateAdmin = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          iam:string,
+ *          idToken:string,
  *          ip:string,
  *          user_agent:string,
  *          accept_language:string,
@@ -396,7 +408,7 @@ const iamAuthenticateUser = async parameters =>{
                                             .then((result_email)=>{
                                                 if(result_email.result)
                                                     socketConnectedUpdate(parameters.app_id, 
-                                                        {   iam:parameters.iam,
+                                                        {   idToken:parameters.idToken,
                                                             user_account_id:result_login.result[0].id,
                                                             iam_user_id:null,
                                                             iam_user_username:null,
@@ -423,7 +435,7 @@ const iamAuthenticateUser = async parameters =>{
                                     }
                                     else{
                                         socketConnectedUpdate(parameters.app_id, 
-                                            {   iam:parameters.iam,
+                                            {   idToken:parameters.idToken,
                                                 user_account_id:result_login.result[0].id,
                                                 iam_user_id:null,
                                                 iam_user_username:null,
@@ -486,7 +498,7 @@ const iamAuthenticateUser = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          iam:string,
+ *          idToken:string,
  *          resource_id:number,
  *          ip:string,
  *          user_agent:string,
@@ -559,7 +571,7 @@ const iamAuthenticateUserProvider = async parameters =>{
                             .then((result_dbModelUserAccountApp)=>{
                                 if (result_dbModelUserAccountApp.result)
                                     socketConnectedUpdate(parameters.app_id, 
-                                        {   iam:parameters.iam,
+                                        {   idToken:parameters.idToken,
                                             user_account_id:result_signin.result[0].id,
                                             iam_user_id:null,
                                             iam_user_username:null,
@@ -623,7 +635,7 @@ const iamAuthenticateUserProvider = async parameters =>{
                                 userGetProvider(parameters.app_id, serverUtilNumberValue(parameters.data.identity_provider_id), parameters.resource_id)
                                 .then(result_signin2=>{
                                     socketConnectedUpdate(parameters.app_id, 
-                                    {   iam:parameters.iam,
+                                    {   idToken:parameters.idToken,
                                         user_account_id:result_create.result.insertId,
                                         iam_user_id:null,
                                         iam_user_username:null,
@@ -760,7 +772,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,  
  *          resource_id:number,
- *          iam:string,
+ *          idToken:string,
  *          ip:string,
  *          authorization:string,
  *          user_agent:string,
@@ -828,7 +840,7 @@ const iamAuthenticateUserActivate = async parameters =>{
             if (result_activate.result.affectedRows==1 && (serverUtilNumberValue(parameters.data.verification_type)==1 ||
                 serverUtilNumberValue(parameters.data.verification_type)==4))
                 return await iamUserLogout({app_id:parameters.app_id,
-                                    iam:parameters.iam,
+                                    idToken:parameters.idToken,
                                     ip:parameters.ip,
                                     authorization:parameters.authorization,
                                     user_agent:parameters.user_agent,
@@ -1107,7 +1119,7 @@ const iamAuthenticateUserUpdate = async parameters => {
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          ip:string,
- *          iam:string,
+ *          idToken:string,
  *          authorization:string,
  *          user_agent:string,
  *          host:string,
@@ -1123,7 +1135,7 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
     
     return updatePassword(parameters)
             .then(result=>result.http?result:iamUserLogout({app_id:parameters.app_id,
-                                        iam:parameters.iam,
+                                        idToken:parameters.idToken,
                                         authorization:parameters.authorization,
                                         ip:parameters.ip,
                                         user_agent:parameters.user_agent,
@@ -1188,29 +1200,10 @@ const iamAuthenticateUserDelete = async parameters => {
 };
 
 /**
- * @name iamAuthenticateSocket
- * @description Middleware authenticate socket used for SSE
- * @function
- * @param {string} path
- * @param {string} host
- * @param {string} iam
- * @param {string} ip
- * @param {server_server_res} res
- * @param {function} next
- * @returns {void}
- */
-const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
-    if (iam && iamUtilDecode(iam, 'authorization_bearer') && path.startsWith('/server-socket')){
-        iamAuthenticateUserCommon(iam, 'APP_ID', 'Bearer ' + iamUtilDecode(iam, 'authorization_bearer'), host, ip, res, next);
-    }
-    else
-        iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateSocket');
-};
-/**
  * @name iamAuthenticateUserCommon
  * @description IAM Middleware authenticate IAM users
  * @function
- * @param {string} iam
+ * @param {string} idToken
  * @param {'AUTH_ADMIN'|'AUTH_USER'|'AUTH_PROVIDER'|'ADMIN'|'APP_ACCESS'|'APP_ID'|'APP_ID_REGISTRATION'} scope
  * @param {string} authorization
  * @param {string} host
@@ -1219,20 +1212,17 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
  * @param {function} next
  * @returns {Promise.<void>}
  */
- const iamAuthenticateUserCommon = async (iam, scope, authorization, host, ip, res, next) =>{
+ const iamAuthenticateUserCommon = async (idToken, scope, authorization, host, ip, res, next) =>{
     const app_id_host = commonAppHost(host);
-    if (iam && scope && authorization && app_id_host !=null){
+    if (idToken && scope && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
-        // APP_ID uses req.headers.authorization ID token except for SOCKET where ID token is in iam.authorization_bearer
-        // other requests uses BASIC or BEARER access token in req.headers.authorization and ID token in iam.authorization_bearer
-        const id_token = scope=='APP_ID'?authorization?.split(' ')[1] ?? '':iamUtilDecode(iam,'authorization_bearer');
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const id_token_decoded = jwt.verify(id_token, fileModelAppSecret.get({app_id:app_id_host, resource_id:app_id_host}).result[0].common_app_id_secret);
+            const id_token_decoded = jwt.verify(idToken, fileModelAppSecret.get({app_id:app_id_host, resource_id:app_id_host}).result[0].common_app_id_secret);
             /**@type{server_db_file_iam_app_token}*/
             const log_id_token = fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_token}*/row)=> 
-                                                                                    row.app_id == app_id_host && row.ip == ip && row.token == id_token
+                                                                                    row.app_id == app_id_host && row.ip == ip && row.token == idToken
                                                                                     )[0];
             if (id_token_decoded.app_id == app_id_host && 
                 (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
@@ -1266,8 +1256,7 @@ const iamAuthenticateSocket = (iam, path, host, ip, res, next) =>{
                             /**@type{server_db_file_iam_user_login[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
-                                access_token_decoded.ip == ip &&
-                                access_token_decoded.id == iamUtilDecode(iam, 'iam_user_id')){
+                                access_token_decoded.ip == ip){
                                 /**@type{server_db_file_iam_user_login}*/
                                 const iam_user_login = fileModelIamUserLogin.get(app_id_host, null).result
                                                         .filter((/**@type{server_db_file_iam_user_login}*/row)=>
@@ -1511,7 +1500,6 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                             path.startsWith('/bff/app_access/v1') ||
                             path.startsWith('/bff/app_external/v1/app-module-function') ||
                             path.startsWith('/bff/admin/v1') ||
-                            path.startsWith('/bff/socket/v1') ||
                             path.startsWith('/bff/iam_admin/v1') ||
                             path.startsWith('/bff/iam_user/v1') ||
                             path.startsWith('/bff/iam_provider/v1') ||
@@ -1677,7 +1665,7 @@ const iamAuthenticateResource = parameters =>  {
  * @returns {Promise.<string>}
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
-    const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', { id: null, 
+    const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', { id: app_id, 
                                                         ip:ip ?? '', 
                                                         name:'', 
                                                         scope:scope});
@@ -1696,7 +1684,7 @@ const iamAuthenticateResource = parameters =>  {
  * @function
  * @param {number} app_id
  * @param {'APP_ID'|'APP_ACCESS'|'ADMIN'|'APP_CUSTOM'} endpoint
- * @param {{id:number|string|null, 
+ * @param {{id:number|string, 
  *          name:string, 
  *          ip:string, 
  *          scope:server_iam_access_token_claim_scope_type}} claim
@@ -1886,7 +1874,7 @@ const iamUserUpdate = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          iam:string,
+ *          idToken:string,
  *          authorization:string,
  *          ip:string,
  *          user_agent:string,
@@ -1904,7 +1892,7 @@ const iamUserLogout = async parameters =>{
         return result.http?result:
         //remove token from connected list
         socketConnectedUpdate(parameters.app_id, 
-            {   iam:parameters.iam,
+            {   idToken:parameters.idToken,
                 user_account_id:null,
                 iam_user_id:null,
                 iam_user_username:null,
@@ -1930,7 +1918,6 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUserUpdate,
         iamAuthenticateUserUpdatePassword,
         iamAuthenticateUserDelete,
-        iamAuthenticateSocket,
         iamAuthenticateUserCommon,
         iamAuthenticateExternal,
         iamAuthenticateRequest,
