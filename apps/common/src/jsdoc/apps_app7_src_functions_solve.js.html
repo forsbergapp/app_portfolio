@@ -11,7 +11,7 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @import {APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
+ * @import {APP_FUNCTION_cube_solution_model,APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
  * @typedef {server_server_response &amp; {result?:APP_FUNCTION_cube_solve_return[]}} cubeSolve
  */
 
@@ -40,7 +40,7 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  *          user_agent:string,
  *          ip:string,
  *          host:string,
- * 			iam:string,
+ * 			idToken:string,
  *          locale:string}} parameters
  * @returns {Promise.&lt;cubeSolve>}
  */
@@ -71,6 +71,8 @@ const cubeSolve = async parameters =>{
 		//Only robot can solve to given goal state at the moment
 		if (parameters.data.cube_goalstate)
 			parameters.data.model = 0;
+		/**@type{APP_FUNCTION_cube_solution_model} */
+		const model = parameters.data.model;
 		switch (parameters.data.model){
 			case 0:{
 				//Model robot can be slow, send PROGRESS using server side event				
@@ -85,7 +87,7 @@ const cubeSolve = async parameters =>{
 				if (solver2_moves_from_solved=='')
 						return {result:[], type:'JSON'};
 				else{
-					await socketAppServerFunctionSend(parameters.app_id, parameters.iam, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
+					await socketAppServerFunctionSend(parameters.app_id, parameters.idToken, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
 					/**
 					 * @param {string} moves
@@ -104,7 +106,7 @@ const cubeSolve = async parameters =>{
 						});
 					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
-					await socketAppServerFunctionSend(parameters.app_id, parameters.iam, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
+					await socketAppServerFunctionSend(parameters.app_id, parameters.idToken, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
 					const timer2 = Date.now();
 					const solution2 = solver2.solve(parameters.data.cube_currentstate, parameters.data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();
@@ -113,18 +115,18 @@ const cubeSolve = async parameters =>{
 						return {result:[{cube_solution:			solution1.split(' ').length&lt;solution2.split(' ').length?solution1:solution2, 
 										cube_solution_time:		solution1.split(' ').length&lt;solution2.split(' ').length?timer2-timer1:timer3-timer2, 
 										cube_solution_length:	solution1.split(' ').length&lt;solution2.split(' ').length?solution1.split(' ').length:solution2.split(' ').length, 
-										cube_solution_model:	0}], type:'JSON'};
+										cube_solution_model:	model}], type:'JSON'};
 					}
 					else{
 						//return all solutions
 						return {result:[{	cube_solution:			solution1, 
 											cube_solution_time:		timer2-timer1, 
 											cube_solution_length:	solution1.split(' ').length,
-											cube_solution_model:	0},
+											cube_solution_model:	model},
 										{	cube_solution:			solution2, 
 											cube_solution_time:		timer3-timer2, 
 											cube_solution_length:	solution2.split(' ').length,
-											cube_solution_model:	0}], 
+											cube_solution_model:	model}], 
 								type:'JSON'};
 					}
 				}
@@ -168,7 +170,7 @@ const cubeSolve = async parameters =>{
 										cube_solution:			solution.solution_string, 
 										cube_solution_time:		timer_finished-timer_start,
 										cube_solution_length:	solution.solution_string.split(' ').length,
-										cube_solution_model:	1}], 
+										cube_solution_model:	model}], 
 								type:'JSON'};
 				}
 			}
