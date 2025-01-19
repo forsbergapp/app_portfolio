@@ -6,6 +6,7 @@ An app portfolio created as a reference platform and implemented with support fo
 	
 All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
 All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
+All apps use pure div elements in HTML without any semantic HTML and without any specific user agent CSS.
 All apps use mostly logographic UI compared to traditional phonemic UI
 All apps use common user access and any user data is saved in each app for the user.
 
@@ -30,6 +31,7 @@ Implemented with many examples of implementation patterns
 - entity/resource datamodel using hybrid JSON storage concept with flexible and minimal data model design
 - role based and secure app server functions (simplified version of Function as a Service and serverless functions model)
 - ISO20022
+- openAPI
 - CD/CI
 - batch cron pattern
 - infrastructure as code (IaC)
