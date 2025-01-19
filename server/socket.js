@@ -94,6 +94,15 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
     res.flush();
 };
 /**
+ * @name socketClientGet
+ * @description Socket client get client_id for given id token
+ *              
+ * @function
+ * @param {string} idtoken
+ * @returns {server_socket_connected_list['id']}
+ */
+const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.authorization_bearer == idtoken)[0]?.id;
+/**
  * @name socketClientConnect
  * @description Socket client connect
  *              Used by EventSource and leaves connection open
@@ -151,9 +160,8 @@ const socketClientAdd = (newClient) => {
  const socketConnectedUpdate = async (app_id, parameters) => {
     /**@type{import('./iam.js')} */
     const { iamUtilMessageNotAuthorized, iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
-    const client_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('client_id'));
-    const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
-    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.id==client_id && row.authorization_bearer == authorization_bearer).length==0){
+    const authorization_bearer = iamUtilDecode(parameters.iam, 'authorization_bearer');
+    if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length==0){
         return {http:401,
                 code:'IAM',
                 text:iamUtilMessageNotAuthorized(),
@@ -164,7 +172,7 @@ const socketClientAdd = (newClient) => {
     }
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){
-            if (connected.id==client_id && connected.authorization_bearer == authorization_bearer){
+            if (connected.authorization_bearer == authorization_bearer){
                 const connectUserData =  await socketConnectedUserDataGet(app_id, parameters.user_account_id, parameters.ip, parameters.headers_user_agent, parameters.headers_accept_language);
                 connected.connection_date = new Date().toISOString();
                 connected.user_account_id = parameters.user_account_id;
@@ -180,7 +188,7 @@ const socketClientAdd = (newClient) => {
                 connected.timezone = connectUserData.timezone;
                 //send message to client with updated data
                 socketClientSend( connected.response, 
-                            btoa(JSON.stringify({   client_id: client_id, 
+                            btoa(JSON.stringify({   client_id: connected.id, 
                                                     latitude: connectUserData.latitude,
                                                     longitude: connectUserData.longitude,
                                                     place: connectUserData.place,
@@ -207,23 +215,24 @@ const socketClientAdd = (newClient) => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
+ *          iam:string,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
- *                  client_id_current:number|null,
  *                  broadcast_type:server_socket_broadcast_type_all,
  *                  broadcast_message:string}}} parameters
- * @returns {socketAdminSend}
+ * @returns {Promise.<socketAdminSend>}
  */
- const socketAdminSend = parameters => {
+ const socketAdminSend = async parameters => {
+    /**@type{import('./iam.js')} */
+    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
     parameters.data.client_id = serverUtilNumberValue(parameters.data.client_id);
-    parameters.data.client_id_current = serverUtilNumberValue(parameters.data.client_id_current);
 
     if (parameters.data.broadcast_type=='ALERT' || parameters.data.broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
         //except MAINTENANCE to admin and current user
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
-            if (client.id != parameters.data.client_id_current)
+            if (client.id != socketClientGet(iamUtilDecode(parameters.iam, 'authorization_bearer')))
                 if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')))
                     null;
                 else
@@ -364,7 +373,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     /**@type{import('./iam.js')} */
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
 
-    const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iamUtilDecode(iam).get('authorization_bearer'));
+    const client = SOCKET_CONNECTED_CLIENTS.filter(client=>client.app_id == app_id && client.authorization_bearer == iamUtilDecode(iam, 'authorization_bearer'));
     if (client.length == 1){
         socketClientSend(client[0].response, message, message_type);
         return {sent:1};
@@ -418,11 +427,11 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
-    const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('user_id'));
-    const iam_user = serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))?
-                    fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam).get('iam_user_id'))).result?.[0]:
+    const user_account_id = serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id'));
+    const iam_user = serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id'))?
+                    fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.iam, 'iam_user_id'))).result?.[0]:
                         null;
-    const authorization_bearer = iamUtilDecode(parameters.iam).get('authorization_bearer');
+    const authorization_bearer = iamUtilDecode(parameters.iam, 'authorization_bearer');
     //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == authorization_bearer).length>0 ||parameters.data.res.req.headers['sec-fetch-mode']!='cors'){
         /**@type{import('./iam.js')} */
@@ -460,11 +469,10 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         socketClientAdd(newClient);
         //send message to client with data
         
-        socketClientSend(parameters.data.res, btoa(JSON.stringify({  client_id: client_id, 
-                                                                latitude: connectUserData.latitude,
-                                                                longitude: connectUserData.longitude,
-                                                                place: connectUserData.place,
-                                                                timezone: connectUserData.timezone})), 'CONNECTINFO');
+        socketClientSend(parameters.data.res, btoa(JSON.stringify({ latitude: connectUserData.latitude,
+                                                                    longitude: connectUserData.longitude,
+                                                                    place: connectUserData.place,
+                                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
     }
 };
 
@@ -481,9 +489,9 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
         setInterval(() => {
             if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
                 socketAdminSend({   app_id:null,
+                                    iam:'',
                                     data:{app_id:null,
                                         client_id:null,
-                                        client_id_current:null,
                                         broadcast_type:'MAINTENANCE',
                                         broadcast_message:''}}
                                     );
@@ -520,4 +528,4 @@ const CheckOnline = parameters => { /**@ts-ignore */
                                                         {online:0}, 
                                             type:'JSON'};};
 
-export {socketClientSend, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline};
+export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline};
