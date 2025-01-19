@@ -1189,7 +1189,7 @@ const iamAuthenticateUserDelete = async parameters => {
 
 /**
  * @name iamAuthenticateSocket
- * @description Middleware authenticate socket used for EventSource
+ * @description Middleware authenticate socket used for SSE
  * @function
  * @param {string} path
  * @param {string} host

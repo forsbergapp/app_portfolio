@@ -2,8 +2,6 @@
  * @description Declaration of all common types used in apps
  * 
  * BOM Browser Object Model (contains what is used)
- *  COMMON_WINDOW
- *  CommonAppEventEventSource
  * 
  * DOM Document Object Model types (contains what is used)
  *  COMMON_DOCUMENT
@@ -69,7 +67,6 @@
  *              clearTimeout:function,
  *              open:function,
  *              addEventListener:function,  //used to override default function with custom function to keep track of third party libraries
- *              EventSource:*,
  *              navigator:{language:string, userAgent:string, serviceWorker:{register:function}},
  *              location:{pathname:string, reload:function},
  *              Intl:{DateTimeFormat()      :{resolvedOptions(): Intl.ResolvedDateTimeFormatOptions},
@@ -83,10 +80,6 @@
  *              __VUE_DEVTOOLS_HOOK_REPLAY__?:*,
  *              __VUE_HMR_RUNTIME__?:*,
  *              __VUE__?:*}} COMMON_WINDOW
- */
-/**
- * @description Type CommonAppEventEventSource
- * @typedef {{data:string}} CommonAppEventEventSource
  */
 
 /**
@@ -232,7 +225,7 @@
  *                                          map_update:                 function
  *                                      }
  *                              }
- *              service_socket_eventsource:{onmessage:function,
+ *              service_socket_SSE:{onmessage:function,
  *                                       onerror:function,
  *                                       close:function}|null}} CommonGlobal
  */

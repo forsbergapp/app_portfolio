@@ -30,7 +30,7 @@ const fs = await import('node:fs');
 /**
  * @name bffInit
  * @description Backend for frontend (BFF) init for all methods
- *              Logs if the request is from EventSource
+ *              Logs if the request is from SSE
  *              Logs when the response is closed
  *              Authenticates the request
  *              Sets header values on both on the response and on the request
@@ -43,11 +43,11 @@ const fs = await import('node:fs');
  */
 const bffInit = async (req, res) =>{
     if (req.headers.accept == 'text/event-stream'){
-        //Eventsource, log since response is open and log again when closing
+        //SSE, log since response is open and log again when closing
         fileModelLog.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res));
     }
     res.on('close',()=>{	
-        //eventsource response time will be time connected until disconnected
+        //SSE response time will be time connected until disconnected
         fileModelLog.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res)).then(() => {
             // do not return any StatusMessage to client, this is only used for logging purpose
             res.statusMessage = '';

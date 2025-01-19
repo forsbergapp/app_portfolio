@@ -81,7 +81,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
 /**
  * @name socketClientSend
  * @description Socket client send
- *              Used by EventSource and closes connection
+ *              Used by SSE and closes connection
  * @function
  * @param {server_server_res} res
  * @param {string} message
@@ -105,19 +105,20 @@ const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => cli
 /**
  * @name socketClientConnect
  * @description Socket client connect
- *              Used by EventSource and leaves connection open
+ *              Used by SSE and leaves connection open
  * @function
  * @param {server_server_res} res
  * @returns {void}
  */
  const socketClientConnect = (res) => {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+    res.setHeader('Cache-control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
 };
 /**
  * @name socketClientOnClose
  * @description Socket client close
- *              Used by EventSource and closes connection
+ *              Used by SSE and closes connection
  * @function
  * @param {server_server_res} res
  * @param {number} client_id
@@ -410,7 +411,7 @@ const socketAppServerFunctionSend = async (app_id, iam, message_type, message) =
 /**
  * @name socketConnect
  * @description Socket connect
- *              Used by EventSource and leaves connection open
+ *              Used by SSE and leaves connection open
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,

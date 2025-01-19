@@ -84,7 +84,7 @@ const COMMON_GLOBAL = {
                             map_update:                 ()=>null
                         }
                     },
-    service_socket_eventsource:null
+    service_socket_SSE:null
 };
 Object.seal(COMMON_GLOBAL);
 
@@ -1730,7 +1730,7 @@ const commonUserLogout = async (activated=false) => {
     if (activated==false)
         await commonFFB({path:'/server-iam-logout', method:'DELETE', authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?'ADMIN':'APP_ACCESS'})
                 .catch((error)=>{
-                    COMMON_GLOBAL.service_socket_eventsource?COMMON_GLOBAL.service_socket_eventsource.close():null;
+                    COMMON_GLOBAL.service_socket_SSE?COMMON_GLOBAL.service_socket_SSE.close():null;
                     socketReconnect();
                     throw error;
                 });
@@ -2354,7 +2354,7 @@ const commonFFB = async parameter => {
         case 'SOCKET':{
             //broadcast connect authorization
             authorization_bearer = `Bearer ${COMMON_GLOBAL.token_dt}`;
-            //use query to send authorization since EventSource does not support headers
+            //use query to send authorization
             parameter.body = null;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
             break;
@@ -2374,7 +2374,7 @@ const commonFFB = async parameter => {
     }
     
    
-    //add and encode IAM parameters, always use Bearer id token in iam to validate EventSource connections
+    //add and encode IAM parameters, always use Bearer id token in iam to validate SSE connections
     const authorization_iam = `Bearer ${COMMON_GLOBAL.token_dt}`;
     const iam =  commonWindowToBase64(    `&authorization_bearer=${authorization_iam}&iam_user_id=${COMMON_GLOBAL.user_account_id ?? COMMON_GLOBAL.iam_user_id}` + 
                                     `&app_id=${COMMON_GLOBAL.app_id??''}`);
@@ -2386,7 +2386,11 @@ const commonFFB = async parameter => {
     const url = `${service_path}/v${(COMMON_GLOBAL.app_rest_api_version ?? 1)}${parameter.path}?parameters=${encodedparameters}`;
 
     if (parameter.authorization_type=='SOCKET'){
-        return new COMMON_WINDOW.EventSource(url);
+        const options = {
+            method: parameter.method,
+            headers: {'Content-Type': 'text/event-stream', 'Cache-control': 'no-cache', 'Connection': 'keep-alive'}
+        };
+        return fetch(url, options);
     }
     else{
         //add options to fetch
@@ -2550,18 +2554,26 @@ const socketReconnect = () => {
  */
 const commonSocketConnectOnline = async () => {
    commonFFB({path:'/server-socket/socket', method:'GET', authorization_type:'SOCKET'})
-    .then((result_eventsource)=>{
-        COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
-        if (COMMON_GLOBAL.service_socket_eventsource){
-            COMMON_GLOBAL.service_socket_eventsource.onmessage = (/**@type{import('../../../common_types.js').CommonAppEventEventSource}*/event) => {
-                 commonSocketBroadcastShow(event.data);
-            };
-            COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
-                if (COMMON_GLOBAL.service_socket_eventsource)
-                    COMMON_GLOBAL.service_socket_eventsource.close();
-                socketReconnect();
-            };
-        }
+    .then((result_SSE)=>{
+        COMMON_GLOBAL.service_socket_SSE = result_SSE.body.getReader();
+
+        const SSERead =async()=>{
+            if (COMMON_GLOBAL.service_socket_SSE){
+                /**@ts-ignore */
+                COMMON_GLOBAL.service_socket_SSE?.read().then(({done,value})=>{                    
+                    if (done)
+                        null;
+                    else
+                        commonSocketBroadcastShow(new TextDecoder().decode(new Uint8Array(value), {stream:true}).split('data: ')[1]);
+                    commonWindowSetTimeout(SSERead, 1000);
+                })
+                .catch(()=>{
+                    COMMON_GLOBAL.service_socket_SSE=null;
+                    socketReconnect();
+                });
+            }
+        };
+        commonWindowSetTimeout(SSERead, 1000);        
     })
     .catch(()=>socketReconnect());
 };
