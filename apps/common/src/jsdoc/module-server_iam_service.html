@@ -72,7 +72,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1750">line 1750</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1736">line 1736</a>
     </div></div></dd>
     
 
@@ -656,7 +656,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1752">line 1752</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1738">line 1738</a>
     </div></div></dd>
     
 
@@ -714,7 +714,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1754">line 1754</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1740">line 1740</a>
     </div></div></dd>
     
 
@@ -871,7 +871,7 @@ since microservices run in separate processes and servers</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1615">line 1615</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1601">line 1601</a>
     </div></div></dd>
     
 
@@ -1187,7 +1187,7 @@ since microservices run in separate processes and servers</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1311">line 1311</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1298">line 1298</a>
     </div></div></dd>
     
 
@@ -1476,7 +1476,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1332">line 1332</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1319">line 1319</a>
     </div></div></dd>
     
 
@@ -1622,7 +1622,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1639">line 1639</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1625">line 1625</a>
     </div></div></dd>
     
 
@@ -1676,277 +1676,7 @@ return 401</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamAuthenticateSocket<span class="signature">(path, host, iam, ip, res, next)</span><span class="type-signature"> &rarr; {void}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Middleware authenticate socket used for EventSource</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>host</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>iam</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ip</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">server_server_res</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>next</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1189">line 1189</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">void</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamAuthenticateUserCommon<span class="signature">(iam, scope, authorization, host, ip, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamAuthenticateUserCommon<span class="signature">(idToken, scope, authorization, host, ip, res, next)</span><span class="type-signature"> &rarr; {Promise.&lt;void>}</span></div>
     
 
     
@@ -1990,7 +1720,7 @@ return 401</p>
 
         <tr>
             
-                <td class="name"><code>iam</code></td>
+                <td class="name"><code>idToken</code></td>
             
 
             <td class="type">
@@ -2203,7 +1933,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1208">line 1208</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1200">line 1200</a>
     </div></div></dd>
     
 
@@ -2407,7 +2137,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1670">line 1670</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1656">line 1656</a>
     </div></div></dd>
     
 
@@ -2638,7 +2368,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1693">line 1693</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1679">line 1679</a>
     </div></div></dd>
     
 
@@ -2804,7 +2534,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1780">line 1780</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1766">line 1766</a>
     </div></div></dd>
     
 
@@ -2982,7 +2712,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1840">line 1840</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line1826">line 1826</a>
     </div></div></dd>
     
 
@@ -3039,7 +2769,7 @@ return 401</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>iamUtilDecode<span class="signature">(query)</span><span class="type-signature"> &rarr; {URLSearchParams}</span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>iamUtilDecode<span class="signature">(token)</span><span class="type-signature"> &rarr; {server_iam_access_token_claim_type}</span></div>
     
 
     
@@ -3047,7 +2777,7 @@ return 401</p>
 
 
 <div class="description">
-    <p>IAM util decode base64 in query</p>
+    <p>IAM util decode idtoken or access token and returns the payload key</p>
 </div>
 
 
@@ -3083,7 +2813,7 @@ return 401</p>
 
         <tr>
             
-                <td class="name"><code>query</code></td>
+                <td class="name"><code>token</code></td>
             
 
             <td class="type">
@@ -3176,7 +2906,7 @@ return 401</p>
     </dt>
     <dd>
         
-<span class="param-type">URLSearchParams</span>
+<span class="param-type">server_iam_access_token_claim_type</span>
 
 
     </dd>
@@ -3470,7 +3200,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line187">line 187</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line200">line 200</a>
     </div></div></dd>
     
 
@@ -3683,7 +3413,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line123">line 123</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line136">line 136</a>
     </div></div></dd>
     
 
@@ -3884,7 +3614,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line160">line 160</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line173">line 173</a>
     </div></div></dd>
     
 
@@ -3990,7 +3720,7 @@ return 401</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line209">line 209</a>
+        <a href="server_iam.js.html">server/iam.js</a>, <a href="server_iam.js.html#line222">line 222</a>
     </div></div></dd>
     
 
