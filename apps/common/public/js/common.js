@@ -2471,7 +2471,7 @@ const commonFFB = async parameter => {
  * @returns {void}
  */
 const commonSocketBroadcastShow = (broadcast_message) => {
-    broadcast_message = COMMON_WINDOW.atob(broadcast_message);
+    broadcast_message = commonWindowFromBase64(broadcast_message);
     const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
@@ -2480,7 +2480,7 @@ const commonSocketBroadcastShow = (broadcast_message) => {
                 location.href = '/';
             else
                 if (message)
-                    commonSocketMaintenanceShow(COMMON_WINDOW.atob(message));
+                    commonSocketMaintenanceShow(commonWindowFromBase64(message));
             break;
         }
         case 'SESSION_EXPIRED':{
@@ -2488,28 +2488,36 @@ const commonSocketBroadcastShow = (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.client_latitude =             JSON.parse(COMMON_WINDOW.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(COMMON_WINDOW.atob(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(COMMON_WINDOW.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(COMMON_WINDOW.atob(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(COMMON_WINDOW.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(COMMON_WINDOW.atob(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(COMMON_WINDOW.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(COMMON_WINDOW.atob(message)).timezone;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(commonWindowFromBase64(message)).latitude==''?
+                                                            COMMON_GLOBAL.client_latitude:
+                                                                JSON.parse(commonWindowFromBase64(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(commonWindowFromBase64(message)).longitude==''?
+                                                            COMMON_GLOBAL.client_longitude:
+                                                                JSON.parse(commonWindowFromBase64(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(commonWindowFromBase64(message)).place==''?
+                                                            COMMON_GLOBAL.client_place:
+                                                                JSON.parse(commonWindowFromBase64(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(commonWindowFromBase64(message)).timezone==''?
+                                                            COMMON_GLOBAL.client_timezone:
+                                                                JSON.parse(commonWindowFromBase64(message)).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
             commonComponentRender({
                 mountDiv:   'common_broadcast',
-                data:       {message:COMMON_WINDOW.atob(message)},
+                data:       {message:commonWindowFromBase64(message)},
                 methods:    null,
                 path:       COMMON_DOCUMENT.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
-			commonMessageShow('PROGRESS', null, null, null, JSON.parse(COMMON_WINDOW.atob(message)));
+			commonMessageShow('PROGRESS', null, null, null, JSON.parse(commonWindowFromBase64(message)));
             break;
         }
         case 'APP_FUNCTION':{
             if (COMMON_GLOBAL.app_function_sse)
-                COMMON_GLOBAL.app_function_sse(COMMON_WINDOW.atob(message));
+                COMMON_GLOBAL.app_function_sse(commonWindowFromBase64(message));
         }
     }
 };
