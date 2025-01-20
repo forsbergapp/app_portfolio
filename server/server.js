@@ -1039,7 +1039,7 @@ const serverREST_API = async (routesparameters) =>{
                                                             (methodObj.requestBody?.content?Object.entries(methodObj.requestBody?.content['application/json'].schema.properties)
                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};},{}):{});
                 //if SSE then add res
-                if (methodObj.responses?.[200]?.content?.['text/event-stream'])
+                if (methodObj.responses?.[201]?.content?.['text/event-stream'])
                     parametersData.res = routesparameters.res;
 
                 //read operationId what file to import and what function to execute
