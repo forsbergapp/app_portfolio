@@ -1624,6 +1624,7 @@ body.rtl{
 }
 .common_markdown_table_row_detail .common_markdown_table_col{
 	min-width:30em;
+	max-width: 50em;
 }
 .common_markdown_table_row_detail_master.show{
 	display:inline-block;
@@ -1638,6 +1639,7 @@ body.rtl{
 	display: inline-block;
 	min-width: 20em;
 	vertical-align: top;
+	max-width: 60em;
 }
 /* common document metadata*/
 .common_document_header{

@@ -405,6 +405,9 @@ body.font_arabic_nastaliq .common_input{
 	animation-name: common_ticker;
 	animation-duration: 10s;
 }
+.rtl #common_broadcast_info_message {
+	animation-name: common_ticker_rtl;
+}
 #common_broadcast_info_message_item{
 	font-size:30px;
 	display: inline-block;
@@ -415,6 +418,14 @@ body.font_arabic_nastaliq .common_input{
 	}
 	100% {
 	  transform: translateX(-100%);
+	}
+}
+@keyframes common_ticker_rtl {
+	0% {
+	  transform: translateX(-100%);
+	}
+	100% {
+	  transform: translateX(100%);
 	}
 }
 #common_broadcast_footer{
