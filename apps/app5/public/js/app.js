@@ -491,7 +491,7 @@ const appInit = async () => {
             data:       null,
             methods:    null,
             path:       '/component/page_start.js'}));
-    await common.commonComponentRender({mountDiv:   'common_fonts',
+    common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
                     font_arabic:    true,

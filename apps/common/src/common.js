@@ -249,12 +249,12 @@ const commonGeodata = async parameters =>{
     .catch(()=>null);
     const result_geodata = {};
     if (result_gps.result){
-        result_geodata.latitude =   result_gps.result.geoplugin_latitude;
-        result_geodata.longitude=   result_gps.result.geoplugin_longitude;
-        result_geodata.place    =   result_gps.result.geoplugin_city + ', ' +
-                                    result_gps.result.geoplugin_regionName + ', ' +
-                                    result_gps.result.geoplugin_countryName;
-        result_geodata.timezone =   result_gps.result.geoplugin_timezone;
+        result_geodata.latitude =   result_gps.result.latitude;
+        result_geodata.longitude=   result_gps.result.longitude;
+        result_geodata.place    =   result_gps.result.city + ', ' +
+                                    result_gps.result.regionName + ', ' +
+                                    result_gps.result.countryName;
+        result_geodata.timezone =   result_gps.result.timezone;
     }
     else{
         /**@type{server_bff_parameters}*/

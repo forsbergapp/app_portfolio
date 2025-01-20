@@ -15,7 +15,7 @@ const http = await import('node:http');
 
 /**
  * @name getGeodataEmpty
- * @description Returns empty geodata
+ * @description Returns empty geodata with removeed key prefix
  * @function
  * @param {'IP'|'PLACE'} geotype 
  * @returns {*}
@@ -23,48 +23,44 @@ const http = await import('node:http');
 const getGeodataEmpty = (geotype) => {
 	switch (geotype){
 		case 'IP':{
-			//http://www.geoplugin.net/json.gp?ip=
-			//used geoplugin_city, geoplugin_regionName, geoplugin_countryName,geoplugin_latitude, geoplugin_longitude
 			return `{
-				"geoplugin_request":"::1",
-				"geoplugin_status":null,
-				"geoplugin_delay":"",
-				"geoplugin_credit":"",
-				"geoplugin_city":"",
-				"geoplugin_region":"",
-				"geoplugin_regionCode":"",
-				"geoplugin_regionName":"",
-				"geoplugin_areaCode":"",
-				"geoplugin_dmaCode":"",
-				"geoplugin_countryCode":"",
-				"geoplugin_countryName":"",
-				"geoplugin_inEU":null,
-				"geoplugin_euVATrate":null,
-				"geoplugin_continentCode":"",
-				"geoplugin_continentName":"",
-				"geoplugin_latitude":"",
-				"geoplugin_longitude":"",
-				"geoplugin_locationAccuracyRadius":"",
-				"geoplugin_timezone":"",
-				"geoplugin_currencyCode":"",
-				"geoplugin_currencySymbol":"",
-				"geoplugin_currencySymbol_UTF8":"",
-				"geoplugin_currencyConverter":null
+				"request":"::1",
+				"status":null,
+				"delay":"",
+				"credit":"",
+				"city":"",
+				"region":"",
+				"regionCode":"",
+				"regionName":"",
+				"areaCode":"",
+				"dmaCode":"",
+				"countryCode":"",
+				"countryName":"",
+				"inEU":null,
+				"euVATrate":null,
+				"continentCode":"",
+				"continentName":"",
+				"latitude":"",
+				"longitude":"",
+				"locationAccuracyRadius":"",
+				"timezone":"",
+				"currencyCode":"",
+				"currencySymbol":"",
+				"currencySymbol_UTF8":"",
+				"currencyConverter":null
 			  }`;
 		}
 		case 'PLACE':{
-			//http://www.geoplugin.net/extras/location.gp?format=json&lat=[latitude]&lon=[longitude]
-			//used geoplugin_place. geoplugin_countryCode, geoplugin_region
 			return `{
-				"geoplugin_place":"",
-				"geoplugin_countryCode":"",
-				"geoplugin_region":"",
-				"geoplugin_regionAbbreviated":"",
-				"geoplugin_county":"",
-				"geoplugin_latitude":"",
-				"geoplugin_longitude":"",
-				"geoplugin_distanceMiles":null,
-				"geoplugin_distanceKilometers":null
+				"place":"",
+				"countryCode":"",
+				"region":"",
+				"regionAbbreviated":"",
+				"county":"",
+				"latitude":"",
+				"longitude":"",
+				"distanceMiles":null,
+				"distanceKilometers":null
 			}`;
 		}
 		default: return null;
@@ -91,8 +87,8 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 geodata_cache = geodata_cache.split('\r\n');
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
-                    if (row_obj.geoplugin_request==ip || 
-                        ((row_obj.geoplugin_request == '::1' || row_obj.geoplugin_request == '::ffff:127.0.0.1' ) &&
+                    if (row_obj.request==ip || 
+                        ((row_obj.request == '::1' || row_obj.request == '::ffff:127.0.0.1' ) &&
                          (ip == '::1' || ip == '::ffff:127.0.0.1' )))
                         return row;
                 }
@@ -127,9 +123,9 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
                     //check 1 decimal for current service provider without round
-                    const lat_row = getFixed(row_obj.geoplugin_latitude,2);
+                    const lat_row = getFixed(row_obj.latitude,2);
                     const lat_search = getFixed(latitude,2);
-                    const long_row = getFixed(row_obj.geoplugin_longitude,2);
+                    const long_row = getFixed(row_obj.longitude,2);
                     const long_search = getFixed(longitude,2);
                     if (check_aprox(lat_row, lat_search) && check_aprox(long_row, long_search))
                         return row;
@@ -194,12 +190,8 @@ const getGeodata = async (url, language) => {
         const request = http.request(url, options, res =>{
             let responseBody = '';
             res.setEncoding('utf8');
-            res.on('data', (chunk) =>{
-                responseBody += chunk;
-            });
-            res.on('end', ()=>{
-                resolve (responseBody);
-            });
+            res.on('data', (chunk) =>responseBody += chunk);
+            res.on('end', ()=>resolve (responseBody));
         });
         request.end();        
     });
@@ -222,7 +214,8 @@ const getGeodata = async (url, language) => {
         const url = registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
                     .replace('<LATITUDE/>', latitude)
                     .replace('<LONGITUDE/>', longitude);
-		geodata = await getGeodata(url, accept_language);
+        //return result without prefix
+		geodata = await getGeodata(url, accept_language).then(result=>result.replaceAll('geoplugin_',''));
 		if (geodata != '[[]]')
 			writeCacheGeodata('PLACE', geodata);
 		return geodata;
@@ -252,7 +245,8 @@ const getIp = async (ip, accept_language) => {
 		else
             url =   registryConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
                     .replace('<IP/>', ip);
-		geodata = await getGeodata(url, accept_language);
+        //return result without prefix
+		geodata = await getGeodata(url, accept_language).then(result=>result.replaceAll('geoplugin_',''));
 		writeCacheGeodata('IP', geodata);
         return geodata;
 	}

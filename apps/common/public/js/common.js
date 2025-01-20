@@ -2592,12 +2592,12 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
        commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             const json = JSON.parse(result);
-            if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
+            if (json.place=='' && json.region =='' && json.countryCode =='')
                 resolve('');
             else
-                resolve(json.geoplugin_place + ', ' +
-                        json.geoplugin_region + ', ' +
-                        json.geoplugin_countryCode);
+                resolve(json.place + ', ' +
+                        json.region + ', ' +
+                        json.countryCode);
         })
         .catch(()=>resolve(''));
     });
@@ -2613,9 +2613,9 @@ const commonMicroserviceGeolocationIp = async ip => {
     return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             return {
-                latitude:JSON.parse(result).geoplugin_latitude,
-                longitude: JSON.parse(result).geoplugin_longitude,
-                place: `${JSON.parse(result).geoplugin_city ?? ''}, ${JSON.parse(result).geoplugin_regionName}, ${JSON.parse(result).geoplugin_countryName}`
+                latitude:JSON.parse(result).latitude,
+                longitude: JSON.parse(result).longitude,
+                place: `${JSON.parse(result).city ?? ''}, ${JSON.parse(result).regionName}, ${JSON.parse(result).countryName}`
             };
         })
         .catch(()=>{return {
