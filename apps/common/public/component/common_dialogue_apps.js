@@ -1,5 +1,5 @@
 /**
- * Displays dialogue apps
+ * Displays dialogue apps and date and time in title using users locale and users timezone
  * @module apps/common/component/common_dialogue_apps
  */
 
@@ -12,7 +12,6 @@
  * @description Template
  * @function
  * @param {{apps:CommonAppRecord[],
- *          title_data:[],
  *          app_copyright:string,
  *          app_email:string,
  *          app_link_url:string,
@@ -23,10 +22,7 @@
  * @returns {string}
  */
 const template = props => ` <div id='common_dialogue_apps_list_title'>
-                                ${props.title_data.map(data=>
-                                    `<div class ='common_dialogue_apps_list_title_col'>${data}</div>`
-                                ).join('')
-                                }
+                                <div id='common_dialogue_apps_list_title_col'></div>
                             </div>
                             <div id='common_dialogue_apps_list'>
                                 ${props.apps.map(row=>
@@ -83,7 +79,8 @@ const template = props => ` <div id='common_dialogue_apps_list_title'>
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonMiscShowDateUpdate:CommonModuleCommon['commonMiscShowDateUpdate'],
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
@@ -96,14 +93,15 @@ const component = async props => {
     const apps = await props.methods.commonFFB({path:'/app-common/', method:'GET', authorization_type:'APP_ID'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
 
-
+    const onMounted =()=>{
+        props.methods.commonMiscShowDateUpdate('common_dialogue_apps_list_title_col');
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template({    
                             apps:apps,
-                            title_data:[],
                             app_copyright:props.data.app_copyright,
                             app_email:props.data.app_email,
                             app_link_url:props.data.app_link_url,

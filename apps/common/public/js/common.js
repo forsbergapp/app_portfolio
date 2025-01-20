@@ -696,6 +696,22 @@ const commonMiscTypewatch = (function_name, ...parameter) =>{
     }, type_delay);
 };
 /**
+ * @name commonMiscShowDateUpdate
+ * @description Show date and time on local format in given element
+ * @function
+ * @param {string} element_id
+ * @returns {Promise<void>}
+ */
+const commonMiscShowDateUpdate = async element_id => {
+    
+    if (COMMON_DOCUMENT.querySelector(`#${element_id}`)){
+        COMMON_DOCUMENT.querySelector(`#${element_id}`).textContent = 
+            new Date().toLocaleString(COMMON_GLOBAL.user_locale, {timeZone: COMMON_GLOBAL.user_timezone});
+        await commonWindowWait(1000);
+        commonMiscShowDateUpdate(element_id);
+    }
+};
+/**
  * @name commonMiscLengthWithoutDiacrites
  * @description Length without diacrites
  * @function
@@ -3897,6 +3913,7 @@ export{/* GLOBALS*/
        commonMiscThemeUpdateFromBody,
        commonMiscTimezoneDate, 
        commonMiscTypewatch,      
+       commonMiscShowDateUpdate,
        /**WINDOW OBJECT */
        commonWindowDocumentFrame,
        commonWindowFromBase64, 

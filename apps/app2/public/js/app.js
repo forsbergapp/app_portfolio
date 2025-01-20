@@ -265,7 +265,10 @@ const appAppsGet = () => {
                     info_link_disclaimer_name:common.COMMON_GLOBAL.info_link_disclaimer_name,
                     info_link_terms_name:common.COMMON_GLOBAL.info_link_terms_name
                     },
-        methods:    {commonFFB:common.commonFFB},
+        methods:    {
+                    commonFFB:common.commonFFB,
+                    commonMiscShowDateUpdate:common.commonMiscShowDateUpdate
+                    },
         path:       '/common/component/common_dialogue_apps.js'});
 };
 /**
