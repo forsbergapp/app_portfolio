@@ -673,6 +673,10 @@ body{
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);
 }
+#common_dialogue_apps_list_title{
+	background: var(--app_theme_background_color);
+	color: var(--common_app_color_white1);
+}
 #common_dialogue_apps_list, #common_dialogue_info_app_menu_content_apps_list{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }

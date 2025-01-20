@@ -578,6 +578,7 @@ body.rtl{
 /*DIALOGUE APPS*/
 #common_dialogue_apps{
 	overflow: hidden;
+	padding: unset;
 }
 #common_dialogue_info_app_menu_content{
 	width: 100%;
@@ -598,7 +599,12 @@ body.rtl{
 #common_dialogue_apps_list{
 	font-size: 0.7em;
 }
-
+#common_dialogue_apps_list_title{
+	height: 50px;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+}
 #common_dialogue_apps_list .common_dialogue_apps_app_link_row{
 	width: 45%;
     display: inline-block;
