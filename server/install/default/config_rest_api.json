@@ -38,9 +38,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                   	"200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                   	"oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -55,7 +75,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "required":true
                         },
                         {"server_validation_resource_key":null},
                         {"server_validation_resource_value":null},
@@ -74,9 +94,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -106,9 +136,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -146,9 +186,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -202,9 +252,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -257,9 +317,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -313,9 +383,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -361,9 +441,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]   
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -401,9 +491,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -469,9 +569,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -505,9 +625,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -541,9 +681,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -585,9 +745,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -625,9 +805,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -670,9 +860,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -723,9 +933,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -775,9 +995,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -812,9 +1042,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "post": {
@@ -866,9 +1116,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -903,9 +1163,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -920,7 +1200,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
-                            "required":false
+                            "required":true
                         },
                         {
                             "name":"type",
@@ -947,9 +1227,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1000,9 +1290,29 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1053,9 +1363,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1107,9 +1427,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1163,9 +1493,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1245,9 +1585,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1327,9 +1677,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "get": {
@@ -1362,9 +1722,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -1414,9 +1784,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1474,9 +1854,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1519,9 +1909,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1573,9 +1973,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -1625,9 +2035,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1679,9 +2099,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -1731,9 +2161,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1768,9 +2208,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "patch": {
@@ -1830,9 +2290,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -1882,9 +2352,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1919,9 +2399,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -1964,9 +2464,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2023,9 +2543,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2083,9 +2613,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -2135,9 +2675,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2189,9 +2739,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -2241,9 +2801,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2259,7 +2829,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "required":true
+                            "required":false
                         },
                         {
                             "name":"data_app_id",
@@ -2286,9 +2856,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2347,9 +2937,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2424,9 +3034,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "put": {
@@ -2487,9 +3117,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -2541,9 +3181,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2605,9 +3255,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2690,9 +3350,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "put": {
@@ -2762,9 +3442,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -2819,9 +3509,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -2889,9 +3589,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3014,9 +3724,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "put": {
@@ -3077,9 +3807,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -3131,9 +3871,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3192,9 +3942,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3249,9 +4009,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3370,9 +4140,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3427,9 +4207,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3485,9 +4275,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]                                 
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3534,9 +4334,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3623,9 +4433,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "post": {
@@ -3693,7 +4513,7 @@
                             
 			            },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "",
                         "content": {
                             "text/event-stream": {
@@ -3737,9 +4557,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3823,9 +4653,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3868,9 +4708,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "put": {
@@ -3934,9 +4794,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -3971,9 +4841,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "patch": {
@@ -4028,9 +4908,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4065,9 +4955,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "patch": {
@@ -4119,9 +5019,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4152,9 +5062,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4225,9 +5145,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4305,9 +5235,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4366,9 +5306,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "put": {
@@ -4426,9 +5386,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4459,9 +5429,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4509,9 +5489,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -4540,9 +5530,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4573,9 +5573,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4606,9 +5616,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4639,9 +5659,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4672,9 +5702,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "post": {
@@ -4703,9 +5743,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "delete": {
@@ -4734,9 +5784,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4855,9 +5915,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4888,9 +5958,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -4969,9 +6049,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5002,9 +6092,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5039,9 +6139,29 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             },
             "patch": {
@@ -5110,9 +6230,19 @@
                             }
 			            },
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5163,9 +6293,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                        {"rows": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5235,7 +6375,7 @@
                             
 			            },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "",
                         "content": {
                             "text/event-stream": {
@@ -5318,7 +6458,7 @@
                             
 			            },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "",
                         "content": {
                             "text/event-stream": {
@@ -5436,9 +6576,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5490,9 +6640,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5544,9 +6704,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5618,9 +6788,19 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5651,9 +6831,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5684,9 +6874,19 @@
                         {"server_function_parameter_path":false}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5725,9 +6925,165 @@
                         {"server_function_parameter_method":true}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                {"properties": {
+                                                        "request":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "status":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "delay":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "credit":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "city":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "region":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "regionCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "regionName":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "areaCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "dmaCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "countryCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "countryName":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "inEU":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "euVATrate":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "continentCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "continentName":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "latitude":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "longitude":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "locationAccuracyRadius":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "timezone":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "currencyCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "currencySymbol":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "currencySymbol_UTF8":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "currencyConverter":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         },
@@ -5774,9 +7130,76 @@
                         {"server_function_parameter_method":true}
                 ],
                 "responses": {
-                    "200":{
-                        "$ref": "#/components/responses/200"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                {"properties": {
+                                                        "place":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "countryCode":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "region":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "regionAbbreviated":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "country":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "latitude":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "longitude":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "distanceMiles":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        },
+                                                        "distanceKilometers":{
+                                                            "description":"",
+                                                            "schema":{
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                }
+                                ,
+                                {"$ref": "#/components/schema/ErrorResponse"}
+                            ]
+                        }
+                    ]
                 }
             }
         },
@@ -5857,45 +7280,30 @@
                             }
 			            },
                 "responses": {
-                    "201":{
-                        "$ref": "#/components/responses/201"
-                    }
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
                 }
             }
         }
     },
     "components":{
         "schemas":{
-            "PathResponseSingle":{
-                "properties":"",
-                "$ref": "#/components/responses/200/content/application~1json/schema/SuccessReponseSingleResource/properties"
-            },
-            "PathResponseList":{
-                "items":"",
-                "$ref": "#/components/responses/200/content/application~1json/schema/SuccessReponseList/properties/list_header/properties/rows/items"
-            },
-            "PathResponsePagination":{
-                "items":"",
-                "$ref": "#/components/responses/200/content/application~1json/schema/SuccessReponsePagination/properties/page_header/properties/rows/items"
-            },
-            "PathResponseErrorISO":{
-                "$ref": "#/components/responses/401/content/application~1json/schema/ErrorResponseISO"
-            },
-            "PathResponseErrorSecurity":{
-                "$ref": "#/components/responses/401/content/'application~1json'/schema/ErrorResponseSecurity"
-            },
-            "SuccessReponse":{
-                "oneOf":[
-                    {"$ref":"#/components/schemas/SuccessSingleResource"},
-                    {"$ref":"#/components/schemas/SuccessReponseList"},
-                    {"$ref":"#/components/schemas/SuccessReponsePagination"}
-                ]
-            },
-            "SuccessReponseSingleResource":{
+            "SuccessResponseSingleResource":{
                 "type": "*",
                 "properties":{}
             },
-            "SuccessReponseList":{
+            "SuccessResponseList":{
                 "type": "object",
                 "properties":{
                     "list_header":{
@@ -5961,6 +7369,10 @@
             "ErrorResponseSecurity":{
                 "type": "string",
                 "message":"⛔"
+            },
+            "ErrorReponseHTML":{
+                "description": "Server error HTML",
+                "type": "string"
             },
             "ErrorReponseISO":{
                 "type": "object",
@@ -6103,17 +7515,7 @@
                     "description": "Success",
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "SuccessResponseSingleResource":{
-                                    "$ref":"#/components/schemas/SuccessResponseSingleResource"
-                                },
-                                "SuccessResponseList":{
-                                    "$ref":"#/components/schemas/SuccessResponseList"
-                                },
-                                "SuccessResponsePagination":{
-                                    "$ref":"#/components/schemas/SuccessResponsePagination"
-                                }
-                            }
+                            "schema": {}
                         }
                     }
                 },
@@ -6121,11 +7523,7 @@
                     "description": "Created",
                     "content": {
                         "application/json": {
-                            "schema": {
-                                "SuccessResponseSingleResource":{
-                                    "$ref":"#/components/schemas/SuccessResponseSingleResource"
-                                }
-                            }
+                            "schema": {}
                         }
                     }
                 },
@@ -6133,60 +7531,57 @@
                     "description": "Redirect if user account or path not found",
                     "content": {
                         "application/json": {
-                            "schema":{
-                                "ErrorResponseSecurity":{
-                                    "$ref":"#/components/schemas/ErrorResponseSecurity"
-                                }
-                            }
+                            "schema":{}
                         }
                     }
                 },
             "400": {
-                    "description": "⛔",
+                    "description": "Bad request",
                     "content":{
                         "application/json":{
-                            "description":"Bad request", 
+                            "description":"", 
                             "schema":{
-                                "ErrorResponseSecurity":{
-                                    "$ref":"#/components/schemas/ErrorResponseSecurity"
-                                },
-                                "ErrorResponseISO":{
-                                    "$ref":"#/components/schemas/ErrorResponseISO"
-                                }
+                                "oneOf":[
+                                    {"$ref":"#/components/schemas/ErrorResponseSecurity"},
+                                    {"$ref":"#/components/schemas/ErrorResponseISO"}
+                                ]
                             }
                         }
                     }
                 },
             "401": {
-                    "description": "⛔",
+                    "description": "Not authorized",
                     "headers":{
                         "application/json":{
-                            "description":"Not authorized", 
+                            "description":"", 
                             "schema":{
-                                "ErrorResponseSecurity":{
-                                    "$ref":"#/components/schemas/ErrorResponseSecurity"
-                                },
-                                "ErrorResponseISO":{
-                                    "$ref":"#/components/schemas/ErrorResponseISO"
-                                }
+                                "oneOf":[
+                                    {"$ref":"#/components/schemas/ErrorResponseSecurity"},
+                                    {"$ref":"#/components/schemas/ErrorResponseISO"}
+                                ]
                             }
                         }
                     }
                 },
             "404": {
-                "description": "⛔",
+                "description": "Not found",
                 "headers":{
                     "application/json":{
-                        "description":"Not found", 
-                        "type":"string"
+                        "description":"", 
+                        "schema":{
+                                "oneOf":[
+                                    {"$ref":"#/components/schemas/ErrorResponseSecurity"},
+                                    {"$ref":"#/components/schemas/ErrorResponseISO"}
+                                ]
+                            }
                     }
                 }
             },
             "429": {
-                "description": "⛔",
+                "description": "Too many requests",
                 "headers":{
                     "application/json":{
-                        "description":"Too many requests", 
+                        "description":"", 
                         "schema":{
                             "ErrorResponseSecurity":{
                                 "$ref":"#/components/schemas/ErrorResponseSecurity"
@@ -6201,13 +7596,12 @@
                     "application/json":{
                         "description":"Server error", 
                         "schema":{
-                            "ErrorResponseSecurity":{
-                                "$ref":"#/components/schemas/ErrorResponseSecurity"
-                            },
-                            "ErrorResponseISO":{
-                                "$ref":"#/components/schemas/ErrorResponseISO"
+                                "oneOf":[
+                                    {"$ref":"#/components/schemas/ErrorResponseSecurity"},
+                                    {"$ref":"#/components/schemas/ErrorResponseISO"},
+                                    {"$ref":"#/components/schemas/ErrorReponseHTML"}
+                                ]
                             }
-                        }
                     }
                 }
             },
