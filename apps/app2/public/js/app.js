@@ -256,7 +256,6 @@ const appAppsGet = () => {
     common.commonComponentRender({
         mountDiv:   'common_dialogue_apps',
         data:       {
-                    common_app_id:common.COMMON_GLOBAL.common_app_id,
                     app_id:common.COMMON_GLOBAL.app_id,
                     app_copyright:common.COMMON_GLOBAL.app_copyright,
                     app_email:common.COMMON_GLOBAL.app_email,
@@ -308,16 +307,11 @@ const appInit = async (parameters) => {
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
-                                                    framework:      common.COMMON_GLOBAL.app_framework,
-                                                    font_default:   true,
-                                                    font_arabic:    true,
-                                                    font_asian:     true,
-                                                    font_prio1:     true,
-                                                    font_prio2:     true,
-                                                    font_prio3:     true
+                                                    framework:      common.COMMON_GLOBAL.app_framework
                                                     },
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
+    appAppsGet();
     await common.commonComponentRender({
         mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
@@ -341,10 +335,9 @@ const appInit = async (parameters) => {
             data:       null,
             methods:    null,
             path:       '/common/component/common_iam_avatar.js'}));
-
-    appAppsGet();
     
-    await common.commonComponentRender({mountDiv:   'common_fonts',
+    
+    common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
                     font_arabic:    true,

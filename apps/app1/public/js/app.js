@@ -150,7 +150,7 @@ const appInit = async () => {
         data:       {app_id:common.COMMON_GLOBAL.common_app_id},
         methods:    {commonFFB:common.commonFFB},
         path:       '/component/app.js'});
-    await common.commonComponentRender({mountDiv:   'common_fonts',
+    common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
                     font_arabic:    true,

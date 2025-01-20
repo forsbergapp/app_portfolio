@@ -12,6 +12,7 @@
  * @description Template
  * @function
  * @param {{apps:CommonAppRecord[],
+ *          title_data:[],
  *          app_copyright:string,
  *          app_email:string,
  *          app_link_url:string,
@@ -21,7 +22,12 @@
  *          info_link_terms_name:string}} props 
  * @returns {string}
  */
-const template = props => ` 
+const template = props => ` <div id='common_dialogue_apps_list_title'>
+                                ${props.title_data.map(data=>
+                                    `<div class ='common_dialogue_apps_list_title_col'>${data}</div>`
+                                ).join('')
+                                }
+                            </div>
                             <div id='common_dialogue_apps_list'>
                                 ${props.apps.map(row=>
                                     `<div class='common_dialogue_apps_app_link_row common_row'>
@@ -66,7 +72,6 @@ const template = props => `
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      common_app_id:number,
  *                      app_id:number,
  *                      app_copyright:string,
  *                      app_email:string,
@@ -98,6 +103,7 @@ const component = async props => {
         methods:    null,
         template:   template({    
                             apps:apps,
+                            title_data:[],
                             app_copyright:props.data.app_copyright,
                             app_email:props.data.app_email,
                             app_link_url:props.data.app_link_url,

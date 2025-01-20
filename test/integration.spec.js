@@ -65,12 +65,12 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
                                 .catch(()=>{return {};});
             console.log('Integration test geolocation result:', result);
             console.log('Integration test geolocation app id:', app.id);
-            console.log('Integration test geolocation geoplugin_latitude:', result.result.geoplugin_latitude);
-            console.log('Integration test geolocation geoplugin_longitude:', result.result.geoplugin_longitude);
-            expect(result.result.geoplugin_latitude).not.toBe(null);
-            expect(result.result.geoplugin_longitude).not.toBe(null);
-            expect(result.result.geoplugin_latitude).not.toBeUndefined();
-            expect(result.result.geoplugin_longitude).not.toBeUndefined();
+            console.log('Integration test geolocation latitude:', result.result.latitude);
+            console.log('Integration test geolocation longitude:', result.result.longitude);
+            expect(result.result.latitude).not.toBe(null);
+            expect(result.result.longitude).not.toBe(null);
+            expect(result.result.latitude).not.toBeUndefined();
+            expect(result.result.longitude).not.toBeUndefined();
         }
     });
 });
