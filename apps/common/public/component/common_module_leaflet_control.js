@@ -191,11 +191,14 @@ const component = async props => {
             map_control_toggle_expand('layer');
         map_control_toggle_expand('search', locale);
     };
-    const eventClickControlFullscreen = () =>{
+    const eventClickControlFullscreen = async () =>{
         if (props.methods.COMMON_DOCUMENT.fullscreenElement)
             props.methods.COMMON_DOCUMENT.exitFullscreen();
-        else
-            props.methods.COMMON_DOCUMENT.querySelector('.leaflet-container').requestFullscreen();
+        else{
+            await props.methods.COMMON_DOCUMENT.querySelector('.leaflet-container').requestFullscreen();
+            map_resize();
+        }
+            
     };
     /**
      * @param {string} client_latitude
