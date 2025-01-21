@@ -27,9 +27,9 @@ const common = await import(commonPath);
  * @function
  * @param {string} href
  * @param {string} title
- * @param {commonDocumentType} type
+ * @param {commonDocumentType} documentType
  */
-const show = async (href, title, type) =>{
+const show = async (href, title, documentType) =>{
     
     COMMON_DOCUMENT.querySelector('#content').innerHTML='';
     //common app component
@@ -41,7 +41,7 @@ const show = async (href, title, type) =>{
                         app_name:COMMON_DOCUMENT.title,
                         href:href,
                         title:title,
-                        type:type
+                        documentType:documentType
                     },
         methods:    {commonFFB:common.commonFFB},
         path:       '/common/component/common_document.js'});

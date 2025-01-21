@@ -292,9 +292,9 @@ const component = async props => {
                                 [];
     
     if (props.data.new_resource==false){
-        const master_metadata = await props.methods.commonFFB({   path:`/app-module-function/${props.data.master_resource}`, 
+        const master_metadata = await props.methods.commonFFB({   path:`/app-module/${props.data.master_resource}`, 
                                                             query:'fields=json_data', 
-                                                            method:'POST', authorization_type:'APP_ID', body:{data_app_id:props.data.app_id}})
+                                                            method:'POST', authorization_type:'APP_ID', body:{type:'FUNCTION',data_app_id:props.data.app_id}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
         for (const key of Object.entries(master_object)){
             master_object[key[0]] = {   
@@ -305,9 +305,9 @@ const component = async props => {
         }
     }
     if (props.data.detail_resource){
-        const detail_metadata = await props.methods.commonFFB({   path:`/app-module-function/${props.data.detail_resource}`, 
+        const detail_metadata = await props.methods.commonFFB({   path:`/app-module/${props.data.detail_resource}`, 
                                                             query:'fields=json_data', 
-                                                            method:'POST', authorization_type:'APP_ID', body:{data_app_id:props.data.app_id}})
+                                                            method:'POST', authorization_type:'APP_ID', body:{type:'FUNCTION',data_app_id:props.data.app_id}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows.map((/**@type{*}*/row)=>JSON.parse(row.json_data)));
         for (const row of detail_rows){
             for (const key of Object.entries(row)){
