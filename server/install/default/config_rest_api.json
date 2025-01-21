@@ -1251,7 +1251,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/app-module-function/${resource_id_string}": {
+        "/bff/app_id/v1/app-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1264,6 +1264,7 @@
                             "$ref": "#/components/parameters/resource_id_string",
                             "required":true
                         },
+                        
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
                         {"server_validation_resource_app_data_app_id":true},
@@ -1289,6 +1290,9 @@
                                         "type":"object" ,
                                         "properties":{
                                             "data_app_id":{
+                                                "type":"string"
+                                            },
+                                            "type":{
                                                 "type":"string"
                                             }
                                         },
@@ -1324,7 +1328,7 @@
                 }
             }
         },
-        "/bff/app_external/v1/app-module-function/${resource_id_string}": {
+        "/bff/app_external/v1/app-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1363,6 +1367,9 @@
                                         "properties":{
                                             "data_app_id":{
                                                 "type":"string"
+                                            },
+                                            "type":{
+                                                "type":"string"
                                             }
                                         },
                                         "additionalProperties":true
@@ -1387,7 +1394,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/app-module-function/${resource_id_string}": {
+        "/bff/app_access/v1/app-module/${resource_id_string}": {
             "post": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
@@ -1426,6 +1433,9 @@
                                         "type":"object" ,
                                         "properties":{
                                             "data_app_id":{
+                                                "type":"string"
+                                            },
+                                            "type":{
                                                 "type":"string"
                                             }
                                         },

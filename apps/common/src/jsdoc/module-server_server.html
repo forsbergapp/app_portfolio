@@ -373,7 +373,7 @@ responds to SSL verification if enabled
 /bff/app_id/v1*                           all     iam.iamAuthenticateIdToken                  bffAppId
 /bff/app_id_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppIdSignup
 /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
-/bff/app_external/v1/app-module-function*   post    iam.iamAuthenticateExternal                 bffAppExternal
+/bff/app_external/v1/app-module*   post    iam.iamAuthenticateExternal                 bffAppExternal
 /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
 /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
 /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
