@@ -644,7 +644,7 @@ const serverUtilAppLine = () =>{
                                             text:err?.name=='PayloadTooLargeError'?iamUtilMessageNotAuthorized():'SERVER ERROR',
                                             developerText:'',
                                             moreInfo:'',
-                                            type:'HTML'},
+                                            type:'JSON'},
                             host:req.headers.host,
                             route:null,
                             res:res});

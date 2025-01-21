@@ -72,17 +72,17 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                                     .then((/**@type{*}*/result_gps)=>result_gps.http?null:result_gps.result)
                                     .catch(()=>null);
     const place = result_geodata?
-                    (result_geodata.geoplugin_city + ', ' +
-                    result_geodata.geoplugin_regionName + ', ' +
-                    result_geodata.geoplugin_countryName):'';
+                    (result_geodata.city + ', ' +
+                    result_geodata.regionName + ', ' +
+                    result_geodata.countryName):'';
     /**@type{import('./db/dbModelUserAccount.js')} */
     const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     const identity_provider_id = user_account_id?await getUserByUserId({app_id:app_id, resource_id:user_account_id})
                                                     .then(result=>result.result?.identity_provider_id ?? null):null;
-    return {latitude:result_geodata?result_geodata.geoplugin_latitude ?? '':'',
-            longitude:result_geodata?result_geodata.geoplugin_longitude ?? '':'',
+    return {latitude:result_geodata?result_geodata.latitude ?? '':'',
+            longitude:result_geodata?result_geodata.longitude ?? '':'',
             place:place,
-            timezone:result_geodata?result_geodata.geoplugin_timezone ?? '':'',
+            timezone:result_geodata?result_geodata.timezone ?? '':'',
             identity_provider_id:identity_provider_id};
 };
 /**
