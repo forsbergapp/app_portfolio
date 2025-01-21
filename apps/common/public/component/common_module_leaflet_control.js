@@ -287,7 +287,7 @@ const component = async props => {
             const cities = await props.methods.commonFFB({path:'/app-module-function/COMMON_WORLDCITIES_COUNTRY', 
                 method:'POST', 
                 authorization_type:'APP_ID', 
-                body:{country:country_code.toUpperCase(), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
+                body:{type:'FUNCTION',country:country_code.toUpperCase(), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
             
             //sort admin name + city
             cities.sort((a, b) => {

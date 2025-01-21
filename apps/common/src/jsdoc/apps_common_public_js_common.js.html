@@ -703,6 +703,22 @@ const commonMiscTypewatch = (function_name, ...parameter) =>{
     }, type_delay);
 };
 /**
+ * @name commonMiscShowDateUpdate
+ * @description Show date and time on local format in given element
+ * @function
+ * @param {string} element_id
+ * @returns {Promise&lt;void>}
+ */
+const commonMiscShowDateUpdate = async element_id => {
+    
+    if (COMMON_DOCUMENT.querySelector(`#${element_id}`)){
+        COMMON_DOCUMENT.querySelector(`#${element_id}`).textContent = 
+            new Date().toLocaleString(COMMON_GLOBAL.user_locale, {timeZone: COMMON_GLOBAL.user_timezone});
+        await commonWindowWait(1000);
+        commonMiscShowDateUpdate(element_id);
+    }
+};
+/**
  * @name commonMiscLengthWithoutDiacrites
  * @description Length without diacrites
  * @function
@@ -2462,7 +2478,7 @@ const commonFFB = async parameter => {
  * @returns {void}
  */
 const commonSocketBroadcastShow = (broadcast_message) => {
-    broadcast_message = COMMON_WINDOW.atob(broadcast_message);
+    broadcast_message = commonWindowFromBase64(broadcast_message);
     const broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
@@ -2471,7 +2487,7 @@ const commonSocketBroadcastShow = (broadcast_message) => {
                 location.href = '/';
             else
                 if (message)
-                    commonSocketMaintenanceShow(COMMON_WINDOW.atob(message));
+                    commonSocketMaintenanceShow(commonWindowFromBase64(message));
             break;
         }
         case 'SESSION_EXPIRED':{
@@ -2479,28 +2495,36 @@ const commonSocketBroadcastShow = (broadcast_message) => {
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.client_latitude =             JSON.parse(COMMON_WINDOW.atob(message)).latitude==''?COMMON_GLOBAL.client_latitude:JSON.parse(COMMON_WINDOW.atob(message)).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(COMMON_WINDOW.atob(message)).longitude==''?COMMON_GLOBAL.client_longitude:JSON.parse(COMMON_WINDOW.atob(message)).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(COMMON_WINDOW.atob(message)).place==''?COMMON_GLOBAL.client_place:JSON.parse(COMMON_WINDOW.atob(message)).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(COMMON_WINDOW.atob(message)).timezone==''?COMMON_GLOBAL.client_timezone:JSON.parse(COMMON_WINDOW.atob(message)).timezone;
+            COMMON_GLOBAL.client_latitude =             JSON.parse(commonWindowFromBase64(message)).latitude==''?
+                                                            COMMON_GLOBAL.client_latitude:
+                                                                JSON.parse(commonWindowFromBase64(message)).latitude;
+            COMMON_GLOBAL.client_longitude =            JSON.parse(commonWindowFromBase64(message)).longitude==''?
+                                                            COMMON_GLOBAL.client_longitude:
+                                                                JSON.parse(commonWindowFromBase64(message)).longitude;
+            COMMON_GLOBAL.client_place =                JSON.parse(commonWindowFromBase64(message)).place==''?
+                                                            COMMON_GLOBAL.client_place:
+                                                                JSON.parse(commonWindowFromBase64(message)).place;
+            COMMON_GLOBAL.client_timezone =             JSON.parse(commonWindowFromBase64(message)).timezone==''?
+                                                            COMMON_GLOBAL.client_timezone:
+                                                                JSON.parse(commonWindowFromBase64(message)).timezone;
             break;
         }
         case 'CHAT':
         case 'ALERT':{
             commonComponentRender({
                 mountDiv:   'common_broadcast',
-                data:       {message:COMMON_WINDOW.atob(message)},
+                data:       {message:commonWindowFromBase64(message)},
                 methods:    null,
                 path:       COMMON_DOCUMENT.querySelector('#common_dialogue_maintenance')?'/maintenance/component/broadcast.js':'/common/component/common_broadcast.js'});
             break;
         }
 		case 'PROGRESS':{
-			commonMessageShow('PROGRESS', null, null, null, JSON.parse(COMMON_WINDOW.atob(message)));
+			commonMessageShow('PROGRESS', null, null, null, JSON.parse(commonWindowFromBase64(message)));
             break;
         }
         case 'APP_FUNCTION':{
             if (COMMON_GLOBAL.app_function_sse)
-                COMMON_GLOBAL.app_function_sse(COMMON_WINDOW.atob(message));
+                COMMON_GLOBAL.app_function_sse(commonWindowFromBase64(message));
         }
     }
 };
@@ -2599,12 +2623,12 @@ const commonMicroserviceGeolocationPlace = async (longitude, latitude) => {
        commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&amp;latitude=${latitude}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             const json = JSON.parse(result);
-            if (json.geoplugin_place=='' &amp;&amp; json.geoplugin_region =='' &amp;&amp; json.geoplugin_countryCode =='')
+            if (json.place=='' &amp;&amp; json.region =='' &amp;&amp; json.countryCode =='')
                 resolve('');
             else
-                resolve(json.geoplugin_place + ', ' +
-                        json.geoplugin_region + ', ' +
-                        json.geoplugin_countryCode);
+                resolve(json.place + ', ' +
+                        json.region + ', ' +
+                        json.countryCode);
         })
         .catch(()=>resolve(''));
     });
@@ -2620,9 +2644,9 @@ const commonMicroserviceGeolocationIp = async ip => {
     return commonFFB({path:'/geolocation/ip', query:`ip=${ip}`, method:'GET', authorization_type:'APP_ID'})
         .then(result=>{
             return {
-                latitude:JSON.parse(result).geoplugin_latitude,
-                longitude: JSON.parse(result).geoplugin_longitude,
-                place: `${JSON.parse(result).geoplugin_city ?? ''}, ${JSON.parse(result).geoplugin_regionName}, ${JSON.parse(result).geoplugin_countryName}`
+                latitude:JSON.parse(result).latitude,
+                longitude: JSON.parse(result).longitude,
+                place: `${JSON.parse(result).city ?? ''}, ${JSON.parse(result).regionName}, ${JSON.parse(result).countryName}`
             };
         })
         .catch(()=>{return {
@@ -3904,6 +3928,7 @@ export{/* GLOBALS*/
        commonMiscThemeUpdateFromBody,
        commonMiscTimezoneDate, 
        commonMiscTypewatch,      
+       commonMiscShowDateUpdate,
        /**WINDOW OBJECT */
        commonWindowDocumentFrame,
        commonWindowFromBase64, 

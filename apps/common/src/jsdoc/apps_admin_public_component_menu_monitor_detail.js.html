@@ -530,13 +530,13 @@ const component = async props => {
             else{
                 props.methods.commonMicroserviceGeolocationPlace(data['longitude'], data['latitude'])
                 .then((/**@type{string}*/result)=>{
-                    /**@type{{geoplugin_place:string, geoplugin_region:string, geoplugin_countryCode:string}} */
+                    /**@type{{place:string, region:string, countryCode:string}} */
                     const geodata = JSON.parse(result);
                     props.methods.map_update({  longitude:data['longitude'],
                                                 latitude:data['latitude'],
-                                                text_place: geodata.geoplugin_place + ', ' + 
-                                                            geodata.geoplugin_region + ', ' + 
-                                                            geodata.geoplugin_countryCode,
+                                                text_place: geodata.place + ', ' + 
+                                                            geodata.region + ', ' + 
+                                                            geodata.countryCode,
                                                 country:'',
                                                 city:'',
                                                 timezone_text :null

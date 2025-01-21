@@ -198,11 +198,14 @@ const component = async props => {
             map_control_toggle_expand('layer');
         map_control_toggle_expand('search', locale);
     };
-    const eventClickControlFullscreen = () =>{
+    const eventClickControlFullscreen = async () =>{
         if (props.methods.COMMON_DOCUMENT.fullscreenElement)
             props.methods.COMMON_DOCUMENT.exitFullscreen();
-        else
-            props.methods.COMMON_DOCUMENT.querySelector('.leaflet-container').requestFullscreen();
+        else{
+            await props.methods.COMMON_DOCUMENT.querySelector('.leaflet-container').requestFullscreen();
+            map_resize();
+        }
+            
     };
     /**
      * @param {string} client_latitude
@@ -291,7 +294,7 @@ const component = async props => {
             const cities = await props.methods.commonFFB({path:'/app-module-function/COMMON_WORLDCITIES_COUNTRY', 
                 method:'POST', 
                 authorization_type:'APP_ID', 
-                body:{country:country_code.toUpperCase(), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
+                body:{type:'FUNCTION',country:country_code.toUpperCase(), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
             
             //sort admin name + city
             cities.sort((a, b) => {

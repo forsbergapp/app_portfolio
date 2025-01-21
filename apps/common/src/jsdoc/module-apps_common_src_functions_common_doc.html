@@ -202,7 +202,18 @@
 
 <div class="description">
     <p>Get documentation menu, guide, app, module or jsdoc documentation
-Returns JS, HTML or JSON content</p>
+Returns different depending document type:
+MODULE_CODE         JS   - javascript source file
+MENU                JSON - renders menu with scanned files and apps from configuration
+JSDOC               HTML - JSDoc rendered file
+MODULE_APPS         HTML - markdown converted with documentation of a file in /apps
+MODULE_MICROSERVICE HTML - markdown converted with documentation of a file in /microservice
+MODULE_SERVER       HTML - markdown converted with documentation of a file in /server
+MODULE_TEST         HTML - markdown converted with documentation of a file in /test
+GUIDE               HTML - markdown converted
+APP                 HTML - markdown converted, renders content from configuration
+ROUTE_APP           HTML - markdown converted, renders content scanning files
+ROUTE_REST_API      HTML - markdown converted, renders content scanning files</p>
 </div>
 
 

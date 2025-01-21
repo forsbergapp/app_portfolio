@@ -114,7 +114,7 @@ const template = props =>`
                                                 ${Object.entries(method[1].responses).map(([status, response]) => `
                                                     &lt;div class='common_markdown_table_row_detail'>
                                                         &lt;div class='common_markdown_table_col'>${status}&lt;/div>
-                                                        &lt;div class='common_markdown_table_col'>${JSON.stringify(response, undefined,2)}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(response, undefined,2)}&lt;/div>
                                                     &lt;/div>
                                                 `).join('')
                                                 }

@@ -6,7 +6,7 @@
     <div class='section'>
         <div class='article'>
             <pre class="prettyprint source linenums"><code>/**
- * Displays dialogue apps
+ * Displays dialogue apps and date and time in title using users locale and users timezone
  * @module apps/common/component/common_dialogue_apps
  */
 
@@ -28,7 +28,9 @@
  *          info_link_terms_name:string}} props 
  * @returns {string}
  */
-const template = props => ` 
+const template = props => ` &lt;div id='common_dialogue_apps_list_title'>
+                                &lt;div id='common_dialogue_apps_list_title_col'>&lt;/div>
+                            &lt;/div>
                             &lt;div id='common_dialogue_apps_list'>
                                 ${props.apps.map(row=>
                                     `&lt;div class='common_dialogue_apps_app_link_row common_row'>
@@ -73,7 +75,6 @@ const template = props => `
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      common_app_id:number,
  *                      app_id:number,
  *                      app_copyright:string,
  *                      app_email:string,
@@ -85,7 +86,8 @@ const template = props => `
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonMiscShowDateUpdate:CommonModuleCommon['commonMiscShowDateUpdate'],
  *                      }}} props
  * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
@@ -98,9 +100,11 @@ const component = async props => {
     const apps = await props.methods.commonFFB({path:'/app-common/', method:'GET', authorization_type:'APP_ID'})
                         .then((/**@type{string}*/result)=>JSON.parse(result).rows.filter((/**@type{*}*/app)=>app.app_id != props.data.app_id));
 
-
+    const onMounted =()=>{
+        props.methods.commonMiscShowDateUpdate('common_dialogue_apps_list_title_col');
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template({    

@@ -1275,7 +1275,7 @@ const appInit = async (parameters) => {
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
     await common.commonDialogueShow('LOGIN_ADMIN');
-    await common.commonComponentRender({mountDiv:   'common_fonts',
+    common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
                     font_arabic:    true,
