@@ -2362,7 +2362,7 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.&lt;void>}
  */
 const appInit = async parameters => {
-    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE?parameters=${common.commonWindowToBase64('type=MODULE')}`;
+    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE?parameters=${common.commonWindowToBase64(`type=MODULE&amp;data_app_id=${common.COMMON_GLOBAL.app_id}`)}`;
     /**@type {CommonModuleLibTimetable} */
     appLibTimetable = await import(appLibTimetable_path);
     appFrameworkSet();
@@ -2490,7 +2490,7 @@ const appInit = async parameters => {
         //show profile for user entered in url
         common.commonProfileShow(null, user);
     }
-    await common.commonComponentRender({mountDiv:   'common_fonts',
+    common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
                     font_arabic:    true,

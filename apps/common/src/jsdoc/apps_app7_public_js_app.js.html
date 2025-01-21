@@ -276,7 +276,7 @@ const appInit = async () => {
         APP_GLOBAL.cube = init_cube.cube;
         APP_GLOBAL.cube_controls = init_cube.controls;
     });
-    await common.commonComponentRender({mountDiv:   'common_fonts',
+    common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
                     font_arabic:    false,

@@ -889,7 +889,7 @@
         "/bff/admin/v1/app-module-report/${resource_id_string}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonModuleGet",
+                "operationId": "apps_common_src.common.commonAppReport",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -952,7 +952,7 @@
         "/bff/app/v1/app-module-report/${resource_id_string}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonModuleGet",
+                "operationId": "apps_common_src.common.commonAppReport",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -1192,7 +1192,7 @@
         "/bff/app/v1/app-module-module/${resource_id_string}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonModuleGet",
+                "operationId": "apps_common_src.common.commonModuleRun",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -1208,7 +1208,15 @@
                             "required":true,
                             "schema":{
                                 "type": "string"
-                            }    
+                            }
+                        },
+                        {
+                            "name":"data_app_id",
+                            "in":"query",
+                            "required":true,
+                            "schema":{
+                                "type": "number"
+                            }
                         },
                         {"server_validation_resource_key":null}, 
                         {"server_validation_resource_value":null},
