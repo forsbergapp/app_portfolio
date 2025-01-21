@@ -53,15 +53,15 @@ const appEventClick = event => {
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
                                             display_type:'MASTER_DETAIL_HORIZONTAL',
-                                            master_path:'/app-module-function/ACCOUNT_STATEMENT',
+                                            master_path:'/app-module/ACCOUNT_STATEMENT',
                                             master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
-                                            master_body:{user_account_id: common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                            master_body:{type:'FUNCTION',user_account_id: common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'ACCOUNT_METADATA',
-                                            detail_path:'/app-module-function/ACCOUNT_TRANSACTIONS',
+                                            detail_path:'/app-module/ACCOUNT_TRANSACTIONS',
                                             detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
-                                            detail_body: {user_account_id:common.COMMON_GLOBAL.user_account_id,data_app_id:common.COMMON_GLOBAL.app_id},
+                                            detail_body: {type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id,data_app_id:common.COMMON_GLOBAL.app_id},
                                             detail_method:'POST',
                                             detail_token_type:'APP_ACCESS',
                                             detail_resource:'TRANSACTION_METADATA',
@@ -91,9 +91,9 @@ const appEventClick = event => {
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
                                             display_type:'VERTICAL_KEY_VALUE',
-                                            master_path:'/app-module-function/CUSTOMER_GET',
+                                            master_path:'/app-module/CUSTOMER_GET',
                                             master_query: 'fields=name,customer_type,address,city,country',
-                                            master_body:{user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                            master_body:{type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'CUSTOMER_METADATA',
@@ -127,9 +127,9 @@ const appEventClick = event => {
                                 data:       {
                                             app_id:common.COMMON_GLOBAL.app_id,
                                             display_type:'VERTICAL_KEY_VALUE',
-                                            master_path:'/app-module-function/ACCOUNT_GET',
+                                            master_path:'/app-module/ACCOUNT_GET',
                                             master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
-                                            master_body: {user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                            master_body: {type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'ACCOUNT_METADATA',
@@ -321,10 +321,11 @@ const appFrameworkSet = async (framework=null) => {
  */
 const appCustomerCreate = async () => {
     
-    await common.commonFFB({  path:'/app-module-function/CUSTOMER_CREATE', 
+    await common.commonFFB({  path:'/app-module/CUSTOMER_CREATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
                         body:{
+                            type:'FUNCTION',
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
                             data_app_id     :common.COMMON_GLOBAL.app_id,
                             customer_type   :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').textContent,
@@ -345,10 +346,11 @@ const appCustomerCreate = async () => {
  * @returns {Promise.<void>}
  */
 const appPaymentRequestUpdate = async status => {
-    await common.commonFFB({  path:'/app-module-function/PAYMENT_REQUEST_UPDATE', 
+    await common.commonFFB({  path:'/app-module/PAYMENT_REQUEST_UPDATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
                         body:{
+                            type:'FUNCTION',
                             data_app_id     :common.COMMON_GLOBAL.app_id,
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
                             payment_request_id:COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
@@ -392,9 +394,10 @@ const appPaymentRequestShow = async message =>{
                             app_id:common.COMMON_GLOBAL.app_id,
                             display_type:'VERTICAL_KEY_VALUE',
                             dialogue:true,
-                            master_path:'/app-module-function/PAYMENT_REQUEST_GET',
+                            master_path:'/app-module/PAYMENT_REQUEST_GET',
                             master_query:'',
                             master_body:{	
+                                            type:'FUNCTION',
                                             data_app_id:common.COMMON_GLOBAL.app_id,
                                             user_account_id: common.COMMON_GLOBAL.user_account_id,
                                             payment_request_id: JSON.parse(message).payment_request_id

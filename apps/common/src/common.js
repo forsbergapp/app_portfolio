@@ -260,8 +260,8 @@ const commonGeodata = async parameters =>{
         /**@type{server_bff_parameters}*/
         const parametersBFF = { endpoint:'APP_ID',
                                 host:null,
-                                url:'/bff/app_id/v1/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
-                                route_path:'/app-module-function/COMMON_WORLDCITIES_CITY_RANDOM',
+                                url:'/bff/app_id/v1/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
+                                route_path:'/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
                                 method:'POST', 
                                 query:'',
                                 body:{type:'FUNCTION',data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
@@ -543,9 +543,9 @@ const commonModuleRun = async parameters => {
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.data.data_app_id}})                                           ;
     if (modules.result){
-        if (parameters.data?.type =='MODULE'|| parameters.data?.type =='FUNCTION'){
+        if (parameters.data?.type =='MODULE'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
-                                                                                                app.common_type==parameters.data.type && 
+                                                                                                app.common_type==(parameters.endpoint=='APP_EXTERNAL'?'FUNCTION':parameters.data.type) && 
                                                                                                 app.common_name==parameters.resource_id && 
                                                                                                 app.common_role == parameters.endpoint)[0];
             if (module){

@@ -60,13 +60,13 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
  *                      template:string}>}
  */
 const component = async props => {
-    const menu = await props.methods.commonFFB({path:'/app-module-function/COMMON_DOC', 
+    const menu = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
                                                 body:{type:'MENU', data_app_id:props.data.app_id}})
                 .then(result=>JSON.parse(JSON.parse(result).rows))
                 .catch(()=>null);
-    const menu_jsdoc = await props.methods.commonFFB({path:'/app-module-function/COMMON_DOC', 
+    const menu_jsdoc = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
                                     method:'POST', 
                                     authorization_type:'APP_ID', 
                                     body:{type:'JSDOC', data_app_id:props.data.app_id, doc:'nav.html'}})

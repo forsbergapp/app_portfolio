@@ -150,10 +150,10 @@ const component = async props => {
     //get locales using user locale
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
-                                                    path:'/app-module-function/COMMON_LOCALE', 
+                                                    path:'/app-module/COMMON_LOCALE', 
                                                     query:`locale=${props.data.user_locale}`, 
                                                     method:'POST', authorization_type:'APP_ID',
-                                                    body:{data_app_id : props.data.common_app_id}
+                                                    body:{type:'FUNCTION',data_app_id : props.data.common_app_id}
                                                 })
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{

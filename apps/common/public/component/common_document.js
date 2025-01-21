@@ -34,7 +34,7 @@ const template = props =>`  <div class='common_document_header' style='${props.a
  *                      app_name:string,
  *                      href:string,
  *                      title:string,
- *                      type:commonDocumentType
+ *                      documentType:commonDocumentType
  *                      },
  *          methods:    {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -47,14 +47,15 @@ const template = props =>`  <div class='common_document_header' style='${props.a
  */
 const component = async props => {
     let classname = '';
-    let content = await props.methods.commonFFB({path:'/app-module-function/COMMON_DOC', 
+    let content = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
                                             method:'POST', 
                                             authorization_type:'APP_ID',
-                                            body:{  type:props.data.type,
+                                            body:{  type:'FUNCTION',
+                                                    documentType:props.data.documentType,
                                                     data_app_id:props.data.common_app_id,
                                                     doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
                             .catch(()=>null);
-    switch (props.data.type){
+    switch (props.data.documentType){
         case 'MODULE_CODE':{
             classname = 'common_markdown code';
             content = content

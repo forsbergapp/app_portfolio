@@ -1496,7 +1496,7 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
                             path.startsWith('/bff/app_id/v1') ||
                             path.startsWith('/bff/app_id_signup/v1') ||
                             path.startsWith('/bff/app_access/v1') ||
-                            path.startsWith('/bff/app_external/v1/app-module-function') ||
+                            path.startsWith('/bff/app_external/v1/app-module') ||
                             path.startsWith('/bff/admin/v1') ||
                             path.startsWith('/bff/iam_admin/v1') ||
                             path.startsWith('/bff/iam_user/v1') ||
