@@ -63,13 +63,13 @@ const component = async props => {
     const menu = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
-                                                body:{type:'MENU', data_app_id:props.data.app_id}})
+                                                body:{type:'FUNCTION',documentType:'MENU', data_app_id:props.data.app_id}})
                 .then(result=>JSON.parse(JSON.parse(result).rows))
                 .catch(()=>null);
     const menu_jsdoc = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
                                     method:'POST', 
                                     authorization_type:'APP_ID', 
-                                    body:{type:'JSDOC', data_app_id:props.data.app_id, doc:'nav.html'}})
+                                    body:{type:'FUNCTION',documentType:'JSDOC', data_app_id:props.data.app_id, doc:'nav.html'}})
                 .catch(()=>null);
     const onMounted =()=>{
         //add common_link to JSDoc generated menu so they will get default hover effect
