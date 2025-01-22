@@ -224,10 +224,7 @@
  *                                          map_line_create:            function,
  *                                          map_update:                 function
  *                                      }
- *                              }
- *              service_socket_SSE:{onmessage:function,
- *                                       onerror:function,
- *                                       close:function}|null}} CommonGlobal
+ *                              }}} CommonGlobal
  */
 
  /**
