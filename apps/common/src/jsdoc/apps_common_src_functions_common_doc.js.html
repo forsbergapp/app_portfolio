@@ -391,7 +391,7 @@ const menuRender = async parameters =>{
  *              ROUTE_REST_API      HTML - markdown converted, renders content scanning files
  * @function
  * @param {{app_id:number,
- *          data:{  type:serverDocumentType,
+ *          data:{  documentType:serverDocumentType,
  *                  data_app_id:number,
  *                  doc:string},
  *          user_agent:string,
@@ -411,7 +411,7 @@ const appFunction = async parameters =>{
 
     //check if valid document request
     if (
-        ((parameters.data.type.toUpperCase()=='GUIDE' ||parameters.data.type.toUpperCase()=='APP'||parameters.data.type.toUpperCase()=='JSDOC') &amp;&amp; parameters.data?.doc == null) ||
+        ((parameters.data.documentType.toUpperCase()=='GUIDE' ||parameters.data.documentType.toUpperCase()=='APP'||parameters.data.documentType.toUpperCase()=='JSDOC') &amp;&amp; parameters.data?.doc == null) ||
         parameters.data?.doc &amp;&amp; (parameters.data.doc.indexOf('\\')>-1||parameters.data.doc.indexOf('..')>-1 ||parameters.data.doc.indexOf(' ')>-1)){
             return {http:400,
                 code:'DOC',
@@ -423,20 +423,20 @@ const appFunction = async parameters =>{
     }
     else{
         switch (true){
-            case parameters.data.type=='MENU':{
+            case parameters.data.documentType=='MENU':{
                 return {result:await menuRender({app_id:parameters.app_id}), type:'JSON'};
             }
-            case parameters.data.type=='MODULE_CODE' &amp;&amp; 
+            case parameters.data.documentType=='MODULE_CODE' &amp;&amp; 
             (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 return {result:await getFile(`${process.cwd()}${parameters.data.doc}.js`, true), type:'JS'};
             }
-            case parameters.data.type=='JSDOC':{
+            case parameters.data.documentType=='JSDOC':{
                 return {result:await getFile(`${process.cwd()}/apps/common/src/jsdoc/${parameters.data.doc}`, true), type:'HTML'};
             }
-            case parameters.data.type=='GUIDE':
-            case parameters.data.type=='APP' &amp;&amp; fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
-            case parameters.data.type=='ROUTE':
-            case parameters.data.type.startsWith('MODULE') &amp;&amp;
+            case parameters.data.documentType=='GUIDE':
+            case parameters.data.documentType=='APP' &amp;&amp; fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:
+            case parameters.data.documentType=='ROUTE':
+            case parameters.data.documentType.startsWith('MODULE') &amp;&amp;
                 (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 const {default:ComponentMarkdown} = await import('../component/common_markdown.js');
                 const {default:ComponentOpenAPI} = await import('../component/common_openapi.js');
@@ -445,10 +445,10 @@ const appFunction = async parameters =>{
                 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
                 //guide documents in separate files, app and modules use templates
                 return {result:(await ComponentMarkdown({ data:{  
-                                                        markdown: parameters.data.type.toUpperCase()=='GUIDE'?
+                                                        markdown: parameters.data.documentType.toUpperCase()=='GUIDE'?
                                                                     await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.data.doc}.md`, true):
                                                                         await markdownRender({  app_id:parameters.app_id,
-                                                                                                type:parameters.data.type,
+                                                                                                type:parameters.data.documentType,
                                                                                                 doc:parameters.data.doc,
                                                                                                 module:parameters.data.doc,
                                                                                                 locale:parameters.locale})},
