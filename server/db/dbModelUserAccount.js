@@ -610,9 +610,6 @@ const getStatCountAdmin = parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          ip:string,
- *          user_agent:string,
- *          host:string,
- *          accept_language:string,
  *          data:{  password_new:string,
  *                  auth:string}}} parameters
  * @returns {Promise.<server_server_response>}
