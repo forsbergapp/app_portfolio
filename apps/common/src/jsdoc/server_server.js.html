@@ -1013,7 +1013,7 @@ const serverREST_API = async (routesparameters) =>{
          * @param{string} key
          * @returns {*}
          */
-        const getParameterValidation = key => key.startsWith('server')?
+        const getParameterValidation = key => key.startsWith('server_validation')?
                                         methodObj.parameters.filter((/**@type{*}*/parameter)=>parameter[key])[0]?.[key]:
                                             methodObj.parameters.filter((/**@type{*}*/parameter)=>
                                                     Object.keys(parameter)[0]=='$ref' &amp;&amp; Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
@@ -1073,18 +1073,19 @@ const serverREST_API = async (routesparameters) =>{
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
                                 app_id:         routesparameters.app_id,
-                                ...(getParameterValidation('server_function_parameter_idtoken')                 &amp;&amp; {idToken:        routesparameters.idToken}),
-                                ...(getParameterValidation('server_function_parameter_authorization')           &amp;&amp; {authorization:  routesparameters.authorization}),
-                                ...(getParameterValidation('server_function_parameter_user_agent')              &amp;&amp; {user_agent:     routesparameters.user_agent}),
-                                ...(getParameterValidation('server_function_parameter_accept_language')         &amp;&amp; {accept_language:routesparameters.accept_language}),
-                                ...(getParameterValidation('server_function_parameter_host')                    &amp;&amp; {host:           routesparameters.host}),
-                                ...(getParameterValidation('server_function_parameter_locale')                  &amp;&amp; {locale:         app_query?.get('locale') ??'en'}),
-                                ...(getParameterValidation('server_function_parameter_ip')                      &amp;&amp; {ip:             routesparameters.ip}),
-                                ...(getParameterValidation('server_function_parameter_path')                    &amp;&amp; {path:           routesparameters.route_path}),
-                                ...(getParameterValidation('server_function_parameter_method')                  &amp;&amp; {method:         routesparameters.method}),
+                                ...(getParameterValidation('server_idtoken')                 &amp;&amp; {idToken:        routesparameters.idToken}),
+                                ...(getParameterValidation('server_authorization')           &amp;&amp; {authorization:  routesparameters.authorization}),
+                                ...(getParameterValidation('server_user_agent')              &amp;&amp; {user_agent:     routesparameters.user_agent}),
+                                ...(getParameterValidation('server_accept_language')         &amp;&amp; {accept_language:routesparameters.accept_language}),
+                                ...(getParameterValidation('server_host')                    &amp;&amp; {host:           routesparameters.host}),
+                                ...(getParameterValidation('locale')                         &amp;&amp; {locale:         app_query?.get('locale') ??'en'}),
+                                ...(getParameterValidation('server_ip')                      &amp;&amp; {ip:             routesparameters.ip}),
+                                ...(getParameterValidation('server_resource_path')           &amp;&amp; {path:           routesparameters.route_path}),
+                                ...(getParameterValidation('server_method')                  &amp;&amp; {method:         routesparameters.method}),
                                 ...(Object.keys(parametersData)?.length>0                                       &amp;&amp; {data:           {...parametersData}}),
-                                ...(getParameterValidation('server_function_parameter_endpoint')                &amp;&amp; {endpoint:       routesparameters.endpoint}),
-                                ...(getParameterValidation('server_function_parameter_resource_id')             &amp;&amp; {resource_id:    (getParameterValidation('resource_id_number')?
+                                ...(getParameterValidation('server_endpoint')                &amp;&amp; {endpoint:       routesparameters.endpoint}),
+                                ...((getParameterValidation('resource_id_string')||
+                                     getParameterValidation('resource_id_number'))           &amp;&amp; {resource_id:    (getParameterValidation('resource_id_number')?
                                                                                                                                     resource_id_get_number(configPath[0]):
                                                                                                                                     resource_id_get_string(configPath[0]))})});
                 return { ...result,
