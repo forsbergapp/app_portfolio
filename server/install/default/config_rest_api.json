@@ -2,7 +2,7 @@
     "info": {
       "title": "App Portfolio REST API",
       "version": "1.0.0",
-      "description": "REST API"
+      "description": "REST API using ISO20022, all #/components/parameters/server* parameters provided by server"
     },
     "servers": [
         {"url": ""}
@@ -18,24 +18,12 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        }
                 ],
                 "responses": {
                    	"oneOf":[
@@ -76,22 +64,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null},
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null},
-                        {"server_validation_app_function_role":null},
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false},
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -119,21 +92,10 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -169,21 +131,10 @@
                                 "type": "string"
                             }    
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -234,22 +185,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -281,21 +217,26 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -347,21 +288,28 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -408,21 +356,22 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -473,22 +422,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -517,8 +451,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"id",
@@ -552,21 +485,18 @@
                                 "type": "number"
                             }    
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -607,22 +537,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -663,22 +578,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -727,22 +627,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -787,22 +672,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -832,8 +702,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_string"
                         },
                         {
                             "name":"type",
@@ -842,22 +711,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -916,21 +770,22 @@
                                 "type": "string"
                             }    
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -978,21 +833,22 @@
                                 "type": "string"
                             }    
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -1022,24 +878,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_string"
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -1080,21 +920,18 @@
                             "$ref": "#/components/parameters/resource_id_string",
                             "required":true
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1143,24 +980,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -1218,21 +1039,26 @@
                                 "type": "number"
                             }
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -1264,22 +1090,33 @@
                             "$ref": "#/components/parameters/resource_id_string",
                             "required":true
                         },
-                        
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_host",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        },
                         {"server_validation_resource_app_data_app_id":true},
                         {"server_validation_app_function":true}, 
-                        {"server_validation_app_function_role":"APP_ID"}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_app_function_role":"APP_ID"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1341,21 +1178,32 @@
                             "$ref": "#/components/parameters/resource_id_string",
                             "required":true
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":false},
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_host",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        },
                         {"server_validation_app_function":true}, 
-                        {"server_validation_app_function_role":"APP_EXTERNAL"}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_app_function_role":"APP_EXTERNAL"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1408,21 +1256,35 @@
                             "$ref": "#/components/parameters/resource_id_string",
                             "required":true
                         },
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_host",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"user_account_id"},
                         {"server_validation_resource_app_data_app_id":true},
                         {"server_validation_app_function":true}, 
-                        {"server_validation_app_function_role":"APP_ACCESS"}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_app_function_role":"APP_ACCESS"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1475,21 +1337,29 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
                         {"server_validation_resource_key":"id"}, 
                         {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":true},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_app_data_app_id":true}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1541,21 +1411,20 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":false},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1633,21 +1502,20 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":false},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":true},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1724,20 +1592,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":false},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -1769,20 +1624,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":false},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1833,20 +1675,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -1909,22 +1738,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -1958,20 +1772,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2020,20 +1821,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2084,20 +1872,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2146,20 +1921,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2210,20 +1972,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -2265,20 +2014,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2337,20 +2073,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2400,21 +2123,10 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":true},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -2464,22 +2176,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -2519,20 +2216,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"user_account_id"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2592,20 +2276,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"user_account_id"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2660,20 +2331,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"user_account_id"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2724,20 +2382,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2786,20 +2431,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -2846,8 +2478,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"data_app_id",
@@ -2856,22 +2487,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -2911,8 +2527,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"entity_id",
@@ -2937,22 +2552,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -2992,8 +2592,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"user_null",
@@ -3034,22 +2633,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -3087,24 +2671,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -3160,24 +2728,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -3224,22 +2776,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -3300,8 +2837,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"user_null",
@@ -3350,22 +2886,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -3403,24 +2924,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -3485,24 +2990,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -3552,22 +3041,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -3634,8 +3108,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"user_null",
@@ -3724,22 +3197,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -3779,22 +3237,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -3852,22 +3295,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -3914,22 +3342,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -4009,22 +3422,7 @@
                                 "type": "string"
                             }    
                         },
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -4140,22 +3538,7 @@
                                 "type": "number"
                             }    
                         },
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -4207,22 +3590,7 @@
                                 "type": "number"
                             }    
                         },
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -4251,21 +3619,10 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -4334,22 +3691,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -4433,22 +3775,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -4474,21 +3801,26 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -4557,22 +3889,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "Sends resource_id=null"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        {"description": "Sends resource_id=null"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -4604,22 +3921,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -4698,8 +4000,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"data_app_id",
@@ -4708,22 +4009,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -4763,22 +4049,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -4841,22 +4112,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -4886,22 +4142,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -4955,22 +4196,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5000,22 +4226,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -5062,22 +4273,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -5145,22 +4341,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5192,22 +4373,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -5306,22 +4472,7 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5361,22 +4512,7 @@
                         {
                             "$ref": "#/components/parameters/resource_id_string",
                             "required":true
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -5429,22 +4565,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -5473,21 +4594,10 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -5531,21 +4641,10 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5573,22 +4672,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -5616,22 +4700,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -5659,22 +4728,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -5702,22 +4756,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -5744,21 +4783,10 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5785,21 +4813,10 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5915,22 +4932,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -5958,22 +4960,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -6049,22 +5036,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -6092,22 +5064,7 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {"description": "parameters"}
                 ],
                 "responses": {
                     "oneOf":[
@@ -6137,24 +5094,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -6192,24 +5133,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":true},
-                        {"server_function_parameter_path":false}
+                            "$ref": "#/components/parameters/resource_id_number"
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6275,8 +5200,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "required":false
+                            "$ref": "#/components/parameters/resource_id_number"
                         },
                         {
                             "name":"data_user_account_id",
@@ -6293,22 +5217,7 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":false},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":false}, 
-                        {"server_function_parameter_accept_language":false},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -6336,21 +5245,22 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6419,21 +5329,26 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6502,21 +5417,18 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6620,21 +5532,26 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6684,21 +5601,22 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6752,21 +5670,22 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "required":true
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -6832,21 +5751,26 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -6875,21 +5799,26 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":true},
-                        {"server_function_parameter_authorization":true},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":false},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":false}
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -6925,22 +5854,30 @@
                                 "type": "string"
                             }    
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":true},
-                        {"server_function_parameter_method":true}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_resource_path",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_method",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -7130,22 +6067,30 @@
                                 "type": "string"
                             }    
                         },
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":true},
-                        {"server_function_parameter_method":true}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_resource_path",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_method",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -7231,22 +6176,30 @@
                 ],
                 "parameters": [
                         {"description": "parameters"},
-                        {"server_validation_resource_key":null}, 
-                        {"server_validation_resource_value":null},
-                        {"server_validation_resource_app_data_app_id":null},
-                        {"server_validation_app_function":null}, 
-                        {"server_validation_app_function_role":null}, 
-                        {"server_function_parameter_ip":true},
-                        {"server_function_parameter_idtoken":false},
-                        {"server_function_parameter_authorization":false},
-                        {"server_function_parameter_user_agent":true}, 
-                        {"server_function_parameter_accept_language":true},
-                        {"server_function_parameter_host":false},
-                        {"server_function_parameter_locale":false},
-                        {"server_function_parameter_endpoint":true},
-                        {"server_function_parameter_resource_id":false},
-                        {"server_function_parameter_path":true},
-                        {"server_function_parameter_method":true}
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_endpoint",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_resource_path",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_method",
+                            "required":true
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -7433,78 +6386,17 @@
         },
         "parameters":{
             "resource_id_number":{
+                "description":"Used here to identify the resource number, if used then response is single resource format or else resource list format using ISO20022 format",
                 "name":	"resource_id_number",
                 "in":"path",
-                "required":true,
+                "required":false,
                 "schema":{
                     "type": "number"
                 }
             },
             "resource_id_string":{
+                "description":"Used here to identify the resource string, if used then response is single resource format or else resource list format using ISO20222 format",
                 "name":	"resource_id_string",
-                "in":"path",
-                "required":true,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "ip":{
-                "name":	"ip",
-                "in":"header",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "authorization":{
-                "description":"req.headers.authorization",
-                "name":	"authorization",
-                "in":"header",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "user_agent":{
-                "description":"req.headers['user-agent']",
-                "name":	"user_agent",
-                "in":"header",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "accept_language":{
-                "description":"req.headers['accept-language']",
-                "name":	"accept_language",
-                "in":"header",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "host":{
-                "description":"req.headers.host",
-                "name":	"host",
-                "in":"header",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-
-            "route_path":{
-                "description":"Route path after * and ? or full path for app route using logic: req.originalUrl.substring(req.route.path.indexOf('*'), req.originalUrl.indexOf('?')>-1?req.originalUrl.indexOf('?'):req.originalUrl.length)",
-                "name":	"route_path",
-                "in":"path",
-                "required":false,
-                "schema":{
-                    "type": "string"
-                }
-            },
-            "endpoint":{
-                "description":"Derived from route path: 'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|'SERVER'",
-                "name":	"endpoint",
                 "in":"path",
                 "required":false,
                 "schema":{
@@ -7512,6 +6404,7 @@
                 }
             },
             "locale":{
+                "description":"Used here for regional result that overrides accept_language, contains string either ISO 639-1, ISO 639-1 + '_' + ISO 3166-1 or ISO 639-1 + '_' + ISO 15924 + '_' + ISO 3166-1 using BCP 47 format. Scripts arab, cyrl, guru, hans, hant and latn part of ISO15924 are supported. All characters that Noto Sans font offers are supported and configured. Browsers can have some limited support with known issues of hanidec numbers and hijri transliteration of arabic on some mobile devices or apps.",
                 "name":	"locale",
                 "in":"query",
                 "required":false,
@@ -7519,9 +6412,82 @@
                     "type": "string"
                 }
             },
-            "iam":{
+            "server_authorization":{
+                "description":"Used here to send as parameter to a function on the server for security reasons",
+                "name":	"authorization",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_ip":{
+                "description":"Used here for regional result or security reasons",
+                "name":	"ip",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_idtoken":{
+                "description": "Used here to send as parameter to a function on the server and update socket connection or send SSE",
                 "name":	"iam",
                 "in":"query",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_user_agent":{
+                "description":"Used in a function for responsive result, statistic or security reasons",
+                "name":	"user_agent",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_accept_language":{
+                "description":"Used in a function for regional result, statistic or security reasons",
+                "name":	"accept_language",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_host":{
+                "description":"req.headers.host, used in a function for security reasons",
+                "name":	"host",
+                "in":"header",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_endpoint":{
+                "description":"Used to prioritize requests for admin, authenticating app modules or for control of APP_EXTERNAL requests",
+                "name":	"endpoint",
+                "in":"path",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_resource_path":{
+                "description":"Used to send resource path to microservice from server",
+                "name":	"route_path",
+                "in":"path",
+                "required":false,
+                "schema":{
+                    "type": "string"
+                }
+            },
+            "server_method":{
+                "description":"Used to send method to microservice from server",
+                "name":	"route_path",
+                "in":"path",
                 "required":false,
                 "schema":{
                     "type": "string"

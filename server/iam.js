@@ -776,7 +776,6 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          authorization:string,
  *          user_agent:string,
  *          accept_language:string,
- *          host:string 
  *          locale:string,
  *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET, 4 NEW EMAIL
  *                  verification_code:string}}} parameters
@@ -900,7 +899,6 @@ const iamAuthenticateUserActivate = async parameters =>{
  *          ip:string, 
  *          user_agent:string, 
  *          accept_language:string, 
- *          host:string, 
  *          data:{  email:string}}} parameters
  * @returns {Promise.<iamAuthenticateUserForgot>}
  */
@@ -989,7 +987,6 @@ const iamAuthenticateUserForgot = async parameters =>{
  *          resource_id:number,
  *          ip:string,
  *          user_agent:string,
- *          host:string,
  *          accept_language:string,
  *          data :{ username:string,
  *                  password:string,
@@ -1120,7 +1117,6 @@ const iamAuthenticateUserUpdate = async parameters => {
  *          idToken:string,
  *          authorization:string,
  *          user_agent:string,
- *          host:string,
  *          accept_language:string,
  *          data:{  password_new:string,
  *                  auth:string},
