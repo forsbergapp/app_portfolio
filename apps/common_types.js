@@ -84,7 +84,7 @@
 
 /**
  * @description Type COMMON_DOCUMENT
- * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
+ * @typedef {{  body:{className:string, requestFullscreen:function, classList:{add:function, remove:function, contains:function}},
  *              createElement:function,
  *              addEventListener:function,
  *              removeEventListener:function,

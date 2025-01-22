@@ -212,11 +212,8 @@ const appThemeUpdate = (toggle_theme=false) => {
  * @returns {void}
  */
  const appPreferencesPostMount = () => {
-    COMMON_DOCUMENT.body.className ='';
-    if (COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.contains('checked'))
-        COMMON_DOCUMENT.body.className = 'app_theme_sun';
-    else
-        COMMON_DOCUMENT.body.className = 'app_theme_moon';
+    if (COMMON_DOCUMENT.body.classList.contains('app_theme_moon'))
+        COMMON_DOCUMENT.querySelector('#app_theme_checkbox').classList.remove('checked');
     common.commonMiscPreferencesUpdateBodyClassFromPreferences();
     appThemeUpdateFromBody();
 };
