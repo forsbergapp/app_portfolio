@@ -595,11 +595,13 @@
 /**
  * @description DB FILE server_db_file_app_module_queue
  * @typedef {{  id:number,
- *              app_id: number,
- *              type:'REPORT',
- *              name: string,
+ *              app_id: number,         //copied from app
+ *              iam_user_id:number,
+ *              app_module_id:number,
+ *              type:'REPORT',          //copied from app_module
+ *              name: string,           //copied from app_module
  *              parameters:string,
- *              user:string,
+ *              user:string,            //copied from iam_user
  *              start:string|null,
  *              end:string|null,
  *              progress:number|null,

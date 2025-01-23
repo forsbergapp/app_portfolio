@@ -18,7 +18,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app.id"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -63,6 +64,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         }
                 ],
@@ -215,6 +217,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -286,6 +289,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -451,7 +455,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id"
                         },
                         {
                             "name":"id",
@@ -536,6 +541,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         }
                 ],
@@ -577,6 +583,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         }
                 ],
@@ -618,6 +625,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -691,7 +699,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-metadata/${resource_id_string}": {
+        "/bff/admin/v1/app-module-metadata/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleMetaDataGet",
@@ -702,7 +710,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_module.id"
                         },
                         {
                             "name":"type",
@@ -752,6 +761,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"app_module.common_name",
                             "required":true
                         },
                         {
@@ -815,6 +825,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"app_module.common_name",
                             "required":true
                         },
                         {
@@ -867,7 +878,7 @@
                 }
             }
         },
-        "/bff/admin/v1/app-module-report-queue/${resource_id_string}": {
+        "/bff/admin/v1/app-module-report-queue/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelAppModuleQueue.get",
@@ -878,7 +889,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_module_queue.id"
                         }
                 ],
                 "responses": {
@@ -917,7 +929,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_string",
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_module.id",
                             "required":true
                         },
                         {
@@ -980,7 +993,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_module_queue.id"
                         }
                 ],
                 "responses": {
@@ -1021,6 +1035,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"app_module.common_name",
                             "required":true
                         },
                         {
@@ -1088,6 +1103,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"app_module.common_name",
                             "required":true
                         },
                         {
@@ -1176,6 +1192,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"app_module.common_name",
                             "required":true
                         },
                         {
@@ -1254,6 +1271,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"app_module.common_name",
                             "required":true
                         },
                         {
@@ -1335,6 +1353,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -1409,6 +1428,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -1500,6 +1520,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -1589,6 +1610,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1621,6 +1643,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1672,6 +1695,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1729,6 +1753,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -1769,6 +1794,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1818,6 +1844,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1869,6 +1896,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1918,6 +1946,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -1969,6 +1998,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2011,6 +2041,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2070,6 +2101,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2121,6 +2153,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -2167,6 +2200,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {
@@ -2273,6 +2307,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account_app_data_post.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2328,6 +2363,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account_app_data_post.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2379,6 +2415,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2428,6 +2465,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
@@ -2478,7 +2516,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_entity.id"
                         },
                         {
                             "name":"data_app_id",
@@ -2527,7 +2566,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_entity_resource.id"
                         },
                         {
                             "name":"entity_id",
@@ -2592,7 +2632,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_master.id"
                         },
                         {
                             "name":"user_null",
@@ -2671,7 +2712,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_master.id"
                         }
                 ],
                 "requestBody":{
@@ -2728,7 +2770,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_master.id"
                         }
                 ],
                 "requestBody":{
@@ -2837,7 +2880,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_detail.id"
                         },
                         {
                             "name":"user_null",
@@ -2924,7 +2968,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_detail.id"
                         }
                 ],
                 "requestBody":{
@@ -2990,7 +3035,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_detail.id"
                         }
                 ],
                 "requestBody":{
@@ -3108,7 +3154,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_detail_data.id"
                         },
                         {
                             "name":"user_null",
@@ -3236,6 +3283,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_detail_data.id",
                             "required":true
                         }
                 ],
@@ -3294,6 +3342,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_data_resource_detail_data.id",
                             "required":true
                         }
                 ],
@@ -3920,6 +3969,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app.id",
                             "required":true
                         }
                 ],
@@ -4000,7 +4050,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_module.id"
                         },
                         {
                             "name":"data_app_id",
@@ -4048,6 +4099,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_module.id",
                             "required":true
                         }
                 ],
@@ -4111,6 +4163,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_parameter.app_id",
                             "required":true
                         }
                 ],
@@ -4141,6 +4194,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_parameter.app_id",
                             "required":true
                         }
                 ],
@@ -4195,6 +4249,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_secret.app_id",
                             "required":true
                         }
                 ],
@@ -4225,6 +4280,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"app_secret.app_id",
                             "required":true
                         }
                 ],
@@ -4372,6 +4428,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.id",
                             "required":true
                         }
                 ],
@@ -4447,6 +4504,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"config file name, CONFIG_SERVER, CONFIG_REST_API, CONFIG_IAM_POLICY, CONFIG_MICROSERVICE or CONFIG_MICROSERVICE_SERVICES",
                             "required":true
                         },
                         {
@@ -4511,6 +4569,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_string",
+                            "description":"config file name, CONFIG_SERVER, CONFIG_REST_API, CONFIG_IAM_POLICY, CONFIG_MICROSERVICE or CONFIG_MICROSERVICE_SERVICES",
                             "required":true
                         }
                 ],
@@ -5094,7 +5153,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"iam_user.id"
                         }
                 ],
                 "responses": {
@@ -5133,7 +5193,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/resource_id_number"
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"iam_user.id"
                         }
                 ],
                 "requestBody":{
@@ -5668,6 +5729,7 @@
                         {"description": "parameters"},
                         {
                             "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db user_account.identity_provider_id",
                             "required":true
                         },
                         {

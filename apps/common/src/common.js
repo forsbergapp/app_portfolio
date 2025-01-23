@@ -6,6 +6,7 @@
  *          server_db_file_app_module,
  *          server_db_file_app_parameter_common,
  *          server_db_file_app_translation,
+ *          server_db_file_iam_user,
  *          server_config_apps_with_db_columns,
  *          server_apps_report_create_parameters,
  *          server_apps_app_service_parameters,
@@ -711,8 +712,8 @@ const commonAppReport = async parameters => {
  * @description Runs report in queue
  * @function
  * @memberof ROUTE_REST_API
- * @param {{app_id:Number,
- *          resource_id:string,
+ * @param {{app_id:number,
+ *          resource_id:number,
  *          authorization:string,
  *          data:{  ps:'A4', 
  *                  report_parameters:string},
@@ -732,40 +733,62 @@ const commonAppReportQueue = async parameters =>{
 
     /**@type{import('../../../server/iam.js')} */
     const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
-                   
-    const result_post = await fileModelAppModuleQueue.post(parameters.app_id, 
-                                                    {
-                                                    type:'REPORT',
-                                                    name:parameters.resource_id,
-                                                    parameters:`ps:${parameters.data.ps}, report:${parameters.data.report_parameters}`,
-                                                    status:'PENDING',
-                                                    user:fileModelIamUser.get(  parameters.app_id, 
-                                                        serverUtilNumberValue(iamUtilDecode(parameters.authorization).id)).result[0].username
-                                                    });
-    if (result_post.result){
-        await fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),
-                                                                progress:0, 
-                                                                status:'RUNNING'});
-        //report can update progress and only progress if necessary
-        //add queue id and parameters from parameter from origin
-        commonAppReport({   app_id:             parameters.app_id,
-                            resource_id:        parameters.resource_id,
-                            data:               {type:'REPORT', 
-                                                    ...{ps:parameters.data.ps}, 
-                                                    ...{queue_parameters:{appModuleQueueId:result_post.result.insertId,
-                                                                            ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
-                                                        }
-                                                },
-                            user_agent:         parameters.user_agent,
-                            ip:                 parameters.ip,
-                            locale:             parameters.locale,
-                            endpoint:           parameters.endpoint});
-        //do not wait for submitted report
-        return {result:null, type:'JSON'};
+    /**@type{import('../../../server/iam.js')} */
+    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+
+    const report = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
+    if (report.result){
+        /**@type{server_db_file_iam_user} */
+        const user = fileModelIamUser.get(  parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.authorization).id)).result[0];
+        const result_post = await fileModelAppModuleQueue.post(parameters.app_id, 
+                                                            {
+                                                            type:'REPORT',
+                                                            iam_user_id:user.id,
+                                                            app_module_id:parameters.resource_id,
+                                                            name:report.result[0].common_name,
+                                                            parameters:`ps:${parameters.data.ps}, report:${parameters.data.report_parameters}`,
+                                                            status:'PENDING',
+                                                            user:user.username
+                                                            });
+        if (result_post.result){
+            await fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { start:new Date().toISOString(),
+                                                                    progress:0, 
+                                                                    status:'RUNNING'});
+            //report can update progress and only progress if necessary
+            //add queue id and parameters from parameter from origin
+            commonAppReport({   app_id:             parameters.app_id,
+                                resource_id:        report.result[0].common_name,
+                                data:               {type:'REPORT', 
+                                                        ...{ps:parameters.data.ps}, 
+                                                        ...{queue_parameters:{appModuleQueueId:result_post.result.insertId,
+                                                                                ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
+                                                            }
+                                                    },
+                                user_agent:         parameters.user_agent,
+                                ip:                 parameters.ip,
+                                locale:             parameters.locale,
+                                endpoint:           parameters.endpoint});
+            //do not wait for submitted report
+            return {result:null, type:'JSON'};
+        }
+        else
+            return result_post;
     }
     else
-        return result_post;
-    
+        return fileModelLog.postAppE(   parameters.app_id, 
+                                        serverUtilAppFilename(import.meta.url), 
+                                        'commonAppReportQueue',
+                                        serverUtilAppLine(), 
+                                        `Module ${parameters.resource_id} not found`)
+                .then((result)=>{          
+                    return result.http?result:{http:404,
+                        code:'APP',
+                        text:iamUtilMessageNotAuthorized(),
+                        developerText:'commonAppReportQueue',
+                        moreInfo:null,
+                        type:'JSON'
+                    };
+                });
 };
 
 /**
