@@ -106,15 +106,8 @@ const component = async props => {
             /**@type{number} */
             this.requests = options.requests ?? 100;
             /**@type{number} */
-            this._stageCount = Math.floor(this.requests / 10);
-            if (this._stageCount > 10000) {
-            this._stageCount = 10000;
-            }
-            /**@type{number} */
             this.concurrency = options.concurrency || 5;
             this._finished = 0;
-            /**@type{number} */
-            this._sent = 0;
             /**@type{number} */
             this._reqSize = 0;
             /**@type{number} */
@@ -193,8 +186,8 @@ const component = async props => {
                 }
             }
 
-            const avgRT = (totalRT / this.requests).toFixed(3);
-            const qps = (this.requests / totalUse * 1000).toFixed(3);
+            const avgRT = (totalRT / (this.requests*this.concurrency)).toFixed(3);
+            const qps = ((this.requests*this.concurrency) / totalUse * 1000).toFixed(3);
             const total = this._finished;
             /**@type {Object.<string,number>} */
             const rates = {};
@@ -318,48 +311,44 @@ const component = async props => {
         };
         async run () {
             const startTime = this._startTime = Date.now();
-            
-            for (let i = 0; i < this.concurrency; i++) {
-                await this.next(i, startTime);
-            }
-            
-            return this.done(startTime);
+            return await new Promise(resolve=>{
+                const next = async () => {
+                    const start = performance.now();
+                    test_function()
+                    .then((/**@type{test_function_result}*/result)=>{
+                        if (result.status!=200) {
+                            this._fail++;
+                        }
+                        const use = performance.now() - start;
+                        this._rts.push(use);
+                        this._totalRT += use;
+                        this._finished++;
+                        if (result) {
+                            if (result.reqSize) {
+                                this._reqSize += result.reqSize;
+                            }
+                            if (result.resSize) {
+                                this._resSize += result.resSize;
+                            }
+                        }
+                        if (this._finished % Math.min(Math.floor((this.requests * this.concurrency) / 10),10000) === 0) {
+                            if (props.queue_parameters.appModuleQueueId)
+                                fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
+                        }
+                        if (this._finished >= (this.requests * this.concurrency)) 
+                            return resolve(this.done(startTime));
+                    })
+                    .catch(()=>{
+                        this._finished++;
+                        this._errors++;
+                    });
+                };
+                for (let concurrency_id = 0; concurrency_id < this.concurrency; concurrency_id++) {
+                    for (let i = 0; i < this.requests; i++)
+                        next();
+                }
+            });   
         }
-        /**
-         * @param {number} id
-         * @param {number} startTime
-         */
-        next = async (id, startTime) => {
-            const start = performance.now();
-            if (this._sent === this.requests) 
-                return;
-            this._sent++;
-            await test_function()
-            .then((/**@type{test_function_result}*/result)=>{
-                if (result.status!=200) {
-                    this._fail++;
-                }
-                const use = performance.now() - start;
-                this._rts.push(use);
-                this._totalRT += use;
-                this._finished++;
-                if (result) {
-                    if (result.reqSize) {
-                        this._reqSize += result.reqSize;
-                    }
-                    if (result.resSize) {
-                        this._resSize += result.resSize;
-                    }
-                }
-                if (this._finished % this._stageCount === 0) {
-                    if (props.queue_parameters.appModuleQueueId)
-                        fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / this.requests)});
-                }})
-            .catch(()=>{
-                this._errors++;
-            });      
-            this.next(id, startTime);
-        };
     }
 
     /**
@@ -392,10 +381,9 @@ const component = async props => {
     //set parameter to avoid certificate errors
     const old = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
     process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
-
     const report = await new Benchmark({  concurrency: Number(props.queue_parameters.concurrency),
                                     requests: Number(props.queue_parameters.requests),
-                                    name:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).result.common_name
+                                    name:commonRegistryAppModule(props.app_id, {type:'REPORT', name:'PERFORMANCE_TEST', role:'ADMIN'}).common_name
                                     }).run();
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED=old;
@@ -403,7 +391,7 @@ const component = async props => {
     return template(report);
 };
 /**@type{server_apps_module_metadata[]}*/
-const metadata = [{param:{name:'concurrency',text:'Concurrency', default:100}},
-                    {param:{name:'requests',text:'Requests', default:1000}}];
+const metadata = [{param:{name:'concurrency',text:'Concurrency', default:50}},
+                    {param:{name:'requests',text:'Requests', default:50}}];
 export {metadata};
 export default component;
