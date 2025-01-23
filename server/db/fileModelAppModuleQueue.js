@@ -55,6 +55,8 @@ const getResult = async parameters => {
  * @function
  * @param {number} app_id 
  * @param {{type:'REPORT',
+ *          app_module_id:number,
+ *          iam_user_id:number,
  *          name:string,
  *          parameters:string,
  *          status:server_db_file_app_module_queue_status
@@ -67,11 +69,13 @@ const post = async (app_id, data) => {
         /**@type{server_db_file_app_module_queue} */
         const job =     {
                             id:Date.now(),
-                            app_id:app_id,                            
-                            type: data.type, 
-                            name:data.name,
+                            app_id:app_id,                      //copied from app
+                            app_module_id:data.app_module_id,   //FK app_module
+                            iam_user_id:data.iam_user_id,       //FK iam_user
+                            type: data.type,                    //copied from app_module
+                            name:data.name,                     //copied from app_module
                             parameters:data.parameters,
-                            user: data.user,
+                            user: data.user,                    //copied from iam_user
                             start:null,
                             end:null,
                             progress:null,
@@ -118,7 +122,7 @@ const postResult = async (app_id, id, result) =>{
  */
 const update = async (app_id, resource_id, data) => {
     const data_update = {};
-    //allowed parameters to update:
+    //allowed parameters to update (not alloewd to update user info or module info):
     if (data.start!=null)
         data_update.start = data.start;
     if (data.end!=null)

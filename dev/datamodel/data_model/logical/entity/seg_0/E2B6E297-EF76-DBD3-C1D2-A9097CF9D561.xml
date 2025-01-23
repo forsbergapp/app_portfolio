@@ -107,5 +107,18 @@
 <attributeRef>DBE179DE-0783-A3EB-3E98-01678D33F210</attributeRef>
 </usedAttributes>
 </identifier>
+<identifier id="B66B69EA-03F6-7C9C-F46D-36A7046ABDE8" name="APP_MODULE_UK">
+<createdBy>admin</createdBy>
+<createdTime>2025-01-23 11:30:15 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>D26A25CB-3DDE-E57E-9597-0F141988DAFE,0C7F8EF4-B3E6-85A9-0412-4F24A0051A37</newElementsIDs>
+<usedAttributes>
+<attributeRef>D26A25CB-3DDE-E57E-9597-0F141988DAFE</attributeRef>
+<attributeRef>0C7F8EF4-B3E6-85A9-0412-4F24A0051A37</attributeRef>
+</usedAttributes>
+</identifier>
 </identifiers>
 </Entity>
