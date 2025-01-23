@@ -90,8 +90,7 @@ const COMMON_GLOBAL = {
                             map_line_create:            ()=>null,
                             map_update:                 ()=>null
                         }
-                    },
-    service_socket_SSE:null
+                    }
 };
 Object.seal(COMMON_GLOBAL);
 
@@ -1753,8 +1752,6 @@ const commonUserLogout = async (activated=false) => {
     if (activated==false)
         await commonFFB({path:'/server-iam-logout', method:'DELETE', authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?'ADMIN':'APP_ACCESS'})
                 .catch((error)=>{
-                    COMMON_GLOBAL.service_socket_SSE?COMMON_GLOBAL.service_socket_SSE.close():null;
-                    socketReconnect();
                     throw error;
                 });
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
@@ -2569,32 +2566,19 @@ const commonSocketConnectOnline = async () => {
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
    commonFFB({path:'/server-socket/socket', method:'POST', authorization_type:authorization_type})
     .then((result_SSE)=>{
-        COMMON_GLOBAL.service_socket_SSE = result_SSE.body.getReader();
-
-        const SSERead =async()=>{
-            if (COMMON_GLOBAL.service_socket_SSE){
-                /**@ts-ignore */
-                COMMON_GLOBAL.service_socket_SSE?.read().then(({done,value})=>{                    
-                    if (done)
-                        null;
-                    else {
-                            try {
-                                const message = new TextDecoder().decode(new Uint8Array(value),{stream:true}).split('\n\n')[0];
-                                if (message.split('data: ')[1])
-                                    commonSocketBroadcastShow(message.split('data: ')[1]);
-                            } catch (error) {
-                                null;
-                            }
-                    }
-                    commonWindowSetTimeout(SSERead, 1000);
-                })
-                .catch(()=>{
-                    COMMON_GLOBAL.service_socket_SSE=null;
-                    socketReconnect();
-                });
+        const SSEStream = new WritableStream({
+            write(data){
+                try {
+                    const message = new TextDecoder().decode(new Uint8Array(data),{stream:true}).split('\n\n')[0];
+                    if (message.split('data: ')[1])
+                        commonSocketBroadcastShow(message.split('data: ')[1]);
+                } catch (error) {
+                    null;
+                }
             }
-        };
-        commonWindowSetTimeout(SSERead, 1000);        
+        });
+        const SSE = result_SSE.body.pipeTo(SSEStream).catch(()=>socketReconnect());
+        SSE;
     })
     .catch(()=>socketReconnect());
 };

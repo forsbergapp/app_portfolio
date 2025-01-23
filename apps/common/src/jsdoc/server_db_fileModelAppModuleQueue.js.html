@@ -13,7 +13,7 @@
  *          server_db_file_app_module_queue} from '../types.js'
  * @typedef {server_server_response &amp; {result?:server_db_file_app_module_queue[] }} get
  * @typedef {server_server_response &amp; {result?:{sendfile:String} }} getResult
- * @typedef {server_server_response &amp; {result?:server_db_file_app_module_queue }} post
+ * @typedef {server_server_response &amp; {result?:server_db_common_result_insert }} post
  * @typedef {server_server_response &amp; {result?:server_db_common_result_insert }} postResult
  * @typedef {server_server_response &amp; {result?:server_db_common_result_update }} update
  * @typedef {server_server_response &amp; {result?:server_db_common_result_delete }} deleteRecord
@@ -62,8 +62,11 @@ const getResult = async parameters => {
  * @function
  * @param {number} app_id 
  * @param {{type:'REPORT',
+ *          app_module_id:number,
+ *          iam_user_id:number,
  *          name:string,
  *          parameters:string,
+ *          status:server_db_file_app_module_queue_status
  *          user:string}} data
  * @returns {Promise.&lt;post>}
  */
@@ -73,20 +76,22 @@ const post = async (app_id, data) => {
         /**@type{server_db_file_app_module_queue} */
         const job =     {
                             id:Date.now(),
-                            app_id:app_id,                            
-                            type: data.type, 
-                            name:data.name,
+                            app_id:app_id,                      //copied from app
+                            app_module_id:data.app_module_id,   //FK app_module
+                            iam_user_id:data.iam_user_id,       //FK iam_user
+                            type: data.type,                    //copied from app_module
+                            name:data.name,                     //copied from app_module
                             parameters:data.parameters,
-                            user: data.user,
+                            user: data.user,                    //copied from iam_user
                             start:null,
                             end:null,
                             progress:null,
-                            status:'PENDING',
+                            status:data.status,
                             message:null
                         };
         return fileDBPost(app_id, 'APP_MODULE_QUEUE', job).then((result)=>{
             if (result.affectedRows>0)
-                return  {result:job, type:'JSON'};
+                return  {result:{insertId:job.id, affectedRows:result.affectedRows}, type:'JSON'};
             else
                 return dbCommonRecordError(app_id, 404);
         });
@@ -124,7 +129,7 @@ const postResult = async (app_id, id, result) =>{
  */
 const update = async (app_id, resource_id, data) => {
     const data_update = {};
-    //allowed parameters to update:
+    //allowed parameters to update (not alloewd to update user info or module info):
     if (data.start!=null)
         data_update.start = data.start;
     if (data.end!=null)
