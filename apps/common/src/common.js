@@ -17,7 +17,6 @@
  *          server_server_error,
  *          server_server_response,
  *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_file_app_module }} commonRegistryAppModule
  * @typedef {server_server_response & {result?:server_apps_module_with_metadata[] }} commonModuleMetaDataGet
  * @typedef {server_server_response & {result?:string }} commonComponentCreate
  * @typedef {server_server_response & {result?:server_config_apps_with_db_columns[] }} commonAppsGet
@@ -600,7 +599,7 @@ const commonModuleRun = async parameters => {
 *                  ps?:'A4'|'Letter', 
 *                  type:'REPORT', 
 *                  reportid?:string,
-*                  queue_parameters?:{}},
+*                  queue_parameters?:{appModuleQueueId:number}},
 *          user_agent:string, 
 *          ip:string,
 *          locale:string,
@@ -610,6 +609,8 @@ const commonModuleRun = async parameters => {
 const commonAppReport = async parameters => {
     /**@type{import('../../../server/iam.js')} */
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    /**@type{import('../../../server/db/fileModelAppModuleQueue.js')} */
+    const fileModelAppModuleQueue = await import(`file://${process.cwd()}/server/db/fileModelAppModuleQueue.js`);
     if (parameters.data?.type =='REPORT'){
         const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}})                                           ;
         if (modules.result){
@@ -636,13 +637,49 @@ const commonAppReport = async parameters => {
                                 user_agent:     parameters.user_agent ?? '',
                                 accept_language:parameters.locale ?? ''
                                 };
-                return {result:await ComponentCreate({data:   {
-                                                CONFIG_APP: {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
-                                                data:       data,
-                                                /**@ts-ignore */
-                                                papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
-                                                },
-                                        methods:{function_report:RunReport}}), type:'HTML'};
+                if (parameters.data.queue_parameters){
+                    //do not wait for the report result when using report queue and the result is saved and not returned here
+                    ComponentCreate({data:   {
+                                                    CONFIG_APP: {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
+                                                    data:       data,
+                                                    /**@ts-ignore */
+                                                    papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
+                                                    },
+                                            methods:{function_report:RunReport}})
+                                            .then(result_queue=>{
+                                                //update report result
+                                                fileModelAppModuleQueue.postResult( parameters.app_id, 
+                                                                                    parameters.data.queue_parameters?.appModuleQueueId??0, 
+                                                                                    result_queue)
+                                                .then((result_fileModelAppModuleQueue)=>
+                                                    result_fileModelAppModuleQueue.http?
+                                                        result_fileModelAppModuleQueue:
+                                                            fileModelAppModuleQueue.update( parameters.app_id, 
+                                                                                            parameters.data.queue_parameters?.appModuleQueueId??0, 
+                                                                                            {   end:new Date().toISOString(), 
+                                                                                                progress:1, 
+                                                                                                status:'SUCCESS'}));
+                                                    
+                                            })
+                                            .catch(error=>{
+                                                //update report fail
+                                                fileModelAppModuleQueue.update( parameters.app_id, 
+                                                                                parameters.data.queue_parameters?.appModuleQueueId??0, 
+                                                                                {   end:new Date().toISOString(), 
+                                                                                    progress:1, 
+                                                                                    status:'FAIL',
+                                                                                    message:error});
+                                            });
+                    return {result:'', type:'HTML'};
+                }
+                else
+                    return {result:await ComponentCreate({data:   {
+                                                    CONFIG_APP: {...fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0]},
+                                                    data:       data,
+                                                    /**@ts-ignore */
+                                                    papersize:  (pagesize=='' ||pagesize==null)?'A4':pagesize
+                                                    },
+                                            methods:{function_report:RunReport}}), type:'HTML'};
             }
             else{
                 return fileModelLog.postAppE(parameters.app_id, serverUtilAppFilename(import.meta.url), 'commonAppReport()', serverUtilAppLine(), `Module ${parameters.resource_id} not found`)
@@ -700,7 +737,8 @@ const commonAppReportQueue = async parameters =>{
                                                     {
                                                     type:'REPORT',
                                                     name:parameters.resource_id,
-                                                    parameters:parameters.data.report_parameters,
+                                                    parameters:`ps:${parameters.data.ps}, report:${parameters.data.report_parameters}`,
+                                                    status:'PENDING',
                                                     user:fileModelIamUser.get(  parameters.app_id, 
                                                         serverUtilNumberValue(iamUtilDecode(parameters.authorization).id)).result[0].username
                                                     });
@@ -721,23 +759,7 @@ const commonAppReportQueue = async parameters =>{
                             user_agent:         parameters.user_agent,
                             ip:                 parameters.ip,
                             locale:             parameters.locale,
-                            endpoint:           parameters.endpoint})
-        .then(result=>{
-            if (result.result){
-                fileModelAppModuleQueue.postResult( parameters.app_id, 
-                                                    result_post.result.insertId, 
-                                                    result.result)
-                .then((result_fileModelAppModuleQueue)=>
-                    result_fileModelAppModuleQueue.http?result_fileModelAppModuleQueue:fileModelAppModuleQueue.update( parameters.app_id, 
-                                                    result_post.result.insertId, 
-                                                    {end:new Date().toISOString(), progress:1, status:'SUCCESS'}));
-            }
-            else
-                fileModelAppModuleQueue.update(parameters.app_id, result_post.result.insertId, { end:new Date().toISOString(), 
-                                                        progress:1, 
-                                                        status:'FAIL',
-                                                        message:result.text});
-        });
+                            endpoint:           parameters.endpoint});
         //do not wait for submitted report
         return {result:null, type:'JSON'};
     }
@@ -757,23 +779,41 @@ const commonAppReportQueue = async parameters =>{
  * @returns {Promise.<commonModuleMetaDataGet>}
  */
 const commonModuleMetaDataGet = async parameters =>{
+    /**@type{import('../../../server/iam.js')} */
+    const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
         const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
         if (modules.result){
-            for (const row of modules.result.filter((/**@type{server_db_file_app_module}*/row)=>row.common_type==parameters.data.type)){
-                const module = await import(`file://${process.cwd()}${row.common_path}`);
-                /**@type{server_apps_module_metadata[]}*/
-                const metadata = module.metadata;
-                row.common_metadata = metadata;
+            const module_reports = modules.result.filter((/**@type{server_db_file_app_module}*/row)=>row.common_type==parameters.data.type);
+            if (module_reports){
+                for (const row of module_reports){
+                    const module = await import(`file://${process.cwd()}${row.common_path}`);
+                    /**@type{server_apps_module_metadata[]}*/
+                    const metadata = module.metadata;
+                    row.common_metadata = metadata;
+                }
+                return {result:module_reports, type:'JSON'};
             }
-            return modules;
+            else
+                return fileModelLog.postAppE(   parameters.app_id, 
+                                                serverUtilAppFilename(import.meta.url), 
+                                                'commonModuleMetaDataGet', 
+                                                serverUtilAppLine(), 
+                                                `Module ${parameters.resource_id} not found`)
+                    .then((result)=>{          
+                        return result.http?result:{http:404,
+                            code:'APP',
+                            text:iamUtilMessageNotAuthorized(),
+                            developerText:'commonModuleMetaDataGet',
+                            moreInfo:null,
+                            type:'JSON'
+                        };
+                    });
         }
         else
             return modules;
     }
     else{
-        /**@type{import('../../../server/iam.js')} */
-        const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         return {http:400,
             code:'APP',
             text:iamUtilMessageNotAuthorized(),
@@ -1000,8 +1040,11 @@ const commonApp = async parameters =>{
                                                 /**@ts-ignore */
                                                 parameters.app_id, 
                                                 serverUtilAppFilename(import.meta.url), 'commonApp()', serverUtilAppLine(), error)
-                                        .then((result)=>{
-                                            return result.http?result:{http:500, code:null, text:error, developerText:'commonApp', moreInfo:null, type:'JSON'};
+                                        .then(()=>{
+                                            return import('./component/common_server_error.js')
+                                                .then(({default:serverError})=>{
+                                                    return {result:serverError({data:null, methods:null}), type:'HTML'};
+                                                });
                                         });
                                     });
             }
@@ -1059,7 +1102,7 @@ const commonAppsGet = async parameters =>{
  * @param {{type:string,
  *          name:string,
  *          role:string|null}} parameters
- * @returns {commonRegistryAppModule}
+ * @returns {server_db_file_app_module}
  */
 const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get({app_id:app_id, resource_id:null, data:{data_app_id:app_id}}).result
                                                            .filter((/**@type{server_db_file_app_module}*/app)=>

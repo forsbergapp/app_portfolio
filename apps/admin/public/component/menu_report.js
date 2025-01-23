@@ -30,7 +30,8 @@ const template = () => ` <div id='menu_report_content_widget1' class='widget'>
  *          methods:     {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                       commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       commonFFB:CommonModuleCommon['commonFFB'],
+ *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff']
  *                       },
  *          lifecycle:   null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -73,10 +74,14 @@ const component = async props => {
      */
     const reportQueueUpdate = ()=>{
         props.methods.commonComponentRender({mountDiv:'menu_report_queue',
-            data:{
-                sort:null,
-                order_by:null},
-            methods:{commonFFB:props.methods.commonFFB},
+            data:   {
+                    sort:null,
+                    order_by:null
+                    },
+            methods:{
+                    commonFFB:props.methods.commonFFB,
+                    commonMiscRoundOff:props.methods.commonMiscRoundOff
+                    },
             path:'/component/menu_report_queue.js'});
     };
     /**

@@ -6,7 +6,7 @@
  *          server_db_file_app_module_queue} from '../types.js'
  * @typedef {server_server_response & {result?:server_db_file_app_module_queue[] }} get
  * @typedef {server_server_response & {result?:{sendfile:String} }} getResult
- * @typedef {server_server_response & {result?:server_db_file_app_module_queue }} post
+ * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
  * @typedef {server_server_response & {result?:server_db_common_result_insert }} postResult
  * @typedef {server_server_response & {result?:server_db_common_result_update }} update
  * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
@@ -57,6 +57,7 @@ const getResult = async parameters => {
  * @param {{type:'REPORT',
  *          name:string,
  *          parameters:string,
+ *          status:server_db_file_app_module_queue_status
  *          user:string}} data
  * @returns {Promise.<post>}
  */
@@ -74,12 +75,12 @@ const post = async (app_id, data) => {
                             start:null,
                             end:null,
                             progress:null,
-                            status:'PENDING',
+                            status:data.status,
                             message:null
                         };
         return fileDBPost(app_id, 'APP_MODULE_QUEUE', job).then((result)=>{
             if (result.affectedRows>0)
-                return  {result:job, type:'JSON'};
+                return  {result:{insertId:job.id, affectedRows:result.affectedRows}, type:'JSON'};
             else
                 return dbCommonRecordError(app_id, 404);
         });
