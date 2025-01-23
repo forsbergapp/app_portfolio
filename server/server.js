@@ -8,7 +8,7 @@
  */
 
 /**
- * @import {server_req_method, server_bff_endpoint_type, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
+ * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
  */
 const zlib = await import('node:zlib');
 

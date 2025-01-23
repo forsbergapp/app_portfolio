@@ -22,7 +22,7 @@ const {securityUUIDCreate, securityRequestIdCreate, securityCorrelationIdCreate}
 
 /**@type{import('../apps/common/src/common.js')} */
 const app_common= await import(`file://${process.cwd()}/apps/common/src/common.js`);
-const {default:serverError} = await import('../apps/common/src/component/common_server_error.js');
+
 
 const fs = await import('node:fs');
 
@@ -188,7 +188,10 @@ const bffStart = async (req, res) =>{
                             host:bff_parameters.host,
                             route : 'APP',
                             res:bff_parameters.res})
-            .catch(()=>serverError({data:null, methods:null}));
+            .catch(()=>import('../apps/common/src/component/common_server_error.js')
+                        .then(({default:serverError})=>{
+                            return {result:serverError({data:null, methods:null}), type:'HTML'};
+                        }));
         }
         else{
             //REST API route

@@ -198,7 +198,8 @@ const appSecureMenuShow = menu => {
                 data:       null,
                 methods:    {
                             commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB
+                            commonFFB:common.commonFFB,
+                            commonMiscRoundOff:common.commonMiscRoundOff
                             },
                 path:       '/component/menu_report.js'})
                 .then(result=>{

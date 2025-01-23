@@ -75,7 +75,7 @@ const template = props =>`  <!DOCTYPE html>
  * @function
  * @param {{data:       null,
  *          methods:    null}} props 
- * @returns {Promise.<string>}
+ * @returns {string}
  */
-const component = async props => template(props);
+const component = props => template(props);
 export default component;
