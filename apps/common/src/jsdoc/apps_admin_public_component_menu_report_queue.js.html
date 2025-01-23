@@ -19,7 +19,8 @@
  * @description Template
  * @function
  * @param {{report_queue:CommonAppModuleQueue[],
- *          function_get_order_by:function}} props
+ *          function_get_order_by:function,
+ *          function_commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff']}} props
  * @returns {string}
  */
 const template = props => ` &lt;div class='menu_report_queue_row'>
@@ -44,7 +45,7 @@ const template = props => ` &lt;div class='menu_report_queue_row'>
                                     &lt;div data-column='user' class='menu_report_queue_col list_readonly'>${report_queue.user ??''}&lt;/div>
                                     &lt;div data-column='start' class='menu_report_queue_col list_readonly'>${report_queue.start ??''}&lt;/div>
                                     &lt;div data-column='end' class='menu_report_queue_col list_readonly'>${report_queue.end ??''}&lt;/div>
-                                    &lt;div data-column='progress' class='menu_report_queue_col list_readonly'>${(report_queue.progress ?? 0) * 100}%&lt;/div>
+                                    &lt;div data-column='progress' class='menu_report_queue_col list_readonly'>${props.function_commonMiscRoundOff((report_queue.progress ?? 0) * 100)}%&lt;/div>
                                     &lt;div data-column='status' class='menu_report_queue_col list_readonly'>${report_queue.status}&lt;/div>
                                     &lt;div data-column='message' class='menu_report_queue_col list_readonly'>${report_queue.message ??''}&lt;/div>
                                     &lt;div data-id='${report_queue.id}' class='menu_report_queue_col report_queue_result list_readonly common_icon'>&lt;/div>
@@ -62,7 +63,8 @@ const template = props => ` &lt;div class='menu_report_queue_row'>
  *                       },
  *          methods:     {
  *                       COMMON_DOCUMENT:COMMON_DOCUMENT,
- *                       commonFFB:CommonModuleCommon['commonFFB']
+ *                       commonFFB:CommonModuleCommon['commonFFB'],
+ *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff']
  *                       },
  *          lifecycle:   null}} props 
  * @returns {Promise.&lt;{ lifecycle:CommonComponentLifecycle, 
@@ -85,7 +87,8 @@ const component = async props => {
             data:        null,
             methods:     null,
             template:    template({ report_queue:report_queue,
-                                    function_get_order_by:get_order_by})
+                                    function_get_order_by:get_order_by,
+                                    function_commonMiscRoundOff:props.methods.commonMiscRoundOff})
    };
 };
 export default component;</code></pre>

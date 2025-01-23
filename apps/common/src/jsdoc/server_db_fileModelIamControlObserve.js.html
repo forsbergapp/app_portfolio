@@ -58,7 +58,8 @@ const post = async (app_id, data) => {
                                                             method:data.method,
                                                             url:data.url,
                                                             status:data.status,
-                                                            type:data.type}).then((result)=>{
+                                                            type:data.type,
+                                                            created:new Date().toISOString()}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId = id;
                 return {result:result,type:'JSON'};
@@ -100,6 +101,7 @@ const update = async (app_id, resource_id, data) => {
             if (data.url!=null)
                 data_update.url = data.url;
             data_update.status = data.status;
+            data_update.modified = new Date().toISOString();
             //id and type not allowed to update
             if (Object.entries(data_update).length>0)
                 return fileDBUpdate(app_id, 'IAM_CONTROL_OBSERVE', resource_id, null, data_update).then((result)=>{
