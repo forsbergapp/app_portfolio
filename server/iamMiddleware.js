@@ -65,7 +65,7 @@ const iamAuthenticateAccessToken = (req, res, next) => iamService.iamAuthenticat
  * @param {function} next
  * @returns {void}
  */
-const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateExternal('APP_EXTERNAL', req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.ip, req.body, res, next);    
+const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateExternal('APP_EXTERNAL', req.body, res, next);    
 
 /**
  * @name iamAuthenticateAdmin
