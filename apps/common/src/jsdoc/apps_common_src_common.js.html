@@ -534,8 +534,8 @@ const commonAssetfile = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: { type:'MODULE'|'FUNCTION',
- *                  data_app_id:number, 
+ *          data: { type?:'MODULE'|'FUNCTION',
+ *                  data_app_id?:number, 
  *                  [key:string]:*},
  *          user_agent:string,
  *          ip:string,
@@ -548,7 +548,12 @@ const commonAssetfile = parameters =>{
 const commonModuleRun = async parameters => {
     /**@type{import('../../../server/iam.js')} */
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-    const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.data.data_app_id}})                                           ;
+    const modules = fileModelAppModule.get({app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{data_app_id:parameters.endpoint=='APP_EXTERNAL'?
+                                                        //APP_EXTERNAL can only run function using same appid used by host
+                                                        parameters.app_id:
+                                                            parameters.data.data_app_id}})                                           ;
     if (modules.result){
         if (parameters.data?.type =='MODULE'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
