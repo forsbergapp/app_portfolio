@@ -910,8 +910,6 @@ const serverJs = async () => {
  * @returns {Promise.<server_server_response>}
  */
 const serverREST_API = async (routesparameters) =>{
-    /**@type{import('../apps/common/src/common.js')} */
-    const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('./db/fileModelConfig.js')} */
@@ -942,9 +940,7 @@ const serverREST_API = async (routesparameters) =>{
      *          resource_validate_key?: 'id'|'app_id'|null,
      *          resource_validate_value?: string|number|null,
      *          required?: boolean,
-     *          resource_validate_app_data_app_id?: number|null,
-     *          validate_app_function?:string|null,
-     *          validate_app_function_role?:string|null}} params
+     *          resource_validate_app_data_app_id?: number|null}} params
      * @returns {boolean}
      */
     const validate = params =>{
@@ -953,18 +949,13 @@ const serverREST_API = async (routesparameters) =>{
         params.resource_validate_value = params.resource_validate_value ?? null;
         params.required = params.required ?? false;
         params.resource_validate_app_data_app_id = params.resource_validate_app_data_app_id ?? null;
-        params.validate_app_function = params.validate_app_function ?? null;
-        params.validate_app_function_role = params.validate_app_function_role ?? null;
         const APP_ID_VALIDATE = (params.resource_validate_app_data_app_id == COMMON_APP_ID)?COMMON_APP_ID:routesparameters.app_id;
         //match route path using resource id parameter
         if (
             //match required resource id
             (params.required && URI_path.substring(URI_path.lastIndexOf('/') + 1) == '')==false &&
             //match app data app id
-            ((params.resource_validate_app_data_app_id !=null && params.resource_validate_app_data_app_id == APP_ID_VALIDATE) ||params.resource_validate_app_data_app_id==null) &&
-            //match app function and app function role
-            ((params.validate_app_function && APP_ID_VALIDATE !=null && app_common.commonRegistryAppModule(APP_ID_VALIDATE, {type:'FUNCTION', name:params.validate_app_function?.toUpperCase(), role:params.validate_app_function_role})) || 
-                params.validate_app_function == null)){
+            ((params.resource_validate_app_data_app_id !=null && params.resource_validate_app_data_app_id == APP_ID_VALIDATE) ||params.resource_validate_app_data_app_id==null)){
                 if (params.resource_validate_key){
                     if (iam.iamAuthenticateResource({  app_id:routesparameters.app_id, 
                                                             ip:routesparameters.ip, 
@@ -1018,9 +1009,7 @@ const serverREST_API = async (routesparameters) =>{
                             resource_validate_key:              getParameterValidation('server_validation_resource_key'),
                             resource_validate_value:            getParameterValidation('server_validation_resource_value'),
                             required:                           (getParameterValidation('resource_id_string') ?? getParameterValidation('resource_id_number'))?.required ?? false,
-                            resource_validate_app_data_app_id:  getParameterValidation('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null,
-                            validate_app_function:              getParameterValidation('server_validation_app_function')?resource_id_get_string(configPath[0]):null,
-                            validate_app_function_role:         getParameterValidation('server_validation_app_function')?getParameterValidation('server_validation_app_function_role'):null})){
+                            resource_validate_app_data_app_id:  getParameterValidation('server_validation_resource_app_data_app_id')?routesparameters.body.data_app_id:null})){
 
                 //add parameters using tree shaking pattern
                 //so only defined parameters defined using openAPI pattern are sent to functions
@@ -1065,7 +1054,7 @@ const serverREST_API = async (routesparameters) =>{
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
-                                app_id:         routesparameters.app_id,
+                                ...(getParameterValidation('server_app_id')                  && {app_id:        routesparameters.app_id}),
                                 ...(getParameterValidation('server_idtoken')                 && {idToken:        routesparameters.idToken}),
                                 ...(getParameterValidation('server_authorization')           && {authorization:  routesparameters.authorization}),
                                 ...(getParameterValidation('server_user_agent')              && {user_agent:     routesparameters.user_agent}),
