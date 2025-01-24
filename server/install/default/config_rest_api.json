@@ -1200,6 +1200,11 @@
                             "required":true
                         },
                         {
+                            "$ref": "#/components/parameters/server_app_id",
+                            "description":"APP EXTERNAL can only run a module belong to the app id",
+                            "required":true
+                        },
+                        {
                             "$ref": "#/components/parameters/server_ip",
                             "required":true
                         },
@@ -1230,14 +1235,13 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "data_app_id":{
-                                                "type":"string"
+                                            "id":{
+                                                "type":"number"
                                             },
-                                            "type":{
+                                            "message":{
                                                 "type":"string"
                                             }
-                                        },
-                                        "additionalProperties":true
+                                        }
                                     }
                                 }
                             }
@@ -1377,8 +1381,7 @@
                             "required":true
                         },
                         {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"},
-                        {"server_validation_resource_app_data_app_id":true}
+                        {"server_validation_resource_value":"resource_id_number"}
                 ],
                 "requestBody":{
                             "description":"",
@@ -5701,6 +5704,7 @@
                             }
 			            },
                 "responses": {
+                    "description":"Also returns error 401 if server parameter is not ENABLE_USER_LOGIN=1",
                     "oneOf":[
                         {"allOf":[
                                 {"$ref": "#/components/responses/201/content/application~1json/schema"},
@@ -5787,6 +5791,7 @@
                             }
 			            },
                 "responses": {
+                    "description":"Also returns error 401 if server parameter is not ENABLE_USER_LOGIN=1",
                     "oneOf":[
                         {"allOf":[
                                 {"$ref": "#/components/responses/201/content/application~1json/schema"},
@@ -6442,7 +6447,7 @@
                 "schema":"bearer"
             },
             "id-token":{
-                "description":"Created when app starts. Should be in all requests. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], id:null, name:[''], ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
+                "description":"Created when app starts. Should be in all requests to protect all paths. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], id:null, name:[''], ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
                 "type":"string"
             }
         },
@@ -6472,6 +6477,15 @@
                 "required":false,
                 "schema":{
                     "type": "string"
+                }
+            },
+            "server_app_id":{
+                "description":"Used here to authenticate that requested subdomain is used by app id",
+                "name":	"app_id",
+                "in":"header",
+                "required":true,
+                "schema":{
+                    "type": "number"
                 }
             },
             "server_authorization":{

@@ -214,7 +214,7 @@ const iamUtilResponseNotAuthorized = (res, status, reason, bff=false) => {
         return iamUtilMessageNotAuthorized();
     }
     else
-        serverResponse({result_request:{http:status, code:'IAM',text:iamUtilMessageNotAuthorized(), developerText:reason, type:'JSON'},
+        serverResponse({result_request:{http:status, code:'IAM',text:iamUtilMessageNotAuthorized(), developerText:reason,moreInfo:null, type:'JSON'},
                         route:null,
                         res:res});
 };
@@ -1236,7 +1236,7 @@ const iamAuthenticateUserDelete = async parameters => {
                                 next();
                             }
                             else
-                                iamUtilResponseNotAuthorized(res, 403, 'iamAuthenticateUserCommon');
+                                iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
                         case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
@@ -1293,22 +1293,22 @@ const iamAuthenticateUserDelete = async parameters => {
 
 /**
  * @name iamAuthenticateExternal
- * @description IAM external authenticate
+ * @description IAM external authenticate, only keys id of type number and message of type string allowed as parameters
  * @function
  * @param {'APP_EXTERNAL'} endpoint 
- * @param {string} host 
- * @param {string} user_agent 
- * @param {string} accept_language 
- * @param {string} ip 
- * @param {*} body
+ * @param {{}} body
  * @param {server_server_res} res
  * @param {function} next
  * @returns {void}
  */
-const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip, body, res, next) => {
-    //add host, user_agent, accept_language and ip validation if needed
-    if (endpoint =='APP_EXTERNAL' && ('id' in body) && ('message' in body))
+const iamAuthenticateExternal = (endpoint, body, res, next) => {
+
+    if (endpoint =='APP_EXTERNAL' && 
+        ('id' in body) && typeof body.id =='number' && 
+        ('message' in body) && typeof body.message =='string' && 
+        Object.keys(body).length==2){
         next();
+    }
     else
         iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateExternal');
 };
@@ -1360,7 +1360,6 @@ const iamAuthenticateExternal = (endpoint, host, user_agent, accept_language, ip
     };
     /**
      * Controls if ip is blocked
-     *  if ip is blocked return 403
      * @function
      * @param {number} app_id
      * @param {number|null} data_app_id

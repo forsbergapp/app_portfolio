@@ -627,7 +627,7 @@ const serverUtilAppLine = () =>{
     app.route('/bff/app_id/v1*').all                            (iam.iamAuthenticateIdToken,                bffAppId);
     app.route('/bff/app_id_signup/v1*').post                    (iam.iamAuthenticateIdTokenRegistration,    bffAppIdSignup);
     app.route('/bff/app_access/v1*').all                        (iam.iamAuthenticateAccessToken,            bffAppAccess);
-    app.route('/bff/app_external/v1/app-module*').post          (iam.iamAuthenticateExternal,               bffAppExternal);
+    app.route('/bff/app_external/v1/*').post                    (iam.iamAuthenticateExternal,               bffAppExternal);
     app.route('/bff/admin/v1*').all                             (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
     app.route('/bff/iam_admin/v1/server-iam-login').post        (iam.iamAuthenticateAdmin,                  bffIAMAdmin);
     app.route('/bff/iam_user/v1*').post                         (iam.iamAuthenticateUser,                   bffIAMUser);
@@ -717,8 +717,8 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/app_external/v1/app-module') && req.method=='POST':{
-                    req.route.path = '/bff/app_external/v1/app-module*';
+                case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':{
+                    req.route.path = '/bff/app_external/v1*';
                     iamMiddleware.iamAuthenticateExternal(req, res, () =>
                         bffAppExternal(req, res)
                     );
