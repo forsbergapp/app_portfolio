@@ -92,13 +92,23 @@ const paymentRequestCreate = async parameters =>{
         };
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-        const body_encrypted = {id:     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id,
+        const body_encrypted = {id:     serverUtilNumberValue(fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id),
                                 message:securityPublicEncrypt(
                                                                 fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_public_key, 
                                                                 JSON.stringify(body))};
         
         const result_commonBFE = await commonBFE({url:url, method:'POST', body:body_encrypted, user_agent:parameters.user_agent, ip:parameters.ip, authorization:null, locale:parameters.locale});
-        if (result_commonBFE.result){
+        if (result_commonBFE.result.error) {
+            //read external ISO20022 error format and return internal server format using camel case format
+            return {http:           result_commonBFE.result.error.http,
+                    code:           result_commonBFE.result.error.code,
+                    text:           result_commonBFE.result.error.text,
+                    developerText:  result_commonBFE.result.error.developer_text,
+                    moreInfo:       result_commonBFE.result.error.more_info,
+                    type:           'JSON'
+            };
+        }
+        else{
             /**
             * @type {{ token:string,
             *          exp:number,
@@ -127,8 +137,6 @@ const paymentRequestCreate = async parameters =>{
                             countdown:              ''
                         }], type:'JSON'};
         }
-        else
-            return result_commonBFE;
     }
 	else
         return {http:400,
