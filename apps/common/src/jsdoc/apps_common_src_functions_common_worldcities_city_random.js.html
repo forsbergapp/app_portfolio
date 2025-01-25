@@ -11,7 +11,6 @@
 
 /**
  * @import {server_server_response,commonWorldCitiesCity} from '../../../../server/types.js'
- * @typedef {server_server_response &amp; {result?:commonWorldCitiesCity}} appFunction
  */
 
 /**
@@ -25,7 +24,7 @@
  *          host:string,
  *          idToken:string, 
  *          locale:string}} parameters
- * @returns {Promise.&lt;appFunction>}
+ * @returns {Promise.&lt;server_server_response &amp; {result?:commonWorldCitiesCity}>}
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');
