@@ -10,57 +10,12 @@
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete,
  *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_db_file_iam_user, server_db_file_iam_user_new, 
  *          server_db_sql_parameter_user_account_event_insertUserEvent,
- *          server_db_sql_result_user_account_userLogin,
  *          server_db_sql_parameter_user_account_userLogin,
  *          server_db_sql_result_user_account_providerSignIn,
  *          server_db_sql_parameter_user_account_create,
  *          server_db_sql_result_user_account_event_getLastUserEvent,
  *          server_db_sql_parameter_user_account_updateUserLocal,
  *          server_server_res} from './types.js'
- * 
- * @typedef {server_server_response & {result?:{
- *                                              iam_user_id:number,
- *                                              iam_user_name:string,
- *                                              token_at:string,
- *                                              exp:number,
- *                                              iat:number,
- *                                              tokentimestamp:number} }} iamAuthenticateAdmin
- * @typedef {server_server_response & {result?:{
- *                                              accessToken:string|null,
- *                                              exp:number,
- *                                              iat:number,
- *                                              tokentimestamp:number,
- *                                              login:server_db_sql_result_user_account_userLogin[]} }} iamAuthenticateUser
- * @typedef {server_server_response & {result?:{
- *                                              accessToken:string|null,
- *                                              exp:number,
- *                                              iat:number,
- *                                              tokentimestamp:number,
- *                                              items:server_db_sql_result_user_account_providerSignIn[],
- *                                              userCreated:0|1} }} iamAuthenticateUserProvider
- * @typedef {server_server_response & {result?:{
- *                                              accessToken:string|null,
- *                                              exp:number,
- *                                              iat:number,
- *                                              tokentimestamp:number,
- *                                              id:number,
- *                                              data:server_db_common_result_insert} }} iamAuthenticateUserSignup
- * @typedef {server_server_response & {result?:{
- *                                              count: number,
- *                                              auth: string|null,
- *                                              accessToken: string|null,
- *                                              exp:number|null,
- *                                              iat:number|null,
- *                                              tokentimestamp:number|null,
- *                                              items: server_db_common_result_update[]} }} iamAuthenticateUserActivate
- * @typedef {server_server_response & {result?:{sent: number,id?: number} }} iamAuthenticateUserForgot
- * @typedef {server_server_response & {result?:{sent_change_email: number} }} iamAuthenticateUserUpdate
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} iamAuthenticateUserDelete
- * @typedef {server_server_response & {result?:server_db_file_iam_user_login[] }} iamUserLoginGet
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} iamUserCreate
- * @typedef {server_server_response & {result?:server_db_file_iam_user_get }} iamUserGet
- * @typedef {server_server_response & {result?:server_db_common_result_update }} iamUserUpdate
- * 
  */
 
 /**@type{import('./server.js')} */
@@ -240,7 +195,13 @@ const iamUtilVerificationCode = () => {
  *          ip:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<iamAuthenticateAdmin>}
+ * @returns {Promise.<server_server_response & {result?:{
+ *                                              iam_user_id:number,
+ *                                              iam_user_name:string,
+ *                                              token_at:string,
+ *                                              exp:number,
+ *                                              iat:number,
+ *                                              tokentimestamp:number} }>}
  */
 const iamAuthenticateAdmin = async parameters =>{
     /**@type{import('./socket.js')} */
@@ -250,7 +211,13 @@ const iamAuthenticateAdmin = async parameters =>{
      * @param {number} id
      * @param {string} username
      * @param {'ADMIN'|'USER'} type
-     * @returns {Promise.<iamAuthenticateAdmin>}
+     * @returns {Promise.<server_server_response & {result?:{
+     *                                              iam_user_id:number,
+     *                                              iam_user_name:string,
+     *                                              token_at:string,
+     *                                              exp:number,
+     *                                              iat:number,
+     *                                              tokentimestamp:number} }>}
      */
     const check_user = async (result, id, username, type) => {       
         const jwt_data = iamAuthorizeToken(parameters.app_id, 'ADMIN', {id:id, name:username, ip:parameters.ip, scope:'USER'});
@@ -347,7 +314,12 @@ const iamAuthenticateAdmin = async parameters =>{
  *          accept_language:string,
  *          data:{   username:string,
  *                   password:string}}} parameters
- * @return {Promise.<iamAuthenticateUser>}
+ * @return {Promise.<server_server_response & {result?:{
+ *                                              accessToken:string|null,
+*                                              exp:number,
+*                                              iat:number,
+*                                              tokentimestamp:number,
+*                                              login:server_db_sql_result_user_account_userLogin[]} }>}
  */
 const iamAuthenticateUser = async parameters =>{
     
@@ -512,7 +484,13 @@ const iamAuthenticateUser = async parameters =>{
  *                   provider_image:string,
  *                   provider_image_url:string,
  *                   provider_email:string}}} parameters
- * @return {Promise.<iamAuthenticateUserProvider>}
+ * @return {Promise.<server_server_response & {result?:{
+ *                                              accessToken:string|null,
+ *                                              exp:number,
+ *                                              iat:number,
+ *                                              tokentimestamp:number,
+ *                                              items:server_db_sql_result_user_account_providerSignIn[],
+ *                                              userCreated:0|1} }>}
  */
 const iamAuthenticateUserProvider = async parameters =>{
     /**@type{import('./socket.js')} */
@@ -682,8 +660,14 @@ const iamAuthenticateUserProvider = async parameters =>{
  *          accept_language:string,
  *          locale:string,
  *          data:server_db_sql_parameter_user_account_create}} parameters
- * @return {Promise.<iamAuthenticateUserSignup>}
-*/
+ * @return {Promise.<server_server_response & {result?:{
+ *                                              accessToken:string|null,
+ *                                              exp:number,
+ *                                              iat:number,
+ *                                              tokentimestamp:number,
+ *                                              id:number,
+ *                                              data:server_db_common_result_insert} }>}
+ */
 const iamAuthenticateUserSignup = async parameters =>{
     /**@type{import('../apps/common/src/common.js')} */
     const {commonMailSend} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -779,7 +763,14 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          locale:string,
  *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET, 4 NEW EMAIL
  *                  verification_code:string}}} parameters
- * @return {Promise.<iamAuthenticateUserActivate>}
+ * @return {Promise.<server_server_response & { result?:{
+ *                                              count: number,
+ *                                              auth: string|null,
+ *                                              accessToken: string|null,
+ *                                              exp:number|null,
+ *                                              iat:number|null,
+ *                                              tokentimestamp:number|null,
+ *                                              items: server_db_common_result_update[]} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
     
@@ -801,7 +792,14 @@ const iamAuthenticateUserActivate = async parameters =>{
     if (result_activate.result)
         if (auth_password_new == null){
             /**
-             * @returns {Promise.<iamAuthenticateUserActivate>}
+             * @returns {Promise.<server_server_response & {result?:{
+             *                                              count: number,
+             *                                              auth: string|null,
+             *                                              accessToken: string|null,
+             *                                              exp:number|null,
+             *                                              iat:number|null,
+             *                                              tokentimestamp:number|null,
+             *                                              items: server_db_common_result_update[]} }>}
              */
             const commonResult = async ()=>{
                 if (result_activate.result.affectedRows==1 && serverUtilNumberValue(parameters.data.verification_type)==4){
@@ -900,7 +898,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  *          user_agent:string, 
  *          accept_language:string, 
  *          data:{  email:string}}} parameters
- * @returns {Promise.<iamAuthenticateUserForgot>}
+ * @returns {Promise.<server_server_response & {result?:{sent: number,id?: number} }>}
  */
 const iamAuthenticateUserForgot = async parameters =>{
 
@@ -999,7 +997,7 @@ const iamAuthenticateUserForgot = async parameters =>{
  *                  new_email:string,
  *                  verification_code:string},
  *          locale:string}} parameters
- * @returns {Promise.<iamAuthenticateUserUpdate>}
+ * @returns {Promise.<server_server_response & {result?:{sent_change_email: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
 
@@ -1144,7 +1142,7 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
  *          resource_id:number,
  *          data:{password:string},
  *          locale:string}} parameters
- * @returns {Promise.<iamAuthenticateUserDelete>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const iamAuthenticateUserDelete = async parameters => {
 
@@ -1743,7 +1741,7 @@ const iamAuthenticateResource = parameters =>  {
  * @param {{app_id:Number,
  *          data:{  data_user_account_id?:string|null,
  *                  data_app_id?:string|null}}} parameters
- * @returns {iamUserLoginGet}
+ * @returns {server_server_response & {result?:server_db_file_iam_user_login[] }}
  */
 const iamUserLoginGet = parameters => {const rows = fileModelIamUserLogin.get(parameters.app_id, null).result
                                                                 .filter((/**@type{server_db_file_iam_user_login}*/row)=>
@@ -1764,7 +1762,7 @@ const iamUserLoginGet = parameters => {const rows = fileModelIamUserLogin.get(pa
  * @function
  * @param {number} app_id
  * @param {server_db_file_iam_user_new} data
- * @returns {Promise.<iamUserCreate>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const iamUserCreate = async (app_id, data) => {
 
@@ -1792,7 +1790,7 @@ const iamUserCreate = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<iamUserGet>}
+ * @returns {Promise.<server_server_response & {result?:server_db_file_iam_user_get }>}
  */
 const iamUserGet = async parameters =>{
     /**@type{import('./db/fileModelIamUser.js')} */
@@ -1840,7 +1838,7 @@ const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserLogin.get(app_id, nul
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_file_iam_user_update}} parameters
- * @returns {Promise.<iamUserUpdate>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const iamUserUpdate = async parameters =>{
     

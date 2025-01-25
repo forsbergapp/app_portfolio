@@ -4,7 +4,6 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{message:string}}} paymentRequestCreate
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
@@ -18,7 +17,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<paymentRequestCreate>}
+ * @returns {Promise.<server_server_response & {result?:{message:string}}>}
  */
 const paymentRequestCreate = async parameters =>{
    

@@ -5,17 +5,6 @@
 /**
  * @import {server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
- * @typedef {server_server_response & {result?:{payment_request_message:string,
- *                                              token:                  string,
- *                                              exp:                    number,
- *                                              iat:                    number,
- *                                              tokentimestamp:         number,
- *                                              payment_request_id:     string,
- *                                              status:                 string,
- *                                              merchant_name:          string,
- *                                              amount:			        number,
- *                                              currency_symbol:        string,
- *                                              countdown:              string}[]}} paymentRequestGet
  */
 
 /**
@@ -31,7 +20,17 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<paymentRequestGet>}
+ * @returns {Promise.<server_server_response & {result?:{payment_request_message:string,
+ *                                              token:                  string,
+ *                                              exp:                    number,
+ *                                              iat:                    number,
+ *                                              tokentimestamp:         number,
+ *                                              payment_request_id:     string,
+ *                                              status:                 string,
+ *                                              merchant_name:          string,
+ *                                              amount:			        number,
+ *                                              currency_symbol:        string,
+ *                                              countdown:              string}[]}>}
  */
 const paymentRequestGet = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */

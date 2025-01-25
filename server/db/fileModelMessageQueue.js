@@ -2,8 +2,6 @@
 
 /**
  * @import {server_server_response,server_db_common_result_select, server_db_common_result_insert, server_db_file_db_name_message_queue} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_common_result_select['rows'] }} get
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
  */
 
 /**@type{import('./file.js')} */
@@ -16,7 +14,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @description Get user 
  * @function
  * @param {server_db_file_db_name_message_queue} file
- * @returns {Promise.<get>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_select['rows'] }>}
  */
 const get = async file =>{
     const result = await fileFsDBLogGet(null, file, null, null,'');
@@ -31,7 +29,7 @@ const get = async file =>{
  * @function
  * @param {server_db_file_db_name_message_queue} file
  * @param {*} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (file,data) => {return {result:await fileFsDBLogPost(null, file,data, ''), type:'JSON'};};
 

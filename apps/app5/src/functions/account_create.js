@@ -4,7 +4,6 @@
 
 /**
  * @import {server_server_response, server_db_common_result_insert} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_common_result_insert}} createBankAccount
  */
 /**@type{import('../../../../server/security.js')} */
 const {securitySecretCreate, securityUUIDCreate} = await import(`file://${process.cwd()}/server/security.js`);
@@ -24,7 +23,7 @@ const createBankAccountVPA = ()=>securityUUIDCreate();
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<createBankAccount>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const createBankAccount = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */

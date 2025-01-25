@@ -3,7 +3,6 @@
 
 /**
  * @import {server_server_response,server_db_sql_result_app_data_entity_resource_get} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_app_data_entity_resource_get[] }} get
  */
 
 /**@type{import('./dbSql.js')} */
@@ -22,7 +21,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *          data:{  entity_id?:string|null,
  *                  data_app_id?:string|number|null,
  *                  resource_name?:string|null}}} parameters
- * @returns {Promise.<get>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_entity_resource_get[] }>}
  */
 const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

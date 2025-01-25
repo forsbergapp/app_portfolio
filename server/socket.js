@@ -5,11 +5,6 @@
  *          server_socket_broadcast_type_all, server_server_res, server_bff_parameters, 
  *          server_socket_broadcast_type_app_function,
  *          server_socket_connected_list, server_socket_connected_list_no_res, server_socket_connected_list_sort} from './types.js'
- * @typedef {server_server_response & {result?:{sent:number} }} socketAdminSend
- * @typedef {server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:server_socket_connected_list_no_res[]} }} socketConnectedList
- * @typedef {server_server_response & {result?:{count_connected:number} }} socketConnectedCount
- * @typedef {server_server_response & {result?:{online:1|0} }} CheckOnline
- * 
  */
 
 
@@ -220,7 +215,7 @@ const socketClientAdd = (newClient) => {
  *                  client_id:number|null,
  *                  broadcast_type:server_socket_broadcast_type_all,
  *                  broadcast_message:string}}} parameters
- * @returns {Promise.<socketAdminSend>}
+ * @returns {Promise.<server_server_response & {result?:{sent:number} }>}
  */
  const socketAdminSend = async parameters => {
     parameters.data.client_id = serverUtilNumberValue(parameters.data.client_id);
@@ -268,7 +263,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<socketConnectedList>}
+ * @returns{Promise.<server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:server_socket_connected_list_no_res[]} }>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = serverUtilNumberValue(parameters.data.select_app_id);
@@ -384,7 +379,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  * @memberof ROUTE_REST_API
  * @param {{data:{  identity_provider_id?:string|null,
  *                  logged_in?:string|null}}} parameters
- * @returns {socketConnectedCount}
+ * @returns {server_server_response & {result?:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
     const identity_provider_id = serverUtilNumberValue(parameters.data.identity_provider_id);
@@ -518,7 +513,7 @@ const socketExpiredTokensUpdate = () =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{resource_id :number|null}} parameters
- * @returns {CheckOnline}
+ * @returns {server_server_response & {result?:{online:1|0} }}
  */
 const CheckOnline = parameters => { /**@ts-ignore */
                                     return { result:parameters.resource_id?

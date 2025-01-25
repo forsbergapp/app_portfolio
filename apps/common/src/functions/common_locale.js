@@ -3,7 +3,6 @@
 */
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{locale: string, text:string}[]}} appFunction
  */
 
 /**
@@ -65,7 +64,7 @@ const formatLocale = locale =>{
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<appFunction>}
+ * @returns {Promise.<server_server_response & {result?:{locale: string, text:string}[]}>}
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');

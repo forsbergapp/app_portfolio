@@ -1641,6 +1641,10 @@ body.rtl{
 	vertical-align: top;
 	max-width: 60em;
 }
+.common_markdown_jsdoc_tag{
+	display:inline-block;
+	white-space:unset !important;
+}
 /* common document metadata*/
 .common_document_header{
 	background-size: contain;

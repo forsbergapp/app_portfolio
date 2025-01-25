@@ -1,15 +1,9 @@
 /** @module server/db/fileModelAppModuleQueue */
 
 /**
- * @import {server_server_response,server_server_res,server_db_file_app_module_queue_status,
+ * @import {server_server_response,server_db_file_app_module_queue_status,
  *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_file_app_module_queue} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_app_module_queue[] }} get
- * @typedef {server_server_response & {result?:{sendfile:String} }} getResult
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} postResult
- * @typedef {server_server_response & {result?:server_db_common_result_update }} update
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 
 /**@type{import('./file.js')} */
@@ -26,7 +20,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_app_module_queue[] }}
  */
 const get = parameters =>{ 
     const result = fileDBGet(parameters.app_id, 'APP_MODULE_QUEUE',parameters.resource_id, parameters.app_id);
@@ -44,7 +38,7 @@ const get = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<getResult>}
+ * @returns {Promise.<server_server_response & {result?:{sendfile:String} }>}
  */
 const getResult = async parameters => {
     return {sendfile:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${parameters.resource_id}.html`, type:'HTML'};
@@ -61,7 +55,7 @@ const getResult = async parameters => {
  *          parameters:string,
  *          status:server_db_file_app_module_queue_status
  *          user:string}} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -99,7 +93,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} id
  * @param {string} result
- * @returns {Promise.<postResult>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postResult = async (app_id, id, result) =>{
     const fs = await import('node:fs');
@@ -118,7 +112,7 @@ const postResult = async (app_id, id, result) =>{
  *          progress?:number|null,
  *          status?:server_db_file_app_module_queue_status,
  *          message?:string|null}} data
- * @returns {Promise.<update>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
     const data_update = {};
@@ -150,7 +144,7 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<deleteRecord>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, null).then((result)=>{

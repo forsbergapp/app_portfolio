@@ -3,7 +3,6 @@
 /**
  * @import {server_server_response,
  *          server_db_file_app_translation} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_app_translation[] }} get
  */
 
 /**@type{import('./file.js')} */
@@ -24,7 +23,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @param {number|null} resource_id
  * @param {string|null} locale
  * @param {number} data_app_id
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_app_translation[] }}
  */
 const get = (app_id, resource_id, locale, data_app_id) =>{
     //all locales should be saved with '-' if used
