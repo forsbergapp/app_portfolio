@@ -41,7 +41,7 @@ class RubiksCube {
 
 	/**
 	 * @param {string|array} notations - The list of moves to reverse.
-	 * @return {string|array} -- whichever was initially given.
+	 * @returns {string|array} -- whichever was initially given.
 	 */
 	static reverseMoves(moves) {
 		return RubiksCube.transformMoves(moves, { reverse: true });
@@ -54,7 +54,7 @@ class RubiksCube {
 	 * @prop {object} options.orientation - An object describing the orientation
 	 * from which to makes the moves. See src/js/utils#orientMoves.
 	 *
-	 * @return {string|array} -- whichever was initially given.
+	 * @returns {string|array} -- whichever was initially given.
 	 */
 	static transformMoves(moves, options = {}) {
 		return transformNotations(moves, options);
@@ -137,7 +137,7 @@ class RubiksCube {
 	 * Grab all the cubes on a given face, and return them in order from top left
 	 * to bottom right.
 	 * @param {string} face - The face to grab.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	getFace(face) {
 		if (typeof face !== 'string') {
@@ -218,7 +218,7 @@ class RubiksCube {
 
 	/**
 	 * Finds and returns all cubies with three colors.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	corners() {
 		return this._cubies.filter(cubie => cubie.isCorner());
@@ -226,7 +226,7 @@ class RubiksCube {
 
 	/**
 	 * Finds and returns all cubies with two colors.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	edges() {
 		return this._cubies.filter(cubie => cubie.isEdge());
@@ -234,7 +234,7 @@ class RubiksCube {
 
 	/**
 	 * Finds and returns all cubies with one color.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	middles() {
 		return this._cubies.filter(cubie => cubie.isMiddle());
@@ -324,7 +324,7 @@ class RubiksCube {
 
 	/**
 	 * Populates the "virtual" cube with 26 "empty" cubies by their position.
-	 * @return {null}
+	 * @returns {null}
 	 */
 	_populateCube() {
 		for (let x = -1; x <= 1; x++) {
@@ -343,7 +343,7 @@ class RubiksCube {
 	}
 
 	/**
-	 * @return {object} - A map with faces for keys and colors for values
+	 * @returns {object} - A map with faces for keys and colors for values
 	 */
 	_parseColors(cubeState) {
 		const faceColors = {
@@ -392,7 +392,7 @@ class RubiksCube {
 	}
 
 	/**
-	 * @return {object} - The the rotation axis and magnitude for the given face.
+	 * @returns {object} - The the rotation axis and magnitude for the given face.
 	 */
 	_getRotationForFace(face) {
 		if (typeof face !== 'string') {

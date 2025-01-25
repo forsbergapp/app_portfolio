@@ -21,7 +21,7 @@ class Vector {
 	/**
 	 * Factory method.
 	 * @param {string} vector - Space-deliminated x, y, and z values.
-	 * @return {Vector}
+	 * @returns {Vector}
 	 */
 	static FromString(vector) {
 		return new Vector(vector.split(' ').map(value => parseInt(value)));
@@ -30,7 +30,7 @@ class Vector {
 	/**
 	 * @param {array} vector1 - Vector 1.
 	 * @param {array} vector2 - Vector 2.
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	static areEqual(vector1, vector2) {
 		return vector1[0] === vector2[0] && vector1[1] === vector2[1] && vector1[2] === vector2[2];
@@ -45,7 +45,7 @@ class Vector {
 	 *
 	 * @param {array} v1 - Vector 1.
 	 * @param {array} v2 - Vector 2.
-	 * @return {number}
+	 * @returns {number}
 	 */
 	static getAngle(v1, v2) {
 		const _angle = angle(v1, v2);
@@ -59,7 +59,7 @@ class Vector {
 	 * Finds the rotation axis and angle to get from one normal to another.
 	 * @param {array} normal1 - The from normal.
 	 * @param {array} normal2 - The to normal.
-	 * @return {object} - Stores the rotation axis and angle
+	 * @returns {object} - Stores the rotation axis and angle
 	 */
 	static getRotationFromNormals(normal1, normal2) {
 		let axis = new Vector(cross([], normal1, normal2)).getAxis();
@@ -81,7 +81,7 @@ class Vector {
 
 	/**
 	 * @param {object} rotation - The rotation to reverse.
-	 * @return {object}
+	 * @returns {object}
 	 */
 	static reverseRotation(rotation) {
 		rotation.angle *= -1;
@@ -96,7 +96,7 @@ class Vector {
 	}
 
 	/**
-	 * @return {array}
+	 * @returns {array}
 	 */
 	toArray() {
 		return this.vector;
@@ -135,21 +135,21 @@ class Vector {
 	}
 
 	/**
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getX() {
 		return this.toArray()[0];
 	}
 
 	/**
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getY() {
 		return this.toArray()[1];
 	}
 
 	/**
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getZ() {
 		return this.toArray()[2];
@@ -159,7 +159,7 @@ class Vector {
 	 * Kind of a flimsy method. If this vector points parallel to an axis, this
 	 * returns true. A hacky way to find this is to count the number of 0's and
 	 * return true if and only if the count is 2.
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	isAxis() {
 		let count = 0;
@@ -175,7 +175,7 @@ class Vector {
 	/**
 	 * Kind of a flimsy method. If this vector points parallel to an axis, return
 	 * that axis.
-	 * @return {string}
+	 * @returns {string}
 	 */
 	getAxis() {
 		if (!this.isAxis()) {
@@ -191,7 +191,7 @@ class Vector {
 	 * Kind of a flimsy method. If this vector points parallel to an axis, return
 	 * the magnitude of the value along that axis. (Basically, return whether it
 	 * is positive or negative.)
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getMagnitude() {
 		if (!this.isAxis()) {
@@ -204,7 +204,7 @@ class Vector {
 	/**
 	 * @param {string} axis - The axis to rotate around.
 	 * @param {number} angle - The angle of rotation.
-	 * @return {Vector}
+	 * @returns {Vector}
 	 */
 	rotate(axis, angle) {
 		axis = axis.toLowerCase();

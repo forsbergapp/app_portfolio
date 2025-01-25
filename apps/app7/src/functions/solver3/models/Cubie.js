@@ -47,7 +47,7 @@ class Cubie {
 	}
 
 	/**
-	 * @return {Cubie}
+	 * @returns {Cubie}
 	 */
 	clone() {
 		return new Cubie({
@@ -59,7 +59,7 @@ class Cubie {
 	/**
 	 * Getter/setter for the vector position.
 	 * @param {array} [position] - The new position to store.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	position(position) {
 		if (typeof position === 'undefined') {
@@ -70,49 +70,49 @@ class Cubie {
 	}
 
 	/**
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getX() {
 		return this.vector.getX();
 	}
 
 	/**
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getY() {
 		return this.vector.getY();
 	}
 
 	/**
-	 * @return {number}
+	 * @returns {number}
 	 */
 	getZ() {
 		return this.vector.getZ();
 	}
 
 	/**
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	isCorner() {
 		return Object.keys(this.colorMap).length === 3;
 	}
 
 	/**
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	isEdge() {
 		return Object.keys(this.colorMap).length === 2;
 	}
 
 	/**
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	isMiddle() {
 		return Object.keys(this.colorMap).length === 1;
 	}
 
 	/**
-	 * @return {array}
+	 * @returns {array}
 	 */
 	colors() {
 		return Object.keys(this.colorMap).map(face => this.colorMap[face]);
@@ -120,7 +120,7 @@ class Cubie {
 
 	/**
 	 * @param {string} color - Check if the cubie has this color.
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	hasColor(color) {
 		color = color.toLowerCase();
@@ -136,7 +136,7 @@ class Cubie {
 
 	/**
 	 * @param {string} face - Check if the cubie has this face.
-	 * @return {boolean}
+	 * @returns {boolean}
 	 */
 	hasFace(face) {
 		face = face.toLowerCase();
@@ -147,7 +147,7 @@ class Cubie {
 	 * Sets a color on a given face or normal of a cubie.
 	 * @param {string} face - The face of the cubie we want to set the color on.
 	 * @param {string} color - The color we want to set.
-	 * @return {Cubie}
+	 * @returns {Cubie}
 	 */
 	colorFace(face, color) {
 		face = face.toLowerCase();
@@ -159,7 +159,7 @@ class Cubie {
 
 	/**
 	 * @param {string} face - The color on the face this cubie sits on.
-	 * @return {string}
+	 * @returns {string}
 	 */
 	getColorOfFace(face) {
 		face = face.toLowerCase();
@@ -169,7 +169,7 @@ class Cubie {
 
 	/**
 	 * @param {string} color - Find the face that this color sits on.
-	 * @return {string}
+	 * @returns {string}
 	 */
 	getFaceOfColor(color) {
 		color = color.toLowerCase();
@@ -181,7 +181,7 @@ class Cubie {
 
 	/**
 	 * Return all the faces this cubie sits on.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	faces() {
 		return Object.keys(this.colorMap);
@@ -192,7 +192,7 @@ class Cubie {
 	 * position vector and the normal-color map.
 	 * @param {string} axis - The axis of rotation.
 	 * @param {number} angle - The magnitude of rotation.
-	 * @return {null}
+	 * @returns {null}
 	 */
 	rotate(axis, angle) {
 		// update position vector after rotation

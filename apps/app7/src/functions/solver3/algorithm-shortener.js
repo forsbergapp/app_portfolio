@@ -13,7 +13,7 @@ const parallelMoves = {
 
 /**
  * @param {array|string} notations - The array of move notations.
- * @return {string}
+ * @returns {string}
  */
 const algorithmShortener = (notations) => {
 	if (typeof notations === 'string') {

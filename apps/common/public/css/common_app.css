@@ -1622,9 +1622,11 @@ body.rtl{
 .common_markdown_table_row_detail{
 	margin-inline-start: 5em;
 }
-.common_markdown_table_row_detail .common_markdown_table_col{
-	min-width:30em;
-	max-width: 50em;
+.common_markdown_table_row_detail .common_markdown_table_col1{
+	width:25em;
+}
+.common_markdown_table_row_detail .common_markdown_table_col2{
+	width: 55em;
 }
 .common_markdown_table_row_detail_master.show{
 	display:inline-block;
@@ -1643,7 +1645,7 @@ body.rtl{
 }
 .common_markdown_jsdoc_tag{
 	display:inline-block;
-	white-space:unset !important;
+	vertical-align: text-top;
 }
 /* common document metadata*/
 .common_document_header{
