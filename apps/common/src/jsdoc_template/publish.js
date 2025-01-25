@@ -158,7 +158,7 @@ function addSignatureReturns(f) {
 
     // jam all the return-type attributes into an array. this could create odd results (for example,
     // if there are both nullable and non-nullable return types), but let's assume that most people
-    // who use multiple @return tags aren't using Closure Compiler type annotations, and vice-versa.
+    // who use multiple @returns tags aren't using Closure Compiler type annotations, and vice-versa.
     if (source) {
         source.forEach(item => {
             helper.getAttribs(item).forEach(attrib => {
@@ -351,7 +351,7 @@ function linktoExternal(longName, name) {
  * @param {array<object>} members.tutorials
  * @param {array<object>} members.events
  * @param {array<object>} members.interfaces
- * @return {string} The HTML for the navigation sidebar.
+ * @returns {string} The HTML for the navigation sidebar.
  */
 function buildNav(members) {
     let globalNav;

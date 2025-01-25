@@ -64,50 +64,50 @@ const template = props =>`
                                             </div>
                                             <div class='common_markdown_table_row_detail_master'>
                                                 <div class='common_markdown_table_row_detail'>
-                                                    <div class='common_markdown_table_col'>Summary</div>
-                                                    <div class='common_markdown_table_col common_markdown_table_content_preserve'>${method[1].summary}</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col1'>Summary</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${method[1].summary}</div>
                                                 </div>
                                                 <div class='common_markdown_table_row_detail'>
-                                                    <div class='common_markdown_table_col'>operationId</div>
-                                                    <div class='common_markdown_table_col'>${method[1].operationId}</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col1'>operationId</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col2'>${method[1].operationId}</div>
                                                 </div>
                                                 <div class='common_markdown_table_row_detail'>
-                                                    <div class='common_markdown_table_col common_markdown_title_h3'>Parameters</div>
-                                                    <div class='common_markdown_table_col'></div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col1 common_markdown_title_h3'>Parameters</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col2'></div>
                                                 </div>
                                                 ${method[1].parameters.map((/**@type{*}*/param) => `
                                                     <div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}</div>
-                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col1'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}</div>
                                                     </div>
                                                 `).join('')
                                                 }
                                                 ${method[1]?.requestBody?
                                                     `<div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col common_markdown_title_h3'>Request body</div>
-                                                        <div class='common_markdown_table_col'></div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col1 common_markdown_title_h3'>Request body</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col2'></div>
                                                     </div>
                                                     <div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col'>Description</div>
-                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${method[1]?.requestBody.description}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col1'>Description</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${method[1]?.requestBody.description}</div>
                                                     </div>
                                                     <div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col'>Required</div>
-                                                        <div class='common_markdown_table_col'>${method[1]?.requestBody.required}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col1'>Required</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col2'>${method[1]?.requestBody.required}</div>
                                                     </div>
                                                     <div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col'>Content</div>
-                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(method[1]?.requestBody.content, undefined,2)}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col1'>Content</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${JSON.stringify(method[1]?.requestBody.content, undefined,2)}</div>
                                                     </div>`:''
                                                 }
                                                 <div class='common_markdown_table_row_detail'>
-                                                    <div class='common_markdown_table_col common_markdown_title_h3'>Responses</div>
-                                                    <div class='common_markdown_table_col'></div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col1 common_markdown_title_h3'>Responses</div>
+                                                    <div class='common_markdown_table_col common_markdown_table_col2'></div>
                                                 </div>
                                                 ${Object.entries(method[1].responses).map(([status, response]) => `
                                                     <div class='common_markdown_table_row_detail'>
-                                                        <div class='common_markdown_table_col'>${status}</div>
-                                                        <div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(response, undefined,2)}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col1'>${status}</div>
+                                                        <div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${JSON.stringify(response, undefined,2)}</div>
                                                     </div>
                                                 `).join('')
                                                 }
@@ -182,15 +182,18 @@ const component = async props => {
                             .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
                             .trimStart()
                             .split('\n')
-                            .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                            .join('\n')
-                            .replace('{','')
-                            .replace('}','')
-                            .replaceAll('|','&vert;')
-                            .replaceAll('[','&#91;')
-                            .replaceAll(']','&#93;')
-                            .replaceAll('<','&lt;')
-                            .replaceAll('>','&gt;')
+                            .map(row=>
+                                '<div>' +
+                                (row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                .replaceAll('|','&vert;')
+                                .replaceAll('[','&#91;')
+                                .replaceAll(']','&#93;')
+                                .replaceAll('<','&lt;')
+                                .replaceAll('>','&gt;')
+                                +
+                                '</div>'
+                            )
+                            .join('')
                             +
                             '</div>'
                             };

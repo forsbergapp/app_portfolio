@@ -314,7 +314,7 @@ const iamAuthenticateAdmin = async parameters =>{
  *          accept_language:string,
  *          data:{   username:string,
  *                   password:string}}} parameters
- * @return {Promise.<server_server_response & {result?:{
+ * @returns {Promise.<server_server_response & {result?:{
  *                                              accessToken:string|null,
 *                                              exp:number,
 *                                              iat:number,
@@ -484,7 +484,7 @@ const iamAuthenticateUser = async parameters =>{
  *                   provider_image:string,
  *                   provider_image_url:string,
  *                   provider_email:string}}} parameters
- * @return {Promise.<server_server_response & {result?:{
+ * @returns {Promise.<server_server_response & {result?:{
  *                                              accessToken:string|null,
  *                                              exp:number,
  *                                              iat:number,
@@ -660,7 +660,7 @@ const iamAuthenticateUserProvider = async parameters =>{
  *          accept_language:string,
  *          locale:string,
  *          data:server_db_sql_parameter_user_account_create}} parameters
- * @return {Promise.<server_server_response & {result?:{
+ * @returns {Promise.<server_server_response & {result?:{
  *                                              accessToken:string|null,
  *                                              exp:number,
  *                                              iat:number,
@@ -763,7 +763,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          locale:string,
  *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET, 4 NEW EMAIL
  *                  verification_code:string}}} parameters
- * @return {Promise.<server_server_response & { result?:{
+ * @returns {Promise.<server_server_response & { result?:{
  *                                              count: number,
  *                                              auth: string|null,
  *                                              accessToken: string|null,

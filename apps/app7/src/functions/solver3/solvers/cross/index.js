@@ -50,7 +50,7 @@ class CrossSolver extends BaseSolver {
 
 	/**
 	 * Finds all edges that have 'F' as a color.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	_getCrossEdges() {
 		return this.cube.edges().filter(edge => edge.hasColor(CROSS_COLOR));

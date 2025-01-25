@@ -17,7 +17,7 @@ class Face {
 	/**
 	 * Factory method.
 	 * @param {string|array} normal - The normal that identifies this face.
-	 * @return {Face}
+	 * @returns {Face}
 	 */
 	static FromNormal(normal) {
 		if (typeof normal === 'string') {
@@ -29,7 +29,7 @@ class Face {
 
 	/**
 	 * @param {string} face - A string that identifies a face.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	static getNormal(face) {
 		return Vector.FromString(faceToNormal[face]).toArray();
@@ -37,7 +37,7 @@ class Face {
 
 	/**
 	 * @param {string|array} normal - The normal that identifies a face.
-	 * @return {string}
+	 * @returns {string}
 	 */
 	static getFace(normal) {
 		if (typeof normal === 'string') {
@@ -66,14 +66,14 @@ class Face {
 
 	/**
 	 * Method to return the normal as an array.
-	 * @return {array}
+	 * @returns {array}
 	 */
 	normal() {
 		return this.vector.toArray();
 	}
 
 	/**
-	 * @return {string}
+	 * @returns {string}
 	 */
 	toString() {
 		return Face.getFace(this.normal());
@@ -99,7 +99,7 @@ class Face {
 	 * face's normals, not any cubies' positions.
 	 * @param {string} axis - Axis of rotation.
 	 * @param {number} angle - Angle of rotation.
-	 * @return {Face}
+	 * @returns {Face}
 	 */
 	rotate(axis, angle) {
 		this.vector.rotate(axis, angle);
