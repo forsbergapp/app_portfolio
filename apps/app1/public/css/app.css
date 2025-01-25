@@ -348,6 +348,10 @@ td, th{
 	color: var(--common_report_color_black);
 	background-color:var(--common_report_color_white);
 }
+.common_markdown_jsdoc_tag{
+    color: var(--common_app_color_green);
+}
+
 .common_toolbar_selected{
 	background-color: var(--common_app_color_blue1) !important;
 }

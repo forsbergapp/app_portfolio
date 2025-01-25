@@ -2,7 +2,6 @@
 
 /**
  * @import {server_server_response,server_db_sql_result_identity_provider_getIdentityProviders} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_identity_provider_getIdentityProviders[] }} get
  */
 
 /**@type{import('./dbSql.js')} */
@@ -14,7 +13,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id :number}} parameters
- * @returns {Promise.<get>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_identity_provider_getIdentityProviders[] }>}
  */
 const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

@@ -4,17 +4,6 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{token:string,
- *                                              exp:number,
- *                                              iat:number,
- *                                              tokentimestamp:number,
- *                                              payment_request_id:string,
- *                                              payment_request_message:string,
- *                                              status:string,
- *                                              merchant_name:string
- *                                              amount:number,
- *                                              currency_symbol:string,
- *                                              countdown:string}[]}} paymentRequestCreate
  */
 
 /**
@@ -33,7 +22,17 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<paymentRequestCreate>}
+ * @returns {Promise.<server_server_response & {result?:{token:string,
+ *                                              exp:number,
+ *                                              iat:number,
+ *                                              tokentimestamp:number,
+ *                                              payment_request_id:string,
+ *                                              payment_request_message:string,
+ *                                              status:string,
+ *                                              merchant_name:string
+ *                                              amount:number,
+ *                                              currency_symbol:string,
+ *                                              countdown:string}[]}>}
  */
 const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */

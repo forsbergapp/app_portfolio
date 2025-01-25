@@ -4,7 +4,6 @@
 /**
  * @import {server_server_response} from '../../../../server/types.js'
  * @import {bank_transaction} from './types.js'
- * @typedef {server_server_response & {result?:bank_transaction}} getTransactions
  */
 /**
  * @name getTransacions
@@ -17,7 +16,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<getTransactions>}
+ * @returns {Promise.<server_server_response & {result?:bank_transaction}>}
  */
 const getTransacions = async parameters =>{
 

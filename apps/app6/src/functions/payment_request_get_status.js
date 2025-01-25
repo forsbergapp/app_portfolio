@@ -4,7 +4,6 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{ status:string}[]}} paymentRequestGetStatus
  */
 
 /**
@@ -19,7 +18,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<paymentRequestGetStatus>}
+ * @returns {Promise.<server_server_response & {result?:{ status:string}[]}>}
  */
 const paymentRequestGetStatus = async parameters =>{
     /**@type{import('../../../../server/server.js')} */

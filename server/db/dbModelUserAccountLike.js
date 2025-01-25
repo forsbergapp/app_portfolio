@@ -4,8 +4,6 @@
  * @import {server_server_response,
  *          server_db_common_result_insert,
  *          server_db_common_result_delete} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 
 /**@type{import('./dbSql.js')} */
@@ -22,7 +20,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_account_id:number|null}}} parameters
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -42,7 +40,7 @@ const post = parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{user_account_id:number|null}}} parameters
- * @returns {Promise.<deleteRecord>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

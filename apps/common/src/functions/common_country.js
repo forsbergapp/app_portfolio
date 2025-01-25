@@ -4,11 +4,6 @@
 
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{value:string,
- *                                              group_name:string, 
- *                                              country_code:string, 
- *                                              flag_emoji:string, 
- *                                              text:string}[]}} appFunction
  */
 
 /**
@@ -22,7 +17,11 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<appFunction>}
+ * @returns {Promise.<server_server_response & {result?:{value:string,
+ *                                              group_name:string, 
+ *                                              country_code:string, 
+ *                                              flag_emoji:string, 
+ *                                              text:string}[]}>}
  */
 const appFunction = async parameters =>{
     /**@type{import('./common_locale.js')} */

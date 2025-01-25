@@ -2,8 +2,6 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert, server_db_file_iam_app_token_insert, server_db_file_iam_app_token} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_iam_app_token[] }} get
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
  */
 
 /**@type{import('./file.js')} */
@@ -16,7 +14,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @description Get user
  * @function
  * @param {number} app_id
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_iam_app_token[] }}
  */
 const get = app_id => {return {result:fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).rows, type:'JSON'};};
 
@@ -26,7 +24,7 @@ const get = app_id => {return {result:fileDBGet(app_id, 'IAM_APP_TOKEN', null, n
  * @function
  * @param {number} app_id 
  * @param {server_db_file_iam_app_token_insert} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
     //check required attributes

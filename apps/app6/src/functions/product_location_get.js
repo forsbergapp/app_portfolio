@@ -3,7 +3,6 @@
  */
 /**
  * @import {server_server_response} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:{stock:{key_name:string, key_value:string, key_type:string}[][]}[] }} productLocationGet
  */
 /**
  * @name productLocationGet
@@ -16,7 +15,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<productLocationGet>}
+ * @returns {Promise.<server_server_response & {result?:{stock:{key_name:string, key_value:string, key_type:string}[][]}[] }>}
  */
 const productLocationGet = async parameters =>{
 

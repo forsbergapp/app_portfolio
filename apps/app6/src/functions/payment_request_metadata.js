@@ -3,7 +3,6 @@
  */
 /**
  * @import {server_server_response, server_db_sql_result_app_data_resource_master_get} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}} paymentRequestMetadata
  */
 /**
  * @name payment_request_metadata
@@ -16,7 +15,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<paymentRequestMetadata>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}>}
  */
 const paymentRequestMetadata = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */

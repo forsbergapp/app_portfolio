@@ -2,10 +2,6 @@
 
 /**
  * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_file_app_module} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_app_module[] }} get
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
- * @typedef {server_server_response & {result?:server_db_common_result_update }} update
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -22,7 +18,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @param {{app_id:Number,
  *          resource_id:number|null,
  *          data:{data_app_id?:string|number|null}}} parameters
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_app_module[] }}
  */
 const get = parameters => {
     const result = fileDBGet(parameters.app_id, 'APP_MODULE',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
@@ -38,7 +34,7 @@ const get = parameters => {
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -74,7 +70,7 @@ const post = async (app_id, data) => {
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_file_app_module}} parameters
- * @returns {Promise.<update>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
     /**@type{server_db_file_app_module} */
@@ -107,7 +103,7 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<deleteRecord>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'APP_MODULE', resource_id, null).then((result)=>{

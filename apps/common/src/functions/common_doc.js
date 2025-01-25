@@ -3,7 +3,6 @@
 */
 /**
  * @import {server_server_response, serverDocumentType, serverDocumentMenu} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:string}} appFunction
  */
 
 /**
@@ -392,7 +391,7 @@ const menuRender = async parameters =>{
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<appFunction>}
+ * @returns {Promise.<server_server_response & {result?:string}>}
  */
 const appFunction = async parameters =>{
     /**@type{import('../../../../server/iam.js')} */

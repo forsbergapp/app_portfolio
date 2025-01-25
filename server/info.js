@@ -2,7 +2,6 @@
 
 /**
  * @import {server_server_response,server_info_result_Info} from './types.js'
- * @typedef {server_server_response & {result?:server_info_result_Info }} info
  */
 
 /**
@@ -10,7 +9,7 @@
  * @description Info about operating system and process
  * @function
  * @memberof ROUTE_REST_API
- * @returns {Promise.<info>}
+ * @returns {Promise.<server_server_response & {result?:server_info_result_Info }>}
  */
  const info = async () => {
     const os = await import('node:os');
