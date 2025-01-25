@@ -2,10 +2,6 @@
 
 /**
  * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, server_db_file_app} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_app[] }} get
- * @typedef {server_server_response & {result?:{id:number} }} post
- * @typedef {server_server_response & {result?:server_db_common_result_update }} update
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 
 /**@type{import('./file.js')} */
@@ -20,7 +16,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
  *          resource_id:number|null}} parameters
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_app[] }}
  */
 const get = parameters =>{ 
     const result = fileDBGet(parameters.app_id, 'APP',parameters.resource_id, null);
@@ -36,7 +32,7 @@ const get = parameters =>{
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:{id:number} }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -89,7 +85,7 @@ const post = async (app_id, data) => {
  *                  favicon_32x32:string,
  *                  favicon_192x192:string,
  *                  status:'ONLINE'|'OFFLINE'}}} parameters
- * @returns {Promise.<update>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
     if (parameters.app_id!=null){
@@ -140,7 +136,7 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<deleteRecord>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'APP', resource_id, null).then((result)=>{

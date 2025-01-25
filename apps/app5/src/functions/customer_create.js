@@ -4,7 +4,6 @@
 
 /**
  * @import {server_server_response, server_db_common_result_insert} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_common_result_insert}} customerCreate
  */
 
 /**
@@ -18,7 +17,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const customerCreate = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataEntityResource.js')} */

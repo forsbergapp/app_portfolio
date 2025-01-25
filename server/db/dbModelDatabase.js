@@ -12,14 +12,6 @@
  *          server_db_database_install_database_app_script, server_db_database_install_database_script, 
  *          server_db_database_install_result, server_db_database_script_files, 
  *          server_db_sql_result_admin_DBInfoSpaceSum, server_db_sql_result_admin_DBInfoSpace, server_db_sql_result_admin_DBInfo} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_admin_DBInfo[] }} dbInfo
- * @typedef {server_server_response & {result?:server_db_sql_result_admin_DBInfoSpace[] }} dbInfoSpace
- * @typedef {server_server_response & {result?:server_db_sql_result_admin_DBInfoSpaceSum[] }} dbInfoSpaceSum
- * @typedef {server_server_response & {result?:{info: {}[]} }} dbInstall
- * @typedef {server_server_response & {result?:server_db_database_install_db_check }} dbInstalledCheck
- * @typedef {server_server_response & {result?:server_db_database_install_uninstall_result }} dbUninstall
- * @typedef {server_server_response & {result?:{info: {}[]} }} dbDemoInstall
- * @typedef {server_server_response & {result?:{info: {}[]} }} dbDemoUninstall
  */
 
 /**@type{import('./dbSqlDatabase.js')} */
@@ -53,7 +45,7 @@ const DB_APP_UNINSTALL          = 'uninstall_database.json';
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<dbInfo>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_admin_DBInfo[] }>}
  */
 const dbInfo = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -70,7 +62,7 @@ const dbInfo = parameters =>
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<dbInfoSpace>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_admin_DBInfoSpace[] }>}
  */
 const dbInfoSpace = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -87,7 +79,7 @@ const dbInfoSpace = parameters =>
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<dbInfoSpaceSum>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_admin_DBInfoSpaceSum[] }>}
  */
 const dbInfoSpaceSum = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -135,7 +127,7 @@ const dbInstallGetFiles = async (install_type) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          idToken:string,}} parameters
- * @returns {Promise.<dbInstall>}
+ * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
  */
  const dbInstall = async parameters => {
     /**@type{import('./fileModelAppSecret.js')} */
@@ -354,7 +346,7 @@ const dbInstallGetFiles = async (install_type) =>{
   * @function
   * @memberof ROUTE_REST_API
   * @param {{app_id:number|null}}parameters
-  * @returns {Promise.<dbInstalledCheck>}
+  * @returns {Promise.<server_server_response & {result?:server_db_database_install_db_check }>}
   */
  const dbInstalledCheck = async parameters =>
     /**@ts-ignore */
@@ -374,7 +366,7 @@ const dbInstallGetFiles = async (install_type) =>{
   * @memberof ROUTE_REST_API
   * @param {{app_id:number,
   *          idToken:string}} parameters
-  * @returns {Promise.<dbUninstall>} 
+  * @returns {Promise.<server_server_response & {result?:server_db_database_install_uninstall_result }>} 
   */
  const dbUninstall = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
@@ -481,7 +473,7 @@ const dbInstallGetFiles = async (install_type) =>{
  * @param {{app_id:number,
  *          idToken:string,
  *          data:{  demo_password?:string|null}}} parameters
- * @returns {Promise.<dbDemoInstall>}
+ * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
  */
  const dbDemoInstall = async parameters=> {
     /**@type{import('../socket.js')} */
@@ -1112,7 +1104,7 @@ const dbInstallGetFiles = async (install_type) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          idToken:string}} parameters
- * @returns {Promise.<dbDemoUninstall>}
+ * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
  */
 const dbDemoUninstall = async parameters => {
     /**@type{import('../socket.js')} */

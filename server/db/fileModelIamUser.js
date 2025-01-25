@@ -3,10 +3,6 @@
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_file_iam_user} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_iam_user[] }} get
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
- * @typedef {server_server_response & {result?:server_db_common_result_update }} update
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -19,7 +15,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_iam_user[] }}
  */
 const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_USER',resource_id, null);
@@ -35,7 +31,7 @@ const get = (app_id, resource_id) =>{
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -82,7 +78,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<update>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
     /**@type{import('../security.js')} */
@@ -132,7 +128,7 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<deleteRecord>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'IAM_USER', resource_id, null).then((result)=>{

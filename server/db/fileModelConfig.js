@@ -8,8 +8,6 @@
  *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,
  *          server_db_file_app_translation} from '../types.js'
  * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
- * @typedef {server_server_response & {result?:* }} getFile
- * @typedef {server_server_response & {result?:server_db_common_result_update }} update
  */
 
 /**@type{import('./file.js')} */
@@ -202,7 +200,7 @@ const configInit = async () => {
  *          data:{  config_group?:string|null,
  *                  parameter?:string|null,
  *                  saved?:string|null}|null}} parameters
- * @returns {Promise.<getFile>}
+ * @returns {Promise.<server_server_response & {result?:* }>}
  */
 const getFile = async parameters => {
     const config_group = parameters.data?.config_group?parameters.data.config_group:null;
@@ -232,7 +230,7 @@ const getFile = async parameters => {
  *                  maintenance:string,
  *                  comment:string,
  *                  configuration:string}}} parameters
- * @returns {Promise.<update>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
     const maintenance = serverUtilNumberValue(parameters.data.maintenance);

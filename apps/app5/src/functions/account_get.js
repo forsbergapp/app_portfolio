@@ -3,7 +3,6 @@
  */
 /**
  * @import {server_server_response, server_db_sql_result_app_data_resource_detail_get} from '../../../../server/types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_app_data_resource_detail_get[]}} accountGet
  */
 /**
  * @name accountGet
@@ -16,7 +15,7 @@
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<accountGet>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_resource_detail_get[]}>}
  */
 const accountGet = async parameters =>{
     /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */

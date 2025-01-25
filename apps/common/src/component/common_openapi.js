@@ -148,9 +148,9 @@ const component = async props => {
     /**
      * Return description tag for given operationId
      * @param{string} operationId
-     * @returns {Promise.<string>}
+     * @returns {Promise.<{summary:string, response:string}>}
      */
-    const getDescription = async operationId =>{
+    const getJsDocMetadata = async operationId =>{
             //read operationId what file to import and what function to execute
             //syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
             const filePath = '/' + operationId.split('.')[0].replaceAll('_','/') + '/' +
@@ -164,15 +164,38 @@ const component = async props => {
                 if (match[1].indexOf(`@name ${functionRESTAPI}`)>-1 && 
                     match[1].indexOf('@function')>-1 &&
                     match[1].indexOf('@memberof ROUTE_REST_API')>-1)
-                    return match[1]
+                    return {summary:
+                            '<div class=\'common_markdown_jsdoc_tag\'>'+
+                            match[1]
                             .split('@')
                             .filter(tag=>tag.startsWith('description'))[0]?.substring('description'.length)
                                                                             .trimStart()
                                                                             .split('\n')
                                                                             .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                                                                            .join('\n');
+                                                                            .join('\n')
+                            +
+                            '</div>',
+                            response:
+                            '<div class=\'common_markdown_jsdoc_tag\'>'+
+                            match[1]
+                            .split('@')
+                            .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
+                            .trimStart()
+                            .split('\n')
+                            .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                            .join('\n')
+                            .replace('{','')
+                            .replace('}','')
+                            .replaceAll('|','&vert;')
+                            .replaceAll('[','&#91;')
+                            .replaceAll(']','&#93;')
+                            .replaceAll('<','&lt;')
+                            .replaceAll('>','&gt;')
+                            +
+                            '</div>'
+                            };
             }
-            return '';
+            return {summary:'', response:''};
             
     };
 
@@ -200,8 +223,44 @@ const component = async props => {
                                     };
                         });
     for (const path of Object.entries(CONFIG_REST_API.paths))
-        for (const method of Object.entries(path[1]))
-            method[1].summary = await getDescription(method[1].operationId);
+        for (const method of Object.entries(path[1])){
+            const JSDocResult = await getJsDocMetadata(method[1].operationId);
+            //Update summary with @description tag
+            method[1].summary = JSDocResult.summary;
+            //All paths starts with oneOf key followed by allOf key except SSE path
+            if (method[1].responses.oneOf)
+                //Update rows and properties with @returns tag
+                for (const elementallOf of method[1].responses.oneOf.filter((/**@type{*}*/row)=>'allOf' in row)[0].allOf){
+                    if (Object.keys(elementallOf)[0]=='oneOf' || Object.keys(elementallOf)[0]=='allOf' ){
+                        for (const elementArray of elementallOf[Object.keys(elementallOf)[0]]){
+                            if (Object.keys(elementArray)[0]=='oneOf' || Object.keys(elementArray)[0]=='allOf' ){
+                                for (const elementArraySub of elementArray[Object.keys(elementArray)[0]]){
+                                    if ('properties' in elementArraySub || 'rows' in elementArraySub){
+                                        if ('properties' in elementArraySub)
+                                            elementArraySub.properties = JSDocResult.response;
+                                        if ('rows' in elementArraySub)
+                                            elementArraySub.rows = JSDocResult.response;
+                                    }           
+                                }
+                            }
+                            else
+                                if ('properties' in elementArray || 'rows' in elementArray){
+                                    if ('properties' in elementArray)
+                                        elementArray.properties = JSDocResult.response;
+                                    if ('rows' in elementArray)
+                                        elementArray.rows = JSDocResult.response;
+                                } 
+                        }
+                    }
+                    else
+                        if ('properties' in elementallOf || 'rows' in elementallOf){
+                            if ('properties' in elementallOf)
+                                elementallOf.properties = JSDocResult.response;
+                            if ('rows' in elementallOf)
+                                elementallOf.rows = JSDocResult.response;
+                        }
+                }    
+        }    
 
     return template({   openapi:CONFIG_REST_API,
                         sortByRole:sortByRole

@@ -18,9 +18,6 @@
  *          server_server_error,
  *          server_server_response,
  *          server_apps_email_return_createMail, server_apps_email_param_data} from '../../../server/types.js'
- * @typedef {server_server_response & {result?:server_apps_module_with_metadata[] }} commonModuleMetaDataGet
- * @typedef {server_server_response & {result?:string }} commonComponentCreate
- * @typedef {server_server_response & {result?:server_config_apps_with_db_columns[] }} commonAppsGet
  * 
  */
 
@@ -804,7 +801,7 @@ const commonAppReportQueue = async parameters =>{
  * @param {{app_id:Number,
  *          data:{type:'REPORT'|'MODULE'|'FUNCTION'},
  *          resource_id:number}} parameters
- * @returns {Promise.<commonModuleMetaDataGet>}
+ * @returns {Promise.<server_server_response & {result?:server_apps_module_with_metadata[] }>}
  */
 const commonModuleMetaDataGet = async parameters =>{
     /**@type{import('../../../server/iam.js')} */
@@ -872,7 +869,7 @@ const commonModuleMetaDataGet = async parameters =>{
  *                                  reportid?:          string,
  *                                  host?:              string},
  *          type:'APP'|'MAINTENANCE'|'INFO_DISCLAIMER'|'INFO_PRIVACY_POLICY'|'INFO_TERMS'}} parameters
- * @returns {Promise.<commonComponentCreate>}
+ * @returns {Promise.<server_server_response & {result?:string }>}
  */
 const commonComponentCreate = async parameters =>{
     /**@type{import('../../../server/iam.js')} */
@@ -1089,7 +1086,7 @@ const commonApp = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          locale:string}} parameters
- * @returns {Promise.<commonAppsGet>}
+ * @returns {Promise.<server_server_response & {result?:server_config_apps_with_db_columns[] }>}
  */
 const commonAppsGet = async parameters =>{
     /**@type{import('../../../server/db/fileModelAppTranslation.js')} */

@@ -5,13 +5,6 @@
 /**
  * @import {server_server_response} from '../../../../server/types.js'
  * @import {bank_transaction} from './types.js'
- * @typedef {server_server_response & {result?:{title_sub	        :string,
- *                                              title	            :string,
- *                                              bank_account_iban	:string,
- *                                              bank_account_number :string,
- *                                              currency            :string,
- *                                              currency_name       :string,
- *                                              bank_account_balance:number}[]}} getStatement
  */
 /**
  * @name IBAN_mod97
@@ -91,7 +84,13 @@ const IBAN_validate = iban => {
  *          host:string,
  *          idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<getStatement>}
+ * @returns {Promise.<server_server_response & {result?:{   title_sub	        :string,
+ *                                                          title	            :string,
+ *                                                          bank_account_iban	:string,
+ *                                                          bank_account_number :string,
+ *                                                          currency            :string,
+ *                                                          currency_name       :string,
+ *                                                          bank_account_balance:number}[]}>}
  */
 const getStatement = async parameters =>{
 

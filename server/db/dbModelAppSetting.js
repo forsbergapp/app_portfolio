@@ -2,8 +2,6 @@
 
 /**
  * @import {server_server_response, server_db_sql_result_app_setting_getDisplayData, server_db_sql_result_app_setting_getSettings} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_app_setting_getSettings[] }} get
- * @typedef {server_server_response & {result?:server_db_sql_result_app_setting_getDisplayData[] }} getDisplayData
  */
 
 /**@type{import('./dbSql.js')} */
@@ -23,7 +21,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {{app_id:number,
  *          data:{setting_type:string|null},
  *          locale:string}} parameters
- * @returns {Promise.<get>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_setting_getSettings[] }>}
  */
 const get = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
@@ -45,7 +43,7 @@ const get = parameters =>
  *          data:{  setting_type?:string|null,
  *                  data_app_id?:string|number|null,
  *                  value?:string|null}}} parameters
- * @returns {Promise.<getDisplayData>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_setting_getDisplayData[] }>}
  */
 const getDisplayData = parameters => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

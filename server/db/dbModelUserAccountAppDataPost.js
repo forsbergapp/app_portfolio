@@ -11,15 +11,6 @@
  *          server_db_sql_result_user_account_app_data_post_getProfileUserPosts,
  *          server_db_sql_result_user_account_app_data_post_getUserPostsByUserId,
  *          server_db_sql_result_user_account_app_data_post_getUserPost} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPost[] }} getUserPost
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[] }} getUserPostsByUserId
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPosts[] }} getProfileUserPosts
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_data_post_getProfileStatLike[] }} getProfileStatLike
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileStatPost[] }} getProfileStatPost
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[] }} getProfileUserPostDetail
- * @typedef {server_server_response & {result?:{id:number|null,data: server_db_common_result_insert|null} }} createUserPost
- * @typedef {server_server_response & {result?:server_db_common_result_update }} updateUserPost
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteUserPost
  */
 
 /**@type{import('./dbSql.js')} */
@@ -37,7 +28,7 @@ const { dbCommonExecute, dbCommonRecordErrorAsync } = await import(`file://${pro
  * @function
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<getUserPost>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPost[] }>}
  */
 const getUserPost = async (app_id, id) => 
         dbCommonExecute(app_id, 
@@ -52,7 +43,7 @@ const getUserPost = async (app_id, id) =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<getUserPostsByUserId>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[] }>}
  */
 const getUserPostsByUserId = async parameters =>
         dbCommonExecute(parameters.app_id, 
@@ -73,7 +64,7 @@ const getUserPostsByUserId = async parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{id_current_user?:string|null}}} parameters
- * @returns {Promise.<getProfileUserPosts>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPosts[] }>}
  */
 const getProfileUserPosts = async parameters =>
         dbCommonExecute(parameters.app_id, 
@@ -93,7 +84,7 @@ const getProfileUserPosts = async parameters =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<getProfileStatLike>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_data_post_getProfileStatLike[] }>}
  */
  const getProfileStatLike = async parameters =>
         dbCommonExecute(parameters.app_id, 
@@ -113,7 +104,7 @@ const getProfileUserPosts = async parameters =>
  * @param {{app_id:number,
  *         data:{statchoice?:string|null}
  *       }} parameters
- * @returns {Promise.<getProfileStatPost>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileStatPost[] }>}
  */
 const getProfileStatPost = async parameters =>
         parameters.data.statchoice==null?
@@ -137,7 +128,7 @@ const getProfileStatPost = async parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{detailchoice?:string|null}}} parameters
- * @returns {Promise.<getProfileUserPostDetail>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[] }>}
  */
 const getProfileUserPostDetail = async parameters =>
         dbCommonExecute(parameters.app_id, 
@@ -160,7 +151,7 @@ const getProfileUserPostDetail = async parameters =>
  *                  description:string,
  *                  json_data:*,
  *                  user_account_id:number}}} parameters
- * @returns {Promise.<createUserPost>}
+ * @returns {Promise.<server_server_response & {result?:{id:number|null,data: server_db_common_result_insert|null} }>}
  */
 const createUserPost = parameters => {
     return new Promise((resolve)=>{
@@ -219,7 +210,7 @@ const createUserPost = parameters => {
  *          data:{  description:string,
  *                  json_data:string,
  *                  user_account_id:number}}} parameters
- * @returns {Promise.<updateUserPost>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateUserPost = parameters =>
         dbCommonExecute(parameters.app_id, 
@@ -243,7 +234,7 @@ const updateUserPost = parameters =>
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{  user_account_id:number}}} parameters
- * @returns {Promise.<deleteUserPost>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteUserPost = parameters =>
         dbCommonExecute(parameters.app_id, 

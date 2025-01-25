@@ -6,13 +6,6 @@
  *          server_log_scope, server_log_level,
  *          server_log_result_logFilesGet, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
  *          server_server_error, server_server_req, server_server_req_verbose, server_db_common_result, server_db_common_result_error} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
- * @typedef {server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:[]} }} get
- * @typedef {server_server_response & {result?:object}} getStatusCodes
- * @typedef {server_server_response & {result?:server_log_result_logStatGet[]|[]}} getStat
- * @typedef {server_server_response & {result?:[server_log_result_logFilesGet]|[]}} getFiles
- * 
- * 
  */
 /**@type{import('./fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -36,7 +29,7 @@ const logDate = () => new Date().toISOString();
  * @param {server_log_scope} logscope 
  * @param {server_log_level} loglevel 
  * @param {object} log 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
  const post = async (logscope, loglevel, log) => {
     const config_file_interval = fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL');
@@ -56,7 +49,7 @@ const logDate = () => new Date().toISOString();
  * @param {string|number|object|Error|null} statusMessage 
  * @param {number} responsetime 
  * @param {server_server_error} err 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
     /**@type{server_db_file_log_request}*/
@@ -88,7 +81,7 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
  * @param {number} statusCode 
  * @param {string} statusMessage 
  * @param {number} responsetime 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     let log_level;
@@ -174,7 +167,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
  * @function
  * @param {server_log_level} log_level 
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServer = async (log_level, logtext) =>{
     /**@type{server_db_file_log_server} */
@@ -189,7 +182,7 @@ const postServer = async (log_level, logtext) =>{
  * @description Log server Info
  * @function
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServerI = async (logtext)=>{
     return postServer(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO'), logtext);
@@ -199,7 +192,7 @@ const postServerI = async (logtext)=>{
  * @description Log server error
  * @function
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServerE = async (logtext)=>{
     return postServer(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), logtext);
@@ -213,7 +206,7 @@ const postServerE = async (logtext)=>{
  * @param {string} sql 
  * @param {object} parameters 
  * @param {server_db_common_result} result 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postDBI = async (app_id, db, sql, parameters, result) => {
     /**@type{server_db_file_log_db} */
@@ -261,7 +254,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
  * @param {string} sql 
  * @param {object} parameters 
  * @param {server_db_common_result_error} result 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postDBE = async (app_id, db, sql, parameters, result) => {
     /**@type{server_db_file_log_db} */
@@ -283,7 +276,7 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
  * @param {string} service 
  * @param {string} parameters 
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceI = async (app_id, service, parameters, logtext) => {
     /**@type{server_db_file_log_service}*/
@@ -325,7 +318,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
  * @param {string} service 
  * @param {string} parameters 
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceE = async (app_id, service, parameters, logtext) => {
     /**@type{server_db_file_log_service}*/   
@@ -348,7 +341,7 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
  * @param {string} app_function_name 
  * @param {number} app_line 
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
     /**@type{server_db_file_log_app} */
@@ -372,7 +365,7 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
  * @param {string} app_function_name 
  * @param {number} app_line 
  * @param {string} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     //log if INFO or VERBOSE level
@@ -390,7 +383,7 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
  * @param {string} app_function_name 
  * @param {number} app_line 
  * @param {*} logtext 
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => postApp( app_id, 
                                                                                                 fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), 
@@ -416,7 +409,7 @@ const postAppE = async (app_id, app_filename, app_function_name, app_line, logte
  *                  day?:string|null,
  *                  limit?:string|null,
  *                  offset?:string|null}}} parameters
- * @returns{Promise.<get>}
+ * @returns{Promise.<server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:[]} }>}
  */
 const get = async parameters => {
     /**@type{import('../server.js')} */
@@ -569,7 +562,7 @@ const get = async parameters => {
  *                  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
  * @function
  * @memberof ROUTE_REST_API
- * @returns {Promise.<getStatusCodes>}
+ * @returns {Promise.<server_server_response & {result?:object}>}
  */
 const getStatusCodes = async () =>{
     const {STATUS_CODES} = await import('node:http');
@@ -587,7 +580,7 @@ const getStatusCodes = async () =>{
  *                  statValue?:string|null,
  *                  year?:string|null,
  *                  month?:string|null}}} parameters
- * @returns{Promise.<getStat>}
+ * @returns{Promise.<server_server_response & {result?:server_log_result_logStatGet[]|[]}>}
  */
 const getStat = async parameters => {
     /**@type{import('../server.js')} */
@@ -722,7 +715,7 @@ const getStat = async parameters => {
  * @description Get log files
  * @function
  * @memberof ROUTE_REST_API
- * @returns{Promise.<getFiles>}
+ * @returns{Promise.<server_server_response & {result?:[server_log_result_logFilesGet]|[]}>}
  */
 const getFiles = async () => {
     /**@type{[server_log_result_logFilesGet]|[]} */

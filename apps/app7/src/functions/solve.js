@@ -5,7 +5,6 @@
 /**
  * @import {server_server_response} from '../../../../server/types.js'
  * @import {APP_FUNCTION_cube_solution_model,APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
- * @typedef {server_server_response & {result?:APP_FUNCTION_cube_solve_return[]}} cubeSolve
  */
 
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
@@ -35,7 +34,7 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  *          host:string,
  * 			idToken:string,
  *          locale:string}} parameters
- * @returns {Promise.<cubeSolve>}
+ * @returns {Promise.<server_server_response & {result?:APP_FUNCTION_cube_solve_return[]}>}
  */
 const cubeSolve = async parameters =>{
 	/**@type{import('../../../../server/iam.js')} */

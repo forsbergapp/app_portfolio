@@ -23,26 +23,6 @@
  *          server_db_sql_parameter_user_account_create,
  * 			server_db_sql_parameter_user_account_updateUserLocal,
  *         	server_db_sql_parameter_user_account_updateAdmin} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_userLogin[] }} userGetUsername
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_providerSignIn[] }} userGetProvider
- * @typedef {server_server_response & {result?:server_db_common_result_update }} updateUserVerificationCode
- * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateProvider
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} userPost
- * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateActivate
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getEmailUser[] }} userGetEmail
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getProfileUser[] }} getProfile
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getProfileStat[] }} getProfileStat
- * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateAdmin
- * @typedef {server_server_response & {result?:server_db_common_result_update }} updateAdmin
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getUsersAdmin[] }} getUsersAdmin
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getStatCountAdmin[] }} getStatCountAdmin
- * @typedef {server_server_response & {result?:server_db_common_result_update }} userUpdateLocal
- * @typedef {server_server_response & {result?:server_db_common_result_update }} updateUserCommon
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getUserByUserId }} getUserByUserId
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_checkPassword[] }} userGetPassword
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} userDelete
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getProfileDetail[] }} getProfileDetail
- * @typedef {server_server_response & {result?:server_db_sql_result_user_account_getDemousers[] }} userDemoGet
  */
 
 
@@ -221,7 +201,7 @@ const data_validation = data => {
  * @function
  * @param {number} app_id
  * @param {server_db_sql_parameter_user_account_userLogin} data
- * @returns {Promise.<userGetUsername>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_userLogin[] }>}
  */
 const userGetUsername = (app_id, data) =>
         dbCommonExecute(app_id, 
@@ -239,7 +219,7 @@ const userGetUsername = (app_id, data) =>
  * @param {number} app_id 
  * @param {number|null} identity_provider_id 
  * @param {number} search_id
- * @returns {Promise.<userGetProvider>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_providerSignIn[] }>}
  */
 const userGetProvider = async (app_id, identity_provider_id, search_id) =>
         dbCommonExecute(app_id, 
@@ -257,7 +237,7 @@ const userGetProvider = async (app_id, identity_provider_id, search_id) =>
  * @param {number} app_id 
  * @param {number} id 
  * @param {string} verification_code 
- * @returns {Promise.<updateUserVerificationCode>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateUserVerificationCode = async (app_id, id, verification_code) => 
         dbCommonExecute(app_id, 
@@ -276,7 +256,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) =>
  * @param {number} app_id 
  * @param {number} id 
  * @param {server_db_sql_parameter_user_account_create} data
- * @returns {Promise.<userUpdateProvider>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const userUpdateProvider = async (app_id, id, data) => {
     const error_code = data_validation(data);
@@ -306,7 +286,7 @@ const userUpdateProvider = async (app_id, id, data) => {
  * @function
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_create} data 
- * @returns {Promise.<userPost>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const userPost = async (app_id, data) =>{ 
     const error_code = data_validation(data);
@@ -350,7 +330,7 @@ const userPost = async (app_id, data) =>{
  * @param {number|null} verification_type 
  * @param {string} verification_code 
  * @param {string|null} auth 
- * @returns {Promise.<userUpdateActivate>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const userUpdateActivate = async (app_id, id, verification_type, verification_code, auth) => 
         dbCommonExecute(app_id, 
@@ -370,7 +350,7 @@ const userUpdateActivate = async (app_id, id, verification_type, verification_co
  * @function
  * @param {number} app_id 
  * @param {string} email 
- * @returns {Promise.<userGetEmail>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getEmailUser[] }>}
  */
 const userGetEmail = async (app_id, email) => dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_SELECT_EMAIL,
@@ -393,7 +373,7 @@ const userGetEmail = async (app_id, email) => dbCommonExecute(app_id,
  *                  id?:string|null,
  *                  search?:string|null,
  *                  POST_ID?:string |null}}} parameters
- * @returns {Promise.<getProfile>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileUser[] }>}
  */
 const getProfile = async parameters =>{
     /**
@@ -474,7 +454,7 @@ const getProfile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{statchoice?:string|null}}} parameters
- * @returns {Promise.<getProfileStat>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileStat[] }>}
  */
 const getProfileStat = parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -492,7 +472,7 @@ const getProfileStat = parameters =>
  * @param {number} app_id 
  * @param {number} id 
  * @param {server_db_sql_parameter_user_account_updateAdmin} data 
- * @returns {Promise.<userUpdateAdmin>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const userUpdateAdmin = async (app_id, id, data) =>{
 	const error_code = data_validation(data);
@@ -534,7 +514,7 @@ const userUpdateAdmin = async (app_id, id, data) =>{
  *                  user_level:number,
  *                  private:number,
  *                  verification_code:string}}} parameters
- * @returns {Promise.<updateAdmin>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateAdmin = parameters =>{
     return new Promise((resolve)=>{
@@ -576,7 +556,7 @@ const updateAdmin = parameters =>{
  *                  search?:string|null,
  *                  offset?:string|null,
  *                  limit?:string|null}}} parameters
- * @returns {Promise.<getUsersAdmin>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getUsersAdmin[] }>}
  */
 const getUsersAdmin = parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -595,7 +575,7 @@ const getUsersAdmin = parameters =>
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<getStatCountAdmin>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getStatCountAdmin[] }>}
  */
 const getStatCountAdmin = parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -651,7 +631,7 @@ const getStatCountAdmin = parameters =>
  * @param {number} app_id 
  * @param {server_db_sql_parameter_user_account_updateUserLocal} data 
  * @param {number} search_id
- * @returns {Promise.<userUpdateLocal>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const userUpdateLocal = async (app_id, data, search_id) =>{
     const error_code = data_validation(data);
@@ -686,7 +666,7 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_sql_parameter_user_account_updateUserCommon}} parameters
- * @returns {Promise.<updateUserCommon>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
  const updateUserCommon = async parameters => {
     const error_code = data_validation_common(parameters.data);
@@ -715,7 +695,7 @@ const userUpdateLocal = async (app_id, data, search_id) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<getUserByUserId>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getUserByUserId }>}
  */
 const getUserByUserId = async parameters => {
     const result = await dbCommonExecute(   parameters.app_id, 
@@ -736,7 +716,7 @@ const getUserByUserId = async parameters => {
  * @function
  * @param {number} app_id 
  * @param {number} id
- * @returns {Promise.<userGetPassword>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_checkPassword[] }>}
  */
 const userGetPassword = async (app_id, id) => 
         dbCommonExecute(app_id, 
@@ -751,7 +731,7 @@ const userGetPassword = async (app_id, id) =>
  * @function
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<userDelete>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const userDelete = async (app_id, id) =>
         dbCommonExecute(app_id, 
@@ -767,7 +747,7 @@ const userDelete = async (app_id, id) =>
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{detailchoice?:string|null}}} parameters
- * @returns {Promise.<getProfileDetail>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileDetail[] }>}
  */
  const getProfileDetail = async parameters => 
         dbCommonExecute(parameters.app_id, 
@@ -786,7 +766,7 @@ const userDelete = async (app_id, id) =>
  * @description Get demo users
  * @function
  * @param {number} app_id
- * @returns {Promise.<userDemoGet>}
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getDemousers[] }>}
  */
 const userDemoGet = async app_id => 
         dbCommonExecute(app_id, 

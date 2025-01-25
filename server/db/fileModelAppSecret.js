@@ -3,11 +3,6 @@
 /**
  * @import {server_server_response,server_db_common_result_update,server_db_common_result_insert,server_db_common_result_delete,
  *          server_db_file_app_secret} from '../types.js'
- * @typedef {server_server_response & {result?:server_db_file_app_secret[] }} get
- * @typedef {server_server_response & {result?:server_db_file_app_secret }} getFile
- * @typedef {server_server_response & {result?:server_db_common_result_insert }} post
- * @typedef {server_server_response & {result?:server_db_common_result_update }} update
- * @typedef {server_server_response & {result?:server_db_common_result_delete }} deleteRecord
  */
 /**@type{import('./file.js')} */
 const {fileFsRead, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -22,7 +17,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
  *          resource_id:number|null}} parameters
- * @returns {get}
+ * @returns {server_server_response & {result?:server_db_file_app_secret[] }}
  */
 const get = parameters => {
     const result = fileDBGet(parameters.app_id, 'APP_SECRET',null, serverUtilNumberValue(parameters.resource_id));
@@ -37,7 +32,7 @@ const get = parameters => {
  * @description Get records from file
  * @function
  * @param {number} app_id
- * @returns {Promise.<getFile>}
+ * @returns {Promise.<server_server_response & {result?:server_db_file_app_secret }>}
  */
 const getFile = async app_id => {
     return {result:await fileFsRead('APP_SECRET').then(result=>result.file_content.filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0]),
@@ -50,7 +45,7 @@ const getFile = async app_id => {
  * @param {number} app_id 
  * @param {number} resource_id
  * @param {*} data
- * @returns {Promise.<post>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, resource_id, data) => update({app_id:app_id, resource_id:resource_id, data:data})
                                                         .then(result_update=>{return {result:{insertid:resource_id, affectedRows:result_update.result.affectedRows}, type:'JSON'};}) ;
@@ -63,7 +58,7 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
  *          resource_id:number,
  *          data:{  parameter_name:string,
  *                  parameter_value:string}}} parameters
- * @returns {Promise.<update>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
     if  (parameters.data.parameter_name=='app_id')
@@ -85,7 +80,7 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<deleteRecord>}
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
     return fileDBDelete(app_id, 'APP_SECRET', null, resource_id).then((result)=>{
