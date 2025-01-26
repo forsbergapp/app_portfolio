@@ -7,10 +7,23 @@ import {
 	getFaceOfMove, getRotationFromTo, getDirectionFromFaces
 } from '../../utils/index.js';
 
+/**
+ * @name SOLVED_STATE
+ * @description
+ * @constant
+ */
 const SOLVED_STATE = '0 0 0 0 0 0 0 0';
-
+/**
+ * @name PLLSolver
+ * @description PLLSolver
+ * @class
+ */
 class PLLSolver extends BaseSolver {
+	/**
+	 * @param {*} args
+	 */
 	constructor(...args) {
+		/**@ts-ignore */
 		super(...args);
 		this.phase = 'pll';
 
@@ -39,15 +52,31 @@ class PLLSolver extends BaseSolver {
 			'0 2 0 2 0 2 0 2': 'RPrime U R UPrime RPrime FPrime UPrime F R U RPrime F RPrime FPrime R UPrime R', // #21
 		};
 	}
-
+	/**
+	 * @name solver
+	 * @description solver
+	 * @method
+	 * @returns {*}
+	 */
 	solve() {
 		return this._solve();
 	}
-
+	/**
+	 * @name _getCaseNumber
+	 * @description _getCaseNumber
+	 * @method
+	 * @returns {*}
+	 */
 	_getCaseNumber() {
 		return this.getPllString();
 	}
-
+	/**
+	 * @name _solveCase
+	 * @description _solveCase
+	 * @method
+	 * @param {*} pllString
+	 * @returns {*}
+	 */
 	_solveCase(pllString) {
 		const pattern = this.findPattern(pllString);
 		const algorithm = this.getAlgorithm(pattern);
@@ -58,23 +87,33 @@ class PLLSolver extends BaseSolver {
 		});
 
 		// may need an extra rotation of DOWN for a complete solve
+		/**@ts-ignore */
 		const cubie = this.cube.getCubie(['down', 'front']); // any cubie on DOWN
 		const origin = 'front';
 		const target = getFaceOfMove(cubie.getColorOfFace(origin));
+		/**@ts-ignore */
 		const lastLayerMove = getRotationFromTo('down', origin, target);
-
+		/**@ts-ignore */
 		this.move(lastLayerMove);
 	}
-
+	/**
+	 * @name isSolved
+	 * @description isSolved
+	 * @method
+	 * @returns {*}
+	 */
 	isSolved() {
 		return this.cube.isSolved();
 	}
 
 	/**
-	 * Permutations are unique in the way that each cubie is permutated relative
+	 * @name getPLLString
+	 * @description Permutations are unique in the way that each cubie is permutated relative
 	 * to the one adjacent to it. For each cubie (in order), find the relative
 	 * direction from its color to the next cubie's color, and turn it into a
 	 * number. This will allow each permutation to be held in a unique string.
+	 * @method
+	 * @returns {*}
 	 */
 	getPllString() {
 		const pllString = [];
@@ -101,10 +140,15 @@ class PLLSolver extends BaseSolver {
 			const face2 = getFaceOfMove(color2);
 
 			// turn it into a number
+			/**@ts-ignore */
 			let direction = getDirectionFromFaces(face1, face2, { up: 'down' });
+			/**@ts-ignore */
 			if (direction === 'front') direction = 0;
+			/**@ts-ignore */
 			if (direction === 'right') direction = 1;
+			/**@ts-ignore */
 			if (direction === 'left') direction = -1;
+			/**@ts-ignore */
 			if (direction === 'back') direction = 2;
 
 			pllString.push(direction);
@@ -112,7 +156,13 @@ class PLLSolver extends BaseSolver {
 
 		return pllString.join(' ');
 	}
-
+	/**
+	 * @name findPattern
+	 * @description findPattern
+	 * @method
+	 * @param {*} pllString
+	 * @returns {*}
+	 */
 	findPattern(pllString) {
 		const initialString = pllString;
 
@@ -121,6 +171,7 @@ class PLLSolver extends BaseSolver {
 		}
 
 		for (let i = 0; i < 4; i++) {
+			/**@ts-ignore */
 			const algorithm = this.algorithms[pllString];
 
 			if (typeof algorithm === 'string') {
@@ -132,19 +183,30 @@ class PLLSolver extends BaseSolver {
 
 		throw new Error(`No pattern found for pll string "${initialString}"`);
 	}
-
+	/**
+	 * @name getAlgorithm
+	 * @description getAlgorithm
+	 * @method
+	 * @param {*} pattern
+	 * @returns {*}
+	 */
 	getAlgorithm(pattern) {
 		if (typeof pattern === 'undefined') {
 			pattern = this.findPattern(pattern); // pattern can be a pllString
 		}
-
+		/**@ts-ignore */
 		if (typeof this.algorithms[pattern] === 'undefined') {
 			throw new Error(`No algorithm found for pattern "${pattern}"`);
 		}
-
+		/**@ts-ignore */
 		return this.algorithms[pattern];
 	}
-
+	/**
+	 * @name _getPllCubies
+	 * @description _getPllCubies
+	 * @method
+	 * @returns {*}
+	 */
 	_getPllCubies() {
 		const positions = [
 			['front', 'down', 'right'],
@@ -157,18 +219,27 @@ class PLLSolver extends BaseSolver {
 			['right', 'down']
 		];
 
+		/**@ts-ignore */
 		return positions.map(pos => this.cube.getCubie(pos));
 	}
-
+	/**
+	 * @name _getCubiePermutation
+	 * @description _getCubiePermutation
+	 * @method
+	 * @param {*} cubie
+	 * @returns {*}
+	 */
 	_getCubiePermutation(cubie) {
 		// pick a face, any face (expect for the down face)
-		const face = cubie.faces().find(face => face !== 'down');
+		const face = cubie.faces().find((/**@type{*}*/face) => face !== 'down');
 
 		// get the cube face this face lies on
 		const cubeFace = getFaceOfMove(cubie.getColorOfFace(face));
 
 		// find the move that will permute the cubie correctly
+		/**@ts-ignore */
 		let moveToSolveCubie = getRotationFromTo('down', face, cubeFace);
+		/**@ts-ignore */
 		moveToSolveCubie = moveToSolveCubie.toLowerCase();
 
 		// translate the move to a number
@@ -180,12 +251,25 @@ class PLLSolver extends BaseSolver {
 
 		return dir;
 	}
-
+	/**
+	 * @name _rotatePllStringLeft
+	 * @description _rotatePllStringLeft
+	 * @method
+	 * @param {*} pllString
+	 * @returns {*}
+	 */
 	_rotatePllStringLeft(pllString) {
-		const arr = pllString.split(' ').map(num => parseInt(num));
+		const arr = pllString.split(' ').map((/**@type{*}*/num) => parseInt(num));
 		return [...arr.slice(2), ...arr.slice(0, 2)].join(' ');
 	}
-
+	/**
+	 * @name _getFrontFace
+	 * @description _getFrontFace
+	 * @method
+	 * @param {*} pllString
+	 * @param {*} pattern
+	 * @returns {*}
+	 */
 	_getFrontFace(pllString, pattern) {
 		const rotationOrder = ['front', 'left', 'back', 'right'];
 
