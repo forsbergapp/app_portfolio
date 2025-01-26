@@ -12,14 +12,21 @@ import { getRandomInt, factorial, rotateParts } from '../tools.js';
 
 import { solveCoordinates } from '../solvers/kociemba.js';
 
+/**
+ * @name UPPER_FACE_POSITIONS
+ * @description UPPER_FACE_POSITIONS
+ * @constant
+ */
 const UPPER_FACE_POSITIONS = [0, 1, 2, 3];
 
 /**
- * Returns an orientation vector where all pieces
- * are solved, except for the given enabled pieces.
+ * @name getOrientationFromEnabled
+ * @description Returns an orientation vector where all pieces
+ *              are solved, except for the given enabled pieces.
  * @param {*} enabled
  * @param {*} flipCount
  * @param {*} size
+ * @returns {*}
  */
 const getOrientationFromEnabled = (enabled, flipCount, size) => {
   const pieces = getOrientationFromIndex(
@@ -38,10 +45,13 @@ const getOrientationFromEnabled = (enabled, flipCount, size) => {
 };
 
 /**
- * Returns a permutation vector where all pieces are
- * solved, except for the given enabled pieces.
+ * @name getPermutationFromEnabled
+ * @description Returns a permutation vector where all pieces are
+ *              solved, except for the given enabled pieces.
+ * @function
  * @param {*} enabled
  * @param {*} size
+ * @returns {*}
  */
 const getPermutationFromEnabled = (enabled, size) => {
   const pieces = getPermutationFromIndex(
@@ -59,7 +69,15 @@ const getPermutationFromEnabled = (enabled, size) => {
   return permutation;
 };
 
-export const adjustUpperFace = (/**@type{*}*/pieces, /**@type{*}*/amount) => {
+/**
+ * @name adjustUpperFace
+ * @description adjustUpperFace
+ * @function
+ * @param {*} pieces
+ * @param {*} [amount]
+ * @returns {*}
+ */
+export const adjustUpperFace = (pieces, amount) => {
   amount = amount || getRandomInt(0, 4);
 
   for (let i = 0; i < amount; i += 1) {
@@ -70,8 +88,11 @@ export const adjustUpperFace = (/**@type{*}*/pieces, /**@type{*}*/amount) => {
 };
 
 /**
- * Generates a random scramble where all pieces are solved, except
- * for the provided edges and corners, which will be scrambled randomly.
+ * @name getScrambleForPieces
+ * @description Generates a random scramble where all pieces are solved, except
+ *              for the provided edges and corners, which will be scrambled randomly.
+ * @function
+ * @returns {*}
  */
 export const getScrambleForPieces = (
   /**@ts-ignore */

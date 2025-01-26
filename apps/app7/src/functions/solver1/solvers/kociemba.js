@@ -19,9 +19,13 @@ import {
 
 import Search from '../Search.js';
 
-// In phase two, only quarter moves of U and D and double turns of
-// all the other faces are allowed, in order to keep the cube in
-// the phase two group G1.
+/** 
+ * @name phaseTwoMoves
+ * @description In phase two, only quarter moves of U and D and double turns of
+ *              all the other faces are allowed, in order to keep the cube in
+ *              the phase two group G1.
+ * @constant
+ */
 const phaseTwoMoves = [1, 10, 4, 13, 6, 7, 8, 15, 16, 17];
 
 // The following tables are being used in both phases.
@@ -35,7 +39,10 @@ let slice;
 let merge;
 
 /**
- * Initialize the tables used in phase one of the solver.
+ * @name phaseTwoTables
+ * @description Initialize the tables used in phase one of the solver.
+ * @function
+ * @returns {*}
  */
 const phaseTwoTables = () => {
   // In order to start phase two, we need to know the positions
@@ -103,8 +110,19 @@ const phaseTwoTables = () => {
   };
 };
 
+/**
+ * @name phaseTwo
+ * @description phaseTwo
+ * @constant
+ */
 export const phaseTwo = new Search(phaseTwoTables, phaseTwoMoves);
 
+/**
+ * @name phaseOneTables
+ * @description phaseOneTables
+ * @function
+ * @returns {*}
+ */
 const phaseOneTables = () => {
   // The parity move table is so small that we inline it. It
   // describes the parity of both the edge and corner pieces,
@@ -185,6 +203,12 @@ const phaseOneTables = () => {
   };
 };
 
+/**
+ * @name PhaseOneSearch
+ * @description PhaseOneSearch
+ * @class
+ * @returns {*}
+ */
 class PhaseOneSearch extends Search {
   /**@ts-ignore*/
   constructor(...args) {
@@ -194,7 +218,14 @@ class PhaseOneSearch extends Search {
     this.maxDepth = 20;
     this.solution = null;
   }
-  /**@ts-ignore*/
+  /**
+   * @name handleSolution
+   * @description handleSolution
+   * @method
+   * @param {*} solution
+   * @param {*} indexes
+   * @returns {*}
+   */
   handleSolution(solution, indexes) {
     const lastMove = solution.slice(-1)[0];
 
@@ -225,6 +256,7 @@ class PhaseOneSearch extends Search {
     });
 
     if (phaseTwoSolution) {
+      /**@ts-ignore */
       this.solution = solution.concat(phaseTwoSolution.solution);
 
       if (this.maxDepth <= this.settings.maxDepth) {
@@ -240,11 +272,18 @@ class PhaseOneSearch extends Search {
     return false;
   }
 }
-
+/**
+ * @name phaseOne
+ * @description phaseOne
+ * @constant
+ */
 export const phaseOne = new PhaseOneSearch(phaseOneTables);
 /**
+ * @name kociemba
+ * @description kociemba
  * @param {*} scramble
  * @param {*} maxDepth
+ * @returns {*}
  */
 const kociemba = (scramble, maxDepth = 20) => {
   if (Array.isArray(scramble)) {
@@ -262,6 +301,11 @@ const kociemba = (scramble, maxDepth = 20) => {
 
 export default kociemba;
 
+/**
+ * @name solveCoordinates
+ * @description solveCoordinates
+ * @constant
+ */
 export const solveCoordinates = (/**@type{*}*/eo, /**@type{*}*/ep, /**@type{*}*/co, /**@type{*}*/cp) => kociemba([
   Math.floor(getIndexFromPermutation(ep, [8, 9, 10, 11], true) / 24),
   getIndexFromOrientation(co, 3),

@@ -20,44 +20,69 @@ import {
 import { factorial } from './tools.js';
 
 /**
- * Create a function which performs a move on a coordinate.
- * @param {*} getVector
- * @param {*} doMove
- * @param {*} getIndex
+ * @name createMoveHandler
+ * @description Create a function which performs a move on a coordinate.
+ * @function
+ * @param {function} getVector
+ * @param {function} doMove
+ * @param {function} getIndex
+ * @returns {function}
  */
-const createMoveHandler = (getVector, doMove, getIndex) => (/**@type{*}*/index, /**@type{*}*/move) => {
+const createMoveHandler = (getVector, doMove, getIndex) => (/**@type{number}*/index, /**@type{number}*/move) => {
   let vector = getVector(index);
   vector = doMove(vector, move);
   return getIndex(vector);
 };
-
+/**
+ * @name MoveTable
+ * @description  MoveTable
+ * @class
+ */
 export class MoveTable {
-  constructor(/**@type{*}*/settings) {
+  /**
+   * @param {*} settings
+   */
+  constructor(settings) {
     // A name must be provided if the generic solver is being used, as
     // we use them to create the pruning tables.
+    /**@type{string}*/
     this.name = settings.name;
 
     // Some tables in the Kociemba solver define their own size, as
     // they are a subset of another already generated helper table.
+    /**@type{number}*/
     this.size = settings.size;
-
+    /**@type{number}*/
     this.defaultIndex = settings.defaultIndex || 0;
+    /**@type{number[]}*/
     this.solvedIndexes = settings.solvedIndexes || [this.defaultIndex];
 
-    // We allow defining a custom function that returns the updated
-    // index. This is useful for helper tables which are subsets
-    // of already generated tables.
     if (settings.doMove) {
+      /**
+       * @name doMove
+       * @description We allow defining a custom function that returns the updated
+       *              index. This is useful for helper tables which are subsets
+       *              of already generated tables.
+       * @function
+       * @method
+       * @returns {*}
+       */
       this.doMove = (/**@type{*}*/index, /**@type{*}*/move) => settings.doMove(this.table, index, move);
     }
 
     if (settings.table) {
+      /**@type{*} */
       this.table = settings.table;
 
       // If a pre-generated table is provide, do not generate another one.
       return;
     }
-
+    /**
+     * @name cubieMove
+     * @description cubieMove
+     * @function
+     * @returns {function}
+     */
     const cubieMove = createMoveHandler(
       settings.getVector,
       settings.cubieMove,
@@ -67,20 +92,36 @@ export class MoveTable {
     this.createMoveTable(settings.size, cubieMove, settings.moves);
   }
 
-  doMove(/**@type{*}*/index, /**@type{*}*/move) {
+  /**
+   * @name  doMove
+   * @description doMove
+   * @method
+   * @param {number} index
+   * @param {number} move
+   * @returns {number}
+   */
+  doMove(index, move) {
     return this.table[index][move];
   }
   /**
-   * @param {*} size
-   * @param {*} cubieMove
-   * @param {*} moves
+   * @name createMoveTable
+   * @description createMoveTable
+   * @method
+   * @param {number} size
+   * @param {function} cubieMove
+   * @param {number[]} moves
+   * @returns {void}
    */
   createMoveTable(size, cubieMove, moves = allMoves) {
-    this.table = [];
+    //replacing very slow loop with one fast statement
+    //use map function to avoid server memory issue
+    this.table = Array(size).fill([]).map(()=>[]);
 
-    for (let i = 0; i < size; i += 1) {
-      this.table.push([]);
-    }
+    //original code
+    //this.table = [];
+    //for (let i = 0; i < size; i += 1) {
+    //  this.table.push([]);
+    //}
 
     // Create a matrix which stores the result after
     // applying a move to a coordinate.
@@ -101,7 +142,11 @@ export class MoveTable {
   }
 }
 /**
+ * @name createCornerPermutationTable
+ * @description createCornerPermutationTable
+ * @function
  * @param {*} settings
+ * @returns {*}
  */
 export const createCornerPermutationTable = settings => new MoveTable({
   name: settings.name,
@@ -128,7 +173,11 @@ export const createCornerPermutationTable = settings => new MoveTable({
   getIndex: pieces => getIndexFromPermutation(pieces, settings.affected, settings.reversed),
 });
 /**
+ * @name createEdgePermutationTable
+ * @description createEdgePermutationTable
+ * @function
  * @param {*} settings
+ * @returns {*}
  */
 export const createEdgePermutationTable = settings => new MoveTable({
   name: settings.name,
@@ -155,9 +204,13 @@ export const createEdgePermutationTable = settings => new MoveTable({
   getIndex: pieces => getIndexFromPermutation(pieces, settings.affected, settings.reversed),
 });
 /**
+ * @name getCorrectOrientations
+ * @description getCorrectOrientations
+ * @function
  * @param {*} affected
  * @param {*} numPieces
  * @param {*} numStates
+ * @returns {*}
  */
 const getCorrectOrientations = (affected, numPieces, numStates) => {
   const indexes = [];
@@ -177,7 +230,11 @@ const getCorrectOrientations = (affected, numPieces, numStates) => {
   return indexes;
 };
 /**
+ * @name createEdgeOrientationTable
+ * @description createEdgeOrientationTable
+ * @function
  * @param {*} settings
+ * @returns {*}
  */
 export const createEdgeOrientationTable = settings => new MoveTable({
   name: settings.name,
@@ -194,7 +251,11 @@ export const createEdgeOrientationTable = settings => new MoveTable({
   getIndex: pieces => getIndexFromOrientation(pieces, 2),
 });
 /**
+ * @name createCornerOrientationTable
+ * @description createCornerOrientationTable
+ * @function
  * @param {*} settings
+ * @returns {*}
  */
 export const createCornerOrientationTable = settings => new MoveTable({
   name: settings.name,

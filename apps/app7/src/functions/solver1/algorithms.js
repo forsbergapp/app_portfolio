@@ -2,7 +2,11 @@
  * @module apps/app7/src/functions/solver1/algorithms
  */
 
-// Numeric representation of the different powers of moves.
+/** 
+ * @name powers
+ * @description Numeric representation of the different powers of moves.
+ * @constant
+ */
 const powers = {
   '': 0,
   2: 1,
@@ -10,12 +14,19 @@ const powers = {
 };
 
 /**
- * Check whether or not we are able to parse the given algorithm string.
+ * @name validateAlgorithm
+ * @description Check whether or not we are able to parse the given algorithm string.
  * @param {*} algorithm
+ * @function
+ * @returns {boolean}
  */
 const validateAlgorithm = algorithm => /^([FRUBLDfrubldxyzMSE][2']?\s*)+$/.test(algorithm);
 
-// Map single-power wide moves to a rotation + moves.
+/**
+ * @name wideMoves
+ * @description Map single-power wide moves to a rotation + moves.
+ * @constant
+ */
 const wideMoves = {
   f: ['z', 'B'],
   r: ['x', 'L'],
@@ -28,7 +39,11 @@ const wideMoves = {
   E: ['y\'', 'U', 'D\''],
 };
 
-// Specifies the translation of FRUBLD as performed by rotations.
+/**
+ * @name rotations
+ * @description Specifies the translation of FRUBLD as performed by rotations.
+ * @constant
+ */
 const rotations = {
   x: 'DRFULB',
   y: 'RBULFD',
@@ -36,9 +51,12 @@ const rotations = {
 };
 
 /**
- * Strip rotations and wide moves from an algorithm. Returns
- * an array of moves as strings.
- * @param {*} moves
+ * @name normalize
+ * @description Strip rotations and wide moves from an algorithm. Returns
+ *              an array of moves as strings.
+ * @function
+ * @param {RegExpMatchArray} moves
+ * @returns {[string[],string[]]}
  */
 const normalize = moves => {
   // Replace wide moves with rotations + moves.
@@ -56,7 +74,7 @@ const normalize = moves => {
     }
     return acc.concat(move);
   }, []);
-  /**@ts-ignore */
+  /**@type{string[]} */
   let output = [];
 
   // We store all rotations that were encountered, to map the
@@ -85,18 +103,22 @@ const normalize = moves => {
 };
 
 /**
- * Parses a scramble, returning an array of integers describing the moves.
- * @param {*}       algorithm
+ * @name parseAlgorithm
+ * @description Parses a scramble, returning an array of integers describing the moves.
+ * @function
+ * @param {string}  algorithm
  * @param {boolean} returnTotalRotation
+ * @returns {[number[], string[]]|number[]}
  */
 export const parseAlgorithm = (algorithm, returnTotalRotation = false) => {
   if (!validateAlgorithm(algorithm)) {
     throw 'Invalid algorithm provided to algorithm parser';
   }
-  /**@ts-ignore */
+  /**@type{number[]} */
   const result = [];
 
   const [moves, totalRotation] = normalize(
+    /**@ts-ignore */
     algorithm.match(/[FRUBLDfrubldxyzMSE][2']?/g),
   );
 
@@ -108,16 +130,17 @@ export const parseAlgorithm = (algorithm, returnTotalRotation = false) => {
   });
 
   if (returnTotalRotation) {
-    /**@ts-ignore */
     return [result, totalRotation];
   }
-  /**@ts-ignore */
   return result;
 };
 
 /**
- * Computes the inverse of a given algorithm. Rotations are supported.
- * @param {*} algorithm
+ * @name invertAlgorithm
+ * @description Computes the inverse of a given algorithm. Rotations are supported.
+ * @function
+ * @param {string} algorithm
+ * @returns {string|undefined}
  */
 export const invertAlgorithm = algorithm => {
   if (!validateAlgorithm(algorithm)) {
@@ -125,7 +148,7 @@ export const invertAlgorithm = algorithm => {
   }
 
   const moves = algorithm.match(/[FRUBLDfrubldxyzMSE][2']?/g);
-
+  /**@ts-ignore */
   const inverted = moves.reverse().map((/**@type{*}*/move) => {
     const axis = move.charAt(0);
     /**@ts-ignore */
@@ -147,8 +170,11 @@ export const invertAlgorithm = algorithm => {
 };
 
 /**
- * Convert an array of integers to a human-readable representation.
+ * @name formatAlgorithm
+ * @description Convert an array of integers to a human-readable representation.
+ * @function
  * @param {*} moves
+ * @returns {string}
  */
 export const formatAlgorithm = moves => {
   let sequence = '';

@@ -358,9 +358,14 @@ const component = props => {
 	//----------------------- PrayTimes Class ------------------------
 
 	/**
-	 * @param {string|null} method
+	 * @name PrayTimes
+	 * @description PrayTimes refactored to class and types ares declared
+	 * @class
 	 */
 	class PrayTimes {
+		/**
+		 * @param {string|null} method
+		 */
 		constructor(method= null) {
 			//------------------------ Constants --------------------------
 			
@@ -378,7 +383,21 @@ const component = props => {
 			};
 
 
-			// Calculation Methods
+			/**
+			 * @name methods
+			 * @description Calculation Methods
+			 * @constant
+			 * @type {{[key:string]:{
+			 * 							name:string, 
+			 * 							params:{
+			 * 									fajr:number, 
+			 * 									isha:string|number, 
+			 * 									maghrib?:number, 
+			 * 									midnight?:string
+			 * 									}
+			 * 						}
+			 * 			}}
+			 */
 			this.methods = {
 				MWL: {
 					name: 'Muslim World League',
@@ -465,7 +484,29 @@ const component = props => {
 			this.invalidTime =  '-----',
 
 			this.numIterations = 1,
-			this.offset = {};
+			/**
+			 * @name offset
+			 * @description init time offsets
+			 * @constant
+			 * @type{{	imsak    : number,
+			 *			fajr     : number,
+			 *			sunrise  : number,
+			 *			dhuhr    : number,
+			 *			asr      : number,
+			 *			sunset   : number,
+			 *			maghrib  : number,
+			 *			isha     : number,
+			 *			midnight : number}}
+			 */
+			this.offset = {	imsak    : 0,
+							fajr     : 0,
+							sunrise  : 0,
+							dhuhr    : 0,
+							asr      : 0,
+							sunset   : 0,
+							maghrib  : 0,
+							isha     : 0,
+							midnight : 0};
 
 
 			//----------------------- Local Variables ---------------------
@@ -500,20 +541,13 @@ const component = props => {
 				/**@ts-ignore */
 				this.setting[id] = this.params[id];
 			}
-				
-			// init time offsets
-			for (const i in this.timeNames){
-				/**@ts-ignore */
-				this.offset[i] = 0;
-			}	
-
 		}
-		//----------------------- Public Functions ------------------------
-		
-
 		/**
-		 * set calculation method 
+		 * @name setMethod
+		 * @description set calculation method 
+		 * @method
 		 * @param {string} method
+		 * @returns  {void}
 		 */
 		setMethod (method) {
 			/**@ts-ignore */
@@ -524,13 +558,16 @@ const component = props => {
 			}
 		}
 		/**
-		 * set calculating parameters
+		 * @name adjust
+		 * @description set calculating parameters
+		 * @method
 		 * @param {{asr?:    string,
-					highLats?: string|undefined,
-					fajr:     string|number,
-					isha:     string|number|null,
-					maghrib?:  string|number,
-					midnight?: string}} params
+		 *			highLats?: string|undefined,
+		 *			fajr:     string|number,
+		 *			isha:     string|number|null,
+		 *			maghrib?:  string|number,
+		 *			midnight?: string}} params
+		 * @returns {void}
 		 */
 		adjust (params) {
 			for (const id in params){
@@ -540,8 +577,11 @@ const component = props => {
 		}
 
 		/**
-		 * set time offsets
+		 * @name tune
+		 * @description set time offsets (not used)
+		 * @method
 		 * @param {*} timeOffsets
+		 * @returns {void}
 		 */
 		tune (timeOffsets) {
 			for (const i in timeOffsets){
@@ -551,31 +591,62 @@ const component = props => {
 		}
 
 		/**
-		 * get current calculation method
+		 * @name getMethod
+		 * @description get current calculation method
+		 * @method
+		 * @returns {string}
 		 */
 		getMethod () { return this.calcMethod; }
 
 		/**
-		 * get current setting
+		 * @name getMethod
+		 * @description get current setting
+		 * @method
+		 * @returns {{fajr?:string, imsak:string, dhuhr:string, asr:string, highLats:string, maghrib?:string, isha?:string, midnight?:string}}
 		 */
 		getSetting () { return this.setting; }
 
 		/**
-		 * get current time offsets
+		 * @name getMethod
+		 * @description get current time offsets
+		 * @method
+		 * @returns {{	imsak    : number,
+		 *				fajr     : number,
+		 *				sunrise  : number,
+		 *				dhuhr    : number,
+		 *				asr      : number,
+		 *				sunset   : number,
+		 *				maghrib  : number,
+		 *				isha     : number,
+		 *				midnight : number}}
 		 */
 		getOffsets () { return this.offset; }
 
 		/**
-		 * get default calc parametrs
+		 * @name getDefaults
+		 * @description get default calc parametrs
+		 * @method
+		 * @returns {{[key:string]:{
+		 * 							name:string, 
+		 * 							params:{
+		 * 									fajr:number, 
+		 * 									isha:string|number, 
+		 * 									maghrib?:number, 
+		 * 									midnight?:string
+		 * 									}
+		 * 						}
+		 * 			}}
 		 */
 		getDefaults () { return this.methods; }
 
 		/**
-		 * return prayer times for a given date
-		 * @param {*} date
+		 * @name getTimes
+		 * @description return prayer times for a given date
+		 * @method
+		 * @param {Date|[Number,Number,number]} date
 		 * @param {[number, number, number?]} coords
-		 * @param {*} timezone
-		 * @param {*} dst
+		 * @param {string|number} timezone
+		 * @param {string|number} dst
 		 * @param {string} format
 		 * @returns {timesType}
 		 */
@@ -586,21 +657,30 @@ const component = props => {
 			this.timeFormat = format || this.timeFormat;
 			if (date.constructor === Date)
 				date = [date.getFullYear(), date.getMonth()+ 1, date.getDate()];
-			if (typeof(timezone) == 'undefined' || timezone == 'auto')
+			if (typeof(timezone) == 'undefined' || timezone == 'auto'){
+				/**@ts-ignore */
 				timezone = this.getTimeZone(date);
-			if (typeof(dst) == 'undefined' || dst == 'auto') 
+			}
+			if (typeof(dst) == 'undefined' || dst == 'auto'){
+				/**@ts-ignore */
 				dst = this.getDst(date);
+			}
+			/**@ts-ignore */
 			this.timeZone = 1* timezone+ (1* dst ? 1 : 0);
+			/**@ts-ignore */
 			this.jDate = this.julian(date[0], date[1], date[2])- this.lng/ (15* 24);
 			
 			return this.computeTimes();
 		}
 
 		/**
-		 * convert float time to the given format (see timeFormats)
+		 * @name getFormattedTime
+		 * @description convert float time to the given format (see timeFormats)
+		 * @method
 		 * @param{number} time
 		 * @param {string} format
 		 * @param {*} suffixes
+		 * @returns {string|number}
 		 */
 		getFormattedTime (time, format, suffixes) {
 			if (isNaN(time))
@@ -620,19 +700,24 @@ const component = props => {
 		//---------------------- Calculation Functions -----------------------
 
 		/**
-		 * compute mid-day time
+		 * @name midDay
+		 * @description compute mid-day time
+		 * @method
 		 * @param {number} time
+		 * @returns {number}
 		 */
 		midDay (time) {
 			const eqt = this.sunPosition(this.jDate+ time).equation;
-			const noon = DMath.fixHour(12- eqt);
-			return noon;
+			return DMath.fixHour(12- eqt);
 		}
 		/**
-		 * compute the time at which sun reaches a specific angle below horizon
+		 * @name sunAngleTime
+		 * @description compute the time at which sun reaches a specific angle below horizon
+		 * @method
 		 * @param {number|undefined} angle
 		 * @param {number} time
 		 * @param {string|null} direction
+		 * @returns {number}
 		 */
 		sunAngleTime (angle, time, direction=null) {
 			const decl = this.sunPosition(this.jDate+ time).declination;
@@ -644,9 +729,12 @@ const component = props => {
 		}
 
 		/**
-		 * compute asr time 
+		 * @name asrTime
+		 * @description compute asr time 
+		 * @method
 		 * @param {number} factor
 		 * @param {number} time
+		 * @returns {number}
 		 */
 		asrTime (factor, time) { 
 			const decl = this.sunPosition(this.jDate+ time).declination;
@@ -655,9 +743,12 @@ const component = props => {
 		}
 
 		/**
-		 * compute declination angle of sun and equation of time
-		 * Ref: http://aa.usno.navy.mil/faq/docs/SunApprox.php
+		 * @name sunPosition
+		 * @description compute declination angle of sun and equation of time
+		 * 				Ref: http://aa.usno.navy.mil/faq/docs/SunApprox.php
+		 * @method
 		 * @param {number} jd
+		 * @returns {{declination:Number, equation:number}}
 		 */ 
 		sunPosition (jd) {
 			const D = jd - 2451545.0;
@@ -670,18 +761,20 @@ const component = props => {
 			const e = 23.439 - 0.00000036* D;
 
 			const RA = DMath.arctan2(DMath.cos(e)* DMath.sin(L), DMath.cos(L))/ 15;
-			const eqt = q/15 - DMath.fixHour(RA);
-			const decl = DMath.arcsin(DMath.sin(e)* DMath.sin(L));
-
-			return {declination: decl, equation: eqt};
+			// original saves in constant before returning values, return fast stateless result
+			return {declination: 	DMath.arcsin(DMath.sin(e)* DMath.sin(L)), 
+					equation: 		q/15 - DMath.fixHour(RA)};
 		}
 
 		/**
-		 * convert Gregorian date to Julian day
-		 * Ref: Astronomical Algorithms by Jean Meeus
+		 * @name julian
+		 * @description convert Gregorian date to Julian day
+		 * 				Ref: Astronomical Algorithms by Jean Meeus
+		 * @method
 		 * @param {number} year
 		 * @param {number} month
 		 * @param {number} day
+		 * @returns {number}
 		 */
 		julian (year, month, day) {
 			if (month <= 2) {
@@ -697,20 +790,31 @@ const component = props => {
 
 		//---------------------- Compute Prayer Times -----------------------
 		/**
-		 * compute prayer times at given julian date
-		 * @param {{imsak:number, fajr:number, sunrise:number, dhuhr:number, asr:number, sunset:number, maghrib:number, isha:number}} times
+		 * @name computePrayerTimes
+		 * @description compute prayer times at given julian date
+		 * @method
+		 * @param {timesType} times
+		 * @returns {timesType}
 		 */
 		computePrayerTimes (times) {
+			/**@ts-ignore */
 			times = this.dayPortion(times);
 			const params  = this.setting;
-			
+			/**@ts-ignore */
 			const imsak   = this.sunAngleTime(this.eval(params.imsak), times.imsak, 'ccw');
+			/**@ts-ignore */
 			const fajr    = this.sunAngleTime(this.eval(params.fajr), times.fajr, 'ccw');
+			/**@ts-ignore */
 			const sunrise = this.sunAngleTime(this.riseSetAngle(), times.sunrise, 'ccw');  
+			/**@ts-ignore */
 			const dhuhr   = this.midDay(times.dhuhr);
+			/**@ts-ignore */
 			const asr     = this.asrTime(this.asrFactor(params.asr), times.asr);
+			/**@ts-ignore */
 			const sunset  = this.sunAngleTime(this.riseSetAngle(), times.sunset);
+			/**@ts-ignore */
 			const maghrib = this.sunAngleTime(this.eval(params.maghrib), times.maghrib);
+			/**@ts-ignore */
 			const isha    = this.sunAngleTime(this.eval(params.isha), times.isha);
 
 			return {
@@ -720,7 +824,10 @@ const component = props => {
 		}
 
 		/**
-		 * compute prayer times 
+		 * @name computeTimes
+		 * @description compute prayer times 
+		 * @method
+		 * @returns {timesType}
 		 */
 		computeTimes() {
 			// default times
@@ -740,7 +847,9 @@ const component = props => {
 			
 			// add midnight time
 			times.midnight = (this.setting.midnight == 'Jafari') ? 
+					/**@ts-ignore */
 					times.sunset+ this.timeDiff(times.sunset, times.fajr)/ 2 :
+					/**@ts-ignore */
 					times.sunset+ this.timeDiff(times.sunset, times.sunrise)/ 2;
 
 			times = this.tuneTimes(times);
@@ -748,8 +857,10 @@ const component = props => {
 		}
 
 		/**
-		 * adjust times 
+		 * @name adjustTimes
+		 * @description adjust times 
 		 * @param {timesType} times
+		 * @returns {timesType}
 		 */
 		adjustTimes(times) {
 			const params = this.setting;
@@ -779,8 +890,11 @@ const component = props => {
 		}
 
 		/**
-		 * get asr shadow factor
-		 * @param {*} asrParam
+		 * @name asrFactor
+		 * @description get asr shadow factor
+		 * @method
+		 * @param {number|string} asrParam
+		 * @returns {number|undefined}
 		 */
 		asrFactor(asrParam) {
 			/**@ts-ignore*/
@@ -789,7 +903,10 @@ const component = props => {
 		}
 
 		/**
-		 * return sun angle for sunset/sunrise
+		 * @name riseSetAngle
+		 * @description return sun angle for sunset/sunrise
+		 * @method
+		 * @returns {number}
 		 */
 		riseSetAngle () {
 			//var earthRad = 6371009; // in meters
@@ -799,8 +916,11 @@ const component = props => {
 		}
 
 		/**
-		 * apply offsets to the times
+		 * @name tuneTimes
+		 * @description apply offsets to the times
+		 * @method
 		 * @param {timesType} times
+		 * @returns {timesType}
 		 */
 		tuneTimes (times) {
 			for (const i in times){
@@ -811,8 +931,11 @@ const component = props => {
 		}
 
 		/**
-		 * convert times to given time format
+		 * @name modifyFormats
+		 * @description convert times to given time format
+		 * @method
 		 * @param {timesType} times
+		 * @returns {timesType}
 		 */
 		modifyFormats (times) {
 			for (const i in times){
@@ -823,28 +946,38 @@ const component = props => {
 		}
 
 		/**
-		 *adjust times for locations in higher latitudes
-		 *@param{timesType} times
+		 * @name adjustHighLats
+		 * @description adjust times for locations in higher latitudes
+		 * @method
+		 * @param{timesType} times
+		 * @returns {timesType}
 		 */
 		adjustHighLats (times) {
 			const params = this.setting;
+			/**@ts-ignore */
 			const nightTime = this.timeDiff(times.sunset, times.sunrise); 
-
+			/**@ts-ignore */
 			times.imsak = this.adjustHLTime(times.imsak, times.sunrise, this.eval(params.imsak), nightTime, 'ccw');
+			/**@ts-ignore */
 			times.fajr  = this.adjustHLTime(times.fajr, times.sunrise, this.eval(params.fajr), nightTime, 'ccw');
+			/**@ts-ignore */
 			times.isha  = this.adjustHLTime(times.isha, times.sunset, this.eval(params.isha), nightTime);
+			/**@ts-ignore */
 			times.maghrib = this.adjustHLTime(times.maghrib, times.sunset, this.eval(params.maghrib), nightTime);
 			
 			return times;
 		}
 
 		/**
-		 * adjust a time for higher latitudes
+		 * @name
+		 * @description adjust a time for higher latitudes
+		 * @method
 		 * @param {number} time
 		 * @param {number} base
 		 * @param {number|undefined} angle
 		 * @param {number} night
 		 * @param {string|null} direction
+		 * @returns {number}
 		 * 
 		 */
 		adjustHLTime (time, base, angle, night, direction=null) {
@@ -858,9 +991,12 @@ const component = props => {
 		}
 
 		/**
-		 * the night portion used for adjusting times in higher latitudes
+		 * @name nightPortion
+		 * @description the night portion used for adjusting times in higher latitudes
+		 * @method
 		 * @param {number|undefined} angle
 		 * @param {number} night
+		 * @returns {number}
 		 */
 		nightPortion (angle, night) {
 			const method = this.setting.highLats;
@@ -875,8 +1011,11 @@ const component = props => {
 		}
 
 		/**
-		 * convert hours to day portions 
+		 * @name dayPortion
+		 * @description convert hours to day portions 
+		 * @method
 		 * @param {timesType} times
+		 * @returns {timesType}
 		 */
 		dayPortion (times) {
 			for (const i in times){
@@ -888,8 +1027,11 @@ const component = props => {
 
 		//---------------------- Time Zone Functions -----------------------
 		/**
-		 * get local time zone
+		 * @name getTimeZone
+		 * @description get local time zone
+		 * @method
 		 * @param {[number, number, number]} date
+		 * @returns {number}
 		 */
 		getTimeZone (date) {
 			const year = date[0];
@@ -899,15 +1041,20 @@ const component = props => {
 		}
 
 		/**
-		 * get daylight saving for a given date
+		 * @name getDst
+		 * @description get daylight saving for a given date
+		 * @method
 		 * @param {[number, number, number]} date
+		 * @returns {number}
 		 */
 		getDst (date) {
 			/**@ts-ignore*/
 			return 1* (this.gmtOffset(date) != this.getTimeZone(date));
 		}
-		// GMT offset for a given date
 		/**
+		 * @name gmtOffset
+		 * @description GMT offset for a given date
+		 * @method
 		 * @param {[number, number, number]} date
 		 * @returns {number}
 		 */
@@ -926,8 +1073,11 @@ const component = props => {
 		//---------------------- Misc Functions -----------------------
 
 		/**
-		 * convert given string into a number
-		 * @param {string|undefined} str
+		 * @name eval
+		 * @description convert given string into a number
+		 * @method
+		 * @param {string|number} str
+		 * @returns {number|undefined}
 		 */
 		eval = str =>{
 			return typeof str == 'string'?Number(str.split(' ')[0]):str;
@@ -936,25 +1086,34 @@ const component = props => {
 		};
 
 		/**
-		 * detect if input contains 'min'
+		 * @name isMin
+		 * @description detect if input contains 'min'
+		 * @method
 		 * @param {string|undefined} arg
+		 * @returns {boolean}
 		 */
 		isMin = arg => {
 			return (arg+ '').indexOf('min') != -1;
 		};
 
 		/**
-		 * compute the difference between two times 
+		 * @name timeDiff
+		 * @description compute the difference between two times 
+		 * @method
 		 * @param {number} time1
 		 * @param {number} time2
+		 * @returns {number}
 		 */
 		timeDiff = (time1, time2) => {
 			return DMath.fixHour(time2- time1);
 		};
 
 		/**
-		 * add a leading 0 if necessary
+		 * @name twoDigitsFormat
+		 * @description add a leading 0 if necessary
+		 * @method
 		 * @param {number} num
+		 * @returns  {number|string}
 		 */
 		twoDigitsFormat (num) {
 			return (num <10) ? '0'+ num : num;
@@ -962,7 +1121,22 @@ const component = props => {
 	}
 
 	/**
-	 * Degree-Based Math Class
+	 * @name DMath
+	 * @description Degree-Based Math Class
+	 * @constant
+	 * @returns{{	dtr:function,
+	 * 				rtd:function,
+	 * 				sin:function,
+	 * 				cos:function,
+	 * 				tan:function,
+	 * 				arcsin:function,
+	 * 				arccos:function
+	 * 				arctan:function,
+	 * 				arccot:function,
+	 * 				arctan2:function
+	 * 				fixAngle:function,
+	 * 				fixHour:function,
+	 * 				fix:function}}
 	 */
 	const DMath = {
 
@@ -1789,6 +1963,7 @@ const component = props => {
 			switch (column){
 				case 'day':{
 					return number_system=='hanidec'?
+						/**@ts-ignore */
 						getNumberString(settings.number_system, data[column]).toString():
 							data[column].toLocaleString(settings.locale + 
 														APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
@@ -1796,6 +1971,7 @@ const component = props => {
 														settings.number_system);
 				}
 				case 'caltype':{
+					/**@ts-ignore */
 					const date_temp = new Date(year,month,data.day);
 					date_temp.setDate(date_temp.getDate() + settings.hijri_adj);
 					return calendartype=='GREGORIAN'?
@@ -1814,6 +1990,7 @@ const component = props => {
 				}
 				case 'weekday':
 				case 'weekday_tr':{
+					/**@ts-ignore */
 					const date_temp = new Date(year,month,data.day);
 					date_temp.setDate(date_temp.getDate() + settings.hijri_adj);
 					return calendartype=='GREGORIAN'?
@@ -1832,6 +2009,7 @@ const component = props => {
 				case 'iqamat_asr':
 				case 'iqamat_maghrib':
 				case 'iqamat_isha':{
+					/**@ts-ignore */
 					const iqamat = calculateIqamat(settings[column], data[column.split('_')[1]]);
 					return localTime(null, settings.locale + 		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + 
@@ -1903,7 +2081,11 @@ const component = props => {
 												locale:					settings.locale,
 												number_system:			settings.number_system,
 												format:					settings.format};
-						return show_col('MONTH', column, data[column], show_col_data);
+						return show_col('MONTH', 
+										column, 
+										data[column], 
+										/**@ts-ignore */
+										show_col_data);
 					}
 				}
 		//show columns that got content

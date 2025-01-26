@@ -5,44 +5,62 @@
 import { cartesian } from './tools.js';
 
 /**
- * A pruning table gives a lower bound on the number of moves
- * required to reach a target state.
+ * @name PruningTable
+ * @description A pruning table gives a lower bound on the number of moves
+ *              required to reach a target state.
+ * @class
  */
 class PruningTable {
   /**
-   * @param {*} moveTables
-   * @param {*} moves
+   * @description declaring MoveTable type here is faster than using type import
+   * @param {{name:string,size:number, doMove:function}[]} moveTables
+   * @param {number[]} moves
    */
   constructor(moveTables, moves) {
     this.computePruningTable(moveTables, moves);
   }
   /**
-   * @param {*} index
-   * @param {*} value
+   * @name setPruningValue
+   * @description setPruningValue
+   * @method
+   * @param {number} index
+   * @param {number} value
+   * @returns {void}
    */
   setPruningValue(index, value) {
     /**@ts-ignore */
     this.table[index >> 3] ^= (0xf ^ value) << ((index & 7) << 2);
   }
   /**
-   * @param {*} index
+   * @name getPruningValue
+   * @description getPruningValue
+   * @method
+   * @param {number} index
+   * @returns {number}
    */
   getPruningValue(index) {
     /**@ts-ignore */
     return (this.table[index >> 3] >> ((index & 7) << 2)) & 0xf;
   }
   /**
-   * @param {*} moveTables
-   * @param {*} moves
+   * @name computePruningTable
+   * @description computePruningTable (declaring MoveTable type here is faster than using type import)
+   * @method
+   * @param {{name:string,size:number, doMove:function}[]} moveTables
+   * @param {number[]} moves
+   * @returns {void}
    */
   computePruningTable(moveTables, moves) {
     const size = moveTables.reduce((/**@type{*}*/acc, /**@type{*}*/obj) => acc * obj.size, 1);
-    /**@type{*} */
-    this.table = [];
 
-    for (let i = 0; i < (size + 7) >> 3; i += 1) {
-      this.table.push(-1);
-    }
+    //replacing very slow loop with one fast statement
+    //use map function to avoid server memory issue
+    this.table = Array(size+7>>3).fill([]).map(()=>-1);
+    //original code
+    //this.table = [];
+    //for (let i = 0; i < (size + 7) >> 3; i += 1) {
+    //  this.table.push(-1);
+    //}
 
     let depth = 0;
     let done = 0;
@@ -66,7 +84,6 @@ class PruningTable {
 
       done += 1;
     }
-
     // We generate the table using a BFS. Depth 0 contains all positions which
     // are solved, and we loop through the correct indexes and apply all 18 moves
     // to the correct states. Then we visit all positions at depth 2, and apply
@@ -81,7 +98,7 @@ class PruningTable {
       const check = inverse ? depth : 0xf;
 
       depth += 1;
-
+      
       for (let index = 0; index < size; index += 1) {
         if (this.getPruningValue(index) === find) {
           for (let moveIndex = 0; moveIndex < moves.length; moveIndex += 1) {
@@ -89,12 +106,10 @@ class PruningTable {
 
             let currentIndex = index;
             let position = 0;
-
             for (let i = powers.length - 1; i >= 0; i -= 1) {
               position += powers[i] * moveTables[i].doMove(Math.floor(currentIndex / powers[i]), move);
               currentIndex %= powers[i];
             }
-
             if (this.getPruningValue(position) === check) {
               done += 1;
 
