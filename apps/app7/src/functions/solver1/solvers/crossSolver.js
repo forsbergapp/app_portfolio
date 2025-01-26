@@ -9,6 +9,12 @@ import {
 
 import Search from '../Search.js';
 
+/**
+ * @name CrossSearch
+ * @description CrossSearch
+ * @function
+ * @returns {*}
+ */
 export const CrossSearch = new Search(() => ({
   moveTables: [
     createEdgePermutationTable({
@@ -26,7 +32,11 @@ export const CrossSearch = new Search(() => ({
 }));
 
 /**
+ * @name crossSolver 
+ * @description crossSolver 
+ * @function
  * @param {*} scramble
+ * @returns {*}
  */
 const crossSolver = scramble => CrossSearch.solve({ scramble });
 

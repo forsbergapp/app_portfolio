@@ -133,7 +133,7 @@
  */
 /**
  * @description Type APP_REPORT_times
- * @typedef	{{[index: string]:number}}	APP_REPORT_times
+ * @typedef	{{[index: string]:string|number}}	APP_REPORT_times
  * @property{number}	day
  * @property{number}	fajr
  * @property{number}	dhuhr
@@ -254,6 +254,15 @@
 /**
  * @description Type timesType
  *              added day key for timetables
- * @typedef {{day?:number, imsak:number, fajr:number, sunrise:number, dhuhr:number, asr:number, sunset:number, maghrib:number, isha:number, midnight?:number}} timesType
+ * @typedef {{  day?:number|string, 
+ *              imsak:number|string, 
+ *              fajr:number|string, 
+ *              sunrise:number|string, 
+ *              dhuhr:number|string, 
+ *              asr:number|string, 
+ *              sunset:number|string, 
+ *              maghrib:number|string, 
+ *              isha:number|string, 
+ *              midnight?:number|string}} timesType
  */
 export{};

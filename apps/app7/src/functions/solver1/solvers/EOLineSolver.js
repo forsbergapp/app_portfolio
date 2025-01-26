@@ -9,6 +9,12 @@ import {
 
 import Search from '../Search.js';
 
+/**
+ * @name EOLineSearch
+ * @description EOLineSearch
+ * @function
+ * @returns {*}
+ */
 export const EOLineSearch = new Search(() => ({
   moveTables: [
     createEdgeOrientationTable({
@@ -24,8 +30,13 @@ export const EOLineSearch = new Search(() => ({
 
   pruningTables: [['EdgeOrientation'], ['EdgePermutation']],
 }));
+
 /**
+ * @name EOLineSolver
+ * @description EOLineSolver
  * @param {*} scramble
+ * @function
+ * @returns {*}
  */
 const EOLineSolver = scramble => EOLineSearch.solve({ scramble });
 

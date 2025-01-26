@@ -19,6 +19,12 @@ import getZBLLScramble from './scramblers/zbll.js';
 import getZZLSScramble from './scramblers/zzls.js';
 
 export default {
+  /**
+   * @name solve
+   * @description solve
+   * @function
+   * @returns {*}
+   */
   solve: (/**@type{*}*/scramble, /**@type{string}*/solver = 'kociemba') => {
     const solvers = {
       kociemba,
@@ -35,7 +41,12 @@ export default {
 
     throw 'Specified solver does not exist.';
   },
-
+  /**
+   * @name scramble
+   * @description scramble
+   * @function
+   * @returns {*}
+   */
   scramble: (scrambler = '3x3') => {
     const scramblers = {
       '3x3': get3x3Scramble,
@@ -58,6 +69,12 @@ export default {
     throw 'Specified scrambler does not exist.';
   },
 
+  /**
+   * @name initialize
+   * @description initialize
+   * @function
+   * @returns {*}
+   */
   initialize: (/**@type{*}*/solver) => {
     const search = {
       cross: CrossSearch,

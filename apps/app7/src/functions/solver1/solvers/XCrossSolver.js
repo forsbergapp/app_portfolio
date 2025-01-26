@@ -11,6 +11,12 @@ import {
 
 import Search from '../Search.js';
 
+/**
+ * @name XCrossSearch
+ * @description XCrossSearch
+ * @function
+ * @returns {*}
+ */
 export const XCrossSearch = new Search(() => ({
   moveTables: [
     createEdgePermutationTable({
@@ -40,7 +46,11 @@ export const XCrossSearch = new Search(() => ({
   ],
 }));
 /**
+ * @name XCrossSolver
+ * @description XCrossSolver
+ * @function
  * @param {*} scramble
+ * @returns {*}
  */
 const XCrossSolver = scramble => XCrossSearch.solve({ scramble });
 

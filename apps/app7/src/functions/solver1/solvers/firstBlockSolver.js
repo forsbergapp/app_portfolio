@@ -11,6 +11,12 @@ import {
 
 import Search from '../Search.js';
 
+/**
+ * @name FirstBlockSearch
+ * @description FirstBlockSearch
+ * @function
+ * @returns {*}
+ */
 export const FirstBlockSearch = new Search(() => ({
   moveTables: [
     createEdgeOrientationTable({
@@ -41,7 +47,11 @@ export const FirstBlockSearch = new Search(() => ({
   ],
 }));
 /**
+ * @name firstBlockSolver
+ * @description firstBlockSolver
  * @param {*} scramble
+ * @function
+ * @returns {*}
  */
 const firstBlockSolver = scramble => FirstBlockSearch.solve({ scramble });
 
