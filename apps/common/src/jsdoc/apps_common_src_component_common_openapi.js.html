@@ -71,50 +71,50 @@ const template = props =>`
                                             &lt;/div>
                                             &lt;div class='common_markdown_table_row_detail_master'>
                                                 &lt;div class='common_markdown_table_row_detail'>
-                                                    &lt;div class='common_markdown_table_col'>Summary&lt;/div>
-                                                    &lt;div class='common_markdown_table_col common_markdown_table_content_preserve'>${method[1].summary}&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col1'>Summary&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${method[1].summary}&lt;/div>
                                                 &lt;/div>
                                                 &lt;div class='common_markdown_table_row_detail'>
-                                                    &lt;div class='common_markdown_table_col'>operationId&lt;/div>
-                                                    &lt;div class='common_markdown_table_col'>${method[1].operationId}&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col1'>operationId&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col2'>${method[1].operationId}&lt;/div>
                                                 &lt;/div>
                                                 &lt;div class='common_markdown_table_row_detail'>
-                                                    &lt;div class='common_markdown_table_col common_markdown_title_h3'>Parameters&lt;/div>
-                                                    &lt;div class='common_markdown_table_col'>&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col1 common_markdown_title_h3'>Parameters&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col2'>&lt;/div>
                                                 &lt;/div>
                                                 ${method[1].parameters.map((/**@type{*}*/param) => `
                                                     &lt;div class='common_markdown_table_row_detail'>
-                                                        &lt;div class='common_markdown_table_col'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}&lt;/div>
-                                                        &lt;div class='common_markdown_table_col common_markdown_table_content_preserve'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col1'>${param['$ref']?'ref$':param['name']?param.name:Object.keys(param)[0]}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${Object.keys(param)[0].startsWith('server')?Object.values(param)[0]:JSON.stringify(param, undefined,2)}&lt;/div>
                                                     &lt;/div>
                                                 `).join('')
                                                 }
                                                 ${method[1]?.requestBody?
                                                     `&lt;div class='common_markdown_table_row_detail'>
-                                                        &lt;div class='common_markdown_table_col common_markdown_title_h3'>Request body&lt;/div>
-                                                        &lt;div class='common_markdown_table_col'>&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col1 common_markdown_title_h3'>Request body&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col2'>&lt;/div>
                                                     &lt;/div>
                                                     &lt;div class='common_markdown_table_row_detail'>
-                                                        &lt;div class='common_markdown_table_col'>Description&lt;/div>
-                                                        &lt;div class='common_markdown_table_col common_markdown_table_content_preserve'>${method[1]?.requestBody.description}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col1'>Description&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${method[1]?.requestBody.description}&lt;/div>
                                                     &lt;/div>
                                                     &lt;div class='common_markdown_table_row_detail'>
-                                                        &lt;div class='common_markdown_table_col'>Required&lt;/div>
-                                                        &lt;div class='common_markdown_table_col'>${method[1]?.requestBody.required}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col1'>Required&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col2'>${method[1]?.requestBody.required}&lt;/div>
                                                     &lt;/div>
                                                     &lt;div class='common_markdown_table_row_detail'>
-                                                        &lt;div class='common_markdown_table_col'>Content&lt;/div>
-                                                        &lt;div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(method[1]?.requestBody.content, undefined,2)}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col1'>Content&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${JSON.stringify(method[1]?.requestBody.content, undefined,2)}&lt;/div>
                                                     &lt;/div>`:''
                                                 }
                                                 &lt;div class='common_markdown_table_row_detail'>
-                                                    &lt;div class='common_markdown_table_col common_markdown_title_h3'>Responses&lt;/div>
-                                                    &lt;div class='common_markdown_table_col'>&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col1 common_markdown_title_h3'>Responses&lt;/div>
+                                                    &lt;div class='common_markdown_table_col common_markdown_table_col2'>&lt;/div>
                                                 &lt;/div>
                                                 ${Object.entries(method[1].responses).map(([status, response]) => `
                                                     &lt;div class='common_markdown_table_row_detail'>
-                                                        &lt;div class='common_markdown_table_col'>${status}&lt;/div>
-                                                        &lt;div class='common_markdown_table_col common_markdown_table_content_preserve'>${JSON.stringify(response, undefined,2)}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col1'>${status}&lt;/div>
+                                                        &lt;div class='common_markdown_table_col common_markdown_table_col2 common_markdown_table_content_preserve'>${JSON.stringify(response, undefined,2)}&lt;/div>
                                                     &lt;/div>
                                                 `).join('')
                                                 }
@@ -189,15 +189,18 @@ const component = async props => {
                             .filter(tag=>tag.startsWith('returns'))[0]?.substring('returns'.length)
                             .trimStart()
                             .split('\n')
-                            .map(row=>row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
-                            .join('\n')
-                            .replace('{','')
-                            .replace('}','')
-                            .replaceAll('|','&amp;vert;')
-                            .replaceAll('[','&amp;#91;')
-                            .replaceAll(']','&amp;#93;')
-                            .replaceAll('&lt;','&amp;lt;')
-                            .replaceAll('>','&amp;gt;')
+                            .map(row=>
+                                '&lt;div>' +
+                                (row.trimStart()[0]=='*'?row.trimStart().substring(2).trimStart():row.trimStart())
+                                .replaceAll('|','&amp;vert;')
+                                .replaceAll('[','&amp;#91;')
+                                .replaceAll(']','&amp;#93;')
+                                .replaceAll('&lt;','&amp;lt;')
+                                .replaceAll('>','&amp;gt;')
+                                +
+                                '&lt;/div>'
+                            )
+                            .join('')
                             +
                             '&lt;/div>'
                             };

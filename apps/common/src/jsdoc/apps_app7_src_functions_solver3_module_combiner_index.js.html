@@ -14,6 +14,11 @@
  * removed debug functionality
  */
 
+/**
+ * @name DEFAULTS
+ * @cdescription DEFAULTS
+ * @constant
+ */
 const DEFAULTS = {
 	cancel() {
 		return false;
@@ -22,20 +27,34 @@ const DEFAULTS = {
 		return false;
 	}
 };
-
+/**
+ * @name Combiner
+ * @description Combiner
+ * @class
+ */
 class Combiner {
+	/**
+	 * @param {*} input
+	 * @param {*} options
+	 */
 	constructor(input, options) {
 		this.options = Object.assign({}, DEFAULTS, options);
 
 		this.input = input.slice();
+		/**@ts-ignore */
 		this.output = [];
 	}
-
+	/**
+	 * @name run
+	 * @description run
+	 * @method
+	 * @returns {*}
+	 */
 	run() {
 		if (this.input.length &lt;= 1) {
 			return this.input;
 		}
-
+		/**@ts-ignore */
 		this.temp = [this.input.shift()];
 
 		while (this.temp.length > 0) {
@@ -71,6 +90,7 @@ class Combiner {
 				if (notIgnoredIdx !== undefined) {
 					this.input.splice(notIgnoredIdx, 1);
 				}
+				/**@ts-ignore */
 				const value = this.options.combine(this.temp[0], this.temp[1]);
 
 				this.temp = this.options.cancel(value) ? [] : [value];
@@ -101,19 +121,28 @@ class Combiner {
 
 		return this.output;
 	}
-
+	/**
+	 * @name populateTempBackward
+	 * @description populateTempBackward
+	 * @method
+	 * @returns {*}
+	 */
 	populateTempBackward() {
 		if (this.output.length > 0) {
 			this.temp.unshift(this.output.pop());
 		}
 	}
-
+	/**
+	 * @name populateTempForward
+	 * @description populateTempForward
+	 * @method
+	 * @returns {*}
+	 */
 	populateTempForward() {
 		if (this.input.length > 0) {
 			this.temp.push(this.input.shift());
 		}
 	}
-
 }
 
 export {Combiner};</code></pre>

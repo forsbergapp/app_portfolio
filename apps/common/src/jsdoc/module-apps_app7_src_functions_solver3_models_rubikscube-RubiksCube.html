@@ -3,6 +3,200 @@
 <div class='header'>
     
         <div class='title_h2'><span class="attribs"><span class="type-signature"></span></span>
+            <span class="ancestors"><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a>~</span>RubiksCube<span class="signature">()</span><span class="type-signature"></span></div>
+        
+    
+</div>
+
+<div id ='article'>
+    <div class="container-overview">
+    
+        
+
+    
+
+    
+    <div class='title_h4'><span class="type-signature"></span>new RubiksCube<span class="signature">()</span><span class="type-signature"></span></div>
+    
+
+    
+
+
+
+<div class="description">
+    <p>RubiksCube</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line18">line 18</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='title_h3'>Members</div>
+
+        
+            
+<div class='title_h4'><span class="type-signature"></span>_cubies<span class="type-signature"></span></div>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line400">line 400</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</div>
+
+</div>
+
+
+
+
+
+
+
+<div class='section'>
+
+<div class='header'>
+    
+        <div class='title_h2'><span class="attribs"><span class="type-signature"></span></span>
             <span class="ancestors"><a href="module-apps_app7_src_functions_solver3_models_rubikscube.html">apps/app7/src/functions/solver3/models/rubikscube</a>~</span>RubiksCube<span class="signature">(cubeState)</span><span class="type-signature"></span></div>
         
     
@@ -22,6 +216,25 @@
     
 
 
+
+<div class="description">
+    <p>The cube state are represented as:
+'FFFFFFFFFRRRRRRRRRUUUUUUUUUDDDDDDDDDLLLLLLLLLBBBBBBBBB'</p>
+<p>where:
+F stands for the FRONT COLOR
+R stands for the RIGHT COLOR
+U stands for the UP COLOR
+D stands for the DOWN COLOR
+L stands for the LEFT COLOR
+B stands for the BACK COLOR</p>
+<p>and the faces are given in the order of:
+FRONT, RIGHT, UP, DOWN, LEFT, BACK</p>
+<p>The order of each color per face is ordered by starting from the top left
+corner and moving to the bottom right, as if reading lines of text.</p>
+<p>See this example: http://2.bp.blogspot.com/_XQ7FznWBAYE/S9Sbric1KNI/AAAAAAAAAFs/wGAb_LcSOwo/s1600/rubik.png
+Also available here:
+/apps/app7/src/functions/solver3/models/rubik.png</p>
+</div>
 
 
 
@@ -72,23 +285,7 @@
 
             
 
-            <td class="description last"><p>The string representing the Rubik's Cube.</p>
-<p>The cube state are represented as:
-'FFFFFFFFFRRRRRRRRRUUUUUUUUUDDDDDDDDDLLLLLLLLLBBBBBBBBB'</p>
-<p>where:
-F stands for the FRONT COLOR
-R stands for the RIGHT COLOR
-U stands for the UP COLOR
-D stands for the DOWN COLOR
-L stands for the LEFT COLOR
-B stands for the BACK COLOR</p>
-<p>and the faces are given in the order of:
-FRONT, RIGHT, UP, DOWN, LEFT, BACK</p>
-<p>The order of each color per face is ordered by starting from the top left
-corner and moving to the bottom right, as if reading lines of text.</p>
-<p>See this example: http://2.bp.blogspot.com/_XQ7FznWBAYE/S9Sbric1KNI/AAAAAAAAAFs/wGAb_LcSOwo/s1600/rubik.png
-Also available here:
-/apps/app7/src/functions/solver3/models/rubik.png</p></td>
+            <td class="description last"><p>The string representing the Rubik's Cube.</p></td>
         </tr>
 
     
@@ -129,7 +326,7 @@ Also available here:
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line116">line 116</a>
+        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line147">line 147</a>
     </div></div></dd>
     
 
@@ -175,30 +372,11 @@ Also available here:
     
 
     
-
-    
-        <div class='title_h3'>Methods</div>
+        <div class='title_h3'>Members</div>
 
         
             
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>_build<span class="signature">()</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Create a &quot;virtual&quot; cube, with individual &quot;cubies&quot; having a 3D coordinate
-position and 1 or more colors attached to them.</p>
-</div>
-
-
-
+<div class='title_h4'><span class="type-signature"></span>_cubies<span class="type-signature"></span></div>
 
 
 
@@ -238,7 +416,7 @@ position and 1 or more colors attached to them.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line313">line 313</a>
+        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line400">line 400</a>
     </div></div></dd>
     
 
@@ -254,2060 +432,9 @@ position and 1 or more colors attached to them.</p>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>_colorFace<span class="signature">(face, colors)</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>face</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of the cubies on the given face.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>colors</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of the colors on the given face.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line387">line 387</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>_getRotationForFace<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></div>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line397">line 397</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-<div class="param-desc">
-    <ul>
-<li>The the rotation axis and magnitude for the given face.</li>
-</ul>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>_parseColors<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></div>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line348">line 348</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-<div class="param-desc">
-    <ul>
-<li>A map with faces for keys and colors for values</li>
-</ul>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>_populateCube<span class="signature">()</span><span class="type-signature"> &rarr; {null}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Populates the &quot;virtual&quot; cube with 26 &quot;empty&quot; cubies by their position.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line329">line 329</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">null</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>corners<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Finds and returns all cubies with three colors.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line223">line 223</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>edges<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Finds and returns all cubies with two colors.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line231">line 231</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>getCubie<span class="signature">(faces)</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>faces</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The list of faces the cubie belongs on.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line203">line 203</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>getFace<span class="signature">(face)</span><span class="type-signature"> &rarr; {array}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Grab all the cubes on a given face, and return them in order from top left
-to bottom right.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>face</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The face to grab.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line142">line 142</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>middles<span class="signature">()</span><span class="type-signature"> &rarr; {array}</span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Finds and returns all cubies with one color.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line239">line 239</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature"></span>move<span class="signature">(notations, options)</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Gets the rotation axis and magnitude of rotation based on notation.
-Then finds all cubes on the correct face, and rotates them around the
-rotation axis.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>notations</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The move notation.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Move options.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-    <div class='title_h5'>Properties:</div>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.upperCase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Turn all moves to upper case (i.e. no &quot;double&quot; moves).</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line251">line 251</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(static) </span>FromMoves<span class="signature">(moves)</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Factory method.</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>moves</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line25">line 25</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(static) </span>Scrambled<span class="signature">()</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Factory method. Returns an instance of a scrambled Rubiks Cube.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line34">line 34</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(static) </span>Solved<span class="signature">()</span><span class="type-signature"></span></div>
-    
-
-    
-
-
-
-<div class="description">
-    <p>Factory method. Returns an instance of a solved Rubiks Cube.</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line17">line 17</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(static) </span>reverseMoves<span class="signature">(notations)</span><span class="type-signature"> &rarr; {string|array}</span></div>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>notations</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The list of moves to reverse.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line46">line 46</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-<div class="param-desc">
-    <p>-- whichever was initially given.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <div class='title_h4'><span class="type-signature">(static) </span>transformMoves<span class="signature">(moves, options)</span><span class="type-signature"> &rarr; {string|array}</span></div>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    <div class='title_h5'>Parameters:</div>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>moves</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The moves to transform;</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-    <div class='title_h5'>Properties:</div>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options.upperCase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Turn lowercase moves into uppercase.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options.orientation</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An object describing the orientation
-from which to makes the moves. See src/js/utils#orientMoves.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html">apps/app7/src/functions/solver3/models/RubiksCube.js</a>, <a href="apps_app7_src_functions_solver3_models_RubiksCube.js.html#line59">line 59</a>
-    </div></div></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='title_h5'>Returns:</div>
-
-        
-<div class="param-desc">
-    <p>-- whichever was initially given.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
         
-<span class="param-type">string</span>
-|
-
-<span class="param-type">array</span>
-
-
-    </dd>
-</dl>
-
     
 
-
-
-
-
-        
     
 
     

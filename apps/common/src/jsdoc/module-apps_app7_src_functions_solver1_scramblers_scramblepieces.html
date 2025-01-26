@@ -32,14 +32,13 @@
 
         
             
-<div class='title_h4'><span class="type-signature">(static, constant) </span>getScrambleForPieces<span class="type-signature"></span></div>
+<div class='title_h4'><span class="type-signature">(inner, constant) </span>UPPER_FACE_POSITIONS<span class="type-signature"></span></div>
 
 
 
 
 <div class="description">
-    <p>Generates a random scramble where all pieces are solved, except
-for the provided edges and corners, which will be scrambled randomly.</p>
+    <p>UPPER_FACE_POSITIONS</p>
 </div>
 
 
@@ -77,7 +76,70 @@ for the provided edges and corners, which will be scrambled randomly.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line76">line 76</a>
+        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line15">line 15</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<div class='title_h4'><span class="type-signature">(inner) </span>getOrientationFromEnabled<span class="type-signature"></span></div>
+
+
+
+
+<div class="description">
+    <p>Returns an orientation vector where all pieces
+are solved, except for the given enabled pieces.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line22">line 22</a>
     </div></div></dd>
     
 
@@ -105,7 +167,7 @@ for the provided edges and corners, which will be scrambled randomly.</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>getOrientationFromEnabled<span class="signature">(enabled, flipCount, size)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>adjustUpperFace<span class="signature">(pieces, amount<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {*}</span></div>
     
 
     
@@ -113,8 +175,7 @@ for the provided edges and corners, which will be scrambled randomly.</p>
 
 
 <div class="description">
-    <p>Returns an orientation vector where all pieces
-are solved, except for the given enabled pieces.</p>
+    <p>adjustUpperFace</p>
 </div>
 
 
@@ -138,6 +199,8 @@ are solved, except for the given enabled pieces.</p>
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
         
 
@@ -150,7 +213,7 @@ are solved, except for the given enabled pieces.</p>
 
         <tr>
             
-                <td class="name"><code>enabled</code></td>
+                <td class="name"><code>pieces</code></td>
             
 
             <td class="type">
@@ -162,6 +225,14 @@ are solved, except for the given enabled pieces.</p>
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -173,7 +244,7 @@ are solved, except for the given enabled pieces.</p>
 
         <tr>
             
-                <td class="name"><code>flipCount</code></td>
+                <td class="name"><code>amount</code></td>
             
 
             <td class="type">
@@ -186,28 +257,15 @@ are solved, except for the given enabled pieces.</p>
             </td>
 
             
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>size</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">*</span>
+                    &lt;optional><br>
+                
 
+                
 
-            
-            </td>
-
+                
+                </td>
             
 
             
@@ -253,7 +311,7 @@ are solved, except for the given enabled pieces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line24">line 24</a>
+        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line72">line 72</a>
     </div></div></dd>
     
 
@@ -278,6 +336,24 @@ are solved, except for the given enabled pieces.</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -289,7 +365,7 @@ are solved, except for the given enabled pieces.</p>
     
 
     
-    <div class='title_h4'><span class="type-signature">(inner) </span>getPermutationFromEnabled<span class="signature">(enabled, size)</span><span class="type-signature"></span></div>
+    <div class='title_h4'><span class="type-signature">(inner) </span>getPermutationFromEnabled<span class="signature">(enabled, size)</span><span class="type-signature"> &rarr; {*}</span></div>
     
 
     
@@ -414,7 +490,7 @@ solved, except for the given enabled pieces.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><div class='ul'><div class='li'>
-        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line46">line 46</a>
+        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line47">line 47</a>
     </div></div></dd>
     
 
@@ -439,6 +515,131 @@ solved, except for the given enabled pieces.</p>
 
 
 
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <div class='title_h4'><span class="type-signature">(inner) </span>getScrambleForPieces<span class="signature">()</span><span class="type-signature"> &rarr; {*}</span></div>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Generates a random scramble where all pieces are solved, except
+for the provided edges and corners, which will be scrambled randomly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><div class='ul'><div class='li'>
+        <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html">apps/app7/src/functions/solver1/scramblers/scramblePieces.js</a>, <a href="apps_app7_src_functions_solver1_scramblers_scramblePieces.js.html#line90">line 90</a>
+    </div></div></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class='title_h5'>Returns:</div>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
