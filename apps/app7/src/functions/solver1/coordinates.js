@@ -5,11 +5,14 @@
 import { factorial, choose } from './tools.js';
 
 /**
- * In-place rotation of the subarray determined by the two
- * indexes left and right to the left by one.
+ * @name rotateLeft
+ * @description In-place rotation of the subarray determined by the two
+ *              indexes left and right to the left by one.
+ * @function
  * @param {*} pieces
  * @param {*} left
  * @param {*} right
+ * @returns {void}
  */
 const rotateLeft = (pieces, left, right) => {
   const original = pieces[left];
@@ -22,11 +25,14 @@ const rotateLeft = (pieces, left, right) => {
 };
 
 /**
- * In-place rotation of the subarray determined by the two
- * indexes left and right to the right by one.
+ * @name rotateRight
+ * @description In-place rotation of the subarray determined by the two
+ *              indexes left and right to the right by one.
+ * @function
  * @param {*} pieces
  * @param {*} left
  * @param {*} right
+ * @returns {void}
  */
 const rotateRight = (pieces, left, right) => {
   const original = pieces[right];
@@ -39,13 +45,16 @@ const rotateRight = (pieces, left, right) => {
 };
 
 /**
- * Bijection which encodes a given orientation vector to an unique index.
- * The flip count is the number of ways in which a single piece in the
- * orientation vector may be oriented. For edges, this number is 2 flips,
- * and for corners there are 3 possible twists. Thus, edges are encoded
- * using a binary number system, and corners using a trinary number system.
+ * @name getIndexFromOrientation
+ * @description Bijection which encodes a given orientation vector to an unique index.
+ *              The flip count is the number of ways in which a single piece in the
+ *              orientation vector may be oriented. For edges, this number is 2 flips,
+ *              and for corners there are 3 possible twists. Thus, edges are encoded
+ *              using a binary number system, and corners using a trinary number system.
+ * @function
  * @param {*} pieces
  * @param {*} flipCount
+ * @returns {number}
  */
 export const getIndexFromOrientation = (pieces, flipCount) => {
   let sum = 0;
@@ -62,12 +71,15 @@ export const getIndexFromOrientation = (pieces, flipCount) => {
 };
 
 /**
- * Returns the original orientation vector given the number which
- * describes it, the number of pieces in the vector, and the number
- * of ways in which an individual piece may be oriented.
+ * @name getOrientationFromIndex
+ * @description Returns the original orientation vector given the number which
+ *              describes it, the number of pieces in the vector, and the number
+ *              of ways in which an individual piece may be oriented.
+ * @function
  * @param {*} index
  * @param {*} numPieces
  * @param {*} numFlips
+ * @returns {*}
  */
 export const getOrientationFromIndex = (index, numPieces, numFlips) => {
   const orientation = [];
@@ -88,15 +100,18 @@ export const getOrientationFromIndex = (index, numPieces, numFlips) => {
 };
 
 /**
- * Each move on a cube perform an even number of swaps when considering
- * both edges and corner pieces at the same time. Thus, only half of all
- * cube states are reachable using legal moves. This also implies that
- * for a cube to be solvable, the parity of both corners and edges must
- * both be either even or odd. We use this to verify that a cube is
- * solvable when generating random state scrambles, and also to
- * describe the overall cube permutation using only 10 edges, 6 corners
- * and the parity of either the corners or the edges.
+ * @name getParity
+ * @description Each move on a cube perform an even number of swaps when considering
+ *              both edges and corner pieces at the same time. Thus, only half of all
+ *              cube states are reachable using legal moves. This also implies that
+ *              for a cube to be solvable, the parity of both corners and edges must
+ *              both be either even or odd. We use this to verify that a cube is
+ *              solvable when generating random state scrambles, and also to
+ *              describe the overall cube permutation using only 10 edges, 6 corners
+ *              and the parity of either the corners or the edges.
+ * @function
  * @param {*} pieces
+ * @returns {number}
  */
 export const getParity = pieces => {
   let sum = 0;
@@ -113,16 +128,19 @@ export const getParity = pieces => {
 };
 
 /**
- * Encodes the permutation of the affected pieces within the entire
- * permutation vector, by encoding both their position and then the
- * permutation of the affected pieces within the permutation vector
- * using a variable-base number system. If reversed is true, the
- * values are assigned right-to-left. This is used in the Kociemba
- * solver, so that 0 is used as the solved coordinate for the move
- * table describing the UD-slice edges.
+ * @name getIndexFromPermutation
+ * @description Encodes the permutation of the affected pieces within the entire
+ *              permutation vector, by encoding both their position and then the
+ *              permutation of the affected pieces within the permutation vector
+ *              using a variable-base number system. If reversed is true, the
+ *              values are assigned right-to-left. This is used in the Kociemba
+ *              solver, so that 0 is used as the solved coordinate for the move
+ *              table describing the UD-slice edges.
+ * @function
  * @param {*} pieces
  * @param {*} affected
  * @param {*} reversed
+ * @returns {*}
  */
 export const getIndexFromPermutation = (pieces, affected, reversed = false) => {
   let offset = pieces.length - 1;
@@ -177,13 +195,16 @@ export const getIndexFromPermutation = (pieces, affected, reversed = false) => {
 };
 
 /**
- * Restores the permutation described by an index, number of affected
- * pieces and the permutation vector size. If reversed is true, the
- * indexes have been assigned right-to-left.
+ * @name getPermutationFromIndex
+ * @description Restores the permutation described by an index, number of affected
+ *              pieces and the permutation vector size. If reversed is true, the
+ *              indexes have been assigned right-to-left.
+ * @function
  * @param {*} index
  * @param {*} affected
  * @param {*} size
  * @param {boolean} reversed
+ * @returns {*}
  */
 export const getPermutationFromIndex = (
   index,

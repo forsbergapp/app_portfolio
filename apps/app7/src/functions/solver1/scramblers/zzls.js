@@ -5,6 +5,11 @@
 import getScrambleForPieces from './scramblePieces.js';
 import { Edges, Corners } from '../cube.js';
 
+/**
+ * @name CORNERS
+ * @description CORNERS
+ * @constant
+ */
 const CORNERS = [
   Corners.URF,
   Corners.UFL,
@@ -13,6 +18,12 @@ const CORNERS = [
   Corners.DFR,
 ];
 
+/**
+ * @name getScramble
+ * @description getScramble
+ * @function
+ * @returns {*}
+ */
 const getScramble = () => getScrambleForPieces(
   [Edges.UR, Edges.UF, Edges.UL, Edges.UB, Edges.FR],
 

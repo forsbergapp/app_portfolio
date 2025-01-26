@@ -1,107 +1,110 @@
 /**
+ * SSSSSSSS   OOOOOO   LL      VV    VV  EEEEEEE  RRRRRR
+ * SS        OO    OO  LL      VV    VV  EE       RR   RR
+ * SSSSSSSS  00    00  LL       VV  VV   EEEEEEE  RRRRR
+ *		 SS  00    00  LL        VVVV    EE       RR  RR
+ * SSSSSSSS   000000   LLLLLL     VV     EEEEEEE  RR   RR
+ *
+ * This is an implementation of Thistlewaite's algorithm in javascript:
+ * (http://en.wikipedia.org/wiki/Optimal_solutions_for_Rubik's_Cube#Thistlethwaite.27s_algorithm)
+ *
+ * The Rubik's cube has 20 cubicles, the cubicles are fixed positions on the cube where cubies reside
+ * Each cubie is named after the cubicle it belongs in. A cubicle is named by the faces it has.
+ * The faces are labeled as: {U: up, D: down, R: right, L: left, F: front, B: back}
+ *
+ * To solve a cube you pass it a string of the current state of the cube that looks like:
+ * UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR (<-- is an already solved cube)*
+ *
+ * The first 12 pairs correspond to the cubicle of the Rubik's cube
+ * For a scrambled cube you put the cubie that is in the cubicle in the order presented above.
+ * An example of a scramble cube is:
+ * BR DF UR LB BD FU FL DL RD FR LU BU UBL FDR FRU BUR ULF LDF RDB DLB
+ *
+ * The state of the Rubik's cube is the position of the cubies at each of the 20 non-center locations
+ * We number the cubies in the following order:
+ * 
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |  11 |  B  |  10 |
+ *                    |     |     |     |
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *  =======================================================
+ *  |     |     |     |     |     |     |     |     |     |
+ *  |     |     |     |  14 |  2  |  13 |     |     |     |
+ *  |     |     |     |     |     |     |     |     |     |
+ *  -------------------------------------------------------
+ *  |     |     |     |     |     |     |     |     |     |
+ *  |     |  L  |     |  3  |  U  |  1  |     |  R  |     |
+ *  |     |     |     |     |     |     |     |     |     |
+ *  -------------------------------------------------------
+ *  |     |     |     |     |     |     |     |     |     |
+ *  |     |     |     |  15 |  0  |  12 |     |     |     |
+ *  |     |     |     |     |     |     |     |     |     |
+ *  =======================================================
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |  9  |  F  |  8  |
+ *                    |     |     |     |
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    |     |     |     |
+ *                    ===================
+ *                    |     |     |     |
+ *                    |  17 |  4  |  16 |
+ *                    |     |     |     |
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |  7  |  D  |  5  |
+ *                    |     |     |     |
+ *                    -------------------
+ *                    |     |     |     |
+ *                    |  18 |  6  |  19 |
+ *                    |     |     |     |
+ *                    -------------------
+ * 
+ * A cube 'state' is a Array<int> with 40 entries, the first 20
+ * are a permutation of {0,...,19} and describe which cubie is at
+ * a certain position (regarding the input ordering). The first
+ * twelve are for edges, the last eight for corners.
+ * 
+ * The last 20 entries are for the orientations, each describing
+ * how often the cubie at a certain position has been turned
+ * counterclockwise away from the correct orientation. Again the
+ * first twelve are edges, the last eight are corners. The values
+ * are 0 or 1 for edges and 0, 1 or 2 for corners.
+ *
  * @module apps/app7/src/functions/solver2
  */
 
-// SSSSSSSS   OOOOOO   LL      VV    VV  EEEEEEE  RRRRRR
-// SS        OO    OO  LL      VV    VV  EE       RR   RR
-// SSSSSSSS  00    00  LL       VV  VV   EEEEEEE  RRRRR
-//       SS  00    00  LL        VVVV    EE       RR  RR
-// SSSSSSSS   000000   LLLLLL     VV     EEEEEEE  RR   RR
-
-/*
-  This is an implementation of Thistlewaite's algorithm in javascript:
-  (http://en.wikipedia.org/wiki/Optimal_solutions_for_Rubik's_Cube#Thistlethwaite.27s_algorithm)
-
-  The Rubik's cube has 20 cubicles, the cubicles are fixed positions on the cube where cubies reside
-  Each cubie is named after the cubicle it belongs in. A cubicle is named by the faces it has.
-  The faces are labeled as: {U: up, D: down, R: right, L: left, F: front, B: back}
-
-  To solve a cube you pass it a string of the current state of the cube that looks like:
-  UF UR UB UL DF DR DB DL FR FL BR BL UFR URB UBL ULF DRF DFL DLB DBR (<-- is an already solved cube)
-
-  The first 12 pairs correspond to the cubicle of the Rubik's cube
-  For a scrambled cube you put the cubie that is in the cubicle in the order presented above.
-  An example of a scramble cube is:
-  BR DF UR LB BD FU FL DL RD FR LU BU UBL FDR FRU BUR ULF LDF RDB DLB
-
+/**
+ * @name RubiksCubeSolver
+ * @description RubiksCubeSolver
+ * @function
+ * @returns {*}
  */
-
- /*The state of the Rubik's cube is the position of the cubies at each of the 20 non-center locations
-  * We number the cubies in the following order:
-  * 
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  11 |  B  |  10 |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *  =======================================================
-  *  |     |     |     |     |     |     |     |     |     |
-  *  |     |     |     |  14 |  2  |  13 |     |     |     |
-  *  |     |     |     |     |     |     |     |     |     |
-  *  -------------------------------------------------------
-  *  |     |     |     |     |     |     |     |     |     |
-  *  |     |  L  |     |  3  |  U  |  1  |     |  R  |     |
-  *  |     |     |     |     |     |     |     |     |     |
-  *  -------------------------------------------------------
-  *  |     |     |     |     |     |     |     |     |     |
-  *  |     |     |     |  15 |  0  |  12 |     |     |     |
-  *  |     |     |     |     |     |     |     |     |     |
-  *  =======================================================
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  9  |  F  |  8  |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    |     |     |     |
-  *                    ===================
-  *                    |     |     |     |
-  *                    |  17 |  4  |  16 |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  7  |  D  |  5  |
-  *                    |     |     |     |
-  *                    -------------------
-  *                    |     |     |     |
-  *                    |  18 |  6  |  19 |
-  *                    |     |     |     |
-  *                    -------------------
-*/
-
-// /**********************************************************************
-//  * 
-//  * A cube 'state' is a Array<int> with 40 entries, the first 20
-//  * are a permutation of {0,...,19} and describe which cubie is at
-//  * a certain position (regarding the input ordering). The first
-//  * twelve are for edges, the last eight for corners.
-//  * 
-//  * The last 20 entries are for the orientations, each describing
-//  * how often the cubie at a certain position has been turned
-//  * counterclockwise away from the correct orientation. Again the
-//  * first twelve are edges, the last eight are corners. The values
-//  * are 0 or 1 for edges and 0, 1 or 2 for corners.
-//  * 
-//  **********************************************************************/
 const RubiksCubeSolver = function(){
 	this.phase = 0;
 	this.currentState = null;
 	this.goalState = null;
 };
 /**
+ * @name applyMove
+ * @description applyMove
+ * @function
  * @param {*} move
  * @param {*} inState
+ * @returns {*}
  */
 RubiksCubeSolver.prototype.applyMove = function(move, inState) {
 	const affectedCubies = [
@@ -131,13 +134,21 @@ RubiksCubeSolver.prototype.applyMove = function(move, inState) {
 	return state;
 };
 /**
+ * @name inverse
+ * @description inverse
+ * @function
  * @param {*} move
+ * @returns {*}
  */
 RubiksCubeSolver.prototype.inverse = function(move) {
 	return move + 2 - 2 * (move % 3);
 };
 /**
+ * @name getid
+ * @description getid
+ * @function
  * @param {*} state
+ * @returns {*}
  */
 RubiksCubeSolver.prototype.getId = function(state) {
 	//--- Phase 1: Edge orientations.
@@ -186,10 +197,14 @@ RubiksCubeSolver.prototype.getId = function(state) {
 	return JSON.stringify(state);
 };
 
-// //----------------------------------------------------------------------
+
 /**
+ * @name setState
+ * @description setState
+ * @function
  * @param {*} cube
  * @param {*} cube_goal
+ * @returns {*}
  */
 RubiksCubeSolver.prototype.setState = function(cube, cube_goal) {
 	cube = cube.split(' ');
@@ -221,6 +236,12 @@ RubiksCubeSolver.prototype.setState = function(cube, cube_goal) {
 	return this.verifyState();
 };
 
+/**
+ * @name verifyState
+ * @description verifyState
+ * @function
+ * @returns {*}
+ */
 RubiksCubeSolver.prototype.verifyState = function() {
 	//orientation of edges
 	let sum = 0;
@@ -271,9 +292,12 @@ RubiksCubeSolver.prototype.verifyState = function() {
 };
 
 /**
+ * @name solve
+ * @description solve
+ * @function
  * @param {*} cube_currentstate
  * @param {*} cube_goalstate
- * @returns {string}
+ * @returns {*}
  */
 RubiksCubeSolver.prototype.solve = function(cube_currentstate, cube_goalstate) {
 	this.solution = '';
@@ -291,6 +315,12 @@ RubiksCubeSolver.prototype.solve = function(cube_currentstate, cube_goalstate) {
 	return this.solution;
 };
 
+/**
+ * @name startPhase
+ * @description startPhase
+ * @function
+ * @returns {*}
+ */
 RubiksCubeSolver.prototype.startPhase = function() {
 	//--- Compute ids for current and goal state, skip phase if equal.
 	const currentId = this.getId(this.currentState), goalId = this.getId(this.goalState);
@@ -380,6 +410,12 @@ RubiksCubeSolver.prototype.startPhase = function() {
 	}
 };
 
+/**
+ * @name prepareSolution
+ * @description prepareSolution
+ * @function
+ * @returns {*}
+ */
 RubiksCubeSolver.prototype.prepareSolution = function(){
 	/**@ts-ignore */
 	let moves = this.solution.match(/(\w)\1*/g);

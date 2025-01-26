@@ -4,6 +4,12 @@
 
 import getScrambleForPieces from './scramblePieces.js';
 
+/**
+ * @name getScramble
+ * @description getScramble
+ * @function
+ * @returns {*}
+ */
 const getScramble = () => getScrambleForPieces(
   [],
 

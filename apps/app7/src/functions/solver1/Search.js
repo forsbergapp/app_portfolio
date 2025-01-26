@@ -6,6 +6,11 @@ import { parseAlgorithm, formatAlgorithm, invertAlgorithm } from './algorithms.j
 import PruningTable from './PruningTable.js';
 import { allMoves } from './cube.js';
 
+/**
+ * @name Search
+ * @description Search
+ * @class
+ */
 class Search {
   /**
    * @param {*} createTables
@@ -15,7 +20,12 @@ class Search {
     this.createTables = createTables;
     this.moves = moves;
   }
-
+  /**
+   * @name initialize
+   * @description initialize
+   * @method
+   * @returns {void}
+   */
   initialize() {
     if (this.initialized) {
       return;
@@ -26,7 +36,7 @@ class Search {
     const { moveTables, pruningTables } = this.createTables();
 
     this.moveTables = moveTables;
-    /**@type{*} */
+    /**@type{{pruningTable:{table:number[]|undefined},moveTableIndexes:[]}[]} */
     this.pruningTables = [];
 
     pruningTables.forEach((/**@type{*} */moveTableNames) => {
@@ -41,7 +51,7 @@ class Search {
       moveTableIndexes.forEach((/**@type{*} */i) => mappedTables.push(this.moveTables[i]));
 
       const pruningTable = new PruningTable(mappedTables, this.moves);
-
+      /**@ts-ignore */
       this.pruningTables.push({
         pruningTable,
         moveTableIndexes,
@@ -49,8 +59,12 @@ class Search {
     });
   }
   /**
+   * @name handleSolution
+   * @descrtion handleSolution
+   * @method
    * @param {*} solution
    * @param {*} indexes
+   * @returns {{solution:*, indexes:*}}
    */
   handleSolution(solution, indexes) {
     return {
@@ -59,24 +73,30 @@ class Search {
     };
   }
   /**
+   * @name search
+   * @description search
+   * @method
    * @param {*} indexes
    * @param {*} depth
    * @param {*} lastMove
    * @param {*} solution
-   * @returns {*}
+   * @returns {boolean|{solution:*, indexes:*}}
    */
   search(indexes, depth, lastMove, solution) {
     let minimumDistance = 0;
-
+    /**@ts-ignore */
     for (let i = 0; i < this.pruningTables.length; i += 1) {
+      /**@ts-ignore */
       let index = indexes[this.pruningTables[i].moveTableIndexes[0]];
       let power = 1;
-
+      /**@ts-ignore */
       for (let j = 1; j < this.pruningTables[i].moveTableIndexes.length; j += 1) {
+        /**@ts-ignore */
         power *= this.moveTables[this.pruningTables[i].moveTableIndexes[j - 1]].size;
+        /**@ts-ignore */
         index += indexes[this.pruningTables[i].moveTableIndexes[j]] * power;
       }
-
+      /**@ts-ignore */
       const distance = this.pruningTables[i].pruningTable.getPruningValue(index);
 
       if (distance > depth) {
@@ -117,7 +137,10 @@ class Search {
     return false;
   }
   /**
+   * @name solve
+   * @description solve
    * @param {*} settings
+   * @returns {boolean|string|{solution:*, indexes:*}}
    */
   solve(settings) {
     this.initialize();
@@ -133,15 +156,16 @@ class Search {
 
     if (this.settings.scramble) {
       const [moves, totalRotation] = parseAlgorithm(this.settings.scramble, true);
-
+      /**@ts-ignore */
       if (totalRotation.length > 0) {
+        /**@ts-ignore */
         solutionRotation = invertAlgorithm(totalRotation.join(' '));
       }
 
       for (let i = 0; i < this.moveTables.length; i += 1) {
         indexes.push(this.moveTables[i].defaultIndex);
       }
-
+      /**@ts-ignore */
       moves.forEach((/**@type{*} */move) => {
         for (let i = 0; i < indexes.length; i += 1) {
           indexes[i] = this.moveTables[i].doMove(indexes[i], move);
@@ -154,6 +178,7 @@ class Search {
 
       if (solution) {
         if (this.settings.format) {
+          /**@ts-ignore */
           const formatted = formatAlgorithm(solution.solution);
 
           if (solutionRotation) {

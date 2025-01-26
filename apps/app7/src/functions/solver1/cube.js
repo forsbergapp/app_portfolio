@@ -32,8 +32,9 @@ export const Corners = {
 };
 
 /**
- * We define moves as the four pieces which are
- * rotated in a circular fashion.
+ * @description We define moves as the four pieces which are
+ *              rotated in a circular fashion.
+ * @constant
  */
 const edgeMoves = [
   [1, 8, 5, 9],
@@ -45,8 +46,9 @@ const edgeMoves = [
 ];
 
 /**
- * Corner moves are defined in the same way as
- * the edge moves are defined.
+ * @description Corner moves are defined in the same way as
+ *              the edge moves are defined.
+ * @constant
  */
 const cornerMoves = [
   [1, 0, 4, 5],
@@ -58,11 +60,14 @@ const cornerMoves = [
 ];
 
 /**
- * Helper function to perform a corner or edge permutation move
- * to the given permutation vector.
+ * @name permutationMove
+ * @description Helper function to perform a corner or edge permutation move
+ *              to the given permutation vector.
+ * @constant
  * @param {*} pieces
  * @param {*} moveIndex
  * @param {*} moves
+ * @returns {*}
  */
 const permutationMove = (pieces, moveIndex, moves) => {
   let updated = pieces;
@@ -77,23 +82,32 @@ const permutationMove = (pieces, moveIndex, moves) => {
 };
 
 /**
- * Perform a move to an edge permutaion vector.
+ * @name edgePermutationMove
+ * @description Perform a move to an edge permutaion vector.
+ * @constant
  * @param {*} pieces
  * @param {*} moveIndex
+ * @returns {*}
  */
 export const edgePermutationMove = (pieces, moveIndex) => permutationMove(pieces, moveIndex, edgeMoves);
 
 /**
- * Perform a move to a corner permuttaion vector.
+ * @name cornerPermutationMove
+ * @description Perform a move to a corner permuttaion vector.
+ * @function
  * @param {*} pieces
  * @param {*} moveIndex
+ * @returns {*}
  */
 export const cornerPermutationMove = (pieces, moveIndex) => permutationMove(pieces, moveIndex, cornerMoves);
 
 /**
- * Perform a move to an edge orientation vector.
+ * @name edgeOrientationMove
+ * @description Perform a move to an edge orientation vector.
+ * @function
  * @param {*} pieces
  * @param {*} moveIndex
+ * @returns {*}
  */
 export const edgeOrientationMove = (pieces, moveIndex) => {
   const moveNumber = Math.floor(moveIndex / 3);
@@ -113,9 +127,11 @@ export const edgeOrientationMove = (pieces, moveIndex) => {
 };
 
 /**
- * Perform a move to a corner orientation vector.
+ * @name cornerOrientationMove
+ * @description Perform a move to a corner orientation vector.
  * @param {*} pieces
  * @param {*} moveIndex
+ * @returns {*}
  */
 export const cornerOrientationMove = (pieces, moveIndex) => {
   const moveNumber = Math.floor(moveIndex / 3);
@@ -135,7 +151,10 @@ export const cornerOrientationMove = (pieces, moveIndex) => {
   return updatedPieces;
 };
 
-// The identity cube.
+/**
+ * @description The identity cube.
+ * @constant
+ */
 export const identity = {
   ep: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
   eo: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -144,9 +163,11 @@ export const identity = {
 };
 
 /**
- * Performs an algorithm to a cube on the cubie level.
+ * @name doAlgorithm
+ * @description Performs an algorithm to a cube on the cubie level.
  * @param {*} algorithm
  * @param {*} cube
+ * @returns {*}
  */
 export const doAlgorithm = (algorithm, cube = identity) => {
   let ep = cube.ep.slice();
@@ -167,7 +188,9 @@ export const doAlgorithm = (algorithm, cube = identity) => {
 };
 
 /**
- * All the moves which can be performed on a cube.
+ * @name allMoves
+ * @description All the moves which can be performed on a cube.
+ * @constant
  */
 export const allMoves = [
   0,
