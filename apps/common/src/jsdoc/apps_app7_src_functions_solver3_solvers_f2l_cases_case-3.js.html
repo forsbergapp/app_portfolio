@@ -15,11 +15,20 @@ import {
 	getDirectionFromFaces, getFaceFromDirection, getRotationFromTo
 } from '../../../utils/index.js';
 
-const R = (moves) => RubiksCube.reverseMoves(moves);
+/**
+ * @name R
+ * @description R
+ * @function
+ * @param {*} moves
+ * @returns {*}
+ */
+const R = moves => RubiksCube.reverseMoves(moves);
 
 /**
- * Top level case 3:
- * Corner is on UP face and edge is on DOWN face.
+ * @name Case3Solver
+ * @description Top level case 3:
+ * 				Corner is on UP face and edge is on DOWN face.
+ * @class
  */
 class Case3Solver extends F2LCaseBaseSolver {
 	/**
@@ -28,6 +37,13 @@ class Case3Solver extends F2LCaseBaseSolver {
    * 1) Corner's cross color is on the cross face.
    * 2) Corner's cross color is not on the cross face.
    */
+	/**
+	 * @name _getCaseNumber
+	 * @description _getCaseNumber
+	 * @function
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {number}
+	 */
 	_getCaseNumber({ corner, edge }) {
 		if (corner.getColorOfFace('up') === 'u') {
 			return 1;
@@ -35,13 +51,19 @@ class Case3Solver extends F2LCaseBaseSolver {
 			return 2;
 		}
 	}
-
+	/**
+	 * @name _solveCase1
+	 * @description _solveCase1
+	 * @function
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {void}
+	 */
 	_solveCase1({ corner, edge }) {
-		const faces = corner.faces().filter(face => face !== 'up');
+		const faces = corner.faces().filter((/**@type{*}*/face) => face !== 'up');
 		const direction = getDirectionFromFaces(faces[0], faces[1], { up: 'down' });
 		const [leftFace, rightFace] = direction === 'right' ? faces : faces.reverse();
 
-		const currentFace = edge.faces().find(face => face !== 'down');
+		const currentFace = edge.faces().find((/**@type{*}*/face) => face !== 'down');
 		const primaryColor = edge.getColorOfFace(currentFace);
 
 		const targetFace = getFaceFromDirection(
@@ -58,12 +80,18 @@ class Case3Solver extends F2LCaseBaseSolver {
 		this.move(`${prep} ${moveFace} ${dir} ${R(moveFace)}`, { upperCase: true });
 		this.solveMatchedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase2
+	 * @description _solveCase2
+	 * @function
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {void}
+	 */
 	_solveCase2({ corner, edge }) {
-		const otherColor = corner.colors().find(color => {
+		const otherColor = corner.colors().find((/**@type{*}*/color) => {
 			return color !== 'u' &amp;&amp; corner.getFaceOfColor(color) !== 'up';
 		});
-		const currentFace = edge.faces().find(face => face !== 'down');
+		const currentFace = edge.faces().find((/**@type{*}*/face) => face !== 'down');
 		const primaryColor = edge.getColorOfFace(currentFace);
 
 		const willBeMatched = otherColor !== primaryColor;
@@ -81,6 +109,7 @@ class Case3Solver extends F2LCaseBaseSolver {
 
 		this.move(`${prep} ${moveFace} ${dir} ${R(moveFace)}`, { upperCase: true });
 		const solveFn = `solve${willBeMatched ? 'Matched' : 'Separated'}Pair`;
+		/**@ts-ignore */
 		this[solveFn]({ corner, edge });
 	}
 }

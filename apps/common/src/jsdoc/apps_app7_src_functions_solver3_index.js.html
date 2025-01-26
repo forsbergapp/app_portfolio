@@ -29,10 +29,11 @@ export { PLLSolver } from './solvers/pll/index.js';
 export { algorithmShortener } from './algorithm-shortener.js';
 
 /**
+ * @name default
+ * @description default
+ * @function
  * @param {string} cubeState - The string representing a cube state.
- * @param {{partitioned:boolean}} options
- * @prop {boolean} options.partitioned - Whether to separate moves according to
- * phase.
+ * @param {{partitioned:boolean}} options, Whether to separate moves according to phase.
  * @returns {{	solution_string:string,
  * 			 	solution_partitioned:{}}}
  */
