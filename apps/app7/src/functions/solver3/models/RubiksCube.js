@@ -8,19 +8,35 @@ import {
 	transformNotations, getMiddleMatchingFace
 } from '../utils/index.js';
 
+/**
+ * @name SOLVED_STATE
+ * @description SOLVED_STATE
+ * @constant
+ */
 const SOLVED_STATE = 'fffffffffrrrrrrrrruuuuuuuuudddddddddlllllllllbbbbbbbbb';
 
+/**
+ * @name RubiksCube
+ * @description RubiksCube
+ * @class
+ */
 class RubiksCube {
 	/**
-	 * Factory method. Returns an instance of a solved Rubiks Cube.
+	 * @name Solved
+	 * @description Factory method. Returns an instance of a solved Rubiks Cube.
+	 * @method
+	 * @returns {*}
 	 */
 	static Solved() {
 		return new RubiksCube(SOLVED_STATE);
 	}
 
 	/**
-	 * Factory method.
-	 * @param {string|array} moves
+	 * @name FromMoves
+	 * @description Factory method.
+	 * @method
+	 * @param {string|[]} moves
+	 * @returns {*}
 	 */
 	static FromMoves(moves) {
 		const cube = RubiksCube.Solved();
@@ -29,7 +45,10 @@ class RubiksCube {
 	}
 
 	/**
-	 * Factory method. Returns an instance of a scrambled Rubiks Cube.
+	 * @name Scrambled
+	 * @description Factory method. Returns an instance of a scrambled Rubiks Cube.
+	 * @method
+	 * @returns {*}
 	 */
 	static Scrambled() {
 		const cube = RubiksCube.Solved();
@@ -40,27 +59,39 @@ class RubiksCube {
 	}
 
 	/**
-	 * @param {string|array} notations - The list of moves to reverse.
-	 * @returns {string|array} -- whichever was initially given.
+	 * @name resverseMoves
+	 * @description 
+	 * @method
+	 * @param {string|[]} moves - The list of moves to reverse.
+	 * @returns {string|[]} -- whichever was initially given.
 	 */
 	static reverseMoves(moves) {
 		return RubiksCube.transformMoves(moves, { reverse: true });
 	}
 
 	/**
-	 * @param {string|array} moves - The moves to transform;
-	 * @param {object} options
-	 * @prop {boolean} options.upperCase - Turn lowercase moves into uppercase.
-	 * @prop {object} options.orientation - An object describing the orientation
+	 * @name transformMoves
+	 * @description transformMoves
+	 * @method
+	 * @param {string|[]} moves - The moves to transform;
+	 * @param {{uppercase:boolean,				//Turn lowercase moves into uppercase.
+	 * 			orientation:object}				//An object describing the orientation
+	 * 			|{}} options
 	 * from which to makes the moves. See src/js/utils#orientMoves.
 	 *
-	 * @returns {string|array} -- whichever was initially given.
+	 * @returns {string|[]} -- whichever was initially given.
 	 */
 	static transformMoves(moves, options = {}) {
 		return transformNotations(moves, options);
 	}
-
+	/**
+	 * @name getRandomMoves
+	 * @description getRandomMoves
+	 * @method
+	 * @returns {*}
+	 */
 	static getRandomMoves(length = 25) {
+		/**@type{*} */
 		let randomMoves = [];
 		const totalMoves = [
 			'F',
@@ -90,9 +121,7 @@ class RubiksCube {
 	}
 
 	/**
-	 * @param {string} cubeState - The string representing the Rubik's Cube.
-	 *
-	 * The cube state are represented as:
+	 * @description  The cube state are represented as:
 	 * 'FFFFFFFFFRRRRRRRRRUUUUUUUUUDDDDDDDDDLLLLLLLLLBBBBBBBBB'
 	 *
 	 * where:
@@ -112,6 +141,8 @@ class RubiksCube {
 	 * See this example: http://2.bp.blogspot.com/_XQ7FznWBAYE/S9Sbric1KNI/AAAAAAAAAFs/wGAb_LcSOwo/s1600/rubik.png
 	 * Also available here:
 	 * /apps/app7/src/functions/solver3/models/rubik.png
+	 * @param {string} cubeState - The string representing the Rubik's Cube.
+	 * 
 	 */
 	constructor(cubeState) {
 		if (cubeState.length !== 9 * 6) {
@@ -134,10 +165,12 @@ class RubiksCube {
 	}
 
 	/**
-	 * Grab all the cubes on a given face, and return them in order from top left
-	 * to bottom right.
+	 * @name getFace
+	 * @description Grab all the cubes on a given face, and return them in order from top left
+	 * 				to bottom right.
+	 * @method
 	 * @param {string} face - The face to grab.
-	 * @returns {array}
+	 * @returns {[]}
 	 */
 	getFace(face) {
 		if (typeof face !== 'string') {
@@ -153,38 +186,50 @@ class RubiksCube {
 		// index, but rows are not always denoted by cubies' y position, and
 		// "higher rows" do not always mean "higher axis values".
 
+		/**@ts-ignore */
 		let row, col, rowOrder, colOrder;
 		let cubies;
 
 		// grab correct cubies
 		if (face === 'f') {
 			[row, col, rowOrder, colOrder] = ['Y', 'X', -1, 1];
+			/**@ts-ignore */
 			cubies = this._cubies.filter(cubie => cubie.getZ() === 1);
 		} else if (face === 'r') {
 			[row, col, rowOrder, colOrder] = ['Y', 'Z', -1, -1];
+			/**@ts-ignore */
 			cubies = this._cubies.filter(cubie => cubie.getX() === 1);
 		} else if (face === 'u') {
 			[row, col, rowOrder, colOrder] = ['Z', 'X', 1, 1];
+			/**@ts-ignore */
 			cubies = this._cubies.filter(cubie => cubie.getY() === 1);
 		} else if (face === 'd') {
 			[row, col, rowOrder, colOrder] = ['Z', 'X', -1, 1];
+			/**@ts-ignore */
 			cubies = this._cubies.filter(cubie => cubie.getY() === -1);
 		} else if (face === 'l') {
 			[row, col, rowOrder, colOrder] = ['Y', 'Z', -1, 1];
+			/**@ts-ignore */
 			cubies = this._cubies.filter(cubie => cubie.getX() === -1);
 		} else if (face === 'b') {
 			[row, col, rowOrder, colOrder] = ['Y', 'X', -1, -1];
+			/**@ts-ignore */
 			cubies = this._cubies.filter(cubie => cubie.getZ() === -1);
 		} else if (['m', 'e', 's'].includes(face)) {
+			/**@ts-ignore */
 			return this._getMiddleCubiesForMove(face);
 		}
 
 		// order cubies from top left to bottom right
+		/**@ts-ignore */
 		return cubies.sort((first, second) => {
+			/**@ts-ignore */
 			const firstCubieRow = first[`get${row}`]() * rowOrder;
+			/**@ts-ignore */
 			const firstCubieCol = first[`get${col}`]() * colOrder;
-
+			/**@ts-ignore */
 			const secondCubieRow = second[`get${row}`]() * rowOrder;
+			/**@ts-ignore */
 			const secondCubieCol = second[`get${col}`]() * colOrder;
 
 			if (firstCubieRow < secondCubieRow) {
@@ -198,9 +243,14 @@ class RubiksCube {
 	}
 
 	/**
-	 * @param {array} faces - The list of faces the cubie belongs on.
+	 * @name getCubie
+	 * @description getCubie
+	 * @method
+	 * @param {[]} faces - The list of faces the cubie belongs on.
+	 * @returns{*}
 	 */
 	getCubie(faces) {
+		/**@ts-ignore */
 		return this._cubies.find(cubie => {
 			if (faces.length != cubie.faces().length) {
 				return false;
@@ -217,42 +267,54 @@ class RubiksCube {
 	}
 
 	/**
-	 * Finds and returns all cubies with three colors.
-	 * @returns {array}
+	 * @name corners
+	 * @description Finds and returns all cubies with three colors.
+	 * @method
+	 * @returns {[]}
 	 */
 	corners() {
+		/**@ts-ignore */
 		return this._cubies.filter(cubie => cubie.isCorner());
 	}
 
 	/**
-	 * Finds and returns all cubies with two colors.
-	 * @returns {array}
+	 * @name edges
+	 * @description Finds and returns all cubies with two colors.
+	 * @method
+	 * @returns {[]}
 	 */
 	edges() {
+		/**@ts-ignore */
 		return this._cubies.filter(cubie => cubie.isEdge());
 	}
 
 	/**
-	 * Finds and returns all cubies with one color.
-	 * @returns {array}
+	 * @name middles
+	 * @description Finds and returns all cubies with one color.
+	 * @method
+	 * @returns {[]}
 	 */
 	middles() {
+		/**@ts-ignore */
 		return this._cubies.filter(cubie => cubie.isMiddle());
 	}
 
 	/**
-	 * Gets the rotation axis and magnitude of rotation based on notation.
-	 * Then finds all cubes on the correct face, and rotates them around the
-	 * rotation axis.
-	 * @param {string|array} notations - The move notation.
-	 * @param {object} options - Move options.
-	 * @prop {boolean} options.upperCase - Turn all moves to upper case (i.e. no "double" moves).
+	 * @name move
+	 * @description Gets the rotation axis and magnitude of rotation based on notation.
+	 * 				Then finds all cubes on the correct face, and rotates them around the
+	 * 				rotation axis.
+	 * @method
+	 * @param {string|[]} notations - The move notation.
+	 * @param {{uppercase:object}|{}} options - Move options.Turn all moves to upper case (i.e. no "double" moves).
+	 * @returns {*}
 	 */
 	move(notations, options = {}) {
 		if (typeof notations === 'string') {
+			/**@ts-ignore */
 			notations = notations.split(' ');
 		}
-
+		/**@ts-ignore */
 		notations = transformNotations(notations, options);
 
 		for (const notation of notations) {
@@ -266,6 +328,7 @@ class RubiksCube {
 			const isWithMiddle = move === move.toLowerCase();
 			const isDoubleMove  = notation.includes('2');
 
+			/**@ts-ignore */
 			let { axis, mag } = this._getRotationForFace(move);
 			let cubesToRotate = this.getFace(move);
 
@@ -275,19 +338,31 @@ class RubiksCube {
 			if (isWithMiddle) {
 				const middleMove = getMiddleMatchingFace(move);
 				const middleCubies = this._getMiddleCubiesForMove(middleMove);
+				/**@ts-ignore */
 				cubesToRotate = [...cubesToRotate, ...middleCubies];
 			}
 
 			for (const cubie of cubesToRotate) {
+				/**@ts-ignore */
 				cubie.rotate(axis, mag);
 			}
 		}
 	}
-
+	/**
+	 * @name isSolved
+	 * @description isSolved
+	 * @method
+	 * @returns {*}
+	 */
 	isSolved() {
 		return this.toString() === SOLVED_STATE;
 	}
-
+	/**
+	 * @name toString
+	 * @description toString
+	 * @method
+	 * @returns {*}
+	 */
 	toString() {
 		let cubeState = '';
 
@@ -295,36 +370,51 @@ class RubiksCube {
 		for (const face of faces) {
 			const cubies = this.getFace(face);
 			for (const cubie of cubies) {
+				/**@ts-ignore */
 				cubeState += cubie.getColorOfFace(face);
 			}
 		}
 
 		return cubeState;
 	}
-
+	/**
+	 * @name clone
+	 * @description clone
+	 * @method
+	 * @returns {*}
+	 */
 	clone() {
 		return new RubiksCube(this.toString());
 	}
 
 	/**
-	 * Create a "virtual" cube, with individual "cubies" having a 3D coordinate
-	 * position and 1 or more colors attached to them.
+	 * @name _build
+	 * @description Create a "virtual" cube, with individual "cubies" having a 3D coordinate
+	 * 				position and 1 or more colors attached to them.
+	 * @method
+	 * @param {*} cubeState
+	 * @returns {*}
 	 */
 	_build(cubeState) {
+		/**@ts-ignore */
 		this._cubies = [];
 		this._populateCube();
 
 		const parsedColors = this._parseColors(cubeState);
 
 		for (const face of Object.keys(parsedColors)) {
+			/**@ts-ignore */
 			const colors = parsedColors[face];
+			/**@ts-ignore */
 			this._colorFace(face, colors);
 		}
 	}
 
 	/**
-	 * Populates the "virtual" cube with 26 "empty" cubies by their position.
-	 * @returns {null}
+	 * @name _populateCube
+	 * @description Populates the "virtual" cube with 26 "empty" cubies by their position.
+	 * @method
+	 * @returns {void}
 	 */
 	_populateCube() {
 		for (let x = -1; x <= 1; x++) {
@@ -334,8 +424,9 @@ class RubiksCube {
 					if (x === 0 && y === 0 && z === 0) {
 						continue;
 					}
-
+					/**@ts-ignore */
 					const cubie = new Cubie({ position: [x, y, z] });
+					/**@ts-ignore */
 					this._cubies.push(cubie);
 				}
 			}
@@ -343,7 +434,11 @@ class RubiksCube {
 	}
 
 	/**
-	 * @returns {object} - A map with faces for keys and colors for values
+	 * @name _parseColors
+	 * @description A map with faces for keys and colors for values
+	 * @method
+	 * @param {*} cubeState
+	 * @returns {object} 
 	 */
 	_parseColors(cubeState) {
 		const faceColors = {
@@ -373,7 +468,7 @@ class RubiksCube {
 			} else {
 				currentFace = 'back';
 			}
-
+			/**@ts-ignore */
 			faceColors[currentFace].push(color);
 		}
 
@@ -381,18 +476,28 @@ class RubiksCube {
 	}
 
 	/**
-	 * @param {array} face - An array of the cubies on the given face.
-	 * @param {array} colors - An array of the colors on the given face.
+	 * @name _colorFace
+	 * @description _colorFace
+	 * @method
+	 * @param {[]} face - An array of the cubies on the given face.
+	 * @param {[]} colors - An array of the colors on the given face.
+	 * @returns {*}
 	 */
 	_colorFace(face, colors) {
+		/**@ts-ignore */
 		const cubiesToColor = this.getFace(face);
 		for (let i = 0; i < colors.length; i++) {
+			/**@ts-ignore */
 			cubiesToColor[i].colorFace(face, colors[i]);
 		}
 	}
 
 	/**
-	 * @returns {object} - The the rotation axis and magnitude for the given face.
+	 * @name _getRotationForFace
+	 * @description The the rotation axis and magnitude for the given face.
+	 * @method
+	 * @param {*} face
+	 * @returns {object}
 	 */
 	_getRotationForFace(face) {
 		if (typeof face !== 'string') {
@@ -402,14 +507,23 @@ class RubiksCube {
 		face = face.toLowerCase();
 
 		return {
+			/**@ts-ignore */
 			axis: this._notationToRotation[face].axis,
+			/**@ts-ignore */
 			mag: this._notationToRotation[face].mag * Math.PI / 2
 		};
 	}
-
+	/**
+	 * @name _getMiddleCubiesForMove
+	 * @description _getMiddleCubiesForMove
+	 * @method
+	 * @param {*} move
+	 * @returns {*}
+	 */
 	_getMiddleCubiesForMove(move) {
 		move = move[0].toLowerCase();
 
+		/**@ts-ignore */
 		let nonMiddles;
 		if (move === 'm') {
 			nonMiddles = ['left', 'right'];
@@ -418,8 +532,9 @@ class RubiksCube {
 		} else if (move === 's') {
 			nonMiddles = ['front', 'back'];
 		}
-
+		/**@ts-ignore */
 		return this._cubies.filter(cubie => {
+			/**@ts-ignore */
 			return !cubie.hasFace(nonMiddles[0]) && !cubie.hasFace(nonMiddles[1]);
 		});
 	}
