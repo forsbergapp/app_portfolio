@@ -13,11 +13,33 @@ import { RubiksCube } from '../../models/RubiksCube.js';
 import { BaseSolver } from '../BaseSolver.js';
 import { getDirectionFromFaces } from '../../utils/index.js';
 
+/**
+ * @name SOLVED_STATE
+ * @description SOLVED_STATE
+ * @constant
+ */
 const SOLVED_STATE = '00000000';
-const R = (moves) => RubiksCube.reverseMoves(moves);
 
+/**
+ * @name R
+ * @description R
+ * @function
+ * @param {*} moves
+ * @returns {*}
+ */
+const R = moves => RubiksCube.reverseMoves(moves);
+
+/**
+ * @name OLLSolver
+ * @description OLLSolver
+ * @class
+ */
 class OLLSolver extends BaseSolver {
+	/**
+	 * @param {*} args
+	 */
 	constructor(...args) {
+		/**@ts-ignore */
 		super(...args);
 		this.phase = 'oll';
 
@@ -84,19 +106,40 @@ class OLLSolver extends BaseSolver {
 			'21012020': 'F U FPrime RPrime F R UPrime RPrime FPrime R', // 57
 		};
 	}
-
+	/**
+	 * @name isSolved
+	 * @description isSolved
+	 * @method
+	 * @returns {*}
+	 */
 	isSolved() {
 		return this.getOllString() === SOLVED_STATE;
 	}
-
+	/**
+	 * @name solve
+	 * @description solve
+	 * @method
+	 * @returns {*}
+	 */
 	solve() {
 		return this._solve();
 	}
-
+	/**
+	 * @name _getCaseNumber
+	 * @description _getCaseNumber
+	 * @method
+	 * @returns {*}
+	 */
 	_getCaseNumber() {
 		return this.getOllString();
 	}
-
+	/**
+	 * @name _solveCase
+	 * @description _solveCase
+	 * @method
+	 * @param {*} ollString
+	 * @returns {*}
+	 */
 	_solveCase(ollString) {
 		const pattern = this.findPattern(ollString);
 		const algorithm = this.getAlgorithm(pattern);
@@ -106,12 +149,18 @@ class OLLSolver extends BaseSolver {
 			orientation: { up: 'down', front: frontFace }
 		});
 	}
-
+	/**
+	 * @name getOllString
+	 * @description getOllString
+	 * @method
+	 * @returns {*}
+	 */
 	getOllString() {
+		/**@type{*} */
 		const orientations = [];
 
 		const cubies = this._getOllCubies();
-		cubies.forEach(cubie => {
+		cubies.forEach((/**@type{*}*/cubie) => {
 			const orientation = this._getCubieOrientation(cubie);
 			orientations.push(orientation);
 		});
@@ -120,8 +169,12 @@ class OLLSolver extends BaseSolver {
 	}
 
 	/**
+	 * @name findPattern
+	 * @description findPattern
+	 * @method
 	 * @param {string} [ollString] - Probably unnecessary. If passed in, it saves
-	 * a step computing the ollString.
+	 * 								a step computing the ollString.
+	 * @returns {*}
 	 */
 	findPattern(ollString) {
 		if (typeof ollString === 'undefined') {
@@ -129,6 +182,7 @@ class OLLSolver extends BaseSolver {
 		}
 
 		for (let i = 0; i &lt; 4; i++) {
+			/**@ts-ignore */
 			const algorithm = this.algorithms[ollString];
 
 			if (typeof algorithm === 'string') {
@@ -142,20 +196,30 @@ class OLLSolver extends BaseSolver {
 	}
 
 	/**
+	 * @name getAlgorithm
+	 * @description getAlgorithm
+	 * @method
 	 * @param {string} [pattern] - The pattern on this OLL or the ollString.
+	 * @returns {*}
 	 */
 	getAlgorithm(pattern) {
 		if (typeof pattern === 'undefined') {
+			/**@ts-ignore */
 			pattern = this.getPattern(pattern); // pattern can be an ollString
 		}
-
+		/**@ts-ignore */
 		if (typeof this.algorithms[pattern] === 'undefined') {
 			throw new Error(`No algorithm found for pattern "${pattern}"`);
 		}
-
+		/**@ts-ignore */
 		return this.algorithms[pattern];
 	}
-
+	/**
+	 * @name _getOllCubies
+	 * @description _getOllCubies
+	 * @method
+	 * @returns {*}
+	 */
 	_getOllCubies() {
 		const positions = [
 			['front', 'down', 'right'],
@@ -167,15 +231,19 @@ class OLLSolver extends BaseSolver {
 			['back', 'down', 'right'],
 			['right', 'down']
 		];
-
+		/**@ts-ignore */
 		return positions.map(pos => this.cube.getCubie(pos));
 	}
 
 	/**
-	 * Returns a number indicating the orientation of the cubie.
+	 * @name _getCubieOrientation
+	 * @description Returns a number indicating the orientation of the cubie.
 	 * 0 --> The DOWN color is on the DOWN face.
 	 * 1 --> The DOWN color is a clockwise rotation from "solved".
 	 * 2 --> The DOWN color is a counter-clockwise rotation from "solved".
+	 * @method
+	 * @param {*} cubie
+	 * @returns {*}
 	 */
 	_getCubieOrientation(cubie) {
 		if (cubie.getColorOfFace('down') === 'd') {
@@ -187,13 +255,20 @@ class OLLSolver extends BaseSolver {
 			return 1;
 		}
 
-		const [face1, face2] = cubie.faces().filter(face => face !== 'down');
+		const [face1, face2] = cubie.faces().filter((/**@type{*}*/face) => face !== 'down');
 		const dir = getDirectionFromFaces(face1, face2, { up: 'down' });
 		const rightFace = dir === 'right' ? face2 : face1;
 
 		return cubie.getColorOfFace(rightFace) === 'd' ? 1 : 2;
 	}
-
+	/**
+	 * @name _getFrontFace
+	 * @description _getFrontFace
+	 * @method
+	 * @param {*} ollString
+	 * @param {*} pattern
+	 * @returns {*}
+	 */
 	_getFrontFace(ollString, pattern) {
 		const rotationOrder = ['front', 'left', 'back', 'right'];
 
@@ -207,15 +282,31 @@ class OLLSolver extends BaseSolver {
 
 		throw new Error(`OLL string "${ollString}" does not resolve to the pattern "${pattern}"`);
 	}
-
+	/**
+	 * @name _rotateOllStringLeft
+	 * @description _rotateOllStringLeft
+	 * @method
+	 * @param {*} ollString
+	 * @returns {*}
+	 */
 	_rotateOllStringLeft(ollString) {
 		return ollString.slice(2) + ollString.slice(0, 2);
 	}
-
+	/**
+	 * @name _getPartitionBefore
+	 * @description _getPartitionBefore
+	 * @method
+	 * @returns {*}
+	 */
 	_getPartitionBefore() {
 		return this.getOllString();
 	}
-
+	/**
+	 * @name _getPartitionAfter
+	 * @description _getPartitionAfter
+	 * @method
+	 * @returns {*}
+	 */
 	_getPartitionAfter() {
 		return null;
 	}
