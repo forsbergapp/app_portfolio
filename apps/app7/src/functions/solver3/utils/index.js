@@ -2,14 +2,17 @@
  * @module apps/app7/src/functions/solver3/utils
  */
 
-//import cross from 'gl-vec3/cross';
-/**@ts-ignore */
-const {default:{cross}} = await import('../module/gl-vec3/index.js');
+/**@type{import('../module/gl-vec3/index.js')} */
+const {cross} = await import('../module/gl-vec3/index.js');
 
 import { Face } from '../models/Face.js';
 import { Vector } from '../models/Vector.js';
 
-// maps each face with the notation for their middle moves
+/**
+ * @name _middlesMatchingFace
+ * @description maps each face with the notation for their middle moves
+ * @constant
+ */
 const _middlesMatchingFace = {
 	f: 's',
 	r: 'mprime',
@@ -20,10 +23,13 @@ const _middlesMatchingFace = {
 };
 
 /**
+ * @name getFaceOfMove
+ * @description getFaceOfMove
+ * @function
  * @param {string} move - The notation of a move, e.g. rPrime.
- * @returns {string}
+ * @returns {string|undefined}
  */
-export const getFaceOfMove = (move) => {
+export const getFaceOfMove = move => {
 	if (typeof move !== 'string') {
 		throw new TypeError('move must be a string');
 	}
@@ -39,11 +45,15 @@ export const getFaceOfMove = (move) => {
 };
 
 /**
- * Almost useless. Almost.
+ * @name getMoveOfFace
+ * @description Checks if string, sets lowercase and checks if 
+ * 				from, right, up, down, left or back
+ * 				(Original comment: Almost useless. Almost.)
+ * @function
  * @param {string} face - The string identifying a face.
  * @returns {string}
  */
-export const getMoveOfFace = (face) => {
+export const getMoveOfFace = face => {
 	if (typeof face !== 'string') {
 		throw new TypeError('face must be a string');
 	}
@@ -56,16 +66,30 @@ export const getMoveOfFace = (face) => {
 
 	return face[0];
 };
-
-export const getMiddleMatchingFace = (face) => {
+/**
+ * @name getMiddleMatchingFace
+ * @description getMiddleMatchingFace
+ * @function
+ * @param {*} face
+ * @returns {*}
+ */
+export const getMiddleMatchingFace = face => {
 	face = face.toLowerCase()[0];
+	/**@ts-ignore */
 	return _middlesMatchingFace[face];
 };
-
-export const getFaceMatchingMiddle = (middle) => {
+/**
+ * @name getFaceMatchingMiddle
+ * @description getFaceMatchingMiddle
+ * @function
+ * @param {*} middle
+ * @returns {*}
+ */
+export const getFaceMatchingMiddle = middle => {
 	middle = middle.toLowerCase();
 
 	for (const face of Object.keys(_middlesMatchingFace)) {
+		/**@ts-ignore*/
 		const testMiddle = _middlesMatchingFace[face];
 		if (middle === testMiddle) {
 			return face;
@@ -74,16 +98,21 @@ export const getFaceMatchingMiddle = (middle) => {
 };
 
 /**
- * @param {string|array} notations - The move notation.
- * @param {object} options - Move options.
- * @prop {boolean} options.upperCase - Turn all moves to upper case (i.e. no "double" moves).
+ * @name transformNotations
+ * @description transformNotations
+ * @function
+ * @param {string|[]} notations - The move notation.
+ * @param {{upperCase?:boolean, 		//Turn all moves to upper case (i.e. no "double" moves).
+ * 			orientation?:*,
+ * 			reverse?:*}} options - Move options. 
  *
- * @returns {string|array} -- whichever was initially given.
+ * @returns {string|[]} -- whichever was initially given.
  */
 export const transformNotations = (notations, options = {}) => {
 	let normalized = normalizeNotations(notations);
 
 	if (options.upperCase) {
+		/**@ts-ignore*/
 		normalized = normalized.map(n => n[0].toUpperCase() + n.slice(1));
 	}
 
@@ -99,16 +128,21 @@ export const transformNotations = (notations, options = {}) => {
 };
 
 /**
- * @param {array|string} notations - The notations to noramlize.
- * @returns {array}
+ * @name normalizeNotations
+ * @description normalizeNotations
+ * @function
+ * @param {[]|string} notations - The notations to noramlize.
+ * @returns {[]}
  */
 export const normalizeNotations = (notations) => {
 	if (typeof notations === 'string') {
+		/**@ts-ignore */
 		notations = notations.split(' ');
 	}
-
+	/**@ts-ignore */
 	notations = notations.filter(notation => notation !== '');
 
+	/**@ts-ignore */
 	return notations.map(notation => {
 		const isPrime = notation.toLowerCase().includes('prime');
 		const isDouble = notation.includes('2');
@@ -123,25 +157,24 @@ export const normalizeNotations = (notations) => {
 };
 
 /**
- * Finds the direction from an origin face to a target face. The origin face
- * will be oriented so that it becomes FRONT. An orientation object must be
- * provided that specifies any of these faces (exclusively): TOP, RIGHT, DOWN,
- * LEFT.
- * If FRONT or BACK is provided along with one of those faces, it will be
- * ignored. If FRONT or BACK is the only face provided, the orientation is
- * ambiguous and an error will be thrown.
- *
- * Example:
- * getDirectionFromFaces('back', 'up', { down: 'right' })
- * Step 1) orient the BACK face so that it becomes FRONT.
- * Step 2) orient the DOWN face so that it becomes RIGHT.
- * Step 3) Find the direction from BACK (now FRONT) to UP (now LEFT).
- * Step 4) Returns 'left'.
- *
+ * @name getDirectionFromFaces
+ * @description Finds the direction from an origin face to a target face. The origin face
+ * 				will be oriented so that it becomes FRONT. An orientation object must be
+ * 				provided that specifies any of these faces (exclusively): TOP, RIGHT, DOWN,
+ * 				LEFT.
+ * 				If FRONT or BACK is provided along with one of those faces, it will be
+ * 				ignored. If FRONT or BACK is the only face provided, the orientation is
+ * 				ambiguous and an error will be thrown.
+ * @example		getDirectionFromFaces('back', 'up', { down: 'right' })
+ * 				Step 1) orient the BACK face so that it becomes FRONT.
+ * 				Step 2) orient the DOWN face so that it becomes RIGHT.
+ * 				Step 3) Find the direction from BACK (now FRONT) to UP (now LEFT).
+ * 				Step 4) Returns 'left'.
+ * @function
  * @param {string} origin - The origin face.
  * @param {string} target - The target face.
  * @param {object} orientation - The object that specifies the cube orientation.
- * @returns {string|number}
+ * @returns {string|undefined}
  */
 export const getDirectionFromFaces = (origin, target, orientation) => {
 	orientation = _toLowerCase(orientation);
@@ -151,6 +184,7 @@ export const getDirectionFromFaces = (origin, target, orientation) => {
 	const toFace = new Face(target);
 
 	const rotations = _getRotationsForOrientation(orientation);
+	/**@ts-ignore*/
 	_rotateFacesByRotations([fromFace, toFace], rotations);
 
 	const axis = new Vector(cross([], fromFace.normal(), toFace.normal())).getAxis();
@@ -169,9 +203,11 @@ export const getDirectionFromFaces = (origin, target, orientation) => {
 };
 
 /**
- * See `getDirectionFromFaces`. Almost identical, but instead of finding a
- * direction from an origin face and target face, this finds a target face from
- * an origin face and direction.
+ * @name getFaceFromDirection
+ * @description See `getDirectionFromFaces`. Almost identical, but instead of finding a
+ * 				direction from an origin face and target face, this finds a target face from
+ * 				an origin face and direction.
+ * @function
  * @param {string} origin - The origin face.
  * @param {string} direction - The direction.
  * @param {object} orientation - The orientation object.
@@ -184,6 +220,7 @@ export const getFaceFromDirection = (origin, direction, orientation) => {
 	const fromFace = new Face(origin);
 
 	const rotations = _getRotationsForOrientation(orientation);
+	/**@ts-ignore*/
 	_rotateFacesByRotations([fromFace], rotations);
 
 	const directionFace = new Face(direction);
@@ -192,18 +229,21 @@ export const getFaceFromDirection = (origin, direction, orientation) => {
 
 	// at this point fromFace is now the target face, but we still need to revert
 	// the orientation to return the correct string
-	const reversedRotations = rotations.map(rotation => Vector.reverseRotation(rotation)).reverse();
+	const reversedRotations = rotations.map((/**@type{*}*/rotation) => Vector.reverseRotation(rotation)).reverse();
+	/**@ts-ignore*/
 	_rotateFacesByRotations([fromFace], reversedRotations);
 	return fromFace.toString();
 };
 
 /**
- * Finds a move that rotates the given face around its normal, by the angle
- * described by normal1 -> normal2.
+ * @name getRotationFromTo
+ * @description Finds a move that rotates the given face around its normal, by the angle
+ * 				described by normal1 -> normal2.
+ * @function
  * @param {string} face - The face to rotate.
  * @param {string} from - The origin face.
  * @param {string} to - The target face.
- * @returns {string}
+ * @returns {string|undefined}
  */
 export const getRotationFromTo = (face, from, to) => {
 	const rotationFace = new Face(face);
@@ -235,31 +275,37 @@ export const getRotationFromTo = (face, from, to) => {
 };
 
 /**
- * Returns an array of transformed notations so that if done when the cube's
- * orientation is default (FRONT face is FRONT, RIGHT face is RIGHT, etc.), the
- * moves will have the same effect as performing the given notations on a cube
- * oriented by the specified orientation.
- *
- * Examples:
- * orientMoves(['R', 'U'], { front: 'front', up: 'up' })      === ['R', 'U']
- * orientMoves(['R', 'U'], { front: 'front', down: 'right' }) === ['U', 'L']
- * orientMoves(['R', 'U', 'LPrime', 'D'], { up: 'back', right: 'down' }) === ['D', 'B', 'UPrime', 'F']
- *
- * @param {array} notations - An array of notation strings.
+ * @name orientMoves
+ * @description Returns an array of transformed notations so that if done when the cube's
+ * 				orientation is default (FRONT face is FRONT, RIGHT face is RIGHT, etc.), the
+ * 				moves will have the same effect as performing the given notations on a cube
+ * 				oriented by the specified orientation.
+ * @function
+ * @example		orientMoves(['R', 'U'], { front: 'front', up: 'up' })      === ['R', 'U']
+ * 				orientMoves(['R', 'U'], { front: 'front', down: 'right' }) === ['U', 'L']
+ * 				orientMoves(['R', 'U', 'LPrime', 'D'], { up: 'back', right: 'down' }) === ['D', 'B', 'UPrime', 'F']
+ * @function
+ * @param {[]} notations - An array of notation strings.
  * @param {object} orientation - The orientation object.
+ * @returns {*}
  */
 export const orientMoves = (notations, orientation) => {
 	orientation = _toLowerCase(orientation);
 	const rotations = _getRotationsForOrientation(orientation);
-	rotations.reverse().map(rotation => Vector.reverseRotation(rotation));
+	rotations.reverse().map((/**@type{*}*/rotation) => Vector.reverseRotation(rotation));
 
 	return notations.map(notation => {
+		/**@ts-ignore */
 		const isPrime = notation.toLowerCase().includes('prime');
+		/**@ts-ignore */
 		const isDouble = notation.includes('2');
+		/**@ts-ignore */
 		const isWithMiddle = notation[0] === notation[0].toLowerCase();
+		/**@ts-ignore */
 		const isMiddle = ['m', 'e', 's'].includes(notation[0].toLowerCase());
 
 		if (isDouble) {
+			/**@ts-ignore */
 			notation = notation.replace('2', '');
 		}
 
@@ -267,12 +313,14 @@ export const orientMoves = (notations, orientation) => {
 
 		if (isMiddle) {
 			const faceStr = getFaceOfMove(getFaceMatchingMiddle(notation));
+			/**@ts-ignore */
 			face = new Face(faceStr);
 		} else {
 			const faceStr = getFaceOfMove(notation[0]);
+			/**@ts-ignore */
 			face = new Face(faceStr);
 		}
-
+		/**@ts-ignore*/
 		_rotateFacesByRotations([face], rotations);
 
 		let newNotation; // this will always be lower case
@@ -296,24 +344,31 @@ export const orientMoves = (notations, orientation) => {
 //-----------------
 
 /**
- * Returns an object with all keys and values lowercased. Assumes all keys and
- * values are strings.
+ * @name _toLowerCase
+ * @description Returns an object with all keys and values lowercased. Assumes all keys and
+ * 				values are strings.
+ * @function
  * @param {object} object - The object to map.
+ * @returns {*}
  */
 function _toLowerCase(object) {
 	const ret = {};
 	Object.keys(object).forEach(key => {
+		/**@ts-ignore */
 		ret[key.toLowerCase()] = object[key].toLowerCase();
 	});
 	return ret;
 }
 
 /**
- * This function is specificly for `getDirectionFromFaces` and
- * `getFaceFromDirection`. It removes all keys that are either 'front' or 'back'
- * and sets the given front face to orientation.front.
+ * @name _prepOrientationForDirection
+ * @description This function is specificly for `getDirectionFromFaces` and
+ * 				`getFaceFromDirection`. It removes all keys that are either 'front' or 'back'
+ * 				and sets the given front face to orientation.front.
+ * @function
  * @param {object} orientation - The orientation object.
  * @param {string} front - The face to set as front.
+ * @returns {*}
  */
 function _prepOrientationForDirection(orientation, front) {
 	const keys = Object.keys(orientation);
@@ -330,24 +385,29 @@ function _prepOrientationForDirection(orientation, front) {
 		if (['front', 'back'].includes(key)) {
 			return;
 		}
+		/**@ts-ignore */
 		orientation[key] = temp[key];
 	});
-
+	/**@ts-ignore*/
 	orientation.front = front.toLowerCase();
 
 	return orientation;
 }
 
 /**
+ * @name _getRotationsForOrientation
+ * @description _getRotationsForOrientation
  * @param {object} orientation - The orientation object.
- * @returns {array}
+ * @returns {*}
  */
 function _getRotationsForOrientation(orientation) {
+	/**@ts-ignore */
 	if (Object.keys(orientation) <= 1) {
 		throw new Error(`Orientation object "${orientation}" is ambiguous. Please specify 2 faces.`);
 	}
 
 	const keys = Object.keys(orientation);
+	/**@ts-ignore */
 	const origins = keys.map(key => new Face(orientation[key]));
 	const targets = keys.map(key => new Face(key));
 
@@ -379,27 +439,35 @@ function _getRotationsForOrientation(orientation) {
 }
 
 /**
- * @param {array} - Array of Face objects to rotate.
- * @param {array} - Array of rotations to apply to faces.
- * @returns {null}
+ * @name _rotateFacesByRotations
+ * @description _rotateFacesByRotations
+ * @param {[]} faces 		- Array of Face objects to rotate.
+ * @param {[]} rotations 	- Array of rotations to apply to faces.
+ * @returns {void}
  */
 function _rotateFacesByRotations(faces, rotations) {
 	for (const face of faces) {
 		for (const rotation of rotations) {
+			/**@ts-ignore */
 			face.rotate(rotation.axis, rotation.angle);
 		}
 	}
 }
 
 /**
- * @param {array} notations
- * @returns {array}
+ * @name _reverseNotations
+ * @description _reverseNotations
+ * @param {[]} notations
+ * @returns {*}
  */
 function _reverseNotations(notations) {
+	/**@ts-ignore*/
 	const reversed = [];
 
 	for (let notation of notations) {
+		/**@ts-ignore*/
 		const isPrime = notation.includes('prime');
+		/**@ts-ignore*/
 		notation = isPrime ? notation[0] : notation[0] + 'prime';
 		reversed.push(notation);
 	}

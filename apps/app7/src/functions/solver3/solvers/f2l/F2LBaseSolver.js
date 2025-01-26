@@ -9,15 +9,37 @@ import {
 	getMoveOfFace
 } from '../../utils/index.js';
 
-const R = (moves) => RubiksCube.reverseMoves(moves);
+/**
+ * @name R
+ * @description R
+ * @function
+ * @param {*} moves
+ * @returns {*}
+ */
+const R = moves => RubiksCube.reverseMoves(moves);
 
+/**
+ * @name F2LBaseSolver
+ * @description F2LBaseSolver
+ * @class
+ */
 class F2LBaseSolver extends BaseSolver {
+	/**
+	 * @param {*} args
+	 */
 	constructor(...args) {
+		/**@ts-ignore */
 		super(...args);
 
 		this.phase = 'f2l';
 	}
-
+	/**
+	 * @name colorsMatch
+	 * @description colorsMatch
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {*}
+	 */
 	colorsMatch({ corner, edge }) {
 		const colors = edge.colors();
 
@@ -29,7 +51,11 @@ class F2LBaseSolver extends BaseSolver {
 	}
 
 	/**
-	 * Returns true only if the pair is matched and in the correct slot.
+	 * @name isPairSolved
+	 * @description Returns true only if the pair is matched and in the correct slot.
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {boolean}
 	 */
 	isPairSolved({ corner, edge }) {
 		if (!this.isPairMatched({ corner, edge })) {
@@ -51,7 +77,13 @@ class F2LBaseSolver extends BaseSolver {
 
 		return true;
 	}
-
+	/**
+	 * @name isPairMatched
+	 * @description isPairMatched
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {boolean}
+	 */
 	isPairMatched({ corner, edge }) {
 		// are the two non-cross colors the same?
 		if (!this.colorsMatch({ corner, edge })) {
@@ -67,7 +99,13 @@ class F2LBaseSolver extends BaseSolver {
 
 		return true;
 	}
-
+	/**
+	 * @name isPairSeparated
+	 * @description isPairSeparated
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {boolean}
+	 */
 	isPairSeparated({ corner, edge }) {
 		// colors must match
 		if (!this.colorsMatch({ corner, edge })) {
@@ -85,7 +123,7 @@ class F2LBaseSolver extends BaseSolver {
 		}
 
 
-		const otherColor = corner.colors().find(color => {
+		const otherColor = corner.colors().find((/**@type{*}*/color) => {
 			return color !== 'u' && corner.getFaceOfColor(color) !== 'down';
 		});
 
@@ -103,14 +141,20 @@ class F2LBaseSolver extends BaseSolver {
 
 		return isOneMoveFromMatched;
 	}
-
+	/**
+	 * @name solveMatchedPair
+	 * @description solveMatchedPair
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {*}
+	 */
 	solveMatchedPair({ corner, edge }) {
 		if (!this.isPairMatched({ corner, edge })) {
 			throw new Error('Pair is not matched');
 		}
 
 		// get the color that is not on the down face and is not the crossColor
-		const matchedColor = edge.colors().find(color => {
+		const matchedColor = edge.colors().find((/**@type{*}*/color) => {
 			return edge.getFaceOfColor(color) !== 'down';
 		});
 
@@ -122,6 +166,7 @@ class F2LBaseSolver extends BaseSolver {
 
 		const matchingFace = getFaceOfMove(matchedColor);
 		const currentFace = corner.getFaceOfColor(matchedColor);
+		/**@ts-ignore */
 		const prepFace = getFaceFromDirection(matchingFace, isLeft ? 'left' : 'right', { up: 'down' });
 
 		const prep = getRotationFromTo('down', currentFace, prepFace);
@@ -132,17 +177,23 @@ class F2LBaseSolver extends BaseSolver {
 		this.move(solveMoves, { upperCase: true });
 		return solveMoves;
 	}
-
+	/**
+	 * @name solveSeparatedPair
+	 * @description solveSeparatedPair
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {*}
+	 */
 	solveSeparatedPair({ corner, edge }) {
 		if (!this.isPairSeparated({ corner, edge })) {
 			throw new Error('Pair is not separated');
 		}
 
 		// get the color that is not on the down face and is not the crossColor
-		const matchedColor = edge.colors().find(color => {
+		const matchedColor = edge.colors().find((/**@type{*}*/color) => {
 			return edge.getFaceOfColor(color) !== 'down';
 		});
-
+		/**@ts-ignore */
 		const isLeft = getDirectionFromFaces(
 			corner.getFaceOfColor('u'),
 			edge.getFaceOfColor(matchedColor),
@@ -151,8 +202,9 @@ class F2LBaseSolver extends BaseSolver {
 
 		const currentFace = corner.getFaceOfColor('u');
 		const prepFace = getFaceOfMove(matchedColor);
-
+		/**@ts-ignore */
 		const prep = getRotationFromTo('down', currentFace, prepFace);
+		/**@ts-ignore */
 		let match = getMoveOfFace(prepFace);
 		match = isLeft ? R(match) : match;
 		const insert = isLeft ? 'DPrime' : 'D';
@@ -161,14 +213,26 @@ class F2LBaseSolver extends BaseSolver {
 		this.move(solveMoves, { upperCase: true });
 		return solveMoves;
 	}
-
+	/**
+	 * @name _getPartitionBefore
+	 * @description _getPartitionBefore
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {*}
+	 */
 	_getPartitionBefore({ corner, edge }) {
 		return {
 			corner: corner.clone(),
 			edge: edge.clone()
 		};
 	}
-
+	/**
+	 * @name _getPartitionAfter
+	 * @description _getPartitionAfter
+	 * @method
+	 * @param {{corner:*, edge:*}} data
+	 * @returns {*}
+	 */
 	_getPartitionAfter({ corner, edge }) {
 		return { corner, edge };
 	}

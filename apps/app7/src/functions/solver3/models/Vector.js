@@ -2,14 +2,8 @@
  * @module apps/app7/src/functions/solver3/models/vector
  */
 
-// import angle from 'gl-vec3/angle';
-// import cross from 'gl-vec3/cross';
-// import rotateX from 'gl-vec3/rotateX';
-// import rotateY from 'gl-vec3/rotateY';
-// import rotateZ from 'gl-vec3/rotateZ';
-/**@ts-ignore */
-const {default:{angle, cross, rotateX, rotateY, rotateZ}} = await import('../module/gl-vec3/index.js');
-
+/**@type{import('../module/gl-vec3/index.js')} */
+const {angle, cross, rotateX, rotateY, rotateZ} = await import('../module/gl-vec3/index.js');
 
 const rotate = {
 	x: rotateX,
@@ -17,34 +11,47 @@ const rotate = {
 	z: rotateZ
 };
 
+/**
+ * @name Vector
+ * @description Vector
+ * @class
+ */
 class Vector {
 	/**
-	 * Factory method.
+	 * @name FromString
+	 * @description Factory method.
 	 * @param {string} vector - Space-deliminated x, y, and z values.
+	 * @method
 	 * @returns {Vector}
 	 */
 	static FromString(vector) {
+		/**@ts-ignore */
 		return new Vector(vector.split(' ').map(value => parseInt(value)));
 	}
 
 	/**
-	 * @param {array} vector1 - Vector 1.
-	 * @param {array} vector2 - Vector 2.
+	 * @name areEqual
+	 * @description areEqual
+	 * @method
+	 * @param {[]} vector1 - Vector 1.
+	 * @param {[]} vector2 - Vector 2.
 	 * @returns {boolean}
 	 */
 	static areEqual(vector1, vector2) {
+		/**@ts-ignore */
 		return vector1[0] === vector2[0] && vector1[1] === vector2[1] && vector1[2] === vector2[2];
 	}
 
 	/**
-	 * Helper method. gl-vec3's angle function always returns positive but in many
-	 * cases we want the angle in the direction from one vector to another. To get
-	 * the sign of the angle, cross the two vectors and determine the direction the
-	 * crossed vector, um, directs in. For example, the vector [0, -1, 0] would
-	 * shoot negatively along the y-axis.
-	 *
-	 * @param {array} v1 - Vector 1.
-	 * @param {array} v2 - Vector 2.
+	 * @name getAngle
+	 * @description Helper method. gl-vec3's angle function always returns positive but in many
+	 * 				cases we want the angle in the direction from one vector to another. To get
+	 * 				the sign of the angle, cross the two vectors and determine the direction the
+	 * 				crossed vector, um, directs in. For example, the vector [0, -1, 0] would
+	 * 				shoot negatively along the y-axis.
+	 * @method
+	 * @param {[]} v1 - Vector 1.
+	 * @param {[]} v2 - Vector 2.
 	 * @returns {number}
 	 */
 	static getAngle(v1, v2) {
@@ -56,10 +63,12 @@ class Vector {
 	}
 
 	/**
-	 * Finds the rotation axis and angle to get from one normal to another.
-	 * @param {array} normal1 - The from normal.
-	 * @param {array} normal2 - The to normal.
-	 * @returns {object} - Stores the rotation axis and angle
+	 * @name getRotationFromNormals
+	 * @descriotion Finds the rotation axis and angle to get from one normal to another.
+	 * @method
+	 * @param {[]} normal1 - The from normal.
+	 * @param {[]} normal2 - The to normal.
+	 * @returns {{axis:*, angle:*}} - Stores the rotation axis and angle
 	 */
 	static getRotationFromNormals(normal1, normal2) {
 		let axis = new Vector(cross([], normal1, normal2)).getAxis();
@@ -80,8 +89,11 @@ class Vector {
 	}
 
 	/**
-	 * @param {object} rotation - The rotation to reverse.
-	 * @returns {object}
+	 * @name reverseRotation
+	 * @description reverseRotation
+	 * @method
+	 * @param {{axis:*, angle:*}} rotation - The rotation to reverse.
+	 * @returns {{axis:*, angle:*}}
 	 */
 	static reverseRotation(rotation) {
 		rotation.angle *= -1;
@@ -89,21 +101,29 @@ class Vector {
 	}
 
 	/**
-	 * @param {array} [vector] - Contains x, y, and z values.
+	 * @param {[]} [vector] - Contains x, y, and z values.
 	 */
 	constructor(vector) {
+		/**@ts-ignore */
 		this.set(vector);
 	}
 
 	/**
-	 * @returns {array}
+	 * @name toArray
+	 * @description toArray
+	 * @method
+	 * @returns {*}
 	 */
 	toArray() {
 		return this.vector;
 	}
 
 	/**
-	 * @param {array} vector - The new vector to store.
+	 * @name set
+	 * @description set
+	 * @method
+	 * @param {[]} vector - The new vector to store.
+	 * @returns {*}
 	 */
 	set(vector) {
 		if (typeof vector === 'undefined') {
@@ -114,27 +134,45 @@ class Vector {
 	}
 
 	/**
+	 * @name setX
+	 * @description setX
+	 * @method
 	 * @param {number} value - The value to store.
+	 * @returns {*}
 	 */
 	setX(value) {
+		/**@ts-ignore */
 		this.vector[0] = value;
 	}
 
 	/**
+	 * @name setY
+	 * @description setY
+	 * @method
 	 * @param {number} value - The value to store.
+	 * @returns {*}
 	 */
 	setY(value) {
+		/**@ts-ignore */
 		this.vector[1] = value;
 	}
 
 	/**
+	 * @name setZ
+	 * @description setZ
+	 * @method
 	 * @param {number} value - The value to store.
+	 * @returns {*}
 	 */
 	setZ(value) {
+		/**@ts-ignore */
 		this.vector[2] = value;
 	}
 
 	/**
+	 * @name getX
+	 * @description getX
+	 * @method
 	 * @returns {number}
 	 */
 	getX() {
@@ -142,6 +180,9 @@ class Vector {
 	}
 
 	/**
+	 * @name getY
+	 * @description getY
+	 * @method
 	 * @returns {number}
 	 */
 	getY() {
@@ -149,6 +190,8 @@ class Vector {
 	}
 
 	/**
+	 * @name getZ
+	 * @description getZ
 	 * @returns {number}
 	 */
 	getZ() {
@@ -156,13 +199,15 @@ class Vector {
 	}
 
 	/**
-	 * Kind of a flimsy method. If this vector points parallel to an axis, this
-	 * returns true. A hacky way to find this is to count the number of 0's and
-	 * return true if and only if the count is 2.
+	 * @name isAxis
+	 * @description Kind of a flimsy method. If this vector points parallel to an axis, this
+	 * 				returns true. A hacky way to find this is to count the number of 0's and
+	 * 				return true if and only if the count is 2.
 	 * @returns {boolean}
 	 */
 	isAxis() {
 		let count = 0;
+		/**@ts-ignore */
 		for (const value of this.vector) {
 			if (value === 0) {
 				count += 1;
@@ -173,42 +218,51 @@ class Vector {
 	}
 
 	/**
-	 * Kind of a flimsy method. If this vector points parallel to an axis, return
-	 * that axis.
-	 * @returns {string}
+	 * @name getAxis
+	 * @description Kind of a flimsy method. If this vector points parallel to an axis, return
+	 * 				that axis.
+	 * @method
+	 * @returns {*}
 	 */
 	getAxis() {
 		if (!this.isAxis()) {
 			return;
 		}
-
+		/**@ts-ignore */
 		if (this.vector[0] !== 0) return 'x';
+		/**@ts-ignore */
 		if (this.vector[1] !== 0) return 'y';
+		/**@ts-ignore */
 		if (this.vector[2] !== 0) return 'z';
 	}
 
 	/**
-	 * Kind of a flimsy method. If this vector points parallel to an axis, return
-	 * the magnitude of the value along that axis. (Basically, return whether it
-	 * is positive or negative.)
-	 * @returns {number}
+	 * @name getMagnitude
+	 * @description Kind of a flimsy method. If this vector points parallel to an axis, return
+	 * 				the magnitude of the value along that axis. (Basically, return whether it
+	 * 				is positive or negative.)
+	 * @method
+	 * @returns {*}
 	 */
 	getMagnitude() {
 		if (!this.isAxis()) {
 			return;
 		}
-
+		/**@ts-ignore */
 		return this[`get${this.getAxis().toUpperCase()}`]();
 	}
 
 	/**
+	 * @name rotate
+	 * @description rotate
+	 * @method
 	 * @param {string} axis - The axis to rotate around.
 	 * @param {number} angle - The angle of rotation.
 	 * @returns {Vector}
 	 */
 	rotate(axis, angle) {
 		axis = axis.toLowerCase();
-
+		/**@ts-ignore */
 		this.set(rotate[axis]([], this.vector, [0, 0, 0], angle));
 		return this;
 	}

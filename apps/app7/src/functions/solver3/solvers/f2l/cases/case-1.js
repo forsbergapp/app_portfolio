@@ -9,11 +9,20 @@ import {
 	getDirectionFromFaces
 } from '../../../utils/index.js';
 
-const R = (moves) => RubiksCube.reverseMoves(moves);
+/**
+ * @name R
+ * @description R
+ * @function
+ * @param {*} moves
+ * @returns {*}
+ */
+const R = moves => RubiksCube.reverseMoves(moves);
 
 /**
- * Top level case 1:
- * Both corner and edge are on the DOWN face.
+ * @name  Case1Solver
+ * @description Top level case 1:
+ * 				Both corner and edge are on the DOWN face.
+ * @class
  */
 class Case1Solver extends F2LCaseBaseSolver {
 	/**
@@ -37,6 +46,13 @@ class Case1Solver extends F2LCaseBaseSolver {
 	 *
 	 * TODO: refactor
 	 */
+	/**
+	 * @name _getCaseNumber
+	 * @description _getCaseNumber
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_getCaseNumber({ corner, edge }) {
 		if (this.isPairMatched({ corner, edge })) {
 			return 1;
@@ -46,15 +62,15 @@ class Case1Solver extends F2LCaseBaseSolver {
 		}
 
 		let sharedFace;
-		edge.faces().forEach(face => {
+		edge.faces().forEach((/**@type{*}*/face) => {
 			if (corner.faces().includes(face) && face !== 'down') {
 				sharedFace = face;
 			}
 		});
-		const otherColor = corner.colors().find(color => {
+		const otherColor = corner.colors().find((/**@type{*}*/color) => {
 			return color !== 'u' && color !== corner.getColorOfFace('down');
 		});
-		const primaryColor = edge.colors().find(c => edge.getFaceOfColor(c) !== 'down');
+		const primaryColor = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) !== 'down');
 
 		// Group 1
 		if (corner.getFaceOfColor('u') === 'down') {
@@ -89,19 +105,38 @@ class Case1Solver extends F2LCaseBaseSolver {
 			return 10;
 		}
 	}
-
+	/**
+	 * @name _solveCase1
+	 * @description _solveCase1
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase1({ corner, edge }) {
 		return this.solveMatchedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase2
+	 * @description _solveCase2
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase2({ corner, edge }) {
 		return this.solveSeparatedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase3
+	 * @description _solveCase3
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase3({ corner, edge }) {
 		// calculate which side the corner is on, the position, etc.
-		const currentFace = edge.faces().find(face => face !== 'down');
+		const currentFace = edge.faces().find((/**@type{*}*/face) => face !== 'down');
 		const targetFace = getFaceOfMove(edge.getColorOfFace('down'));
+		/**@ts-ignore */
 		const prepFace = getFaceFromDirection(targetFace, 'back', { up: 'down' });
 		const otherFace = corner.getFaceOfColor(edge.getColorOfFace('down'));
 		const isLeft = getFaceFromDirection(currentFace, otherFace, { up: 'down' }) === 'left';
@@ -117,28 +152,43 @@ class Case1Solver extends F2LCaseBaseSolver {
 		solveMoves += `${moveFace} ${dir} ${R(moveFace)} ${dir} ${moveFace} ${moveFace}`;
 		this.move(solveMoves, { upperCase: true });
 	}
-
+	/**
+	 * @name _solveCase4
+	 * @description _solveCase4
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase4({ corner, edge }) {
 		// calculate which side the corner is on, the position, etc.
-		const currentFace = edge.faces().find(face => face !== 'down');
+		const currentFace = edge.faces().find((/**@type{*}*/face) => face !== 'down');
 		const targetFace = getFaceOfMove(edge.getColorOfFace(currentFace));
-		const otherFace = corner.faces().find(face => !edge.faces().includes(face));
+		const otherFace = corner.faces().find((/**@type{*}*/face) => !edge.faces().includes(face));
 		const isLeft = getFaceFromDirection(otherFace, currentFace, { up: 'down' }) === 'left';
 
 		// the moves
+		/**@ts-ignore*/
 		const prep = getRotationFromTo('down', currentFace, targetFace);
+		/**@ts-ignore */
 		let moveFace = getMoveOfFace(targetFace);
 		moveFace = isLeft ? R(moveFace) : moveFace;
 
 		this.move(`${prep} ${moveFace} D D ${R(moveFace)}`, { upperCase: true });
 		this.solveSeparatedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase5
+	 * @description _solveCase5
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase5({ corner, edge }) {
-		const primary = edge.colors().find(color => edge.getFaceOfColor(color) !== 'down');
-		const secondary = edge.colors().find(color => edge.getFaceOfColor(color) === 'down');
+		const primary = edge.colors().find((/**@type{*}*/color) => edge.getFaceOfColor(color) !== 'down');
+		const secondary = edge.colors().find((/**@type{*}*/color) => edge.getFaceOfColor(color) === 'down');
 
 		const isLeft = getFaceFromDirection(
+			/**@ts-ignore */
 			getFaceOfMove(primary),
 			getFaceOfMove(secondary),
 			{ up: 'down' }
@@ -148,7 +198,9 @@ class Case1Solver extends F2LCaseBaseSolver {
 		const edgeTarget = getFaceOfMove(primary);
 
 		// do the prep move now. need to calculate things after this move is done
+		/**@ts-ignore */
 		const edgePrep = getRotationFromTo('down', edgeCurrent, edgeTarget);
+		/**@ts-ignore */
 		this.move(edgePrep, { upperCase: true });
 
 		// calculate corner stuff
@@ -156,15 +208,22 @@ class Case1Solver extends F2LCaseBaseSolver {
 		const cornerTarget = edgeTarget;
 
 		// the moves
+		/**@ts-ignore */
 		const cornerPrep = getRotationFromTo('down', cornerCurrent, cornerTarget);
 		const open = isLeft ? R(edgeTarget) : edgeTarget;
 
 		this.move(`${open} ${cornerPrep} ${R(open)}`, { upperCase: true });
 		this.solveMatchedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase6
+	 * @description _solveCase6
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase6({ corner, edge }) {
-		const primary = edge.colors().find(color => edge.getFaceOfColor(color) !== 'down');
+		const primary = edge.colors().find((/**@type{*}*/color) => edge.getFaceOfColor(color) !== 'down');
 
 		const currentFace = edge.getFaceOfColor(primary);
 		const targetFace = getFaceOfMove(edge.getColorOfFace('down'));
@@ -173,7 +232,7 @@ class Case1Solver extends F2LCaseBaseSolver {
 			corner.getFaceOfColor(primary),
 			{ up: 'down' }
 		) === 'left';
-
+		/**@ts-ignore */
 		const prep = getRotationFromTo('down', currentFace, targetFace);
 		const moveFace = isLeft ? targetFace : R(targetFace);
 		const dir = isLeft ? 'DPrime' : 'D';
@@ -182,8 +241,15 @@ class Case1Solver extends F2LCaseBaseSolver {
 		this.solveSeparatedPair({ corner, edge});
 	}
 
+	/**
+	 * @name _solveCase7
+	 * @description _solveCase7
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase7({ corner, edge }) {
-		const primary = edge.colors().find(c => edge.getFaceOfColor(c) !== 'down');
+		const primary = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) !== 'down');
 		const cornerCurrent = corner.getFaceOfColor('u');
 		const cornerTarget = getFaceOfMove(primary);
 		const isLeft = getDirectionFromFaces(
@@ -191,8 +257,9 @@ class Case1Solver extends F2LCaseBaseSolver {
 			corner.getFaceOfColor('u'),
 			{ up: 'down' }
 		) === 'left';
-
+		/**@ts-ignore */
 		const cornerPrep = getRotationFromTo('down', cornerCurrent, cornerTarget);
+		/**@ts-ignore */
 		this.move(cornerPrep, { upperCase: true });
 
 		const edgeCurrent = edge.getFaceOfColor(primary);
@@ -204,10 +271,16 @@ class Case1Solver extends F2LCaseBaseSolver {
 
 		this.solveMatchedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase8
+	 * @description _solveCase8
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase8({ corner, edge }) {
-		const primary = edge.colors().find(c => edge.getFaceOfColor(c) !== 'down');
-		const secondary = edge.colors().find(c => edge.getFaceOfColor(c) === 'down');
+		const primary = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) !== 'down');
+		const secondary = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) === 'down');
 
 		const currentFace = corner.getFaceOfColor(secondary);
 		const targetFace = getFaceOfMove(primary);
@@ -217,7 +290,7 @@ class Case1Solver extends F2LCaseBaseSolver {
 			corner.getFaceOfColor('u'),
 			{ up: 'down' }
 		) === 'left';
-
+		/**@ts-ignore */
 		const prep = getRotationFromTo('down', currentFace, targetFace);
 		const open = isLeft ? R(targetFace) : targetFace;
 		const dir = isLeft ? 'D' : 'DPrime';
@@ -225,9 +298,15 @@ class Case1Solver extends F2LCaseBaseSolver {
 		this.move(`${prep} ${open} ${dir} ${R(open)}`, { upperCase: true });
 		this.solveSeparatedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase9
+	 * @description _solveCase9
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase9({ corner, edge }) {
-		const otherColor = edge.colors().find(c => edge.getFaceOfColor(c) === 'down');
+		const otherColor = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) === 'down');
 		const currentFace = corner.getFaceOfColor('u');
 		const targetFace = getFaceOfMove(otherColor);
 
@@ -236,17 +315,23 @@ class Case1Solver extends F2LCaseBaseSolver {
 			currentFace,
 			{ up: 'down' }
 		) === 'left';
-
+		/**@ts-ignore */
 		const prep = getRotationFromTo('down', currentFace, targetFace);
 		const moveFace = isLeft ? targetFace : R(targetFace);
 
 		this.move(`${prep} ${moveFace} D D ${R(moveFace)}`, { upperCase: true });
 		this.solveSeparatedPair({ corner, edge });
 	}
-
+	/**
+	 * @name _solveCase10
+	 * @description _solveCase10
+	 * @method
+	 * @param {{corner:*, edge:*}} case
+	 * @returns {*}
+	 */
 	_solveCase10({ corner, edge }) {
-		const primary = edge.colors().find(c => edge.getFaceOfColor(c) !== 'down');
-		const secondary = edge.colors().find(c => edge.getFaceOfColor(c) === 'down');
+		const primary = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) !== 'down');
+		const secondary = edge.colors().find((/**@type{*}*/c) => edge.getFaceOfColor(c) === 'down');
 		const cornerCurrent = corner.getFaceOfColor('u');
 		const cornerTarget = getFaceOfMove(secondary);
 		const isLeft = getDirectionFromFaces(
@@ -254,14 +339,16 @@ class Case1Solver extends F2LCaseBaseSolver {
 			corner.getFaceOfColor('u'),
 			{ up: 'down' }
 		) === 'left';
-
+		/**@ts-ignore */
 		const cornerPrep = getRotationFromTo('down', cornerCurrent, cornerTarget);
+		/**@ts-ignore */
 		this.move(cornerPrep, { upperCase: true });
 
 		const edgeCurrent = edge.getFaceOfColor(primary);
 		const edgeTarget = getFaceOfMove(primary);
 
 		const open = isLeft ? cornerTarget : R(cornerTarget);
+		/**@ts-ignore */
 		const edgePrep = getRotationFromTo('down', edgeCurrent, edgeTarget);
 
 		this.move(`${open} ${edgePrep} ${R(open)}`, { upperCase: true });
