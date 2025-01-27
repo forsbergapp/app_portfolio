@@ -90,7 +90,7 @@ sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
         npm install --omit=dev
 sudo npm install -g pm2
 
-pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data docs node_modules microservice .gitignore .eslintignore .eslintrc.js jsdoc.json README.md tsconfig.json"
+pm2 start $HOME/app_portfolio/server/init.js --cwd $HOME/app_portfolio --name app_portfolio -o "/dev/null" -e "/dev/null" --watch --ignore-watch=".git .vscode .well-known data docs node_modules microservice .gitignore .eslintignore .eslintrc.js README.md tsconfig.json"
 
 ```
 	optional (batch and git are used for CD/CI solution):

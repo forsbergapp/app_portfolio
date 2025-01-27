@@ -121,7 +121,7 @@
 
 /**
  * @description APP commonDocumentType
- * @typedef {'MENU'|'APP'|'GUIDE'|'ROUTE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
+ * @typedef {'MENU'|'APP'|'GUIDE'|'ROUTE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_MICROSERVICE'|'MODULE_SERVER'|'MODULE_TEST'} serverDocumentType
  */
 
 /**

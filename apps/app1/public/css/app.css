@@ -31,12 +31,9 @@
 #nav_content_app div[href]{
 	margin-inline-start: 1em;
 }
-#nav_content_jsdoc{
-    margin-top: 1em;
-}
+
 #title,
-#nav_content_app div[href],
-#nav_content_jsdoc li{
+#nav_content_app div[href]{
 	cursor: pointer;
 }
 #title{
@@ -139,89 +136,6 @@
 .code_line,
 .code_text{
     font-family: 'Noto Sans Mono';
-}
-
-/* JSDoc template css*/
-.header{
-    display: block;
-    margin-bottom: 5em;
-}
-
-.section{
-    display: block;
-    margin-bottom: 5em;
-}
-.article{
-    display: block;
-}
-.footer{
-    font-size: 0.6em;
-    margin-bottom: 1em;
-}
-.a {
-    cursor:pointer;
-}
-.ul{
-    font-size: 1em;
-    margin-inline-start: 1em;
-}
-.li{
-    font-size: 0.9em;
-}
-.details .ul{
-    margin-inline-start: 6em;
-}
-.details .li{
-    padding-top: 6px;
-}
-.details dt {
-    width: 120px;
-    float: left;
-    padding-left: 10px;
-    padding-top: 6px;
-}
-.source{
-    font-size: 0.7em !important;
-}
-.description {
-    margin-bottom: 1em;
-    margin-top: 1em;
-    white-space: preserve;
-}
-a {
-    text-decoration: none;
-}
-table
-{
-    border-spacing: 0;
-    border: 0;
-    border-collapse: collapse;
-}
-
-td, th
-{
-    border: 1px solid;
-    margin: 0px;
-    text-align: start;
-    vertical-align: top;
-    padding: 4px 6px;
-    display: table-cell;
-}
-
-thead tr
-{
-    font-weight: bold;
-}
-.params .code{
-    border: none;
-    white-space: inherit;
-    border-radius: inherit;
-    padding: 0;
-    font-size: inherit !important;
-    font-family: inherit;
-    background-color: inherit;
-	color: inherit;
-    border-color: inherit;
 }
 /*RESPONSIVE SECURE*/
 @media only screen and (min-width: 768px) {

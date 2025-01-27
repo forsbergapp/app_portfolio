@@ -368,11 +368,10 @@ const menuRender = async parameters =>{
 };
 /**
  * @name appFunction
- * @description Get documentation menu, guide, app, module or jsdoc documentation
+ * @description Get documentation menu, guide, app, routes, module or module code
  *              Returns different depending document type:
  *              MODULE_CODE         JS   - javascript source file
  *				MENU                JSON - renders menu with scanned files and apps from configuration
- *				JSDOC               HTML - JSDoc rendered file
  *              MODULE_APPS         HTML - markdown converted with documentation of a file in /apps
  *              MODULE_MICROSERVICE HTML - markdown converted with documentation of a file in /microservice
  *              MODULE_SERVER       HTML - markdown converted with documentation of a file in /server
@@ -403,7 +402,7 @@ const appFunction = async parameters =>{
 
     //check if valid document request
     if (
-        ((parameters.data.documentType.toUpperCase()=='GUIDE' ||parameters.data.documentType.toUpperCase()=='APP'||parameters.data.documentType.toUpperCase()=='JSDOC') && parameters.data?.doc == null) ||
+        ((parameters.data.documentType.toUpperCase()=='GUIDE' ||parameters.data.documentType.toUpperCase()=='APP') && parameters.data?.doc == null) ||
         parameters.data?.doc && (parameters.data.doc.indexOf('\\')>-1||parameters.data.doc.indexOf('..')>-1 ||parameters.data.doc.indexOf(' ')>-1)){
             return {http:400,
                 code:'DOC',
@@ -421,9 +420,6 @@ const appFunction = async parameters =>{
             case parameters.data.documentType=='MODULE_CODE' && 
             (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/microservice')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
                 return {result:await getFile(`${process.cwd()}${parameters.data.doc}.js`, true), type:'JS'};
-            }
-            case parameters.data.documentType=='JSDOC':{
-                return {result:await getFile(`${process.cwd()}/apps/common/src/jsdoc/${parameters.data.doc}`, true), type:'HTML'};
             }
             case parameters.data.documentType=='GUIDE':
             case parameters.data.documentType=='APP' && fileModelApp.get({app_id:parameters.app_id, resource_id:serverUtilNumberValue(parameters.data.doc)}).result?.length==1:

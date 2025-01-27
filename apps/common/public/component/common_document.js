@@ -67,30 +67,6 @@ const component = async props => {
                 }).join('\n') ?? '';
             break;
         }
-        case 'JSDOC':{
-            const content_element = props.methods.COMMON_DOCUMENT.createElement('div');
-            content_element.innerHTML = content;
-            if (content_element.querySelector('.prettyprint.source')){
-                //Code
-                classname = 'code';
-                content_element.innerHTML = `<div id='content_title'>${props.data.title}</div>`+ 
-                                                content_element.querySelector('code').textContent.replaceAll('\r\n','\n').split('\n')
-                                                .map((/**@type{string}*/row,/**@type{number}*/index)=>
-                                                    `<div data-line='${index+1}' class='code_line'>${index+1}</div><div data-line='${index+1}' class='code_text'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`).join('\n') ?? '';
-                //highlight selected line if # is used in link
-                if (props.data.href.split('#')[1])   
-                    Array.from(content_element.querySelectorAll(`[data-line='${props.data.href.split('#line')[1]}'`)).forEach((/**@type{HTMLDivElement}*/element) => element.classList.add('code_line_selected'));
-                 
-                content = content_element.innerHTML;
-            }
-            else{
-                //Module
-                //can contain @example JSDoc tags with html code tags
-                //replace all <code></code> tags with <div class='code'></div>
-                content =   `<div id='content_title'>${props.data.title}</div>`+ content_element.innerHTML.replaceAll('<code>','<div class=\'code\'>').replaceAll('</code>','</div>');
-            }
-            break;
-        }
         default:{
             //APP, GUIDE, MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
             classname = 'common_markdown';
