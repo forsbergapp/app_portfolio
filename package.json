@@ -13,8 +13,7 @@
     "sqlite3": "^5.1.7"
   },
   "scripts": {
-    "test": "jasmine --config=test/jasmine.json",
-    "jsdoc": "node node_modules/jsdoc/jsdoc.js -c jsdoc.json --verbose"
+    "test": "jasmine --config=test/jasmine.json"
   },
   "keywords": [],
   "author": "",
@@ -31,7 +30,6 @@
     "@types/pg": "^8.10.3",
     "@types/sqlite3": "^3.1.11",
     "eslint": "^8.49.0",
-    "jasmine": "^5.1.0",
-    "jsdoc": "^4.0.3"
+    "jasmine": "^5.1.0"
   }
 }
