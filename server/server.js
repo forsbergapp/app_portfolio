@@ -189,6 +189,9 @@ const serverResponse = async parameters =>{
                     if(parameters.result_request.type){
                         setType(parameters.result_request.type);
                         if (parameters.result_request?.type=='JSON'){
+                            //set no cache for JSON
+                            parameters.res.setHeader('Cache-control', 'no-cache');
+                            parameters.res.setHeader('Access-Control-Max-Age', '0');
                             if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).get('fields')){
                                 if (parameters.result_request.result[0]){
                                     //limit fields/keys in rows

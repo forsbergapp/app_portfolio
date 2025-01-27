@@ -2388,8 +2388,10 @@ const commonFFB = async parameter => {
         let options = {};
         if (parameter.body ==null)
             options = {
+                        cache: 'no-store',  //browser should never cache result from REST API
                         method: parameter.method,
                         headers: {
+                                    
                                     'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                     ...(authorization && {Authorization: authorization})
                                 },
@@ -2397,6 +2399,7 @@ const commonFFB = async parameter => {
                     };
         else
             options = {
+                    cache: 'no-store',      //browser should never cache result from from REST API
                     method: parameter.method,
                     headers: {
                                 'Content-Type': 'application/json',
