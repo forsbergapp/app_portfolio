@@ -10,8 +10,7 @@
  * @description Template
  * @function
  * @param {{title:string,
- *          app_menu:CommonAppMenu[]
- *          jsdoc_menu:string}} props
+ *          app_menu:CommonAppMenu[]}} props
  * @returns {string}
  */
 const template = props =>`  <div id='menu_open' class='common_icon'></div>
@@ -31,14 +30,6 @@ const template = props =>`  <div id='menu_open' class='common_icon'></div>
                                         </div>
                                         `
                                     ).join('')}
-                                </div>
-                                <div id='nav_content_jsdoc'>
-                                    <div class='app_menu_data' data-type='JSDOC'>
-                                        <div class='app_menu common_link'>JSDOC</div>
-                                        <div class='app_submenu'>
-                                            ${props.jsdoc_menu}
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                             <div id='content'></div>`;
@@ -66,11 +57,6 @@ const component = async props => {
                                                 body:{type:'FUNCTION',documentType:'MENU', data_app_id:props.data.app_id}})
                 .then(result=>JSON.parse(JSON.parse(result).rows))
                 .catch(()=>null);
-    const menu_jsdoc = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
-                                    method:'POST', 
-                                    authorization_type:'APP_ID', 
-                                    body:{type:'FUNCTION',documentType:'JSDOC', data_app_id:props.data.app_id, doc:'nav.html'}})
-                .catch(()=>null);
     const onMounted =()=>{
         //add common_link to JSDoc generated menu so they will get default hover effect
         Array.from(props.methods.COMMON_DOCUMENT.querySelectorAll('#nav_content_jsdoc .app_submenu .li a')).forEach(element=>element.classList.add('common_link'));
@@ -80,8 +66,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({  title:props.methods.COMMON_DOCUMENT.title,
-                                app_menu:menu,
-                                jsdoc_menu:menu_jsdoc
+                                app_menu:menu
         })
     };
 };

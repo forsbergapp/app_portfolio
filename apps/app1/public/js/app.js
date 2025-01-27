@@ -85,9 +85,7 @@ const appEventClick = event => {
                 }
                 case 'title':
                 case 'nav_content_app':
-                case 'nav_content_jsdoc':
-                case 'content':
-                case 'article':{
+                case 'content':{
                     event.preventDefault();
                     if (event.target.getAttribute('href'))
                         show(   event.target.getAttribute('href'), 
@@ -95,7 +93,7 @@ const appEventClick = event => {
                                 event_target_id=='title'?COMMON_DOCUMENT.querySelectorAll('#nav_content_app .common_link')[0].textContent:event.target.href?event.target.href.split('/')[3]:event.target.textContent, 
                                 //GUIDE in title and nav_content_app
                                 /**@ts-ignore */
-                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':event_target_id=='article'?'JSDOC':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
+                                event_target_id=='title'?'GUIDE':event_target_id=='content'?'MODULE_CODE':common.commonMiscElementRow(event.target, 'app_menu_data').getAttribute('data-type'));
                     break;
                 }
                 case 'common_toolbar_framework_js':{
