@@ -141,7 +141,7 @@
                     "screenshot_start":"[![Cube](/common/documents/screenshot_app7_small.webp)](/common/documents/screenshot_app7.webp)",
                     "description":"Cube solver app using generative AI pattern that uses robot or human model to solve current cube state", 
                     "pattern":"Generative AI", 
-                    "technology":"svg animation, worker_threads in NodeJs to execute long time running Javascript functions without blocking main server process and sending client updates with server side events without using EventSource", 
+                    "technology":"svg animation, worker_threads in NodeJs to execute long time running Javascript functions without blocking main server process and sending client updates with server side events without using EventSource, javascript performance", 
                     "reference":"Kociemba algorithm, CFOP / Fridrich method, Thistlewaite, Singmaster notation", 
                     "security":"OWASP refactored thirdparty obscure animation by replacing canvas with svg animation without events and removing unnecessary obscure code",
                     "solution":"",
