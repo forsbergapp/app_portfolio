@@ -1111,7 +1111,7 @@
  * @description DB SQL server_db_database_script_files
  * @typedef {   [number|null,
  *              string, 
- *              number|null][]} server_db_database_script_files
+ *              number][]} server_db_database_script_files
  */
 
 /** 

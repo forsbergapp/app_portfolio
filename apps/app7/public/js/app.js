@@ -1,11 +1,10 @@
-/** 
- * Cube app
+/**
+ * Map app
  * @module apps/app7/app
  */
 
 /**
  * @import {CommonAppEvent, CommonModuleCommon, COMMON_DOCUMENT} from '../../../common_types.js'
- * @import {APP_GLOBAL} from './types.js'
  */
 
 /**@type{COMMON_DOCUMENT} */
@@ -15,38 +14,24 @@ const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
 
-/**@type{APP_GLOBAL} */
-const APP_GLOBAL = {
-    cube :{},
-    cube_controls:{},
-    cube_init:()=>null,
-    cube_show_solution:()=>null,
-    cube_solve:()=>null,
-    cube_makeIdentityAffine:()=>null,
-    cube_multiplyAffine:()=>null,
-    cube_makeRotateAffineX:()=>null,
-    cube_makeRotateAffineY:()=>null,
-    width : 360
-};
-
 /**
  * @name appException
  * @description App exception function
  * @function
- * @param {Error} error 
+ * @param {*} error 
  * @returns {void}
  */
-const appException = error => {
+const appException = (error) => {
     common.commonMessageShow('EXCEPTION', null, null, null, error);
 };
 /**
  * @name appEventClick
  * @description App event click
  * @function
- * @param {CommonAppEvent|null} event 
+ * @param {CommonAppEvent} event 
  * @returns {void}
  */
-const appEventClick = (event=null) => {
+const appEventClick = event =>{
     if (event==null){
         COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('click',(/**@type{CommonAppEvent}*/event) => {
             appEventClick(event);
@@ -57,62 +42,6 @@ const appEventClick = (event=null) => {
         common.commonEvent('click',event)
         .then(()=>{
             switch (event_target_id){
-                case 'button_reset':{
-                    const init_cube = APP_GLOBAL.cube_init();
-                    APP_GLOBAL.cube = init_cube.cube;
-                    APP_GLOBAL.cube_controls = init_cube.controls;
-                    break;
-                }
-                case 'button_L':
-                case 'button_R':
-                case 'button_U':
-                case 'button_D':
-                case 'button_F':
-                case 'button_B':
-                case 'button_L2':
-                case 'button_R2':
-                case 'button_U2':
-                case 'button_D2':
-                case 'button_F2':
-                case 'button_B2':{
-                    APP_GLOBAL.cube_controls.cube.makeMove(event.target.getAttribute('name'));
-                    break;
-                }
-                case 'button_solve':
-                case 'button_solved_step':{
-                    APP_GLOBAL.cube_solve(APP_GLOBAL.cube, APP_GLOBAL.cube_controls, event.target.id);
-                    break;
-                }
-                case 'button_solve_cubestate':
-                case 'button_solved_step_cubestate':{
-                    const cubestate = common.commonWindowPrompt('?');
-                    if (cubestate && cubestate.split(' ').length==20)
-                        APP_GLOBAL.cube_solve(APP_GLOBAL.cube, APP_GLOBAL.cube_controls, event.target.id, cubestate.split(' '));
-                    else
-                        if (cubestate)
-                            common.commonMessageShow('INFO', null, null, 'message_text','!', common.COMMON_GLOBAL.common_app_id);
-                    break;
-                }
-                case 'button_info':{
-                    common.commonMessageShow('INFO', null, null, null,APP_GLOBAL.cube.getState(), common.COMMON_GLOBAL.common_app_id);
-                    break;
-                }
-                case event.target.id.startsWith('button_solve_speed')?event_target_id:null:{
-                    COMMON_DOCUMENT.querySelectorAll('.button_solve_speed').forEach((/**@type{HTMLElement}*/content) =>content.classList.remove('button_speed_selected'));
-                    event.target.classList.add('button_speed_selected');
-                    APP_GLOBAL.cube_controls.cube.turnSpeed = event.target.getAttribute('data-speed');
-                    break;
-                }
-                case 'button_step_info':
-                case 'button_step':
-                case 'button_step_move':{
-                    APP_GLOBAL.cube_controls.nextMove();
-                    break;
-                }
-                case 'button_scramble':{
-                    APP_GLOBAL.cube_controls.cube.scramble();
-                    break;
-                }
                 case 'common_toolbar_framework_js':{
                    appFrameworkSet(1);
                     break;
@@ -125,77 +54,44 @@ const appEventClick = (event=null) => {
                    appFrameworkSet(3);
                     break;
                 }
+                //dialogue user menu
+                case 'common_iam_avatar':
+                case 'common_iam_avatar_logged_in':
+                case 'common_iam_avatar_avatar':
+                case 'common_iam_avatar_avatar_img':
+                case 'common_iam_avatar_logged_out':
+                case 'common_iam_avatar_default_avatar':{
+                    common.commonComponentRender({
+                            mountDiv:   'common_dialogue_user_menu_app_theme',
+                            data:       null,
+                            methods:    {
+                                        commonMiscThemeDefaultList:common.commonMiscThemeDefaultList,
+                                        commonComponentRender:common.commonComponentRender, 
+                                        app_theme_update:common.commonMiscPreferencesPostMount
+                                        },
+                            path:       '/common/component/common_dialogue_user_menu_app_theme.js'});
+                    break;
+                }
+                case 'common_dialogue_user_menu_log_out':{
+                    common.commonUserLogout();
+                    break;
+                }
+                /*Dialogue user start */
+                case 'common_dialogue_iam_start_login_button':{
+                    common.commonUserLogin().catch(()=>null);
+                    break;
+                }
+                case 'common_dialogue_iam_start_identity_provider_login':{
+                    const target_row = common.commonMiscElementRow(event.target);
+                    const provider_element = target_row.querySelector('.common_login_provider_id');
+                    if (provider_element && provider_element.textContent)
+                        common.commonUserLogin(null, null, null, parseInt(provider_element.textContent));
+                    break;
+                }
+                
             }
         });
     }
-};
-/**
- * @name appEvenOther
- * @description App event other
- * @function
- * @returns {void}
- */
-const appEvenOther = () => {
-    const onmousedown = function(/**@type{CommonAppEvent}*/e){
-		APP_GLOBAL.cube.mouseDown = true;
-		if(e.touches && e.touches.length > 0){
-			e = e.touches[0];
-		}
-		APP_GLOBAL.cube.lastPos = {x:e.clientX,y:e.clientY};
-		APP_GLOBAL.cube.affinediff = APP_GLOBAL.cube_makeIdentityAffine();
-        APP_GLOBAL.cube.render();
-	};
-	const onmouseup = function(){
-		if(APP_GLOBAL.cube.mouseDown){
-			APP_GLOBAL.cube.mouseDown = false;
-			if(APP_GLOBAL.cube.affinediff){
-				APP_GLOBAL.cube.customAffine = APP_GLOBAL.cube_multiplyAffine(APP_GLOBAL.cube.affinediff, APP_GLOBAL.cube.customAffine);
-			}
-			APP_GLOBAL.cube.affinediff = null;
-            APP_GLOBAL.cube.render();
-		}
-	};
-	const onmousemove = function(/**@type{CommonAppEvent}*/e){
-		if(APP_GLOBAL.cube.mouseDown){
-			e.preventDefault();
-			if(e.touches && e.touches.length > 0){
-				e = e.touches[0];
-			}
-			const moved = {x:e.clientX - APP_GLOBAL.cube.lastPos.x, y:e.clientY-APP_GLOBAL.cube.lastPos.y};
-			APP_GLOBAL.cube.lastPos = {x:e.clientX,y:e.clientY};
-			APP_GLOBAL.cube.affinediff = APP_GLOBAL.cube_multiplyAffine(APP_GLOBAL.cube_multiplyAffine(APP_GLOBAL.cube_makeRotateAffineX(moved.y/100), APP_GLOBAL.cube_makeRotateAffineY(-moved.x/100)),APP_GLOBAL.cube.affinediff);
-            APP_GLOBAL.cube.render();
-		}
-	};
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousedown',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmousedown(event);
-    });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mouseup',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmouseup();
-    });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('mousemove',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmousemove(event);
-    });
-
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchstart',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmousedown(event);
-    });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchend',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmouseup();
-    });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchcancel',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmouseup();
-    });
-    COMMON_DOCUMENT.querySelector(`#${common.COMMON_GLOBAL.app_root}`).addEventListener('touchmove',(/**@type{CommonAppEvent}*/event) => {
-        if (event.target.classList.contains('cube_face'))
-            onmousemove(event);
-    });
 };
 /**
  * @name appFrameworkSet
@@ -211,8 +107,7 @@ const appEvenOther = () => {
             KeyDown: null,
             KeyUp: null,
             Focus: null,
-            Input:null,
-            Other:appEvenOther});
+            Input:null});
 };
 
 /**
@@ -221,8 +116,7 @@ const appEvenOther = () => {
  * @function
  * @returns {Promise.<void>}
  */
-const appInit = async () => {
-    COMMON_DOCUMENT.body.className = 'app_theme1';
+const appInit = async () =>{
     appFrameworkSet();
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
@@ -232,54 +126,33 @@ const appInit = async () => {
                                         methods:    null,
                                         path:       '/common/component/common_app.js'});
     await common.commonComponentRender({
-        mountDiv:   common.COMMON_GLOBAL.app_div, 
+        mountDiv:   common.COMMON_GLOBAL.app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
     await common.commonComponentRender({
-        mountDiv:   'app_main_page', 
-        data:       {
-                    cube_width:APP_GLOBAL.width,
-                    common_app_id:common.COMMON_GLOBAL.common_app_id
-                    },
-        methods:    {
-                    commonMiscElementRow:common.commonMiscElementRow,
-                    commonLovShow:common.commonLovShow,
-                    commonLovClose:common.commonLovClose,
-                    commonMessageShow:common.commonMessageShow,
-                    commonComponentRemove:common.commonComponentRemove,
-                   commonFFB:common.commonFFB},
-        path:       '/component/cube.js'})
-    .then((/**@type{{   data:null,
-                        methods:{   cube_init:                  function, 
-                                    cube_show_solution:         function,
-                                    cube_solve:                 function,
-                                    cube_makeIdentityAffine:    function,
-                                    cube_multiplyAffine:        function,
-                                    cube_makeRotateAffineX:     function,
-                                    cube_makeRotateAffineY:     function}}}*/component)=>{
-        APP_GLOBAL.cube_init =                  component.methods.cube_init;
-        APP_GLOBAL.cube_show_solution =         component.methods.cube_show_solution;
-        APP_GLOBAL.cube_solve =                 component.methods.cube_solve;
-        APP_GLOBAL.cube_makeIdentityAffine =    component.methods.cube_makeIdentityAffine;
-        APP_GLOBAL.cube_multiplyAffine =        component.methods.cube_multiplyAffine;
-        APP_GLOBAL.cube_makeRotateAffineX =     component.methods.cube_makeRotateAffineX;
-        APP_GLOBAL.cube_makeRotateAffineY =     component.methods.cube_makeRotateAffineY;
-        const init_cube = APP_GLOBAL.cube_init();
-        APP_GLOBAL.cube = init_cube.cube;
-        APP_GLOBAL.cube_controls = init_cube.controls;
-    });
+        mountDiv:   'common_user_account',
+        data:       null,
+        methods:    null,
+        path:       '/common/component/common_iam_avatar.js'});
+    common.commonModuleLeafletInit({mount_div:'mapid',
+                                    latitude:common.COMMON_GLOBAL.client_latitude,
+                                    longitude:common.COMMON_GLOBAL.client_longitude,
+                                    place:common.COMMON_GLOBAL.client_place,
+                                    doubleclick_event:null, 
+                                    update_map:true});
     common.commonComponentRender({mountDiv:   'common_fonts',
         data:       {
                     font_default:   true,
-                    font_arabic:    false,
-                    font_asian:     false,
-                    font_prio1:     false,
+                    font_arabic:    true,
+                    font_asian:     true,
+                    font_prio1:     true,
                     font_prio2:     true,
-                    font_prio3:     false
+                    font_prio3:     true
                     },
         methods:    null,
         path:       '/common/component/common_fonts.js'});
+
 };
 /**
  * @name appCommonInit
@@ -288,9 +161,10 @@ const appInit = async () => {
  * @param {string} parameters 
  * @returns {void}
  */
-const appCommonInit = (parameters) => {
+const appCommonInit = parameters => {
+    COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = null;
+    common.COMMON_GLOBAL.app_function_session_expired = common.commonUserLogout;
     common.commonInit(parameters).then(()=>{
         appInit();
     });

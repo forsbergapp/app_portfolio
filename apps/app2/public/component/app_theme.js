@@ -1,6 +1,6 @@
 /**
  * Displays app theme
- * @module apps/app1/component/app_theme
+ * @module apps/app2/component/app_theme
  */
 
 /**

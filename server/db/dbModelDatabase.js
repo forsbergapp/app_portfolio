@@ -30,10 +30,8 @@ const DB_INSTALL_PATH           = '/server/install/db/';
 const DB_INSTALL                = 'install_database.json';
 const DB_UNINSTALL              = 'uninstall_database.json';
 
-const DB_ADMIN_INSTALL_PATH     = '/apps/admin/scripts/';
-const DB_ADMIN_INSTALL          = 'install_database.json';
-const DB_ADMIN_UNINSTALL        = 'uninstall_database.json';
-
+const DB_ADMIN_INSTALL_PATH     = '/apps/app1/scripts/';
+const DB_APPS_DIR               = '/apps';
 const DB_APP_PATH               = '/apps/app';
 //each app should be installed in /apps[appid] and have these files:
 const DB_APP_INSTALL_PATH       = '/scripts/';
@@ -100,25 +98,29 @@ const dbInfoSpaceSum = parameters =>
  */
 const dbInstallGetFiles = async (install_type) =>{
     const fs = await import('node:fs');
-    let app_id = 1;
+    
     /**@type{server_db_database_script_files} */
     const files = [
-       //add main script with id 0 and without app_id
-       [0, install_type=='install'?(DB_INSTALL_PATH + DB_INSTALL):(DB_INSTALL_PATH + DB_UNINSTALL), null],
-       //add admin script with id 1 and without app_id
-       [1, install_type=='install'?(DB_ADMIN_INSTALL_PATH + DB_ADMIN_INSTALL):(DB_ADMIN_INSTALL_PATH + DB_ADMIN_UNINSTALL), null]
+       //add main and common script
+       [0, install_type=='install'?(DB_INSTALL_PATH + DB_INSTALL):(DB_INSTALL_PATH + DB_UNINSTALL), serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))??0]
     ];
-    //Loop file directories /apps/app + id until not found anymore and return files found
-    while (true){
-       try {
-          await fs.promises.access(`${process.cwd()}${DB_APP_PATH}${app_id}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`);
-          //add app script, first index not used for apps, save app id instead
-          files.push([null, `${DB_APP_PATH}${app_id}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`, app_id]);
-          app_id += 1; 
-       } catch (error) {
-          return files;
-       }
+    //Loop file directories
+    for (const file of await fs.promises.readdir(`${process.cwd()}${DB_APPS_DIR}`, { withFileTypes: true })){
+        if (file.isDirectory() && file.name.startsWith('app')){
+            try {
+                await fs.promises.access(`${process.cwd()}${DB_APPS_DIR}/${file.name}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`);
+                //add app script, first index not used for apps, save app id instead
+                files.push([null, 
+                            `${DB_APPS_DIR}/${file.name}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`, 
+                            //save app_id here, directory using format app + id
+                            /**@ts-ignore */
+                            serverUtilNumberValue(file.name.split('app')[1])]);
+             } catch (error) {
+                null;
+             }   
+        }
     }
+    return files;
  };
 /**
  * @name dbInstall
@@ -232,7 +234,7 @@ const dbInstallGetFiles = async (install_type) =>{
                         const sql_and_pw = await sql_with_password('app_portfolio', sql);
                         sql = sql_and_pw[0];
                     }
-                    sql = sql.replaceAll('<APP_ID/>', file[2]?file[2].toString():'0');
+                    sql = sql.replaceAll('<APP_ID/>', file[2].toString());
                     sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
                         
                     //if ; must be in wrong place then set tag in import script and convert it
@@ -271,34 +273,34 @@ const dbInstallGetFiles = async (install_type) =>{
                         }
                         else{
                             if (change_DBA_pool == true){
-                            //add database name in dba pool
-                            await dbPoolClose(null, db_use, DBA);
-                            /**@type{server_db_db_pool_parameters} */
-                            const json_data = {
-                                use:                       db_use,
-                                pool_id:                   null,
-                                port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                                dba:                       DBA,
-                                user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
-                                //db 1 + 2 parameters
-                                charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
-                                // db 3 parameters
-                                connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
-                                // db 4 parameters not used here
-                                connectString:             null,
-                                poolMin:                   null,
-                                poolMax:                   null,
-                                poolIncrement:             null
-                            };
-                            await dbPoolStart(json_data);
-                            //change to database value for the rest of the function
-                            change_DBA_pool = false;
+                                //add database name in dba pool
+                                await dbPoolClose(null, db_use, DBA);
+                                /**@type{server_db_db_pool_parameters} */
+                                const json_data = {
+                                    use:                       db_use,
+                                    pool_id:                   null,
+                                    port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                                    host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                    dba:                       DBA,
+                                    user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                    password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                    database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+                                    //db 1 + 2 parameters
+                                    charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                    connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                    // db 3 parameters
+                                    connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                    idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                    max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                    // db 4 parameters not used here
+                                    connectString:             null,
+                                    poolMin:                   null,
+                                    poolMax:                   null,
+                                    poolIncrement:             null
+                                };
+                                await dbPoolStart(json_data);
+                                //change to database value for the rest of the function
+                                change_DBA_pool = false;
                             }
                         }
                     await dbCommonExecute(parameters.app_id, sql, {}, DBA);
@@ -353,9 +355,12 @@ const dbInstallGetFiles = async (install_type) =>{
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_SELECT_INSTALLED_CHECK, 
-                        {app_id: parameters.app_id}, 
+                        {app_id: parameters.app_id},
                         DBA, 
                         null)
+                        .then(()=>{
+                            return {result:[{installed: 1}], type:'JSON'};
+                        })
                         .catch(()=>{        
                             return {result:[{installed: 0}], type:'JSON'};
                         }));

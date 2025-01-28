@@ -5020,7 +5020,11 @@
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
-                        {"description": "parameters"}
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id",
+                            "required":true
+                        }
                 ],
                 "responses": {
                     "oneOf":[
