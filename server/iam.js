@@ -286,7 +286,7 @@ const iamAuthenticateAdmin = async parameters =>{
             /**@type{server_db_file_iam_user}*/
             const user =  fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_file_iam_user}*/user)=>user.username == username)[0];
 
-            if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && parameters.app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')))
+            if (user && user.username == username && user.type=='ADMIN' && await securityPasswordCompare(password, user.password) && parameters.app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID')))
                 return check_user(1, user.id, username, type); 
             else
                 return check_user(0, user?.id, username, type);
@@ -1207,7 +1207,7 @@ const iamAuthenticateUserDelete = async parameters => {
  const iamAuthenticateUserCommon = async (idToken, scope, authorization, host, ip, res, next) =>{
     const app_id_host = commonAppHost(host);
     if (idToken && scope && app_id_host !=null){
-        const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
+        const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'));
         try {
             //authenticate id token
             /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
