@@ -437,13 +437,13 @@ const iamAuthenticateUser = async parameters =>{
                        //Username or password not found
                        fileModelIamUserLogin.post(parameters.app_id, data_body)
                        .then(()=>{
-                            return {http:401,
+                            resolve({http:401,
                                 code:'IAM',
                                 text:iamUtilMessageNotAuthorized(),
                                 developerText:null,
                                 moreInfo:null,
                                 type:'JSON'
-                            };
+                            });
                        });
                    }
                });
@@ -451,13 +451,13 @@ const iamAuthenticateUser = async parameters =>{
                //User not found
                fileModelIamUserLogin.post(parameters.app_id, data_body)
                .then(()=>{
-                    return {http:401,
+                    resolve({http:401,
                         code:'IAM',
                         text:iamUtilMessageNotAuthorized(),
                         developerText:null,
                         moreInfo:null,
                         type:'JSON'
-                    };
+                    });
                });
            }
        });

@@ -55,6 +55,7 @@
  * @property {string|null}  client_place
  * @property {string|null}  client_timezone
  * @property {number|null}  common_app_id
+ * @property {number|null}  admin_app_id
  * @property {string}       rest_resource_bff
  * @property {number}       first_time
  */
