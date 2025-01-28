@@ -11,6 +11,7 @@ const COMMON_DOCUMENT = document;
 /**@type{import('../../../common_types.js').CommonGlobal} */
 const COMMON_GLOBAL = {
     common_app_id:0,
+    admin_app_id:1,
     app_id:null,
     app_logo:null,
     app_email:null,
@@ -1097,7 +1098,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                 data:           {
                                 type:               null,
                                 app_id:             COMMON_GLOBAL.app_id,
-                                common_app_id:      COMMON_GLOBAL.common_app_id,
+                                admin_app_id:       COMMON_GLOBAL.admin_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
@@ -1113,7 +1114,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null, title=n
                 data:           {
                                 type:               dialogue,
                                 app_id:             COMMON_GLOBAL.app_id,
-                                common_app_id:      COMMON_GLOBAL.common_app_id,
+                                admin_app_id:       COMMON_GLOBAL.admin_app_id,
                                 admin_only: 		COMMON_GLOBAL.admin_only,
                                 admin_first_time:   COMMON_GLOBAL.admin_first_time
                                 },
@@ -1743,11 +1744,11 @@ const commonUserLogin = async (admin=false, username_verify=null, password_verif
 const commonUserLogout = async (activated=false) => {
     commonComponentRemove('common_dialogue_user_menu');
     if (activated==false)
-        await commonFFB({path:'/server-iam-logout', method:'DELETE', authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id)?'ADMIN':'APP_ACCESS'})
+        await commonFFB({path:'/server-iam-logout', method:'DELETE', authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id)?'ADMIN':'APP_ACCESS'})
                 .catch((error)=>{
                     throw error;
                 });
-    if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id){
+    if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.admin_app_id){
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
@@ -1816,7 +1817,7 @@ const commonUserUpdate = async () => {
             const password_new = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
             const password_reminder = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
         
-            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id){
                 /**@type{{
                 *          username:string, 
                 *          password:string,
@@ -1870,7 +1871,7 @@ const commonUserUpdate = async () => {
         .then(result=>{
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= avatar?`url('${avatar}')`:'url()';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',avatar);
-            if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id && JSON.parse(result).sent_change_email == 1){
+            if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.admin_app_id && JSON.parse(result).sent_change_email == 1){
                 commonDialogueShow('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
@@ -2358,7 +2359,7 @@ const commonFFB = async parameter => {
         case 'IAM_PROVIDER':
         case 'IAM_USER':{
             authorization = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
-            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && parameter.authorization_type == 'IAM_USER')
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id && parameter.authorization_type == 'IAM_USER')
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/iam_admin`;
             else
                 service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
@@ -2557,7 +2558,7 @@ const socketReconnect = () => {
  * @returns {Promise.<void>}
  */
 const commonSocketConnectOnline = async () => {
-    const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.common_app_id == COMMON_GLOBAL.app_id)?
+    const  authorization_type= (COMMON_GLOBAL.token_at && COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id)?
                                     'ADMIN':
                                         COMMON_GLOBAL.token_at?'APP_ACCESS':'APP_ID';
    commonFFB({path:'/server-socket/socket', method:'POST', authorization_type:authorization_type})
@@ -2740,7 +2741,8 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                                 app_id:COMMON_GLOBAL.app_id,
                                 iam_user_id:COMMON_GLOBAL.iam_user_id,
                                 user_account_id:COMMON_GLOBAL.user_account_id,
-                                common_app_id:COMMON_GLOBAL.common_app_id
+                                common_app_id:COMMON_GLOBAL.common_app_id,
+                                admin_app_id:COMMON_GLOBAL.admin_app_id
                                },
                    methods:    {
                               commonFFB:commonFFB,
@@ -2993,6 +2995,7 @@ const commonEvent = async (event_type,event=null) =>{
                                             app_id:COMMON_GLOBAL.app_id,
                                             user_account_id:COMMON_GLOBAL.user_account_id,
                                             common_app_id:COMMON_GLOBAL.common_app_id,
+                                            admin_app_id:COMMON_GLOBAL.admin_app_id,
                                             data_app_id:COMMON_GLOBAL.common_app_id,
                                             username:COMMON_GLOBAL.user_account_username,
                                             token_exp:COMMON_GLOBAL.token_exp,
@@ -3036,7 +3039,8 @@ const commonEvent = async (event_type,event=null) =>{
                                             app_id:COMMON_GLOBAL.app_id,
                                             iam_user_id:COMMON_GLOBAL.iam_user_id,
                                             user_account_id:COMMON_GLOBAL.user_account_id,
-                                            common_app_id:COMMON_GLOBAL.common_app_id
+                                            common_app_id:COMMON_GLOBAL.common_app_id,
+                                            admin_app_id:COMMON_GLOBAL.admin_app_id
                                             },
                                 methods:    {
                                            commonFFB:commonFFB,
@@ -3423,7 +3427,8 @@ const commonEventCommonRemove = () => {
 
 };
 /**
- * @name commonInitParametersInfoSet
+ * @name 
+ * 
  * @description Set app service parameters
  * @function
  * @param {*} parameters 
@@ -3432,6 +3437,7 @@ const commonEventCommonRemove = () => {
 const commonInitParametersInfoSet = parameters => {
     //app info
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
+    COMMON_GLOBAL.admin_app_id= parseInt(parameters.admin_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
     COMMON_GLOBAL.app_logo = parameters.app_logo;
    

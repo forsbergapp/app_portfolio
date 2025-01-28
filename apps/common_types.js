@@ -148,6 +148,7 @@
 /**
  * @description Type CommonGlobal
  * @typedef {{  common_app_id:number,
+ *              admin_app_id:number,
  *              app_id:number|null,
  *              app_logo:string|null,
  *              app_email:string|null,
