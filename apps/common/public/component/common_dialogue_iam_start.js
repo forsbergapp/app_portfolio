@@ -96,7 +96,7 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
  *                      commonMountdiv:string,
  *                      type:'LOGIN'|'SIGNUP'|'FORGOT',
  *                      app_id:number,
- *                      common_app_id:number,
+ *                      admin_app_id:number,
  *                      admin_first_time:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -112,7 +112,7 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
     //fetch providers if not admin app
-    const providers = props.data.app_id == props.data.common_app_id?[]:
+    const providers = props.data.app_id == props.data.admin_app_id?[]:
                         await props.methods.commonFFB({path:'/server-db/identity_provider', method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
@@ -122,7 +122,7 @@ const component = async props => {
         methods:    null,
         template:   template({
                             providers:providers, 
-                            admin_app:props.data.app_id == props.data.common_app_id,
+                            admin_app:props.data.app_id == props.data.admin_app_id,
                             type:props.data.type,
                             first_time: props.data.admin_first_time == 1})
     };

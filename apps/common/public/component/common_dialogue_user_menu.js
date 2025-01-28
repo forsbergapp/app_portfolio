@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{app_id:number,
- *          common_app_id:number,
+ *          admin_app_id:number,
  *          user_account_id:number|null,
  *          username:string,
  *          admin:string,
@@ -20,7 +20,7 @@
  *          function_is_provider_user:function}} props 
  * @returns {string}
  */
-const template = props =>`  ${props.app_id == props.common_app_id?
+const template = props =>`  ${props.app_id == props.admin_app_id?
                                 `<div id='common_dialogue_user_menu_admin'>${props.admin ?? ''}</div>`:
                                 `${props.username?
                                     `<div id='common_dialogue_user_menu_username'>${props.username}</div>`:
@@ -51,15 +51,15 @@ const template = props =>`  ${props.app_id == props.common_app_id?
                                     <div id='common_dialogue_user_menu_user_arabic_script_select'></div>
                                 </div>
                             </div>
-                            ${props.app_id == props.common_app_id || props.username || (props.user_account_id!=null && props.function_is_provider_user())?
+                            ${props.app_id == props.admin_app_id || props.username || (props.user_account_id!=null && props.function_is_provider_user())?
                                 `<div id='common_dialogue_user_menu_logged_in'>
                                     <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
-                                    ${props.app_id == props.common_app_id?
+                                    ${props.app_id == props.admin_app_id?
                                         '':
                                         '<div id=\'common_dialogue_user_menu_log_out\' class=\'common_icon\'></div>'
                                     }
                                 </div>`:
-                                `${props.app_id == props.common_app_id?'':
+                                `${props.app_id == props.admin_app_id?'':
                                     `<div id='common_dialogue_user_menu_logged_out'>
                                         <div id='common_dialogue_user_menu_signup' class='common_icon'></div>
                                         <div id='common_dialogue_user_menu_log_in' class='common_icon'></div>
@@ -76,6 +76,7 @@ const template = props =>`  ${props.app_id == props.common_app_id?
  *                      app_id:number,
  *                      user_account_id:number,
  *                      common_app_id:number,
+ *                      admin_app_id:number,
  *                      data_app_id:number,
  *                      username:string,
  *                      token_exp:number|null,
@@ -218,7 +219,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({  app_id:props.data.app_id,
-                                common_app_id:props.data.common_app_id,
+                                admin_app_id:props.data.admin_app_id,
                                 user_account_id:props.data.user_account_id,
                                 username:props.data.username,
                                 admin:props.data.admin,

@@ -876,6 +876,7 @@ const commonComponentCreate = async parameters =>{
     const { iamAuthorizeIdToken } = await import(`file://${process.cwd()}/server/iam.js`);
 
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
+    const admin_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'));
     //id token for APP and MAINTENANCE
     const idtoken = (parameters.type=='APP' ||parameters.type=='MAINTENANCE')?
                         await iamAuthorizeIdToken(parameters.app_id, parameters.componentParameters.ip, parameters.type):
@@ -904,6 +905,7 @@ const commonComponentCreate = async parameters =>{
                 client_place:           result_geodata?.place ?? '',
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
+                admin_app_id:           admin_app_id,
                 rest_resource_bff:      fileModelConfig.get('CONFIG_SERVER','SERVER', 'REST_RESOURCE_BFF'),
                 first_time:             admin_only==1?(fileModelIamUser.get(parameters.app_id, null).result.length==0?1:0):0
             };
@@ -934,9 +936,10 @@ const commonComponentCreate = async parameters =>{
         case 'MAINTENANCE':{
             //maintenance can be used from all app_id
             const data = JSON.stringify({   
-                app_id: parameters.app_id,
-                common_app_id: common_app_id,
-                app_idtoken: idtoken,
+                app_id:         parameters.app_id,
+                common_app_id:  common_app_id,
+                admin_app_id:   admin_app_id,
+                app_idtoken:    idtoken,
                 rest_resource_bff: fileModelConfig.get('CONFIG_SERVER','SERVER', 'REST_RESOURCE_BFF')
             });
 

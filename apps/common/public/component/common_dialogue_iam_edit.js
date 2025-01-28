@@ -203,6 +203,7 @@ const template = () => `<div id='common_dialogue_iam_edit_common'>
  *                      iam_user_id:number,
  *                      user_account_id:number,
  *                      common_app_id:number,
+ *                      admin_app_id:number,
  *                      },
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -220,7 +221,7 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
     
-    const user = props.data.app_id == props.data.common_app_id?
+    const user = props.data.app_id == props.data.admin_app_id?
                         await props.methods.commonFFB({path:`/server-iam/user/${props.data.iam_user_id ?? ''}`, method:'GET', authorization_type:'ADMIN'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result)):
                             await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
@@ -230,7 +231,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const user_get = async () => {
-        if ((props.data.app_id == props.data.common_app_id && props.data.iam_user_id == user.id)||
+        if ((props.data.app_id == props.data.admin_app_id && props.data.iam_user_id == user.id)||
             props.data.user_account_id == parseInt(user.id)) {
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display = 'none';
             props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_provider').style.display = 'none';
