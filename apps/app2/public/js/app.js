@@ -1,6 +1,6 @@
 /**
  * App Portfolio app
- * @module apps/app1/app
+ * @module apps/app2/app
  */
 
 /**

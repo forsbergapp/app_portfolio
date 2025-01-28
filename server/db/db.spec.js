@@ -86,7 +86,7 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         //Test sql and parameters SELECT that contains <LOCALE/> and <DB_SCHEMA/> tags
         const {sql:sql_select, parameters:sql_select_params} = adjustSqlParams(dbSql.APP_SETTING_SELECT, {  app_id : app_id,
                                                                                                             common_app_id: common_app_id,
-                                                                                                            app_setting_type_name: 'APP_THEME'
+                                                                                                            app_setting_type_name: 'PAPER_SIZE'
                                                                                                             });
                                                                                                             
         const result_select = db.dbSQLParamConvert(db_use, connection, sql_select, sql_select_params);

@@ -1,6 +1,6 @@
 /**
  * Displays app
- * @module apps/app1/component/app
+ * @module apps/app2/component/app
  */
 
 /**

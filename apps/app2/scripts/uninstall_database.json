@@ -4,9 +4,6 @@
            {"db": 2, "sql": "drop user <APP_USERNAME/>"},
            {"db": 3, "sql": "drop user <APP_USERNAME/>"},
            {"db": 4, "sql": "drop user <APP_USERNAME/>"},
-           {"db": null, "sql": "DELETE FROM app_portfolio.app_translation WHERE app_id = <APP_ID/>"},
-           {"db": null, "sql": "DELETE FROM app_portfolio.app_setting WHERE id IN (SELECT id FROM app_portfolio.setting_type WHERE app_id = <APP_ID/>)"},
-           {"db": null, "sql": "DELETE FROM app_portfolio.app_setting_type WHERE app_id = <APP_ID/>"},
-           {"db": null, "sql": "DELETE FROM app_portfolio.app WHERE id = <APP_ID/>"}
+           {"db": null, "sql": "DELETE FROM <DB_SCHEMA/>.app WHERE id = <APP_ID/>"}
        ]
    }

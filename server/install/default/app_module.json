@@ -2,15 +2,6 @@
     {
         "id":1,
         "app_id": 0,
-        "common_type": "REPORT",
-        "common_name": "PERFORMANCE_TEST",
-        "common_role": "ADMIN",
-        "common_path": "/apps/admin/src/report/performance_test.js",
-        "common_description": "Performs performance test and displays result"
-    },
-    {
-        "id":2,
-        "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_COUNTRY",
         "common_role": "APP_ID",
@@ -18,7 +9,7 @@
         "common_description": "Get countries for given locale"
     },
     {
-        "id":3,
+        "id":2,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_LOCALE",
@@ -27,7 +18,7 @@
         "common_description": "Get locales for given locale"
     },
     {
-        "id":4,
+        "id":3,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_DOC",
@@ -36,7 +27,7 @@
         "common_description": "Get documentation menu or guide, app or jsdoc documentation"
     },
     {
-        "id":5,
+        "id":4,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_WORLDCITIES_CITY",
@@ -45,7 +36,7 @@
         "common_description": "Get searched city from worldcities database"
     },
     {
-        "id":6,
+        "id":5,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_WORLDCITIES_CITY_RANDOM",
@@ -54,7 +45,7 @@
         "common_description": "Get random city from worldcities database"
     },
     {
-        "id":7,
+        "id":6,
         "app_id": 0,
         "common_type": "FUNCTION",
         "common_name": "COMMON_WORLDCITIES_COUNTRY",
@@ -63,21 +54,30 @@
         "common_description": "Get all cities from a given coutry from worldcities database"
     },
     {
+        "id":7,
+        "app_id": 1,
+        "common_type": "REPORT",
+        "common_name": "PERFORMANCE_TEST",
+        "common_role": "ADMIN",
+        "common_path": "/apps/app1/src/report/performance_test.js",
+        "common_description": "Performs performance test and displays result"
+    },
+    {
         "id":8,
-        "app_id": 3,
+        "app_id": 4,
         "common_type": "REPORT",
         "common_name": "TIMETABLE",
         "common_role": "APP",
-        "common_path": "/apps/app3/src/report/timetable.js",
+        "common_path": "/apps/app4/src/report/timetable.js",
         "common_description": "Timetable day, month and year"
     },
     {
         "id":9,
-        "app_id": 3,
+        "app_id": 4,
         "common_type": "MODULE",
         "common_name": "MODULE_LIB_TIMETABLE",
         "common_role": "APP",
-        "common_path": "/apps/app3/src/modules/module_lib_timetable.js",
+        "common_path": "/apps/app4/src/modules/module_lib_timetable.js",
         "common_description": "Timetable module"
     },
     {
@@ -280,11 +280,11 @@
     },
     {
         "id":32,
-        "app_id": 7, 
+        "app_id": 8, 
         "common_type": "FUNCTION",
         "common_name": "CUBE_SOLVE",
         "common_role": "APP_ID",
-        "common_path": "/apps/app7/src/functions/solve.js",
+        "common_path": "/apps/app8/src/functions/solve.js",
         "common_description": "Cube solve"
     }
 ]

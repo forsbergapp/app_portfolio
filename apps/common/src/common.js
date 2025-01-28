@@ -1024,7 +1024,7 @@ const commonApp = async parameters =>{
             case (parameters.url.toLowerCase().startsWith('/maintenance')):{
                 return await commonAssetfile({app_id:parameters.app_id, url: parameters.url.substring('/maintenance'.length), basepath:'/apps/common/public'});
             }
-            case (parameters.app_id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) && await commonAppStart(parameters.app_id) ==false):{
+            case (parameters.app_id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID')) && await commonAppStart(parameters.app_id) ==false):{
                 return await commonComponentCreate({app_id:parameters.app_id, componentParameters:{ip:parameters.ip},type:'MAINTENANCE'});
             }
             case (parameters.url.toLowerCase().startsWith('/common')):{
@@ -1096,7 +1096,9 @@ const commonAppsGet = async parameters =>{
     const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
     
     /**@type{server_db_file_app[]}*/
-    const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result;
+    const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result
+                    //do not show common app id
+                    .filter((/**@type{server_db_file_app}*/app)=>app.id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')));
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
