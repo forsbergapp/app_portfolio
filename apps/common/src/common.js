@@ -950,19 +950,12 @@ const commonComponentCreate = async parameters =>{
                                     methods:null
                                     }), type:'HTML'};
         }
-        case 'INFO_DISCLAIMER':{
-            const {default:ComponentCreate} = await import('./component/common_info_disclaimer.js');
-            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name},
-                                    methods:null}), type:'HTML'};
-        }
-        case 'INFO_PRIVACY_POLICY':{
-            const {default:ComponentCreate} = await import('./component/common_info_privacy_policy.js');
-            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name},
-                                    methods:null}), type:'HTML'};
-        }
+        case 'INFO_DISCLAIMER':
+        case 'INFO_PRIVACY_POLICY':
         case 'INFO_TERMS':{
-            const {default:ComponentCreate} = await import('./component/common_info_terms.js');
-            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name},
+            const {default:ComponentCreate} = await import('./component/common_info.js');
+            return {result:await ComponentCreate({data: {app_name:fileModelApp.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].name,
+                                                        type:parameters.type},
                                     methods:null}), type:'HTML'};
         }
         default:{
