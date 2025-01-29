@@ -1243,7 +1243,7 @@
                 "responses": {
                     "oneOf":[
                         {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
                                 {
                                     "oneOf":[
                                         {
