@@ -77,7 +77,7 @@
                     "reference":"Prayertime sun and moon calculations", 
                     "security":"OWASP",
                     "solution":"",
-                    "screenshot_end":[""]}
+                    "screenshot_end":["[![Showing arabic Nastaliq font and chinese timetable and spanish ui using default font and mixing RTL and LTR](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui_small.webp)](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui.webp)"]}
     },
     {
         "id": 5,
@@ -95,6 +95,8 @@
                     "screenshot_end": [
                                         "[![Bank statement](/common/documents/screenshot_app5_bank_statement_small.webp)](/common/documents/screenshot_app5_bank_statement.webp)",
                                         "[![Bank account info](/common/documents/screenshot_app5_bank_account_info_small.webp)](/common/documents/screenshot_app5_bank_account_info.webp)",
+                                        "[![Create customer and select customer type](/common/documents/screenshot_app5_customer_type_select_small.webp)](/common/documents/screenshot_app5_customer_type_select.webp)",
+                                        "[![Create customer and select country](/common/documents/screenshot_app5_country_lov_small.webp)](/common/documents/screenshot_app5_country_lov.webp)",
                                         "[![Payment request](/common/documents/screenshot_app5_payment_request_small.webp)](/common/documents/screenshot_app5_payment_request.webp)",
                                         "[![Payment request paid](/common/documents/screenshot_app5_payment_request_paid_small.webp)](/common/documents/screenshot_app5_payment_request_paid.webp)",
                                         "[![Payment request no funds](/common/documents/screenshot_app5_payment_request_no_funds_small.webp)](/common/documents/screenshot_app5_payment_request_no_funds.webp)"]}
@@ -115,7 +117,8 @@
                     "screenshot_end": [
                                         "[![Payment request](/common/documents/screenshot_app6_payment_request_small.webp)](/common/documents/screenshot_app6_payment_request.webp)",
                                         "[![Payment request paid](/common/documents/screenshot_app6_payment_request_paid_small.webp)](/common/documents/screenshot_app6_payment_request_paid.webp)",
-                                        "[![Payment request no funds](/common/documents/screenshot_app6_payment_request_no_funds_small.webp)](/common/documents/screenshot_app6_payment_request_no_funds.webp)"]}
+                                        "[![Payment request no funds](/common/documents/screenshot_app6_payment_request_no_funds_small.webp)](/common/documents/screenshot_app6_payment_request_no_funds.webp)",
+                                        "[![Component select supporting JSON and custom CSS](/common/documents/screenshot_app6_product_variant_select_small.webp)](/common/documents/screenshot_app6_product_variant_select.webp)"]}
     },
     {
         "id": 7,
@@ -160,31 +163,30 @@
                     "reference":"", 
                     "security":"OWASP",
                     "solution":"",
-                    "screenshot_end": [
+                    "screenshot_end":[
                                         "[![Component App Data Display Form Vertical key value](/common/documents/screenshot_app5_payment_request_small.webp)](/common/documents/screenshot_app5_payment_request.webp)",
                                         "[![Component App Data Display Form Master detail horizontal](/common/documents/screenshot_app5_bank_statement_small.webp)](/common/documents/screenshot_app5_bank_statement.webp)",
                                         "[![Component App Data Display Form Master detail vertical](/common/documents/screenshot_app6_small.webp)](/common/documents/screenshot_app6.webp)",
                                         "[![Component broadcast](/common/documents/screenshot_app1_menu_start_SSE_small.webp)](/common/documents/screenshot_app1_menu_start_SSE.webp)",
-                                        "[![Component construction](/common/documents/screenshot_app1_SSE_maintenance_with_countdown_small.webp)](/common/documents/screenshot_app1_SSE_maintenance_with_countdown.webp)",
                                         "[![Component dialogue apps and IAM avatar](/common/documents/screenshot_app2_small.webp)](/common/documents/screenshot_app2.webp)",
-                                        "[![Component dialogue IAM start login](/common/documents/screenshot_common_start_login_small.webp)](/common/documents/screenshot_common_start_login_small.webp)",
-                                        "[![Component dialogue IAM start signup](/common/documents/screenshot_common_start_signup_small.webp)](/common/documents/screenshot_app1_common_start_signup_small.webp)",
-                                        "[![Component dialogue IAM start forgot](/common/documents/screenshot_common_start_forgot_small.webp)](/common/documents/screenshot_common_start_forgot.webp)",
-                                        "[![Component dialogue IAM verify](/common/documents/screenshot_common_iam_verify_small.webp)](/common/documents/screenshot_common_iam_verify.webp)",
+                                        "[![Component dialogue IAM start login](/common/documents/screenshot_common_iam_start_login_small.webp)](/common/documents/screenshot_common_iam_start_login.webp)",
+                                        "[![Component dialogue IAM start signup](/common/documents/screenshot_common_iam_start_signup_small.webp)](/common/documents/screenshot_common_iam_start_signup.webp)",
+                                        "[![Component dialogue IAM start forgot](/common/documents/screenshot_common_iam_start_forgot_small.webp)](/common/documents/screenshot_common_iam_start_forgot.webp)",
+                                        "[![Component dialogue IAM verify for signup, account not activated, password reset and email change](/common/documents/screenshot_common_iam_verify_small.webp)](/common/documents/screenshot_common_iam_verify.webp)",
                                         "[![Component dialogue IAM edit](/common/documents/screenshot_common_iam_edit_small.webp)](/common/documents/screenshot_common_iam_edit.webp)",
-                                        "[![Component dialogue IAM password new](/common/documents/screenshot_common_password_small.webp)](/common/documents/screenshot_common_password.webp)",
-                                        "[![Component dialogue list of values](/common/documents/screenshot_common_lov_small.webp)](/common/documents/screenshot_common_lov.webp)",
+                                        "[![Component dialogue IAM password new with password mask](/common/documents/screenshot_common_iam_password_new_with_mask_small.webp)](/common/documents/screenshot_common_iam_password_new_with_mask.webp)",
+                                        "[![Component dialogue list of values with filter and key navigation](/common/documents/screenshot_app5_country_lov_small.webp)](/common/documents/screenshot_app5_country_lov.webp)",
                                         "[![Component dialogue maintenance](/common/documents/screenshot_app1_SSE_maintenance_with_countdown_small.webp)](/common/documents/screenshot_app1_SSE_maintenance_with_countdown.webp)",
                                         "[![Component dialogue message](/common/documents/screenshot_common_message_small.webp)](/common/documents/screenshot_common_message.webp)",
-                                        "[![Component dialogue profile stat](/common/documents/screenshot_common_profile_stat_small.webp)](/common/documents/screenshot_common_profile_stat.webp)",
-                                        "[![Component dialogue profile and profile detail](/common/documents/screenshot_common_profile_small.webp)](/common/documents/screenshot_common_profile.webp)",
-                                        "[![Component dialogue user menu and app theme](/common/documents/screenshot_common_user_menu_small.webp)](/common/documents/screenshot_common_user_menu.webp)",
-                                        "[![Component document showing javascript](/common/documents/screenshot_common_document_small.webp)](/common/documents/screenshot_common_document.webp)",
-                                        "[![Component module leaflet, leaflet control, leaflet popup and IAM avatar](/common/documents/screenshot_app7_small.webp)](/common/documents/screenshot_app7.webp)",
-                                        "[![Component module leaflet layer](/common/documents/screenshot_common_leaflet_layer_small.webp)](/common/documents/screenshot_common_leaflet_layer.webp)",
-                                        "[![Component module leaflet search city](/common/documents/screenshot_common_leaflet_search_small.webp)](/common/documents/screenshot_common_leaflet_search.webp)",
+                                        "[![Component dialogue profile stat using caffe latte theme](/common/documents/screenshot_common_profile_stat_theme_caffe_latte_small.webp)](/common/documents/screenshot_common_profile_stat_theme_caffe_latte.webp)",
+                                        "[![Component dialogue profile and profile detail using dark theme](/common/documents/screenshot_common_profile_dark_small.webp)](/common/documents/screenshot_common_profile_dark.webp)",
+                                        "[![Component dialogue user menu and app theme showing arabic Nastaliq font and chinese timetable and spanish ui using default font and mixing RTL and LTR](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui_small.webp)](/common/documents/screenshot_app4_arabic_chinese_hanidec_nastaliq_timetable_rtl_user_menu_ltr_spanish_ui.webp)",
+                                        "[![Component document showing javascript with highlighted row](/common/documents/screenshot_common_document_showing_javascript_highlight_small.webp)](/common/documents/screenshot_common_document_showing_javascript_highlight.webp)",
                                         "[![Component profile search and profile search list](/common/documents/screenshot_common_search_small.webp)](/common/documents/screenshot_common_search.webp)",
-                                        "[![Component select](/common/documents/screenshot_common_select_small.webp)](/common/documents/screenshot_common_select.webp)",
-                                        "[![Component window info](/common/documents/screenshot_common_window_info_small.webp)](/common/documents/screenshot_common_window_info.webp)"]}
+                                        "[![Component select supporting JSON and custom CSS](/common/documents/screenshot_app6_product_variant_select_small.webp)](/common/documents/screenshot_app6_product_variant_select.webp)",
+                                        "[![Component window info for documents, images and report preview with fullscreen support and toolbar](/common/documents/screenshot_app1_menu_report_queue_performance_test_small.webp)](/common/documents/screenshot_app1_menu_report_queue_performance_test.webp)",
+                                        "[![Component module leaflet, leaflet control, leaflet popup and IAM avatar](/common/documents/screenshot_app7_small.webp)](/common/documents/screenshot_app7.webp)",
+                                        "[![Component module leaflet layer here used by settings in timetables app](/common/documents/screenshot_common_module_leaflet_layer_small.webp)](/common/documents/screenshot_common_module_leaflet_layer.webp)",
+                                        "[![Component module leaflet search city](/common/documents/screenshot_common_module_leaflet_search_small.webp)](/common/documents/screenshot_common_module_leaflet_search.webp)"]}
     }   
 ]
