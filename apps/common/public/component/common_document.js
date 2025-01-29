@@ -15,12 +15,23 @@
  *          app_copyright:string,
  *          app_name:string,
  *          document :string,
- *          document_class:string
+ *          documentType:commonDocumentType,
+ *          document_href:string
  *          }} props
  * @returns {string}
  */
 const template = props =>`  <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
-                               <div class='common_document_article ${props.document_class ?? ''}'>${props.document}</div>
+                               <div class='common_document_article ${props.documentType=='MODULE_CODE'?'common_markdown code':'common_markdown'}'>${
+                                    props.documentType=='MODULE_CODE'?
+                                        props.document
+                                        .replaceAll('\r\n','\n').split('\n')
+                                        .map((/**@type{string}*/row,/**@type{number}*/index)=>{
+                                            const selected_class = (props.document_href.split('#line')[1] == (index+1).toString())?'code_line_selected':'';
+                                            //split rows into two columns and highlight selected line if #line is used in link
+                                            return `<div data-line='${index+1}' class='code_line ${selected_class}'>${index+1}</div><div data-line='${index+1}' class='code_text ${selected_class}'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
+                                        }).join('\n') ?? '':
+                                            props.document
+                                }</div>
                            <div class='common_document_footer'>${props.app_copyright}</div>`;
 /**
  * @name component
@@ -46,32 +57,7 @@ const template = props =>`  <div class='common_document_header' style='${props.a
  *                      template:string}>}
  */
 const component = async props => {
-    let classname = '';
-    let content = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
-                                            method:'POST', 
-                                            authorization_type:'APP_ID',
-                                            body:{  type:'FUNCTION',
-                                                    documentType:props.data.documentType,
-                                                    data_app_id:props.data.common_app_id,
-                                                    doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
-                            .catch(()=>null);
-    switch (props.data.documentType){
-        case 'MODULE_CODE':{
-            classname = 'common_markdown code';
-            content = content
-                .replaceAll('\r\n','\n').split('\n')
-                .map((/**@type{string}*/row,/**@type{number}*/index)=>{
-                    const selected_class = (props.data.href.split('#line')[1] == (index+1).toString())?'code_line_selected':'';
-                    //split rows into two columns and highlight selected line if #line is used in link
-                    return `<div data-line='${index+1}' class='code_line ${selected_class}'>${index+1}</div><div data-line='${index+1}' class='code_text ${selected_class}'>${row.replaceAll('<','&lt;').replaceAll('>','&gt;')}</div>`;
-                }).join('\n') ?? '';
-            break;
-        }
-        default:{
-            //APP, GUIDE, MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
-            classname = 'common_markdown';
-        }
-    }   
+    
     const onMounted = () =>{
         if (props.data.href.split('#')[1]){
             //set focus on highlighted row
@@ -86,8 +72,16 @@ const component = async props => {
         template:   template({app_logo:props.data.app_logo,
                       app_copyright:props.data.app_copyright,
                       app_name:props.data.app_name,
-                      document:content,
-                      document_class:classname
+                      document:await props.methods.commonFFB({  path:'/app-module/COMMON_DOC', 
+                                                                method:'POST', 
+                                                                authorization_type:'APP_ID',
+                                                                body:{  type:'FUNCTION',
+                                                                        documentType:props.data.documentType,
+                                                                        data_app_id:props.data.common_app_id,
+                                                                        doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
+                                                .catch(()=>null),
+                      documentType:props.data.documentType,
+                      document_href:props.data.href
                     })
     };
 };

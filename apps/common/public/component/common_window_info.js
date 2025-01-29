@@ -28,7 +28,7 @@ const template = props => ` <div id='common_window_info_btn_close' class='common
                                 </div>`:
                                 ''
                             }
-                            ${(props.info_type==0 ||props.info_type==1)?
+                            ${(props.info_type==0)?
                                 `<div id='common_window_info_toolbar'>
                                     ${props.info_type==0?
                                         `   <div id='common_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
