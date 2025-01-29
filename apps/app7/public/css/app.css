@@ -85,6 +85,9 @@ body{
 }
 
 /*APP THEME COMMON*/
+.common_dialogue_iam_start_selected {
+	background-color: var(--app_theme_selected_background_color);
+}
 #common_iam_avatar_avatar{
 	background-color: var(--app_theme_main_branding_color1);
     border-radius: 50%;
@@ -103,7 +106,6 @@ body{
 .common_icon:hover,
 .common_icon:active{
 	color: var(--app_theme_user_menu_hover_color) !important;
-	background-color:var(--app_theme_user_menu_hover_background_color);	
 }
 .common_toolbar_selected{
 	background-color: var(--app_theme_main_branding_color1) !important;
