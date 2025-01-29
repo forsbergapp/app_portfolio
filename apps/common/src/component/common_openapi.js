@@ -161,7 +161,7 @@ const component = async props => {
             const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
             let match;
             while ((match = regexp_module_function.exec(file ?? '')) !==null){
-                if (match[1].indexOf(`@name ${functionRESTAPI}`)>-1 && 
+                if ((match[1].indexOf(`@name ${functionRESTAPI}\n`)>-1 || match[1].indexOf(`@name ${functionRESTAPI} `)>-1) &&
                     match[1].indexOf('@function')>-1 &&
                     match[1].indexOf('@memberof ROUTE_REST_API')>-1)
                     return {summary:
