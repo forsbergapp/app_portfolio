@@ -156,7 +156,7 @@
         "locale": "en",
         "text": "",
         "json_data":{"name":"Common", 
-                    "screenshot_start":"[![Common](/common/documents/screenshot_common_small.webp)](/common/documents/screenshot_common.webp)",
+                    "screenshot_start":"",
                     "description":"Common app library including frontend for backend FFB), single file components (SFC) and management, css, documents, modules, user management, event delegation management, framework management, server side response management and utilities. Common server library with server components app, info, mail, maintenance, markdown, openapi, report and server error and server functions country, locale, document and worldcities", 
                     "pattern":"Frontend for backend, event delegation, SFC, SSE, simultaneous React and Vue without build step", 
                     "technology":"HTML to React conversion, React and Vue custom restricted event and app mount management, React and Vue components without transpilers, JWT token secured server side events without using EventSource", 
