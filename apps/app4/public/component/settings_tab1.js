@@ -189,7 +189,7 @@ const component = async props => {
                         },
             methods:    {commonFFB:props.methods.commonFFB},
             path:       '/common/component/common_select.js'});
-        //commmon
+        //common
         //Timezone
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_timezone',
