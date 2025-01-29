@@ -134,6 +134,7 @@ const appSecureMenuShow = menu => {
                 mountDiv:   'secure_menu_content',
                 data:       {
                             app_id:common.COMMON_GLOBAL.app_id, 
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
                             iam_user_id: common.COMMON_GLOBAL.iam_user_id,
                             client_latitude:common.COMMON_GLOBAL.client_latitude,
                             client_longitude:common.COMMON_GLOBAL.client_longitude,

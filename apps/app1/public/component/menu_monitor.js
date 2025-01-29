@@ -49,6 +49,7 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
  * @function
  * @param {{data:{      commonMountdiv:string,
  *                      app_id:number,
+ *                      common_app_id:number,
  *                      iam_user_id: number,
  *                      client_latitude:string,
  *                      client_longitude:string,
@@ -115,7 +116,7 @@ const component = async props => {
      */
     let monitorDetailClickItemDetail = (item_type, data) => {item_type;data;};
 
-    const LIMIT = await props.methods.commonFFB({path:`/app-common-app-parameter/${props.data.app_id}`, method:'GET', authorization_type:'ADMIN'})
+    const LIMIT = await props.methods.commonFFB({path:`/app-common-app-parameter/${props.data.common_app_id}`, method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>parseInt(JSON.parse(result)[0].common_app_limit_records.value)); 
         
     /**
