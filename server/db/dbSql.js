@@ -751,7 +751,7 @@ const USER_ACCOUNT_EVENT_INSERT =
                 user_account_id, event_id, event_status_id,
                 date_created, date_modified)
      SELECT :user_account_id, e.id, es.id, 
-            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
        FROM <DB_SCHEMA/>.event e,
             <DB_SCHEMA/>.event_status es
       WHERE e.event_name = :event
