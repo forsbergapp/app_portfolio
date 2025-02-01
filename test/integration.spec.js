@@ -113,8 +113,8 @@ describe('Integration test, server function worldcities random city called from 
                                 .catch(()=>{return {};});
                                 console.log('worldcites result:',result);
             console.log('Integration test worldcities app id:', app.id);
-            console.log('Integration test worldcities lat:', result.result.lat);
-            console.log('Integration test worldcities lng:', result.resul.tlng);
+            console.log('Integration test worldcities lat:', result.lat);
+            console.log('Integration test worldcities lng:', result.lng);
             console.log('Integration test worldcities city:', result.city);
             console.log('Integration test worldcities admin_name:', result.admin_name);
             console.log('Integration test worldcities country:', result.country);
