@@ -77,7 +77,7 @@ const appEventClick = event => {
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    appFrameworkSet();
+    await appFrameworkSet();
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
