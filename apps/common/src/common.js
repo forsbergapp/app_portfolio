@@ -12,6 +12,7 @@
  *          server_apps_app_service_parameters,
  *          server_apps_module_with_metadata,
  *          server_apps_module_metadata,
+ *          APP_server_apps_module_common_type,
  *          server_server_res,
  *          server_bff_endpoint_type,
  *          server_bff_parameters,
@@ -513,6 +514,35 @@ const commonAssetfile = parameters =>{
 };
 
 /**
+ * @name commonModuleAsset
+ * @description Get asset using commonModuleRun since assets are not using idToken
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+*          resource_id:string,
+*          data: {},
+*          user_agent:string,
+*          ip:string,
+*          host:string,
+*          locale:string,
+*          endpoint:server_bff_endpoint_type}} parameters
+* @returns {Promise.<server_server_response>}
+*/
+const commonModuleAsset = async parameters => {
+    return commonModuleRun({app_id:         parameters.app_id,
+                            resource_id:    parameters.resource_id,
+                            data:           {
+                                                type:'ASSET', 
+                                                data_app_id:parameters.app_id
+                                            },
+                            user_agent:     parameters.user_agent,
+                            ip:             parameters.ip,
+                            host:           '',
+                            locale:         parameters.locale,
+                            idToken:        '',
+                            endpoint:       parameters.endpoint});
+};
+/**
  * @name commonModuleRun
  * @description Run function for given app and role
  *              Parameters in data should be requried data_app_id plus additional keys
@@ -524,7 +554,7 @@ const commonAssetfile = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: { type?:'MODULE'|'FUNCTION',
+ *          data: { type?:APP_server_apps_module_common_type,
  *                  data_app_id?:number|null},   //can accept more parameters if defined
  *          user_agent:string,
  *          ip:string,
@@ -541,7 +571,7 @@ const commonModuleRun = async parameters => {
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}});
     if (modules.result){
-        if (parameters.data?.type =='MODULE'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'){
+        if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
                                                                                                 //APP EXTERNAL only uses id and message keys, add function type
                                                                                                 app.common_type==(parameters.endpoint=='APP_EXTERNAL'?'FUNCTION':parameters.data.type) && 
@@ -1162,6 +1192,8 @@ const commonRegistryAppSecretDBReset = async app_id => {
     }
 };
 export {commonMailCreate, commonMailSend,
-        commonAppStart, commonAppHost, commonAssetfile,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, commonApp, commonBFE, commonAppsGet, 
+        commonAppStart, commonAppHost, commonAssetfile,
+        commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
+        commonApp, commonBFE, commonAppsGet, 
         commonRegistryAppModule,
         commonRegistryAppSecretDBReset};

@@ -74,7 +74,7 @@
     {
         "id":9,
         "app_id": 4,
-        "common_type": "MODULE",
+        "common_type": "ASSET",
         "common_name": "MODULE_LIB_TIMETABLE",
         "common_role": "APP",
         "common_path": "/apps/app4/src/modules/module_lib_timetable.js",
