@@ -469,7 +469,7 @@ const appSecureInit = () => {
  */
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    appFrameworkSet();
+    await appFrameworkSet();
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {

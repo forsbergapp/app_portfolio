@@ -2358,7 +2358,7 @@ const appInit = async parameters => {
     const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-asset/MODULE_LIB_TIMETABLE`;
     /**@type {CommonModuleLibTimetable} */
     appLibTimetable = await import(appLibTimetable_path);
-    appFrameworkSet();
+    await appFrameworkSet();
     //common app component
     await common.commonComponentRender({mountDiv:   'common_app',
                                         data:       {
