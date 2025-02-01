@@ -58,6 +58,10 @@
         "menu_sub":[
                 {   "id":1,
                     "menu":"",
+                    "doc":"5.development_repository"
+                },
+                {   "id":2,
+                    "menu":"",
                     "doc":"5.development"
                 }]
     },
