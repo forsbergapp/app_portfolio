@@ -621,7 +621,6 @@ const serverUtilAppLine = () =>{
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app/v1/app-module*').get                    (bffApp);
     app.route('/bff/app_id/v1*').all                            (iam.iamAuthenticateIdToken,                bffAppId);
     app.route('/bff/app_id_signup/v1*').post                    (iam.iamAuthenticateIdTokenRegistration,    bffAppIdSignup);
     app.route('/bff/app_access/v1*').all                        (iam.iamAuthenticateAccessToken,            bffAppAccess);
@@ -689,11 +688,6 @@ const serverJs = async () => {
             //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
             //URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
             switch (true){
-                case (req.path.startsWith('/bff/app/v1/app-module') && req.method == 'GET'):{
-                    req.route.path = '/bff/app/v1/app-module*';
-                    bffApp(req, res);
-                    break;
-                }
                 case req.path.startsWith('/bff/app_id/v1'):{
                     req.route.path = '/bff/app_id/v1*';
                     await iamMiddleware.iamAuthenticateIdToken(req, res, () =>
@@ -936,9 +930,9 @@ const serverREST_API = async (routesparameters) =>{
                                                     ip:                         routesparameters.ip, 
                                                     idToken:                    routesparameters.idToken,
                                                     authorization:              routesparameters.authorization, 
-                                                    claim_iam_user_id:          params.IAM_iam_user_id,
-                                                    claim_iam_user_account_id:  params.IAM_user_account_id,
-                                                    claim_iam_data_app_id:      params.IAM_data_app_id}))
+                                                    claim_iam_user_id:          serverUtilNumberValue(params.IAM_iam_user_id),
+                                                    claim_iam_user_account_id:  serverUtilNumberValue(params.IAM_user_account_id),
+                                                    claim_iam_data_app_id:      serverUtilNumberValue(params.IAM_data_app_id)}))
                     return true;
                 else
                     return false;
