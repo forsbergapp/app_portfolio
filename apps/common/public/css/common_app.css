@@ -1517,7 +1517,6 @@ body.rtl{
 /*MARKDOWN */
 .common_markdown{
     white-space: pre-wrap;
-    font-size: 0.8em !important;
     margin-bottom: 10em;
 	line-height: 1.2em;
 }
