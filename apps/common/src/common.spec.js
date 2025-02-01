@@ -2,13 +2,13 @@
  * @module apps/common/src/common.spec 
  */
 let filterCount_APP_SECRET = 0;
-let filterCount_IAM_APP_TOKEN = 0;
+let filterCount_IAM_APP_ID_TOKEN = 0;
 //Save original filter function
 const ORIGINAL_FILTER = Array.prototype.filter;
 /**
  * @name describe
  * @description describe: Spy test, commonApp as called from bff
- *              it: should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_TOKEN at least 1 time each when requesting app
+ *              it: should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
  *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with APP_SECRET and APP_TOKEN
  *              afterAll:   restores Array.prototype.filter
  * @function
@@ -27,17 +27,17 @@ describe('Spy test, commonApp as called from bff', ()=> {
                 //Review Error().stack if necessary
                 console.log('Spy test commonApp reading APP_SECRET using custom filter function');
             }
-            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.NAME=='IAM_APP_TOKEN'){
-                filterCount_IAM_APP_TOKEN++;
+            if (ORIGINAL_FILTER.call(this, callBack, thisArg)[0]?.NAME=='IAM_APP_ID_TOKEN'){
+                filterCount_IAM_APP_ID_TOKEN++;
                 //Review Error().stack if necessary
-                console.log('Spy test commonApp reading IAM_APP_TOKEN using custom filter function');
+                console.log('Spy test commonApp reading IAM_APP_ID_TOKEN using custom filter function');
             }
             return ORIGINAL_FILTER.call(this, callBack, thisArg);  
         };
         
     });
-    it('should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_TOKEN at least 1 time each when requesting app', async () =>{
-        //Solution to test if FILE_DB object is fetching the APP_SECRET or IAM_APP_TOKEN record is to create a custom filter function 
+    it('should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app', async () =>{
+        //Solution to test if FILE_DB object is fetching the APP_SECRET or IAM_APP_ID_TOKEN record is to create a custom filter function 
         //that is available in global scope in NodeJS since FILE_DB object uses Object.seal() so no getter can be added 
         //and module is using closure pattern.
         
@@ -75,7 +75,7 @@ describe('Spy test, commonApp as called from bff', ()=> {
         await app_common.commonApp(parameters);
         
         expect (filterCount_APP_SECRET).toBeGreaterThan(0);
-        expect (filterCount_IAM_APP_TOKEN).toBeGreaterThan(0);
+        expect (filterCount_IAM_APP_ID_TOKEN).toBeGreaterThan(0);
     });
     afterAll(()=>{
         Array.prototype.filter = ORIGINAL_FILTER;

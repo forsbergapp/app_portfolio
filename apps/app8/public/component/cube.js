@@ -5,7 +5,6 @@
 /**
  * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
-
 /**
  * @name template
  * @description Template
@@ -111,6 +110,7 @@ const template = props =>`  <div id='cube'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      cube_width:number,
+ *                      app_id:number,
  *                      common_app_id:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
@@ -216,6 +216,7 @@ const component = async props => {
             props.methods.commonFFB({ path:'/app-module/CUBE_SOLVE', method:'POST', authorization_type:'APP_ID',
                                 body:{  type:'FUNCTION',
                                         model:              Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
+                                        IAM_data_app_id:    props.data.app_id,
                                         preamble:           0,
                                         temperature:        Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                                         cube_currentstate: 	cube.getState(),

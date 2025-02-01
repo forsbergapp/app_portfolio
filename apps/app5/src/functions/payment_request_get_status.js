@@ -68,13 +68,18 @@ const paymentRequestGetStatus = async parameters =>{
                                                                                 }})
                                             .then(result=>result.result.map((/**@type{payment_request}*/payment_request)=>JSON.parse(payment_request.json_data??'')));
             const payment_request = payment_requests.filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0];
-            /**@type{{id:number, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const token_decoded = jwt.verify(payment_request.token, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
-            
+            /**@type{*} */
+            const token_verify = jwt.verify(payment_request.token, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
+            /**@type{{app_custom_id:number, ip:string, scope:string}} */
+            const authenticate_token = {
+                app_custom_id:  token_verify.app_custom_id,
+                ip:             token_verify.ip,
+                scope:          token_verify.scope
+            };
             if (payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0 &&
-                token_decoded.id == payment_request.payerid && 
-                token_decoded.scope == 'APP_CUSTOM' && 
-                token_decoded.ip == parameters.ip){
+                authenticate_token.app_custom_id == payment_request.payerid && 
+                authenticate_token.scope == 'APP_CUSTOM' && 
+                authenticate_token.ip == parameters.ip){
                     /**
                      * @type {{ status:string}}
                      */

@@ -1,7 +1,7 @@
-/** @module server/db/fileModelIamAppToken */
+/** @module server/db/fileModelIamAppIdToken */
 
 /**
- * @import {server_server_response,server_db_common_result_insert, server_db_file_iam_app_token_insert, server_db_file_iam_app_token} from '../types.js'
+ * @import {server_server_response,server_db_common_result_insert, server_db_file_iam_app_id_token_insert, server_db_file_iam_app_id_token} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -14,16 +14,16 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @description Get user
  * @function
  * @param {number} app_id
- * @returns {server_server_response & {result?:server_db_file_iam_app_token[] }}
+ * @returns {server_server_response & {result?:server_db_file_iam_app_id_token[] }}
  */
-const get = app_id => {return {result:fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).rows, type:'JSON'};};
+const get = app_id => {return {result:fileDBGet(app_id, 'IAM_APP_ID_TOKEN', null, null).rows, type:'JSON'};};
 
 /**
  * @name post
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_app_token_insert} data
+ * @param {server_db_file_iam_app_id_token_insert} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -34,8 +34,8 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IAM_APP_TOKEN', null, null).rows.filter((/**@type{server_db_file_iam_app_token} */row)=>row.token==data.token).length==0){
-            /**@type{server_db_file_iam_app_token} */
+        if (fileDBGet(app_id, 'IAM_APP_ID_TOKEN', null, null).rows.filter((/**@type{server_db_file_iam_app_id_token} */row)=>row.token==data.token).length==0){
+            /**@type{server_db_file_iam_app_id_token} */
             const data_new = {};
             //required
             data_new.app_id = data.app_id;
@@ -46,7 +46,7 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return fileDBPost(app_id, 'IAM_APP_TOKEN',data_new).then((result)=>{
+            return fileDBPost(app_id, 'IAM_APP_ID_TOKEN',data_new).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else

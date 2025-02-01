@@ -51,12 +51,11 @@ const post = async (app_id, data) =>{
             data_new.res = data.res;
             data_new.ip = data.ip;
             //optional
-            if (data.token!=null)
-                data_new.token = data.token;
-            if (data.db!=null)
-                data_new.db = data.db;    
-            if (data.ua!=null)
-                data_new.ua = data.ua;
+            data_new.user_account_id = data.user_account_id;
+            data_new.token = data.token;
+            data_new.db = data.db;
+            data_new.ua = data.ua;
+            //required server value
             data_new.created = new Date().toISOString();
             return fileDBPost(app_id, 'IAM_USER_LOGIN',data_new).then((result)=>{
                 if (result.affectedRows>0){
