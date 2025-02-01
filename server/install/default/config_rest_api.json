@@ -1078,10 +1078,10 @@
                 }
             }
         },
-        "/bff/app/v1/app-module-module/${resource_id_string}": {
+        "/bff/app/v1/app-module-asset/${resource_id_string}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonModuleRun",
+                "operationId": "apps_common_src.common.commonModuleAsset",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -1102,10 +1102,6 @@
                             "schema":{
                                 "type": "string"
                             }
-                        },
-                        {
-                            "$ref":"#/components/parameters/IAM_data_app_id",
-                            "in":"query"
                         },
                         {
                             "$ref": "#/components/parameters/locale",

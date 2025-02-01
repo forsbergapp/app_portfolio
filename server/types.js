@@ -86,10 +86,14 @@
  * @typedef {{param:{name:string, text:string, default:string|number}}} server_apps_module_metadata
  */
 /**
+ * @description APP_server_apps_module_common_type
+ * @typedef {'FUNCTION'|'ASSET'|'REPORT'} APP_server_apps_module_common_type
+ */
+/**
  * @description APP server_apps_module_with_metadata
  * @typedef {{  id:number,
  *              app_id: number,
- *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
+ *              common_type: APP_server_apps_module_common_type,
  *              common_name:string,
  *              common_path:string,
  *              common_metadata:server_apps_module_metadata[],
@@ -582,7 +586,7 @@
  * @description DB FILE server_db_file_app_module
  * @typedef {{  id:number,
  *              app_id: number,
- *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
+ *              common_type: APP_server_apps_module_common_type,
  *              common_name:string,
  *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'',
  *              common_path:string,

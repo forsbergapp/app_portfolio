@@ -2355,7 +2355,7 @@ const appFrameworkSet = async (framework=null) => {
  * @returns {Promise.<void>}
  */
 const appInit = async parameters => {
-    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-module/MODULE_LIB_TIMETABLE?parameters=${common.commonWindowToBase64(`type=MODULE&IAM_data_app_id=${common.COMMON_GLOBAL.app_id}`)}`;
+    const appLibTimetable_path = `/bff/app/v${common.COMMON_GLOBAL.app_rest_api_version}/app-module-asset/MODULE_LIB_TIMETABLE`;
     /**@type {CommonModuleLibTimetable} */
     appLibTimetable = await import(appLibTimetable_path);
     appFrameworkSet();
