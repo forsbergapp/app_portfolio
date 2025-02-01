@@ -202,44 +202,61 @@ const component = async props => {
                 const t = times[i];
                 totalRate += (rates[t] || 0);
                 if (totalRate >= 99.9 && !rtRates[99.9]) {
-                rtRates[99.9] = t;
+                    rtRates[99.9] = t;
                 }
                 if (totalRate >= 99.5 && !rtRates[99.5]) {
-                rtRates[99.5] = t;
+                    rtRates[99.5] = t;
                 }
                 if (totalRate >= 99 && !rtRates[99]) {
-                rtRates[99] = t;
+                    rtRates[99] = t;
                 }
                 if (totalRate >= 98 && !rtRates[98]) {
-                rtRates[98] = t;
+                    rtRates[98] = t;
                 }
                 if (totalRate >= 97 && !rtRates[97]) {
-                rtRates[97] = t;
+                    rtRates[97] = t;
                 }
                 if (totalRate >= 96 && !rtRates[96]) {
-                rtRates[96] = t;
+                    rtRates[96] = t;
                 }
                 if (totalRate >= 95 && !rtRates[95]) {
-                rtRates[95] = t;
+                    rtRates[95] = t;
                 }
                 if (totalRate >= 90 && !rtRates[90]) {
-                rtRates[90] = t;
+                    rtRates[90] = t;
                 }
                 if (totalRate >= 85 && !rtRates[85]) {
-                rtRates[85] = t;
+                    rtRates[85] = t;
                 }
                 if (totalRate >= 80 && !rtRates[80]) {
-                rtRates[80] = t;
+                    rtRates[80] = t;
                 }
                 if (totalRate >= 70 && !rtRates[70]) {
-                rtRates[70] = t;
+                    rtRates[70] = t;
                 }
                 if (totalRate >= 60 && !rtRates[60]) {
-                rtRates[60] = t;
+                    rtRates[60] = t;
                 }
                 if (totalRate >= 50 && !rtRates[50]) {
-                rtRates[50] = t;
+                    rtRates[50] = t;
                 }
+                if (totalRate >= 40 && !rtRates[40]) {
+                    rtRates[40] = t;
+                    }
+                if (totalRate >= 30 && !rtRates[30]) {
+                    rtRates[30] = t;
+                }
+                if (totalRate >= 20 && !rtRates[20]) {
+                    rtRates[20] = t;
+                }
+                if (totalRate >= 10 && !rtRates[10]) {
+                    rtRates[10] = t;
+                }
+                if (totalRate >= 5 && !rtRates[5]) {
+                    rtRates[5] = t;
+                }
+                else
+                    rtRates[0] = t;
             }
 
             const totalSize = this._reqSize + this._resSize;
@@ -293,19 +310,25 @@ const component = async props => {
                                                 
                     rt_percent:                 [
                                                 //[percent %, time ms] ex 99.9%: <= %s ms
-                                                ['99.9%',   rtRates[99.9]], 
-                                                ['99.5%',   rtRates[99.5]],
-                                                ['99%',     rtRates[99]],
-                                                ['98%',     rtRates[98]],
-                                                ['97%',     rtRates[97]],
-                                                ['96%',     rtRates[96]],
-                                                ['95%',     rtRates[95]],
-                                                ['90%',     rtRates[90]],
-                                                ['85%',     rtRates[85]],
-                                                ['80%',     rtRates[80]],
-                                                ['70%',     rtRates[70]],
-                                                ['60%',     rtRates[60]],
-                                                ['50%',     rtRates[50]]
+                                                ['99.9%',   rtRates[99.9]??0], 
+                                                ['99.5%',   rtRates[99.5]??0],
+                                                ['99%',     rtRates[99]??0],
+                                                ['98%',     rtRates[98]??0],
+                                                ['97%',     rtRates[97]??0],
+                                                ['96%',     rtRates[96]??0],
+                                                ['95%',     rtRates[95]??0],
+                                                ['90%',     rtRates[90]??0],
+                                                ['85%',     rtRates[85]??0],
+                                                ['80%',     rtRates[80]??0],
+                                                ['70%',     rtRates[70]??0],
+                                                ['60%',     rtRates[60]??0],
+                                                ['50%',     rtRates[50]??0],
+                                                ['40%',     rtRates[40]??0],
+                                                ['30%',     rtRates[30]??0],
+                                                ['20%',     rtRates[20]??0],
+                                                ['10%',     rtRates[10]??0],
+                                                ['5%',      rtRates[5]??0],
+                                                ['0%',      rtRates[0]??0]
                                                 ]
             };
         };
