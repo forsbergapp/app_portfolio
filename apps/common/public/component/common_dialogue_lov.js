@@ -85,7 +85,7 @@ const component = async props => {
             path = '/app-module/COMMON_COUNTRY';
             query= `locale=${props.data.user_locale}`;
             token_type = 'APP_ID';
-            body = {type:'FUNCTION',ddata_app_id : props.data.common_app_id};
+            body = {type:'FUNCTION',IAM_data_app_id : props.data.common_app_id};
             break;
         }
         default:{

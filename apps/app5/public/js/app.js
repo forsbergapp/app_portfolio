@@ -55,13 +55,13 @@ const appEventClick = event => {
                                             display_type:'MASTER_DETAIL_HORIZONTAL',
                                             master_path:'/app-module/ACCOUNT_STATEMENT',
                                             master_query:'fields=title,bank_account_balance,bank_account_number,bank_account_iban,currency,currency_name',
-                                            master_body:{type:'FUNCTION',user_account_id: common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                            master_body:{type:'FUNCTION',user_account_id: common.COMMON_GLOBAL.user_account_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'ACCOUNT_METADATA',
                                             detail_path:'/app-module/ACCOUNT_TRANSACTIONS',
                                             detail_query: 'fields=timestamp,logo,origin,amount_deposit,amount_withdrawal',
-                                            detail_body: {type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id,data_app_id:common.COMMON_GLOBAL.app_id},
+                                            detail_body: {type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id,IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             detail_method:'POST',
                                             detail_token_type:'APP_ACCESS',
                                             detail_resource:'TRANSACTION_METADATA',
@@ -93,7 +93,7 @@ const appEventClick = event => {
                                             display_type:'VERTICAL_KEY_VALUE',
                                             master_path:'/app-module/CUSTOMER_GET',
                                             master_query: 'fields=name,customer_type,address,city,country',
-                                            master_body:{type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                            master_body:{type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'CUSTOMER_METADATA',
@@ -129,7 +129,7 @@ const appEventClick = event => {
                                             display_type:'VERTICAL_KEY_VALUE',
                                             master_path:'/app-module/ACCOUNT_GET',
                                             master_query: 'fields=title,title_sub,bank_account_number,bank_account_secret,bank_account_vpa',
-                                            master_body: {type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id, data_app_id:common.COMMON_GLOBAL.app_id},
+                                            master_body: {type:'FUNCTION',user_account_id:common.COMMON_GLOBAL.user_account_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                                             master_method:'POST',
                                             master_token_type:'APP_ACCESS',
                                             master_resource:'ACCOUNT_METADATA',
@@ -327,7 +327,7 @@ const appCustomerCreate = async () => {
                         body:{
                             type:'FUNCTION',
                             user_account_id :common.COMMON_GLOBAL.user_account_id,
-                            data_app_id     :common.COMMON_GLOBAL.app_id,
+                            IAM_data_app_id :common.COMMON_GLOBAL.app_id,
                             customer_type   :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'customer_type\']').textContent,
                             name            :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'name\']').textContent,
                             address         :COMMON_DOCUMENT.querySelector('#app_page_secure_tab_content [data-value=\'address\']').textContent,
@@ -351,9 +351,9 @@ const appPaymentRequestUpdate = async status => {
                         authorization_type:'APP_ACCESS', 
                         body:{
                             type:'FUNCTION',
-                            data_app_id     :common.COMMON_GLOBAL.app_id,
-                            user_account_id :common.COMMON_GLOBAL.user_account_id,
-                            payment_request_id:COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
+                            IAM_data_app_id:    common.COMMON_GLOBAL.app_id,
+                            user_account_id:    common.COMMON_GLOBAL.user_account_id,
+                            payment_request_id: COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
                             status:status
                         }})
     .then((result)=>status==1?common.commonMessageShow('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
@@ -398,7 +398,7 @@ const appPaymentRequestShow = async message =>{
                             master_query:'',
                             master_body:{	
                                             type:'FUNCTION',
-                                            data_app_id:common.COMMON_GLOBAL.app_id,
+                                            IAM_data_app_id:common.COMMON_GLOBAL.app_id,
                                             user_account_id: common.COMMON_GLOBAL.user_account_id,
                                             payment_request_id: JSON.parse(message).payment_request_id
                                         },

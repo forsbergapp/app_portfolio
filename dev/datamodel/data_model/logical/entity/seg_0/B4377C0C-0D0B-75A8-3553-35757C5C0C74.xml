@@ -134,6 +134,21 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="user_account_id" id="6C135537-DE11-B468-B237-92B23481F196">
+<createdBy>admin</createdBy>
+<createdTime>2025-01-31 21:22:16 UTC</createdTime>
+<generatorID>C563C8D9-7E27-DAD7-3E1F-F3B3BA6D0EDB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>A028F8AE-2874-B058-F3DA-38793B0FBE2F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="D2BDE752-A7BD-22DD-2086-AEE13C6820CC" name="IAM_USER_LOGIN PK">

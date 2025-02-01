@@ -18,8 +18,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -67,8 +66,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -103,8 +101,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -138,8 +135,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"setting_type",
@@ -181,8 +177,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"setting_type",
@@ -193,12 +188,8 @@
                             }    
                         },
                         {
-                            "name":"data_app_id",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
+                            "$ref":"#/components/parameters/IAM_data_app_id",
+                            "in":"query"
                         },
                         {
                             "name":"value",
@@ -226,7 +217,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account-activate/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/user_account-activate/${IAM_user_account_id}": {
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
@@ -236,12 +227,11 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
                         },
                         {
@@ -301,7 +291,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account-activate/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account-activate/${IAM_user_account_id}": {
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
@@ -312,12 +302,11 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
                         },
                         {
@@ -339,9 +328,7 @@
 			            {
                             "$ref": "#/components/parameters/server_accept_language",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -389,8 +376,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -452,8 +438,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"statchoice",
@@ -491,8 +476,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -580,8 +564,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -626,8 +609,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -672,8 +654,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -726,8 +707,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"statchoice",
@@ -766,8 +746,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -820,8 +799,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -888,8 +866,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -957,8 +934,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -1001,8 +977,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -1069,8 +1044,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -1114,8 +1088,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -1131,12 +1104,8 @@
                             }
                         },
                         {
-                            "name":"data_app_id",
-                            "in":"query",
-                            "required":true,
-                            "schema":{
-                                "type": "number"
-                            }
+                            "$ref":"#/components/parameters/IAM_data_app_id",
+                            "in":"query"
                         },
                         {
                             "$ref": "#/components/parameters/locale",
@@ -1186,8 +1155,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -1217,8 +1185,7 @@
 			            {
                             "$ref": "#/components/parameters/server_endpoint",
                             "required":true
-                        },
-                        {"server_validation_resource_app_data_app_id":true}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1228,8 +1195,8 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "data_app_id":{
-                                                "type":"string"
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             },
                                             "type":{
                                                 "type":"string"
@@ -1243,7 +1210,7 @@
                 "responses": {
                     "oneOf":[
                         {"allOf":[
-                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
                                 {
                                     "oneOf":[
                                         {
@@ -1277,8 +1244,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -1362,8 +1328,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -1393,10 +1358,7 @@
 			            {
                             "$ref": "#/components/parameters/server_endpoint",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"},
-                        {"server_validation_resource_app_data_app_id":true}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1406,11 +1368,12 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "data_app_id":{
-                                                "type":"string"
+                                            "IAM_user_account_id":{
+                                                "required":false
                                             },
-                                            "type":{
-                                                "type":"string"
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id",
+                                                "required":false
                                             }
                                         },
                                         "additionalProperties":true
@@ -1435,7 +1398,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account-password/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account-password/${IAM_user_account_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
@@ -1446,12 +1409,11 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
                         },
                         {
@@ -1473,9 +1435,7 @@
 			            {
                             "$ref": "#/components/parameters/server_accept_language",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1513,7 +1473,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/user_account/${resource_id_number}": {
+        "/bff/admin/v1/server-db/user_account/${IAM_user_account_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdate",
@@ -1524,12 +1484,11 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
                         },
                         {
@@ -1543,9 +1502,7 @@
 			            {
                             "$ref": "#/components/parameters/server_accept_language",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1609,7 +1566,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account/${IAM_user_account_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdate",
@@ -1620,12 +1577,11 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
                         },
                         {
@@ -1639,9 +1595,7 @@
 			            {
                             "$ref": "#/components/parameters/server_accept_language",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1714,16 +1668,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -1751,16 +1702,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1796,7 +1744,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account-common/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account-common/${IAM_user_account_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.updateUserCommon",
@@ -1807,16 +1755,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1858,7 +1803,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account-profile-detail/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account-profile-detail/${IAM_user_account_id}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getProfileDetail",
@@ -1869,12 +1814,11 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
                         },
                         {
@@ -1903,7 +1847,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_follow/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account_follow/${IAM_user_account_id}": {
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountFollow.post",
@@ -1914,16 +1858,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -1968,16 +1909,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2013,7 +1951,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_like/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account_like/${IAM_user_account_id}": {
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountLike.post",
@@ -2024,16 +1962,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2078,16 +2013,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2123,7 +2055,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account_app/${IAM_user_account_id}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountApp.get",
@@ -2134,16 +2066,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "responses": {
                     "oneOf":[
@@ -2181,16 +2110,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2245,16 +2171,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2301,8 +2224,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -2352,8 +2274,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -2407,11 +2328,8 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"}
+                            "$ref": "#/components/parameters/server_app_id"
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2430,7 +2348,7 @@
                                             "json_data":{
                                                 "type":"string"
                                             },
-                                            "user_account_id":{
+                                            "IAM_user_account_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -2467,16 +2385,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"db user_account_app_data_post.id",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2492,7 +2407,7 @@
                                             "json_data":{
                                                 "type":"string"
                                             },
-                                            "user_account_id":{
+                                            "IAM_user_account_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -2527,16 +2442,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"db user_account_app_data_post.id",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"user_account_id"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2546,7 +2458,7 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "user_account_id":{
+                                            "IAM_user_account_id":{
                                                 "required":true,
                                                 "type":"number"
                                             }
@@ -2572,7 +2484,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account_app_data_post_like/${resource_id_number}": {
+        "/bff/app_access/v1/server-db/user_account_app_data_post_like/${IAM_user_account_id}": {
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccountAppDataPostLike.post",
@@ -2583,16 +2495,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2637,16 +2546,13 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
+                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "in":"path",
                             "required":true
-                        },
-                        {"server_validation_resource_key":"id"}, 
-                        {"server_validation_resource_value":"resource_id_number"}
+                        }
                 ],
                 "requestBody":{
                             "description":"",
@@ -2693,8 +2599,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -2747,8 +2652,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -2817,8 +2721,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -2901,8 +2804,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -2963,8 +2865,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3077,8 +2978,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3169,8 +3069,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3240,8 +3139,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3363,8 +3261,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3495,8 +3392,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3558,8 +3454,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -3890,8 +3785,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_idtoken",
@@ -3951,8 +3845,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"identity_provider_id",
@@ -3999,8 +3892,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"select_app_id",
@@ -4084,8 +3976,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_authorization",
@@ -4205,8 +4096,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4291,8 +4181,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4343,8 +4232,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4411,8 +4299,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4446,8 +4333,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4505,8 +4391,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4540,8 +4425,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4624,8 +4508,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"sort",
@@ -4696,8 +4579,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -4776,8 +4658,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -4845,8 +4726,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_string",
@@ -4935,8 +4815,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_idtoken",
@@ -4986,8 +4865,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_idtoken",
@@ -5022,8 +4900,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         }
                 ],
                 "responses": {
@@ -5136,8 +5013,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_idtoken",
@@ -5170,8 +5046,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_idtoken",
@@ -5206,8 +5081,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"select_app_id",
@@ -5354,8 +5228,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"select_app_id",
@@ -5462,8 +5335,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -5506,8 +5378,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -5578,8 +5449,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number"
@@ -5628,8 +5498,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -5716,8 +5585,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_authorization",
@@ -5808,8 +5676,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -5927,8 +5794,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_authorization",
@@ -6000,8 +5866,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -6070,8 +5935,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
@@ -6161,8 +6025,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_authorization",
@@ -6213,8 +6076,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_authorization",
@@ -6264,8 +6126,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"ip",
@@ -6473,8 +6334,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "name":"latitude",
@@ -6602,8 +6462,7 @@
                 "parameters": [
                         {"description": "parameters"},
                         {
-                            "$ref": "#/components/parameters/server_app_id",
-                            "required":true
+                            "$ref": "#/components/parameters/server_app_id"
                         },
                         {
                             "$ref": "#/components/parameters/server_ip",
@@ -6804,12 +6663,12 @@
                 "scheme":"basic"
             },
             "AuthorizationBearer":{
-                "description":"Syntax: Bearer [app access or admin token using base64], claims: app_id:[APP_ID], id:[USER ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
+                "description":"Syntax: Bearer [app access or admin token using base64], claims: app_id:[APP_ID], iam_user_id:[IAM_USER.ID], user_account_id[DB USER_ACCOUNT.ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
                 "type":"http",
                 "schema":"bearer"
             },
             "id-token":{
-                "description":"Created when app starts. Should be in all requests to protect all paths. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], id:null, name:[''], ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
+                "description":"Created when app starts. Should be in all requests to protect all paths. Syntax Bearer [app id token using base64], claims: app_id:[APP_ID], iam_user_id:null, user_account_id:null, name:[''], ip:[IP], scope:[APP|REPORT|MAINTENANCE], tokentimestamp: [TIMESTAMP]",
                 "type":"string"
             }
         },
@@ -6839,6 +6698,30 @@
                 "required":false,
                 "schema":{
                     "type": "string"
+                }
+            },
+            "IAM_iam_user_id":{
+                "description":"iam_user.id to be authenticated in IAM can be in query or in body, admin does not use IAM authentication",
+                "name":	"IAM_iam_user_id",
+                "required":true,
+                "schema":{
+                    "type": "number"
+                }
+            },
+            "IAM_user_account_id":{
+                "description":"db user_account.id to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
+                "name":	"IAM_user_account_id",
+                "required":true,
+                "schema":{
+                    "type": "number"
+                }
+            },
+            "IAM_data_app_id":{
+                "description":"App id to be authenticated in IAM that user has access to, can be in query or in body, admin does not use IAM authentication",
+                "name":	"IAM_data_app_id",
+                "required":true,
+                "schema":{
+                    "type": "number"
                 }
             },
             "server_app_id":{

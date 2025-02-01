@@ -500,7 +500,7 @@
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
  *              'APP_TRANSLATION'|
- *              'IAM_APP_TOKEN'|
+ *              'IAM_APP_ID_TOKEN'|
  *              'IAM_CONTROL_IP'|
  *              'IAM_CONTROL_USER_AGENT'|
  *              'IAM_CONTROL_OBSERVE'|
@@ -726,27 +726,28 @@
  *              common_app_access_expire:string}} server_db_file_app_secret
  */
 /** 
- * @description DB FILE server_db_file_iam_app_token
+ * @description DB FILE server_db_file_iam_app_id_token
  * @typedef {{	app_id: 	number,
  *		        res:		0|1,
  *   	        token:   	string,
  *		        ip:         string,
  *		        ua:         string|null,
- *		        created:    string}} server_db_file_iam_app_token
+ *		        created:    string}} server_db_file_iam_app_id_token
  */
 /** 
- * @description DB FILE server_db_file_iam_app_token_insert
+ * @description DB FILE server_db_file_iam_app_id_token_insert
  * @typedef {{	app_id: 	number,
  *		        res:		0|1,
  *   	        token:   	string,
  *		        ip:         string,
- *		        ua:         string|null,}} server_db_file_iam_app_token_insert
+ *		        ua:         string|null,}} server_db_file_iam_app_id_token_insert
  */
 
 /**
  * @description DB FILE server_db_file_iam_user_login
  * @typedef {{	id:             number,
  *              iam_user_id:    number,
+ *              user_account_id:number|null,
  *              app_id:         number,
  *              user:           string,
  *              db:             number|null,
@@ -761,6 +762,7 @@
  /**
   * @description DB FILE server_db_file_iam_user_login_insert
   * @typedef {{	iam_user_id:    number,
+  *             user_account_id:number|null,
   *             app_id:         number,
   *             user:           string,
   *             db:             number|null,
@@ -1802,9 +1804,11 @@
  */
 /**
  * @description IAM server_iam_access_token_claim_type
- * @typedef {{  app_id:         number,
- *              id:             number|string,
- *              name:           string,
+ * @typedef {{  app_custom_id?: number|string,
+ *              app_id:         number,
+ *              iam_user_id:    number|null,
+ *              user_account_id:number|null,
+ *              name:           string|null,
  *              ip:             string,
  *              scope:          server_iam_access_token_claim_scope_type,
  *              tokentimestamp: number}} server_iam_access_token_claim_type

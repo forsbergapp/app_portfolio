@@ -2717,7 +2717,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                                                 path:'/app-module/COMMON_LOCALE', 
                                                 query:`locale=${COMMON_GLOBAL.user_locale}`, 
                                                 method:'POST', authorization_type:'APP_ID',
-                                                body:{type:'FUNCTION',data_app_id : COMMON_GLOBAL.common_app_id}
+                                                body:{type:'FUNCTION',IAM_data_app_id : COMMON_GLOBAL.common_app_id}
                                             })
                                             .then((/**@type{string}*/result)=>JSON.parse(result).rows),
                     path:null,

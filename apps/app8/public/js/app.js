@@ -240,6 +240,7 @@ const appInit = async () => {
         mountDiv:   'app_main_page', 
         data:       {
                     cube_width:APP_GLOBAL.width,
+                    app_id:common.COMMON_GLOBAL.app_id,
                     common_app_id:common.COMMON_GLOBAL.common_app_id
                     },
         methods:    {

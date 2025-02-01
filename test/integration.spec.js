@@ -101,7 +101,7 @@ describe('Integration test, server function worldcities random city called from 
                 route_path:'/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
                 method:'POST', 
                 query:'',
-                body:{type:'FUNCTION',data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
+                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
                 authorization:null,
                 ip:':1', 
                 user_agent:'*', 

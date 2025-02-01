@@ -141,7 +141,7 @@ const appProductUpdate = async () =>{
                     display_type:'VERTICAL_KEY_VALUE',
                     master_path:'/app-module/PRODUCT_LOCATION_GET',
                     master_query:'fields=stock',
-                    master_body:{type:'FUNCTION',data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
+                    master_body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
                     master_method:'POST',
                     master_token_type:'APP_ID',
                     master_resource:'PRODUCT_VARIANT_LOCATION_METADATA',
@@ -179,7 +179,7 @@ const appPaymentRequestStatus = ()=>{
     if ( new Date().getSeconds() % 2){
         const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
     
-        common.commonFFB({path:'/app-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ID',   body:{type:'FUNCTION',payment_request_id: payment_request_id}})
+        common.commonFFB({path:'/app-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ID',   body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
@@ -203,7 +203,7 @@ const appPaymentRequest = async () =>{
         const data = {
             type:'FUNCTION',
             reference:      `SHOP SKU ${sku}`,
-            data_app_id:    common.COMMON_GLOBAL.app_id,
+            IAM_data_app_id:common.COMMON_GLOBAL.app_id,
             payerid:        payerid_element.textContent,
             amount:         COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-price]')[0].getAttribute('data-price'),
             currency_code:  COMMON_DOCUMENT.querySelectorAll('.common_select_dropdown_value .common_app_data_display_master_col_list[data-currency_code]')[0].getAttribute('data-currency_code'),
@@ -283,7 +283,7 @@ const appPay = async () =>{
                     dialogue:true,
                     master_path:'/app-module/PAYMENT_METADATA',
                     master_query:'fields=json_data',
-                    master_body:{type:'FUNCTION',data_app_id:common.COMMON_GLOBAL.app_id},
+                    master_body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                     master_method:'POST',
                     master_token_type:'APP_ID',
                     master_resource:'PAYMENT_METADATA',

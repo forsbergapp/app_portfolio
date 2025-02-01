@@ -261,7 +261,7 @@ const commonGeodata = async parameters =>{
                                 route_path:'/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
                                 method:'POST', 
                                 query:'',
-                                body:{type:'FUNCTION',data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
+                                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
                                 authorization:null,
                                 ip:parameters.ip, 
                                 user_agent:parameters.user_agent, 
@@ -297,7 +297,7 @@ const commonBFE = async parameters =>{
         const zlib = await import('node:zlib');
         const request_protocol = parameters.url.toLowerCase().startsWith('https')?await import('node:https'):await import('node:http');
         const timeout_message = '🗺⛔?';
-        const timeout = 5000;
+        const timeout = 500000;
         return new Promise((resolve)=>{           
             const options = {
                 method: parameters.method,
@@ -525,8 +525,7 @@ const commonAssetfile = parameters =>{
  * @param {{app_id:number,
  *          resource_id:string,
  *          data: { type?:'MODULE'|'FUNCTION',
- *                  data_app_id?:number, 
- *                  [key:string]:*},
+ *                  data_app_id?:number|null},   //can accept more parameters if defined
  *          user_agent:string,
  *          ip:string,
  *          host:string,
@@ -540,13 +539,11 @@ const commonModuleRun = async parameters => {
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     const modules = fileModelAppModule.get({app_id:parameters.app_id, 
                                             resource_id:null, 
-                                            data:{data_app_id:parameters.endpoint=='APP_EXTERNAL'?
-                                                        //APP_EXTERNAL can only run function using same appid used by host
-                                                        parameters.app_id:
-                                                            parameters.data.data_app_id}})                                           ;
+                                            data:{data_app_id:parameters.data.data_app_id}});
     if (modules.result){
         if (parameters.data?.type =='MODULE'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
+                                                                                                //APP EXTERNAL only uses id and message keys, add function type
                                                                                                 app.common_type==(parameters.endpoint=='APP_EXTERNAL'?'FUNCTION':parameters.data.type) && 
                                                                                                 app.common_name==parameters.resource_id && 
                                                                                                 app.common_role == parameters.endpoint)[0];
@@ -741,7 +738,7 @@ const commonAppReportQueue = async parameters =>{
     const report = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
     if (report.result){
         /**@type{server_db_file_iam_user} */
-        const user = fileModelIamUser.get(  parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.authorization).id)).result[0];
+        const user = fileModelIamUser.get(  parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.authorization).iam_user_id)).result[0];
         const result_post = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                             {
                                                             type:'REPORT',
