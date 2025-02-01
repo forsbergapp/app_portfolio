@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="278AAE9F-A468-4E43-AEFB-476D1AC25D1A" name="IAM_APP_TOKEN">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="278AAE9F-A468-4E43-AEFB-476D1AC25D1A" name="IAM_APP_ID_TOKEN">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:34:27 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -81,7 +81,7 @@
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="54DCE980-6088-A10C-4C15-A4F3FA38362C" name="IAM_APP_TOKEN PK">
+<identifier id="54DCE980-6088-A10C-4C15-A4F3FA38362C" name="IAM_APP_ID_TOKEN PK">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:34:53 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -89,11 +89,12 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <pk>true</pk>
+<newElementsIDs>D6D5957D-46E8-EE76-EE43-CFC769D2009A</newElementsIDs>
 <usedAttributes>
 <attributeRef>D6D5957D-46E8-EE76-EE43-CFC769D2009A</attributeRef>
 </usedAttributes>
 </identifier>
-<identifier id="C0F8519C-EE21-296B-7975-8F2DD63F79EB" name="IAM_APP_TOKEN_UK">
+<identifier id="C0F8519C-EE21-296B-7975-8F2DD63F79EB" name="IAM_APP_ID_TOKEN_UK">
 <createdBy>admin</createdBy>
 <createdTime>2024-12-08 22:56:05 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

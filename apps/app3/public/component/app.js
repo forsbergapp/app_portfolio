@@ -54,7 +54,7 @@ const component = async props => {
     const menu = await props.methods.commonFFB({path:'/app-module/COMMON_DOC', 
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
-                                                body:{type:'FUNCTION',documentType:'MENU', data_app_id:props.data.app_id}})
+                                                body:{type:'FUNCTION',documentType:'MENU', IAM_data_app_id:props.data.app_id}})
                 .then(result=>JSON.parse(JSON.parse(result).rows))
                 .catch(()=>null);
     const onMounted =()=>{

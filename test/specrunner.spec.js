@@ -18,7 +18,7 @@
 
 /**
  * Spy test, commonApp as called from bff 
- *  should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_TOKEN at least 1 time each when requesting app
+ *  should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
  */
 import '../apps/common/src/common.spec.js';
 

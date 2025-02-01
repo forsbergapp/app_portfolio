@@ -266,7 +266,7 @@ const component = async props => {
                                                                                                             query:`locale=${locale}`,
                                                                                                             method:'POST', 
                                                                                                             authorization_type:'APP_ID', 
-                                                                                                            body:{type:'FUNCTION',data_app_id:props.data.data_app_id}
+                                                                                                            body:{type:'FUNCTION',IAM_data_app_id:props.data.data_app_id}
                                                                                                         })
                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows)
                                                 .then((/**@type{[{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}]}*/result)=>
@@ -287,7 +287,7 @@ const component = async props => {
             const cities = await props.methods.commonFFB({path:'/app-module/COMMON_WORLDCITIES_COUNTRY', 
                 method:'POST', 
                 authorization_type:'APP_ID', 
-                body:{type:'FUNCTION',country:country_code.toUpperCase(), data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
+                body:{type:'FUNCTION',country:country_code.toUpperCase(), IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
             
             //sort admin name + city
             cities.sort((a, b) => {

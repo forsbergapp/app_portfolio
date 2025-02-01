@@ -116,10 +116,14 @@ const paymentRequestCreate = async parameters =>{
             if (body_decrypted.currency_code==currency.currency_code){
                 // payment request uses ID Token and SECRET.APP_ID_SECRET  parameter since no user is logged in
                 // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
-                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_CUSTOM', { id:             body_decrypted.payerid,
-                                                                        name:           '',
-                                                                        ip:             parameters.ip,
-                                                                        scope:          'APP_CUSTOM'}, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_payment_request_expire);
+                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_CUSTOM', {   app_custom_id:             body_decrypted.payerid,
+                                                                                        app_id:null,
+                                                                                        iam_user_id:null,
+                                                                                        user_account_id:null,
+                                                                                        name:null,
+                                                                                        ip:             parameters.ip,
+                                                                                        scope:          'APP_CUSTOM'}, 
+                                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_payment_request_expire);
                 const payment_request_id = securityUUIDCreate();
                 /**@type{payment_request} */
                 const data_payment_request = {
