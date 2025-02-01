@@ -101,6 +101,9 @@
     margin-bottom: 1em;
 }
 #content{
+    --document_width: 1;
+    transform: scale(var(--document_width));
+    transform-origin: top left;
     display: inline-block;
     font-size: 1em;
     margin-inline-start: 10px;
@@ -108,6 +111,7 @@
     min-width:80em;
     vertical-align: top;
 }
+
 /*CODE*/
 .common_markdown_code,
 .code {
