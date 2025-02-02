@@ -28,3 +28,8 @@ variable "oci_core_image_operating_system_version" {
     type        = string
     default     = "20.04"
 }
+variable "git_repository_url" {
+    description = "GIT Repository"
+    type        = string
+    default     = "https://[server]/[path]/[file].git"
+}
