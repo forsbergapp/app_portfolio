@@ -181,7 +181,33 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
 
 /**
  * @name markdownRender
- * @description Renders markdown document from template APP
+ * @description Renders markdown document and replaces variables:
+ *              type APP
+ *                  APP_NAME                APP
+ *                  SCREENSHOT_START        APP_TRANSLATION
+ *                  DESCRIPTION             APP_TRANSLATION
+ *                  REFERENCE               APP_TRANSLATION
+ *                  TECHNOLOGY              APP_TRANSLATION
+ *                  SECURITY                APP_TRANSLATION
+ *                  PATTERN                 APP_TRANSLATION
+ *                  SOLUTION                APP_TRANSLATION
+ *                  SCREENSHOT_END (arrray) APP_TRANSLATION
+ *              type MODULE*
+ *                  MODULE_NAME
+ *                  MODULE
+ *                  SOURCE_LINK
+ *                  SERVER_HOST             CONFIG_SERVER->SERVER->HOST
+ *                  APP_CONFIGURATION       CONFIG_SERVER->METADATA->CONFIGURATION
+ *                  APP_COPYRIGHT           APP_PARAMETER
+ *                  MODULE_FUNCTION replaced by all functions found in getFileFunctions()
+ *              type ROUTE and template 6.restapi
+ *                  CONFIG_REST_API variable is rendered directly to HTML using common_openapi.js component because of complexity
+ *              type ROUTE and template 6.restapiFunctions
+ *                  ROUTE_FUNCTIONS all functions with tag ROUTE_REST_API
+ *              type ROUTE and template 6.appRoutes
+ *                  ROUTE_FUNCTIONS with tag ROUTE_APP
+ *              any file in menu of type GUIDE
+ *                  REPOSITORY_GIT_URL replaces with REPOSITORY_GIT_URL parameter in CONFIG_SERVER if used in any document 
  * @function
  * @param {{app_id:number,
  *          type:serverDocumentType,
@@ -195,7 +221,8 @@ const markdownRender = async parameters =>{
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../../server/db/fileModelApp.js')} */
     const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-    
+    /**@type{import('../../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);    
 
     switch (true){
         case parameters.type.toUpperCase()=='APP':{
@@ -235,8 +262,7 @@ const markdownRender = async parameters =>{
             //replace variables for MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
             /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
             const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
-            /**@type{import('../../../../server/db/fileModelConfig.js')} */
-            const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+            
 
             const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`)
                         .then(markdown=>
@@ -308,6 +334,10 @@ const markdownRender = async parameters =>{
                 else
                     return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'microservice','server'], parameters.doc);
             }
+        }
+        case parameters.type.toUpperCase()=='GUIDE':{
+            return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
+                        .then(markdown=>markdown.replaceAll('@{REPOSITORY_GIT_URL}',fileModelConfig.get('CONFIG_SERVER', 'SERVER', 'REPOSITORY_GIT_URL')));
         }
         default:{
             return '';
@@ -435,15 +465,12 @@ const appFunction = async parameters =>{
                 /**@type{import('../../../../server/db/fileModelConfig.js')} */
                 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
                 //guide documents in separate files, app and modules use templates
-                return {result:(await ComponentMarkdown({ data:{  
-                                                        markdown: parameters.data.documentType.toUpperCase()=='GUIDE'?
-                                                                    await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.data.doc}.md`, true):
-                                                                        await markdownRender({  app_id:parameters.app_id,
-                                                                                                type:parameters.data.documentType,
-                                                                                                doc:parameters.data.doc,
-                                                                                                module:parameters.data.doc,
-                                                                                                locale:parameters.locale})},
-                                                methods:null}))
+                return {result:(await ComponentMarkdown({   data:{  markdown:await markdownRender({ app_id:parameters.app_id,
+                                                                    type:parameters.data.documentType,
+                                                                    doc:parameters.data.doc,
+                                                                    module:parameters.data.doc,
+                                                                    locale:parameters.locale})},
+                                                            methods:null}))
                                         .replace(parameters.data.doc=='6.restapi'?'@{CONFIG_REST_API}':'',parameters.data.doc=='6.restapi'?
                                                 await ComponentOpenAPI({data:   {  
                                                                                 app_id: parameters.app_id

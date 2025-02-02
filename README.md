@@ -62,7 +62,7 @@ Full documentation in /apps/common/src/functions/documentation or in presentatio
 install NodeJs from https://nodejs.org/
 install VS Studio Code from https://code.visualstudio.com/download
 ```
-git clone https://github.com/forsbergapp/app_portfolio.git
+git clone [repository .git url]
 npm install
 ``` 
 launch configured (launch.json) from Visual Studio Code
@@ -83,7 +83,7 @@ install db and optional demo users so apps will start
 see full documentation how to install on a cloud service using Terraform
 
 ```
-git clone https://github.com/forsbergapp/app_portfolio.git app_portfolio
+git clone [repository .git url] app_portfolio
 sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 	    sudo apt install nodejs
         sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node

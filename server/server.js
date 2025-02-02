@@ -651,7 +651,7 @@ const serverUtilAppLine = () =>{
 };
 /**
  * @name serverJs
- * @description Same as serverExpress but without Express
+ * @description Server app using Express pattern
  * @function
  * @returns {Promise<*>}
  */
@@ -677,7 +677,7 @@ const serverJs = async () => {
      */
     const app = async (req, res)=>{
         /**
-         * Routes request emulating Express  route() function
+         * @description Routes request
          * @param {server_server_req} req
          * @param {server_server_res} res
          * @returns {Promise.<*>}
@@ -763,7 +763,7 @@ const serverJs = async () => {
                 }
             }
         };
-        //set keys and functions as set in Express
+        //set used functionality as in Express
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] =='application/json'){
@@ -812,52 +812,53 @@ const serverJs = async () => {
             });
         }
         else{
-            req.protocol = req.socket.encrypted?'https':'http';
-            req.ip = req.socket.remoteAddress;
-            req.hostname = req.headers.host;
-            req.path = req.url;
-            req.originalUrl = req.url;
-            req.route = {path:''};
+            req.protocol =      req.socket.encrypted?'https':'http';
+            req.ip =            req.socket.remoteAddress;
+            req.hostname =      req.headers.host;
+            req.path =          req.url;
+            req.originalUrl =   req.url;
+            req.route =         {path:''};
 
             /**@ts-ignore */
-            req.query = req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
-                        .substring(req.path.indexOf('?')+1)))
-                        .reduce((query, param)=>{
-                            const key = {[param[0]] : decodeURIComponent(param[1])};
-                            return {...query, ...key};
-                        }, {}):null;
+            req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
+                                .substring(req.path.indexOf('?')+1)))
+                                .reduce((query, param)=>{
+                                    const key = {[param[0]] : decodeURIComponent(param[1])};
+                                    return {...query, ...key};
+                                }, {}):null;
             
-            res.status = (/**@type{number}*/code) =>{
-                res.statusCode = code;
-            };
-            res.type = (/**@type{string}*/type)=>{
-                res.setHeader('Content-Type', type);
-            };
-            res.send = (/**@type{*}*/result) =>{
-                //Content-Type should be set beforem sets default to text/html
-                if (res.getHeader('Content-Type')==undefined)
-                    res.type('text/html; charset=utf-8');
-                res.write(result);
-                res.end();
-            };
-            res.sendFile = async (/**@type{*}*/path) =>{
-                const fs = await import('node:fs');
-                const readStream = fs.createReadStream(path);
-                readStream.on ('error', streamErr =>{
-                    streamErr;
-                    res.writeHead(500);
-                    res.end(iamUtilMessageNotAuthorized());
-                });
-                /**@ts-ignore */
-                readStream.pipe(res);
-            };
-            res.redirect = (/**@type{string}*/url) =>{
-                res.writeHead(301, {'Location':url});
-                res.end();
-            };
+            res.status =        (/**@type{number}*/code) =>{
+                                    res.statusCode = code;
+                                };
+            res.type =          (/**@type{string}*/type)=>{
+                                    res.setHeader('Content-Type', type);
+                                };
+            res.send =          (/**@type{*}*/result) =>{
+                                    //Content-Type should be set beforem sets default to text/html
+                                    if (res.getHeader('Content-Type')==undefined)
+                                        res.type('text/html; charset=utf-8');
+                                    res.write(result);
+                                    res.end();
+                                };
+            res.sendFile =      async (/**@type{*}*/path) =>{
+                                    const fs = await import('node:fs');
+                                    const readStream = fs.createReadStream(path);
+                                    readStream.on ('error', streamErr =>{
+                                        streamErr;
+                                        res.writeHead(500);
+                                        res.end(iamUtilMessageNotAuthorized());
+                                    });
+                                    /**@ts-ignore */
+                                    readStream.pipe(res);
+                                };
+            res.redirect =      (/**@type{string}*/url) =>{
+                                    res.writeHead(301, {'Location':url});
+                                    res.end();
+                                };
+            //Backend for frontend (BFF) start
             /**@type{import('./bff.js')} */
-            const bffService = await import('./bff.js');
-            const resultbffInit = await bffService.bffInit(req, res);
+            const bffService =      await import('./bff.js');
+            const resultbffInit =   await bffService.bffInit(req, res);
             if (resultbffInit.reason == null){
                 const resultbffStart = req.method=='GET'?await bffService.bffStart(req, res):{reason:null};
                 switch (resultbffStart.reason){
@@ -870,6 +871,7 @@ const serverJs = async () => {
                         break;
                     }
                     default:{
+                        //Route request
                         return bffRoute(req, res);
                     }
                 }
@@ -889,14 +891,6 @@ const serverJs = async () => {
  * @description Server REST API routes using openAPI where paths, methods, validation rules, operationId and function parameters are defined
  *              OperationId syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
  *              Returns single resource result format or ISO20022 format with either list header format or page header metadata
- *              Returns HTML or {static:boolean, sendfile:string|null, sendcontent:string}
- *              /app-module-report-queue-result
- *              /bff/admin/v1/app-module-report
- *              /bff/app/v1/app-module-report
- *              /bff/app/v1/app-module-module
- * 
- *              Returns status 401 if not authorized
- *              Returns status 404 if route is not found
  * @function
  * @param {server_REST_API_parameters} routesparameters
  * @returns {Promise.<server_server_response>}

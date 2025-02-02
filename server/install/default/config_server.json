@@ -13,6 +13,7 @@
         {"APP_ADMIN_APP_ID": "1", "COMMENT": "admin app id"},
         {"FRAMEWORK": "1", "COMMENT": "1=JS,2=Express"},
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"},
+        {"REPOSITORY_GIT_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
         {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"}
     ],
     "SERVICE_IAM":[
