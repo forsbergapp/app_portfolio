@@ -91,40 +91,6 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/identity_provider": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.dbModelIdentityProvider.get",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/locale",
-                            "required":true
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                        {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_id/v1/server-db/app_settings": {
             "get": {
                 "summary": "",
@@ -217,81 +183,7 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/user_account-activate/${IAM_user_account_id}": {
-            "put": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserActivate",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/locale",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "verification_type":{
-                                                "type":"string"
-                                            },
-                                            "verification_code":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/app_access/v1/server-db/user_account-activate/${IAM_user_account_id}": {
+        "/bff/app_access_verification/v1/server-db/user_account-activate/${IAM_user_account_id}": {
             "put": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserActivate",
@@ -380,6 +272,10 @@
                         },
                         {
                             "$ref": "#/components/parameters/locale",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
                             "required":true
                         },
 			            {
@@ -1394,7 +1290,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-db/user_account-password/${IAM_user_account_id}": {
+        "/bff/app_access_verification/v1/server-db/user_account-password/${IAM_user_account_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
@@ -1442,9 +1338,6 @@
                                         "type":"object" ,
                                         "properties":{
                                             "password_new":{
-                                                "type":"string"
-                                            },
-                                            "auth":{
                                                 "type":"string"
                                             }
                                         }
@@ -6659,7 +6552,7 @@
                 "scheme":"basic"
             },
             "AuthorizationBearer":{
-                "description":"Syntax: Bearer [app access or admin token using base64], claims: app_id:[APP_ID], iam_user_id:[IAM_USER.ID], user_account_id[DB USER_ACCOUNT.ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
+                "description":"Syntax: Bearer [app access, app_access_verification or admin token using base64], claims: app_id:[APP_ID], iam_user_id:[IAM_USER.ID], user_account_id[DB USER_ACCOUNT.ID], name:[USERNAME], ip:[IP], scope:[APP_ACCESS|ADMIN|APP_CUSTOM], tokentimestamp: [TIMESTAMP]",
                 "type":"http",
                 "schema":"bearer"
             },
