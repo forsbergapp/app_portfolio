@@ -170,7 +170,7 @@
 
 /** 
  * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
+ * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
  *           'SERVER'} server_bff_endpoint_type
  */
 
@@ -1583,8 +1583,7 @@
 
 /**
  * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updatePassword
- * @typedef {{  password_new:string|null,
- *              auth:string|null}} server_db_sql_parameter_user_account_updatePassword
+ * @typedef {{  password_new:string|null}} server_db_sql_parameter_user_account_updatePassword
  *
  */
 

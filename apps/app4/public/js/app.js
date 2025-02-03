@@ -1034,12 +1034,10 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
  * @description User login
  * @function
  * @param {boolean} admin
- * @param {string|null} username_verify
- * @param {string|null} password_verify
  * @returns {Promise.<void>}
  */
-const appUserLogin = async (admin=false, username_verify=null, password_verify=null) => {
-    await common.commonUserLogin(admin, username_verify, password_verify)
+const appUserLogin = async (admin=false) => {
+    await common.commonUserLogin(admin)
     .then(result=>{
         //create intitial user setting if not exist, send initial=true
         appUserLoginCommon(result.avatar);
@@ -1105,20 +1103,6 @@ const appUserLoginCommon = avatar => {
             appToolbarButton(APP_GLOBAL.app_default_startup_page);
         });
     });
-};
-/**
- * @name appUserLoginProvider
- * @description Provider login
- * @function
- * @param {*} provider_id 
- * @returns {Promise.<void>}
- */
-const appUserLoginProvider = async (provider_id) => {
-    common.commonUserLogin(null, null, null, provider_id)
-    .then(result=>{
-        appUserLoginCommon(result.avatar);
-    })
-    .catch(()=>null);
 };
 /**
  * @name appUserProfileStatUpdate
@@ -2106,13 +2090,6 @@ const appEventClick = event => {
                 //dialogue user start
                 case 'common_dialogue_iam_start_login_button':{
                     appUserLogin();
-                    break;
-                }
-                case 'common_dialogue_iam_start_identity_provider_login':{
-                    const target_row = common.commonMiscElementRow(event.target);
-                    const provider_element = target_row.querySelector('.common_login_provider_id');
-                    if (provider_element && provider_element.textContent)
-                        appUserLoginProvider(parseInt(provider_element.textContent));
                     break;
                 }
                 //dialogue profile 

@@ -181,7 +181,6 @@
  *              iam_user_name:string|null,
  *              admin_first_time:number|null,
  *              admin_only:number|null,
- *              user_identity_provider_id:number|null,
  *              user_account_id:number|null,
  *              user_account_username:string|null,
  *              client_latitude:string,
@@ -208,12 +207,19 @@
  *              user_timezone:string,
  *              user_direction:string,
  *              user_arabic_script:string,
+ *              component:{
+ *                          common_dialogue_iam_verify:{
+ *                              methods:{
+ *                                  commonUserVerifyCheckInput:function
+ *                              }
+ *                          }
+ *              },
  *              moduleLeaflet: {methods:{
  *                                          eventClickCountry:          function, 
  *                                          eventClickCity:             function,
  *                                          eventClickMapLayer:         function,
  *                                          eventClickControlZoomIn:    function,
- *                                          eventClickControlZoomOut:    function,
+ *                                          eventClickControlZoomOut:   function,
  *                                          eventClickControlSearch:    function,
  *                                          eventClickControlFullscreen:function,
  *                                          eventClickControlLocation:  function,
@@ -279,7 +285,7 @@
 
 /**
  * @description Type CommonRESTAPIMethod
- * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'ADMIN'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
+ * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
  */
 
 

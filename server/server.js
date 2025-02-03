@@ -550,28 +550,27 @@ const serverUtilAppLine = () =>{
  * @description Gets Express app with following settings in this order
  *	            1.Middleware	JSON maximum size setting
  *	            2.Routes	
- *	            path	                                    method	middleware                                  controller      comment
- *              /bff/app/v1/app-module*'                    get                                                 bffApp          app modules type MODULE and REPORT
- *                                                                                                                              used for shared libraries and open report url
- *	            *	                                        all	                                                bffInit	        logs SSE and response when closed, 
- *                                                                                                                              authenticates request and will end request if not passing controls,
- *                                                                                                                              sets headers, 
- *                                                                                                                              returns disallow for robots.txt and empty favicon.ico
- *	            *	                                        get	                                                bffStart	    redirects naked domain, http to https if enabled 
- *				            			                                                                                        and to admin subdomain if first time, 
- *							                                                                                                    responds to SSL verification if enabled
- *              /bff/app_id/v1*                           all     iam.iamAuthenticateIdToken                  bffAppId
- *              /bff/app_id_signup/v1*                         post    iam.iamAuthenticateIdTokenRegistration      bffAppIdSignup
- *              /bff/app_access/v1*                         all     iam.iamAuthenticateAccessToken              bffAppAccess
- *              /bff/app_external/v1/app-module*   post    iam.iamAuthenticateExternal                 bffAppExternal
- *              /bff/admin/v1*                              all     iam.iamAuthenticateAdminAccessToken         bffAdmin
- *              /bff/iam_admin/v1*                          post    iam.iamAuthenticateAdmin                    bffIAMAdmin
- *              /bff/iam_user/v1*                           post    iam.iamAuthenticateUser                     bffIAMUser
- *              /bff/iam_provider/v1*                       post    iam.iamAuthenticateProvider                 bffIAMProvider
- *	            *	                                        get	                                                bffApp		    app asset
- *				        			                                                                                            common asset
- *						            	                                                                                        info page
- *							                                                                                                    app
+ *	            path	                                    method	middleware                                              controller      comment
+ *	            *	                                        all	                                                            bffInit	        logs SSE and response when closed, 
+ *                                                                                                                                          authenticates request and will end request if not passing controls,
+ *                                                                                                                                          sets headers, 
+ *                                                                                                                                          returns disallow for robots.txt and empty favicon.ico
+ *	            *	                                        get	                                                            bffStart	    redirects naked domain, http to https if enabled 
+ *				            			                                                                                                    and to admin subdomain if first time, 
+ *							                                                                                                                responds to SSL verification if enabled
+ *              /bff/app_id/v1*                             all     iamMiddleware.iamAuthenticateIdToken                    bffAppId
+ *              /bff/app_id_signup/v1*                      post    iamMiddleware.iamAuthenticateIdTokenRegistration        bffAppIdSignup
+ *              /bff/app_access/v1*                         all     iamMiddleware.iamAuthenticateAccessToken                bffAppAccess
+ *              /bff/app_access_verification/v1*            all     iamMiddleware.iamAuthenticateAccessVerificationToken    bffAppAccessVerification
+ *              /bff/app_external/v1/app-module*            post    iamMiddleware.iamAuthenticateExternal                   bffAppExternal
+ *              /bff/admin/v1*                              all     iamMiddleware.iamAuthenticateAdminAccessToken           bffAdmin
+ *              /bff/iam_admin/v1*                          post    iamMiddleware.iamAuthenticateAdmin                      bffIAMAdmin
+ *              /bff/iam_user/v1*                           post    iamMiddleware.iamAuthenticateUser                       bffIAMUser
+ *              /bff/iam_provider/v1*                       post    iamMiddleware.iamAuthenticateProvider                   bffIAMProvider
+ *	            *	                                        get	                                                            bffApp		    app asset
+ *				        			                                                                                                        common asset
+ *						            	                                                                                                    info page
+ *							                                                                                                                app
  *              3.Middleware error logging
 
  * @function
@@ -603,35 +602,35 @@ const serverUtilAppLine = () =>{
     //ROUTES MIDDLEWARE
     //apps
     /**@type{import('./bffMiddleware.js')} */
-    const { bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, 
-            bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
+    const bff = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
     //auth
     /**@type{import('./iamMiddleware.js')} */
-    const iam = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
+    const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
     
     //ROUTES 
     //logs SSE and response when closed, authenticates request and will end request if not passing controls, 
     //sets headers, returns disallow for robots.txt and empty favicon.ico
-    app.route('*').all                          (bffInit);
+    app.route('*').all                          (bff.bffInit);
     
     //redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
-    app.route('*').get                          (bffStart);
+    app.route('*').get                          (bff.bffStart);
     
     //REST API 
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_id/v1*').all                            (iam.iamAuthenticateIdToken,                bffAppId);
-    app.route('/bff/app_id_signup/v1*').post                    (iam.iamAuthenticateIdTokenRegistration,    bffAppIdSignup);
-    app.route('/bff/app_access/v1*').all                        (iam.iamAuthenticateAccessToken,            bffAppAccess);
-    app.route('/bff/app_external/v1/*').post                    (iam.iamAuthenticateExternal,               bffAppExternal);
-    app.route('/bff/admin/v1*').all                             (iam.iamAuthenticateAccessTokenAdmin,       bffAdmin);
-    app.route('/bff/iam_admin/v1/server-iam-login').post        (iam.iamAuthenticateAdmin,                  bffIAMAdmin);
-    app.route('/bff/iam_user/v1*').post                         (iam.iamAuthenticateUser,                   bffIAMUser);
-    app.route('/bff/iam_provider/v1*').post                     (iam.iamAuthenticateProvider,               bffIAMProvider);
+    app.route('/bff/app_id/v1*').all                            (iamMiddleware.iamAuthenticateIdToken,                bff.bffAppId);
+    app.route('/bff/app_id_signup/v1*').post                    (iamMiddleware.iamAuthenticateIdTokenRegistration,    bff.bffAppIdSignup);
+    app.route('/bff/app_access/v1*').all                        (iamMiddleware.iamAuthenticateAccessToken,            bff.bffAppAccess);
+    app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,bff.bffAppAccessVerification);
+    app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,               bff.bffAppExternal);
+    app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,       bff.bffAdmin);
+    app.route('/bff/iam_admin/v1/server-iam-login').post        (iamMiddleware.iamAuthenticateAdmin,                  bff.bffIAMAdmin);
+    app.route('/bff/iam_user/v1*').post                         (iamMiddleware.iamAuthenticateUser,                   bff.bffIAMUser);
+    app.route('/bff/iam_provider/v1*').post                     (iamMiddleware.iamAuthenticateProvider,               bff.bffIAMProvider);
     
     //app asset, common asset, info page, report and app
-    app.route('*').get                                          (bffApp);
+    app.route('*').get                                          (bff.bffApp);
     
     //ERROR LOGGING
     app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res) => {
@@ -667,8 +666,7 @@ const serverJs = async () => {
     const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
 
     /**@type{import('./bffMiddleware.js')} */
-    const { bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, 
-        bffIAMAdmin, bffIAMUser, bffIAMProvider} = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
+    const bff = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
 
     /**
      * @param {server_server_req} req
@@ -691,63 +689,70 @@ const serverJs = async () => {
                 case req.path.startsWith('/bff/app_id/v1'):{
                     req.route.path = '/bff/app_id/v1*';
                     await iamMiddleware.iamAuthenticateIdToken(req, res, () =>
-                        bffAppId(req, res)
+                        bff.bffAppId(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/app_id_signup/v1') &&req.method=='POST':{
                     req.route.path = '/bff/app_id_signup/v1*';
                     await iamMiddleware.iamAuthenticateIdTokenRegistration(req, res, () =>
-                            bffAppIdSignup(req, res)
+                            bff.bffAppIdSignup(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/app_access/v1') :{
                     req.route.path = '/bff/app_access/v1*';
                     await iamMiddleware.iamAuthenticateAccessToken(req, res, () =>
-                        bffAppAccess(req, res)
+                        bff.bffAppAccess(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/app_access_verification/v1') :{
+                    req.route.path = '/bff/app_access_verification/v1*';
+                    await iamMiddleware.iamAuthenticateAccessVerificationToken(req, res, () =>
+                        bff.bffAppAccessVerification(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':{
                     req.route.path = '/bff/app_external/v1*';
                     iamMiddleware.iamAuthenticateExternal(req, res, () =>
-                        bffAppExternal(req, res)
+                        bff.bffAppExternal(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/admin/v1') :{
                     req.route.path = '/bff/admin/v1*';
                     await iamMiddleware.iamAuthenticateAccessTokenAdmin(req, res, () =>
-                        bffAdmin(req, res)
+                        bff.bffAdmin(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
                     req.route.path = '/bff/iam_admin/v1/server-iam-login';
                     await iamMiddleware.iamAuthenticateAdmin(req, res, () =>
-                        bffIAMAdmin(req, res)
+                        bff.bffIAMAdmin(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/iam_user/v1') && req.method=='POST':{
                     req.route.path = '/bff/iam_user/v1*';
                     await iamMiddleware.iamAuthenticateUser(req, res, () =>
-                        bffIAMUser(req, res)
+                        bff.bffIAMUser(req, res)
                     );
                     break;
                 }
                 case req.path.startsWith('/bff/iam_provider/v1') && req.method=='POST':{
                     req.route.path = '/bff/iam_provider/v1*';
                     await iamMiddleware.iamAuthenticateProvider(req, res, () =>
-                        bffIAMProvider(req, res)
+                        bff.bffIAMProvider(req, res)
                     );
                     break;
                 }
                 case req.method=='GET':{
                     req.route.path = '*';
                     //app asset, common asset, info page, report and app
-                    bffApp(req,res);
+                    bff.bffApp(req,res);
                     break;
                 }
                 default:{

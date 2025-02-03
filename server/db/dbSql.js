@@ -910,19 +910,7 @@ const USER_ACCOUNT_INSERT =
 const USER_ACCOUNT_UPDATE_ACTIVATE =
     `UPDATE <DB_SCHEMA/>.user_account
         SET active = 1,
-            verification_code = :auth,
-            email = CASE 
-                    WHEN  :verification_type = 4 THEN 
-                        email_unverified
-                    ELSE 
-                        email
-                    END,
-            email_unverified = CASE 
-                                WHEN  :verification_type = 4 THEN 
-                                    NULL
-                                ELSE 
-                                    email_unverified
-                                END,
+            verification_code = null
             date_modified = CURRENT_TIMESTAMP
      WHERE id = :id
        AND verification_code = :verification_code `;
@@ -1160,11 +1148,8 @@ const USER_ACCOUNT_SELECT_PASWORD =
       WHERE id = :id `;
 const USER_ACCOUNT_UPDATE_PASSWORD =
     `UPDATE <DB_SCHEMA/>.user_account
-        SET password = :password_new,
-            verification_code = null
-      WHERE id = :id  
-        AND verification_code = :auth
-        AND verification_code IS NOT NULL`;
+        SET password = :password_new
+      WHERE id = :id`;
 const USER_ACCOUNT_UPDATE_LOCAL =
     `UPDATE <DB_SCHEMA/>.user_account
         SET bio = :bio,

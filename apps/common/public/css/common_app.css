@@ -144,7 +144,7 @@
 
 
 /*Icons dialogue user verify*/
-#common_dialogue_iam_verify_email_icon::before{									content:var(--common_app_icon_email)}
+#common_dialogue_iam_verify_verification_code_icon::before{						content:var(--common_app_icon_verification_code)}
 #common_dialogue_iam_verify_cancel::before{										content:var(--common_app_icon_cancel)}
 
 /*Icons module leaflet control*/
@@ -774,18 +774,9 @@ body.rtl{
 #common_dialogue_iam_verify.common_dialogue_show2{
 	height:280px;
 }
-#common_dialogue_iam_verify_email_icon{
+#common_dialogue_iam_verify_verification_code_icon{
 	font-size:30px;
 	height:30px;
-}
-#common_dialogue_iam_verify_email{
-    margin-top: 20px;
-	height: 30px;
-}
-#common_dialogue_iam_verify_data_verification_type,
-#common_dialogue_iam_verify_data_username,
-#common_dialogue_iam_verify_data_password{
-	display: none;
 }
 #common_dialogue_iam_verify_verification_container{
 	margin-top:40px;
@@ -820,9 +811,6 @@ body.rtl{
 #common_dialogue_iam_password_new_icon{
 	font-size: 30px;
     height: 30px;
-}
-#common_dialogue_iam_password_new_auth{
-	display: none;
 }
 #common_dialogue_iam_password_new_password,
 #common_dialogue_iam_password_new_password_mask,
