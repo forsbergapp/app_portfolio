@@ -10,8 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{providers:CommonProvider[],
- *          admin_app:boolean,
+ * @param {{admin_app:boolean,
  *          type:'LOGIN'|'SIGNUP'|'FORGOT',
  *          first_time: boolean}} props 
  * @returns {string}
@@ -53,15 +52,6 @@ const template = props =>`  <div id='common_dialogue_iam_start_logo' class='comm
                                             <div id='common_dialogue_iam_start_login_password_mask' class='common_input common_password_mask'></div>
                                         </div>
                                         <div id='common_dialogue_iam_start_login_button' class='common_dialogue_button common_dialogue_iam_start_button common_icon' ></div>
-                                        <div id='common_dialogue_iam_start_identity_provider_login'>
-                                            ${props.providers.map((/**@type{*}*/row)=>(
-                                                `<div class='common_dialogue_iam_start_button common_link common_row' >
-                                                    <div class='common_login_provider_id'>${row.id}</div>
-                                                    <div class='common_login_provider_name'>${row.provider_name}</div>
-                                                </div>
-                                                `)).join('')
-                                            }
-                                        </div>
                                     </div>`:''
                                 }
                                 ${props.type=='SIGNUP'? 
@@ -111,17 +101,11 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
-    //fetch providers if not admin app
-    const providers = props.data.app_id == props.data.admin_app_id?[]:
-                        await props.methods.commonFFB({path:'/server-db/identity_provider', method:'GET', authorization_type:'APP_ID'})
-                                    .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-
     return {
         lifecycle:  null,
         data:       null,
         methods:    null,
         template:   template({
-                            providers:providers, 
                             admin_app:props.data.app_id == props.data.admin_app_id,
                             type:props.data.type,
                             first_time: props.data.admin_first_time == 1})

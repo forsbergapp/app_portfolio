@@ -158,6 +158,22 @@ const bffService = await import('./bff.js');
     bffService.bff(bff_parameters);
 };
 /**
+ * @name bffAppAccessVerification
+ * @description Backend for frontend (BFF) APP_ACCESS_VERIFICATION
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
+ */
+const bffAppAccessVerification = (req, res) =>{
+    /**@type{import('./types.js').server_bff_parameters} */
+    const bff_parameters = {endpoint:'APP_ACCESS_VERIFICATION', 
+                            ...bffCommon(req, res)
+                            };
+    bffService.bff(bff_parameters);
+};
+
+/**
  * @name bffAppExternal
  * @description Backend for frontend (BFF) APP_EXTERNAL
  * @function
@@ -233,5 +249,5 @@ const bffIAMAdmin = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 
-export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppExternal, bffAdmin, 
+export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppAccessVerification, bffAppExternal, bffAdmin, 
         bffIAMAdmin, bffIAMUser, bffIAMProvider};

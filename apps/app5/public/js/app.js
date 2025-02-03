@@ -208,16 +208,6 @@ const appEventClick = event => {
                     appUserLogin();
                     break;
                 }
-                case 'common_dialogue_iam_start_identity_provider_login':{
-                    const target_row = common.commonMiscElementRow(event.target);
-                    const provider_element = target_row.querySelector('.common_login_provider_id');
-                    if (provider_element && provider_element.textContent)
-                        common.commonUserLogin(null, null, null, parseInt(provider_element.textContent))
-                            .then(()=>common.commonComponentRemove('app_main_page'))
-                            .then(()=>appSecureInit())
-                            .catch(()=>null);             
-                    break;
-                }
             }
         });
     }

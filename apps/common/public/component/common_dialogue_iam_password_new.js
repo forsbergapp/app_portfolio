@@ -11,11 +11,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{auth:string}} props
  * @returns {string}
  */
-const template = props =>`  <div id='common_dialogue_iam_password_new_icon' class='common_icon'></div>
-                            <div id='common_dialogue_iam_password_new_auth'>${props.auth}</div>
+const template = () =>`  <div id='common_dialogue_iam_password_new_icon' class='common_icon'></div>
                             <div class='common_password_container'>
                                 <div id='common_dialogue_iam_password_new_password' contentEditable='true' class='common_password_new_input common_input common_password common_placeholder'></div>
                                 <div id='common_dialogue_iam_password_new_password_mask' class='common_input common_password_mask'/></div>
@@ -32,9 +30,7 @@ const template = props =>`  <div id='common_dialogue_iam_password_new_icon' clas
  * @name component
  * @description Component
  * @function
- * @param {{data:       {
- *                      commonMountdiv:string,
- *                      auth:string},
+ * @param {{data:       {commonMountdiv:string},
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -49,7 +45,7 @@ const component = async props => {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template({auth:props.data.auth})
+        template:   template()
     };
 };
 export default component;

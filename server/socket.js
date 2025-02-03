@@ -502,9 +502,18 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  */
 const socketExpiredTokensUpdate = () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
-        if (client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)||
-            client.token_admin && iamUtilTokenExpired(null, 'ADMIN', client.token_admin))
-            socketClientSend(client.response, '', 'SESSION_EXPIRED');
+        if ((client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)&&
+            client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
+            client.token_admin && iamUtilTokenExpired(null, 'ADMIN', client.token_admin)){
+                client.iam_user_id=null;
+                client.user_account_id=null;
+                client.iam_user_type=null;
+                client.iam_user_username=null;
+                client.identity_provider_id=null;
+                client.token_access=null;
+                client.token_admin=null;
+                socketClientSend(client.response, '', 'SESSION_EXPIRED');
+            }
     }
 };
 /**

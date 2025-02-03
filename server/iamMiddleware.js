@@ -43,7 +43,7 @@ const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUse
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'APP_ID_REGISTRATION', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'APP_ID_SIGNUP', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateAccessToken
@@ -55,6 +55,16 @@ const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAut
  * @returns {Promise.<void>}
  */
 const iamAuthenticateAccessToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'APP_ACCESS', req.headers.authorization, req.headers.host, req.ip, res, next);    
+/**
+ * @name iamAuthenticateAccessVerificationToken
+ * @description Middleware authenticates access verification token
+ * @function
+ * @param {server_server_req} req
+ * @param {server_server_res} res
+ * @param {function} next
+ * @returns {Promise.<void>}
+ */
+const iamAuthenticateAccessVerificationToken = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'APP_ACCESS_VERIFICATION', req.headers.authorization, req.headers.host, req.ip, res, next);    
 
 /**
  * @name iamAuthenticateExternal
@@ -76,7 +86,7 @@ const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateEx
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'AUTH_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateUser
@@ -87,7 +97,7 @@ const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUser
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'AUTH_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
  /**
   * @name iamAuthenticateProvider
@@ -98,10 +108,10 @@ const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCo
   * @param {function} next
   * @returns {Promise.<void>}
   */
-const iamAuthenticateProvider = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'AUTH_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateProvider = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 export{ iamAuthenticateIdToken, iamAuthenticateIdTokenRegistration,
-        iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, 
+        iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, iamAuthenticateAccessVerificationToken,
         iamAuthenticateExternal,
         iamAuthenticateAdmin, 
         iamAuthenticateUser,

@@ -189,7 +189,7 @@ const data_validation = data => {
 								}
 								else
 									if (data.provider_id == null && ((data.admin==1 && data.password_new != null) || data.admin==0))
-										return data_validation_password({password_new: data.password_new??data.password, auth:null});
+										return data_validation_password({password_new: data.password_new??data.password});
 									else
 										return null;
 					}
@@ -329,14 +329,12 @@ const userPost = async (app_id, data) =>{
  * @param {number} id 
  * @param {number|null} verification_type 
  * @param {string} verification_code 
- * @param {string|null} auth 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
-const userUpdateActivate = async (app_id, id, verification_type, verification_code, auth) => 
+const userUpdateActivate = async (app_id, id, verification_type, verification_code) => 
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_UPDATE_ACTIVATE,
                         {
-                            auth: auth,
                             verification_type: verification_type,
                             id: id,
                             verification_code: verification_code
@@ -590,8 +588,7 @@ const getStatCountAdmin = parameters =>
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          ip:string,
- *          data:{  password_new:string,
- *                  auth:string}}} parameters
+ *          data:{  password_new:string}}} parameters
  * @returns {Promise.<server_server_response>}
  */
  const updatePassword = async parameters => {
@@ -603,8 +600,7 @@ const getStatCountAdmin = parameters =>
                                                     dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
                                                     {
                                                         password_new: password,
-                                                        id: parameters.resource_id,
-                                                        auth: parameters.data.auth
+                                                        id: parameters.resource_id
                                                     },
                                                     null, 
                                                     null));
