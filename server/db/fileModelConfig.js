@@ -147,6 +147,7 @@ const configDefault = async () => {
         row.common_client_secret = securitySecretCreate();
         row.common_app_id_secret = securitySecretCreate();
         row.common_app_access_secret = securitySecretCreate();
+        row.common_app_access_verification_secret = securitySecretCreate();
     });        
     //set paths in microservice config
     /**@type{microservice_config} */
