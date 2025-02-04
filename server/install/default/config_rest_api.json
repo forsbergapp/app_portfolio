@@ -5327,10 +5327,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iam_user_login": {
+        "/bff/admin/v1/server-iam/iam_user_app_access": {
             "get": {
                 "summary": "",
-                "operationId": "server.iam.iamUserLoginGet",
+                "operationId": "server.iam.iamUserAppAccessGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}

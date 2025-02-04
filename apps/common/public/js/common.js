@@ -38,7 +38,7 @@ const COMMON_GLOBAL = {
     info_link_terms_url:null,
     info_link_about_url:null,
     iam_user_id:null,
-    iam_user_name:null,
+    iam_user_username:null,
     admin_first_time:null,
     admin_only:null,
     user_account_id:null,
@@ -1084,7 +1084,8 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                                     commonDialogueShow:         commonDialogueShow,
                                     commonUserLogout:           commonUserLogout,
                                     commonMesssageNotAuthorized:commonMesssageNotAuthorized,
-                                    commonUserActive:           commonUserActive
+                                    commonUserAuthenticateCode: commonUserAuthenticateCode,
+                                    commonUserSessionCountdown: commonUserSessionCountdown
                                 },
                     path:       '/common/component/common_dialogue_iam_verify.js'})
                     .then((/**@type{{   data:null,
@@ -1163,6 +1164,29 @@ const commonMessageShow = async (message_type, code, function_event, text_class=
  */
 const commonMesssageNotAuthorized = () => '⛔';
 /**
+ * @name commonUserSessionClear
+ * @description Clears users ssesion variables
+ * @function
+ * @returns {void}
+ */
+const commonUserSessionClear = () => {
+    //iam user
+    COMMON_GLOBAL.iam_user_id =             null;
+    COMMON_GLOBAL.iam_user_username =       null;
+
+    //db user
+    COMMON_GLOBAL.user_account_id =         null;
+    COMMON_GLOBAL.user_account_username =   null;
+
+    //admin access token
+    COMMON_GLOBAL.token_admin_at =          null;
+    //user access token
+    COMMON_GLOBAL.token_at	=               null;
+    COMMON_GLOBAL.token_exp =               null;
+    COMMON_GLOBAL.token_iat =               null;
+    COMMON_GLOBAL.token_timestamp =         null;
+};
+/**
  * @name commonDialoguePasswordNewClear
  * @description Dialogue password new clear
  * @function
@@ -1170,13 +1194,7 @@ const commonMesssageNotAuthorized = () => '⛔';
  */
 const commonDialoguePasswordNewClear = () => {
     commonComponentRemove('common_dialogue_iam_password_new');
-    COMMON_GLOBAL.token_at = '';
-    COMMON_GLOBAL.user_account_id = null;
-    COMMON_GLOBAL.user_account_username = null;
-
-    COMMON_GLOBAL.token_exp = null;
-    COMMON_GLOBAL.token_iat = null;
-    COMMON_GLOBAL.token_timestamp = null;
+    commonUserSessionClear();
 };
 /**
  * @name commonLovEvent
@@ -1598,33 +1616,27 @@ const commonUserLogin = async (admin=false) => {
             throw 'ERROR';
     }
     const result_iam = await commonFFB({path:path, method:'POST', authorization_type:authorization_type, body:json_data, spinner_id:spinner_item});
-    const login_data = JSON.parse(result_iam).login[0];
-    if (login_data.active==1){
+    if (JSON.parse(result_iam).active==1){
+        COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
+        COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
+        COMMON_GLOBAL.user_account_id =         JSON.parse(result_iam).user_account_id;
+        COMMON_GLOBAL.user_account_username =   JSON.parse(result_iam).user_account_username;
+        COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
+        COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
+        COMMON_GLOBAL.token_timestamp =         JSON.parse(result_iam).tokentimestamp;
+
         if (admin){
-            COMMON_GLOBAL.iam_user_id = JSON.parse(result_iam).iam_user_id;
-            COMMON_GLOBAL.iam_user_name = JSON.parse(result_iam).iam_user_name;
-            COMMON_GLOBAL.token_admin_at = JSON.parse(result_iam).token_at;
-            COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
-            COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
-            COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
+            COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
+            COMMON_GLOBAL.token_at	    = null;
             commonComponentRemove(current_dialogue, true);
             return {avatar: JSON.parse(result_iam).avatar};
         }
         else{
-            COMMON_GLOBAL.iam_user_id = null;
-            COMMON_GLOBAL.iam_user_name = null;
-            
-            COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
-            COMMON_GLOBAL.token_at	= JSON.parse(result_iam).accessToken;
-            COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
-            COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
-            COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
-    
-            COMMON_GLOBAL.user_account_username = login_data.username;
-    
+            COMMON_GLOBAL.token_admin_at= null;
+            COMMON_GLOBAL.token_at	    = JSON.parse(result_iam).token_at;
             //set avatar or empty
-            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (login_data.avatar)?
-                                                                                                        `url('${login_data.avatar}')`:
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (JSON.parse(result_iam).avatar)?
+                                                                                                        `url('${JSON.parse(result_iam).avatar}')`:
                                                                                                         'url()';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
@@ -1650,17 +1662,18 @@ const commonUserLogin = async (admin=false) => {
             commonMiscPreferencesUpdateBodyClassFromPreferences();
             commonComponentRemove(current_dialogue, true);
             commonComponentRemove('common_dialogue_profile', true);
-            return {avatar: login_data.avatar};
+            return {avatar: JSON.parse(result_iam).avatar};
         }
     }
     else{
-        COMMON_GLOBAL.iam_user_id = null;
-        COMMON_GLOBAL.iam_user_name = null;
-        COMMON_GLOBAL.user_account_id = parseInt(login_data.id);
-        COMMON_GLOBAL.token_at	= JSON.parse(result_iam).accessToken;
-        COMMON_GLOBAL.token_exp = JSON.parse(result_iam).exp;
-        COMMON_GLOBAL.token_iat = JSON.parse(result_iam).iat;
-        COMMON_GLOBAL.token_timestamp = JSON.parse(result_iam).tokentimestamp;
+        COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
+        COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
+        COMMON_GLOBAL.user_account_id =         JSON.parse(result_iam).user_account_id;
+        COMMON_GLOBAL.user_account_username =   JSON.parse(result_iam).user_account_username;
+        COMMON_GLOBAL.token_at	=               JSON.parse(result_iam).token_at;
+        COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
+        COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
+        COMMON_GLOBAL.token_timestamp =         JSON.parse(result_iam).tokentimestamp;
         commonDialogueShow('VERIFY', 'LOGIN');
         throw 'ERROR';
     }
@@ -1670,9 +1683,10 @@ const commonUserLogin = async (admin=false) => {
  * @description Countdown function to monitor token expire time
  *              Uses event listener on element instead of setTimeout since element can removed 
  *              and then event listener will automatically be removed
+ *              if token_exp is null then users COMMON_GLOBAL.token_exp will be used
  * @function
  * @param {HTMLElement} element
- * @param {number} token_exp
+ * @param {number|null} token_exp
  * @param {function|null} app_function
  * @returns {Promise.<void>}
  */
@@ -1683,7 +1697,7 @@ const commonUserLogin = async (admin=false) => {
     else
         element = COMMON_DOCUMENT.querySelector(`.${element.className.replaceAll(' ','.')}`);
     if (element){
-        const time_left = ((token_exp ?? 0) * 1000) - (Date.now());
+        const time_left = ((token_exp ?? COMMON_GLOBAL?.token_exp ??0) * 1000) - (Date.now());
         if (time_left < 0){
             element.textContent ='';
             element.classList.add('common_user_session_expired');
@@ -1698,7 +1712,7 @@ const commonUserLogin = async (admin=false) => {
             app_function?app_function():null;
             //wait 1 second
             await commonWindowWait(1000);            
-            commonUserSessionCountdown(element, token_exp, app_function);
+            commonUserSessionCountdown(element, token_exp ?? COMMON_GLOBAL?.token_exp ?? 0, app_function);
         }
     }
 };
@@ -1734,18 +1748,7 @@ const commonUserLogout = async () => {
     commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
     //update body class with app theme, direction and arabic script usage classes
     commonMiscPreferencesUpdateBodyClassFromPreferences();
-    
-    COMMON_GLOBAL.token_admin_at = '';
-    COMMON_GLOBAL.iam_user_id = null;
-    COMMON_GLOBAL.iam_user_name = null;
-
-    COMMON_GLOBAL.token_at ='';
-    COMMON_GLOBAL.user_account_id = null;
-    COMMON_GLOBAL.user_account_username = null;
-
-    COMMON_GLOBAL.token_exp = null;
-    COMMON_GLOBAL.token_iat = null;
-    COMMON_GLOBAL.token_timestamp = null;
+    commonUserSessionClear();
 };
 
 /**
@@ -1870,11 +1873,13 @@ const commonUserSignup = () => {
            
        commonFFB({path:'/server-db/user_account-signup', method:'POST', authorization_type:'APP_ID_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
         .then(result=>{
-            COMMON_GLOBAL.token_at = JSON.parse(result).accessToken;
-            COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-            COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+            COMMON_GLOBAL.user_account_id = JSON.parse(result).user_account_id;
+            COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
+            COMMON_GLOBAL.token_at =        JSON.parse(result).token_at;
+            COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
+            COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
             COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
-            COMMON_GLOBAL.user_account_id = parseInt(JSON.parse(result).id);
+            
             commonDialogueShow('VERIFY', 'SIGNUP');
         });
     }
@@ -2011,10 +2016,11 @@ const commonUserForgot = async () => {
        commonFFB({path:'/server-db/user_account-forgot', method:'POST', authorization_type:'APP_ID', body:json_data, spinner_id:'common_dialogue_iam_start_forgot_button'})
         .then(result=>{
             if (JSON.parse(result).sent == 1){
-                COMMON_GLOBAL.user_account_id = parseInt(JSON.parse(result).id);
-                COMMON_GLOBAL.token_at	= JSON.parse(result).accessToken;
-                COMMON_GLOBAL.token_exp = JSON.parse(result).exp;
-                COMMON_GLOBAL.token_iat = JSON.parse(result).iat;
+                COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
+                COMMON_GLOBAL.user_account_id = JSON.parse(result).user_account_id;
+                COMMON_GLOBAL.token_at	=       JSON.parse(result).token_at;
+                COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
+                COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
                 COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;    
                 commonDialogueShow('VERIFY', 'FORGOT');
             }
@@ -2022,15 +2028,15 @@ const commonUserForgot = async () => {
     }
 };
 /**
- * @name commonUserActivate
+ * @name commonUserAuthenticateCode
  * @description Activate user
  * @function
  * @param {string} verification_code
  * @param {string}verification_type
  * @returns {Promise.<boolean>}
  */
-const commonUserActive = async (verification_code, verification_type) => {
-    return commonFFB({ path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, 
+const commonUserAuthenticateCode = async (verification_code, verification_type) => {
+    return await commonFFB({ path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, 
                 method:'PUT', 
                 authorization_type:'APP_ACCESS_VERIFICATION', 
                 body:{   verification_code:  verification_code,
@@ -2043,28 +2049,22 @@ const commonUserActive = async (verification_code, verification_type) => {
                         verification_type:  verification_type=='LOGIN'?1:verification_type=='SIGNUP'?2:3}, 
                 spinner_id:'common_app_icon_verification_code'})
     .then(result=>{
-            if (JSON.parse(result).affectedRows == 1){
+            if (JSON.parse(result).activated == 1){
                 //returns a new APP_ACCESS_VERIFICATION token
-                COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
-                COMMON_GLOBAL.iam_user_name =   JSON.parse(result).iam_user_name;
-                COMMON_GLOBAL.user_account_id = JSON.parse(result).user_account_id;
-                COMMON_GLOBAL.token_at	=       JSON.parse(result).accessToken;
-                COMMON_GLOBAL.token_exp =       JSON.parse(result).exp;
-                COMMON_GLOBAL.token_iat =       JSON.parse(result).iat;
-                COMMON_GLOBAL.token_timestamp = JSON.parse(result).tokentimestamp;
+                COMMON_GLOBAL.iam_user_id =             JSON.parse(result).iam_user_id;
+                COMMON_GLOBAL.iam_user_username =       JSON.parse(result).iam_user_username;
+                COMMON_GLOBAL.user_account_id =         JSON.parse(result).user_account_id;
+                COMMON_GLOBAL.user_account_username =   JSON.parse(result).user_account_username;
+                COMMON_GLOBAL.token_at	=               JSON.parse(result).token_at;
+                COMMON_GLOBAL.token_exp =               JSON.parse(result).exp;
+                COMMON_GLOBAL.token_iat =               JSON.parse(result).iat;
+                COMMON_GLOBAL.token_timestamp =         JSON.parse(result).tokentimestamp;
                 return true;
             }
             else
                 return false;
     })
     .catch(()=>{
-        COMMON_GLOBAL.iam_user_id = null;
-        COMMON_GLOBAL.iam_user_name = null;
-        COMMON_GLOBAL.user_account_id = null;
-        COMMON_GLOBAL.token_at	= null;
-        COMMON_GLOBAL.token_exp = null;
-        COMMON_GLOBAL.token_iat = null;
-        COMMON_GLOBAL.token_timestamp = null;
         return false;
     });
 };
@@ -2910,7 +2910,7 @@ const commonEvent = async (event_type,event=null) =>{
                                             token_exp:COMMON_GLOBAL.token_exp,
                                             token_iat:COMMON_GLOBAL.token_iat,
                                             token_timestamp: COMMON_GLOBAL.token_timestamp,
-                                            admin:COMMON_GLOBAL.iam_user_name,
+                                            admin:COMMON_GLOBAL.iam_user_username,
                                             user_locale:COMMON_GLOBAL.user_locale,
                                             user_timezone:COMMON_GLOBAL.user_timezone,
                                             user_direction:COMMON_GLOBAL.user_direction,
@@ -2998,6 +2998,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }        
                         //dialogue verify
                         case 'common_dialogue_iam_verify_cancel':{
+                            commonUserSessionClear();
                             commonComponentRemove('common_dialogue_iam_verify', true);
                             break;
                         }
@@ -3358,7 +3359,7 @@ const commonInitParametersInfoSet = parameters => {
 
     //admin
     COMMON_GLOBAL.iam_user_id = null;
-    COMMON_GLOBAL.iam_user_name = null;
+    COMMON_GLOBAL.iam_user_username = null;
     COMMON_GLOBAL.admin_only = parameters.admin_only;
     COMMON_GLOBAL.admin_first_time = parameters.first_time;
 
@@ -3866,7 +3867,7 @@ export{/* GLOBALS*/
        commonUserSessionCountdown, 
        commonUserSignup, 
        commonUserUpdate, 
-       commonUserActive,
+       commonUserAuthenticateCode,
        commonUserUpdatePassword,
        /* MODULE LEAFLET  */
        commonModuleLeafletInit, 

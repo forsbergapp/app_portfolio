@@ -910,7 +910,7 @@ const USER_ACCOUNT_INSERT =
 const USER_ACCOUNT_UPDATE_ACTIVATE =
     `UPDATE <DB_SCHEMA/>.user_account
         SET active = 1,
-            verification_code = null
+            verification_code = null,
             date_modified = CURRENT_TIMESTAMP
      WHERE id = :id
        AND verification_code = :verification_code `;
@@ -1212,6 +1212,7 @@ const USER_ACCOUNT_SELECT_PROVIDER =
         AND u.identity_provider_id = :identity_provider_id`;
 const USER_ACCOUNT_SELECT_EMAIL =
     `SELECT id "id",
+            username,
             email "email"
        FROM <DB_SCHEMA/>.user_account
       WHERE email = :email `;

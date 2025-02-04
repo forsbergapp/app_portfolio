@@ -21,8 +21,8 @@ const template = () => `<div id='menu_users_content_widget1' class='widget'>
                             <div id='menu_users_list' class='common_list_scrollbar'></div>
                         </div>
                         <div id='menu_users_content_widget2' class='widget'>
-                            <div id='menu_users_iam_user_login_title' class='common_icon'></div>
-                            <div id='menu_users_iam_user_login' class='common_list_scrollbar'></div>
+                            <div id='menu_users_iam_user_app_access_title' class='common_icon'></div>
+                            <div id='menu_users_iam_user_app_access' class='common_list_scrollbar'></div>
                             <div id='menu_users_buttons' class="save_buttons">
                                 <div id='menu_users_save' class='common_dialogue_button button_save common_icon' ></div>
                             </div>

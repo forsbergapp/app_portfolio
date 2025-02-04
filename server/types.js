@@ -505,11 +505,11 @@
  *              'APP_SECRET'|
  *              'APP_TRANSLATION'|
  *              'IAM_APP_ID_TOKEN'|
+ *              'IAM_USER_APP_ACCESS'|
  *              'IAM_CONTROL_IP'|
  *              'IAM_CONTROL_USER_AGENT'|
  *              'IAM_CONTROL_OBSERVE'|
  *              'IAM_USER'|
- *              'IAM_USER_LOGIN'|
  *              server_db_file_db_name_log|
  *              server_db_file_db_name_message_queue} server_db_file_db_name
  */
@@ -748,32 +748,34 @@
  */
 
 /**
- * @description DB FILE server_db_file_iam_user_login
- * @typedef {{	id:             number,
- *              iam_user_id:    number,
- *              user_account_id:number|null,
- *              app_id:         number,
- *              user:           string,
- *              db:             number|null,
- *              res:	        0|1|2,          //0=fail, 1=success, 2=invalidated
- *   	        token:          string|null,
- *		        ip:             string,
- *		        ua:             string|null,
- *		        created:        string,
- *              modified?:      string}} server_db_file_iam_user_login
+ * @description DB FILE server_db_file_iam_user_app_access
+ * @typedef {{	id:                     number,
+ *              iam_user_id:            number,
+ *              iam_user_username:      string|null,
+ *              user_account_id:        number|null,
+ *              user_account_username:  string|null,
+ *              app_id:                 number,
+ *              db:                     number|null,
+ *              res:	                0|1|2,          //0=fail, 1=success, 2=invalidated
+ *   	        token:                  string|null,
+ *		        ip:                     string,
+ *		        ua:                     string|null,
+ *		        created:                string,
+ *              modified?:              string}} server_db_file_iam_user_app_access
  */
 
  /**
-  * @description DB FILE server_db_file_iam_user_login_insert
-  * @typedef {{	iam_user_id:    number,
-  *             user_account_id:number|null,
-  *             app_id:         number,
-  *             user:           string,
-  *             db:             number|null,
-  *             res:	        0|1|2,          //0=fail, 1=success, 2=invalidated
-  *   	        token:          string|null,
-  *		        ip:             string,
-  *		        ua:             string|null}} server_db_file_iam_user_login_insert
+  * @description DB FILE server_db_file_iam_user_app_access_insert
+  * @typedef {{	iam_user_id:            number,
+ *              iam_user_username:      string|null,
+ *              user_account_id:        number|null,
+ *              user_account_username:  string|null,
+  *             app_id:                 number,
+  *             db:                     number|null,
+  *             res:	                0|1|2,          //0=fail, 1=success, 2=invalidated
+  *   	        token:                  string|null,
+  *		        ip:                     string,
+  *		        ua:                     string|null}} server_db_file_iam_user_app_access_insert
   */
 
  /** 
@@ -1806,15 +1808,16 @@
  * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_CUSTOM'} server_iam_access_token_claim_scope_type
  */
 /**
- * @description IAM server_iam_access_token_claim_type
- * @typedef {{  app_custom_id?: number|string,
- *              app_id:         number,
- *              iam_user_id:    number|null,
- *              user_account_id:number|null,
- *              name:           string|null,
- *              ip:             string,
- *              scope:          server_iam_access_token_claim_scope_type,
- *              tokentimestamp: number}} server_iam_access_token_claim_type
+ * @description IAM server_iam_access_token_claim
+ * @typedef {{  app_custom_id?:         number|string,
+ *              app_id:                 number,
+ *              iam_user_id:            number|null,
+ *              iam_user_username:      string|null,
+ *              user_account_id:        number|null,
+ *              user_account_username:  string|null,
+ *              ip:                     string,
+ *              scope:                  server_iam_access_token_claim_scope_type,
+ *              tokentimestamp?:        number}} server_iam_access_token_claim
  */
 
 /**

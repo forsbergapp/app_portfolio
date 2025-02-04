@@ -1,21 +1,19 @@
 /** @module server/iam/service */
 
 /**
- * @import {server_server_response,server_server_response_type,
+ * @import {server_server_response,
  *          server_db_file_iam_app_id_token,server_db_file_iam_app_id_token_insert, 
- *          server_db_file_iam_user_login,server_db_file_iam_user_login_insert,
- *          server_iam_access_token_claim_type,server_iam_access_token_claim_scope_type,
+ *          server_db_file_iam_user_app_access,server_db_file_iam_user_app_access_insert,
+ *          server_iam_access_token_claim,server_iam_access_token_claim_scope_type,
  *          server_db_file_iam_control_observe,server_db_file_iam_control_user_agent,
  *          server_db_file_iam_control_ip,
  *          server_bff_endpoint_type,
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete,
  *          server_db_file_iam_user_update,server_db_file_iam_user_get,server_db_file_iam_user, server_db_file_iam_user_new, 
- *          server_db_sql_result_user_account_userLogin,
  *          server_db_sql_parameter_user_account_event_insertUserEvent,
  *          server_db_sql_parameter_user_account_userLogin,
  *          server_db_sql_result_user_account_providerSignIn,
  *          server_db_sql_parameter_user_account_create,
- *          server_db_sql_result_user_account_event_getLastUserEvent,
  *          server_db_sql_parameter_user_account_updateUserLocal,
  *          server_server_res} from './types.js'
  */
@@ -44,8 +42,8 @@ const fileModelIamControlObserve = await import(`file://${process.cwd()}/server/
 /**@type{import('./db/fileModelIamUser.js')} */
 const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
-/**@type{import('./db/fileModelIamUserLogin.js')} */
-const fileModelIamUserLogin = await import(`file://${process.cwd()}/server/db/fileModelIamUserLogin.js`);
+/**@type{import('./db/fileModelIamUserAppAccess.js')} */
+const fileModelIamUserAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamUserAppAccess.js`);
 
 /**@type{import('./db/fileModelIamAppIdToken.js')} */
 const fileModelIamAppToken = await import(`file://${process.cwd()}/server/db/fileModelIamAppIdToken.js`);
@@ -72,7 +70,7 @@ const iamUtilMessageNotAuthorized = () => '⛔';
  * @description IAM util decode idtoken or access token and returns the payload key
  * @function
  * @param {string} token
- * @returns {server_iam_access_token_claim_type} 
+ * @returns {server_iam_access_token_claim} 
 */
  const iamUtilDecode = token => {
     
@@ -90,6 +88,33 @@ const iamUtilMessageNotAuthorized = () => '⛔';
                 type:'JSON'
             };
 };
+/**
+ * @name iamUtilDecodeVerify
+ * @descriotion IAM util decode token using secret and returns claim
+ * @function
+ * @param {number} app_id
+ * @param {string} token
+ * @param {'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ID'|'ADMIN'} token_type 
+ * @returns {server_iam_access_token_claim}
+ */
+const iamUtilDecodeVerify = (app_id, token, token_type) =>{
+    /**@type{*} */
+    const verify = jwt.verify(token, token_type=='ADMIN'?
+                                        fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET'):
+                                            fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
+                                                                                                                    token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
+                                                                                                                    'common_app_id_secret']);
+    /**@type{server_iam_access_token_claim} */
+    return {app_id:                 verify.app_id,
+            iam_user_id:            verify.iam_user_id,
+            iam_user_username:      verify.iam_user_username,
+            user_account_id:        verify.user_account_id,
+            user_account_username:  verify.user_account_username,
+            ip:                     verify.ip,
+            scope:                  verify.scope,
+            tokentimestamp:         verify.tokentimestamp};
+};
+
 /**
  * @name iamUtilTokenExpired
  * @description IAM util token expired
@@ -149,11 +174,11 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
  */
 const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
     const token = authorization?.split(' ')[1] ?? '';
-    /**@type{server_db_file_iam_user_login}*/
-    const iam_user_login_row = fileModelIamUserLogin.get(app_id,null).result.filter((/**@type{server_db_file_iam_user_login}*/row)=>row.token==token &&row.ip == ip)[0];
-    if (iam_user_login_row){
+    /**@type{server_db_file_iam_user_app_access}*/
+    const iam_user_app_access_row = fileModelIamUserAppAccess.get(app_id,null).result.filter((/**@type{server_db_file_iam_user_app_access}*/row)=>row.token==token &&row.ip == ip)[0];
+    if (iam_user_app_access_row){
         //set token expired
-        return fileModelIamUserLogin.update(app_id, iam_user_login_row.id, {res:2});
+        return fileModelIamUserAppAccess.update(app_id, iam_user_app_access_row.id, {res:2});
     }
     else
         return {http:401,
@@ -233,18 +258,24 @@ const iamAuthenticateAdmin = async parameters =>{
      *                                              tokentimestamp:number} }>}
      */
     const check_user = async (result, id, username, type) => {       
-        const jwt_data = iamAuthorizeToken(parameters.app_id, 'ADMIN', {app_id:parameters.app_id, iam_user_id:id, user_account_id:null, name:username, ip:parameters.ip, scope:'USER'});
-        /**@type{server_db_file_iam_user_login_insert} */
-        const file_content = {	iam_user_id:id,
-                                user_account_id:null,
-                                app_id:     parameters.app_id,
-                                user:		username,
-                                db:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                                res:		result,
-                                token:      jwt_data.token,
-                                ip:         parameters.ip,
-                                ua:         null};
-        await fileModelIamUserLogin.post(parameters.app_id, file_content);
+        const jwt_data = iamAuthorizeToken(parameters.app_id, 'ADMIN', {app_id:parameters.app_id, 
+                                                                        iam_user_id:id, 
+                                                                        iam_user_username:username,
+                                                                        user_account_id:null, 
+                                                                        user_account_username:null, 
+                                                                        ip:parameters.ip, scope:'USER'});
+        /**@type{server_db_file_iam_user_app_access_insert} */
+        const file_content = {	iam_user_id:            id,
+                                iam_user_username:      username,
+                                user_account_id:        null,
+                                app_id:                 parameters.app_id,
+                                user_account_username:  null,
+                                db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                res:		            result,
+                                token:                  jwt_data.token,
+                                ip:                     parameters.ip,
+                                ua:                     null};
+        await fileModelIamUserAppAccess.post(parameters.app_id, file_content);
         if (result == 1){
             return await socketConnectedUpdate(parameters.app_id, 
                 {   idToken:parameters.idToken,
@@ -258,14 +289,19 @@ const iamAuthenticateAdmin = async parameters =>{
                     headers_user_agent:parameters.user_agent,
                     headers_accept_language:parameters.accept_language})
             .then((result_socket)=>{
-                return  result_socket.http?result_socket:{result:{   iam_user_id: id,
-                            iam_user_name:username,
-                            avatar: fileModelIamUser.get(parameters.app_id, id).result[0].avatar,
-                            token_at: jwt_data.token,
-                            exp:jwt_data.exp,
-                            iat:jwt_data.iat,
-                            tokentimestamp:jwt_data.tokentimestamp}, 
-                        type:'JSON'};
+                return  result_socket.http?result_socket:{result:{  iam_user_id: id,
+                                                                    iam_user_name:username,
+                                                                    user_account_id:null,
+                                                                    user_account_username:null,
+                                                                    bio:null,
+                                                                    email:null,
+                                                                    avatar: fileModelIamUser.get(parameters.app_id, id).result[0].avatar,
+                                                                    token_at: jwt_data.token,
+                                                                    exp:jwt_data.exp,
+                                                                    iat:jwt_data.iat,
+                                                                    tokentimestamp:jwt_data.tokentimestamp,
+                                                                    active:1}, 
+                                                                type:'JSON'};
             });
         }
         else
@@ -329,16 +365,18 @@ const iamAuthenticateAdmin = async parameters =>{
  *          data:{   username:string,
  *                   password:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:{
- *                                              accessToken:string|null,
- *                                              exp:number,
- *                                              iat:number,
- *                                              tokentimestamp:number,
- *                                              active:number,
- *                                              login:{  id: number;
- *                                                       bio: string | null,
- *                                                       username: string,
- *                                                       email: string,
- *                                                       avatar: string | null}[]|{id:number}[]} }>}
+ *                                              iam_user_id:            number,
+ *                                              iam_username:           string,
+ *                                              user_account_id:        number;
+ *                                              user_account_username:  string,
+ *                                              bio?:                   string | null,
+ *                                              email?:                 string,
+ *                                              avatar?:                string | null,
+ *                                              token_at:               string|null,
+ *                                              exp:                    number,
+ *                                              iat:                    number,
+ *                                              tokentimestamp:         number,
+ *                                              active:                 number}}>}
  */
 const iamAuthenticateUser = async parameters =>{
     
@@ -357,16 +395,17 @@ const iamAuthenticateUser = async parameters =>{
        const data_login =    {   username: parameters.data.username};
        userGetUsername(parameters.app_id, data_login)
        .then(result_login=>{
-           /**@type{server_db_file_iam_user_login_insert} */
-           const data_body = { iam_user_id: result_login.result[0]?.id,
-                               user_account_id:result_login.result[0]?.id,
-                               app_id:      parameters.app_id,
-                               user:        parameters.data.username,
-                               db:          serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                               res:         0,
-                               token:       null,
-                               ip:          parameters.ip,
-                               ua:          parameters.user_agent
+           /**@type{server_db_file_iam_user_app_access_insert} */
+           const data_body = { iam_user_id:             result_login.result[0]?.id,
+                               iam_user_username:       parameters.data.username,
+                               user_account_id:         result_login.result[0]?.id,
+                               app_id:                  parameters.app_id,
+                               user_account_username:   parameters.data.username,
+                               db:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                               res:                     0,
+                               token:                   null,
+                               ip:                      parameters.ip,
+                               ua:                      parameters.user_agent
                            };
            if (result_login.result[0]) {
                securityPasswordCompare(parameters.data.password, result_login.result[0].password).then((result_password)=>{
@@ -376,14 +415,15 @@ const iamAuthenticateUser = async parameters =>{
                             const new_code = iamUtilVerificationCode();
                             const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                                 'APP_ACCESS_VERIFICATION', 
-                                                                {   app_id:         parameters.app_id, 
-                                                                    iam_user_id:    result_login.result[0].id, 
-                                                                    user_account_id:result_login.result[0].id, 
-                                                                    name:           result_login.result[0].username, 
-                                                                    ip:             parameters.ip, 
-                                                                    scope:          'USER'});
+                                                                {   app_id:                 parameters.app_id, 
+                                                                    iam_user_id:            result_login.result[0].id, 
+                                                                    iam_user_username:      result_login.result[0].username, 
+                                                                    user_account_id:        result_login.result[0].id, 
+                                                                    user_account_username:  result_login.result[0].username, 
+                                                                    ip:                     parameters.ip, 
+                                                                    scope:                  'USER'});
                             data_body.token = jwt_data.token;
-                            fileModelIamUserLogin.post(parameters.app_id, data_body)
+                            fileModelIamUserAppAccess.post(parameters.app_id, data_body)
                             .then(()=>{
                                 updateUserVerificationCode(parameters.app_id, result_login.result[0].id, new_code)
                                 .then(()=>{
@@ -400,12 +440,15 @@ const iamAuthenticateUser = async parameters =>{
                                             headers_accept_language:parameters.accept_language})
                                     .then((result_socket)=>{
                                         resolve(result_socket.http?result_socket:{result:{
-                                                            accessToken: jwt_data.token,
-                                                            exp:jwt_data.exp,
-                                                            iat:jwt_data.iat,
-                                                            tokentimestamp:jwt_data.tokentimestamp,
-                                                            active:0,
-                                                            login: [{id:result_login.result[0].id}]
+                                                            iam_user_id:            result_login.result[0].id,
+                                                            iam_username:           result_login.result[0].username,
+                                                            user_account_id:        result_login.result[0].id,
+                                                            user_account_username:  result_login.result[0].username,
+                                                            token_at:               jwt_data.token,
+                                                            exp:                    jwt_data.exp,
+                                                            iat:                    jwt_data.iat,
+                                                            tokentimestamp:         jwt_data.tokentimestamp,
+                                                            active:                 0
                                                         }, 
                                                     type:'JSON'});
                                     });
@@ -413,9 +456,16 @@ const iamAuthenticateUser = async parameters =>{
                             });
                         }
                         else{
-                            const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {app_id:parameters.app_id, iam_user_id:result_login.result[0].id, user_account_id:result_login.result[0].id, name:result_login.result[0].username, ip:parameters.ip, scope:'USER'});
+                            const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', 
+                                                                {   app_id:                 parameters.app_id, 
+                                                                    iam_user_id:            result_login.result[0].id, 
+                                                                    iam_user_username:      result_login.result[0].username, 
+                                                                    user_account_id:        result_login.result[0].id, 
+                                                                    user_account_username:  result_login.result[0].username, 
+                                                                    ip:                     parameters.ip, 
+                                                                    scope:                  'USER'});
                             data_body.token = jwt_data.token;
-                            fileModelIamUserLogin.post(parameters.app_id, data_body)
+                            fileModelIamUserAppAccess.post(parameters.app_id, data_body)
                             .then(()=>{
                                 dbModelUserAccountApp.post(parameters.app_id, result_login.result[0].id)
                                 .then((result_dbModelUserAccountApp)=>{
@@ -433,16 +483,18 @@ const iamAuthenticateUser = async parameters =>{
                                                     headers_accept_language:parameters.accept_language})
                                             .then((result_socket)=>{
                                                 resolve(result_socket.http?result_socket:{result:{
-                                                                    accessToken: jwt_data.token,
-                                                                    exp:jwt_data.exp,
-                                                                    iat:jwt_data.iat,
-                                                                    tokentimestamp:jwt_data.tokentimestamp,
-                                                                    active:1,
-                                                                    login: [{   id:result_login.result[0].id,
-                                                                                bio:result_login.result[0].bio,
-                                                                                username:result_login.result[0].username,
-                                                                                email:result_login.result[0].email,
-                                                                                avatar:result_login.result[0].avatar}]
+                                                                    iam_user_id:            result_login.result[0].id,
+                                                                    iam_username:           result_login.result[0].username,
+                                                                    user_account_id:        result_login.result[0].id,
+                                                                    user_account_username:  result_login.result[0].username,
+                                                                    bio:result_login.       result[0].bio,
+                                                                    email:                  result_login.result[0].email,
+                                                                    avatar:                 result_login.result[0].avatar,
+                                                                    token_at:               jwt_data.token,
+                                                                    exp:                    jwt_data.exp,
+                                                                    iat:                    jwt_data.iat,
+                                                                    tokentimestamp:         jwt_data.tokentimestamp,
+                                                                    active:                 1
                                                                 }, 
                                                             type:'JSON'});
                                             });
@@ -454,7 +506,7 @@ const iamAuthenticateUser = async parameters =>{
                         }
                     } else {
                        //Username or password not found
-                       fileModelIamUserLogin.post(parameters.app_id, data_body)
+                       fileModelIamUserAppAccess.post(parameters.app_id, data_body)
                        .then(()=>{
                             resolve({http:401,
                                 code:'IAM',
@@ -468,7 +520,7 @@ const iamAuthenticateUser = async parameters =>{
                });
            } else{
                //User not found
-               fileModelIamUserLogin.post(parameters.app_id, data_body)
+               fileModelIamUserAppAccess.post(parameters.app_id, data_body)
                .then(()=>{
                     resolve({http:401,
                         code:'IAM',
@@ -547,20 +599,28 @@ const iamAuthenticateUserProvider = async parameters =>{
            
             if (result_signin.result.length > 0) {        
                 
-                const jwt_data_exists = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {app_id:parameters.app_id, iam_user_id:result_signin.result[0].id, user_account_id:result_signin.result[0].id, name:result_signin.result[0].username, ip:parameters.ip, scope:'USER'});
-                /**@type{server_db_file_iam_user_login_insert} */
+                const jwt_data_exists = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', 
+                                                                            {   app_id:                 parameters.app_id, 
+                                                                                iam_user_id:            result_signin.result[0].id, 
+                                                                                iam_user_username:      result_signin.result[0].username, 
+                                                                                user_account_id:        result_signin.result[0].id, 
+                                                                                user_account_username:  result_signin.result[0].username, 
+                                                                                ip:                     parameters.ip, 
+                                                                                scope:                  'USER'});
+                /**@type{server_db_file_iam_user_app_access_insert} */
                 const data_login = {
-                    iam_user_id:    result_signin.result[0].id,
-                    user_account_id:result_signin.result[0].id,
-                    app_id:         parameters.app_id,
-                    user:           result_signin.result[0].username,
-                    db:             serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                    res:            1,
-                    token:          jwt_data_exists.token,
-                    ip:             parameters.ip,
-                    ua:             parameters.user_agent
+                    iam_user_id:            result_signin.result[0].id,
+                    iam_user_username:      result_signin.result[0].username,
+                    user_account_id:        result_signin.result[0].id,
+                    user_account_username:  result_signin.result[0].username,
+                    app_id:                 parameters.app_id,
+                    db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                    res:                    1,
+                    token:                  jwt_data_exists.token,
+                    ip:                     parameters.ip,
+                    ua:                     parameters.user_agent
                 };
-                fileModelIamUserLogin.post(parameters.app_id, data_login)
+                fileModelIamUserAppAccess.post(parameters.app_id, data_login)
                 .then(()=>{
                     userUpdateProvider(parameters.app_id, result_signin.result[0].id, data_user)
                     .then((result_update)=>{
@@ -613,20 +673,28 @@ const iamAuthenticateUserProvider = async parameters =>{
                
                 userPost(parameters.app_id, data_user)
                 .then(result_create=>{
-                    const jwt_data_new = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', {app_id:parameters.app_id, iam_user_id:result_create.result.insertId, user_account_id:result_create.result.insertId, name:data_user.username ?? '', ip:parameters.ip, scope:'USER'});
-                    /**@type{server_db_file_iam_user_login_insert} */
+                    const jwt_data_new = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS', 
+                                                {   app_id:                 parameters.app_id, 
+                                                    iam_user_id:            result_create.result.insertId, 
+                                                    iam_user_username:      data_user.username, 
+                                                    user_account_id:        result_create.result.insertId, 
+                                                    user_account_username:  data_user.username ?? '', 
+                                                    ip:parameters.ip, 
+                                                    scope:'USER'});
+                    /**@type{server_db_file_iam_user_app_access_insert} */
                     const data_login = {
-                        iam_user_id:    result_create.result.insertId,
-                        user_account_id:result_create.result.insertId,
-                        app_id:         parameters.app_id,
-                        user:           data_user.username ?? '',
-                        db:             serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                        res:            1,
-                        token:          jwt_data_new.token,
-                        ip:             parameters.ip,
-                        ua:             parameters.user_agent
+                        iam_user_id:            result_create.result.insertId,
+                        iam_user_username:      data_user.username ?? '',
+                        user_account_id:        result_create.result.insertId,
+                        user_account_username:  data_user.username ?? '',
+                        app_id:                 parameters.app_id,
+                        db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                        res:                    1,
+                        token:                  jwt_data_new.token,
+                        ip:                     parameters.ip,
+                        ua:                     parameters.user_agent
                     };
-                    fileModelIamUserLogin.post(parameters.app_id, data_login)
+                    fileModelIamUserAppAccess.post(parameters.app_id, data_login)
                     .then(()=>{
                         dbModelUserAccountApp.post(parameters.app_id, result_create.result.insertId)
                         .then((result_dbModelUserAccountApp)=>{
@@ -682,11 +750,12 @@ const iamAuthenticateUserProvider = async parameters =>{
  *          locale:string,
  *          data:server_db_sql_parameter_user_account_create}} parameters
  * @returns {Promise.<server_server_response & {result?:{
- *                                              accessToken:string|null,
+ *                                              token_at:string|null,
  *                                              exp:number,
  *                                              iat:number,
  *                                              tokentimestamp:number,
- *                                              id:number} }>}
+ *                                              iam_user_id:number,
+ *                                              user_account_id: number} }>}
  */
 const iamAuthenticateUserSignup = async parameters =>{
 
@@ -721,19 +790,36 @@ const iamAuthenticateUserSignup = async parameters =>{
             if (result_create.result){
                 const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                     'APP_ACCESS_VERIFICATION', 
-                                                    {   app_id:         parameters.app_id, 
-                                                        iam_user_id:    result_create.result.insertId, 
-                                                        user_account_id:result_create.result.insertId, 
-                                                        name:           parameters.data.username??'', 
-                                                        ip:             parameters.ip, 
-                                                        scope:          'USER'});
-                resolve({result:{
-                                accessToken: jwt_data.token,
-                                exp:jwt_data.exp,
-                                iat:jwt_data.iat,
-                                tokentimestamp:jwt_data.tokentimestamp,
-                                id: result_create.result.insertId}, 
-                        type:'JSON'});
+                                                    {   app_id:                 parameters.app_id, 
+                                                        iam_user_id:            result_create.result.insertId, 
+                                                        iam_user_username:      parameters.data.username, 
+                                                        user_account_id:        result_create.result.insertId, 
+                                                        user_account_username:  parameters.data.username??'', 
+                                                        ip:                     parameters.ip, 
+                                                        scope:                  'USER'});
+                /**@type{server_db_file_iam_user_app_access_insert} */
+                const data_body = { 
+                    iam_user_id:            result_create.result.insertId,
+                    iam_user_username:      parameters.data.username,
+                    user_account_id:        result_create.result.insertId,
+                    user_account_username:  parameters.data.username,
+                    app_id:                 parameters.app_id,
+                    db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                    res:                    1,
+                    token:                  jwt_data.token,
+                    ip:                     parameters.ip,
+                    ua:                     parameters.user_agent};
+                return fileModelIamUserAppAccess.post(parameters.app_id, data_body)
+                        .then(()=>{
+                            resolve({result:{
+                                            token_at:       jwt_data.token,
+                                            exp:            jwt_data.exp,
+                                            iat:            jwt_data.iat,
+                                            tokentimestamp: jwt_data.tokentimestamp,
+                                            iam_user_id:    result_create.result.insertId,
+                                            user_account_id:result_create.result.insertId},
+                                    type:'JSON'});
+                            });
             }
             else
                 resolve(result_create);
@@ -759,14 +845,15 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET
  *                  verification_code:string}}} parameters
  * @returns {Promise.<server_server_response & { result?:{
- *                                              accessToken: string|null,
+ *                                              token_at: string|null,
  *                                              exp:number|null,
  *                                              iat:number|null,
  *                                              tokentimestamp:number|null,
  *                                              activated:number,
  *                                              iam_user_id:number|null,
- *                                              iam_user_name:string|null,
- *                                              user_account_id:number|null} }>}
+ *                                              iam_user_username:string|null,
+ *                                              user_account_id:number|null,
+ *                                              user_account_username:string|null} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
     
@@ -775,7 +862,6 @@ const iamAuthenticateUserActivate = async parameters =>{
 
     const result_activate = await  userUpdateActivate(  parameters.app_id, 
                                                         parameters.resource_id, 
-                                                        serverUtilNumberValue(parameters.data.verification_type), 
                                                         parameters.data.verification_code);
     if (result_activate.result)
         if (result_activate.result.affectedRows==1 && (serverUtilNumberValue(parameters.data.verification_type)==1||serverUtilNumberValue(parameters.data.verification_type)==2))
@@ -786,7 +872,7 @@ const iamAuthenticateUserActivate = async parameters =>{
                                 user_agent:parameters.user_agent,
                                 accept_language:parameters.accept_language})
                 .then(result=>result.http?result:{result:{
-                                                        accessToken: null,
+                                                        token_at: null,
                                                         exp:null,
                                                         iat:null,
                                                         tokentimestamp:null,
@@ -798,45 +884,54 @@ const iamAuthenticateUserActivate = async parameters =>{
         else{
             if (result_activate.result.affectedRows==1){
                 //verification type 3 FORGOT/ PASSWORD RESET
-                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_VERIFICATION', {app_id:parameters.app_id, iam_user_id:parameters.resource_id, user_account_id:parameters.resource_id, name:'', ip:parameters.ip, scope:'USER'});
+                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_VERIFICATION', 
+                                                    {   app_id:                 parameters.app_id, 
+                                                        iam_user_id:            parameters.resource_id, 
+                                                        iam_user_username:      null, 
+                                                        user_account_id:        parameters.resource_id, 
+                                                        user_account_username:  null, 
+                                                        ip:                     parameters.ip, 
+                                                        scope:                  'USER'});
                 //email was verified and activated with id token, but now the password will be updated
                 //return accessToken and authentication code
-                /**@type{server_db_file_iam_user_login_insert} */
+                /**@type{server_db_file_iam_user_app_access_insert} */
                 const data_body = { 
-                    iam_user_id:    parameters.resource_id,
-                    user_account_id:parameters.resource_id,
-                    app_id:         parameters.app_id,
-                    user:           '',
-                    db:             serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                    res:            1,
-                    token:          jwt_data.token,
-                    ip:             parameters.ip,
-                    ua:             parameters.user_agent};
-                return fileModelIamUserLogin.post(parameters.app_id, data_body)
+                    iam_user_id:            parameters.resource_id,
+                    iam_user_username:      null,
+                    user_account_id:        parameters.resource_id,
+                    user_account_username:  null,
+                    app_id:                 parameters.app_id,
+                    db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                    res:                    1,
+                    token:                  jwt_data.token,
+                    ip:                     parameters.ip,
+                    ua:                     parameters.user_agent};
+                return fileModelIamUserAppAccess.post(parameters.app_id, data_body)
                         .then(()=>{
                             return {result:{
-                                        accessToken: jwt_data.token,
-                                        exp:jwt_data.exp,
-                                        iat:jwt_data.iat,
-                                        tokentimestamp:jwt_data.tokentimestamp,
-                                        activated:1,
-                                        iam_user_id:parameters.resource_id,
-                                        iam_user_name:'',
-                                        user_account_id:parameters.resource_id}, 
+                                        token_at:               jwt_data.token,
+                                        exp:                    jwt_data.exp,
+                                        iat:                    jwt_data.iat,
+                                        tokentimestamp:         jwt_data.tokentimestamp,
+                                        activated:              1,
+                                        iam_user_id:            parameters.resource_id,
+                                        iam_user_username:      null,
+                                        user_account_id:        parameters.resource_id,
+                                        user_account_username:  null}, 
                                     type:'JSON'};
                         });
             }
             else
                 return {result:{
-                                auth: null,
-                                accessToken: null,
+                                token_at: null,
                                 exp:null,
                                 iat:null,
                                 tokentimestamp:null,
                                 activated:0,
                                 iam_user_id:null,
-                                iam_user_name:null,
-                                user_account_id:null}, 
+                                iam_user_username:null,
+                                user_account_id:null,
+                                user_account_username:null}, 
                         type:'JSON'};
         }
     else
@@ -854,7 +949,13 @@ const iamAuthenticateUserActivate = async parameters =>{
  *          user_agent:string, 
  *          accept_language:string, 
  *          data:{  email:string}}} parameters
- * @returns {Promise.<server_server_response & {result?:{sent: number,id?: number} }>}
+ * @returns {Promise.<server_server_response & {result?:{   sent: number,
+ *                                                          token_at?: string,
+ *                                                          exp?:number,
+ *                                                          iat?:number,
+ *                                                          tokentimestamp?:number,
+ *                                                          iam_user_id?: number,
+ *                                                          user_account_id?: number} }>}
  */
 const iamAuthenticateUserForgot = async parameters =>{
 
@@ -892,25 +993,28 @@ const iamAuthenticateUserForgot = async parameters =>{
                                         const new_code = iamUtilVerificationCode();
                                         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                                             'APP_ACCESS_VERIFICATION', 
-                                                                            {   app_id:         parameters.app_id, 
-                                                                                iam_user_id:    result_emailuser.result[0].id, 
-                                                                                user_account_id:result_emailuser.result[0].id, 
-                                                                                name:           result_emailuser.result[0].username, 
-                                                                                ip:             parameters.ip, 
-                                                                                scope:          'USER'});
-                                        /**@type{server_db_file_iam_user_login_insert} */
-                                        const data_body = { iam_user_id: result_emailuser.result[0]?.id,
-                                            user_account_id:result_emailuser.result[0]?.id,
-                                            app_id:      parameters.app_id,
-                                            user:        result_emailuser.result[0].username,
-                                            db:          serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                                            res:         0,
-                                            token:       null,
-                                            ip:          parameters.ip,
-                                            ua:          parameters.user_agent
+                                                                            {   app_id:                 parameters.app_id, 
+                                                                                iam_user_id:            result_emailuser.result[0].id, 
+                                                                                iam_user_username:      result_emailuser.result[0].username, 
+                                                                                user_account_id:        result_emailuser.result[0].id, 
+                                                                                user_account_username:  result_emailuser.result[0].username, 
+                                                                                ip:                     parameters.ip, 
+                                                                                scope:                  'USER'});
+                                        /**@type{server_db_file_iam_user_app_access_insert} */
+                                        const data_body = { 
+                                            iam_user_id:            result_emailuser.result[0]?.id,
+                                            iam_user_username:      result_emailuser.result[0].username,
+                                            user_account_id:        result_emailuser.result[0]?.id,
+                                            user_account_username:  result_emailuser.result[0].username,
+                                            app_id:                 parameters.app_id,
+                                            db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                            res:                    1,
+                                            token:                  null,
+                                            ip:                     parameters.ip,
+                                            ua:                     parameters.user_agent
                                         };
                                         data_body.token = jwt_data.token;
-                                        fileModelIamUserLogin.post(parameters.app_id, data_body)
+                                        fileModelIamUserAppAccess.post(parameters.app_id, data_body)
                                         .then(()=>{
                                             updateUserVerificationCode(parameters.app_id, result_emailuser.result[0].id, new_code)
                                             .then((result_updateUserVerificationCode)=>{
@@ -928,12 +1032,13 @@ const iamAuthenticateUserForgot = async parameters =>{
                                                             headers_accept_language:parameters.accept_language})
                                                     .then((result_socket)=>{
                                                         resolve(result_socket.http?result_socket:{result:{
-                                                            sent:1,
-                                                            accessToken: jwt_data.token,
-                                                            exp:jwt_data.exp,
-                                                            iat:jwt_data.iat,
-                                                            tokentimestamp:jwt_data.tokentimestamp,
-                                                            login: [{id:result_emailuser.result[0].id}]
+                                                            sent:                   1,
+                                                            token_at:               jwt_data.token,
+                                                            exp:                    jwt_data.exp,
+                                                            iat:                    jwt_data.iat,
+                                                            tokentimestamp:         jwt_data.tokentimestamp,
+                                                            iam_userid:             result_emailuser.result[0].id,
+                                                            user_account_id:        result_emailuser.result[0].id
                                                         }, 
                                                         type:'JSON'});
                                                     });
@@ -1145,8 +1250,7 @@ const iamAuthenticateUserDelete = async parameters => {
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'));
         try {
             //authenticate id token
-            /**@type{{app_id:number, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-            const id_token_decoded = jwt.verify(idToken, fileModelAppSecret.get({app_id:app_id_host, resource_id:app_id_host}).result[0].common_app_id_secret);
+            const id_token_decoded = iamUtilDecodeVerify(app_id_host, idToken, 'APP_ID');
             /**@type{server_db_file_iam_app_id_token}*/
             const log_id_token = fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_id_token}*/row)=> 
                                                                                     row.app_id == app_id_host && row.ip == ip && row.token == idToken
@@ -1177,29 +1281,31 @@ const iamAuthenticateUserDelete = async parameters => {
                         case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
-                            /**@type{{app_id:number, iam_user_id:number, user_account_id:number|null, name:string, ip:string, scope:string, exp:number, iat:number, tokentimestamp:number}|*} */
-                            const access_token_decoded = jwt.verify(access_token, scope=='ADMIN'?
-                                                                                    fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET') ?? '':
-                                                                                    access_token, scope=='APP_ACCESS'?
-                                                                                    fileModelAppSecret.get({app_id:app_id_host, resource_id:app_id_host}).result[0].common_app_access_secret ?? '':
-                                                                                    //APP_ACCESS_VERFICATION
-                                                                                    fileModelAppSecret.get({app_id:app_id_host, resource_id:app_id_host}).result[0].common_app_access_verification_secret ?? '');
-                            /**@type{server_db_file_iam_user_login[]}*/
+                            const access_token_decoded = iamUtilDecodeVerify(app_id_host, access_token, scope);
+                            
+                            /**@type{server_db_file_iam_user_app_access[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip){
-                                /**@type{server_db_file_iam_user_login}*/
-                                const iam_user_login = fileModelIamUserLogin.get(app_id_host, null).result
-                                                        .filter((/**@type{server_db_file_iam_user_login}*/row)=>
-                                                                                                row.iam_user_id == access_token_decoded.iam_user_id && 
-                                                                                                row.user_account_id == access_token_decoded.user_account_id && 
-                                                                                                row.app_id      == app_id_host &&
-                                                                                                row.user        == access_token_decoded.name && 
-                                                                                                row.res         == 1 &&
-                                                                                                row.ip          == ip &&
-                                                                                                row.token       == access_token
+                                /**@type{server_db_file_iam_user_app_access}*/
+                                const iam_user_app_access = fileModelIamUserAppAccess.get(app_id_host, null).result
+                                                        .filter((/**@type{server_db_file_iam_user_app_access}*/row)=>
+                                                                                                //Authenticate IAM user
+                                                                                                row.iam_user_id           == access_token_decoded.iam_user_id && 
+                                                                                                row.iam_user_username       == access_token_decoded.iam_user_username && 
+                                                                                                // Authenticate DB user, admin does not use this
+                                                                                                (row.user_account_id        == access_token_decoded.user_account_id ||scope=='ADMIN') && 
+                                                                                                (row.user_account_username  == access_token_decoded.user_account_username ||scope=='ADMIN') && 
+                                                                                                //Authenticate app id corresponds to current subdomain
+                                                                                                row.app_id                  == app_id_host &&
+                                                                                                //Authenticate token is valid
+                                                                                                row.res                     == 1 &&
+                                                                                                //Authenticate IP address
+                                                                                                row.ip                      == ip &&
+                                                                                                //Authenticate the token string
+                                                                                                row.token                   == access_token
                                                                                             )[0];
-                                if (iam_user_login)
+                                if (iam_user_app_access)
                                     next();
                                 else
                                     iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
@@ -1208,7 +1314,7 @@ const iamAuthenticateUserDelete = async parameters => {
                                 iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case scope=='APP_ID_SIGNUP' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin && authorization.toUpperCase().startsWith('BEARER'):{
+                        case scope=='APP_ID_SIGNUP' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin:{
                             next();
                             break;
                         }
@@ -1425,11 +1531,12 @@ const iamAuthenticateExternal = (endpoint, body, res, next) => {
                     return  (path =='/favicon.ico' ||
                             path == '/robots.txt' ||
                             //REST API paths
-                            path.startsWith('/bff/app/v1/app-module') ||
+                            path.startsWith('/bff/app/v1') ||
                             path.startsWith('/bff/app_id/v1') ||
                             path.startsWith('/bff/app_id_signup/v1') ||
                             path.startsWith('/bff/app_access/v1') ||
-                            path.startsWith('/bff/app_external/v1/app-module') ||
+                            path.startsWith('/bff/app_access_verification/v1') ||
+                            path.startsWith('/bff/app_external/v1') ||
                             path.startsWith('/bff/admin/v1') ||
                             path.startsWith('/bff/iam_admin/v1') ||
                             path.startsWith('/bff/iam_user/v1') ||
@@ -1635,9 +1742,10 @@ const iamAuthenticateResource = parameters =>  {
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
     const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', {  app_id: app_id, 
                                                             iam_user_id:null,
+                                                            iam_user_username:null,
                                                             user_account_id:null,
+                                                            user_account_username:null, 
                                                             ip:ip ?? '', 
-                                                            name:null, 
                                                             scope:scope});
 
     /**@type{server_db_file_iam_app_id_token_insert} */
@@ -1654,13 +1762,7 @@ const iamAuthenticateResource = parameters =>  {
  * @function
  * @param {number} app_id
  * @param {'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'|'APP_CUSTOM'} endpoint
- * @param {{app_custom_id?:number|string,
- *          app_id:number|null,
- *          iam_user_id:number|null, 
- *          user_account_id:number|null,
- *          name:string|null, 
- *          ip:string, 
- *          scope:server_iam_access_token_claim_scope_type}} claim
+ * @param {server_iam_access_token_claim} claim
  * @param {string|null} app_custom_expire
  * @returns {{
  *              token:string, 
@@ -1704,15 +1806,16 @@ const iamAuthenticateResource = parameters =>  {
             break;
         }
     }
-    /**@type{server_iam_access_token_claim_type} */
-    const access_token_claim = {app_custom_id:  claim.app_custom_id,
-                                app_id:         app_id,
-                                iam_user_id:    claim.iam_user_id,
-                                user_account_id:claim.user_account_id,
-                                name:           claim.name,
-                                ip:             claim.ip,
-                                scope:          claim.scope,
-                                tokentimestamp: Date.now()};
+    /**@type{server_iam_access_token_claim} */
+    const access_token_claim = {app_custom_id:          claim.app_custom_id,
+                                app_id:                 app_id,
+                                iam_user_id:            claim.iam_user_id,
+                                iam_user_username:      claim.iam_user_username,
+                                user_account_id:        claim.user_account_id,
+                                user_account_username:  claim.user_account_username,
+                                ip:                     claim.ip,
+                                scope:                  claim.scope,
+                                tokentimestamp:         Date.now()}; //this key is provided here, not from calling function
     const token = jwt.sign (access_token_claim, secret, {expiresIn: expiresin});
     return {token:token,
             /**@ts-ignore */
@@ -1724,23 +1827,23 @@ const iamAuthenticateResource = parameters =>  {
 };
 
 /**
- * @name iamUserLoginGet
+ * @name iamUserAppAccessGet
  * @description Get user login records
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          data:{  data_user_account_id?:string|null,
  *                  data_app_id?:string|null}}} parameters
- * @returns {server_server_response & {result?:server_db_file_iam_user_login[] }}
+ * @returns {server_server_response & {result?:server_db_file_iam_user_app_access[] }}
  */
-const iamUserLoginGet = parameters => {const rows = fileModelIamUserLogin.get(parameters.app_id, null).result
-                                                                .filter((/**@type{server_db_file_iam_user_login}*/row)=>
+const iamUserAppAccessGet = parameters => {const rows = fileModelIamUserAppAccess.get(parameters.app_id, null).result
+                                                                .filter((/**@type{server_db_file_iam_user_app_access}*/row)=>
                                                                     row.iam_user_id==serverUtilNumberValue(parameters.data.data_user_account_id) &&  
                                                                     row.app_id==(serverUtilNumberValue(parameters.data.data_app_id==''?null:parameters.data.data_app_id) ?? row.app_id));
                                                     
                                                     return {result:rows.length>0?
-                                                                rows.sort(( /**@type{server_db_file_iam_user_login}*/a,
-                                                                            /**@type{server_db_file_iam_user_login}*/b)=> 
+                                                                rows.sort(( /**@type{server_db_file_iam_user_app_access}*/a,
+                                                                            /**@type{server_db_file_iam_user_app_access}*/b)=> 
                                                                             //sort descending on created
                                                                             a.created.localeCompare(b.created)==1?-1:1):
                                                                     [], 
@@ -1814,11 +1917,11 @@ const iamUserGet = async parameters =>{
  * @param {number} id
  * @returns {string|null}
  */
-const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserLogin.get(app_id, null).result
-                                                .filter((/**@type{server_db_file_iam_user_login}*/row)=>
+const iamUserGetLastLogin = (app_id, id) =>fileModelIamUserAppAccess.get(app_id, null).result
+                                                .filter((/**@type{server_db_file_iam_user_app_access}*/row)=>
                                                     row.iam_user_id==id &&  row.app_id==app_id && row.res==1)
-                                                .sort((/**@type{server_db_file_iam_user_login}*/a,
-                                                        /**@type{server_db_file_iam_user_login}*/b)=>a.created < b.created?1:-1)[0]?.created;
+                                                .sort((/**@type{server_db_file_iam_user_app_access}*/a,
+                                                        /**@type{server_db_file_iam_user_app_access}*/b)=>a.created < b.created?1:-1)[0]?.created;
 
 /**
  * @name iamUserUpdate
@@ -1905,7 +2008,7 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateResource,
         iamAuthorizeIdToken,
         iamAuthorizeToken,
-        iamUserLoginGet,
+        iamUserAppAccessGet,
         iamUserCreate,
         iamUserGet,
         iamUserGetLastLogin,
