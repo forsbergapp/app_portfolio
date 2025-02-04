@@ -105,13 +105,14 @@ const microserviceRequest = async parameters =>{
                                                     return {result:result, type:'JSON'};
                                                 })
                                                 .catch((error)=>{
-                                                    return {
-                                                            http:500, 
-                                                            code:'MICROSERVICE', 
-                                                            text:error, 
-                                                            developerText:null, 
-                                                            moreInfo:null,
-                                                            type:'JSON'};
+                                                    return error.error.http?
+                                                                error.error:
+                                                                {   http:500, 
+                                                                    code:'MICROSERVICE', 
+                                                                    text:error, 
+                                                                    developerText:null, 
+                                                                    moreInfo:null,
+                                                                    type:'JSON'};
                                                 });
         }
     else{

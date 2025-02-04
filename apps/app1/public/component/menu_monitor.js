@@ -218,7 +218,8 @@ const component = async props => {
                         commonWindowUserAgentPlatform:props.methods.commonWindowUserAgentPlatform,
                         commonMiscRoundOff:props.methods.commonMiscRoundOff,
                         commonFFB:props.methods.commonFFB,
-                        commonMicroserviceGeolocationIp:props.methods.commonMicroserviceGeolocationIp
+                        commonMicroserviceGeolocationIp:props.methods.commonMicroserviceGeolocationIp,
+                        commonMicroserviceGeolocationPlace:props.methods.commonMicroserviceGeolocationPlace
                         },
             path:       '/component/menu_monitor_detail.js'})
             .then(result=>{
