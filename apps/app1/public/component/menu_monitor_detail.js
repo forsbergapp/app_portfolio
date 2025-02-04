@@ -503,9 +503,9 @@ const component = async props => {
      *          latitude:string,
      *          longitude:string,
      *          id:number}} data 
-     * @returns {void}
+     * @returns {Promise.<void>}
      */
-    const monitorDetailClickItem = (item_type, data) => {
+    const monitorDetailClickItem = async (item_type, data) => {
         if (item_type=='GPS'){
             if (data['ip']){
                 props.methods.commonMicroserviceGeolocationIp(data['ip'] != '::1'?data['ip']:null)
@@ -521,21 +521,13 @@ const component = async props => {
                 .catch(()=>null);
             }
             else{
-                props.methods.commonMicroserviceGeolocationPlace(data['longitude'], data['latitude'])
-                .then((/**@type{string}*/result)=>{
-                    /**@type{{place:string, region:string, countryCode:string}} */
-                    const geodata = JSON.parse(result);
-                    props.methods.map_update({  longitude:data['longitude'],
-                                                latitude:data['latitude'],
-                                                text_place: geodata.place + ', ' + 
-                                                            geodata.region + ', ' + 
-                                                            geodata.countryCode,
-                                                country:'',
-                                                city:'',
-                                                timezone_text :null
-                                            });
-                })
-                .catch(()=>null);
+                props.methods.map_update({  longitude:data['longitude'],
+                                            latitude:data['latitude'],
+                                            text_place: await props.methods.commonMicroserviceGeolocationPlace(data['longitude'], data['latitude']),
+                                            country:'',
+                                            city:'',
+                                            timezone_text :null
+                                        });
             }
         }
         else
