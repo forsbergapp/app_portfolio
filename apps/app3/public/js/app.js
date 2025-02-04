@@ -160,18 +160,7 @@ const appInit = async () => {
         methods:    null,
         path:       '/common/component/common_fonts.js'});
     //show first menu at start
-    await COMMON_DOCUMENT.querySelector('#title').click();
-
-    const resizeDoc = () =>{
-        if (COMMON_DOCUMENT.querySelector('#nav').offsetWidth)
-            COMMON_DOCUMENT.querySelector('#content').style.setProperty('--document_width', (COMMON_DOCUMENT.querySelector('body').offsetWidth - COMMON_DOCUMENT.querySelector('#nav').offsetWidth)/(COMMON_DOCUMENT.querySelector('body').offsetWidth));
-        else
-            COMMON_DOCUMENT.querySelector('#content').style.setProperty('--document_width', (COMMON_DOCUMENT.querySelector('body').offsetWidth)/(COMMON_DOCUMENT.querySelector('#content').offsetWidth));
-    };
-    const resizeObserver = new ResizeObserver(() => {
-        resizeDoc();    
-    }); 
-    resizeObserver.observe(COMMON_DOCUMENT.querySelector('body'));
+    COMMON_DOCUMENT.querySelector('#title').click();
 };
 /**
  * @name appCommonInit
