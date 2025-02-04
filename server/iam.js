@@ -830,8 +830,8 @@ const iamAuthenticateUserSignup = async parameters =>{
 /**
  * @name iamAuthenticateUserActivate
  * @description IAM Authenticates user activate
- *              Activates user after signup when user is still not logged in using APP_ID role
- *              Activates user after user logged in using APP_ACCESS role
+ *              Activates user after user logged in and after signup and verification code is accepted
+ *              Authenticates verification code after forgot request and activates account then user gets a new token to change the password
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,  
@@ -1146,7 +1146,7 @@ const iamAuthenticateUserUpdate = async parameters => {
 };
 /**
  * @name iamAuthenticateUserUpdatePassword
- * @description IAM Authenticates user update password
+ * @description Updates users password and logs out the user
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -1953,7 +1953,7 @@ const iamUserUpdate = async parameters =>{
 
 /**
  * @name iamUserLogout
- * @description User logout
+ * @description User logout that sets the token as expired and removes the token from the connected list
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
