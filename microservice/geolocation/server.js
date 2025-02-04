@@ -40,9 +40,14 @@ const serverStart = async () =>{
 			if (authenticate){
 				switch (true){
 					case microserviceRouteMatch('/api/v1/geolocation/place' , 'GET', URI_path, req.method):{
-						service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
-						.then((result)=>result?.length>0?microserviceResultReturn(200, null, JSON.parse(result), res):'')
-						.catch((error) =>microserviceResultReturn(500, error, null, res));
+						if(	(req.query.data.latitude !=null && req.query.data.latitude!='') ||
+							(req.query.data.longitude !=null && req.query.data.longitude!='')){
+							service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
+							.then((result)=>result?.length>0?microserviceResultReturn(200, null, JSON.parse(result), res):'')
+							.catch((error) =>microserviceResultReturn(500, error, null, res));
+						}
+						else
+							microserviceResultReturn(400, '⛔', null, res);
 						break;
 					}
 					case microserviceRouteMatch('/api/v1/geolocation/ip' , 'GET', URI_path, req.method):{
