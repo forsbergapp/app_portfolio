@@ -727,7 +727,9 @@
  *              common_app_id_secret:string, 
  *              common_app_id_expire:string, 
  *              common_app_access_secret:string, 
- *              common_app_access_expire:string}} server_db_file_app_secret
+ *              common_app_access_expire:string,
+ *              common_app_access_verification_secret:string, 
+ *              common_app_access_verification_expire:string}} server_db_file_app_secret
  */
 /** 
  * @description DB FILE server_db_file_iam_app_id_token
