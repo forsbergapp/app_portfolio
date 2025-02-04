@@ -51,7 +51,8 @@ const serverStart = async () =>{
 						break;
 					}
 					case microserviceRouteMatch('/api/v1/geolocation/ip' , 'GET', URI_path, req.method):{
-						service.getIp(req.query.data.ip, req.headers['accept-language'])
+						//no v6 support
+						service.getIp(req.query.data.ip.replace('::ffff:',''), req.headers['accept-language'])
 						.then((result)=>microserviceResultReturn(200, null, JSON.parse(result), res))
 						.catch((error) =>microserviceResultReturn(500, error, null, res));
 						break;

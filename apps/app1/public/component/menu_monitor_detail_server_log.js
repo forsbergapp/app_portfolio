@@ -100,8 +100,8 @@ const template = props => ` ${  /*
                                         <div class='menu_monitor_detail_server_log_request_log_col common_wide_list_column'>
                                             ${log.host}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_request_log_col gps_click' data-ip='${log.ip==''?'':log.ip.replace('::ffff:','')}'>
-                                            ${log.ip==''?'':log.ip.replace('::ffff:','')}
+                                        <div class='menu_monitor_detail_server_log_request_log_col gps_click' data-ip='${log.ip}'>
+                                            ${log.ip}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
                                             ${log.requestid}

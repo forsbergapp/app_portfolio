@@ -126,8 +126,8 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.iam_user_type ?? ''}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col'>
-                                                    ${log.ip.replace('::ffff:','')}
+                                                <div class='menu_monitor_detail_connected_col gps_click' data-ip='${log.ip}'>
+                                                    ${log.ip}
                                                 </div>
                                                 <div class='menu_monitor_detail_connected_col gps_click' 
                                                     data-latitude='${log.gps_latitude ?? ''}'
