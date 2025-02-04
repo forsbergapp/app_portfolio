@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon,COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
@@ -14,6 +14,9 @@
  * @returns {string}
  */
 const template = () =>`  <div id='common_dialogue_iam_password_new_icon' class='common_icon'></div>
+                            <div id='common_dialogue_iam_password_new_token_countdown'>
+                                    <div id='common_dialogue_iam_password_new_token_countdown_time'></div>
+                            </div>
                             <div class='common_password_container'>
                                 <div id='common_dialogue_iam_password_new_password' contentEditable='true' class='common_password_new_input common_input common_password common_placeholder'></div>
                                 <div id='common_dialogue_iam_password_new_password_mask' class='common_input common_password_mask'/></div>
@@ -30,8 +33,13 @@ const template = () =>`  <div id='common_dialogue_iam_password_new_icon' class='
  * @name component
  * @description Component
  * @function
- * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT}}} props
+ * @param {{data:       {
+ *                      commonMountdiv:string
+ *                      },
+ *          methods:    {
+ *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown']
+ *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
@@ -40,9 +48,11 @@ const template = () =>`  <div id='common_dialogue_iam_password_new_icon' class='
 const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show2');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
-
+    const onMounted = () =>{
+        props.methods.commonUserSessionCountdown(props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_token_countdown_time'), null);
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         template:   template()

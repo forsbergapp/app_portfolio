@@ -39,7 +39,7 @@
 
 #menu_users_list_title::before{														content:var(--common_app_icon_users)}
 #menu_users_search_icon::before{													content:var(--common_app_icon_reload)}
-#menu_users_iam_user_login_title::before{											content:var(--common_app_icon_login)}
+#menu_users_iam_user_app_access_title::before{											content:var(--common_app_icon_login)}
 #menu_users_save::before{															content:var(--common_app_icon_save)}
 #menu_users_list .list_title[data-column='avatar']::before{							content:var(--common_app_icon_user_avatar)}
 #menu_users_list .list_title[data-column='id']::before{								content:var(--common_app_icon_provider_id)}
@@ -507,23 +507,23 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display:inline-block;
 	cursor:pointer;
 }
-#menu_users_list_title, #menu_users_iam_user_login_title{
+#menu_users_list_title, #menu_users_iam_user_app_access_title{
 	text-transform: uppercase;
 	display:inline-block;
 	width:100%;
 	font-size:1.2em;
 }
-#menu_users_list .css_spinner, #menu_users_iam_user_login .css_spinner{
+#menu_users_list .css_spinner, #menu_users_iam_user_app_access .css_spinner{
 	display: inline-block;
 }
-#menu_users_list, #menu_users_iam_user_login{
+#menu_users_list, #menu_users_iam_user_app_access{
 	display:block;
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
 	border-radius: var(--common_app_css_border_radius);
 }
-.menu_users_list_row, .menu_users_iam_user_login_row{
+.menu_users_list_row, .menu_users_iam_user_app_access_row{
 	padding-top:4px;
 	padding-bottom: 4px;
 	padding-inline-start: 5px;
@@ -533,11 +533,11 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display:grid;
 	grid-template-columns: 3em 5em 5em 5em 5em 20em 40em 15em 10em 10em 10em 10em 10em 10em 10em 10em 10em 10em 10em 12em 12em 12em;
 }
-.menu_users_iam_user_login_row{
+.menu_users_iam_user_app_access_row{
 	display:grid;
 	grid-template-columns: 15em 5em 5em 10em 7em 7em 60em auto;
 }
-.menu_users_iam_user_login_col:nth-child(1){
+.menu_users_iam_user_app_access_col:nth-child(1){
 	display: none;
 }
 /* MENU 4 APP ADMIN*/
@@ -1496,7 +1496,7 @@ body{
 }
 .menu_db_info_space_detail_row,
 .menu_users_list_row,
-.menu_users_iam_user_login_row,
+.menu_users_iam_user_app_access_row,
 .menu_apps_row,
 .menu_apps_detail_row,
 .menu_monitor_detail_app_data_stat_row,
@@ -1506,14 +1506,14 @@ body{
 	font-size: 9px;
 }
 .menu_users_list_row .common_input,
-.menu_users_iam_user_login_row .common_input,
+.menu_users_iam_user_app_access_row .common_input,
 .menu_apps_row .common_input,
 .menu_apps_detail_row .common_input{
 	font-size: 9px;
 }
 .list_search,
 #menu_users_list,
-#menu_users_iam_user_login,
+#menu_users_iam_user_app_access,
 #menu_apps,
 #menu_apps_detail,
 #menu_config_detail{
@@ -1556,7 +1556,7 @@ body{
 	background-color: var(--app_theme_dialogue_background_color);
 }
 #menu_users_list .css_spinner::before,
-#menu_users_iam_user_login .css_spinner::before,
+#menu_users_iam_user_app_access .css_spinner::before,
 #menu_apps_detail .css_spinner::before
 {
 	background-color: var(--app_theme_list_background_color) !important;

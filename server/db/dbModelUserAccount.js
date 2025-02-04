@@ -327,15 +327,13 @@ const userPost = async (app_id, data) =>{
  * @function
  * @param {number} app_id 
  * @param {number} id 
- * @param {number|null} verification_type 
  * @param {string} verification_code 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
-const userUpdateActivate = async (app_id, id, verification_type, verification_code) => 
+const userUpdateActivate = async (app_id, id, verification_code) => 
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_UPDATE_ACTIVATE,
                         {
-                            verification_type: verification_type,
                             id: id,
                             verification_code: verification_code
                         },

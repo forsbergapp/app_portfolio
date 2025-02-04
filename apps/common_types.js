@@ -178,7 +178,7 @@
  *              info_link_terms_url:string|null,
  *              info_link_about_url:string|null,
  *              iam_user_id:number|null,
- *              iam_user_name:string|null,
+ *              iam_user_username:string|null,
  *              admin_first_time:number|null,
  *              admin_only:number|null,
  *              user_account_id:number|null,

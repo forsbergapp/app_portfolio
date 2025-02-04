@@ -896,10 +896,10 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     if (APP_SECURE_GLOBAL.previous_row != common.commonMiscElementRow(event.target)){
                         APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                         common.commonComponentRender({
-                            mountDiv:   'menu_users_iam_user_login',
+                            mountDiv:   'menu_users_iam_user_app_access',
                             data:       {user_account_id:parseInt(common.commonMiscElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
-                            path:       '/component/menu_users_iam_user_login.js'});
+                            path:       '/component/menu_users_iam_user_app_access.js'});
                     }
                     break;
                 }   
