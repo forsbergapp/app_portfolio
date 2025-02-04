@@ -15,6 +15,9 @@
  */
 const template = () => `
                             <div id='common_dialogue_iam_verify_verification_code_icon' class='common_icon'></div>
+                            <div id='common_dialogue_iam_verify_token_countdown'>
+                                    <div id='common_dialogue_iam_verify_token_countdown_time'></div>
+                            </div>
                             <div id='common_dialogue_iam_verify_verification_container'>
                                 <div class='common_dialogue_iam_verify_verification_wrap'><div id='common_dialogue_iam_verify_verification_char1' contentEditable='true' class='common_input common_dialogue_iam_verify_input_verification_char'></div></div>
                                 <div class='common_dialogue_iam_verify_verification_wrap'><div id='common_dialogue_iam_verify_verification_char2' contentEditable='true' class='common_input common_dialogue_iam_verify_input_verification_char'></div></div>
@@ -32,8 +35,7 @@ const template = () => `
  *                      commonMountdiv:string,
  *                      common_app_id:number,
  *                      user_account_id:number,
- *                      user_verification_type:string,
- *                      title:string},
+ *                      user_verification_type:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonFFB:CommonModuleCommon['commonFFB'],
@@ -43,7 +45,8 @@ const template = () => `
  *                      commonDialogueShow:CommonModuleCommon['commonDialogueShow'],
  *                      commonUserLogout:CommonModuleCommon['commonUserLogout'],
  *                      commonMesssageNotAuthorized:CommonModuleCommon['commonMesssageNotAuthorized'],
- *                      commonUserActive:CommonModuleCommon['commonUserActive'],
+ *                      commonUserAuthenticateCode:CommonModuleCommon['commonUserAuthenticateCode'],
+ *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:   null,
@@ -91,25 +94,21 @@ const component = async props => {
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char5').classList.remove('common_input_error');
                 props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char6').classList.remove('common_input_error');
 
-                if (await props.methods.commonUserActive(verification_code, props.data.user_verification_type)){
+                if (await props.methods.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
+                    props.methods.commonComponentRemove('common_dialogue_iam_verify', true);
                     if (props.data.user_verification_type=='FORGOT'){
                         //show dialogue new password
                             props.methods.commonComponentRender({
                                 mountDiv:   'common_dialogue_iam_password_new',
                                 data:       null,
-                                methods:    null,
+                                methods:    {
+                                            commonUserSessionCountdown:props.methods.commonUserSessionCountdown
+                                            },
                                 path:'/common/component/common_dialogue_iam_password_new.js'});
-                        props.methods.commonComponentRemove('common_dialogue_iam_verify', true);
+                        
                     }
-                    else{
-                        if (props.data.user_verification_type=='LOGIN')
-                            props.methods.commonUserLogout();
-                        else{
-                            props.methods.commonComponentRemove('common_dialogue_iam_verify');
-                            props.methods.commonComponentRemove('common_dialogue_iam_edit', true);
-                        }
+                    else
                         props.methods.commonDialogueShow('LOGIN');
-                    }
                 }
                 else{
                     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_verification_char1').classList.add('common_input_error');
@@ -130,9 +129,13 @@ const component = async props => {
             //remove anything else than 0-9
             props.methods.COMMON_DOCUMENT.querySelector('#' + item.id).textContent = '';
         }
-   };
+        
+    };
+    const onMounted = () =>{
+        props.methods.commonUserSessionCountdown(props.methods.COMMON_DOCUMENT.querySelector('#common_dialogue_iam_verify_token_countdown_time'), null);
+    };
     return {
-        lifecycle:  null,
+        lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    {commonUserVerifyCheckInput:commonUserVerifyCheckInput},
         template:   template()

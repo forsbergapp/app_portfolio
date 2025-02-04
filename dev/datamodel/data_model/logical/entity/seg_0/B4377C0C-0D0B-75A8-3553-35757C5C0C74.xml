@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="IAM_USER_LOGIN">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="IAM_USER_APP_ACCESS">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:35:47 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -26,7 +26,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="user" id="A4720BC1-49BC-0F9E-C729-EC6C74A6622C">
+<Attribute name="iam_user_username" id="67F57BBE-0B58-0F6B-1C7C-DEB505973DB5">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-03 21:37:23 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="user_account_username" id="A4720BC1-49BC-0F9E-C729-EC6C74A6622C">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:36:15 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -151,7 +162,7 @@
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="D2BDE752-A7BD-22DD-2086-AEE13C6820CC" name="IAM_USER_LOGIN PK">
+<identifier id="D2BDE752-A7BD-22DD-2086-AEE13C6820CC" name="IAM_USER_APP_ACCESS_PK">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:39:20 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -159,11 +170,12 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <pk>true</pk>
+<newElementsIDs>CE483F92-D0A3-20D0-424B-D5D3A7B45719</newElementsIDs>
 <usedAttributes>
 <attributeRef>CE483F92-D0A3-20D0-424B-D5D3A7B45719</attributeRef>
 </usedAttributes>
 </identifier>
-<identifier id="D013AAC8-5CD2-C252-C82D-9FC002DA4B93" name="IAM_USER_LOGIN_UK">
+<identifier id="D013AAC8-5CD2-C252-C82D-9FC002DA4B93" name="IAM_USER_APP_ACCESS_UK">
 <createdBy>admin</createdBy>
 <createdTime>2024-12-08 22:56:52 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
