@@ -137,8 +137,8 @@ const component = async props => {
         if (props.data.user_account_id_other == null && props.data.user_account_id == null && props.data.username == null) {
             null;
         } else {
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_avatar').style.backgroundImage= (profile.avatar ?? profile.provider_image)?
-                                                                                                    `url('${profile.avatar ?? profile.provider_image}')`:
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_avatar').style.backgroundImage= profile.avata?
+                                                                                                    `url('${profile.avatar}')`:
                                                                                                     'url()'; 
             props.methods.commonModuleEasyQRCODECreate('common_profile_qr', props.methods.commonWindowHostname() + '/' + profile.username);
             //User account followed and liked

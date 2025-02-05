@@ -48,7 +48,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="91AE7A49-44F0-8C52-F16B-4C1F353F5691" referredColumn="AF79088E-C04E-DD99-E889-61C0BABA772D"/>
+<colAssociation fkAssociation="D6FB2BD2-DFE8-8233-C6D1-5D2CBB02921D" referredColumn="30F6315E-6F05-F9A0-75C9-69DFAFC5E778"/>
 </associations>
 </Column>
 <Column name="user_account_app_app_id" id="B4A8221F-CC21-CF6D-2C0B-489EE0D9EAD0">
@@ -63,7 +63,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="91AE7A49-44F0-8C52-F16B-4C1F353F5691" referredColumn="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0"/>
+<colAssociation fkAssociation="D6FB2BD2-DFE8-8233-C6D1-5D2CBB02921D" referredColumn="C151CEF5-2FAC-5528-4B42-D80240397DC8"/>
 </associations>
 </Column>
 </columns>
@@ -82,18 +82,6 @@
 <colUsage columnID="B4A8221F-CC21-CF6D-2C0B-489EE0D9EAD0"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="F61E75F2-18D9-464F-0F1D-14A349C93546" name="user_account_app_data_post_like_user_account_app_FK">
-<createdBy>admin</createdBy>
-<createdTime>2023-04-24 10:31:51 UTC</createdTime>
-<generatorID>E4FBB23F-B9F3-A77F-E29F-466D14774DA3</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="E3A3E2BC-A77C-8400-BE7C-42019721B327"/>
-<colUsage columnID="B4A8221F-CC21-CF6D-2C0B-489EE0D9EAD0"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="29B5E2D0-14C6-85F7-754A-3F279881E55F" name="user_account_app_data_post_like_user_account_app_data_post_FK">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
@@ -103,6 +91,18 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="D5854410-4679-F07D-F899-C96845490594"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="D24EC82E-650F-0E78-035B-1505B6A2CE44" name="user_account_app_data_post_like_user_account_app_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
+<generatorID>E4FBB23F-B9F3-A77F-E29F-466D14774DA3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="E3A3E2BC-A77C-8400-BE7C-42019721B327"/>
+<colUsage columnID="B4A8221F-CC21-CF6D-2C0B-489EE0D9EAD0"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

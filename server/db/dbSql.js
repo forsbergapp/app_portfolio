@@ -476,16 +476,6 @@ const APP_SETTING_SELECT_DISPLAYDATA =
         AND (s.value = :value OR :value IS NULL)
         AND s.display_data IS NOT NULL
         ORDER BY 1`;
-const IDENTITY_PROVIDER_SELECT =
-    `SELECT id "id",
-            provider_name "provider_name",
-            api_src "api_src",
-            api_src2 "api_src2",
-            api_version "api_version",
-            api_id "api_id"
-       FROM <DB_SCHEMA/>.identity_provider
-      WHERE enabled = 1
-      ORDER BY identity_provider_order ASC`;
 const USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT =
       `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post_like(
 					user_account_app_user_account_id, user_account_app_data_post_id, user_account_app_app_id, date_created)
@@ -564,23 +554,15 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE =
 const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL =
     `SELECT detail "detail", 
             id "id", 
-            identity_provider_id "identity_provider_id", 
-            provider_id "provider_id", 
-            avatar "avatar",
-            provider_image "provider_image",
-            provider_image_url "provider_image_url",
-            username "username",
-            provider_first_name "provider_first_name",
+            iam_user_id "iam_user_id", 
+            null "avatar",
+            null "username",
             count(*) over() "total_rows"
         FROM (SELECT 'LIKE_POST' detail,
                     u.id,
-                    u.identity_provider_id,
-                    u.provider_id,
-                    u.avatar,
-                    u.provider_image,
-                    u.provider_image_url,
-                    u.username,
-                    u.provider_first_name
+                    u.iam_user_id,
+                    null,
+                    null
                 FROM <DB_SCHEMA/>.user_account u
             WHERE u.id IN (SELECT us.user_account_app_user_account_id
                                 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
@@ -589,18 +571,13 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL =
                                 AND u_like.user_account_app_app_id = :app_id
                                 AND us.user_account_app_app_id = u_like.user_account_app_app_id
                                 AND us.id = u_like.user_account_app_data_post_id)
-                AND    u.active = 1
                 AND    6 = :detailchoice
                 UNION ALL
                 SELECT 'LIKED_POST' detail,
                         u.id,
-                        u.identity_provider_id,
-                        u.provider_id,
-                        u.avatar,
-                        u.provider_image,
-                        u.provider_image_url,
-                        u.username,
-                        u.provider_first_name
+                        u.iam_user_id,
+                        null,
+                        null
                 FROM  <DB_SCHEMA/>.user_account u
                 WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
                                 FROM <DB_SCHEMA/>.user_account_app_data_post us,
@@ -609,9 +586,8 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL =
                                     AND us.user_account_app_app_id = :app_id
                                     AND us.id = u_like.user_account_app_data_post_id
                                     AND u_like.user_account_app_app_id = us.user_account_app_app_id)
-                AND  u.active = 1
                 AND  7 = :detailchoice) t
-            ORDER BY 1, COALESCE(username, provider_first_name) 
+            ORDER BY 1
             <APP_LIMIT_RECORDS/>`;
 const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_LIKE =
     ` SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
@@ -633,24 +609,16 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_LIKE =
 const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST = 
     `SELECT top "top", 
             id "id", 
-            identity_provider_id "identity_provider_id", 
-            provider_id "provider_id", 
-            avatar "avatar",
-            provider_image "provider_image",
-            provider_image_url "provider_image_url",
-            username "username",
-            provider_first_name "provider_first_name",
+            iam_user_id "iam_user_id", 
+            null "avatar",
+            null "username",
             count "count",
             count(*) over() "total_rows"
         FROM (	SELECT 'LIKE_POST' top,
                         u.id,
-                        u.identity_provider_id,
-                        u.provider_id,
-                        u.avatar,
-                        u.provider_image,
-                        u.provider_image_url,
-                        u.username,
-                        u.provider_first_name,
+                        u.iam_user_id,
+                        null,
+                        null,
                         (SELECT COUNT(us.user_account_app_user_account_id)
                         FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
                                 <DB_SCHEMA/>.user_account_app_data_post us
@@ -659,19 +627,13 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST =
                             AND u_like.user_account_app_data_post_id = us.id
                             AND u_like.user_account_app_app_id = us.user_account_app_app_id) count
                 FROM  <DB_SCHEMA/>.user_account u
-                WHERE  u.active = 1
-                AND  u.private <> 1
-                AND  4 = :statchoice
+                WHERE  4 = :statchoice
                 UNION ALL
                 SELECT 'VISITED_POST' top,
                         u.id,
-                        u.identity_provider_id,
-                        u.provider_id,
-                        u.avatar,
-                        u.provider_image,
-                        u.provider_image_url,
-                        u.username,
-                        u.provider_first_name,
+                        u.iam_user_id,
+                        null,
+                        null,
                         (SELECT COUNT(us.user_account_app_user_account_id)
                         FROM <DB_SCHEMA/>.user_account_app_data_post_view u_view,
                                 <DB_SCHEMA/>.user_account_app_data_post us
@@ -680,10 +642,8 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST =
                             AND u_view.user_account_app_data_post_id = us.id
                             AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
                 FROM  <DB_SCHEMA/>.user_account u
-                WHERE  u.active = 1
-                AND  u.private <> 1
-                AND  5 = :statchoice) t
-        ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+                WHERE  5 = :statchoice) t
+        ORDER BY 1,6 DESC
         <APP_LIMIT_RECORDS/>`;
 const USER_ACCOUNT_APP_DATA_POST_UPDATE = 
     `UPDATE <DB_SCHEMA/>.user_account_app_data_post
@@ -798,156 +758,35 @@ const USER_ACCOUNT_VIEW_INSERT =
     `INSERT INTO <DB_SCHEMA/>.user_account_view(
             user_account_id, user_account_id_view, client_ip, client_user_agent, date_created)
      VALUES(:user_account_id,:user_account_id_view,:client_ip,:client_user_agent, CURRENT_TIMESTAMP) `;
-const USER_ACCOUNT_SELECT = 
-    `SELECT ua.id "id",
-            ua.avatar "avatar",
-            ua.active "active",
-            ua.user_level "user_level",
-            ua.private "private",
-            ua.username "username",
-            ua.bio "bio",
-            ua.email "email",
-            ua.email_unverified "email_unverified",
-            ua.password "password",
-            ua.password_reminder "password_reminder",
-            ua.verification_code "verification_code",
-            ua.identity_provider_id "identity_provider_id",
-            ip.provider_name "provider_name",
-            ua.provider_id "provider_id",
-            ua.provider_first_name "provider_first_name",
-            ua.provider_last_name "provider_last_name",
-            ua.provider_image "provider_image",
-            ua.provider_image_url "provider_image_url",
-            ua.provider_email "provider_email",
-            ua.date_created "date_created",
-            ua.date_modified "date_modified",
-            count(*) over() "total_rows"
-        FROM <DB_SCHEMA/>.user_account ua
-            LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
-                ON ip.id = ua.identity_provider_id
-        WHERE (ua.username LIKE :search
-        OR ua.bio LIKE :search
-        OR ua.email LIKE :search
-        OR ua.email_unverified LIKE :search
-        OR ua.provider_first_name LIKE :search
-        OR ua.provider_last_name LIKE :search
-        OR ua.provider_email LIKE :search
-        OR CAST(ua.id as VARCHAR(11)) LIKE :search)
-        OR :search = '*'
-        ORDER BY <SORT/> <ORDER_BY/>
-        <APP_PAGINATION_LIMIT_OFFSET/>`;
 const USER_ACCOUNT_SELECT_STAT_COUNT = 
-    `SELECT ua.identity_provider_id "identity_provider_id",
-            CASE 
-            WHEN ip.provider_name IS NULL THEN 
-                NULL
-            ELSE 
-                ip.provider_name 
-            END "provider_name",
-            COUNT(*) "count_users"
-       FROM <DB_SCHEMA/>.user_account ua
-            LEFT OUTER JOIN <DB_SCHEMA/>.identity_provider ip
-            ON ip.id = ua.identity_provider_id
-       GROUP BY ua.identity_provider_id, ip.provider_name
-       ORDER BY ua.identity_provider_id`;
-const USER_ACCOUNT_UPDATE =
-    `UPDATE <DB_SCHEMA/>.user_account
-        SET active = :active,
-            user_level = :user_level,
-            private = :private,
-            username = :username,
-            bio = :bio,
-            email = :email,
-            email_unverified = :email_unverified,
-            password = 	CASE WHEN :password_new IS NULL THEN 
-                            password 
-                        ELSE 
-                            :password_new 
-                        END,
-            password_reminder = :password_reminder,
-            verification_code = :verification_code
-      WHERE id = :id`;
+    `SELECT COUNT(*) "count_users"
+       FROM <DB_SCHEMA/>.user_account`;
 const USER_ACCOUNT_INSERT = 
     `INSERT INTO <DB_SCHEMA/>.user_account(
-        bio,
-        private,
-        user_level,
         date_created,
         date_modified,
-        username,
-        password,
-        password_reminder,
-        email,
-        avatar,
-        verification_code,
-        active,
-        identity_provider_id,
-        provider_id,
-        provider_first_name,
-        provider_last_name,
-        provider_image,
-        provider_image_url,
-        provider_email)
-    VALUES( :bio,
-            :private,
-            :user_level,
+        iam_user_id)
+    VALUES( CURRENT_TIMESTAMP,
             CURRENT_TIMESTAMP,
-            CURRENT_TIMESTAMP,
-            :username,
-            :password_new,
-            :password_reminder,
-            :email,
-            :avatar,
-            :verification_code,
-            :active,
-            :identity_provider_id,
-            :provider_id,
-            :provider_first_name,
-            :provider_last_name,
-            :provider_image,
-            :provider_image_url,
-            :provider_email) `;
-const USER_ACCOUNT_UPDATE_ACTIVATE =
-    `UPDATE <DB_SCHEMA/>.user_account
-        SET active = 1,
-            verification_code = null,
-            date_modified = CURRENT_TIMESTAMP
-     WHERE id = :id
-       AND verification_code = :verification_code `;
-const USER_ACCOUNT_UPDATE_VERIFICATION_CODE =
-    `UPDATE <DB_SCHEMA/>.user_account
-        SET verification_code = :verification_code,
-            active = 0,
-            date_modified = CURRENT_TIMESTAMP
-      WHERE id = :id `;
-const USER_ACCOUNT_SELECT_ID =
+            :iam_user_id) `;
+const USER_ACCOUNT_SELECT =
     `SELECT	u.id "id",
-            u.bio "bio",
-            u.private "private",
-            u.user_level "user_level",
-            u.username "username",
-            u.password "password",
-            u.password_reminder "password_reminder",
-            u.email "email",
-            u.email_unverified "email_unverified",
-            u.avatar "avatar",
-            u.verification_code "verification_code",
-            u.active "active",
-            u.identity_provider_id "identity_provider_id",
-            u.provider_id "provider_id",
-            u.provider_first_name "provider_first_name",
-            u.provider_last_name "provider_last_name",
-            u.provider_image "provider_image",
-            u.provider_image_url "provider_image_url",
-            u.provider_email "provider_email",
-            u.date_created "date_created",
-            u.date_modified "date_modified"
+            u.iam_user_id "iam_user_id",
+            u.date_modified "date_modified",
+            u.date_created "date_created"
       FROM  <DB_SCHEMA/>.user_account u
      WHERE  u.id = :id `;
+const USER_ACCOUNT_SELECT_IAM_USER =
+     `SELECT u.id "id",
+             u.iam_user_id "iam_user_id",
+             u.date_modified "date_modified",
+             u.date_created "date_created"
+       FROM  <DB_SCHEMA/>.user_account u
+      WHERE  u.iam_user_id = :iam_user_id `;
 const USER_ACCOUNT_SELECT_PROFILE =
     `SELECT	u.id "id",
-            u.bio "bio",
-            u.private "private",
+            nul "bio",
+            null "private",
             (SELECT 1 
                 FROM <DB_SCHEMA/>.user_account ua_current
                 WHERE ua_current.id = :user_accound_id_current_user
@@ -962,16 +801,11 @@ const USER_ACCOUNT_SELECT_PROFILE =
                 )
     
             ) "friends",
-            u.user_level "user_level",
+            null "user_level",
             u.date_created "date_created",
-            u.username "username",
-            u.avatar "avatar",
-            u.identity_provider_id "identity_provider_id",
-            u.provider_id "provider_id",
-            u.provider_first_name "provider_first_name",
-            u.provider_last_name "provider_last_name",
-            u.provider_image "provider_image",
-            u.provider_image_url "provider_image_url",
+            null "username",
+            null "avatar",
+            u.iam_user_id "iam_user_id",
             (SELECT COUNT(u_following.user_account_id)   
                 FROM <DB_SCHEMA/>.user_account_follow  u_following
                 WHERE u_following.user_account_id = u.id) 					"count_following",
@@ -996,231 +830,113 @@ const USER_ACCOUNT_SELECT_PROFILE =
                 WHERE u_liked_current_user.user_account_id_like = u.id
                 AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
         FROM <DB_SCHEMA/>.user_account u
-       WHERE ((:search IS NOT NULL AND (u.username LIKE :search OR u.provider_first_name LIKE :search))
-                OR
-                (u.username = :name)
-                OR
-                (u.id = :id)
-            )        
-         AND u.active = 1`;
+       WHERE u.id = :id OR :id IS NULL`;
 const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
     `SELECT detail "detail",
             id "id",
-            provider_id "provider_id",
-            avatar "avatar",
-            provider_image "provider_image",
-            provider_image_url "provider_image_url",
-            username "username",
-            provider_first_name "provider_first_name",
+            iam_user_id "iam_user_id",
+            null "avatar",
+            null "username",
             count(*) over() "total_rows"
     FROM (SELECT 	'FOLLOWING' detail,
                     u.id,
-                    u.provider_id,
-                    u.avatar,
-                    u.provider_image,
-                    u.provider_image_url,
-                    u.username,
-                    u.provider_first_name
+                    u.iam_user_id
+                    null,
+                    null
             FROM <DB_SCHEMA/>.user_account_follow u_follow,
                 <DB_SCHEMA/>.user_account u
             WHERE u_follow.user_account_id = :user_account_id
             AND u.id = u_follow.user_account_id_follow
-            AND u.active = 1
             AND 1 = :detailchoice
             UNION ALL
         SELECT 	'FOLLOWED' detail,
                     u.id,
-                    u.provider_id,
-                    u.avatar,
-                    u.provider_image,
-                    u.provider_image_url,
-                    u.username,
-                    u.provider_first_name
+                    u.iam_user_id,
+                    null,
+                    null
             FROM <DB_SCHEMA/>.user_account_follow u_followed,
                 <DB_SCHEMA/>.user_account u
             WHERE u_followed.user_account_id_follow = :user_account_id
             AND u.id = u_followed.user_account_id
-            AND u.active = 1
             AND 2 = :detailchoice
             UNION ALL
         SELECT	'LIKE_USER' detail,
                     u.id,
-                    u.provider_id,
-                    u.avatar,
-                    u.provider_image,
-                    u.provider_image_url,
-                    u.username,
-                    u.provider_first_name
+                    u.iam_user_id,
+                    null,
+                    null
             FROM <DB_SCHEMA/>.user_account_like u_like,
                 <DB_SCHEMA/>.user_account u
             WHERE u_like.user_account_id = :user_account_id
             AND u.id = u_like.user_account_id_like
-            AND u.active = 1
             AND 3 = :detailchoice
             UNION ALL
         SELECT	'LIKED_USER' detail,
                     u.id,
-                    u.provider_id,
-                    u.avatar,
-                    u.provider_image,
-                    u.provider_image_url,
-                    u.username,
-                    u.provider_first_name
+                    u.iam_user_id,
+                    null,
+                    null
             FROM <DB_SCHEMA/>.user_account_like u_liked,
                 <DB_SCHEMA/>.user_account u
             WHERE u_liked.user_account_id_like = :user_account_id
             AND u.id = u_liked.user_account_id
-            AND u.active = 1
             AND 4 = :detailchoice) t
-        ORDER BY 1, COALESCE(username, provider_first_name) 
+        ORDER BY 1
         <APP_LIMIT_RECORDS/>`;
 const USER_ACCOUNT_SELECT_PROFILE_STAT = 
     `SELECT	top "top", 
             id "id", 
-            identity_provider_id "identity_provider_id", 
-            provider_id "provider_id", 
-            avatar "avatar",
-            provider_image "provider_image",
-            provider_image_url "provider_image_url",
-            username "username",
-            provider_first_name "provider_first_name",
+            iam_user_id "iam_user_id", 
+            null "avatar",
+            null "username",
             count "count",
             count(*) over() "total_rows"
        FROM (SELECT 'VISITED' top,
                     u.id,
-                    u.identity_provider_id,
-                    u.provider_id,
-                    u.avatar,
-                    u.provider_image,
-                    u.provider_image_url,
-                    u.username,
-                    u.provider_first_name,
+                    u.iam_user_id,
+                    null,
+                    null,
                     (SELECT COUNT(u_visited.user_account_id_view)
                     FROM <DB_SCHEMA/>.user_account_view u_visited
                     WHERE u_visited.user_account_id_view = u.id) count
                FROM <DB_SCHEMA/>.user_account u
-              WHERE u.active = 1
-                AND u.private <> 1
-                AND 1 = :statchoice
+              WHERE 1 = :statchoice
             UNION ALL
             SELECT 	'FOLLOWING' top,
                         u.id,
-                        u.identity_provider_id,
-                        u.provider_id,
+                        u.iam_user_id,
                         u.avatar,
-                        u.provider_image,
-                        u.provider_image_url,
                         u.username,
-                        u.provider_first_name,
                         (SELECT COUNT(u_follow.user_account_id_follow)
                         FROM <DB_SCHEMA/>.user_account_follow u_follow
                         WHERE u_follow.user_account_id_follow = u.id) count
                 FROM <DB_SCHEMA/>.user_account u
-                WHERE u.active = 1
-                AND u.private <> 1
-                AND 2 = :statchoice
+                WHERE 2 = :statchoice
             UNION ALL
             SELECT 	'LIKE_USER' top,
                         u.id,
-                        u.identity_provider_id,
-                        u.provider_id,
+                        u.iam_user_id,
                         u.avatar,
-                        u.provider_image,
-                        u.provider_image_url,
                         u.username,
-                        u.provider_first_name,
                         (SELECT COUNT(u_like.user_account_id_like)
                         FROM <DB_SCHEMA/>.user_account_like u_like
                         WHERE u_like.user_account_id_like = u.id) count
                 FROM <DB_SCHEMA/>.user_account u
-                WHERE  u.active = 1
-                AND  u.private <> 1
-                AND  3 = :statchoice) t
+                WHERE 3 = :statchoice) t
        WHERE EXISTS(SELECT NULL
                       FROM <DB_SCHEMA/>.user_account_app uap
                      WHERE uap.user_account_id = t.id
                        AND uap.app_id = :app_id)
-      ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) 
+      ORDER BY 1,6 DESC
       <APP_LIMIT_RECORDS/>`;
-const USER_ACCOUNT_SELECT_PASWORD = 
-    `SELECT password "password"
-       FROM <DB_SCHEMA/>.user_account
-      WHERE id = :id `;
-const USER_ACCOUNT_UPDATE_PASSWORD =
+const USER_ACCOUNT_UPDATE =
     `UPDATE <DB_SCHEMA/>.user_account
-        SET password = :password_new
-      WHERE id = :id`;
-const USER_ACCOUNT_UPDATE_LOCAL =
-    `UPDATE <DB_SCHEMA/>.user_account
-        SET bio = :bio,
-            private = :private,
-            username = :username,
-            password = 	COALESCE(:password_new, password),
-            password_reminder = :password_reminder,
-            email = :email,
-            email_unverified = :email_unverified,
-            avatar = :avatar,
-            verification_code = :verification_code,
-            date_modified = CURRENT_TIMESTAMP
-      WHERE id = :id `;
-const USER_ACCOUNT_UPDATE_COMMON =
-    `UPDATE <DB_SCHEMA/>.user_account
-        SET username = :username,
-            bio = :bio,
-            private = :private,
+        SET iam_user_id = :iam_user_id,
             date_modified = CURRENT_TIMESTAMP
       WHERE id = :id `;
 const USER_ACCOUNT_DELETE =
     `DELETE FROM <DB_SCHEMA/>.user_account
 	 WHERE id = :id `;
-const USER_ACCOUNT_SELECT_USERNAME =
-    `SELECT	id "id",
-            bio "bio",
-            username "username",
-            password "password",
-            email "email",
-            active "active",
-            avatar "avatar"
-       FROM <DB_SCHEMA/>.user_account
-      WHERE username = :username 
-        AND provider_id IS NULL`;
-const USER_ACCOUNT_UPDATE_PROVIDER = 
-    `UPDATE <DB_SCHEMA/>.user_account
-        SET identity_provider_id = :identity_provider_id,
-            provider_id = :provider_id,
-            provider_first_name = :provider_first_name,
-            provider_last_name = :provider_last_name,
-            provider_image = :provider_image,
-            provider_image_url = :provider_image_url,
-            provider_email = :provider_email,
-            date_modified = CURRENT_TIMESTAMP
-      WHERE id = :id
-        AND active =1 `;
-const USER_ACCOUNT_SELECT_PROVIDER =
-    `SELECT	u.id "id",
-            u.bio "bio",
-            u.username "username",
-            u.identity_provider_id "identity_provider_id",
-            u.provider_id "provider_id",
-            u.provider_first_name "provider_first_name",
-            u.provider_last_name "provider_last_name",
-            u.provider_image "provider_image",
-            u.provider_image_url "provider_image_url",
-            u.provider_email "provider_email"
-       FROM <DB_SCHEMA/>.user_account u
-      WHERE u.provider_id = :provider_id
-        AND u.identity_provider_id = :identity_provider_id`;
-const USER_ACCOUNT_SELECT_EMAIL =
-    `SELECT id "id",
-            username,
-            email "email"
-       FROM <DB_SCHEMA/>.user_account
-      WHERE email = :email `;
-const USER_ACCOUNT_SELECT_DEMO = 
-    `SELECT id "id",
-            username "username"	
-       FROM <DB_SCHEMA/>.user_account
-      WHERE user_level = :demo_level`;
 export {/**APP_DATA_ENTITIY_RESOURCE */
         APP_DATA_ENTITY_RESOURCE_SELECT, 
         /**APP_DATA_ENTITIY */
@@ -1235,8 +951,6 @@ export {/**APP_DATA_ENTITIY_RESOURCE */
         APP_DATA_STAT_SELECT, APP_DATA_STAT_SELECT_LOG, APP_DATA_STAT_SELECT_UNIQUE_VISITORS,APP_DATA_STAT_INSERT,
         /**APP_SETTING */
         APP_SETTING_SELECT, APP_SETTING_SELECT_DISPLAYDATA,
-        /**IDENTITY_PROVIDER */
-        IDENTITY_PROVIDER_SELECT,
         /**USER_ACCOUNT_APP_DATA_POST_LIKE */
         USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT,USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE,
         /**USER_ACCOUNT_APP_DATA_POST_VIEW */
@@ -1261,9 +975,13 @@ export {/**APP_DATA_ENTITIY_RESOURCE */
         /**USER_ACCOUNT_VIEW */
         USER_ACCOUNT_VIEW_INSERT,
         /**USER_ACCOUNT */
-        USER_ACCOUNT_SELECT,USER_ACCOUNT_SELECT_STAT_COUNT,
+        USER_ACCOUNT_SELECT,
+        USER_ACCOUNT_SELECT_IAM_USER,
+        USER_ACCOUNT_SELECT_STAT_COUNT,
         USER_ACCOUNT_UPDATE,
-        USER_ACCOUNT_INSERT,USER_ACCOUNT_UPDATE_ACTIVATE,USER_ACCOUNT_UPDATE_VERIFICATION_CODE,
-        USER_ACCOUNT_SELECT_ID,USER_ACCOUNT_SELECT_PROFILE,USER_ACCOUNT_SELECT_PROFILE_DETAIL,USER_ACCOUNT_SELECT_PROFILE_STAT,
-        USER_ACCOUNT_SELECT_PASWORD,USER_ACCOUNT_UPDATE_PASSWORD,USER_ACCOUNT_UPDATE_LOCAL,USER_ACCOUNT_UPDATE_COMMON,USER_ACCOUNT_DELETE,
-        USER_ACCOUNT_SELECT_USERNAME,USER_ACCOUNT_UPDATE_PROVIDER,USER_ACCOUNT_SELECT_PROVIDER,USER_ACCOUNT_SELECT_EMAIL,USER_ACCOUNT_SELECT_DEMO};
+        USER_ACCOUNT_INSERT,
+        USER_ACCOUNT_SELECT_PROFILE,
+        USER_ACCOUNT_SELECT_PROFILE_DETAIL,
+        USER_ACCOUNT_SELECT_PROFILE_STAT,
+        USER_ACCOUNT_DELETE
+        };

@@ -20,7 +20,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../db/common.js')} */
-const { dbCommonExecute, dbCommonRecordErrorAsync } = await import(`file://${process.cwd()}/server/db/common.js`);
+const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name getUserPost
@@ -54,7 +54,7 @@ const getUserPostsByUserId = async parameters =>
                         },
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
                                 
 /**
  * @name getProfileUserPosts
@@ -76,7 +76,7 @@ const getProfileUserPosts = async parameters =>
                             },
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name getProfileStatLike
  * @description Get profile stat like
@@ -95,7 +95,7 @@ const getProfileUserPosts = async parameters =>
                         },
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result[0])?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result[0])?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name getProfileStatPost
  * @description Get profile post stat
@@ -108,7 +108,7 @@ const getProfileUserPosts = async parameters =>
  */
 const getProfileStatPost = async parameters =>
         parameters.data.statchoice==null?
-            dbCommonRecordErrorAsync(parameters.app_id, 400):
+            dbCommonRecordError(parameters.app_id, 400):
                 dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST, 
                         {
@@ -117,7 +117,7 @@ const getProfileStatPost = async parameters =>
                         },
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 
 
 /**
@@ -140,7 +140,7 @@ const getProfileUserPostDetail = async parameters =>
                         },
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name createUserPost
  * @description Create user post
@@ -225,7 +225,7 @@ const updateUserPost = parameters =>
                         },
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name deleteUserPost
  * @description Delete user post
@@ -244,7 +244,7 @@ const deleteUserPost = parameters =>
                             app_id:parameters.app_id},
                         null, 
                         null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 
 export{ getUserPost, getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
         getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost};

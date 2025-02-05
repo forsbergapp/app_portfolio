@@ -27,7 +27,6 @@
 <createdTime>2023-12-12 21:43:37 UTC</createdTime>
 <generatorID>7E859F7B-E90E-55B6-655B-87EEC25C8068</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>

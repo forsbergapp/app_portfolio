@@ -23,7 +23,6 @@
  *                  app_name_translation:string,
  *                  date_created:string,
  *                  avatar:string,
- *                  provider_image:string,
  *                  username:string}]|[]}} props
  * @returns {string}
  */
@@ -56,7 +55,7 @@ const template = props => `     ${props.list.map(row=>
                                                 <div class='common_profile_detail_list_user_account_id'>${row.id}</div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
-                                                <div class='common_image common_image_avatar_list' style='${(row.avatar==null &&row.provider_image==null)?'':`background-image:url(${row.avatar ?? row.provider_image});`}'></div>
+                                                <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
                                             </div>
                                             <div class='common_profile_detail_list_col'>
                                                 <div class='common_profile_detail_list_username common_wide_list_column common_link'>

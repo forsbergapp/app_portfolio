@@ -3,7 +3,7 @@
  * @module apps/common/component/common_dialogue_iam_start
  */
 /**
- * @import {CommonProvider, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**

@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="121D1F1D-59B2-2CC7-102A-61723358CEF4" name="app_data_stat">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="121D1F1D-59B2-2CC7-102A-61723358CEF4" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="app_data_stat">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
 <generatorID>0462F317-6A47-8D41-1936-89E356DF619C</generatorID>
@@ -58,10 +58,9 @@
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="6BCC007C-7A57-3176-9FF1-4E48633C918A" referredColumn="AF79088E-C04E-DD99-E889-61C0BABA772D"/>
+<colAssociation fkAssociation="A5FA6EB5-9693-3AA0-55B1-D59148C694CC" referredColumn="30F6315E-6F05-F9A0-75C9-69DFAFC5E778"/>
 </associations>
 </Column>
 <Column name="user_account_app_app_id" id="0B0C3F79-EA80-F92E-E651-5D70303575F1">
@@ -77,7 +76,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="6BCC007C-7A57-3176-9FF1-4E48633C918A" referredColumn="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0"/>
+<colAssociation fkAssociation="A5FA6EB5-9693-3AA0-55B1-D59148C694CC" referredColumn="C151CEF5-2FAC-5528-4B42-D80240397DC8"/>
 </associations>
 </Column>
 <Column name="app_data_resource_master_id" id="B26841D0-DDDF-ECC3-4239-06C6E4B2F7BB">
@@ -153,20 +152,11 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="9D8AE139-F106-10A6-6007-A9ED286B4D51" referredColumn="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
+<colAssociation fkAssociation="9D8AE139-F106-10A6-6007-A9ED286B4D51" referredColumn="B9A82B48-5B54-90A2-6E38-A75563F07C00"/>
 </associations>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="61BAE455-AFE1-2D65-0376-944343285E58" name="app_data_stat_PK">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-08 15:58:57 UTC</createdTime>
-<generatorID>2A7222AC-4098-4A8E-5792-CF37B93F3ECF</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<pk>true</pk>
-<indexState>Primary Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-</ind_PK_UK>
 <ind_PK_UK id="A8E70172-6B3C-7F54-D692-B1CFC0F538C0" name="app_data_stat_app_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
@@ -191,18 +181,6 @@
 <colUsage columnID="09F2CF8E-E618-C6AE-049D-35685B8A6456"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="3362B47D-47FC-8190-C31B-93D8F9E22A34" name="app_data_stat_user_account_app_FK">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:02:42 UTC</createdTime>
-<generatorID>0317CBA9-5DFC-5382-7946-994424F9E7F8</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="4942D991-535E-3D25-94F4-D25D7B9F043A"/>
-<colUsage columnID="0B0C3F79-EA80-F92E-E651-5D70303575F1"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="9323ED84-C82D-4F74-4F66-4E5CD11ECF7A" name="app_data_stat_app_data_resource_master_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
@@ -223,6 +201,18 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="D6B8CE4F-E0F0-968E-DD5D-C0853FB28648"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="B96F70BD-FAB8-F549-7ED7-D124306D2844" name="app_data_stat_user_account_app_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
+<generatorID>0317CBA9-5DFC-5382-7946-994424F9E7F8</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4942D991-535E-3D25-94F4-D25D7B9F043A"/>
+<colUsage columnID="0B0C3F79-EA80-F92E-E651-5D70303575F1"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

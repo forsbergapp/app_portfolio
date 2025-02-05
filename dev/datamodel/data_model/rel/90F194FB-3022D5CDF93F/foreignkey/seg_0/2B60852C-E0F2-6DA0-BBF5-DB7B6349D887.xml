@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="2B60852C-E0F2-6DA0-BBF5-DB7B6349D887" containerWithKeyObject="FFC833FE-2E45-DDF3-58B2-39E3794B638F" localFKIndex="98B137DD-F5EB-4BFE-FD77-B7C728C8535D" name="user_account_app_app_setting_arabic_script_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
+<generatorID>AE30193B-36D2-7C48-8BCE-D13207C8A358</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<referredTableLongName>app_portfolio.app_setting</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>3E6468C2-17EA-B927-CA97-09C83C87A4CC</referredTableID>
+<keyObject>D20F3B45-C617-D177-AA43-6DCDBF430393</keyObject>
+<referredKeyID>D20F3B45-C617-D177-AA43-6DCDBF430393</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

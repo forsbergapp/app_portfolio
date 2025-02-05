@@ -46,6 +46,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="password_reminder" id="06883866-091F-A469-4546-3E15E15B217C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 11:39:53 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="type" id="FEC77B82-DC88-E25F-1CBF-036E49CD0CE7">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:29:46 UTC</createdTime>
@@ -137,6 +148,17 @@
 <Attribute name="status" id="4150DF4F-3158-C6F7-6E09-1B619D938C1F">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:30:30 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="active" id="92787A53-F880-1568-FC91-C0A3BFED75DC">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 11:40:23 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

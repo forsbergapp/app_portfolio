@@ -22,8 +22,9 @@
 <createdTime>2021-03-29 22:05:14 UTC</createdTime>
 <generatorID>C9C84703-39B0-B9D5-30B2-C595089A7A4A</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <referedAttribute>A028F8AE-2874-B058-F3DA-38793B0FBE2F</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
@@ -37,8 +38,9 @@
 <createdTime>2021-03-29 22:07:38 UTC</createdTime>
 <generatorID>DB3CE97A-6D8A-F1A8-B8BE-9CF3488EEBE6</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <referedAttribute>A028F8AE-2874-B058-F3DA-38793B0FBE2F</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>

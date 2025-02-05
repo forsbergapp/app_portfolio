@@ -11,26 +11,10 @@
 <rejectLimit></rejectLimit>
 <storeAs>CLOB</storeAs>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
-<ColumnProxy name="verification_code" id="20AEBDA7-13C8-958A-9998-52212912B06D">
+<ColumnProxy name="avatar" id="3D220786-434F-B374-BDF2-10BB003E1971">
 <createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
+<createdTime>2025-02-04 12:12:32 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="password_reminder" id="26790CD9-7D74-56C7-05A9-A716457ED1A8">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="provider_last_name" id="3E75B8C0-770B-F5EF-AFE9-E55712B11128">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="id" id="4E4186C5-8808-08CF-C4D6-DEBC77828116">
-<createdBy>admin</createdBy>
-<createdTime>2024-08-08 15:58:57 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
 </ColumnProxy>
 <ColumnProxy name="bio" id="5A0C7DF7-65A7-DB7D-B712-DB9425A3E7D8">
 <createdBy>admin</createdBy>
@@ -47,44 +31,14 @@
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="provider_image" id="773455FC-2EA0-929D-473C-8999D2CC986F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="date_created" id="77419BEB-CB94-49E7-2C51-38AD031A26C1">
 <createdBy>admin</createdBy>
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="email_unverified" id="7EE529EF-4DD1-5573-873A-C39E6F3B962F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="password" id="858FAAA9-506A-47A8-9923-784B8BE833FC">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="username" id="8B447387-4E64-ED95-2993-BDC63FFCBCFC">
 <createdBy>admin</createdBy>
 <createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="provider_id" id="92CF4EFC-93A8-0B3A-6795-0E6A7FE28B64">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="provider_image_url" id="9709D783-B45F-E9CB-642C-01DDE101ACAD">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="avatar" id="9F3FC380-81AA-0928-6E37-F922647DF3AC">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="private" id="B41DDF52-F455-0CFA-E640-DDBE36166563">
@@ -92,39 +46,18 @@
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="identity_provider_id" id="D00962D0-C01E-D07A-55F7-4A5AD7DE3E86">
+<ColumnProxy name="id" id="B9A82B48-5B54-90A2-6E38-A75563F07C00">
 <createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<createdTime>2025-02-04 12:18:23 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
 </ColumnProxy>
-<ColumnProxy name="provider_first_name" id="E74B63A3-3176-DA49-DBDF-0C98AFEC5318">
+<ColumnProxy name="iam_user_id" id="EAE49D5D-7CBD-A691-A006-276D634CD459">
 <createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="active" id="EACAF03D-B752-18BF-A536-89F6930EBB30">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="email" id="FB8A16B6-EBE2-5962-9B04-13F589B1945F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="provider_email" id="FF5C42C9-1174-CC9C-4776-3BB40754A6E4">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
+<createdTime>2025-02-04 12:12:32 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
 </columnProxies>
-<foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_identity_provider_FK" id="3C762A3F-615A-296F-B87C-B66A61B0D806">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-11 04:05:34 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ForeignKey>
-</foreignKeys>
 <primaryKeys>
 <PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="user_account_PK" id="230AEEF5-9A90-BF94-6042-5C8D38708798">
 <createdBy>admin</createdBy>
@@ -134,18 +67,6 @@
 </PrimaryKey>
 </primaryKeys>
 <uniqueKeys>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="user_account_email_UN" id="0CEB15F4-8A9F-B811-B39A-72894A3218F1">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="user_account_provider_id_UN" id="7EBB7A18-AC30-D038-88F4-7ADC7DCF1A6F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
 <UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="user_account_username_UN" id="A048C95B-47FC-7FD5-5549-96E9BB11397E">
 <createdBy>admin</createdBy>
 <createdTime>2022-08-17 18:49:13 UTC</createdTime>

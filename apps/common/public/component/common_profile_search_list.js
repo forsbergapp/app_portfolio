@@ -22,7 +22,7 @@ const template = props =>`  ${props.records.length>0?
                                                 <div class='common_profile_search_list_user_account_id'>${row.id}</div>
                                             </div>
                                             <div class='common_profile_search_list_col'>
-                                                <div class='common_image common_image_avatar_list' style='${(row.avatar==null &&row.provider_image==null)?'':`background-image:url(${row.avatar ?? row.provider_image});`}'></div>
+                                                <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
                                             </div>
                                             <div class='common_profile_search_list_col'>
                                                 <div class='common_profile_search_list_username common_wide_list_column common_link'>

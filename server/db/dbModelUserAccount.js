@@ -1,30 +1,18 @@
 /** @module server/db/dbModelUserAccount */
 
 /**
- * @import {server_db_sql_result_user_account_getDemousers,
- *          server_db_sql_result_user_account_getProfileDetail,
+ * @import {server_db_sql_result_user_account_getProfileDetail,
  *          server_db_common_result_delete,
  *          server_db_common_result_update,
  *          server_db_common_result_insert,
- *          server_db_sql_result_user_account_checkPassword,
- *          server_db_sql_result_user_account_getUserByUserId,
- *          server_db_sql_parameter_user_account_event_insertUserEvent,
+ *          server_db_sql_result_user_account_get,
  *          server_db_sql_result_user_account_getStatCountAdmin,
- *          server_db_sql_result_user_account_getUsersAdmin,
  *          server_db_sql_result_user_account_getProfileStat,
  *          server_db_sql_parameter_app_data_stat_post,
  *          server_db_sql_result_user_account_getProfileUser,
- *          server_db_sql_result_user_account_getEmailUser,
  *          server_server_response,
- *          server_db_sql_result_user_account_providerSignIn,
- *          server_db_sql_parameter_user_account_userLogin,
- *          server_db_sql_result_user_account_userLogin,
- *          server_db_sql_parameter_user_account_updateUserCommon, server_db_sql_parameter_user_account_updatePassword,
- *          server_db_sql_parameter_user_account_create,
- * 			server_db_sql_parameter_user_account_updateUserLocal,
- *         	server_db_sql_parameter_user_account_updateAdmin} from '../types.js'
+ *          server_db_sql_parameter_user_account} from '../types.js'
  */
-
 
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
@@ -35,326 +23,26 @@ const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileMode
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../iam.js')} */
-const { iamUserGetLastLogin } = await import(`file://${process.cwd()}/server/iam.js`);
-
 /**@type{import('../db/common.js')} */
-const { dbCommonExecute, dbCommonRecordErrorAsync } = await import(`file://${process.cwd()}/server/db/common.js`);
-
-/**@type{import('./dbModelUserAccountEvent.js')} */
-const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
-
-/**
- * @name set_password
- * @description Sets password using defined encryption
- * @function
- * @param {string|null} password 
- * @returns {Promise.<string|null>}
- */
-const set_password = async (password) =>{
-	/**@type{import('../security.js')} */
-	const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-	return password==null?null:await securityPasswordCreate(password);
-};
-/**
- * @name data_validation_password
- * @description Checks password between 10 and 100 characters
- * @function
- * @param {server_db_sql_parameter_user_account_updatePassword} data 
- * @returns {object|null}
- */
-const data_validation_password = (data) => {
-    if (data.password_new == null || data.password_new.length < 10 || data.password_new.length > 100){
-        //'Password 10 - 100 characters'
-		return {'errorNum' : 20106};
-    }
-    else
-        return null;
-};
-
-/**
- * @name data_validation_common
- * @description Common validation logic
- * @function
- * @param {server_db_sql_parameter_user_account_updateUserCommon} data 
- * @returns {object|null}
- */
- const data_validation_common = data => {
-	data.username = data.username ?? null;
-	data.bio = data.bio ?? null;
-	if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
-		//'username 5 - 100 characters'
-		return {'errorNum' : 20100};
-	}
-	else
-		if (data.username != null &&
-			(data.username.indexOf(' ') > -1 || 
-			data.username.indexOf('?') > -1 ||
-			data.username.indexOf('/') > -1 ||
-			data.username.indexOf('+') > -1 ||
-			data.username.indexOf('"') > -1 ||
-			data.username.indexOf('\'\'') > -1)){
-			//'not valid username'
-			return {'errorNum' : 20101};
-		}
-		else
-			return null;
- };
-/**
- * @name data_validation
- * @description Data validation
- * @function
- * @param {	server_db_sql_parameter_user_account_create|
- * 			server_db_sql_parameter_user_account_updateUserLocal|
- *         	server_db_sql_parameter_user_account_updateAdmin} data 
- * @returns {object|null}
- */
-const data_validation = data => {
-	data.username = data.username ?? null;
-	data.bio = data.bio ?? null;
-	data.password_reminder = data.password_reminder ?? null;
-	data.email_unverified = data.email_unverified ?? null;
-	data.verification_code = data.verification_code ?? null;
-	data.provider_id = data.provider_id ?? null;
-	
-	if (data.provider_id != null){
-		data.password = null;
-		data.password_new = null;
-		data.password_reminder = null;
-		data.email = null;
-		data.email_unverified = null;
-		data.avatar = null;
-		data.verification_code = null;
-	}
-    if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
-		//'username 5 - 100 characters'
-		return {'errorNum' : 20100};
-	}
-	else 
-		if (data.username != null &&
-			(data.username.indexOf(' ') > -1 || 
-			data.username.indexOf('?') > -1 ||
-			data.username.indexOf('/') > -1 ||
-			data.username.indexOf('+') > -1 ||
-			data.username.indexOf('"') > -1 ||
-			data.username.indexOf('\'\'') > -1)){
-			//'not valid username'
-			return {'errorNum' : 20101};
-		}
-		else
-			if (data.bio != null && data.bio.length > 100){
-				//'bio max 100 characters'
-				return {'errorNum' : 20102};
-			}
-			else 
-				if (data.email != null && data.email.length > 100){
-					//'email max 100 characters'
-					return {'errorNum' : 20103};
-				}
-				else
-					if (data.password_reminder != null && data.password_reminder.length > 100){
-						//'reminder max 100 characters'
-						return {'errorNum' : 20104};
-					}
-					else{
-						//Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
-						/**
-						 * 
-						 * @param {string} email 
-						 * @returns 
-						 */
-						const email_ok = email =>{
-							const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
-							try {
-								/**@ts-ignore */
-								return email == email.match(email_regexp)[0];	
-							} catch (error) {
-								return false;
-							}
-							
-						};
-						if (data.email != null && data.email.slice(-10) != '@localhost' && email_ok(data.email)==false){
-							//'not valid email' (ignore emails that ends with '@localhost')
-							return {'errorNum' : 20105};
-						}
-						else
-							if (data.email_unverified != '' && data.email_unverified != null && email_ok(data.email_unverified)==false){
-								//'not valid email'
-								return {'errorNum' : 20105};
-							}
-							else
-								if (data.provider_id == null && (data.username == null || (data.password_new??data.admin==1?data.admin:data.password)==null || data.email==null)){
-									//'Username, password and email are required'
-									return {'errorNum' : 20107};
-								}
-								else
-									if (data.provider_id == null && ((data.admin==1 && data.password_new != null) || data.admin==0))
-										return data_validation_password({password_new: data.password_new??data.password});
-									else
-										return null;
-					}
-};
-
-/**
- * @name userGetUsername
- * @description Get username
- * @function
- * @param {number} app_id
- * @param {server_db_sql_parameter_user_account_userLogin} data
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_userLogin[] }>}
- */
-const userGetUsername = (app_id, data) =>
-        dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_SELECT_USERNAME,
-                        {
-                            username: data.username
-                        },
-                        null, 
-                        null);
-
-/**
- * @name userGetProvider
- * @description Get user provider
- * @function
- * @param {number} app_id 
- * @param {number|null} identity_provider_id 
- * @param {number} search_id
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_providerSignIn[] }>}
- */
-const userGetProvider = async (app_id, identity_provider_id, search_id) =>
-        dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_SELECT_PROVIDER,
-                        {
-                            provider_id: search_id,
-                            identity_provider_id: identity_provider_id
-                        },
-                        null, 
-                        null);
-/**
- * @name updateUserVerificationCode
- * @description Update verification code
- * @function
- * @param {number} app_id 
- * @param {number} id 
- * @param {string} verification_code 
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const updateUserVerificationCode = async (app_id, id, verification_code) => 
-        dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_UPDATE_VERIFICATION_CODE,
-                        {
-                            verification_code: verification_code,
-                            id: id   
-                        },
-                        null, 
-                        null);
-
-/**
- * @name userUpdateProvider
- * @description Update user provider
- * @function
- * @param {number} app_id 
- * @param {number} id 
- * @param {server_db_sql_parameter_user_account_create} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const userUpdateProvider = async (app_id, id, data) => {
-    const error_code = data_validation(data);
-    if (error_code==null)
-        return dbCommonExecute(app_id, 
-                            dbSql.USER_ACCOUNT_UPDATE_PROVIDER,
-                            {
-                                identity_provider_id: data.identity_provider_id,
-                                provider_id: data.provider_id,
-                                provider_first_name: data.provider_first_name,
-                                provider_last_name: data.provider_last_name,
-                                provider_image: data.provider_image,
-                                provider_image_url: data.provider_image_url,
-                                provider_email: data.provider_email,
-                                id: id,
-                                DB_CLOB: ['provider_image']
-                            },
-                            null, 
-                            null);
-    else
-       return dbCommonRecordErrorAsync(app_id, 400, error_code);
-};
+const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name userPost
  * @description Create user
  * @function
  * @param {number} app_id 
- * @param {server_db_sql_parameter_user_account_create} data 
+ * @param {server_db_sql_parameter_user_account} data 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
-const userPost = async (app_id, data) =>{ 
-    const error_code = data_validation(data);
-    if (error_code==null)
-        return set_password(data.password_new)
-            .then(password=>dbCommonExecute(app_id, 
-                                            dbSql.USER_ACCOUNT_INSERT,
-                                            {
-                                                bio: data.bio,
-                                                private: data.private,
-                                                user_level: data.user_level,
-                                                username: data.username,
-                                                password_new: password,
-                                                password_reminder: data.password_reminder,
-                                                email: data.email,
-                                                avatar: (data.avatar==''||data.avatar=='null')?null:data.avatar,
-                                                verification_code: data.verification_code,
-                                                active: data.active,
-                                                identity_provider_id: data.identity_provider_id,
-                                                provider_id: data.provider_id,
-                                                provider_first_name: data.provider_first_name,
-                                                provider_last_name: data.provider_last_name,
-                                                provider_image: data.provider_image,
-                                                provider_image_url: data.provider_image_url,
-                                                provider_email: data.provider_email,
-                                                DB_RETURN_ID:'id',
-                                                DB_CLOB: ['avatar', 'provider_image']
-                                            },
-                                            null, 
-                                            null));
-    else
-        return dbCommonRecordErrorAsync(app_id, 400, error_code);
-};
-
-/**
- * @name userUpdateActivate
- * @description Update user activate
- * @function
- * @param {number} app_id 
- * @param {number} id 
- * @param {string} verification_code 
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const userUpdateActivate = async (app_id, id, verification_code) => 
-        dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_UPDATE_ACTIVATE,
-                        {
-                            id: id,
-                            verification_code: verification_code
-                        },
-                        null, 
-                        null);
-    
-/**
- * @name userGetEmail
- * @description Get user email
- * @function
- * @param {number} app_id 
- * @param {string} email 
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getEmailUser[] }>}
- */
-const userGetEmail = async (app_id, email) => dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_SELECT_EMAIL,
-                        {
-                            email: email
-                        },
-                        null, 
-                        null);
+const userPost = async (app_id, data) =>
+    dbCommonExecute(app_id, 
+                    dbSql.USER_ACCOUNT_INSERT,
+                    {
+                        iam_user_id:data.iam_user_id,
+                        DB_RETURN_ID:'id'
+                    },
+                    null, 
+                    null);
 
 /**
  * @name getProfile
@@ -372,6 +60,8 @@ const userGetEmail = async (app_id, email) => dbCommonExecute(app_id,
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileUser[] }>}
  */
 const getProfile = async parameters =>{
+    /**@type{import('./fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     /**
      * Clear private data if private
      * @param {server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
@@ -402,12 +92,27 @@ const getProfile = async parameters =>{
                                             dbSql.USER_ACCOUNT_SELECT_PROFILE,
                                             {
                                                 user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
-                                                id: parameters.resource_id,
-                                                search:parameters.data.search + '%',
-                                                name:parameters.data.name
-                                            },
+                                                id: parameters.resource_id
+                                            }
+                                            ,
                                             null, 
-                                            null);
+                                            null)
+                                            .then(result=>result.result
+                                                            .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>   
+                                                                            /**@ts-ignore */
+                                                                            parameters.data.search!=''?row.username.indexOf(parameters.data.search)>-1:null ||
+                                                                            /**@ts-ignore */
+                                                                            parameters.data.name!=''?row.username.indexOf(parameters.data.name)>-1:null)
+                                                            .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
+                                                                // get username, bio, private, user_level, avatar from iam_user
+                                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                row.username    = user.username;
+                                                                row.bio         = user.bio;
+                                                                row.private     = user.private;
+                                                                row.user_level  = user.user_level;
+                                                                row.avatar      = user.avatar;
+                                                                return row;
+                                                            }));  
     if (parameters.data.search){
         //searching, return result
         /**@type{import('./dbModelAppDataStat.js')} */
@@ -427,21 +132,21 @@ const getProfile = async parameters =>{
                             app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
                             app_data_entity_resource_app_data_entity_id:        1   //COMMON
                             };
-        return await post(parameters.app_id, data_insert).then(()=>{return {result:clear_private(result_getProfileUser.result), type:'JSON'};});
+        return await post(parameters.app_id, data_insert).then(()=>{return {result:clear_private(result_getProfileUser), type:'JSON'};});
     }
     else
-        if (result_getProfileUser.result[0]){
+        if (result_getProfileUser[0]){
             //always save stat who is viewing, same user, none or someone else
             /**@type{import('./dbModelUserAccountView.js')} */
             const dbModelUserAccountView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`);
             const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
-                                user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser.result[0].id, //viewed account
+                                user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
                                 client_ip:              parameters.ip,
                                 client_user_agent:      parameters.user_agent};
-            return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>{return {result:clear_private(result_getProfileUser.result), type:'JSON'};});
+            return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>{return {result:clear_private(result_getProfileUser), type:'JSON'};});
         }
         else
-            return result_getProfileUser.http?result_getProfileUser:dbCommonRecordErrorAsync(parameters.app_id, 404);
+            return result_getProfileUser.http?result_getProfileUser:dbCommonRecordError(parameters.app_id, 404);
 };
 /**
  * @name getProfileStat
@@ -452,119 +157,31 @@ const getProfile = async parameters =>{
  *          data:{statchoice?:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileStat[] }>}
  */
-const getProfileStat = parameters => 
-        dbCommonExecute(parameters.app_id, 
-                        dbSql.USER_ACCOUNT_SELECT_PROFILE_STAT,
-                        {
-                            statchoice: serverUtilNumberValue(parameters.data?.statchoice),
-                            app_id: parameters.app_id
-                        },
-                        null, 
-                        null);
-/**
- * @name userUpdateAdmin
- * @description Updates user by admin
- * @function
- * @param {number} app_id 
- * @param {number} id 
- * @param {server_db_sql_parameter_user_account_updateAdmin} data 
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const userUpdateAdmin = async (app_id, id, data) =>{
-	const error_code = data_validation(data);
-	if (error_code==null)
-        return set_password(data.password_new)
-            .then(password=>dbCommonExecute(app_id, 
-                                            dbSql.USER_ACCOUNT_UPDATE,
-                                            {id: id,
-                                                active: data.active,
-                                                user_level: data.user_level,
-                                                private: data.private,
-                                                username: data.username,
-                                                bio: data.bio==''?null:data.bio,
-                                                email: data.email,
-                                                email_unverified: data.email_unverified==''?null:data.email_unverified,
-                                                password_new: password,
-                                                password_reminder: data.password_reminder==''?null:data.password_reminder,
-                                                verification_code: data.verification_code==''?null:data.verification_code
-                                                },
-                                            null, 
-                                            null));
-    else
-        return dbCommonRecordErrorAsync(app_id, 400, error_code);
+const getProfileStat = async parameters =>{
+    /**@type{import('./fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    return dbCommonExecute(parameters.app_id, 
+                            dbSql.USER_ACCOUNT_SELECT_PROFILE_STAT,
+                                            {
+                                                statchoice: serverUtilNumberValue(parameters.data?.statchoice),
+                                                app_id: parameters.app_id
+                                            },
+                            null, 
+                            null)
+                            .then(result=>result.result
+                                            .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
+                                                //add condition active and private
+                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                return user.active==1 && user.private !=1;
+                                            })              
+                                            .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
+                                                //add avatar and username from iam_user
+                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                row.username    = user.username;
+                                                row.avatar      = user.avatar;
+                                                return row;
+                                            }));
 };
-/**
- * @name updateAdmin
- * @description Gets user and updates user by admin
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id :number,
- *          resource_id:number,
- *          data:{  username:string,
- *                  bio:string,
- *                  email:string,
- *                  email_unverified:string|null,
- *                  password_new:string,
- *                  password_reminder:string,
- *                  active:number,
- *                  user_level:number,
- *                  private:number,
- *                  verification_code:string}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const updateAdmin = parameters =>{
-    return new Promise((resolve)=>{
-        // get avatar and provider column used to validate
-        getUserByUserId({app_id:parameters.app_id, resource_id:parameters.resource_id})
-        .then(result_user=>{
-            if (result_user.result) {
-                /**@type{server_db_sql_parameter_user_account_updateAdmin} */
-                const body = {  active:             serverUtilNumberValue(parameters.data.active),
-                                user_level:         serverUtilNumberValue(parameters.data.user_level),
-                                private:            serverUtilNumberValue(parameters.data.private),
-                                username:           parameters.data.username,
-                                bio:                parameters.data.bio,
-                                email:              parameters.data.email,
-                                email_unverified:   parameters.data.email_unverified==''?null:parameters.data.email_unverified,
-                                password:           null,
-                                password_new:       parameters.data.password_new==''?null:parameters.data.password_new,
-                                password_reminder:  parameters.data.password_reminder,
-                                verification_code:  parameters.data.verification_code,
-                                provider_id:        result_user.result.provider_id,
-                                avatar:             (result_user.result.avatar==''||result_user.result.avatar=='null')?null:result_user.result.avatar,
-                                admin:              1};
-                userUpdateAdmin(parameters.app_id, parameters.resource_id, body)
-                .then(result_update=>resolve(result_update));
-            }
-            else
-                resolve(dbCommonRecordErrorAsync(parameters.app_id, 404));
-        });
-    });
-};
-/**
- * @name getUsersAdmin
- * @description Get users by admin
- * @function
- * @memberof ROUTE_REST_API
- * @param {{app_id:number,
- *          data:{  sort?:string|null,
- *                  order_by?:string|null,
- *                  search?:string|null,
- *                  offset?:string|null,
- *                  limit?:string|null}}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getUsersAdmin[] }>}
- */
-const getUsersAdmin = parameters => 
-        dbCommonExecute(parameters.app_id, 
-                        dbSql.USER_ACCOUNT_SELECT
-                        .replace('<SORT/>', parameters.data.sort ?? '')
-                        .replace('<ORDER_BY/>', parameters.data.order_by ?? ''),
-                        {   search: parameters.data.search=='*'?parameters.data.search:'%' + parameters.data.search + '%',
-							offset: serverUtilNumberValue(parameters.data.offset) ?? 0,
-							limit:  serverUtilNumberValue(parameters.data.limit)
-							},
-                        null, 
-                        null);
 /**
  * @name getStatCountAdmin
  * @description Get user stat
@@ -580,145 +197,53 @@ const getStatCountAdmin = parameters =>
                         null, 
                         null);
 /**
- * @name updatePassword
- * @description Update user password
- * @function
- * @param {{app_id:number,
- *          resource_id:number|null,
- *          ip:string,
- *          data:{  password_new:string}}} parameters
- * @returns {Promise.<server_server_response>}
- */
- const updatePassword = async parameters => {
-    const error_code = data_validation_password(parameters.data);
-    if (error_code==null){
-        const result_update = await  set_password(parameters.data.password_new)
-                                    .then(password=>
-                                                    dbCommonExecute(parameters.app_id, 
-                                                    dbSql.USER_ACCOUNT_UPDATE_PASSWORD,
-                                                    {
-                                                        password_new: password,
-                                                        id: parameters.resource_id
-                                                    },
-                                                    null, 
-                                                    null));
-        if (result_update.result) {
-            /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
-            const eventData = {
-                /**@ts-ignore */
-                user_account_id: parameters.resource_id,
-                event: 'PASSWORD_RESET',
-                event_status: 'SUCCESSFUL'
-            };
-            return dbModelUserAccountEvent.post(parameters.app_id, eventData);
-        }
-        else
-            return result_update.http?result_update:dbCommonRecordErrorAsync(parameters.app_id, 404);
-    }
-    else
-        return dbCommonRecordErrorAsync(parameters.app_id, 400, error_code);
-};
-/**
- * @name userUpdateLocal
- * @description Update user local
- * @function
- * @param {number} app_id 
- * @param {server_db_sql_parameter_user_account_updateUserLocal} data 
- * @param {number} search_id
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const userUpdateLocal = async (app_id, data, search_id) =>{
-    const error_code = data_validation(data);
-    if (error_code==null)
-        return set_password(data.password_new)
-                .then(password=>dbCommonExecute(app_id, 
-                                dbSql.USER_ACCOUNT_UPDATE_LOCAL,
-                                {
-                                    bio: data.bio,
-                                    private: data.private,
-                                    username: data.username,
-                                    password_new: password,
-                                    password_reminder: data.password_reminder,
-                                    email: data.email,
-                                    email_unverified: data.email_unverified==''?null:data.email_unverified,
-                                    avatar: (data.avatar==''||data.avatar=='null')?null:data.avatar,
-                                    verification_code: data.verification_code,
-                                    id: search_id,
-                                    DB_CLOB: ['avatar']
-                                },
-                                null, 
-                                null));
-    else
-        return dbCommonRecordErrorAsync(app_id, 400, error_code);
-};
-
-/**
- * @name updateUserCommon
- * @description Update user common
+ * @name update
+ * @description Updates user
  * @function
  * @memberof ROUTE_REST_API
- * @param {{app_id:number,
+ * @param {{app_id :number,
  *          resource_id:number,
- *          data:server_db_sql_parameter_user_account_updateUserCommon}} parameters
+ *          data:{  iam_user_id:number|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
- const updateUserCommon = async parameters => {
-    const error_code = data_validation_common(parameters.data);
-	if (error_code==null){
-        const result_update = await dbCommonExecute(parameters.app_id, 
-                                dbSql.USER_ACCOUNT_UPDATE_COMMON,
-                                {	username: parameters.data.username,
-                                    bio: parameters.data.bio,
-                                    private: parameters.data.private,
+const update = async parameters =>dbCommonExecute(parameters.app_id, 
+                                dbSql.USER_ACCOUNT_UPDATE,
+                                {
+                                    iam_user_id:parameters.data.iam_user_id,
                                     id: parameters.resource_id
                                 },
                                 null, 
                                 null);
-        if (result_update.result)
-            return result_update;
-        else
-            return result_update.http?result_update:dbCommonRecordErrorAsync(parameters.app_id, 404);
-    }
-    else
-        return dbCommonRecordErrorAsync(parameters.app_id, 400, error_code);
-};
+
 /**
- * @name getUserByUserId
- * @description Get user by id
+ * @name get
+ * @description Get user
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getUserByUserId }>}
- */
-const getUserByUserId = async parameters => {
-    const result = await dbCommonExecute(   parameters.app_id, 
-                                            dbSql.USER_ACCOUNT_SELECT_ID,
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_get[] }>}
+ */                            
+const get = async parameters =>dbCommonExecute(   parameters.app_id, 
+                                            dbSql.USER_ACCOUNT_SELECT,
                                             {id: parameters.resource_id},
                                             null, 
                                             null);
-    if (result.result[0]){
-        return {result:{...result.result[0], ...{last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)}}, type:'JSON'};
-    }
-    else
-        return result.http?result:dbCommonRecordErrorAsync(parameters.app_id, 404);
-};
-
 /**
- * @name userGetPassword
- * @description Get password for given user
+ * @name getIamUser
+ * @description Get user for given iam_user.id
  * @function
- * @param {number} app_id 
- * @param {number} id
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_checkPassword[] }>}
- */
-const userGetPassword = async (app_id, id) => 
-        dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_SELECT_PASWORD,
-                        {id: id},
-                        null, 
-                        null);
-
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          iam_user_id:number}} parameters
+ * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_get[] }>}
+ */                            
+const getIamUser = async parameters =>dbCommonExecute(   parameters.app_id, 
+                                            dbSql.USER_ACCOUNT_SELECT_IAM_USER,
+                                            {iam_user_id: parameters.iam_user_id},
+                                            null, 
+                                            null);
+                                           
 /**
  * @name userDelete
  * @description Delete user
@@ -743,8 +268,10 @@ const userDelete = async (app_id, id) =>
  *          data:{detailchoice?:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileDetail[] }>}
  */
- const getProfileDetail = async parameters => 
-        dbCommonExecute(parameters.app_id, 
+ const getProfileDetail = async parameters =>{
+    /**@type{import('./fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    return dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_PROFILE_DETAIL,
                             {
                                 user_account_id: parameters.resource_id,
@@ -752,34 +279,23 @@ const userDelete = async (app_id, id) =>
                             },
                             null, 
                             null)
-                            .then(result=>result.result?
-                                            result:
-                                                result.http?result:dbCommonRecordErrorAsync(parameters.app_id, 404));
-/**
- * @name userDemoGet
- * @description Get demo users
- * @function
- * @param {number} app_id
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getDemousers[] }>}
- */
-const userDemoGet = async app_id => 
-        dbCommonExecute(app_id, 
-                        dbSql.USER_ACCOUNT_SELECT_DEMO,
-                        {
-                            demo_level: 2
-                        },
-                        null, 
-                        null);
-                        
-export {userGetUsername,
-        userGetProvider,
-        userUpdateProvider,
-        updateUserVerificationCode,
-        userPost,
-        userUpdateActivate, 
-        userGetEmail,
-        userUpdateAdmin,
+                            .then(result=>result.result
+                                            .filter((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
+                                                //add condition active and private
+                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                return user.active==1 && user.private !=1;
+                                            })              
+                                            .map((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
+                                                //add avatar and username from iam_user
+                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                row.username    = user.username;
+                                                row.avatar      = user.avatar;
+                                                return row;
+                                            }));
+};
+export {userPost,
+        update,
         getProfile, getProfileStat,
-        updateAdmin, getUsersAdmin, getStatCountAdmin,
-        updatePassword, updateUserCommon, userUpdateLocal, getUserByUserId, userGetPassword, userDelete, getProfileDetail,
-        userDemoGet};
+        getStatCountAdmin,
+        get, getIamUser,
+        userDelete, getProfileDetail};

@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="user_account_view" directorySegmentName="seg_0" id="C0B922A5-C5EB-270D-4DF9-84A47A818F39">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="date_created" id="10717357-B0E7-9152-1AE0-E7E4239D98AB">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="user_account_id_view" id="38F73AA3-563B-5D36-23D3-BDDB8E7CA865">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="client_user_agent" id="3DDA6295-8A82-0964-6762-75D8523233C5">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="user_account_id" id="52DB7443-251F-B19C-91D9-C1AA4E764610">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="client_ip" id="F5321E16-BC89-089D-F7DB-DE62F7760864">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_view_user_account_view_FK" id="5EA17952-BD10-40AF-F6B9-FF20AA118AE3">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_view_user_account_FK" id="7D0A2797-F6D4-EAEA-71E1-48D0EF855622">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+</TableProxyOraclev20c>

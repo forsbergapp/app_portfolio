@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4262B313-D6E6-3FB4-C593-420D3B57507A" name="app_data_resource_master">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="4262B313-D6E6-3FB4-C593-420D3B57507A" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="app_data_resource_master">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
 <generatorID>25973C4D-611A-A8FD-CE5E-88620D0430FB</generatorID>
@@ -47,10 +47,9 @@
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="82BFD29B-F059-95BC-7278-B8A9F6B58FC9" referredColumn="AF79088E-C04E-DD99-E889-61C0BABA772D"/>
+<colAssociation fkAssociation="C3D2B7F3-18A1-9BB6-9FBE-94C4D950C223" referredColumn="30F6315E-6F05-F9A0-75C9-69DFAFC5E778"/>
 </associations>
 </Column>
 <Column name="user_account_app_app_id" id="574868DC-A254-B06D-F318-3C0406CC0568">
@@ -66,7 +65,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="82BFD29B-F059-95BC-7278-B8A9F6B58FC9" referredColumn="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0"/>
+<colAssociation fkAssociation="C3D2B7F3-18A1-9BB6-9FBE-94C4D950C223" referredColumn="C151CEF5-2FAC-5528-4B42-D80240397DC8"/>
 </associations>
 </Column>
 <Column name="app_data_entity_resource_app_data_entity_app_id" id="A42B35E0-AF14-78D0-175E-B832CBA2A498">
@@ -128,18 +127,6 @@
 <colUsage columnID="C303200B-47AD-5CB5-7301-DD1CD1F66A7E"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="B6F0AA46-506B-2F07-62F4-DB47CA9723E2" name="app_data_resource_master_user_account_app_FK">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:02:42 UTC</createdTime>
-<generatorID>3A751E78-8BFA-2A2C-609A-49D8792F277F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="54C93ECD-B574-F4BF-8D08-AF412460EFED"/>
-<colUsage columnID="574868DC-A254-B06D-F318-3C0406CC0568"/>
-</indexColumnUsage>
-</ind_PK_UK>
 <ind_PK_UK id="AF3BC262-3F1C-4A89-1D5C-62BC6BE45F53" name="app_data_resource_master_app_data_entity_resource_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
@@ -151,6 +138,18 @@
 <colUsage columnID="A42B35E0-AF14-78D0-175E-B832CBA2A498"/>
 <colUsage columnID="BEEBF26D-03A3-112C-4A53-DBF9F04016C7"/>
 <colUsage columnID="A4C9E12A-E56E-85EE-BDC1-20AEAB71DD70"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="BEF9D486-EBB8-92F5-2C04-F618AD7B9F89" name="app_data_resource_master_user_account_app_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
+<generatorID>3A751E78-8BFA-2A2C-609A-49D8792F277F</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="54C93ECD-B574-F4BF-8D08-AF412460EFED"/>
+<colUsage columnID="574868DC-A254-B06D-F318-3C0406CC0568"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

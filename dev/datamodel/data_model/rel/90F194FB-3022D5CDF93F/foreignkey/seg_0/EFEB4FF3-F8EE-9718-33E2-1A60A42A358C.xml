@@ -4,7 +4,7 @@
 <createdTime>2024-03-02 20:36:12 UTC</createdTime>
 <generatorID>869C7DB5-71FD-D67C-D49D-15D712B38621</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>app_data_resource_master</referredTableLongName>
+<referredTableLongName>app_portfolio.app_data_resource_master</referredTableLongName>
 <deleteRule>CASCADE</deleteRule>
 <referredTableID>4262B313-D6E6-3FB4-C593-420D3B57507A</referredTableID>
 <keyObject>3231457B-87D7-B807-1632-E4D70FDF5300</keyObject>

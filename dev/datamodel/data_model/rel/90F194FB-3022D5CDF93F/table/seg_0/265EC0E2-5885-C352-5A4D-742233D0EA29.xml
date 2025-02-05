@@ -1,0 +1,55 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="265EC0E2-5885-C352-5A4D-742233D0EA29" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="event_type">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:22:30 UTC</createdTime>
+<generatorID>D20D15D3-254B-D12F-D7A5-B53C37A51365</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="04D9DC2D-EA57-776B-81A5-BA7B89883D58">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:48:17 UTC</createdTime>
+<generatorID>4460C010-4303-21A5-16AF-71D544F6BE03</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>30</autoIncrementCache>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+<generateConstraintInDDL>NO</generateConstraintInDDL>
+</Column>
+<Column name="event_type_name" id="4798496B-4332-2832-F2B3-C12C7A687A6F">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:48:17 UTC</createdTime>
+<generatorID>8673CD9E-1D87-59F0-D1AB-85730021AEA1</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="865F06D8-8A2B-7970-3DF6-51F258FC7D1D" name="event_type_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:22:30 UTC</createdTime>
+<generatorID>2E8044C5-6929-38E0-166E-8468D2619557</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="04D9DC2D-EA57-776B-81A5-BA7B89883D58"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

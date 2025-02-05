@@ -564,9 +564,7 @@ const serverUtilAppLine = () =>{
  *              /bff/app_access_verification/v1*            all     iamMiddleware.iamAuthenticateAccessVerificationToken    bffAppAccessVerification
  *              /bff/app_external/v1/app-module*            post    iamMiddleware.iamAuthenticateExternal                   bffAppExternal
  *              /bff/admin/v1*                              all     iamMiddleware.iamAuthenticateAdminAccessToken           bffAdmin
- *              /bff/iam_admin/v1*                          post    iamMiddleware.iamAuthenticateAdmin                      bffIAMAdmin
- *              /bff/iam_user/v1*                           post    iamMiddleware.iamAuthenticateUser                       bffIAMUser
- *              /bff/iam_provider/v1*                       post    iamMiddleware.iamAuthenticateProvider                   bffIAMProvider
+ *              /bff/iam/v1*                                post    iamMiddleware.iamAuthenticateIAM                        bffIAM
  *	            *	                                        get	                                                            bffApp		    app asset
  *				        			                                                                                                        common asset
  *						            	                                                                                                    info page
@@ -625,9 +623,7 @@ const serverUtilAppLine = () =>{
     app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,bff.bffAppAccessVerification);
     app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,               bff.bffAppExternal);
     app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,       bff.bffAdmin);
-    app.route('/bff/iam_admin/v1/server-iam-login').post        (iamMiddleware.iamAuthenticateAdmin,                  bff.bffIAMAdmin);
-    app.route('/bff/iam_user/v1*').post                         (iamMiddleware.iamAuthenticateUser,                   bff.bffIAMUser);
-    app.route('/bff/iam_provider/v1*').post                     (iamMiddleware.iamAuthenticateProvider,               bff.bffIAMProvider);
+    app.route('/bff/iam/v1/server-iam-login').post              (iamMiddleware.iamAuthenticateIAM,                    bff.bffIAM);
     
     //app asset, common asset, info page, report and app
     app.route('*').get                                          (bff.bffApp);
@@ -728,24 +724,10 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/iam_admin/v1/server-iam-login') && req.method=='POST':{
-                    req.route.path = '/bff/iam_admin/v1/server-iam-login';
-                    await iamMiddleware.iamAuthenticateAdmin(req, res, () =>
-                        bff.bffIAMAdmin(req, res)
-                    );
-                    break;
-                }
-                case req.path.startsWith('/bff/iam_user/v1') && req.method=='POST':{
-                    req.route.path = '/bff/iam_user/v1*';
-                    await iamMiddleware.iamAuthenticateUser(req, res, () =>
-                        bff.bffIAMUser(req, res)
-                    );
-                    break;
-                }
-                case req.path.startsWith('/bff/iam_provider/v1') && req.method=='POST':{
-                    req.route.path = '/bff/iam_provider/v1*';
-                    await iamMiddleware.iamAuthenticateProvider(req, res, () =>
-                        bff.bffIAMProvider(req, res)
+                case req.path.startsWith('/bff/iam/v1/server-iam-login') && req.method=='POST':{
+                    req.route.path = '/bff/iam/v1/server-iam-login';
+                    await iamMiddleware.iamAuthenticateIAM(req, res, () =>
+                        bff.bffIAM(req, res)
                     );
                     break;
                 }

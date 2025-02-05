@@ -170,8 +170,7 @@
 
 /** 
  * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM_ADMIN'|'IAM_USER'|'IAM_PROVIDER'|
- *           'SERVER'} server_bff_endpoint_type
+ * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'SERVER'} server_bff_endpoint_type
  */
 
 /**
@@ -431,56 +430,25 @@
 /**
  * @description DB FILE server_db_file_iam_user
  * @typedef {{
- *          id:number, 
+ *          id?:number, 
  *          username:string, 
  *          password:string, 
- *          type: 'ADMIN'|'USER', 
+ *          password_new?:string|null, 
+ *          password_reminder?:string|null, 
  *          bio:string|null, 
  *          private:number|null, 
  *          email:string|null, 
- *          email_unverified:string|null, 
+ *          email_unverified?:string|null, 
  *          avatar:string|null,
- *          user_level:number|null, 
- *          verification_code?: number|null, 
- *          status:number|null, 
- *          created:string, 
- *          modified:string}} server_db_file_iam_user
+ *          type?: 'ADMIN'|'USER', 
+ *          user_level?:number|null, 
+ *          verification_code?: string|null, 
+ *          status?:number|null, 
+ *          active?:number,
+ *          created?:string, 
+ *          modified?:string}} server_db_file_iam_user
  */
-/**
- * @description DB FILE server_db_file_iam_user_new
- * @typedef {{
-*          id?:number, 
-*          username:string, 
-*          password:string, 
-*          type: 'ADMIN'|'USER', 
-*          bio:string|null, 
-*          private:number|null, 
-*          email:string|null, 
-*          email_unverified:string|null, 
-*          avatar:string|null,
-*          user_level?:number|null, 
-*          verification_code?: number|null, 
-*          status?:number|null, 
-*          created?:string, 
-*          modified?:string}} server_db_file_iam_user_new
-*/
-/**
- * @description DB FILE server_db_file_iam_user_get
- * @typedef {{
-*          id:number, 
-*          username:string, 
-*          password:string, 
-*          type: 'ADMIN'|'USER', 
-*          bio:string|null, 
-*          private:number|null, 
-*          email:string|null, 
-*          email_unverified:string|null, 
-*          avatar:string|null,
-*          user_level:number|null, 
-*          status:number|null, 
-*          created:string, 
-*          modified:string}} server_db_file_iam_user_get
-*/
+
 /**
  * @description DB FILE server_db_file_iam_user_update
  * @typedef {{
@@ -582,6 +550,11 @@
  *              favicon_192x192:string,
  *              status:'ONLINE'|'OFFLINE'}} server_db_file_app
  */
+
+/**
+ * @descriotn token_type
+ * @typedef {'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'} token_type
+
 /**
  * @description DB FILE server_db_file_app_module
  * @typedef {{  id:number,
@@ -755,7 +728,6 @@
  *              iam_user_id:            number,
  *              iam_user_username:      string|null,
  *              user_account_id:        number|null,
- *              user_account_username:  string|null,
  *              app_id:                 number,
  *              db:                     number|null,
  *              res:	                0|1|2,          //0=fail, 1=success, 2=invalidated
@@ -771,7 +743,6 @@
   * @typedef {{	iam_user_id:            number,
  *              iam_user_username:      string|null,
  *              user_account_id:        number|null,
- *              user_account_username:  string|null,
   *             app_id:                 number,
   *             db:                     number|null,
   *             res:	                0|1|2,          //0=fail, 1=success, 2=invalidated
@@ -1419,44 +1390,17 @@
  *              data5:string|null}} server_db_sql_result_app_setting_getDisplayData
  */
 
-/**
- * @description DB SQL IDENTITY PROVIDER server_db_sql_result_identity_provider_getIdentityProviders
- * @typedef {{  id:string, 
- *              provider_name:string}} server_db_sql_result_identity_provider_getIdentityProviders
- */
-
 /** 
- * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getUsersAdmin
+ * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_get
  * @typedef {{  id:number,
- *              avatar:string|null,
- *              active:number,
- *              user_level:number,
- *              private:number,
- *              username:string,
- *              bio:string,
- *              email:string,
- *              email_unverified:string,
- *              password:string,
- *              password_reminder:string,
- *              verification_code:string,
- *              identity_provider_id:number,
- *              provider_name:string,
- *              provider_id:string,
- *              provider_first_name:string,
- *              provider_last_name:string,
- *              provider_image:string,
- *              provider_image_url:string,
- *              provider_email:string,
- *              date_created:string,
+ *              iam_user_id:number,
  *              date_modified:string,
- *              total_rows:number}}  server_db_sql_result_user_account_getUsersAdmin
+ *              date_created:string}}  server_db_sql_result_user_account_get
  */
 
 /**
  * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getStatCountAdmin
- * @typedef {{  identity_provider_id:number,
- *              provider_name:string,
- *              count_user:number}} server_db_sql_result_user_account_getStatCountAdmin
+ * @typedef {{  count_user:number}} server_db_sql_result_user_account_getStatCountAdmin
  */
 
 /**
@@ -1478,54 +1422,11 @@
  */
 
 /**
- * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_create
- * @typedef {{  username:string|null,
- *              password:null,
- *              password_new:string|null,
- *              password_reminder:string|null,
- *              bio:string|null,
- *              private: number|null,
- *              user_level:number|null,
- *              email:string|null,
- *              email_unverified:string|null,
- *              avatar:string|null,
- *              verification_code:string|null,
- *              active:number,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_last_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
- *              provider_email:string|null,
- *              admin:number}} server_db_sql_parameter_user_account_create
- */
-
-
-/**
- * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getUserByUserId
- * @typedef {{  id:number,
- *              bio:string|null
- *              private: number|null,
- *              user_level:number|null,
- *              username:string|null,
- *              password:string|null,
- *              password_new:string|null,
- *              password_reminder:string|null,
- *              email:string|null,
- *              email_unverified:string|null,
- *              avatar:string|null,
- *              verification_code:string|null,
- *              active:number,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_last_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
- *              provider_email:string|null,
- *              date_created:string,
- *              date_modified:string}} server_db_sql_result_user_account_getUserByUserId
+ * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account
+ * @typedef {{  id?:number,
+ *              iam_user_id:number,
+ *              date_created?:string,
+ *              date_modified?:string}} server_db_sql_parameter_user_account
  */
 
 /**
@@ -1538,12 +1439,7 @@
  *              date_created:string,
  *              username:string, 
  *              avatar:string|null,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_last_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
+ *              iam_user_id:number|null,
  *              count_following:number|null,
  *              count_followed:number|null,
  *              count_likes:number|null,
@@ -1557,12 +1453,9 @@
  * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileDetail
  * @typedef {{  detail:string,
  *              id:number,
- *              provider_id:string,
+ *              iam_user_id:number,
  *              avatar:string|null,
- *              provider_image:string,
- *              provider_image_url:string,
  *              username:string,
- *              provider_first_name:string,
  *              total_rows:number}} server_db_sql_result_user_account_getProfileDetail
  */
 
@@ -1570,13 +1463,9 @@
  * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getProfileStat
  * @typedef {{  top:string,
  *              id:number,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
+ *              iam_user_id:number|null,
  *              avatar:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
  *              username:string,
- *              provider_first_name:string|null,
  *              total_rows:number}} server_db_sql_result_user_account_getProfileStat
  */
 
@@ -1652,18 +1541,6 @@
  *              date_created:string
  *              date_modified:string}} server_db_sql_result_user_account_providerSignIn
  */
-
-/**
- * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getEmailUser
- * @typedef {{  id:number,
- *              email:string}} server_db_sql_result_user_account_getEmailUser
- */
-
-/**
- * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_getDemousers 
- * @typedef {{  id:number, username:string}} server_db_sql_result_user_account_getDemousers 
- */
-
 /**
  * @description DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps
  * @typedef {{  app_id:number,
@@ -1816,7 +1693,6 @@
  *              iam_user_id:            number|null,
  *              iam_user_username:      string|null,
  *              user_account_id:        number|null,
- *              user_account_username:  string|null,
  *              ip:                     string,
  *              scope:                  server_iam_access_token_claim_scope_type,
  *              tokentimestamp?:        number}} server_iam_access_token_claim
@@ -2022,7 +1898,6 @@
  * @property {string|null} iam_user_username
  * @property {'ADMIN'|'USER'|null} iam_user_type
  * @property {number|null} user_account_id
- * @property {number|null} identity_provider_id
  * @property {string|null} token_access
  * @property {string|null} token_admin
  * @property {string} gps_latitude
@@ -2044,7 +1919,6 @@
  *              iam_user_username:string|null,
  *              iam_user_type:'ADMIN'|'USER'|null,
  *              user_account_id:number|null,
- *              identity_provider_id:number|null,
  *              gps_latitude:string,
  *              gps_longitude:string,
  *              place:string,
@@ -2074,7 +1948,6 @@
  *              'connection_date'| 
  *              'app_id'|
  *              'user_account_id'|
- *              'identity_provider_id'|
  *              'iam_user_id'|
  *              'iam_user_username'|
  *              'iam_user_type'|

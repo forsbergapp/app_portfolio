@@ -8,96 +8,6 @@
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**
- * @name dbCommonAppCodeGet
- * @description	Get app code derived from database error
- *				if known SQL error, example:
- *				MariaDB sqlMessage
- *					'Duplicate entry '[value]' for key 'user_account_username_un''
- *				MySQL sqlMessage
- *					'Duplicate entry '[value]' for key 'user_account.user_account_username_un''
- *				PostgreSQL message:
- *					'duplicate key value violates unique constraint "user_account_username_un"'
- *				Oracle message:
- *					'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
- * @function
- * @param {number|null} db_use
- * @param {server_db_common_result_error} error
- * @returns (string|null)
- * 
- */
-const dbCommonAppCodeGet = (db_use, error) => {
-	if (
-		((db_use ==1 ||db_use ==2)&& error.code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
-		(db_use ==3 && error.code=='23505')|| //PostgreSQL
-		(db_use ==4 && error.errorNum ==1)||  //Oracle
-		(db_use ==5 && error.code == 'ER_DUP_ENTRY')   	//SQLite
-		){ 		  
-		let text_check;
-		if (error.sqlMessage)
-			text_check = JSON.stringify(error.sqlMessage);	//MariaDB/MySQL
-		else
-			text_check = JSON.stringify(error.message);		//Oracle/PostgreSQL/SQLite
-		let app_message_code = null;
-		//check constraints errors, must be same name in mySQL and Oracle
-		if (text_check.toUpperCase().includes('USER_ACCOUNT_EMAIL_UN'))
-			app_message_code = '20200';
-		if (text_check.toUpperCase().includes('USER_ACCOUNT_PROVIDER_ID_UN'))
-			app_message_code = '20201';
-		if (text_check.toUpperCase().includes('USER_ACCOUNT_USERNAME_UN'))
-			app_message_code = '20203';
-		if (app_message_code != null)
-			return app_message_code;
-		else
-			return null;	
-	}
-};
-/**
- * Returns database error message in ISO20022 format
- * Checks database if known app code found
- * Use error when unknown error occurs for both fileModel and dbModel
- * If error then returns known error using app setting message or full error
- * else returns either not found message (404) or not authorized message (400, 401)
- * @param {number|null} app_id
- * @param {number} statusCode
- * @param {*} error
- * @returns {Promise.<server_server_response>}
- */
-const dbCommonRecordErrorAsync = async (app_id, statusCode, error=null) =>{
-	/**@type{import('./fileModelConfig.js')} */
-	const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-
-	const COMMON_APP_ID = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
-	if (error){
-		/**@type{import('./dbModelAppSetting.js')} */
-		const { getDisplayData } = await import(`file://${process.cwd()}/server/db/dbModelAppSetting.js`);
-		const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
-		//search known error in db error or if not found use errorNum key used by data validation in case used
-		//or return full error
-		const app_code = dbCommonAppCodeGet(DB_USE, error) ?? error.errorNum;
-		return {http:statusCode,
-				code:null,
-				text:app_code?await getDisplayData({app_id:app_id ?? COMMON_APP_ID,
-													data:{	data_app_id:COMMON_APP_ID,
-															setting_type:'MESSAGE',
-															value:app_code}
-													})
-									.then(result=>result.result[0].display_data)
-									.catch(()=>error):error,
-				developerText:null,
-				moreInfo:null,
-				type:'JSON'};
-	}
-	else{
-		return {http:statusCode,
-				code:null,
-				text:error?error:statusCode==404?'?!':'⛔',
-				developerText:null,
-				moreInfo:null,
-				type:'JSON'};
-	}
-};
-
-/**
  * Returns database error message in ISO20022 format
  * Does not check database for known errors
  * Use error when unknown error occurs for both fileModel and dbModel
@@ -295,7 +205,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 					else
 						resolve({result:rows ?? result, type:'JSON'});
 				} catch (error) {
-					return resolve(dbCommonRecordErrorAsync(app_id, 500, error));
+					return resolve(dbCommonRecordError(app_id, 500, error));
 				}
 						
 			});
@@ -308,11 +218,11 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 			if (!error.sql)
 				error.sql = sql;
 			fileModelLog.postDBE(app_id, DB_USE, sql, parameters, error)
-			.then(()=>resolve(dbCommonRecordErrorAsync(app_id, 500, error)));
+			.then(()=>resolve(dbCommonRecordError(app_id, 500, error)));
 		});
 	});
 };
 
 export{
-		dbCommonRecordErrorAsync, dbCommonRecordError, dbCommonLocaleGet, dbCommonExecute
+		dbCommonRecordError, dbCommonLocaleGet, dbCommonExecute
 };

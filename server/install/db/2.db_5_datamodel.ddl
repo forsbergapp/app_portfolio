@@ -116,25 +116,25 @@ CREATE TABLE <DB_SCHEMA/>.app_data_stat (
     app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
     user_account_id                                 INTEGER,
     CONSTRAINT arc_2 CHECK ( ( ( app_data_resource_master_id IS NOT NULL )
-                                   AND ( user_account_app_user_account_id IS NULL )
-                                   AND ( user_account_app_app_id IS NULL )
                                    AND ( user_account_id IS NULL )
-                                   AND ( app_id IS NULL ) )
+                                   AND ( app_id IS NULL )
+                                   AND ( user_account_app_user_account_id IS NULL )
+                                   AND ( user_account_app_app_id IS NULL ) )
+                                 OR ( ( user_account_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( user_account_app_user_account_id IS NULL )
+                                      AND ( user_account_app_app_id IS NULL ) )
+                                 OR ( ( app_id IS NOT NULL )
+                                      AND ( app_data_resource_master_id IS NULL )
+                                      AND ( user_account_id IS NULL )
+                                      AND ( user_account_app_user_account_id IS NULL )
+                                      AND ( user_account_app_app_id IS NULL ) )
                                  OR ( ( user_account_app_user_account_id IS NOT NULL )
                                       AND ( user_account_app_app_id IS NOT NULL )
                                       AND ( app_data_resource_master_id IS NULL )
                                       AND ( user_account_id IS NULL )
-                                      AND ( app_id IS NULL ) )
-                                 OR ( ( user_account_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( user_account_app_user_account_id IS NULL )
-                                      AND ( user_account_app_app_id IS NULL )
-                                      AND ( app_id IS NULL ) )
-                                 OR ( ( app_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( user_account_app_user_account_id IS NULL )
-                                      AND ( user_account_app_app_id IS NULL )
-                                      AND ( user_account_id IS NULL ) ) ),
+                                      AND ( app_id IS NULL ) ) ),
     CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
                                                                            app_data_entity_resource_app_data_entity_id,
                                                                            app_data_entity_resource_id )
@@ -203,7 +203,7 @@ CREATE TABLE <DB_SCHEMA/>.app_setting_type (
 
 CREATE TABLE <DB_SCHEMA/>.app_translation (
     language_id                            INTEGER NOT NULL,
-    app_setting_id                         INTEGER,
+    app_setting_id                         INTEGER NOT NULL,
     text                                   VARCHAR(2000),
     json_data                              TEXT,
     CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id, language_id ),
@@ -232,20 +232,6 @@ CREATE TABLE <DB_SCHEMA/>.event_type (
     event_type_name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE <DB_SCHEMA/>.identity_provider (
-    id                      INTEGER NOT NULL,
-    provider_name           VARCHAR(100) NOT NULL,
-    provider_url_logo       VARCHAR(100),
-    api_src                 VARCHAR(100),
-    api_src2                VARCHAR(100),
-    api_version             VARCHAR(100),
-	api_id                  VARCHAR(100),
-    identity_provider_order INTEGER NOT NULL,
-    enabled                 INTEGER,
-    CONSTRAINT identity_provider_pk PRIMARY KEY ( id ),
-    CONSTRAINT identity_provider_order_un UNIQUE ( identity_provider_order )
-);
-
 CREATE TABLE <DB_SCHEMA/>.language (
     id         INTEGER NOT NULL CONSTRAINT language_pk PRIMARY KEY AUTOINCREMENT,
     locale     VARCHAR(10) NOT NULL
@@ -258,31 +244,9 @@ CREATE INDEX <DB_SCHEMA/>.locale_index ON
 
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INTEGER NOT NULL CONSTRAINT user_account_pk PRIMARY KEY AUTOINCREMENT,
-    username              VARCHAR(100),
-    bio                   VARCHAR(150),
-    private               DECIMAL(1,0),
-    user_level            DECIMAL(1,0),
+    iam_user_id           INTEGER,
     date_created          DATETIME,
-    date_modified         DATETIME,
-    password              VARCHAR(100),
-    password_reminder     VARCHAR(100),
-    email                 VARCHAR(100),
-    email_unverified      VARCHAR(100),
-    avatar                TEXT,
-    verification_code     VARCHAR(6),
-    active                DECIMAL(1,0),
-    identity_provider_id  INTEGER,
-    provider_id           VARCHAR(100),
-    provider_first_name   VARCHAR(1000),
-    provider_last_name    VARCHAR(1000),
-    provider_image        TEXT,
-    provider_image_url    VARCHAR(1000),
-    provider_email        VARCHAR(1000),
-    CONSTRAINT user_account_provider_id_un UNIQUE ( provider_id ),
-    CONSTRAINT user_account_username_un UNIQUE ( username ),
-    CONSTRAINT user_account_email_un UNIQUE ( email ),
-    CONSTRAINT user_account_identity_provider_fk FOREIGN KEY ( identity_provider_id )
-        REFERENCES identity_provider ( id )
+    date_modified         DATETIME
 );
 
 CREATE TABLE <DB_SCHEMA/>.user_account_app (
@@ -401,11 +365,11 @@ CREATE TABLE <DB_SCHEMA/>.user_account_like (
 );
 
 CREATE TABLE <DB_SCHEMA/>.user_account_view (
+    user_account_id       INTEGER,
+    user_account_id_view  INTEGER NOT NULL,
     client_ip             VARCHAR(1000),
     client_user_agent     VARCHAR(1000),
     date_created          DATETIME NOT NULL,
-    user_account_id       INTEGER,
-    user_account_id_view  INTEGER NOT NULL,
     CONSTRAINT user_account_view_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
             ON DELETE CASCADE,
