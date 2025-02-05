@@ -1,0 +1,54 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="5C0F645F-BD09-1B82-95BF-B444922D2982" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="event_status">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:22:30 UTC</createdTime>
+<generatorID>2EEB0684-A642-F6FC-EC5D-1450C9676FA6</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="6F17C32C-6478-5D2D-1B17-E6DA5B7C0A13">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:48:17 UTC</createdTime>
+<generatorID>7D526225-DFED-4417-F543-4EE2F501EF92</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>30</autoIncrementCache>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
+<Column name="status_name" id="373D3511-F2AA-D805-0F3C-B6309BC1266C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:48:17 UTC</createdTime>
+<generatorID>F66173F0-92F7-503C-CB03-F6230C9D194C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="99055959-7B21-433B-5255-E84F8DD684BC" name="event_status_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:22:30 UTC</createdTime>
+<generatorID>88A1A79F-DF46-0A61-ABF3-8AA2E713274F</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6F17C32C-6478-5D2D-1B17-E6DA5B7C0A13"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1365,7 +1365,7 @@
         "/bff/admin/v1/server-db/user_account/${IAM_user_account_id}": {
             "patch": {
                 "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserUpdate",
+                "operationId": "server_db.dbModelUserAccount.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1456,100 +1456,9 @@
             }
         },
         "/bff/app_access/v1/server-db/user_account/${IAM_user_account_id}": {
-            "patch": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserUpdate",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "username":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "password_new":{
-                                                "type":"string"
-                                            },
-                                            "password_reminder":{
-                                                "type":"string"
-                                            },
-                                            "bio":{
-                                                "type":"string"
-                                            },
-                                            "private":{
-                                                "type":"string"
-                                            },
-                                            "avatar":{
-                                                "type":"string"
-                                            },
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "new_email":{
-                                                "type":"string"
-                                            },
-                                            "verification_code":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            },
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.getUserByUserId",
+                "operationId": "server_db.dbModelUserAccount.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -1609,65 +1518,6 @@
                                         "properties":{
                                             "password":{
                                                 "required":true,
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/app_access/v1/server-db/user_account-common/${IAM_user_account_id}": {
-            "patch": {
-                "summary": "",
-                "operationId": "server_db.dbModelUserAccount.updateUserCommon",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "username":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "bio":{
-                                                "type":"string"
-                                            },
-                                            "private":{
                                                 "type":"string"
                                             }
                                         }
@@ -2454,6 +2304,120 @@
                                             "user_account_app_data_post_id":{
                                                 "required":true,
                                                 "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/app_access/v1/server-iam/user/${IAM_iam_user_id}": {
+            "get": {
+                "summary": "",
+                "operationId": "server.iam.iamUserGet",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "required":true
+                        }
+                ],
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "oneOf":[
+                                        {
+                                            "allOf":[
+                                                {"$ref": "#/components/schema/SuccessResponseList/properties"},
+                                                {"rows": ""}
+                                            ]
+                                        },
+                                        {
+                                            "allOf":[
+                                                    {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                                    {"properties": ""}
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            },
+            "patch": {
+                "summary": "",
+                "operationId": "server.iam.iamAuthenticateUserUpdate",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "required":true
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "username":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "password_new":{
+                                                "type":"string"
+                                            },
+                                            "bio":{
+                                                "type":"string"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "email_unverified":{
+                                                "type":"string"
+                                            },
+                                            "avatar":{
+                                                "type":"string"
                                             }
                                         }
                                     }
@@ -4386,81 +4350,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/user_account": {
+        "/bff/admin/v1/server-db_admin/user_account/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccount.getUsersAdmin",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "name":"sort",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"order_by",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"search",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
-                        },
-                        {
-                            "name":"offset",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        },
-                        {
-                            "name":"limit",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
-                                        {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/admin/v1/server-db_admin/user_account/${resource_id_number}": {
-            "patch": {
-                "summary": "",
-                "operationId": "server_db.dbModelUserAccount.updateAdmin",
+                "operationId": "server_db.dbModelUserAccount.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4472,61 +4365,17 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.id",
-                            "required":true
+                            "description":"iam_user.id"
                         }
                 ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "username":{
-                                                "type":"string"
-                                            },
-                                            "bio":{
-                                                "type":"string"
-                                            },
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "email_unverified":{
-                                                "type":"string"
-                                            },
-                                            "password_new":{
-                                                "type":"string"
-                                            },
-                                            "password_reminder":{
-                                                "type":"string"
-                                            },
-                                            "active":{
-                                                "type":"number"
-                                            },
-                                            "user_level":{
-                                                "type":"number"
-                                            },
-                                            "private":{
-                                                "type":"number"
-                                            },
-                                            "verification_code":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
                 "responses": {
                     "oneOf":[
                         {"allOf":[
                                 {"$ref": "#/components/responses/200/content/application~1json/schema"},
                                 {
                                     "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
+                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
+                                        {"rows": ""}
                                     ]
                                 }
                             ]
@@ -5259,7 +5108,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server.iam.iamUserUpdate",
+                "operationId": "server.iam.iamAuthenticateUserUpdate",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -5318,6 +5167,77 @@
                                     "allOf":[
                                             {"$ref": "#/components/schema/SuccessResponseSingleResource"},
                                             {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/admin/v1/server-iam/iam_user": {
+            "get": {
+                "summary": "",
+                "operationId": "server.iam.iamUserGetAdmin",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "name":"sort",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        },
+                        {
+                            "name":"order_by",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        },
+                        {
+                            "name":"search",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "string"
+                            }    
+                        },
+                        {
+                            "name":"offset",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        },
+                        {
+                            "name":"limit",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        }
+                ],
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                        {"$ref": "#/components/schema/SuccessReponsePagination/properties"},
+                                        {"rows": ""}
                                     ]
                                 }
                             ]
@@ -5555,7 +5475,7 @@
                 }
             }
         },
-        "/bff/app_id_signup/v1/server-db/user_account-signup": {
+        "/bff/app_id_signup/v1/server-iam/iam_user": {
             "post": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserSignup",
@@ -5672,10 +5592,10 @@
                 }
             }
         },
-        "/bff/iam_admin/v1/server-iam-login": {
+        "/bff/iam/v1/server-iam-login": {
             "post": {
                 "summary": "",
-                "operationId": "server.iam.iamAuthenticateAdmin",
+                "operationId": "server.iam.iamAuthenticateUser",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
@@ -5728,165 +5648,6 @@
                             }
 			            },
                 "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/iam_user/v1/server-iam-login": {
-            "post": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUser",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "username":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "required":true,
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "description":"Also returns error 401 if server parameter is not ENABLE_USER_LOGIN=1",
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/201/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/iam_provider/v1/server-iam-login/${resource_id_number}": {
-            "post": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserProvider",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBasic"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db user_account.identity_provider_id",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_idtoken",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "identity_provider_id":{
-                                                "type":"number"
-                                            },
-                                            "avatar":{
-                                                "type":"string"
-                                            },
-                                            "provider_id":{
-                                                "type":"string"
-                                            },
-                                            "provider_first_name":{
-                                                "type":"string"
-                                            },
-                                            "provider_last_name":{
-                                                "type":"string"
-                                            },
-                                            "provider_image":{
-                                                "type":"string"
-                                            },
-                                            "provider_image_url":{
-                                                "type":"string"
-                                            },
-                                            "provider_email":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "description":"Also returns error 401 if server parameter is not ENABLE_USER_LOGIN=1",
                     "oneOf":[
                         {"allOf":[
                                 {"$ref": "#/components/responses/201/content/application~1json/schema"},

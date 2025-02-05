@@ -31,7 +31,6 @@
  *  CommonCountryType
  *  CommonProfileUser
  *  CommonProfileStatRecord
- *  CommonProvider
  *  CommonProfileSearchRecord
  *  CommonMasterObjectType
  * 
@@ -182,7 +181,6 @@
  *              admin_first_time:number|null,
  *              admin_only:number|null,
  *              user_account_id:number|null,
- *              user_account_username:string|null,
  *              client_latitude:string,
  *              client_longitude:string,
  *              client_place:string,
@@ -285,7 +283,7 @@
 
 /**
  * @description Type CommonRESTAPIMethod
- * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'|'IAM_ADMIN'|'IAM_PROVIDER'|'IAM_USER'} CommonRESTAPIAuthorizationType
+ * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'|'IAM'} CommonRESTAPIAuthorizationType
  */
 
 
@@ -472,12 +470,6 @@
  *              date_created:string|null,
  *              username:string|null, 
  *              avatar:string|null,
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_last_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
  *              count_following:number|null,
  *              count_followed:number|null,
  *              count_likes:number|null,
@@ -489,16 +481,12 @@
 
 /**
  * @description Type CommonProfileStatRecord
- * @typedef {{id:number, username:string, avatar:string|null, provider_image: string|null, count:number}}   CommonProfileStatRecord
- */
-/**
- * @description Type CommonProvider
- * @typedef {{id:number, provider_name:string}} CommonProvider
+ * @typedef {{id:number, username:string, avatar:string|null, count:number}}   CommonProfileStatRecord
  */
 
 /**
  * @description Type CommonProfileSearchRecord
- * @typedef {{id:number, avatar:string, provider_image:string, username:string}} CommonProfileSearchRecord
+ * @typedef {{id:number, avatar:string, username:string}} CommonProfileSearchRecord
  */
  
 /** 
@@ -576,4 +564,23 @@
  * @typedef {import('./common/public/modules/vue/vue.esm-browser.js')} CommonModuleVue
  */
 
+/**
+ * @description Type CommonIAMUser
+ * @typedef {{  id:number, 
+ *              username:string, 
+ *              password:string, 
+ *              password_reminder:string|null, 
+ *              type: 'ADMIN'|'USER', 
+ *              bio:string|null, 
+ *              private:number|null, 
+ *              email:string|null, 
+ *              email_unverified:string|null, 
+ *              avatar:string|null,
+ *              user_level:number|null, 
+ *              verification_code?: number|null, 
+ *              status:number|null, 
+ *              active:number,
+ *              created:string, 
+ *              modified:string}} CommonIAMUser
+ */
  export {};

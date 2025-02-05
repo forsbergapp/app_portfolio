@@ -8,16 +8,15 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
-<Column name="id" id="4E4186C5-8808-08CF-C4D6-DEBC77828116">
+<Column name="id" id="B9A82B48-5B54-90A2-6E38-A75563F07C00">
 <createdBy>admin</createdBy>
-<createdTime>2024-08-08 15:58:57 UTC</createdTime>
-<generatorID>D11F114B-9052-FB23-A4E5-2A7EB6823540</generatorID>
+<createdTime>2025-02-04 12:18:23 UTC</createdTime>
+<generatorID>A028F8AE-2874-B058-F3DA-38793B0FBE2F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
 <autoIncrementColumn>true</autoIncrementColumn>
 <identityColumn>true</identityColumn>
 <defaultOntNull>true</defaultOntNull>
@@ -63,6 +62,18 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="avatar" id="3D220786-434F-B374-BDF2-10BB003E1971">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:12:32 UTC</createdTime>
+<generatorID>59BDC355-2C1A-1BC8-8C05-88F7C55ECCED</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="user_level" id="72C6171D-C807-45E6-03ED-A9B48AC33903">
 <createdBy>admin</createdBy>
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
@@ -74,6 +85,18 @@
 <logicalDatatype>LOGDT019</logicalDatatype>
 <dataTypePrecision>1</dataTypePrecision>
 <ownDataTypeParameters>,1,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="iam_user_id" id="EAE49D5D-7CBD-A691-A006-276D634CD459">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:12:32 UTC</createdTime>
+<generatorID>2E15A016-9ADD-FCB8-BF2F-0E5EB285CC3C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 <Column name="date_created" id="77419BEB-CB94-49E7-2C51-38AD031A26C1">
@@ -100,188 +123,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="password" id="858FAAA9-506A-47A8-9923-784B8BE833FC">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>4D7E1AD5-5128-9F1C-5389-5DECF3E0428B</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>500</dataTypeSize>
-<ownDataTypeParameters>500,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="password_reminder" id="26790CD9-7D74-56C7-05A9-A716457ED1A8">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>FA45C9E1-515B-F7E3-8A1F-8989B31CEE5D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="email" id="FB8A16B6-EBE2-5962-9B04-13F589B1945F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>C5819CE9-C386-CDAE-9F60-D4E931775060</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="email_unverified" id="7EE529EF-4DD1-5573-873A-C39E6F3B962F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>BAC421FE-6699-6CFC-99D8-D6573D7B552A</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="avatar" id="9F3FC380-81AA-0928-6E37-F922647DF3AC">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>1A235E84-6C41-0C93-0CBB-E126AC402A39</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT028</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="verification_code" id="20AEBDA7-13C8-958A-9998-52212912B06D">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>DA6F1D9A-6395-792D-3B2A-6C1055CE6A72</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>6</dataTypeSize>
-<ownDataTypeParameters>6,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="active" id="EACAF03D-B752-18BF-A536-89F6930EBB30">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>ACA1F5AD-4660-AE08-733B-EB62B32BCF9F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT026</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="identity_provider_id" id="D00962D0-C01E-D07A-55F7-4A5AD7DE3E86">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>EBEBC3F6-9796-8430-42D0-D74386673E3D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="B676BBAD-819D-8A81-94B4-B5D79815D5D2" referredColumn="03A83449-F5F3-24A8-8FA3-47E888E26172"/>
-</associations>
-</Column>
-<Column name="provider_id" id="92CF4EFC-93A8-0B3A-6795-0E6A7FE28B64">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>1D51D708-A12E-6266-6567-D4F058D599C2</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="provider_first_name" id="E74B63A3-3176-DA49-DBDF-0C98AFEC5318">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>1D503594-1E05-212F-4F9F-EF9B39C65A2A</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="provider_last_name" id="3E75B8C0-770B-F5EF-AFE9-E55712B11128">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>C81860A7-05AC-BFB5-D36F-EBF79A212B2D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="provider_image" id="773455FC-2EA0-929D-473C-8999D2CC986F">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>219FD3C3-CE60-53A3-2531-A28D8F6E2236</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT028</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="provider_image_url" id="9709D783-B45F-E9CB-642C-01DDE101ACAD">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>77FC5C63-CBB2-E680-B151-293689BF1624</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="provider_email" id="FF5C42C9-1174-CC9C-4776-3BB40754A6E4">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>379EED39-7783-C7B6-316F-1DA212CA2A36</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>1000</dataTypeSize>
-<ownDataTypeParameters>1000,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="230AEEF5-9A90-BF94-6042-5C8D38708798" name="user_account_PK">
@@ -293,29 +134,7 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="4E4186C5-8808-08CF-C4D6-DEBC77828116"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="0CEB15F4-8A9F-B811-B39A-72894A3218F1" name="user_account_email_UN">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>2E13C833-354C-96ED-5CD2-D7A89A4ABD18</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="FB8A16B6-EBE2-5962-9B04-13F589B1945F"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="7EBB7A18-AC30-D038-88F4-7ADC7DCF1A6F" name="user_account_provider_id_UN">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:38:15 UTC</createdTime>
-<generatorID>B5A8871B-9120-F646-6C4F-ED68254C06C8</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="92CF4EFC-93A8-0B3A-6795-0E6A7FE28B64"/>
+<colUsage columnID="B9A82B48-5B54-90A2-6E38-A75563F07C00"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="A048C95B-47FC-7FD5-5549-96E9BB11397E" name="user_account_username_UN">
@@ -327,17 +146,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="8B447387-4E64-ED95-2993-BDC63FFCBCFC"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="3C762A3F-615A-296F-B87C-B66A61B0D806" name="user_account_identity_provider_FK">
-<createdBy>admin</createdBy>
-<createdTime>2022-11-30 18:53:20 UTC</createdTime>
-<generatorID>FBE6B042-CBB0-2DCD-99C9-BF6CF7D5B847</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="D00962D0-C01E-D07A-55F7-4A5AD7DE3E86"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

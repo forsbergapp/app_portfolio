@@ -78,41 +78,17 @@ const iamAuthenticateAccessVerificationToken = (req, res, next) => iamService.ia
 const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateExternal('APP_EXTERNAL', req.body, res, next);    
 
 /**
- * @name iamAuthenticateAdmin
- * @description Middleware authenticates IAM Admin
+ * @name iamAuthenticateIAM
+ * @description Middleware authenticates IAM login
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAuthenticateAdmin = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_ADMIN', req.headers.authorization, req.headers.host, req.ip, res, next);
-
-/**
- * @name iamAuthenticateUser
- * @description Middleware authenticates IAM User
- * @function
- * @param {server_server_req} req
- * @param {server_server_res} res
- * @param {function} next
- * @returns {Promise.<void>}
- */
-const iamAuthenticateUser = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_USER', req.headers.authorization, req.headers.host, req.ip, res, next);
-
- /**
-  * @name iamAuthenticateProvider
-  * @description Middleware authenticates IAM Provider
-  * @function
-  * @param {server_server_req} req
-  * @param {server_server_res} res
-  * @param {function} next
-  * @returns {Promise.<void>}
-  */
-const iamAuthenticateProvider = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_PROVIDER', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIAM = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 export{ iamAuthenticateIdToken, iamAuthenticateIdTokenRegistration,
         iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, iamAuthenticateAccessVerificationToken,
         iamAuthenticateExternal,
-        iamAuthenticateAdmin, 
-        iamAuthenticateUser,
-        iamAuthenticateProvider};
+        iamAuthenticateIAM};

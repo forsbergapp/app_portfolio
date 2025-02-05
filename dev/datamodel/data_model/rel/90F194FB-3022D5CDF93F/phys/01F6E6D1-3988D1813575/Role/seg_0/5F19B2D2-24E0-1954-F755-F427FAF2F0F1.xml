@@ -6,6 +6,27 @@
 <password>05EECCF20BD5D78616A1824A69415237D8</password>
 <privileges>CONNECT, CREATE SESSION, RESOURCE</privileges>
 <permissions>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions100" id="B2A2C811-AB32-02C0-63BA-3720896AA6DF">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:21:59 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
+<table>A82B58CE-FACD-8E9F-3709-B3EA41B17708</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions101" id="C679B414-6CA8-EB15-7431-2BAF25D9E128">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:22:20 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
+<table>96106FE8-0E4E-F978-9419-AD8855B65ECD</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions102" id="7810819E-C84E-98B5-3642-173E22733C95">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:22:43 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
+<table>C0B922A5-C5EB-270D-4DF9-84A47A818F39</table>
+</Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions159" id="87E28653-D965-0F1B-28E0-3F40D1846AA4">
 <createdBy>admin</createdBy>
 <createdTime>2023-12-12 04:40:33 UTC</createdTime>
@@ -80,7 +101,6 @@
 <createdTime>2022-02-15 10:18:11 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT, INSERT</privileges>
-<table>4712657F-C660-872D-808A-3EEF6D219188</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions191" id="615442DF-B606-B27C-43D9-FE72B749778A">
 <createdBy>admin</createdBy>
@@ -93,14 +113,12 @@
 <createdTime>2022-02-15 10:18:11 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>BDD29AB2-AEFB-E067-5F20-F3F7E35C9DA8</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions193" id="DEA4E7B3-885F-15D3-F8BC-91B8CD17FD7D">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-15 10:18:11 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>E0BFC0FB-6A04-AF57-C09C-B646EB22AFCF</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions194" id="4421D35E-17E8-D48A-BAEF-9AFE43FF0ABA">
 <createdBy>admin</createdBy>
@@ -186,14 +204,12 @@
 <createdTime>2022-02-15 10:18:11 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
-<table>1261D682-9179-EB0C-B31C-AADA24E3C270</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions209" id="AA84A76E-6F3C-A7A3-6F89-0169D806A375">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-15 10:18:11 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT, INSERT</privileges>
-<table>D574A0C0-146F-D432-A228-D2AF4CA33E43</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions210" id="5227EC2F-7DA8-0156-5A9D-767136628D42">
 <createdBy>admin</createdBy>
@@ -263,14 +279,12 @@
 <createdTime>2022-02-15 19:10:57 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>91E636DF-4E01-9564-B911-C25A7F0796F7</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions229" id="3DD6CE55-8355-754E-D96C-F329EC94778C">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-15 19:10:57 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>74C068CC-1956-89CE-2D5A-904885A4BB93</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions230" id="D928A3B8-4B37-49FF-5364-70F088BC2DAB">
 <createdBy>admin</createdBy>
@@ -317,14 +331,6 @@
 <createdTime>2022-02-15 19:10:57 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>04793015-3F70-F27C-77EA-5B7F125BE62C</table>
-</Permission>
-<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions322" id="8A565527-D986-21CC-E43F-CB719ECA2BB5">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 22:31:38 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
-<table>7E2D629A-E4B5-28E6-A90E-5C1E80965D29</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions327" id="04C49161-5BCF-E2D0-9A10-4631C90A9B14">
 <createdBy>admin</createdBy>
@@ -366,14 +372,12 @@
 <createdTime>2022-07-24 20:19:05 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>26828276-74F3-85BA-8734-5C8ECE071D60</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions357" id="AB855443-AA9B-37DD-3C9D-0B2950C5073C">
 <createdBy>admin</createdBy>
 <createdTime>2022-07-24 20:19:44 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>89A36620-7A81-1AF8-C3AE-20933BE44CD9</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions362" id="005A3BC4-0331-D336-0CC2-ABD846FEFA0F">
 <createdBy>admin</createdBy>
@@ -454,7 +458,48 @@
 <createdTime>2022-11-30 18:56:09 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>SELECT</privileges>
-<table>3A381E3F-F26C-325F-75EA-8034CA61294D</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions94" id="275CA6E0-CA19-5CE3-DEA5-377ACF1BCFD1">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:04:53 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT</privileges>
+<table>308033A3-04AF-9CA5-7455-FD5BC04C9FC9</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions95" id="56CAE5CB-DCCD-490E-0640-8705C9DA2F24">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:05:09 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT</privileges>
+<table>5C0F645F-BD09-1B82-95BF-B444922D2982</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions96" id="4FC0E2C0-18E2-53AA-0317-8BF4085C46CB">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:05:51 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT</privileges>
+<table>265EC0E2-5885-C352-5A4D-742233D0EA29</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions97" id="98F6358F-9232-705F-018A-6E7ACD02AE15">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:06:13 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
+<table>7E2D629A-E4B5-28E6-A90E-5C1E80965D29</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions98" id="56D7CF66-35CA-F210-B4DB-10F00AA4F4D1">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:19:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
+<table>FFC833FE-2E45-DDF3-58B2-39E3794B638F</table>
+</Permission>
+<Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions99" id="4E3E07E9-2382-A805-881E-6733203BB145">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 13:21:27 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<privileges>SELECT, INSERT, DELETE, UPDATE</privileges>
+<table>4CB2D070-5C6F-D215-69F2-6921E895E706</table>
 </Permission>
 </permissions>
 </RoleOraclev10g>

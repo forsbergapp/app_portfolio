@@ -84,10 +84,9 @@
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="60F13F0E-9491-9FAC-F6D8-C568CB8314FE" referredColumn="AF79088E-C04E-DD99-E889-61C0BABA772D"/>
+<colAssociation fkAssociation="669E2A15-B138-8AAA-097F-61C058A74A45" referredColumn="30F6315E-6F05-F9A0-75C9-69DFAFC5E778"/>
 </associations>
 </Column>
 <Column name="user_account_app_app_id" id="A3D9E707-A21E-0397-7A8E-721FF6218993">
@@ -102,7 +101,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="60F13F0E-9491-9FAC-F6D8-C568CB8314FE" referredColumn="E1FDA2F7-F988-CCCC-AC65-D887CE690DA0"/>
+<colAssociation fkAssociation="669E2A15-B138-8AAA-097F-61C058A74A45" referredColumn="C151CEF5-2FAC-5528-4B42-D80240397DC8"/>
 </associations>
 </Column>
 </columns>
@@ -119,9 +118,9 @@
 <colUsage columnID="64F05755-9071-712A-9ADA-0D089FBD0B2E"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="EFF2CD98-9322-84F3-5BD8-7B56D761C78A" name="user_account_app_data_post_user_account_app_FK">
+<ind_PK_UK id="8EE671C1-ACD6-8D36-F67C-C306F008B54F" name="user_account_app_data_post_user_account_app_FK">
 <createdBy>admin</createdBy>
-<createdTime>2022-08-18 13:26:05 UTC</createdTime>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
 <generatorID>E10823FC-1219-9418-A168-8A286653C8FE</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Foreign Key</indexState>

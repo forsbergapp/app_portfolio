@@ -672,10 +672,3 @@ INSERT INTO <DB_SCHEMA/>.language (id, locale) VALUES (1039,'ug-arab');
 INSERT INTO <DB_SCHEMA/>.language (id, locale) VALUES (1040,'uz-arab');
 INSERT INTO <DB_SCHEMA/>.language (id, locale) VALUES (1041,'uz-cyrl');
 INSERT INTO <DB_SCHEMA/>.language (id, locale) VALUES (1042,'uz-latn');
---
--- identity_provider
---
-INSERT INTO <DB_SCHEMA/>.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 0, 'Local', null, null, null, null, null, 1, 0);
-INSERT INTO <DB_SCHEMA/>.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 1, 'Provider 1 REST API', null, null, null, null, null, 2, 0);
-INSERT INTO <DB_SCHEMA/>.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 2, 'Provider 2 REST API', null, null, null, null, null, 3, 0);
-

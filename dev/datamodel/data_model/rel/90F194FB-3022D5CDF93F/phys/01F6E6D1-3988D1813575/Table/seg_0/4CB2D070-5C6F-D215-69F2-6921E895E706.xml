@@ -1,0 +1,56 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="user_account_event" directorySegmentName="seg_0" id="4CB2D070-5C6F-D215-69F2-6921E895E706">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="user_account_id" id="035AE1C2-00B8-B76A-56F1-43D316E8BF0E">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="date_created" id="433F83C7-B351-E064-5744-F8FC846D8142">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="date_modified" id="6D761FCC-2212-32B7-34FB-3A1F97A81A3B">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="event_id" id="A032AB39-B696-0F5B-8E2F-155B23A43A4A">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="event_status_id" id="B0DC58CF-FFBC-5953-89AA-1F969B97ECEF">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_event_event_FK" id="9E88F4E4-5830-B1CD-78A2-05B67E4C0E72">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_event_event_status_FK" id="E559DD6D-1A9F-5340-38CC-5A6F518CC622">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_event_user_account_FK" id="FCA32350-D6E4-C200-5B6F-60F2E8E5D7E2">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:23:03 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+</TableProxyOraclev20c>
