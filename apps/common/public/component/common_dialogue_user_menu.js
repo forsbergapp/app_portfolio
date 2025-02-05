@@ -16,8 +16,7 @@
  *          user_account_id:number|null,
  *          username:string,
  *          admin:string,
- *          countdown:0|1,
- *          function_is_provider_user:function}} props 
+ *          countdown:0|1}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.app_id == props.admin_app_id?
@@ -51,7 +50,7 @@ const template = props =>`  ${props.app_id == props.admin_app_id?
                                     <div id='common_dialogue_user_menu_user_arabic_script_select'></div>
                                 </div>
                             </div>
-                            ${props.app_id == props.admin_app_id || props.username || (props.user_account_id!=null && props.function_is_provider_user())?
+                            ${(props.app_id == props.admin_app_id) || props.username ?
                                 `<div id='common_dialogue_user_menu_logged_in'>
                                     <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
                                     ${props.app_id == props.admin_app_id?
@@ -114,9 +113,6 @@ const component = async props => {
                                                                                     authorization_type:'APP_ID'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
-    const user = (props.data.username || props.data.user_account_id!=null)?await props.methods.commonFFB({path:`/server-db/user_account/${props.data.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS'})
-                                                                .then((/**@type{string}*/result)=>JSON.parse(result))
-                                                                .catch((/**@type{Error}*/error)=>{throw error;}):null;
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
                                                     path:'/app-module/COMMON_LOCALE', 
@@ -125,16 +121,6 @@ const component = async props => {
                                                     body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}
                                                 })
                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const is_provider_user = () =>{
-        if (props.data.user_account_id == parseInt(user.id))
-            return user.identity_provider_id!=null;
-        else {
-            //User not found
-            props.methods.commonMessageShow('INFO', null, null, 'message_text',props.methods.commonMesssageNotAuthorized(), props.data.common_app_id);
-            return null;
-        }
-    };
-    
     const onMounted = async () =>{                                                               
         
         //mount select
@@ -226,8 +212,7 @@ const component = async props => {
                                 user_account_id:props.data.user_account_id,
                                 username:props.data.username,
                                 admin:props.data.admin,
-                                countdown:(props.data.token_exp && props.data.token_iat)?1:0,
-                                function_is_provider_user:is_provider_user
+                                countdown:(props.data.token_exp && props.data.token_iat)?1:0
                             })
     };
 };

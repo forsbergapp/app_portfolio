@@ -1,8 +1,9 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="user_account_app_setting_view" directorySegmentName="seg_0" id="E3B7577B-E6DB-BCBF-9EC1-777C0877E854">
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="user_account_app_data_post_view" directorySegmentName="seg_0" id="E3B7577B-E6DB-BCBF-9EC1-777C0877E854">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
 <partitionedRowMovement>DISABLE</partitionedRowMovement>
 <temporaryChanged>false</temporaryChanged>
 <user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
@@ -20,11 +21,6 @@
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="client_latitude" id="12F95189-03CA-73C6-126E-1A13AA40295D">
-<createdBy>admin</createdBy>
-<createdTime>2023-04-24 10:31:51 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="user_account_app_app_id" id="210C3A0A-001F-B540-57EC-F912311D9271">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
@@ -35,29 +31,24 @@
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="client_longitude" id="B62123E5-5F89-F1D1-6304-81738035BE4D">
-<createdBy>admin</createdBy>
-<createdTime>2023-04-24 10:31:51 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="client_user_agent" id="BF48319D-8C13-ED57-F235-22FB2306AEC8">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="user_account_app_setting_id" id="C91A486C-DF64-4C47-A995-49CAD817A9F2">
+<ColumnProxy name="user_account_app_data_post_id" id="C91A486C-DF64-4C47-A995-49CAD817A9F2">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_setting_view_user_account_app_FK" id="AC39607A-A51E-2AF2-8475-C31F8F892887">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_data_post_view_user_account_app_FK" id="BCCC7F35-217A-D3DD-9408-1E35E70E5D76">
 <createdBy>admin</createdBy>
-<createdTime>2023-04-24 10:31:51 UTC</createdTime>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_setting_view_user_account_app_setting_FK" id="FFE85323-4B8F-2A9D-5C9E-D4AFC1BA955D">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="user_account_app_data_post_view_user_account_app_data_post_FK" id="FFE85323-4B8F-2A9D-5C9E-D4AFC1BA955D">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

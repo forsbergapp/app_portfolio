@@ -1,0 +1,33 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="event_status" directorySegmentName="seg_0" id="5C0F645F-BD09-1B82-95BF-B444922D2982">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:22:30 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="status_name" id="373D3511-F2AA-D805-0F3C-B6309BC1266C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:48:17 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id" id="6F17C32C-6478-5D2D-1B17-E6DA5B7C0A13">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:48:17 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="event_status_PK" id="99055959-7B21-433B-5255-E84F8DD684BC">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-04 12:22:30 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

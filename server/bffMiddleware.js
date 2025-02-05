@@ -204,50 +204,21 @@ const bffAppExternal = (req, res) =>{
     bffService.bff(bff_parameters);
 };
 /**
- * @name bffIAMAdmin
- * @description Backend for frontend (BFF) IAM_ADMIN
+ * @name bffIAM
+ * @description Backend for frontend (BFF) IAM
  * @function
  * @param {server_server_req} req - Request
  * @param {server_server_res} res
  * @returns {*}
  */
-const bffIAMAdmin = (req, res) =>{
+const bffIAM = (req, res) =>{
     /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'IAM_ADMIN', 
-                            ...bffCommon(req, res)
-                            };
-    bffService.bff(bff_parameters);
-};
-/**
- * @name bffIAMUser
- * @description Backend for frontend (BFF) IAM_USER
- * @function
- * @param {server_server_req} req - Request
- * @param {server_server_res} res
- * @returns {*}
- */
- const bffIAMUser = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'IAM_USER', 
-                            ...bffCommon(req, res)
-                            };
-    bffService.bff(bff_parameters);
-};
-/**
- * @name bffIAMProvider
- * @description Backend for frontend (BFF) IAM_PROVIDER
- * @function
- * @param {server_server_req} req - Request
- * @param {server_server_res} res
- * @returns {*}
- */
- const bffIAMProvider = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'IAM_PROVIDER', 
+    const bff_parameters = {endpoint:'IAM', 
                             ...bffCommon(req, res)
                             };
     bffService.bff(bff_parameters);
 };
 
+
 export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppAccessVerification, bffAppExternal, bffAdmin, 
-        bffIAMAdmin, bffIAMUser, bffIAMProvider};
+        bffIAM};

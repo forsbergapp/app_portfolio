@@ -486,7 +486,7 @@ const dbInstallGetFiles = async (install_type) =>{
     /**@type{import('./fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./common.js')} */
-    const {dbCommonRecordErrorAsync} = await import(`file://${process.cwd()}/server/db/common.js`);
+    const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     /**@type{import('./dbModelUserAccount.js')} */
     const {userPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./dbModelUserAccountApp.js')} */
@@ -1097,7 +1097,7 @@ const dbInstallGetFiles = async (install_type) =>{
         return {result:{info: install_result}, type:'JSON'};
     } catch (error) {
         /**@ts-ignore */
-        return error.http?error:dbCommonRecordErrorAsync(parameters.app_id, 500, error);
+        return error.http?error:dbCommonRecordError(parameters.app_id, 500, error);
     }
     
 };
@@ -1119,7 +1119,7 @@ const dbDemoUninstall = async parameters => {
     /**@type{import('./dbModelUserAccount.js')} */
 	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./common.js')} */
-    const {dbCommonRecordErrorAsync} = await import(`file://${process.cwd()}/server/db/common.js`);
+    const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
     return new Promise((resolve)=>{
         userDemoGet(parameters.app_id)
@@ -1154,7 +1154,7 @@ const dbDemoUninstall = async parameters => {
                             fileModelLog.postServerI(`Demo uninstall count: ${deleted_user}`);
                             resolve({result:{info: [{'count': deleted_user}]}, type:'JSON'});
                     })
-                    .catch(error=>error.http?resolve(error):resolve(dbCommonRecordErrorAsync(parameters.app_id, 500, error)));
+                    .catch(error=>error.http?resolve(error):resolve(dbCommonRecordError(parameters.app_id, 500, error)));
                 }
                 else{
                     fileModelLog.postServerI(`Demo uninstall count: ${result_demo_users.result.length}`);

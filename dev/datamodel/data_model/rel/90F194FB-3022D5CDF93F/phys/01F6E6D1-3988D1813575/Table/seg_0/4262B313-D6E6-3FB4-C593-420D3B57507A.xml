@@ -53,10 +53,10 @@
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_data_resource_master_user_account_app_FK" id="B6F0AA46-506B-2F07-62F4-DB47CA9723E2">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_data_resource_master_user_account_app_FK" id="BEF9D486-EBB8-92F5-2C04-F618AD7B9F89">
 <createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:12:43 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<createdTime>2025-02-04 12:25:23 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
 </foreignKeys>
 <primaryKeys>

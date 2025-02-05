@@ -1,4 +1,4 @@
-/** @module server/bff/service */
+/** @module server/bff */
 
 /**
  * @import {server_iam_authenticate_request, server_server_req, server_server_res, server_server_error, server_bff_parameters} from './types.js'

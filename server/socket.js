@@ -34,8 +34,7 @@ let SOCKET_CONNECTED_CLIENTS = [];
  * @returns {Promise.<{  latitude:string,
  *              longitude:string,
  *               place:string,
- *               timezone:string,
- *               identity_provider_id:number|null}>}
+ *               timezone:string}>}
  */
 const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_user_agent, headers_accept_language) =>{
     /**@type{import('./bff.js')} */
@@ -63,15 +62,10 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
                     (result_geodata.city + ', ' +
                     result_geodata.regionName + ', ' +
                     result_geodata.countryName):'';
-    /**@type{import('./db/dbModelUserAccount.js')} */
-    const {getUserByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-    const identity_provider_id = user_account_id?await getUserByUserId({app_id:app_id, resource_id:user_account_id})
-                                                    .then(result=>result.result?.identity_provider_id ?? null):null;
     return {latitude:result_geodata?result_geodata.latitude ?? '':'',
             longitude:result_geodata?result_geodata.longitude ?? '':'',
             place:place,
-            timezone:result_geodata?result_geodata.timezone ?? '':'',
-            identity_provider_id:identity_provider_id};
+            timezone:result_geodata?result_geodata.timezone ?? '':''};
 };
 /**
  * @name socketClientSend
@@ -172,7 +166,6 @@ const socketClientAdd = (newClient) => {
                 connected.connection_date = new Date().toISOString();
                 connected.user_account_id = parameters.user_account_id;
                 connected.token_access = parameters.token_access;
-                connected.identity_provider_id = connectUserData.identity_provider_id;
                 connected.iam_user_id = parameters.iam_user_id;
                 connected.iam_user_username = parameters.iam_user_username;
                 connected.iam_user_type = parameters.iam_user_type;
@@ -299,7 +292,6 @@ const socketClientAdd = (newClient) => {
                     iam_user_username:      client.iam_user_username,
                     iam_user_type:          client.iam_user_type,
                     user_account_id:        client.user_account_id,
-                    identity_provider_id:   client.identity_provider_id,
                     connection_date:        client.connection_date,
                     gps_latitude:           client.gps_latitude ?? '',
                     gps_longitude:          client.gps_longitude ?? '',
@@ -377,25 +369,15 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  * @description Socket connected count
  * @function
  * @memberof ROUTE_REST_API
- * @param {{data:{  identity_provider_id?:string|null,
- *                  logged_in?:string|null}}} parameters
+ * @param {{data:{  logged_in?:string|null}}} parameters
  * @returns {server_server_response & {result?:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
-    const identity_provider_id = serverUtilNumberValue(parameters.data.identity_provider_id);
     const logged_in = serverUtilNumberValue(parameters.data.logged_in);
     if (logged_in == 1)
-        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>   (connected.identity_provider_id == identity_provider_id &&
-                                                        identity_provider_id !=null &&
-                                                        connected.user_account_id != null)||
-                                                        (identity_provider_id ==null &&
-                                                        connected.identity_provider_id ==null &&
-                                                        (connected.user_account_id != null ||connected.iam_user_id != null))).length}, type:'JSON'};
+        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>  connected.iam_user_id != null).length}, type:'JSON'};
     else
-        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>identity_provider_id ==null &&
-                                                    connected.identity_provider_id ==null &&
-                                                    connected.user_account_id ==null &&
-                                                    connected.iam_user_id == null).length}, type:'JSON'};
+        return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>connected.iam_user_id == null).length}, type:'JSON'};
 };
 
 /**
@@ -445,7 +427,6 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
                             authorization_bearer:   parameters.idToken,
                             user_account_id:        user_account_id,
                             token_access:           null,
-                            identity_provider_id:   connectUserData.identity_provider_id,
                             iam_user_id:            iam_user?iam_user.id:null,
                             iam_user_username:      iam_user?iam_user.username:null,
                             iam_user_type:          iam_user?iam_user.type:null,
@@ -509,7 +490,6 @@ const socketExpiredTokensUpdate = () =>{
                 client.user_account_id=null;
                 client.iam_user_type=null;
                 client.iam_user_username=null;
-                client.identity_provider_id=null;
                 client.token_access=null;
                 client.token_admin=null;
                 socketClientSend(client.response, '', 'SESSION_EXPIRED');
