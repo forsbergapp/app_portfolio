@@ -1131,7 +1131,8 @@
                 "summary": "",
                 "operationId": "apps_common_src.common.commonModuleRun",
                 "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
                 ],
                 "parameters": [
                         {"description": "parameters"},
@@ -1158,6 +1159,10 @@
                         },
 			            {
                             "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
                             "required":true
                         },
 			            {

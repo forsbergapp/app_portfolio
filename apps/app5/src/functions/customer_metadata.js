@@ -15,6 +15,7 @@
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_resource_master_get[]}>}
  */

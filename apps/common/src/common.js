@@ -515,7 +515,7 @@ const commonAssetfile = parameters =>{
 
 /**
  * @name commonModuleAsset
- * @description Get asset using commonModuleRun since assets are not using idToken
+ * @description Get asset using commonModuleRun since assets are not using idToken or authorization
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -540,6 +540,7 @@ const commonModuleAsset = async parameters => {
                             host:           '',
                             locale:         parameters.locale,
                             idToken:        '',
+                            authorization:  '',
                             endpoint:       parameters.endpoint});
 };
 /**
@@ -561,6 +562,7 @@ const commonModuleAsset = async parameters => {
  *          host:string,
  *          locale:string,
  *          idToken:string,
+ *          authorization:string,
  *          endpoint:server_bff_endpoint_type}} parameters
  * @returns {Promise.<server_server_response>}
  */
@@ -571,10 +573,10 @@ const commonModuleRun = async parameters => {
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}});
     if (modules.result){
-        if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'){
+        if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
                                                                                                 //APP EXTERNAL only uses id and message keys, add function type
-                                                                                                app.common_type==(parameters.endpoint=='APP_EXTERNAL'?'FUNCTION':parameters.data.type) && 
+                                                                                                app.common_type==(parameters.endpoint=='APP_ACCESS_EXTERNAL'?'FUNCTION':parameters.data.type) && 
                                                                                                 app.common_name==parameters.resource_id && 
                                                                                                 app.common_role == parameters.endpoint)[0];
             if (module){
@@ -584,6 +586,7 @@ const commonModuleRun = async parameters => {
                                             ip:parameters.ip, 
                                             host:parameters.host, 
                                             idToken:parameters.idToken, 
+                                            authorization:parameters.authorization, 
                                             user_agent:parameters.user_agent, 
                                             locale:parameters.locale});
             }

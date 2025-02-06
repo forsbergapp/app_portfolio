@@ -16,6 +16,7 @@
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
@@ -71,6 +72,7 @@ const customerCreate = async parameters =>{
                                             ip:parameters.ip,
                                             host:parameters.host,
                                             idToken:parameters.idToken,
+                                            authorization:parameters.authorization,
                                             locale:parameters.locale})
                         .then(result=>result.http?result:Customer);
             }
