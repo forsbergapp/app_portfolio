@@ -1628,6 +1628,7 @@ const commonUserLogin = async (admin=false) => {
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= (JSON.parse(result_iam).avatar)?
                                                                                                         `url('${JSON.parse(result_iam).avatar}')`:
                                                                                                         'url()';
+            COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',JSON.parse(result_iam).avatar);
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
     
@@ -1724,6 +1725,7 @@ const commonUserLogout = async () => {
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').style.backgroundImage= 'url()';
+        COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img').setAttribute('data-image',null);
         commonWindoInfoClose();
         commonComponentRemove('common_dialogue_iam_verify');
         commonComponentRemove('common_dialogue_iam_edit');

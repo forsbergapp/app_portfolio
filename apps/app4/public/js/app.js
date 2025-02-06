@@ -614,7 +614,16 @@ const appToolbarButton = async (choice) => {
                 if (common.commonMiscMobile())
                     paper.style.display = 'none';
                 settings.style.visibility = 'visible';
-                SettingShow(1);
+                common.commonComponentRender({  
+                    mountDiv:   'settings',
+                    data:       {
+                                user_account_id:common.COMMON_GLOBAL.user_account_id,
+                                avatar:COMMON_DOCUMENT.querySelector('#common_iam_avatar_avatar_img')?.getAttribute('data-image')
+                                },
+                    methods:    {
+                                SettingShow:SettingShow
+                                },
+                    path:       '/component/settings.js'});
                 break;
             }
         //profile
@@ -1038,9 +1047,20 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
  */
 const appUserLogin = async (admin=false) => {
     await common.commonUserLogin(admin)
-    .then(result=>{
+    .then(()=>{
         //create intitial user setting if not exist, send initial=true
-        appUserLoginCommon(result.avatar);
+        appUserSettingFunction('ADD_LOGIN', true)
+        .then(()=>{
+            //Hide settings
+            COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
+            common.commonComponentRemove('common_dialogue_profile');
+            
+            COMMON_DOCUMENT.querySelector('#paper').textContent='';
+            appUserSettingsGet().then(() => {
+                //show default startup
+                appToolbarButton(APP_GLOBAL.app_default_startup_page);
+            });
+        });
     })
     .catch(()=>null);
 };
@@ -1076,34 +1096,7 @@ const appUserLogout = () => {
         });
     });    
 };
-/**
- * @name appUserLoginCommon
- * @description Login common
- * @function
- * @param {string|null} avatar 
- * @returns {void}
- */
-const appUserLoginCommon = avatar => {
-    //create intitial user setting if not exist, send initial=true
-    appUserSettingFunction('ADD_LOGIN', true)
-    .then(()=>{
-        common.commonComponentRender({
-            mountDiv:   'settings_tab_nav_7',
-            data:       {avatar:avatar},
-            methods:    null,
-            path:       '/component/settings_tab_nav_7.js'});
 
-        //Hide settings
-        COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
-        common.commonComponentRemove('common_dialogue_profile');
-        
-        COMMON_DOCUMENT.querySelector('#paper').textContent='';
-        appUserSettingsGet().then(() => {
-            //show default startup
-            appToolbarButton(APP_GLOBAL.app_default_startup_page);
-        });
-    });
-};
 /**
  * @name appUserProfileStatUpdate
  * @description Profile stat update
@@ -1897,7 +1890,7 @@ const appEventClick = event => {
                 }
                 //settings
                 case 'settings_close':{
-                    common.commonComponentRemove('settings_content');
+                    common.commonComponentRemove('settings');
                     if (common.commonMiscMobile())
                         COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
                     COMMON_DOCUMENT.querySelector('#settings').style.visibility = 'hidden';
