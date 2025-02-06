@@ -179,15 +179,19 @@ const appPaymentRequestStatus = ()=>{
     if ( new Date().getSeconds() % 2){
         const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
     
-        common.commonFFB({path:'/app-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ID',   body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, payment_request_id: payment_request_id}})
+        common.commonFFB({path:'/app-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ACCESS_EXTERNAL',   body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
+                common.COMMON_GLOBAL.token_at = null;
                 common.commonComponentRemove('common_dialogue_app_data_display', true);
                 common.commonMessageShow('INFO', null, null, null,status, common.COMMON_GLOBAL.common_app_id);
             }
         })
-        .catch(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
+        .catch(()=>{
+            common.COMMON_GLOBAL.token_at = null;
+            common.commonComponentRemove('common_dialogue_app_data_display', true);
+        });
     }
 };
 /**
@@ -244,7 +248,10 @@ const appPaymentRequest = async () =>{
                         button_delete:appPayCancel
                         },
             path:'/common/component/common_app_data_display.js'})
-            .then(()=>{
+            .then(result=>{
+                //save the returned access token
+                common.COMMON_GLOBAL.token_at = result.data.master_object.token.value;
+
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent = 
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col1[data-key=amount]').nextElementSibling.textContent + ' ' +
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
@@ -265,6 +272,7 @@ const appPaymentRequest = async () =>{
  * @returns {Promise.<void>}
  */
 const appPayCancel = async () =>{
+    common.COMMON_GLOBAL.token_at = null;
     common.commonMessageShow('INFO',null,null,null, 'Payment cancel');
     common.commonComponentRemove('common_dialogue_app_data_display', true);
 };

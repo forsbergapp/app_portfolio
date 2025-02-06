@@ -100,6 +100,7 @@ const iamUtilDecodeVerify = (app_id, token, token_type) =>{
     const verify = jwt.verify(token, token_type=='ADMIN'?
                                         fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET'):
                                             fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
+                                                                                                                    token_type=='APP_ACCESS_EXTERNAL'?'common_app_access_verification_secret':
                                                                                                                     token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
                                                                                                                     'common_app_id_secret']);
     /**@type{server_iam_access_token_claim} */
@@ -926,20 +927,21 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
  */
  const iamAuthenticateUserCommon = async (idToken, scope, authorization, host, ip, res, next) =>{
     const app_id_host = commonAppHost(host);
-    if (idToken && scope && app_id_host !=null){
+    //APP_EXTERNAL and APP_ACCESS_EXTERNALK do not use idToken
+    if ((idToken ||scope=='APP_EXTERNAL' ||scope=='APP_ACCESS_EXTERNAL') && scope && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'));
         try {
             //authenticate id token
-            const id_token_decoded = iamUtilDecodeVerify(app_id_host, idToken, 'APP_ID');
+            const id_token_decoded = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:iamUtilDecodeVerify(app_id_host, idToken, 'APP_ID');
             /**@type{server_db_file_iam_app_id_token}*/
-            const log_id_token = fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_id_token}*/row)=> 
+            const log_id_token = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_id_token}*/row)=> 
                                                                                     row.app_id == app_id_host && row.ip == ip && row.token == idToken
                                                                                     )[0];
-            if (id_token_decoded.app_id == app_id_host && 
-                (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
-                id_token_decoded.ip == ip &&
-                log_id_token){
-                if (scope=='APP_ID')
+            if (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
+                                                (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
+                                                id_token_decoded.ip == ip &&
+                                                log_id_token)){
+                if (scope=='APP_ID' || scope=='APP_EXTERNAL')
                     next();
                 else{
                     //validate scope, app_id and authorization
@@ -1195,6 +1197,7 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
                             path.startsWith('/bff/app_access/v1') ||
                             path.startsWith('/bff/app_access_verification/v1') ||
                             path.startsWith('/bff/app_external/v1') ||
+                            path.startsWith('/bff/app_access_external/v1') ||
                             path.startsWith('/bff/admin/v1') ||
                             path.startsWith('/bff/iam/v1') ||
                             //APP paths
