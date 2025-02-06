@@ -170,7 +170,7 @@
 
 /** 
  * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'SERVER'} server_bff_endpoint_type
+ * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'SERVER'} server_bff_endpoint_type
  */
 
 /**
@@ -473,7 +473,7 @@
  *              'APP_SECRET'|
  *              'APP_TRANSLATION'|
  *              'IAM_APP_ID_TOKEN'|
- *              'IAM_USER_APP_ACCESS'|
+ *              'IAM_APP_ACCESS'|
  *              'IAM_CONTROL_IP'|
  *              'IAM_CONTROL_USER_AGENT'|
  *              'IAM_CONTROL_OBSERVE'|
@@ -553,7 +553,7 @@
 
 /**
  * @descriotn token_type
- * @typedef {'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'} token_type
+ * @typedef {'APP_ID'|server_db_file_iam_app_access_type} token_type
 
 /**
  * @description DB FILE server_db_file_app_module
@@ -561,7 +561,7 @@
  *              app_id: number,
  *              common_type: APP_server_apps_module_common_type,
  *              common_name:string,
- *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'ADMIN'|'',
+ *              common_role:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'',
  *              common_path:string,
  *              common_description:string}} server_db_file_app_module
  */
@@ -723,8 +723,14 @@
  */
 
 /**
- * @description DB FILE server_db_file_iam_user_app_access
- * @typedef {{	id:                     number,
+ * @description server_db_file_iam_app_access_type
+ * @typedef {'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'} server_db_file_iam_app_access_type
+ */
+/**
+ * @description DB FILE server_db_file_iam_app_access
+ * @typedef {{	id?:                    number,
+ *              type:                   server_db_file_iam_app_access_type,
+ *              app_custom_id?:         number|string|null,
  *              iam_user_id:            number,
  *              iam_user_username:      string|null,
  *              user_account_id:        number|null,
@@ -734,23 +740,10 @@
  *   	        token:                  string|null,
  *		        ip:                     string,
  *		        ua:                     string|null,
- *		        created:                string,
- *              modified?:              string}} server_db_file_iam_user_app_access
+ *		        created?:                string,
+ *              modified?:              string}} server_db_file_iam_app_access
  */
-
- /**
-  * @description DB FILE server_db_file_iam_user_app_access_insert
-  * @typedef {{	iam_user_id:            number,
- *              iam_user_username:      string|null,
- *              user_account_id:        number|null,
-  *             app_id:                 number,
-  *             db:                     number|null,
-  *             res:	                0|1|2,          //0=fail, 1=success, 2=invalidated
-  *   	        token:                  string|null,
-  *		        ip:                     string,
-  *		        ua:                     string|null}} server_db_file_iam_user_app_access_insert
-  */
-
+ 
  /** 
  * @description DB FILE server_log_data_parameter_logGet
  * @typedef{object}             server_log_data_parameter_logGet
@@ -1676,7 +1669,7 @@
 
 /**
  * @description IAM server_iam_access_token_claim_scope_type
- * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_CUSTOM'} server_iam_access_token_claim_scope_type
+ * @typedef{'USER'|'APP'|'REPORT'|'MAINTENANCE'|'APP_EXTERNAL'} server_iam_access_token_claim_scope_type
  */
 /**
  * @description IAM server_iam_access_token_claim

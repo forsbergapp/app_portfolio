@@ -175,7 +175,7 @@
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_CREATE",
-        "common_role": "APP_EXTERNAL",
+        "common_role": "APP_ACCESS_EXTERNAL",
         "common_path": "/apps/app5/src/functions/payment_request_create.js",
         "common_description": "PAYMENT REQUEST create"
     },
@@ -184,7 +184,7 @@
         "app_id": 5,
         "common_type": "FUNCTION",
         "common_name": "PAYMENT_REQUEST_GET_STATUS",
-        "common_role": "APP_EXTERNAL",
+        "common_role": "APP_ACCESS_EXTERNAL",
         "common_path": "/apps/app5/src/functions/payment_request_get_status.js",
         "common_description": "PAYMENT REQUEST get status"
     },

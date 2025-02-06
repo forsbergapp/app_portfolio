@@ -63,6 +63,7 @@ const formatLocale = locale =>{
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{locale: string, text:string}[]}>}
  */

@@ -33,10 +33,6 @@
  *              currency_code:  string,
  *              amount:         number|null,
  *              message:        string,
- *              timestamp:      number,
- *              exp:            number,
- *              iat:            number,
- *              token:          string,
  *              json_data?:     string,
  *              status:         string}} payment_request
  */

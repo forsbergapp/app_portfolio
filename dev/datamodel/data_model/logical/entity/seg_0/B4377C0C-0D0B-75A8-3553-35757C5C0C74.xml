@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="IAM_USER_APP_ACCESS">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B4377C0C-0D0B-75A8-3553-35757C5C0C74" name="IAM_APP_ACCESS">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:35:47 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -27,6 +27,17 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="type" id="1B606945-C4F6-068F-D863-CE684B501503">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-06 15:23:26 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="iam_user_id" id="EA2A23E0-2825-946A-ADB7-C0496B665C9C">
 <createdBy>admin</createdBy>
 <createdTime>2024-12-08 16:47:00 UTC</createdTime>
@@ -36,6 +47,7 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
+<nullsAllowed>true</nullsAllowed>
 <referedAttribute>D0D873C1-E83E-4DB8-964C-B4EFCA59A1DE</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -59,6 +71,17 @@
 <shouldEngineer>false</shouldEngineer>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_custom_id" id="8067292A-D14A-B261-40DB-EFAE76A73D5C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-06 15:52:28 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
