@@ -2199,7 +2199,8 @@ const commonFFB = async parameter => {
             break;
         }
         case 'APP_ACCESS':
-        case 'APP_ACCESS_VERIFICATION':{
+        case 'APP_ACCESS_VERIFICATION':
+        case 'APP_ACCESS_EXTERNAL':{
             authorization = `Bearer ${COMMON_GLOBAL.token_at}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
             break;

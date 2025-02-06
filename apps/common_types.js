@@ -283,7 +283,7 @@
 
 /**
  * @description Type CommonRESTAPIMethod
- * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'|'IAM'} CommonRESTAPIAuthorizationType
+ * @typedef{'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'IAM'} CommonRESTAPIAuthorizationType
  */
 
 
@@ -418,7 +418,7 @@
  *              app_id: number,
  *              common_type: 'FUNCTION'|'MODULE'|'REPORT',
  *              common_name:string,
- *              common_role:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|null,
+ *              common_role:'APP_ID'|'APP_ACCESS'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|null,
  *              common_path:string,
  *              common_description:string}}CommonAppModulesRecord
  */

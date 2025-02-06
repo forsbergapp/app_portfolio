@@ -573,10 +573,10 @@ const commonModuleRun = async parameters => {
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}});
     if (modules.result){
-        if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
+        if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
             const module = modules.result.filter((/**@type{server_db_file_app_module}*/app)=>
                                                                                                 //APP EXTERNAL only uses id and message keys, add function type
-                                                                                                app.common_type==(parameters.endpoint=='APP_ACCESS_EXTERNAL'?'FUNCTION':parameters.data.type) && 
+                                                                                                app.common_type==((parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL')?'FUNCTION':parameters.data.type) && 
                                                                                                 app.common_name==parameters.resource_id && 
                                                                                                 app.common_role == parameters.endpoint)[0];
             if (module){

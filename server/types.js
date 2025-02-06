@@ -170,7 +170,7 @@
 
 /** 
  * @description BFF server_bff_endpoint_type
- * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'SERVER'} server_bff_endpoint_type
+ * @typedef {'APP'|'APP_ID'|'APP_ID_SIGNUP'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_EXTERNAL'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'SOCKET'|'IAM'|'SERVER'} server_bff_endpoint_type
  */
 
 /**
