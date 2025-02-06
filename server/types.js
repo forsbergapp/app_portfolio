@@ -1685,6 +1685,7 @@
  *              iam_user_id:            number|null,
  *              iam_user_username:      string|null,
  *              user_account_id:        number|null,
+ *              db:                     number|null, 
  *              ip:                     string,
  *              scope:                  server_iam_access_token_claim_scope_type,
  *              tokentimestamp?:        number}} server_iam_access_token_claim

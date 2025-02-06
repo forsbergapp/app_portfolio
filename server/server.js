@@ -936,24 +936,45 @@ const serverREST_API = async (routesparameters) =>{
         /**
          * Get resource id that all should use '$ref' and match components path
          * All paths should specify required key if this is used for the path
-         * @example {
-                        "$ref": "#/components/parameters/resource_id_number",
-                        "required":false
-                    }
-         * @example {
-                        "$ref": "#/components/parameters/IAM_data_app_id",
-                        "required":true
-                    }
+         * resource_id_number uses /#components/parameters/resource_id_number/in = path
+         * resource_id_string uses /#components/parameters/resource_id_string/in = path
+         * all other IAM keys can be in query, path or in body and will be authenticated in IAM
+         * admin uses resource_id_string or resource_id_number without authentication in IAM
+         * 
+         * Example 1: optional resource id in path and only used in path
+         * @example  {
+         *               "$ref": "#/components/parameters/resource_id_number",
+         *               "required":false
+         *           }
+         * Example 2: required resource id in path and only used in path
+         * @example  {
+         *               "$ref": "#/components/parameters/resource_id_number",
+         *               "required":true
+         *           }
+         * Example 3: using IAM parameter in query, must specify "in" key since IAM parameters can be used as query or path
+         * @example  {
+         *               "$ref": "#/components/parameters/IAM_data_app_id",
+         *               "in":   "query"
+         *           }
+         * Example 4: using IAM parameter in path, must specify "in" key since IAM parameters can be used as query or path
+         * @example  {
+         *               "$ref": "#/components/parameters/IAM_data_app_id",
+         *               "in":   "path"
+         *           }
+         * Example 5: using IAM parameter in body, not necessary to use "in" key since the parameter is inside the requestBody object
+         * @example  {
+         *               "$ref": "#/components/parameters/IAM_data_app_id"
+         *           }
          * @param{string} key
          * @param{boolean} [resource_id]      //if parameter is used as resource_id
          * @returns {*}
          */
         const getParameter = (key, resource_id = false) => methodObj.parameters.filter((/**@type{*}*/parameter)=>
                                                                 resource_id?
-                                                                    Object.keys(parameter)[0]=='$ref' && 
+                                                                    (Object.keys(parameter)[0]=='$ref' && 
                                                                     Object.keys(parameter)[1]=='in' && 
                                                                     Object.values(parameter)[1]=='path' && 
-                                                                    Object.values(parameter)[0]=='#/components/parameters/' + key:
+                                                                    Object.values(parameter)[0]=='#/components/parameters/' + key):
                                                                         Object.keys(parameter)[0]=='$ref' && Object.values(parameter)[0]=='#/components/parameters/' + key)[0];
         
         const methodObj = configPath[1][routesparameters.method.toLowerCase()];
