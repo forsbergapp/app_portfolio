@@ -1021,7 +1021,7 @@ const serverREST_API = async (routesparameters) =>{
                                                     serverUtilNumberValue(parametersData.IAM_data_app_id);
                     delete parametersData.IAM_data_app_id;
                 }
-                if (parametersData.IAM_user_acount_id != null){
+                if (parametersData.IAM_user_account_id != null){
                     parametersData.user_account_id = serverUtilNumberValue(parametersData.IAM_user_account_id);
                     delete parametersData.IAM_data_app_id;
                 }
