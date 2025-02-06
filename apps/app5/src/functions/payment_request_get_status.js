@@ -70,14 +70,16 @@ const paymentRequestGetStatus = async parameters =>{
             const payment_request = payment_requests.filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0];
             /**@type{*} */
             const token_verify = jwt.verify(payment_request.token, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
-            /**@type{{app_custom_id:number, ip:string, scope:string}} */
+            /**@type{{app_custom_id:number, app_id:number, ip:string, scope:string}} */
             const authenticate_token = {
                 app_custom_id:  token_verify.app_custom_id,
+                app_id:         token_verify.app_id,
                 ip:             token_verify.ip,
                 scope:          token_verify.scope
             };
             if (payment_request && (((payment_request.exp ?? 0) * 1000) - Date.now())>0 &&
                 authenticate_token.app_custom_id == payment_request.payerid && 
+                authenticate_token.app_id == payment_request.app_id && 
                 authenticate_token.scope == 'APP_CUSTOM' && 
                 authenticate_token.ip == parameters.ip){
                     /**

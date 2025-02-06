@@ -1283,9 +1283,9 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
                                                 [APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.text_footer_3_text,null]
                                                 ]})==true){
         
-        const body = {    description:        APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
-                        json_data:          APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
-                        user_account_id:    common.COMMON_GLOBAL.user_account_id
+        const body = {  description:            APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
+                        json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                        IAM_user_account_id:    common.COMMON_GLOBAL.user_account_id
                     };
         /**@type {CommonRESTAPIMethod}*/
         let method;
