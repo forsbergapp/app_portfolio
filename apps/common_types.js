@@ -581,6 +581,7 @@
  *              status:number|null, 
  *              active:number,
  *              created:string, 
- *              modified:string}} CommonIAMUser
+ *              modified:string,
+ *              last_logintime?:string}} CommonIAMUser
  */
  export {};
