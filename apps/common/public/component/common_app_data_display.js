@@ -201,7 +201,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_post:function,
  *                      button_delete:function}}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
- *                      data:null,
+ *                      data:{master_object:*},
  *                      methods:null,
  *                      template:string}>}
  */
@@ -327,7 +327,7 @@ const component = async props => {
     };
     return {
         lifecycle:  {onMounted:onMounted},
-        data:       null,
+        data:       {master_object:master_object},
         methods:    null,
         template:   template({
                             display_type:props.data.display_type,

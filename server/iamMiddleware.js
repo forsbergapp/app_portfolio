@@ -68,14 +68,25 @@ const iamAuthenticateAccessVerificationToken = (req, res, next) => iamService.ia
 
 /**
  * @name iamAuthenticateExternal
- * @description Middleware authenticates external request
+ * @description Middleware authenticates app external request without token
  * @function
  * @param {server_server_req} req
  * @param {server_server_res} res
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAuthenticateAccessExternal = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'APP_ACCESS_EXTERNAL', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateExternal = (req, res, next) => iamService.iamAuthenticateUserCommon('', 'APP_EXTERNAL', req.headers.authorization, req.headers.host, req.ip, res, next);
+
+/**
+ * @name iamAuthenticateAccessExternal
+ * @description Middleware authenticates app access external request with token
+ * @function
+ * @param {server_server_req} req
+ * @param {server_server_res} res
+ * @param {function} next
+ * @returns {Promise.<void>}
+ */
+const iamAuthenticateAccessExternal = (req, res, next) => iamService.iamAuthenticateUserCommon('', 'APP_ACCESS_EXTERNAL', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateIAM
@@ -90,5 +101,5 @@ const iamAuthenticateIAM = (req, res, next)  => iamService.iamAuthenticateUserCo
 
 export{ iamAuthenticateIdToken, iamAuthenticateIdTokenRegistration,
         iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, iamAuthenticateAccessVerificationToken,
-        iamAuthenticateAccessExternal,
+        iamAuthenticateExternal, iamAuthenticateAccessExternal,
         iamAuthenticateIAM};

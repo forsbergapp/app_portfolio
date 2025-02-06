@@ -562,7 +562,8 @@ const serverUtilAppLine = () =>{
  *              /bff/app_id_signup/v1*                      post    iamMiddleware.iamAuthenticateIdTokenRegistration        bffAppIdSignup
  *              /bff/app_access/v1*                         all     iamMiddleware.iamAuthenticateAccessToken                bffAppAccess
  *              /bff/app_access_verification/v1*            all     iamMiddleware.iamAuthenticateAccessVerificationToken    bffAppAccessVerification
- *              /bff/app_external/v1/app-module*            post    iamMiddleware.iamAuthenticateExternal                   bffAppExternal
+ *              /bff/app_external/v1*                       post    iamMiddleware.iamAuthenticateExternal                   bffAppExternal
+ *              /bff/app_access_external/v1*                post    iamMiddleware.iamAuthenticateAccessExternal             bffAppAccessExternal
  *              /bff/admin/v1*                              all     iamMiddleware.iamAuthenticateAdminAccessToken           bffAdmin
  *              /bff/iam/v1*                                post    iamMiddleware.iamAuthenticateIAM                        bffIAM
  *	            *	                                        get	                                                            bffApp		    app asset
@@ -621,6 +622,7 @@ const serverUtilAppLine = () =>{
     app.route('/bff/app_id_signup/v1*').post                    (iamMiddleware.iamAuthenticateIdTokenRegistration,    bff.bffAppIdSignup);
     app.route('/bff/app_access/v1*').all                        (iamMiddleware.iamAuthenticateAccessToken,            bff.bffAppAccess);
     app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,bff.bffAppAccessVerification);
+    app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,               bff.bffAppExternal);
     app.route('/bff/app_access_external/v1/*').post             (iamMiddleware.iamAuthenticateAccessExternal,         bff.bffAppAccessExternal);
     app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,       bff.bffAdmin);
     app.route('/bff/iam/v1/server-iam-login').post              (iamMiddleware.iamAuthenticateIAM,                    bff.bffIAM);
@@ -707,6 +709,13 @@ const serverJs = async () => {
                     req.route.path = '/bff/app_access_verification/v1*';
                     await iamMiddleware.iamAuthenticateAccessVerificationToken(req, res, () =>
                         bff.bffAppAccessVerification(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':{
+                    req.route.path = '/bff/app_external/v1*';
+                    iamMiddleware.iamAuthenticateExternal(req, res, () =>
+                        bff.bffAppExternal(req, res)
                     );
                     break;
                 }
@@ -1156,11 +1165,11 @@ const serverStart = async () =>{
     const https = await import('node:https');
 
     process.env.TZ = 'UTC';
-    process.on('uncaughtException', (err) =>{
+    process.on('uncaughtException', err =>{
         console.log(err);
         fileModelLog.postServerE('Process uncaughtException: ' + err.stack);
     });
-    process.on('unhandledRejection', (reason) =>{
+    process.on('unhandledRejection', reason =>{
         console.log(reason);
         fileModelLog.postServerE('Process unhandledRejection: ' + reason);
     });
