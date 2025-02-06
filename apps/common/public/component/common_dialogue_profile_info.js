@@ -21,7 +21,7 @@ const template = props =>`  <div id='common_profile_main'>
                                         <div id='common_profile_id'>${props.profile.id}</div>
                                         <div id='common_profile_avatar_container'>
                                             <div id='common_profile_avatar_image'>
-                                                <div id='common_profile_avatar' class='common_image common_image_avatar_profile'></div>
+                                                <div id='common_profile_avatar' class='common_image common_image_avatar_profile' style='${props.profile.avatar==null?'':`background-image:url(${props.profile.avatar});`}'></div>
                                             </div>
                                             <div id='common_profile_avatar_online_status' class='common_icon'></div>
                                         </div>
@@ -134,37 +134,30 @@ const component = async props => {
    
     const onMounted = async () => {
         
-        if (props.data.user_account_id_other == null && props.data.user_account_id == null && props.data.username == null) {
-            null;
+        props.methods.commonModuleEasyQRCODECreate('common_profile_qr', props.methods.commonWindowHostname() + '/' + profile.username);
+        //User account followed and liked
+        if (profile.followed == 1) {
+            //followed
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
         } else {
-            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_avatar').style.backgroundImage= profile.avata?
-                                                                                                    `url('${profile.avatar}')`:
-                                                                                                    'url()'; 
-            props.methods.commonModuleEasyQRCODECreate('common_profile_qr', props.methods.commonWindowHostname() + '/' + profile.username);
-            //User account followed and liked
-            if (profile.followed == 1) {
-                //followed
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'none';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'block';
-            } else {
-                //not followed
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
-            }
-            if (profile.liked == 1) {
-                //liked
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
-            } else {
-                //not liked
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
-                props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
-            } 
-            if (props.data.user_account_id ==null)
-                props.methods.commonWindowSetTimeout(()=> {props.methods.commonDialogueShow('LOGIN');}, 2000);
-            else
-                props.methods.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
+            //not followed
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_follow').style.display = 'block';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_follow .common_user_followed').style.display = 'none';
         }
+        if (profile.liked == 1) {
+            //liked
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'none';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'block';
+        } else {
+            //not liked
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_unlike').style.display = 'block';
+            props.methods.COMMON_DOCUMENT.querySelector('#common_profile_like .common_like').style.display = 'none';
+        } 
+        if (props.data.user_account_id ==null)
+            props.methods.commonWindowSetTimeout(()=> {props.methods.commonDialogueShow('LOGIN');}, 2000);
+        else
+            props.methods.commonSocketConnectOnlineCheck('common_profile_avatar_online_status', profile.id);
     };
 
     return {

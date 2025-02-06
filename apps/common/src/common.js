@@ -166,7 +166,7 @@ const commonAppStart = async (app_id=null) =>{
         const DB_START = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
         const APP_START = fileModelAppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_start.value=='1';
         const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).result[0][`service_db_db${db_use}_app_user`];
-        const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>app_id?result.result[0].installed:true).catch(()=>false);
+        const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>result.result[0].installed).catch(()=>false);
         if (NO_MAINTENANCE && DB_START && APP_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
             if (app_id == null)
                 return true;
@@ -246,7 +246,7 @@ const commonGeodata = async parameters =>{
     const result_gps = await bffServer(parameters.app_id, parametersBFF)
     .catch(()=>null);
     const result_geodata = {};
-    if (result_gps.result){
+    if (result_gps?.result){
         result_geodata.latitude =   result_gps.result.latitude;
         result_geodata.longitude=   result_gps.result.longitude;
         result_geodata.place    =   result_gps.result.city + ', ' +
@@ -772,6 +772,7 @@ const commonAppReportQueue = async parameters =>{
         const result_post = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                             {
                                                             type:'REPORT',
+                                                            /**@ts-ignore */
                                                             iam_user_id:user.id,
                                                             app_module_id:parameters.resource_id,
                                                             name:report.result[0].common_name,
