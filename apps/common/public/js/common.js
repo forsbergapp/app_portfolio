@@ -1980,7 +1980,7 @@ const commonUserForgot = async () => {
  * @returns {Promise.<boolean>}
  */
 const commonUserAuthenticateCode = async (verification_code, verification_type) => {
-    return await commonFFB({ path:`/server-db/user_account-activate/${COMMON_GLOBAL.user_account_id ?? ''}`, 
+    return await commonFFB({ path:`/server-db/user_account-activate/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
                 method:'PUT', 
                 authorization_type:'APP_ACCESS_VERIFICATION', 
                 body:{   verification_code:  verification_code,

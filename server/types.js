@@ -1836,7 +1836,6 @@
  * @property {function} on
  * @property {function} write
  * @property {function} flush           - Used for SSE
- * @property {function} set
  * @property {function} writeHead
  * @property {string}   _header         --user for response compression
  * @property {function} _implicitHeader --used for response compression

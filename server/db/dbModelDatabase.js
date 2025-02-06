@@ -5,7 +5,7 @@
  *          server_db_file_app_secret,
  *          server_db_sql_parameter_user_account_view_insertUserAccountView,
  *          server_db_sql_parameter_user_account_app_data_post_createUserPost, server_server_error, 
- *          server_db_sql_parameter_user_account_create, server_db_database_demo_user,
+ *          server_db_sql_parameter_user_account, server_db_file_iam_user,server_db_database_demo_user,
  *          server_db_database_uninstall_database_script,server_db_database_uninstall_database_app_script,
  *          server_db_database_install_uninstall_result, server_db_database_install_db_check,
  *          server_db_database_install_database_app_user_script, server_db_db_pool_parameters,
@@ -358,8 +358,8 @@ const dbInstallGetFiles = async (install_type) =>{
                         {app_id: parameters.app_id},
                         DBA, 
                         null)
-                        .then(()=>{
-                            return {result:[{installed: 1}], type:'JSON'};
+                        .then((result)=>{
+                            return {result:[{installed: result.http?0:1}], type:'JSON'};
                         })
                         .catch(()=>{        
                             return {result:[{installed: 0}], type:'JSON'};
@@ -469,10 +469,28 @@ const dbInstallGetFiles = async (install_type) =>{
 /**
  * @name dbDemoInstall
  * @description Install demo users and sends server side events of progress
- *              Creates user settings and imports images to base64 format
- *              Creates random social records for social types LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
- *              Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
- *              Returns log about records created
+ *              Installation steps:
+ *              1.Create all users (user_level=2) first and update with id
+ *              2.Generate key pairs for each user that can be saved both in resource and apps configuration
+ *              3.Loop users created
+ *                  3A.Generate vpa for each user that can be saved both in resource and apps configuration            
+ *                  3B.Create user_account_app record for all apps except admin
+ *                  3C.Create user posts if any
+ *                  3D.Create app data master records if any
+ *                      3E.Create app data detail records if any
+ *                          3F.Create app data detail data records if any
+ *                  4.Create social record LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
+ *                      4A.Create random sample
+ *                          Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
+ *                      4B.Loop random users group 1
+ *                      4C.Loop random users group 2
+ *                      4D.Create user like
+ *                      4E.Create user view by a user
+ *                      4F.Create user view by anonymous
+ *                      4G.Create user follow
+ *                      4H.Create user account app data post like                        
+ *                      4I.Create user account app data post view
+ *                  5.Return result
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -488,7 +506,9 @@ const dbInstallGetFiles = async (install_type) =>{
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     /**@type{import('./dbModelUserAccount.js')} */
-    const {userPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    /**@type{import('./fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     /**@type{import('./dbModelUserAccountApp.js')} */
     const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
     /**@type{import('./dbModelUserAccountLike.js')} */
@@ -553,35 +573,31 @@ const dbInstallGetFiles = async (install_type) =>{
                  * @returns 
                  */
                 const create_update_id = async demo_user=>{
-                /**@type{server_db_sql_parameter_user_account_create}*/
+                /**@type{server_db_file_iam_user}*/
                     const data_create = {   username:               demo_user.username,
                                             bio:                    demo_user.bio,
                                             avatar:                 demo_user.avatar,
-                                            password:               null,
-                                            password_new:           parameters.data.demo_password ?? '',
+                                            password:               parameters.data.demo_password ?? '',
                                             password_reminder:      null,
                                             email:                  `demo${++email_index}@localhost`,
                                             email_unverified:       null,
                                             active:                 1,
                                             private:                0,
                                             user_level:             2,
-                                            verification_code:      null,
-                                            identity_provider_id:   null,
-                                            provider_id:            null,
-                                            provider_first_name:    null,
-                                            provider_last_name:     null,
-                                            provider_image:         null,
-                                            provider_image_url:     null,
-                                            provider_email:         null,
-                                            admin:                  1
+                                            type:                   'USER',
+                                            verification_code:      null
                                         };
-                    return await userPost(parameters.app_id, data_create)
-                                    .then(result=>{
-                                        if (result.result)
-                                            return result;
-                                        else
-                                            throw result;
-                                    });
+                    //create iam user then database user
+                    return await fileModelIamUser.postAdmin(parameters.app_id,data_create)
+                                 .then(new_iam_user=>new_iam_user.result?
+                                                        dbModelUserAccount.userPost(parameters.app_id, {iam_user_id:new_iam_user.result.insertId })
+                                                            .then(result=>{
+                                                                if (result.result)
+                                                                    return result;
+                                                                else
+                                                                    throw result;
+                                                            }):
+                                                    new_iam_user);
                 };
                 for (const demo_user of demo_users){
                     demo_user.id = await create_update_id(demo_user).then(user=>user.result.insertId);
@@ -695,12 +711,12 @@ const dbInstallGetFiles = async (install_type) =>{
             });
         };
 
-        //create all users first and update with id
+        //1.Create all users first and update with id
         await create_users(demo_users);
         /**@type{server_db_file_app[]}*/
         const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result;
         
-        //generate key pairs for each user that can be saved both in resource and apps configuration
+        //2.Generate key pairs for each user that can be saved both in resource and apps configuration
         //Use same for all demo users since key creation can be slow
         socketAdminSend({   app_id:parameters.app_id, 
                             idToken:parameters.idToken,
@@ -712,7 +728,7 @@ const dbInstallGetFiles = async (install_type) =>{
         const {publicKey, privateKey} = await securityKeyPairCreate();
         const demo_public_key = publicKey;
         const demo_private_key = privateKey;
-        //create user posts
+        //3.Loop users created
         for (const demo_user of demo_users){
             socketAdminSend({   app_id:parameters.app_id, 
                                 idToken:parameters.idToken,
@@ -724,12 +740,13 @@ const dbInstallGetFiles = async (install_type) =>{
                             });
             install_count++;
 
-            //generate vpa for each user that can be saved both in resource and apps configuration
+            //3A.Generate vpa for each user that can be saved both in resource and apps configuration
             const demo_vpa = securityUUIDCreate();
-            //create user_account_app record for all apps except admin
+            //3B.Create user_account_app record for all apps except admin
             for (const app of apps.filter(app=>app.id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))) ){
                 await create_user_account_app(app.id, demo_user.id);
             }
+            //3C.Create user posts if any
             for (const demo_user_account_app_data_post of demo_user.settings){
                 let settings_header_image;
                 //use file in settings or if missing then use filename same as demo username
@@ -822,7 +839,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     }
                 return resource.json_data;
             };
-
+            //3D.Create app data master records if any
             for (const resource_master of demo_user.resource_master ?? []){
                 const data = {  
                                 user_account_id:                                demo_user.id,
@@ -833,6 +850,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                 json_data:                                      await demo_data_update(resource_master)
                 };
                 const master_id = await create_resource_master(parameters.app_id, data);
+                //3E.Create app data detail records if any
                 for (const resource_detail of resource_master.resource_detail ?? []){
                     const data = {  app_data_resource_master_id                     : master_id,
                                     app_data_entity_resource_id                     : resource_detail.app_data_entity_resource_id,
@@ -844,6 +862,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                     json_data                                       : await demo_data_update(resource_detail)
                                     };
                     const detail_id = await create_resource_detail(parameters.app_id, data);
+                    //3F.Create app data detail data records if any
                     for (const resource_detail_data of resource_detail.resource_detail_data ?? []){
                         const data ={   app_data_resource_detail_id             : detail_id,
                                         user_account_id                         : demo_user.id,
@@ -996,6 +1015,7 @@ const dbInstallGetFiles = async (install_type) =>{
                 });
             });
         };
+        //4.Create social record
         for (const social_type of social_types){
             socketAdminSend({   app_id:parameters.app_id, 
                                 idToken:parameters.idToken,
@@ -1005,6 +1025,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                         broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))
                                 }
                             });
+            //4A.Create random sample
             install_count++;
             //select new random sample for each social type
             /**@type{[number]|[]} */
@@ -1016,26 +1037,30 @@ const dbInstallGetFiles = async (install_type) =>{
             while (random_users1.length < sample_amount || random_users2.length < sample_amount){
                 const random_array_index1 = Math.floor(1 + Math.random() * demo_users.length - 1 );
                 const random_array_index2 = Math.floor(1 + Math.random() * demo_users.length - 1 );
-            const random_include_id1 = demo_users[random_array_index1].id;
-            /**@ts-ignore */
+                const random_include_id1 = demo_users[random_array_index1].id;
+                /**@ts-ignore */
                 if (random_users1.length <sample_amount && !random_users1.includes(random_include_id1) ){
+                    /**@ts-ignore */
+                    random_users1.push(demo_users[random_array_index1].id);
+                }
                 /**@ts-ignore */
-                random_users1.push(demo_users[random_array_index1].id);
-            }
-            /**@ts-ignore */
                 if (random_users2.length <sample_amount && !random_users2.includes(demo_users[random_array_index2].id)){
-                /**@ts-ignore */
-                random_users2.push(demo_users[random_array_index2].id);
+                    /**@ts-ignore */
+                    random_users2.push(demo_users[random_array_index2].id);
+                }
             }
-            }
+            //4B.Loop random users group 1
             for (const user1 of random_users1){
+                //4C.Loop random users group 2
                 for(const user2 of random_users2){
                     switch (social_type){
                         case 'LIKE':{
+                            //4D.Create user like
                             await create_likeuser(parameters.app_id, user1, user2);
                             break;
                         }
                         case 'VIEW':{
+                            //4E.Create user view by a user
                             await create_user_account_view(parameters.app_id, 
                                                             {   user_account_id: user1,
                                                                 user_account_id_view: user2,
@@ -1045,6 +1070,7 @@ const dbInstallGetFiles = async (install_type) =>{
                             break;
                         }
                         case 'VIEW_ANONYMOUS':{
+                            //4F.Create user view by anonymous
                             await create_user_account_view(parameters.app_id, 
                                                             {
                                                                 user_account_id: null,
@@ -1055,10 +1081,12 @@ const dbInstallGetFiles = async (install_type) =>{
                             break;
                         }
                         case 'FOLLOWER':{
+                            //4G.Create user follow
                             await create_user_account_follow(parameters.app_id, user1, user2);
                             break;
                         }
                         case 'POSTS_LIKE':{
+                            //4H.Create user account app data post like
                             //pick a random user setting from the user and return the app_id
                             const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].settings;
                             if (user_account_app_data_posts.length>0){
@@ -1069,6 +1097,7 @@ const dbInstallGetFiles = async (install_type) =>{
                         }
                         case 'POSTS_VIEW':
                         case 'POSTS_VIEW_ANONYMOUS':{
+                            //4I.Create user account app data post view
                             //pick a random user setting from the user and return the app_id
                             const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].settings;
                             if (user_account_app_data_posts.length>0){
@@ -1081,6 +1110,7 @@ const dbInstallGetFiles = async (install_type) =>{
                 }
             }
         }
+        //5.Return result
         install_result.push({'user_account': records_user_account});
         install_result.push({'user_account_app': records_user_account_app});
         install_result.push({'user_account_resource_master': records_user_account_resource_master});
@@ -1116,55 +1146,65 @@ const dbDemoUninstall = async parameters => {
     const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('./fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./fileModelIamUser.js')} */
+	const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
     /**@type{import('./dbModelUserAccount.js')} */
-	const {userDemoGet, userDelete} = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+	const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
-    return new Promise((resolve)=>{
-        userDemoGet(parameters.app_id)
-        .then(result_demo_users=>{
-            if (result_demo_users.result){
-                let deleted_user = 0;
-                if (result_demo_users.result.length>0){
-                    const delete_users = async () => {
-                        for (const user of result_demo_users.result){
-                            socketAdminSend({   app_id:parameters.app_id, 
-                                                idToken:parameters.idToken,
-                                                data:{  app_id:null,
-                                                        client_id:socketClientGet(parameters.idToken),
-                                                        broadcast_type:'PROGRESS',
-                                                        broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.result.length, text:user.username}))
-                                                }
-                                            });
-                            await userDelete(parameters.app_id, user.id)
+    const result_demo_users = fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_file_iam_user}*/row)=>row.user_level==2);
+    if (result_demo_users){
+        let deleted_user = 0;
+        if (result_demo_users.length>0){
+            const delete_users = async () => {
+                for (const user of result_demo_users){
+                    socketAdminSend({   app_id:parameters.app_id, 
+                                        idToken:parameters.idToken,
+                                        data:{  app_id:null,
+                                                client_id:socketClientGet(parameters.idToken),
+                                                broadcast_type:'PROGRESS',
+                                                broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))
+                                        }
+                                    });
+                    //delete database user then iam user
+                    const dbUser = await dbModelUserAccount.getIamUser({app_id:parameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        iam_user_id: user.id});
+                    await dbModelUserAccount.userDelete(parameters.app_id,dbUser.result[0]?.id)
                             .then((result)=>{
-                                if (result.result){
-                                    deleted_user++;
-                                    if (deleted_user == result_demo_users.result.length)
-                                        return null;
-                                }
-                                else
-                                    throw result;
-                            });
-                        }
-                    };
-                    delete_users()
-                    .then(()=>{
-                            fileModelLog.postServerI(`Demo uninstall count: ${deleted_user}`);
-                            resolve({result:{info: [{'count': deleted_user}]}, type:'JSON'});
-                    })
-                    .catch(error=>error.http?resolve(error):resolve(dbCommonRecordError(parameters.app_id, 500, error)));
+                                        if (result.result)
+                                            fileModelIamUser.deleteRecordAdmin(parameters.app_id,user.id)
+                                            .then((result)=>{
+                                                if (result.result){
+                                                    deleted_user++;
+                                                    if (deleted_user == result_demo_users.length)
+                                                        return null;
+                                                }
+                                                else
+                                                    throw result;
+                                            });
+                                        else
+                                            throw result;
+                    });
                 }
-                else{
-                    fileModelLog.postServerI(`Demo uninstall count: ${result_demo_users.result.length}`);
-                    resolve({result:{info: [{'count': result_demo_users.result.length}]},type:'JSON'});
-                }
-            }
-            else
-                return result_demo_users;
-        });
-    });
+            };
+            await delete_users().catch(error=>{
+                if (error.http)
+                    throw error;
+                else
+                    throw dbCommonRecordError(parameters.app_id, 500, error);
+                });
+            fileModelLog.postServerI(`Demo uninstall count: ${deleted_user}`);
+            return {result:{info: [{'count': deleted_user}]}, type:'JSON'};
+        }
+        else{
+            fileModelLog.postServerI(`Demo uninstall count: ${result_demo_users.length}`);
+            return {result:{info: [{'count': result_demo_users.length}]},type:'JSON'};
+        }
+    }
+    else
+        return result_demo_users;
 };
 
 /**

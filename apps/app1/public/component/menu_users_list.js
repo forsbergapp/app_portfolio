@@ -19,6 +19,7 @@
 const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
                                 <div data-column='id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('id')}'></div>
+                                <div data-column='type' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('type')}'></div>
                                 <div data-column='active' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('active')}'></div>
                                 <div data-column='status' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('status')}'></div>
                                 <div data-column='user_level' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('user_level')}'></div>
@@ -37,6 +38,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                 `<div data-changed-record='0' data-user_account_id='${user.id}' class='menu_users_list_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
                                     <div data-column='avatar' class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='${user.avatar==null?'':`background-image:url(${user.avatar});`}'></div>
                                     <div data-column='id' class='menu_users_list_col list_readonly'>${user.id}</div>
+                                    <div data-column='type' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.type ?? ''}</div>
                                     <div data-column='active' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.active ?? ''}</div>
                                     <div data-column='status' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.status ?? ''}</div>
                                     <div data-column='user_level' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.user_level ?? ''}</div>
@@ -48,8 +50,8 @@ const template = props => ` <div class='menu_users_list_row'>
                                     <div data-column='password' class='menu_users_list_col common_input list_edit common_input_password' contentEditable='true' placeholder='******'></div>
                                     <div data-column='password_reminder' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.password_reminder ?? ''}</div>
                                     <div data-column='verification_code' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.verification_code ?? ''}</div>
-                                    <div data-column='date_created' class='menu_users_list_col list_readonly'>${user.created ?? ''}</div>
-                                    <div data-column='date_modified' class='menu_users_list_col list_readonly'>${user.modified ?? ''}</div>
+                                    <div data-column='created' class='menu_users_list_col list_readonly'>${user.created ?? ''}</div>
+                                    <div data-column='modified' class='menu_users_list_col list_readonly'>${user.modified ?? ''}</div>
                                 </div>`
                             ).join('')
                             }`;

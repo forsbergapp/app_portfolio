@@ -35,7 +35,7 @@ const get = (app_id, resource_id) =>{
  */
 const post = async (app_id, data) => {
     //check required attributes
-    if (!data.username || !data.password ||
+    if (!data.username || !data.password || !data.type||
         //check not allowed attributes when creating a user
         data.id||data.user_level ||data.verification_code||data.status||data.created||data.modified){
             return dbCommonRecordError(app_id, 400);
@@ -73,6 +73,47 @@ const post = async (app_id, data) => {
         });
     }
 };
+/**
+ * @name postAdmin
+ * @description Add record admin
+ * @function
+ * @param {number} app_id 
+ * @param {server_db_file_iam_user} data
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
+ */
+const postAdmin = async (app_id, data) => {
+    /**@type{import('../security.js')} */
+    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
+    /**@type{server_db_file_iam_user} */
+    const data_new =     {
+                            id:Date.now(),
+                            username:data.username, 
+                            //save encrypted password
+                            password:await securityPasswordCreate(data.password), 
+                            password_reminder:data.password_reminder,
+                            type: data.type, 
+                            bio:data.bio, 
+                            private:data.private, 
+                            email:data.email, 
+                            email_unverified:data.email_unverified, 
+                            avatar:data.avatar,
+                            user_level:data.user_level, 
+                            verification_code: data.verification_code, 
+                            status:data.status, 
+                            active:data.active,
+                            created:new Date().toISOString(), 
+                            modified:new Date().toISOString()
+                    };
+    return fileDBPost(app_id, 'IAM_USER', data_new).then((result)=>{
+        if (result.affectedRows>0){
+            result.insertId=data_new.id;
+            return {result:result, type:'JSON'};
+        }
+        else
+            return dbCommonRecordError(app_id, 404);
+    });
+};
+
 /**
  * @name update
  * @description Update
@@ -260,14 +301,14 @@ const deleteRecord = async (app_id, resource_id, data) => {
 };
                    
 /**
- * @name deleteRecordDemo
- * @description Delete demo record
+ * @name deleteRecordAdmin
+ * @description Delete record admin
  * @function
  * @param {number} app_id
  * @param {number} resource_id
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
-const deleteRecordDemo = async (app_id, resource_id) => {
+const deleteRecordAdmin = async (app_id, resource_id) => {
     /**@type{server_db_file_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
@@ -282,4 +323,4 @@ const deleteRecordDemo = async (app_id, resource_id) => {
         return user;
 };
 
-export {get, post, update, updateVerificationCodeAuthenticate, updateVerificationCodeAdd, updatePassword, deleteRecord, deleteRecordDemo};
+export {get, post, postAdmin, update, updateVerificationCodeAuthenticate, updateVerificationCodeAdd, updatePassword, deleteRecord, deleteRecordAdmin};

@@ -188,10 +188,12 @@ const bffStart = async (req, res) =>{
                             host:bff_parameters.host,
                             route : 'APP',
                             res:bff_parameters.res})
-            .catch(()=>import('../apps/common/src/component/common_server_error.js')
+            .catch((error)=>
+                fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() =>
+                    import('../apps/common/src/component/common_server_error.js')
                         .then(({default:serverError})=>{
                             return {result:serverError({data:null, methods:null}), type:'HTML'};
-                        }));
+                        })));
         }
         else{
             //REST API route
