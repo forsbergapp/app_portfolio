@@ -1296,6 +1296,7 @@ body.rtl{
 .common_profile_detail_list_app_name {
 	width:200px;
 	display:inline-block;
+	text-align: start;
 }
 
 /*Dialogue User Edit*/

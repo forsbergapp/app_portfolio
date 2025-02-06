@@ -43,6 +43,7 @@
 #menu_users_save::before{															content:var(--common_app_icon_save)}
 #menu_users_list .list_title[data-column='avatar']::before{							content:var(--common_app_icon_user_avatar)}
 #menu_users_list .list_title[data-column='id']::before{								content:var(--common_app_icon_provider_id)}
+#menu_users_list .list_title[data-column='type']::before{							content:'TYPE'}
 #menu_users_list .list_title[data-column='active']::before{							content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
 #menu_users_list .list_title[data-column='user_level']::before{						content:'LEVEL'}
 #menu_users_list .list_title[data-column='private']::before{						content:var(--common_app_icon_private)}
@@ -531,7 +532,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 }
 .menu_users_list_row{
 	display:grid;
-	grid-template-columns: 3em 5em 5em 5em 5em 20em 40em 15em 10em 10em 10em 10em 10em 10em 10em 10em 10em 10em 10em 12em 12em 12em;
+	grid-template-columns: 3em 9em 6em 5em 5em 5em 5em 15em 20em 15em 15em 20em 10em 10em 15em 15em;
 }
 .menu_users_iam_user_app_access_row{
 	display:grid;

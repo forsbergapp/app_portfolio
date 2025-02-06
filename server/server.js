@@ -69,49 +69,49 @@ const serverResponse = async parameters =>{
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
-                    parameters.res.set('Cache-Control', app_cache_control);
+                    parameters.res.setHeader('Cache-Control', app_cache_control);
                 parameters.res.type('application/json; charset=utf-8');
                 break;
             }
             case 'HTML':{
                 if (app_cache_control !='')
-                    parameters.res.set('Cache-Control', app_cache_control);
+                    parameters.res.setHeader('Cache-Control', app_cache_control);
                 parameters.res.type('text/html; charset=utf-8');
                 break;
             }
             case 'CSS':{
                 if (app_cache_control !='')
-                    parameters.res.set('Cache-Control', app_cache_control);
+                    parameters.res.setHeader('Cache-Control', app_cache_control);
                 parameters.res.type('text/css; charset=utf-8');
                 break;
             }
             case 'JS':{
                 if (app_cache_control !='')
-                    parameters.res.set('Cache-Control', app_cache_control);
+                    parameters.res.setHeader('Cache-Control', app_cache_control);
                 parameters.res.type('text/javascript; charset=utf-8');
                 break;
             }
             case 'WEBP':{
                 if (app_cache_control !='')
-                    parameters.res.set('Cache-Control', app_cache_control);
+                    parameters.res.setHeader('Cache-Control', app_cache_control);
                 parameters.res.type('image/webp; charset=utf-8');
                 break;
             }
             case 'PNG':{
                 if (app_cache_control !='')
-                    parameters.res.set('Cache-Control', app_cache_control);
+                    parameters.res.setHeader('Cache-Control', app_cache_control);
                 parameters.res.type('image/png; charset=utf-8');
                 break;
             }
             case 'WOFF':{
                 if (app_cache_control_font !='')
-                    parameters.res.set('Cache-Control', app_cache_control_font);
+                    parameters.res.setHeader('Cache-Control', app_cache_control_font);
                 parameters.res.type('font/woff; charset=utf-8');
                 break;
             }
             case 'TTF':{
                 if (app_cache_control_font !='')
-                    parameters.res.set('Cache-Control', app_cache_control_font);
+                    parameters.res.setHeader('Cache-Control', app_cache_control_font);
                 parameters.res.type('text/font/ttf; charset=utf-8');
                 break;
             }

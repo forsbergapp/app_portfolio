@@ -304,57 +304,69 @@ const iamAuthenticateUser = async parameters =>{
                 return verification.result;
             }
             else{
+                /**
+                 * @param {number|null} user_account_id
+                 * @returns {Promise.<server_server_response>}
+                 */
+                const return_result = async user_account_id =>{
+                    //updated info in connected list and then return login result
+                    return await socketConnectedUpdate(parameters.app_id, 
+                        {   idToken:                parameters.idToken,
+                            user_account_id:        null,
+                            /**@ts-ignore */ 
+                            iam_user_id:            user.id,
+                            iam_user_username:      user.username,
+                            /**@ts-ignore */
+                            iam_user_type:          user.type,
+                            token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
+                            token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
+                            ip:                     parameters.ip,
+                            headers_user_agent:     parameters.user_agent,
+                            headers_accept_language:parameters.accept_language})
+                    .then((result_socket)=>{
+                        return  result_socket.http?result_socket:{result:{  iam_user_id:    user.id,
+                                                                            iam_user_name:  user.username,
+                                                                            user_account_id:user_account_id,
+                                                                            //return if account is active
+                                                                            ...(user.active==1 && {bio:  user.bio}),
+                                                                            ...(user.active==1 && {email:  user.email}),
+                                                                            ...(user.active==1 && {avatar:  user.avatar}),
+                                                                            token_at:       jwt_data?jwt_data.token:null,
+                                                                            exp:            jwt_data?jwt_data.exp:null,
+                                                                            iat:            jwt_data?jwt_data.iat:null,
+                                                                            tokentimestamp: jwt_data?jwt_data.tokentimestamp:null,
+                                                                            active:         user.active}, 
+                                                                        type:'JSON'};
+                    });
+                };
                 //user authorized access
-                //create database user if missing
-                /**@type{import('./db/dbModelUserAccount.js')} */
-                const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-                const dbUser = await dbModelUserAccount.getIamUser({app_id:parameters.app_id, 
-                                                                    /**@ts-ignore */
-                                                                    iam_user_id: user.id});
-                if (dbUser.result){
-                    const user_account_id = dbUser.result.length>0?
-                                                dbUser.result[0].id:
-                                                    await dbModelUserAccount.userPost(parameters.app_id, 
-                                                                                        /**@ts-ignore */
-                                                                                        {iam_user_id:user.id})
-                                                            .then(result=>result.http?
-                                                                            result:result.result.insertId);
-                    if (user_account_id.result.http)
-                        return user_account_id;
-                    else{
-                        //updated info in connected list and then return login result
-                        return await socketConnectedUpdate(parameters.app_id, 
-                            {   idToken:                parameters.idToken,
-                                user_account_id:        null,
-                                /**@ts-ignore */ 
-                                iam_user_id:            user.id,
-                                iam_user_username:      user.username,
-                                /**@ts-ignore */
-                                iam_user_type:          user.type,
-                                token_access:           null,
-                                token_admin:            jwt_data?jwt_data.token:null,
-                                ip:                     parameters.ip,
-                                headers_user_agent:     parameters.user_agent,
-                                headers_accept_language:parameters.accept_language})
-                        .then((result_socket)=>{
-                            return  result_socket.http?result_socket:{result:{  iam_user_id:    user.id,
-                                                                                iam_user_name:  user.username,
-                                                                                user_account_id:user_account_id,
-                                                                                //return if account is active
-                                                                                ...(user.active==1 && {bio:  user.bio}),
-                                                                                ...(user.active==1 && {email:  user.email}),
-                                                                                ...(user.active==1 && {avatar:  user.avatar}),
-                                                                                token_at:       jwt_data?jwt_data.token:null,
-                                                                                exp:            jwt_data?jwt_data.exp:null,
-                                                                                iat:            jwt_data?jwt_data.iat:null,
-                                                                                tokentimestamp: jwt_data?jwt_data.tokentimestamp:null,
-                                                                                active:         1}, 
-                                                                            type:'JSON'};
-                        });
+                //return result without database user acount for admin
+                if (parameters.app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID')))
+                    return return_result(null);
+                else{
+                    //create database user if missing
+                    /**@type{import('./db/dbModelUserAccount.js')} */
+                    const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+                    const dbUser = await dbModelUserAccount.getIamUser({app_id:parameters.app_id, 
+                                                                        /**@ts-ignore */
+                                                                        iam_user_id: user.id});
+                    if (dbUser.result){
+                        const user_account_id = dbUser.result.length>0?
+                                                    dbUser.result[0].id:
+                                                        await dbModelUserAccount.userPost(parameters.app_id, 
+                                                                                            /**@ts-ignore */
+                                                                                            {iam_user_id:user.id})
+                                                                .then(result=>result.http?
+                                                                                result:result.result.insertId);
+                        if (user_account_id.result?.http)
+                            return dbUser;
+                        else
+                            return return_result(user_account_id);
+                            
                     }
+                    else
+                        return dbUser;
                 }
-                else
-                    return dbUser;
             }
         }
         else
@@ -378,8 +390,9 @@ const iamAuthenticateUser = async parameters =>{
                             private:            1, 
                             user_level:         null,
                             email:              'admin@localhost', 
-                            email_unverified:   null, 
-                            avatar:             null}, true)
+                            email_unverified:   null,
+                            active:             1, 
+                            avatar:             null})
                     .then(result=>result.http?result:check_user(1, {id:         result.result.insertId,
                                                                     username:   username,
                                                                     password:   password,
@@ -443,11 +456,15 @@ const iamAuthenticateUser = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
+ *          idToken:string,
  *          ip:string,
  *          user_agent:string,
  *          accept_language:string,
  *          locale:string,
- *          data:server_db_file_iam_user}} parameters
+ *          data:{  username:string,
+ *                  password:string,
+ *                  password_reminder:string|null
+ *                  email:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:{
  *                                              token_at:string|null,
  *                                              exp:number,
@@ -457,8 +474,19 @@ const iamAuthenticateUser = async parameters =>{
  *                                              user_account_id: number} }>}
  */
 const iamAuthenticateUserSignup = async parameters =>{
-
-    const new_user = await iamUserPost(parameters.app_id, parameters.data);    
+    /**@type{import('./socket.js')} */
+    const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+    const new_user = await iamUserPost(parameters.app_id, { username:parameters.data.username,
+                                                            password:parameters.data.password,
+                                                            password_reminder:parameters.data.password_reminder,
+                                                            email:parameters.data.email,
+                                                            bio:null,
+                                                            private:0,
+                                                            avatar:null,
+                                                            active:0,
+                                                            //signup process needs verification
+                                                            verification_code:iamUtilVerificationCode(),
+                                                            type:'USER'});
     if (new_user.result){
         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                             'APP_ACCESS_VERIFICATION', 
@@ -480,21 +508,29 @@ const iamAuthenticateUserSignup = async parameters =>{
             ip:                     parameters.ip,
             ua:                     parameters.user_agent};
         await fileModelIamUserAppAccess.post(parameters.app_id, data_body);
-        //save verification code if user account is not active
-        return await fileModelIamUser.updateVerificationCodeAdd(
-                                    parameters.app_id, 
-                                    /**@ts-ignore */
-                                    new_user.result.id, {   verification_code:iamUtilVerificationCode()})
-                    .then(verification=>verification?.result.http?
-                                            verification:
-                                                {result:{
-                                                    token_at:       jwt_data.token,
-                                                    exp:            jwt_data.exp,
-                                                    iat:            jwt_data.iat,
-                                                    tokentimestamp: jwt_data.tokentimestamp,
-                                                    iam_user_id:    new_user.result.id,
-                                                    user_account_id:new_user.result.user_account_id},
-                                                type:'JSON'});
+        //updated info in connected list and then return signup result
+        return await socketConnectedUpdate(parameters.app_id, 
+            {   idToken:                parameters.idToken,
+                user_account_id:        null,
+                /**@ts-ignore */ 
+                iam_user_id:            new_user.result.id,
+                iam_user_username:      parameters.data.username,
+                /**@ts-ignore */
+                iam_user_type:          'USER',
+                token_access:           jwt_data?jwt_data.token:null,
+                token_admin:            null,
+                ip:                     parameters.ip,
+                headers_user_agent:     parameters.user_agent,
+                headers_accept_language:parameters.accept_language})
+        .then(result_socket=>result_socket.result?
+                                {result:{
+                                                token_at:       jwt_data.token,
+                                                exp:            jwt_data.exp,
+                                                iat:            jwt_data.iat,
+                                                tokentimestamp: jwt_data.tokentimestamp,
+                                                iam_user_id:    new_user.result.id,
+                                                user_account_id:new_user.result.user_account_id},
+                                        type:'JSON'}:result_socket);
             
     }
     else
@@ -1145,9 +1181,7 @@ const iamAuthenticateExternal = (endpoint, body, res, next) => {
                             path.startsWith('/bff/app_access_verification/v1') ||
                             path.startsWith('/bff/app_external/v1') ||
                             path.startsWith('/bff/admin/v1') ||
-                            path.startsWith('/bff/iam_admin/v1') ||
-                            path.startsWith('/bff/iam_user/v1') ||
-                            path.startsWith('/bff/iam_provider/v1') ||
+                            path.startsWith('/bff/iam/v1') ||
                             //APP paths
                             path == '/' ||
                             path.startsWith('/js/') ||
@@ -1466,7 +1500,6 @@ const iamUserValidation = data => {
     data.username = data.username ?? null;
     data.bio = data.bio ?? null;
     data.password_reminder = data.password_reminder ?? null;
-    data.email_unverified = data.email_unverified ?? null;
     data.verification_code = data.verification_code ?? null;
     
     if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
@@ -1505,8 +1538,8 @@ const iamUserValidation = data => {
                     type:'JSON'};
             }
             else 
-                if (data.email != null && data.email.length > 100){
-                    //'email max 100 characters'
+                if (data.password_reminder != null && data.password_reminder.length > 100){
+                    //'reminder max 100 characters'
                     return {http:400,
                         code:'IAM',
                         text:'ABC!',
@@ -1514,68 +1547,22 @@ const iamUserValidation = data => {
                         moreInfo:null,
                         type:'JSON'};
                 }
-                else
-                    if (data.password_reminder != null && data.password_reminder.length > 100){
-                        //'reminder max 100 characters'
+                else{
+                    if (data.username == null || data.password==null){
+                        //'Username and password are required'
                         return {http:400,
                             code:'IAM',
-                            text:'ABC!',
+                            text:'👤🔑!',
                             developerText:null,
                             moreInfo:null,
                             type:'JSON'};
                     }
-                    else{
-                        //Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
-                        /**
-                        * 
-                        * @param {string} email 
-                        * @returns 
-                        */
-                        const email_ok = email =>{
-                            const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
-                            try {
-                                /**@ts-ignore */
-                                return email == email.match(email_regexp)[0];	
-                            } catch (error) {
-                                return false;
-                            }
-                            
-                        };
-                        if (data.email != null && data.email.slice(-10) != '@localhost' && email_ok(data.email)==false){
-                            //'not valid email' (ignore emails that ends with '@localhost')
-                            return {http:400,
-                                code:'IAM',
-                                text:'📧!',
-                                developerText:null,
-                                moreInfo:null,
-                                type:'JSON'};
-                        }
+                    else
+                        if (data.password_new != null)
+                            return iamUserValidation_password({password_new: data.password_new??data.password});
                         else
-                            if (data.email_unverified != '' && data.email_unverified != null && email_ok(data.email_unverified)==false){
-                                //'not valid email'
-                                return {http:400,
-                                    code:'IAM',
-                                    text:'📧!',
-                                    developerText:null,
-                                    moreInfo:null,
-                                    type:'JSON'};
-                            }
-                            else
-                                if (data.username == null || data.password || data.email==null){
-                                    //'Username, password and email are required'
-                                    return {http:400,
-                                        code:'IAM',
-                                        text:'👤🔑📧!',
-                                        developerText:null,
-                                        moreInfo:null,
-                                        type:'JSON'};
-                                }
-                                else
-                                    if (data.password_new != null)
-                                        return iamUserValidation_password({password_new: data.password_new??data.password});
-                                    else
-                                        return null;
-                    }
+                            return null;
+                }
 };
 /**
  * @name iamUserValidation_password
@@ -1615,10 +1602,9 @@ const iamUserPasswordSet = async (password) =>{
  * @function
  * @param {number} app_id
  * @param {server_db_file_iam_user} data
- * @param {boolean} [first_user]
  * @returns {Promise.<server_server_response & {result?: {id:number, user_account_id:number|null} }>}
  */
-const iamUserPost = async (app_id, data, first_user=false) => {
+const iamUserPost = async (app_id, data) => {
 
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
@@ -1637,27 +1623,15 @@ const iamUserPost = async (app_id, data, first_user=false) => {
                                                     user_level:         null, 
                                                     verification_code:  null, 
                                                     status:             null,
-                                                    active:             first_user?1:0
+                                                    active:             data.active
                                                 });
-            if (iamUser.result)
-                if (app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID')))
-                    return iamUser;
-                else{
-                    /**@type{import('./db/dbModelUserAccount.js')} */
-                    const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-                    /**@type{server_server_response & {result?:server_db_common_result_insert }} */
-                    const dbUser = await dbModelUserAccount.userPost(app_id, {iam_user_id:iamUser.result.insertId});
-                    return dbUser.result.http?
-                            dbUser.result:
-                                {result:{   id:iamUser.result.insertId,
-                                            user_account_id:dbUser.result.insertid},
-                                type:'JSON'};
-                }
-            else
-                return {result:{id:iamUser.result.insertId,
-                                user_account_id:null}, 
-                        type:'JSON'};
-            }
+        if (iamUser.result)
+            return {result:{id:iamUser.result.insertId,
+                            user_account_id:null}, 
+                    type:'JSON'};
+        else
+            return iamUser;
+    }
     else{
         return error;
     }
@@ -1695,15 +1669,6 @@ const iamUserGet = async parameters =>{
                                 last_logintime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)};})[0],
                     type:'JSON'};
 };
-/**
- * @name iamUserGetDemo
- * @description User get demo
- * @function
- * @param {{app_id:number,
- *          data:{user_level:number}}} parameters
-* @returns {Promise.<server_server_response & {result?:server_db_file_iam_user }>}
-*/
-const iamUserGetDemo = async parameters =>fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_file_iam_user}*/row)=>row.user_level==parameters.data.user_level);
 /**
  * @name iamUserGetAdmin
  * @description Get users by admin
@@ -1859,7 +1824,6 @@ export{ iamUtilMessageNotAuthorized,
         iamUserAppAccessGet,
         iamUserPost,
         iamUserGet,
-        iamUserGetDemo,
         iamUserGetAdmin,
         iamUserGetLastLogin,
         iamUserLogout}; 

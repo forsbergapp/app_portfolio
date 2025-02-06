@@ -5491,6 +5491,10 @@
                             "$ref": "#/components/parameters/server_ip",
                             "required":true
                         },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
 			            {
                             "$ref": "#/components/parameters/server_user_agent",
                             "required":true
@@ -5516,59 +5520,11 @@
                                                 "required":true,
                                                 "type":"string"
                                             },
-                                            "password_new":{
-                                                "type":"string"
-                                            },
                                             "password_reminder":{
                                                 "type":"string"
                                             },
-                                            "bio":{
-                                                "type":"string"
-                                            },
-                                            "private":{
-                                                "type":"number"
-                                            },
-                                            "user_level":{
-                                                "type":"number"
-                                            },
                                             "email":{
                                                 "type":"string"
-                                            },
-                                            "email_unverified":{
-                                                "type":"string"
-                                            },
-                                            "avatar":{
-                                                "type":"string"
-                                            },
-                                            "verification_code":{
-                                                "type":"string"
-                                            },
-                                            "active":{
-                                                "type":"number"
-                                            },
-                                            "identity_provider_id":{
-                                                "type":"number"
-                                            },
-                                            "provider_id":{
-                                                "type":"string"
-                                            },
-                                            "provider_first_name":{
-                                                "type":"string"
-                                            },
-                                            "provider_last_name":{
-                                                "type":"string"
-                                            },
-                                            "provider_image":{
-                                                "type":"string"
-                                            },
-                                            "provider_image_url":{
-                                                "type":"string"
-                                            },
-                                            "provider_email":{
-                                                "type":"string"
-                                            },
-                                            "admin":{
-                                                "type":"number"
                                             }
                                         }
                                     }

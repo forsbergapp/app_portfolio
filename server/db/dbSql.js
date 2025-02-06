@@ -785,7 +785,7 @@ const USER_ACCOUNT_SELECT_IAM_USER =
       WHERE  u.iam_user_id = :iam_user_id `;
 const USER_ACCOUNT_SELECT_PROFILE =
     `SELECT	u.id "id",
-            nul "bio",
+            null "bio",
             null "private",
             (SELECT 1 
                 FROM <DB_SCHEMA/>.user_account ua_current
@@ -905,8 +905,8 @@ const USER_ACCOUNT_SELECT_PROFILE_STAT =
             SELECT 	'FOLLOWING' top,
                         u.id,
                         u.iam_user_id,
-                        u.avatar,
-                        u.username,
+                        null,
+                        null,
                         (SELECT COUNT(u_follow.user_account_id_follow)
                         FROM <DB_SCHEMA/>.user_account_follow u_follow
                         WHERE u_follow.user_account_id_follow = u.id) count
@@ -916,8 +916,8 @@ const USER_ACCOUNT_SELECT_PROFILE_STAT =
             SELECT 	'LIKE_USER' top,
                         u.id,
                         u.iam_user_id,
-                        u.avatar,
-                        u.username,
+                        null,
+                        null,
                         (SELECT COUNT(u_like.user_account_id_like)
                         FROM <DB_SCHEMA/>.user_account_like u_like
                         WHERE u_like.user_account_id_like = u.id) count

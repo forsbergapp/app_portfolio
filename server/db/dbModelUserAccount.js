@@ -98,21 +98,25 @@ const getProfile = async parameters =>{
                                             null, 
                                             null)
                                             .then(result=>result.result
-                                                            .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>   
-                                                                            /**@ts-ignore */
-                                                                            parameters.data.search!=''?row.username.indexOf(parameters.data.search)>-1:null ||
-                                                                            /**@ts-ignore */
-                                                                            parameters.data.name!=''?row.username.indexOf(parameters.data.name)>-1:null)
                                                             .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                                 // get username, bio, private, user_level, avatar from iam_user
                                                                 const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                                row.username    = user.username;
-                                                                row.bio         = user.bio;
-                                                                row.private     = user.private;
-                                                                row.user_level  = user.user_level;
-                                                                row.avatar      = user.avatar;
-                                                                return row;
-                                                            }));  
+                                                                if (user.active==1 && user.private !=1 &&
+                                                                    /**@ts-ignore */
+                                                                    (user.username.indexOf((parameters.data.search!=''&parameters.data.search!=null)?parameters.data.search:user.username)>-1 ||
+                                                                    /**@ts-ignore */
+                                                                    user.username.indexOf((parameters.data.name!='' &&parameters.data.name!=null)?parameters.data.name:user.username)>-1)
+                                                                    ){
+                                                                    row.username    = user.username;
+                                                                    row.bio         = user.bio;
+                                                                    row.private     = user.private;
+                                                                    row.user_level  = user.user_level;
+                                                                    row.avatar      = user.avatar;
+                                                                    return row;
+                                                                }
+                                                                
+                                                            }))
+                                            .catch(error=>{throw error;});  
     if (parameters.data.search){
         //searching, return result
         /**@type{import('./dbModelAppDataStat.js')} */
@@ -168,19 +172,21 @@ const getProfileStat = async parameters =>{
                                             },
                             null, 
                             null)
-                            .then(result=>result.result
-                                            .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
-                                                //add condition active and private
-                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                return user.active==1 && user.private !=1;
-                                            })              
-                                            .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
-                                                //add avatar and username from iam_user
-                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                row.username    = user.username;
-                                                row.avatar      = user.avatar;
-                                                return row;
-                                            }));
+                            .then(result=>{return {result:result.result
+                                                            .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
+                                                                //add condition active and private
+                                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                return user.active==1 && user.private !=1;
+                                                            })              
+                                                            .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
+                                                                //add avatar and username from iam_user
+                                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                row.username    = user.username;
+                                                                row.avatar      = user.avatar;
+                                                                return row;
+                                                            }),
+                                                    type:'JSON'};
+                                            });
 };
 /**
  * @name getStatCountAdmin
@@ -279,19 +285,21 @@ const userDelete = async (app_id, id) =>
                             },
                             null, 
                             null)
-                            .then(result=>result.result
-                                            .filter((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
-                                                //add condition active and private
-                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                return user.active==1 && user.private !=1;
-                                            })              
-                                            .map((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
-                                                //add avatar and username from iam_user
-                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                row.username    = user.username;
-                                                row.avatar      = user.avatar;
-                                                return row;
-                                            }));
+                            .then(result=>{return {result:result.result
+                                                        .filter((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
+                                                            //add condition active and private
+                                                            const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                            return user.active==1 && user.private !=1;
+                                                        })              
+                                                        .map((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
+                                                            //add avatar and username from iam_user
+                                                            const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                            row.username    = user.username;
+                                                            row.avatar      = user.avatar;
+                                                            return row;
+                                                        }),
+                                                    type:'JSON'};
+                                            });
 };
 export {userPost,
         update,
