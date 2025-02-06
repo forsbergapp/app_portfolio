@@ -2342,6 +2342,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":   "path",
                             "required":true
                         }
                 ],
@@ -2385,6 +2386,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":   "path",
                             "required":true
                         }
                 ],

@@ -52,7 +52,6 @@ const post = async (app_id, data) =>{
             //optional
             data_new.iam_user_username = data.iam_user_username; //for security reason can be omitted in a user verification process
             data_new.user_account_id = data.user_account_id;
-            data_new.user_account_username = data.user_account_username;
             data_new.token = data.token;
             data_new.db = data.db;
             data_new.ua = data.ua;
