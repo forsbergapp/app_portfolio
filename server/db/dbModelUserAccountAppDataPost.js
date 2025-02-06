@@ -107,18 +107,37 @@ const getProfileUserPosts = async parameters =>
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileStatPost[] }>}
  */
 const getProfileStatPost = async parameters =>
-        parameters.data.statchoice==null?
-            dbCommonRecordError(parameters.app_id, 400):
-                dbCommonExecute(parameters.app_id, 
-                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST, 
-                        {
-                            app_id: parameters.app_id,
-                            statchoice: serverUtilNumberValue(parameters.data?.statchoice)
-                        },
-                        null, 
-                        null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
-
+    {
+        if (parameters.data.statchoice==null)
+            return dbCommonRecordError(parameters.app_id, 400);
+        else{
+            /**@type{import('./fileModelIamUser.js')} */
+            const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+            return dbCommonExecute(parameters.app_id, 
+                                    dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST, 
+                                    {
+                                        app_id: parameters.app_id,
+                                        statchoice: serverUtilNumberValue(parameters.data?.statchoice)
+                                    },
+                                    null, 
+                                    null)
+                                    .then(result=>{return {result:result.result
+                                                                    .filter((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
+                                                                        //add condition active and private
+                                                                        const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                        return user.active==1 && user.private !=1;
+                                                                    })              
+                                                                    .map((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
+                                                                        //add avatar and username from iam_user
+                                                                        const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                        row.username    = user.username;
+                                                                        row.avatar      = user.avatar;
+                                                                        return row;
+                                                                    }),
+                                                            type:'JSON'};
+                                                    });
+        }
+    };
 
 /**
  * @name getProfileUserPostDetail
@@ -130,17 +149,34 @@ const getProfileStatPost = async parameters =>
  *          data:{detailchoice?:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail[] }>}
  */
-const getProfileUserPostDetail = async parameters =>
-        dbCommonExecute(parameters.app_id, 
-                        dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL, 
-                        {
-                            user_account_id: parameters.resource_id,
-                            app_id: parameters.app_id,
-                            detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
-                        },
-                        null, 
-                        null)
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
+const getProfileUserPostDetail = async parameters =>{
+    /**@type{import('./fileModelIamUser.js')} */
+    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    return dbCommonExecute(parameters.app_id, 
+                            dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL, 
+                            {
+                                user_account_id: parameters.resource_id,
+                                app_id: parameters.app_id,
+                                detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
+                            },
+                            null, 
+                            null)
+                            .then(result=>{return {result:result.result
+                                                            .filter((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
+                                                                //add condition active and private
+                                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                return user.active==1 && user.private !=1;
+                                                            })              
+                                                            .map((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
+                                                                //add avatar and username from iam_user
+                                                                const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                                row.username    = user.username;
+                                                                row.avatar      = user.avatar;
+                                                                return row;
+                                                            }),
+                                                    type:'JSON'};
+                                            });
+};
 /**
  * @name createUserPost
  * @description Create user post
