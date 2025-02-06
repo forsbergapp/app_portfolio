@@ -1614,13 +1614,9 @@
  * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail
  * @typedef {{  detail:string,
  *              id:number,
- *              identity_provider_id:number,
- *              provider_id:string,
+ *              iam_user_id:number,
  *              avatar:string|null,
- *              provider_image:string,
- *              provider_image_url:string,
  *              username:string,
- *              provider_first_name:string,
  *              total_rows:number}} server_db_sql_result_user_account_app_data_post_getProfileUserPostDetail
  */
 
@@ -1628,13 +1624,9 @@
  * @description DB SQL USER ACCOUNT APP DATA POST server_db_sql_result_user_account_app_data_post_getProfileStatPost
  * @typedef {{  top:string,
  *              id:number,
- *              iidentity_provider_id:number,
- *              provider_id:string,
+ *              iam_user_id:number,
  *              avatar:string|null,
- *              provider_image:string,
- *              provider_image_url:string,
  *              username:string,
- *              provider_first_name:string,
  *              count:number,
  *              total_rows:number}} server_db_sql_result_user_account_app_data_post_getProfileStatPost
  */
