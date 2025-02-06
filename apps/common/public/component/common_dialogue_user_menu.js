@@ -13,16 +13,14 @@
  * @function
  * @param {{app_id:number,
  *          admin_app_id:number,
- *          user_account_id:number|null,
- *          username:string,
- *          admin:string,
+ *          iam_user_username:string|null,
  *          countdown:0|1}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.app_id == props.admin_app_id?
-                                `<div id='common_dialogue_user_menu_admin'>${props.admin ?? ''}</div>`:
-                                `${props.username?
-                                    `<div id='common_dialogue_user_menu_username'>${props.username}</div>`:
+                                `<div id='common_dialogue_user_menu_admin'>${props.iam_user_username ?? ''}</div>`:
+                                `${props.iam_user_username?
+                                    `<div id='common_dialogue_user_menu_username'>${props.iam_user_username}</div>`:
                                     ''
                                 }`
                             }
@@ -50,7 +48,7 @@ const template = props =>`  ${props.app_id == props.admin_app_id?
                                     <div id='common_dialogue_user_menu_user_arabic_script_select'></div>
                                 </div>
                             </div>
-                            ${(props.app_id == props.admin_app_id) || props.username ?
+                            ${(props.app_id == props.admin_app_id) || props.iam_user_username ?
                                 `<div id='common_dialogue_user_menu_logged_in'>
                                     <div id='common_dialogue_user_menu_edit' class='common_icon'></div>
                                     ${props.app_id == props.admin_app_id?
@@ -73,7 +71,7 @@ const template = props =>`  ${props.app_id == props.admin_app_id?
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      app_id:number,
- *                      user_account_id:number,
+ *                      iam_user_username:string|null,
  *                      common_app_id:number,
  *                      admin_app_id:number,
  *                      data_app_id:number,
@@ -81,7 +79,6 @@ const template = props =>`  ${props.app_id == props.admin_app_id?
  *                      token_exp:number|null,
  *                      token_iat:number|null,
  *                      token_timestamp:number|null,
- *                      admin:string,
  *                      admin_only:number,
  *                      user_locale:string,
  *                      user_timezone:string,
@@ -209,9 +206,7 @@ const component = async props => {
         methods:    null,
         template:   template({  app_id:props.data.app_id,
                                 admin_app_id:props.data.admin_app_id,
-                                user_account_id:props.data.user_account_id,
-                                username:props.data.username,
-                                admin:props.data.admin,
+                                iam_user_username:props.data.iam_user_username,
                                 countdown:(props.data.token_exp && props.data.token_iat)?1:0
                             })
     };

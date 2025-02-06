@@ -661,13 +661,7 @@ const USER_ACCOUNT_APP_DATA_POST_DELETE =
 const USER_ACCOUNT_APP_INSERT =
     `INSERT INTO <DB_SCHEMA/>.user_account_app(
             app_id, user_account_id, date_created)
-     SELECT :app_id, ua.id, CURRENT_TIMESTAMP
-       FROM <DB_SCHEMA/>.user_account ua
-      WHERE ua.id = :user_account_id
-        AND NOT EXISTS (SELECT NULL
-                          FROM <DB_SCHEMA/>.user_account_app uap
-                         WHERE uap.app_id = :app_id
-                           AND uap.user_account_id = ua.id)`;
+     VALUES (:app_id, :user_account_id, CURRENT_TIMESTAMP)`;
 const USER_ACCOUNT_APP_SELECT_USER_APPS = 
     `SELECT uap.app_id "app_id",
             uap.date_created "date_created"

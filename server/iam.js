@@ -233,7 +233,7 @@ const iamUtilVerificationCode = () => {
  *          accept_language:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{
  *                                              iam_user_id:        number,
- *                                              iam_user_name:      string,
+ *                                              iam_user_username:      string,
  *                                              user_account_id:    number,
  *                                              bio?:               string | null,
  *                                              email?:             string,
@@ -256,7 +256,7 @@ const iamAuthenticateUser = async parameters =>{
      * @param {token_type} token_type
      * @returns {Promise.<server_server_response & {result?:{
      *                                              iam_user_id:number,
-     *                                              iam_user_name:string,
+     *                                              iam_user_username:string,
      *                                              token_at:string,
      *                                              exp:number,
      *                                              iat:number,
@@ -325,7 +325,7 @@ const iamAuthenticateUser = async parameters =>{
                             headers_accept_language:parameters.accept_language})
                     .then((result_socket)=>{
                         return  result_socket.http?result_socket:{result:{  iam_user_id:    user.id,
-                                                                            iam_user_name:  user.username,
+                                                                            iam_user_username:  user.username,
                                                                             user_account_id:user_account_id,
                                                                             //return if account is active
                                                                             ...(user.active==1 && {bio:  user.bio}),
@@ -360,9 +360,22 @@ const iamAuthenticateUser = async parameters =>{
                                                                                 result:result.result.insertId);
                         if (user_account_id.result?.http)
                             return dbUser;
-                        else
-                            return return_result(user_account_id);
+                        else{
+                            //create user_account app record for current app if missing
+                            /**@type{import('./db/dbModelUserAccountApp.js')} */
+                            const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
                             
+                            const dbUserAccountApp = await dbModelUserAccountApp.get({app_id:parameters.app_id, 
+                                                                                /**@ts-ignore */
+                                                                                resource_id: user_account_id});
+                            if (dbUserAccountApp.result){
+                                if (dbUserAccountApp.result.length==0)
+                                    await dbModelUserAccountApp.post(parameters.app_id, user_account_id);
+                                return return_result(user_account_id);
+                            }
+                            else
+                                return dbUserAccountApp;
+                        }
                     }
                     else
                         return dbUser;
@@ -586,7 +599,7 @@ const iamAuthenticateUserActivate = async parameters =>{
                                                         tokentimestamp:null,
                                                         activated:1,
                                                         iam_user_id:null,
-                                                        iam_user_name:null,
+                                                        iam_user_username:null,
                                                         user_account_id:null
                                                     }, type:'JSON'});
         else{
