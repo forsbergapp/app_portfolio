@@ -33,6 +33,7 @@ const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 
  *          ip:string,
  *          host:string,
  * 			idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:APP_FUNCTION_cube_solve_return[]}>}
  */

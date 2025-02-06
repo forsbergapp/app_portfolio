@@ -422,6 +422,7 @@ const menuRender = async parameters =>{
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:string}>}
  */

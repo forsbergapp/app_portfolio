@@ -16,6 +16,7 @@
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{value:string,
  *                                              group_name:string, 

@@ -621,7 +621,7 @@ const serverUtilAppLine = () =>{
     app.route('/bff/app_id_signup/v1*').post                    (iamMiddleware.iamAuthenticateIdTokenRegistration,    bff.bffAppIdSignup);
     app.route('/bff/app_access/v1*').all                        (iamMiddleware.iamAuthenticateAccessToken,            bff.bffAppAccess);
     app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,bff.bffAppAccessVerification);
-    app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,               bff.bffAppExternal);
+    app.route('/bff/app_access_external/v1/*').post             (iamMiddleware.iamAuthenticateAccessExternal,         bff.bffAppAccessExternal);
     app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,       bff.bffAdmin);
     app.route('/bff/iam/v1/server-iam-login').post              (iamMiddleware.iamAuthenticateIAM,                    bff.bffIAM);
     
@@ -710,10 +710,10 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/app_external/v1') && req.method=='POST':{
-                    req.route.path = '/bff/app_external/v1*';
-                    iamMiddleware.iamAuthenticateExternal(req, res, () =>
-                        bff.bffAppExternal(req, res)
+                case req.path.startsWith('/bff/app_access_external/v1') && req.method=='POST':{
+                    req.route.path = '/bff/app_access_external/v1*';
+                    iamMiddleware.iamAuthenticateAccessExternal(req, res, () =>
+                        bff.bffAppAccessExternal(req, res)
                     );
                     break;
                 }
@@ -1014,9 +1014,9 @@ const serverREST_API = async (routesparameters) =>{
                                                             getParameter('IAM_iam_data_app_id', true) ??        //check if used as resource id
                                                             getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
                             })){
-                if (parametersData.IAM_data_app_id !=null ||routesparameters.endpoint=='APP_EXTERNAL'){
-                    //APP_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersData.data_app_id = routesparameters.endpoint=='APP_EXTERNAL'?
+                if (parametersData.IAM_data_app_id !=null ||routesparameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                    //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
+                    parametersData.data_app_id = routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?
                                                     routesparameters.app_id:
                                                     serverUtilNumberValue(parametersData.IAM_data_app_id);
                     delete parametersData.IAM_data_app_id;

@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_server_response} from '../../../../server/types.js'
+ * @import {server_db_file_iam_app_access, server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
@@ -16,6 +16,7 @@
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{message:string}}>}
  */
@@ -24,8 +25,11 @@ const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
-    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('../../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
+    /**@type{import('../../../../server/db/fileModelIamAppAccess.js')} */
+    const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
     const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
@@ -114,17 +118,6 @@ const paymentRequestCreate = async parameters =>{
             currency){
             //validate data
             if (body_decrypted.currency_code==currency.currency_code){
-                // payment request uses ID Token and SECRET.APP_ID_SECRET  parameter since no user is logged in
-                // use SECRET.PAYMENT_REQUEST_EXPIRE to set expire value
-                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_CUSTOM', {   app_custom_id:      body_decrypted.payerid,
-                                                                                        app_id:             parameters.app_id,
-                                                                                        iam_user_id:        null,
-                                                                                        iam_user_username:  null,
-                                                                                        user_account_id:    null,
-                                                                                        db:                 null,
-                                                                                        ip:                 parameters.ip,
-                                                                                        scope:              'APP_CUSTOM'}, 
-                                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_payment_request_expire);
                 const payment_request_id = securityUUIDCreate();
                 /**@type{payment_request} */
                 const data_payment_request = {
@@ -136,10 +129,6 @@ const paymentRequestCreate = async parameters =>{
                                                 currency_code:  body_decrypted.currency_code,
                                                 amount:         serverUtilNumberValue(body_decrypted.amount),
                                                 message:        body_decrypted.message,
-                                                timestamp:      jwt_data.tokentimestamp,
-                                                exp:            jwt_data.exp,
-                                                iat:            jwt_data.iat,
-                                                token:          jwt_data.token,
                                                 status:         'PENDING'
                                             };
                 
@@ -158,7 +147,31 @@ const paymentRequestCreate = async parameters =>{
                                                                                                                                         }}).then(result=>result.result[0].id)
                                                 };
                 await dbModelAppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
-    
+                const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_EXTERNAL', {   
+                                                                                                app_id:             parameters.app_id,
+                                                                                                iam_user_id:        null,
+                                                                                                iam_user_username:  null,
+                                                                                                user_account_id:    null,
+                                                                                                app_custom_id:      body_decrypted.payerid,
+                                                                                                db:                 serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                                                                                ip:                 parameters.ip,
+                                                                                                scope:              'APP_EXTERNAL'});
+                //Save access info in IAM_APP_ACCESS table
+                /**@type{server_db_file_iam_app_access} */
+                const file_content = {	
+                                        type:                   'APP_ACCESS_EXTERNAL',
+                                        /**@ts-ignore */ 
+                                        iam_user_id:            null,
+                                        iam_user_username:      null,
+                                        user_account_id:        null,
+                                        app_custom_id:          body_decrypted.payerid,
+                                        app_id:                 parameters.app_id,
+                                        db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                        res:		            1,
+                                        token:                  jwt_data?jwt_data.token:null,
+                                        ip:                     parameters.ip,
+                                        ua:                     null};
+                await fileModelIamAppAccess.post(parameters.app_id, file_content);
     
                 /**
                 * @type {{ token:string,

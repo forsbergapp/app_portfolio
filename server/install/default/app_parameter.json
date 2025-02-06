@@ -123,7 +123,7 @@
     },
     {
         "app_id": 5, 
-        "app_text_edit":    {"value":"1", "comment":""},
+        "app_text_edit":    {"value":"0", "comment":""},
         "app_copyright":    {"value":"©", "comment":""},
         "app_email":        {"value":"",  "comment":""},
         "app_link_title":   {"value":"",  "comment":""},

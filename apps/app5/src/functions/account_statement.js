@@ -83,6 +83,7 @@ const IBAN_validate = iban => {
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{   title_sub	        :string,
  *                                                          title	            :string,

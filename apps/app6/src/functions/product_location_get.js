@@ -14,6 +14,7 @@
  *          ip:string,
  *          host:string,
  *          idToken:string,
+ *          authorization:string,
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{stock:{key_name:string, key_value:string, key_type:string}[][]}[] }>}
  */
