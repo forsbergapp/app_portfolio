@@ -275,6 +275,7 @@ const iamAuthenticateUser = async parameters =>{
                                                         /**@ts-ignore */ 
                                                         iam_user_id:        user.id, 
                                                         iam_user_username:  user.username,
+                                                        db:                 serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
                                                         user_account_id:    user_account_id, 
                                                         ip:                 parameters.ip, 
                                                         scope:              'USER'});
