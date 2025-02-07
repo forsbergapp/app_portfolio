@@ -52,6 +52,19 @@ const dbModelDatabase = await await import(`file://${process.cwd()}/server/db/db
 const fs = await import('node:fs');
 
 /**
+ * @name commonSearchMatch
+ * @description Searches for text in given variables without diacrites
+ * @param {string} col
+ * @param {string} search
+ * @returns {boolean}
+ */
+const commonSearchMatch = (col, search) =>{
+    const col_check = col.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+    const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();            
+    return col_check.search(search_check)>-1;
+};
+
+/**
  * @name commonMailCreate
  * @description Creates email
  * @function
@@ -1200,7 +1213,8 @@ const commonRegistryAppSecretDBReset = async app_id => {
         }   
     }
 };
-export {commonMailCreate, commonMailSend,
+export {commonSearchMatch,
+        commonMailCreate, commonMailSend,
         commonAppStart, commonAppHost, commonAssetfile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonApp, commonBFE, commonAppsGet, 

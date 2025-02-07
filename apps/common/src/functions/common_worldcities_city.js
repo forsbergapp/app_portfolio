@@ -24,6 +24,8 @@
  * @returns {Promise.<server_server_response & {result?:commonWorldCitiesCity[]}>}
  */
 const appFunction = async parameters =>{
+    /**@type{import('../common.js')} */
+    const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     const fs = await import('node:fs');
     /**
      *  Get file
@@ -37,18 +39,7 @@ const appFunction = async parameters =>{
     };
     /**@type{commonWorldCitiesCity[]} */
     let cities = await getFile();
-    /**
-     * Filter searched and limit records 
-     * Search without diacritics and use lower case
-     * @param {string} col 
-     * @param {string} search 
-     * @returns {boolean}
-     */
-    const match = (col, search) =>{
-        const col_check = col.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-        const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();            
-        return col_check.search(search_check)>-1;
-    };
+    
     let count_limit = 0;
     /**@type{import('../../../../server/db/fileModelAppParameter.js')} */
     const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
@@ -59,10 +50,10 @@ const appFunction = async parameters =>{
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID')) ?? 0;
     const limit = serverUtilNumberValue(fileModelAppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0].common_app_limit_records.value) ?? 0;
 
-    cities = cities.filter((city)=>{if ((count_limit<limit || limit==0) && (match(city.city, parameters.data.search)||
-                                                                            match(city.city_ascii, parameters.data.search)||
-                                                                            match(city.country, parameters.data.search)||
-                                                                            match(city.admin_name, parameters.data.search))){
+    cities = cities.filter((city)=>{if ((count_limit<limit || limit==0) && (commonSearchMatch(city.city, parameters.data.search)||
+                                                                            commonSearchMatch(city.city_ascii, parameters.data.search)||
+                                                                            commonSearchMatch(city.country, parameters.data.search)||
+                                                                            commonSearchMatch(city.admin_name, parameters.data.search))){
                                         count_limit++;
                                         return true;
                                     }
