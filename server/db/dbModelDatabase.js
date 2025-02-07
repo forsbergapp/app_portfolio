@@ -590,7 +590,7 @@ const dbInstallGetFiles = async (install_type) =>{
                     //create iam user then database user
                     return await fileModelIamUser.postAdmin(parameters.app_id,data_create)
                                  .then(new_iam_user=>new_iam_user.result?
-                                                        dbModelUserAccount.userPost(parameters.app_id, {iam_user_id:new_iam_user.result.insertId })
+                                                        dbModelUserAccount.post(parameters.app_id, {iam_user_id:new_iam_user.result.insertId })
                                                             .then(result=>{
                                                                 if (result.result)
                                                                     return result;
@@ -1171,7 +1171,7 @@ const dbDemoUninstall = async parameters => {
                     const dbUser = await dbModelUserAccount.getIamUser({app_id:parameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         iam_user_id: user.id});
-                    await dbModelUserAccount.userDelete(parameters.app_id,dbUser.result[0]?.id)
+                    await dbModelUserAccount.deleteUser(parameters.app_id,dbUser.result[0]?.id)
                             .then((result)=>{
                                         if (result.result)
                                             fileModelIamUser.deleteRecordAdmin(parameters.app_id,user.id)
