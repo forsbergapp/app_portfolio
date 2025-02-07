@@ -13,19 +13,18 @@
  * @returns Promise.<{boolean>}
  */
 const getToken = async parameters => {
-    const {default:jwt} = await import('jsonwebtoken');
     
-    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
     /**@type{import('../../../../server/db/fileModelIamAppAccess.js')} */
     const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
     /**@type{import('../../../../server/db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    /**@type{import('../../../../server/iam.js')} */
+    const {iamUtilTokenGet} = await import(`file://${process.cwd()}/server/iam.js`);
     
     /**@type{*} */
-    const token_verify = jwt.verify(parameters.authorization.replace('Bearer ',''), fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
+    const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
 
     return  token_verify.app_id         == parameters.app_id && 
             token_verify.ip             == parameters.ip && 

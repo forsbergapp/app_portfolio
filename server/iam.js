@@ -64,46 +64,23 @@ const iamRequestRateLimiterCount = {};
  */
 const iamUtilMessageNotAuthorized = () => '⛔';
 /**
- * @name iamUtilDecode
- * @description IAM util decode idtoken or access token and returns the payload key
- * @function
- * @param {string} token
- * @returns {server_iam_access_token_claim} 
-*/
- const iamUtilDecode = token => {
-    
-    const decoded =  jwt.decode(token.replace('Bearer ','').replace('Basic ',''), { complete: true })?.payload;
-    if (decoded){
-        /**@ts-ignore*/
-        return decoded;
-    }
-    else
-        throw  {http:401,
-                code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
-                developerText:iamUtilDecode,
-                moreInfo:null,
-                type:'JSON'
-            };
-};
-/**
- * @name iamUtilDecodeVerify
+ * @name iamUtilTokenGet
  * @descriotion IAM util decode token using secret and returns claim
  * @function
  * @param {number} app_id
  * @param {string} token
  * @param {token_type} token_type 
- * @returns {server_iam_access_token_claim}
+ * @returns {server_iam_access_token_claim & {exp:number, iat:number}}
  */
-const iamUtilDecodeVerify = (app_id, token, token_type) =>{
+const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{*} */
-    const verify = jwt.verify(token, token_type=='ADMIN'?
+    const verify = jwt.verify(token.replace('Bearer ','').replace('Basic ',''), token_type=='ADMIN'?
                                         fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET'):
                                             fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0][  token_type=='APP_ACCESS'?'common_app_access_secret':
                                                                                                                     token_type=='APP_ACCESS_EXTERNAL'?'common_app_access_verification_secret':
                                                                                                                     token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
                                                                                                                     'common_app_id_secret']);
-    /**@type{server_iam_access_token_claim} */
+    /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
     return {app_id:                 verify.app_id,
             iam_user_id:            verify.iam_user_id,
             iam_user_username:      verify.iam_user_username,
@@ -111,54 +88,26 @@ const iamUtilDecodeVerify = (app_id, token, token_type) =>{
             db:                     verify.db,
             ip:                     verify.ip,
             scope:                  verify.scope,
-            tokentimestamp:         verify.tokentimestamp};
+            tokentimestamp:         verify.tokentimestamp,
+            exp:                    verify.exp,
+            iat:                    verify.iat};
 };
 
 /**
  * @name iamUtilTokenExpired
  * @description IAM util token expired
  * @function
- * @param {number|null}  app_id
+ * @param {number}  app_id
  * @param {token_type} token_type 
  * @param {string} token 
  * @returns {boolean}
  */
 const iamUtilTokenExpired = (app_id, token_type, token) =>{
-    switch (token_type){
-        case 'APP_ACCESS':{
-            //exp, iat, tokentimestamp on token
-            try {
-
-                return ((jwt.verify(token, fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0]
-                            /**@ts-ignore*/
-                            .common_app_access_secret).exp ?? 0) * 1000) - Date.now()<0;    
-            } catch (error) {
-                return true;
-            }
-        }
-        case 'APP_ACCESS_VERIFICATION':{
-            //exp, iat, tokentimestamp on token
-            try {
-
-                return ((jwt.verify(token, fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0]
-                            /**@ts-ignore*/
-                            .common_app_access_verification_secret).exp ?? 0) * 1000) - Date.now()<0;    
-            } catch (error) {
-                return true;
-            }
-        }
-        case 'ADMIN':{
-            //exp, iat, tokentimestamp on token
-            try {
-                return ((jwt.verify(token, fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ADMIN_TOKEN_SECRET'))
-                                /**@ts-ignore*/
-                                .exp ?? 0) * 1000) - Date.now()<0;    
-            } catch (error) {
-                return true;
-            }
-        }
-        default:
-            return false;
+    try {
+        iamUtilTokenGet(app_id, token, token_type);
+        return false;
+    } catch (error) {
+        return true;   
     }
 };
 
@@ -932,7 +881,7 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'));
         try {
             //authenticate id token
-            const id_token_decoded = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:iamUtilDecodeVerify(app_id_host, idToken, 'APP_ID');
+            const id_token_decoded = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, idToken, 'APP_ID');
             /**@type{server_db_file_iam_app_id_token}*/
             const log_id_token = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_id_token}*/row)=> 
                                                                                     row.app_id == app_id_host && row.ip == ip && row.token == idToken
@@ -962,7 +911,7 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
                         case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
-                            const access_token_decoded = iamUtilDecodeVerify(app_id_host, access_token, scope);
+                            const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, scope);
                             
                             /**@type{server_db_file_iam_app_access[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
@@ -1330,6 +1279,7 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
  * @param { {app_id:number|null,
  *           ip:string,
  *           idToken:string,
+ *           endpoint:server_bff_endpoint_type,
  *           authorization:string|null,
  *           claim_iam_user_id:number|null,
  *           claim_iam_user_account_id:number|null,
@@ -1343,10 +1293,16 @@ const iamAuthenticateResource = parameters =>  {
             return false;
         else{
             let authenticate_token;
-            if (parameters.authorization){
+            //no authentication of external token
+            if (parameters.authorization && parameters.endpoint != 'APP_ACCESS_EXTERNAL'){
                 //Access token, with user info
-                /**@type{*}*/
-                const verify_decoded = jwt.verify(parameters.authorization.split(' ')[1], fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_access_secret);
+                const verify_decoded = iamUtilTokenGet( parameters.app_id, 
+                                                        parameters.authorization, 
+                                                        parameters.endpoint=='ADMIN'?
+                                                            'ADMIN':
+                                                                parameters.endpoint=='APP_ACCESS'?
+                                                                    'APP_ACCESS':
+                                                                        'APP_ACCESS_VERIFICATION');
                 /**@type{{app_id:number, iam_user_id:number|null, user_account_id:number|null, ip:string}} */
                 authenticate_token = {
                                     app_id:         verify_decoded.app_id,
@@ -1356,9 +1312,8 @@ const iamAuthenticateResource = parameters =>  {
             }
             else{
                 //Id token, without user info
-                /**@type{*}*/
-                const verify_decoded = jwt.verify(parameters.idToken, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
-                /**@type{{app_id:number, ip:string}} */
+                const verify_decoded = iamUtilTokenGet(parameters.app_id, parameters.idToken, 'APP_ID');
+                /**@type{{app_id:number, iam_user_id:null, user_account_id:null, ip:string}} */
                 authenticate_token = {
                                     app_id:         verify_decoded.app_id,
                                     iam_user_id:    null,
@@ -1461,7 +1416,7 @@ const iamAuthenticateResource = parameters =>  {
         //APP Access external token
         //only allowed to use app_access_verification token expire used to set short expire time
         case 'APP_ACCESS_EXTERNAL':{
-            secret = fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0].common_app_id_secret;
+            secret = fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0].common_app_access_verification_secret;
             expiresin = fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result[0].common_app_access_verification_expire;
             break;
         }
@@ -1827,7 +1782,7 @@ const iamUserLogout = async parameters =>{
 };
 
 export{ iamUtilMessageNotAuthorized,
-        iamUtilDecode,
+        iamUtilTokenGet,
         iamUtilTokenExpired,
         iamUtilResponseNotAuthorized,
         iamAuthenticateUser,

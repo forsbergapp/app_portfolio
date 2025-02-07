@@ -764,14 +764,19 @@ const commonAppReportQueue = async parameters =>{
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
     /**@type{import('../../../server/iam.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
+    const { iamUtilTokenGet } = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('../../../server/iam.js')} */
     const {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
     const report = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
     if (report.result){
         /**@type{server_db_file_iam_user} */
-        const user = fileModelIamUser.get(  parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.authorization).iam_user_id)).result[0];
+        const user = fileModelIamUser.get(  parameters.app_id, 
+                                            serverUtilNumberValue(iamUtilTokenGet(  parameters.app_id, 
+                                                                                    parameters.authorization, 
+                                                                                    parameters.app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))?
+                                                                                                                                                    'ADMIN':
+                                                                                                                                                        'APP_ACCESS').iam_user_id)).result[0];
         const result_post = await fileModelAppModuleQueue.post(parameters.app_id, 
                                                             {
                                                             type:'REPORT',
