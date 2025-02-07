@@ -13,7 +13,7 @@
  * @param {{app_id:number,
  *          data:{  data_app_id:number,
  *                  user_account_id:number,
- *                  payment_request_id:string,
+ *                  token:string,
  *                  status:1|0},
  *          user_agent:string,
  *          ip:string,
@@ -39,6 +39,9 @@ const paymentRequestUpdate = async parameters =>{
 
     /**@type{import('../../../../server/iam.js')} */
     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    
+    /**@type{import('./payment_request_create.js')} */
+    const {getToken} = await import('./payment_request_create.js');
 
     const customer = await dbModelAppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                 resource_id:null, 
@@ -48,6 +51,8 @@ const paymentRequestUpdate = async parameters =>{
                                                                         user_null:'0'
                                                                 }})
                             .then(result=>result.result[0]);
+    const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
+    //get payment request using app_custom_id that should be the payment request id
     const payment_request = await dbModelAppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  data_app_id:parameters.data.data_app_id,
@@ -55,79 +60,75 @@ const paymentRequestUpdate = async parameters =>{
                                                                             user_null:'0'
                                                                     }})
                                     .then(result=>result.result
-                                            .filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==parameters.data.payment_request_id)[0]);
+                                            .filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==token.app_custom_id)[0]);
 
     if (customer && payment_request && (serverUtilNumberValue(parameters.data.status)==1 || serverUtilNumberValue(parameters.data.status)==0)){
         let status ='PENDING';
         if (serverUtilNumberValue(parameters.data.status)==1)
-            /**@ts-ignore */
-            if ((((payment_request.exp ?? 0) * 1000) - Date.now())<0)
-                status = 'EXPIRED';
-            else
-                try {
-                    const account_payer         =  await dbModelAppDataResourceDetail.get({app_id:parameters.app_id, 
+            try {
+                const account_payer         =  await dbModelAppDataResourceDetail.get({app_id:parameters.app_id, 
+                                                                                        resource_id:null, 
+                                                                                        data:{  master_id:customer.id,
+                                                                                                user_account_id:parameters.data.user_account_id,
+                                                                                                data_app_id:parameters.app_id,
+                                                                                                resource_name:'ACCOUNT',
+                                                                                                user_null:'0'
+                                                                                        }})
+                                                        .then(result=>result.result[0]);
+                const account_payer_saldo   =  await dbModelAppDataResourceDetailData.get({ app_id:parameters.app_id, 
                                                                                             resource_id:null, 
-                                                                                            data:{  master_id:customer.id,
+                                                                                            data:{  app_data_detail_id:account_payer.id,
                                                                                                     user_account_id:parameters.data.user_account_id,
-                                                                                                    data_app_id:parameters.app_id,
+                                                                                                    data_app_id:parameters.data.data_app_id,
+                                                                                                    resource_name_type:'RESOURCE_TYPE',
+                                                                                                    resource_name:'ACCOUNT',
+                                                                                                    resource_name_master_attribute_type:'RESOURCE_TYPE',
+                                                                                                    resource_name_master_attribute:'CUSTOMER',
+                                                                                                    user_null:'0'
+                                                                                            }})
+                                                        .then(result=>result.result.reduce((/**@type{number}*/balance, /**@type{bank_transaction}*/current_row)=>balance += 
+                                                                                                    (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0));
+                if ((account_payer_saldo - payment_request.amount) <0)
+                    status='NO FUNDS';
+                else{
+                    const data_debit = {json_data                               : { timestamp:new Date().toISOString(),
+                                                                                    logo:'',
+                                                                                    origin:payment_request.reference,
+                                                                                    amount_deposit:null,
+                                                                                    amount_withdrawal:payment_request.amount *-1},
+                                        user_account_id                         : parameters.data.user_account_id,
+                                        data_app_id                             : parameters.data.data_app_id,
+                                        app_data_resource_detail_id             : account_payer.id,
+                                        app_data_resource_master_attribute_id   : null
+                                        };
+                    //create DEBIT transaction PAYERID resource TRANSACTION
+                    await dbModelAppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
+                    
+                    const account_payee         =  await dbModelAppDataResourceDetail.get({ app_id:parameters.app_id, 
+                                                                                            resource_id:null, 
+                                                                                            data:{  data_app_id:parameters.data.data_app_id,
                                                                                                     resource_name:'ACCOUNT',
                                                                                                     user_null:'0'
                                                                                             }})
-                                                            .then(result=>result.result[0]);
-                    const account_payer_saldo   =  await dbModelAppDataResourceDetailData.get({ app_id:parameters.app_id, 
-                                                                                                resource_id:null, 
-                                                                                                data:{  app_data_detail_id:account_payer.id,
-                                                                                                        user_account_id:parameters.data.user_account_id,
-                                                                                                        data_app_id:parameters.data.data_app_id,
-                                                                                                        resource_name_type:'RESOURCE_TYPE',
-                                                                                                        resource_name:'ACCOUNT',
-                                                                                                        resource_name_master_attribute_type:'RESOURCE_TYPE',
-                                                                                                        resource_name_master_attribute:'CUSTOMER',
-                                                                                                        user_null:'0'
-                                                                                                }})
-                                                            .then(result=>result.result.reduce((/**@type{number}*/balance, /**@type{bank_transaction}*/current_row)=>balance += 
-                                                                                                        (current_row.amount_deposit ?? current_row.amount_withdrawal) ?? 0,0));
-                    if ((account_payer_saldo - payment_request.amount) <0)
-                        status='NO FUNDS';
-                    else{
-                        const data_debit = {json_data                               : { timestamp:new Date().toISOString(),
+                                                            .then(result=>result.result.filter((/**@type{bank_account}*/account)=>account.bank_account_vpa == payment_request.payeeid)[0]);
+                    const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
                                                                                         logo:'',
                                                                                         origin:payment_request.reference,
-                                                                                        amount_deposit:null,
-                                                                                        amount_withdrawal:payment_request.amount *-1},
-                                            user_account_id                         : parameters.data.user_account_id,
+                                                                                        amount_deposit:payment_request.amount,
+                                                                                        amount_withdrawal:null},
+                                                                                    
+                                            user_account_id                         : account_payee.user_account_app_user_account_id,
                                             data_app_id                             : parameters.data.data_app_id,
-                                            app_data_resource_detail_id             : account_payer.id,
+                                            app_data_resource_detail_id             : account_payee.id,
                                             app_data_resource_master_attribute_id   : null
                                             };
-                        //create DEBIT transaction PAYERID resource TRANSACTION
-                        await dbModelAppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-                        
-                        const account_payee         =  await dbModelAppDataResourceDetail.get({ app_id:parameters.app_id, 
-                                                                                                resource_id:null, 
-                                                                                                data:{  data_app_id:parameters.data.data_app_id,
-                                                                                                        resource_name:'ACCOUNT',
-                                                                                                        user_null:'0'
-                                                                                                }})
-                                                                .then(result=>result.result.filter((/**@type{bank_account}*/account)=>account.bank_account_vpa == payment_request.payeeid)[0]);
-                        const data_credit = {   json_data                               : { timestamp:new Date().toISOString(),
-                                                                                            logo:'',
-                                                                                            origin:payment_request.reference,
-                                                                                            amount_deposit:payment_request.amount,
-                                                                                            amount_withdrawal:null},
-                                                                                        
-                                                user_account_id                         : account_payee.user_account_app_user_account_id,
-                                                data_app_id                             : parameters.data.data_app_id,
-                                                app_data_resource_detail_id             : account_payee.id,
-                                                app_data_resource_master_attribute_id   : null
-                                                };
-                        //create CREDIT transaction PAYEEID resource TRANSACTION
-                        await dbModelAppDataResourceDetailData.post({app_id:parameters.app_id, data:data_credit});
-                        status = 'PAID';
-                    }
-                } catch (error) {
-                    status = 'FAILED';
+                    //create CREDIT transaction PAYEEID resource TRANSACTION
+                    await dbModelAppDataResourceDetailData.post({app_id:parameters.app_id, data:data_credit});
+                    status = 'PAID';
                 }
+            } catch (error) {
+                status = 'FAILED';
+            }
         else
             status='CANCELLED';
 

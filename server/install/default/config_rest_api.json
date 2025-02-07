@@ -1267,7 +1267,8 @@
                                             "message":{
                                                 "type":"string"
                                             }
-                                        }
+                                        },
+                                        "additionalProperties":true
                                     }
                                 }
                             }

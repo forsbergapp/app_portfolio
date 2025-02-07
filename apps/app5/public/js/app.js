@@ -13,6 +13,9 @@ const COMMON_DOCUMENT = document;
 const commonPath ='/common/js/common.js';
 /**@type {CommonModuleCommon} */
 const common = await import(commonPath);
+
+const APP_GLOBAL = {token:null};
+
 /**
  * @name appException
  * @description App exception function
@@ -340,14 +343,18 @@ const appPaymentRequestUpdate = async status => {
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
                         body:{
-                            type:'FUNCTION',
+                            type:               'FUNCTION',
                             IAM_data_app_id:    common.COMMON_GLOBAL.app_id,
                             user_account_id:    common.COMMON_GLOBAL.user_account_id,
-                            payment_request_id: COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value'),
-                            status:status
+                            token:              APP_GLOBAL.token,
+                            status:             status
                         }})
     .then((result)=>status==1?common.commonMessageShow('INFO', null, null, null,JSON.parse(result).rows[0].status, common.COMMON_GLOBAL.common_app_id):null)
-    .finally(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
+    .finally(()=>{
+        //remove the token since user answered the request
+        APP_GLOBAL.token=null;
+        common.commonComponentRemove('common_dialogue_app_data_display', true);
+    });
 };
 /**
  * @name appPaymentRequestAccept
@@ -375,9 +382,12 @@ const appPaymentRequestCancel = async () => {
  * @returns {Promise.<void>}
  */
 const appPaymentRequestShow = async message =>{
+    APP_GLOBAL.token = JSON.parse(message).token;
+    //mount component only if not already opened
     if (COMMON_DOCUMENT.querySelector('#common_dialogue_app_data_display .common_app_data_display_master_col1[data-key=amount]'))
         null;
     else
+        //Payment request received, show dialogue with payment request info and send received token 
         await common.commonComponentRender({
                 mountDiv:   'common_dialogue_app_data_display', 
                 data:       {
@@ -390,7 +400,7 @@ const appPaymentRequestShow = async message =>{
                                             type:'FUNCTION',
                                             IAM_data_app_id:common.COMMON_GLOBAL.app_id,
                                             user_account_id: common.COMMON_GLOBAL.user_account_id,
-                                            payment_request_id: JSON.parse(message).payment_request_id
+                                            token: APP_GLOBAL.token
                                         },
                             master_method:'POST',
                             master_token_type:'APP_ACCESS',
@@ -425,7 +435,7 @@ const appPaymentRequestShow = async message =>{
                 COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_currency_symbol').textContent;
 
                 common.commonUserSessionCountdown(  COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_countdown'), 
-                                                JSON.parse(message).exp);
+                                                    JSON.parse(message).exp);
             })
             .catch(()=>common.commonComponentRemove('common_dialogue_app_data_display', true));
 };
