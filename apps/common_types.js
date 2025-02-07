@@ -62,6 +62,8 @@
  *                      error:function},
  *              atob:function,
  *              btoa:function,
+ *              encodeURIComponent:function,
+ *              decodeURIComponent:function,
  *              setTimeout:function,
  *              clearTimeout:function,
  *              open:function,
