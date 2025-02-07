@@ -918,7 +918,8 @@ const serverREST_API = async (routesparameters) =>{
                 if (iam.iamAuthenticateResource({   app_id:                     routesparameters.app_id, 
                                                     ip:                         routesparameters.ip, 
                                                     idToken:                    routesparameters.idToken,
-                                                    authorization:              routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?null:routesparameters.authorization, 
+                                                    endpoint:                   routesparameters.endpoint,
+                                                    authorization:              routesparameters.authorization, 
                                                     claim_iam_user_id:          serverUtilNumberValue(params.IAM_iam_user_id),
                                                     claim_iam_user_account_id:  serverUtilNumberValue(params.IAM_user_account_id),
                                                     claim_iam_data_app_id:      serverUtilNumberValue(params.IAM_data_app_id)}))

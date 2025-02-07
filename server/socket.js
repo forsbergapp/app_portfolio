@@ -219,7 +219,7 @@ const socketClientAdd = (newClient) => {
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.id != socketClientGet(parameters.idToken))
-                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')))
+                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
                     null;
                 else
                     if (client.app_id == parameters.data.app_id || parameters.data.app_id == null){
@@ -398,15 +398,19 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  */
  const socketConnect = async parameters =>{
     /**@type{import('./iam.js')} */
-    const { iamUtilDecode } = await import(`file://${process.cwd()}/server/iam.js`);
+    const { iamUtilTokenGet } = await import(`file://${process.cwd()}/server/iam.js`);
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
 
-    const user_account_id = parameters.authorization?serverUtilNumberValue(iamUtilDecode(parameters.authorization)?.user_account_id):null;
-    const iam_user = parameters.authorization?
-                        (serverUtilNumberValue(iamUtilDecode(parameters.authorization)?.iam_user_id)?
-                            fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(iamUtilDecode(parameters.authorization)?.iam_user_id)).result?.[0]:null):
-                                null;
+    //get access token if any
+    const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
+                                            parameters.authorization, 
+                                            parameters.app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))?'ADMIN':'APP_ACCESS'):null;
+    const user_account_id = parameters.authorization?serverUtilNumberValue(access_token?.user_account_id):null;
+    const iam_user =        parameters.authorization?
+                                (serverUtilNumberValue(access_token?.iam_user_id)?
+                                    fileModelIamUser.get(parameters.app_id, serverUtilNumberValue(access_token?.iam_user_id)).result?.[0]:null):
+                                        null;
     //no authorization for repeated request using same id token or requesting from browser
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.authorization_bearer == parameters.idToken).length>0 ||parameters.data.res.req.headers['sec-fetch-mode']!='cors'){
         /**@type{import('./iam.js')} */
@@ -485,7 +489,7 @@ const socketExpiredTokensUpdate = () =>{
     for (const client of SOCKET_CONNECTED_CLIENTS){
         if ((client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS', client.token_access)&&
             client.token_access && iamUtilTokenExpired(client.app_id, 'APP_ACCESS_VERIFICATION', client.token_access)) ||
-            client.token_admin && iamUtilTokenExpired(null, 'ADMIN', client.token_admin)){
+            client.token_admin && iamUtilTokenExpired(client.app_id, 'ADMIN', client.token_admin)){
                 client.iam_user_id=null;
                 client.user_account_id=null;
                 client.iam_user_type=null;
