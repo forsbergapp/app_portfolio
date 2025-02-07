@@ -818,13 +818,20 @@ const commonWindowToBase64 = str => COMMON_WINDOW.btoa(COMMON_WINDOW.encodeURICo
 
 /**
  * @name commonWindowFromBase64
- * @description Convert base64 to string
+ * @description Convert base64 containing unicode to string
  * @function
  * @param {string} str 
  * @returns {string}
  */
-const commonWindowFromBase64 = str => COMMON_WINDOW.decodeURIComponent(COMMON_WINDOW.atob(str));
-
+const commonWindowFromBase64 = str => {
+    const binary_string = COMMON_WINDOW.atob(str);
+    const len = binary_string.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+};
 /**
  * @name commonWindowNavigatorLocale
  * @description Read Navigator language
