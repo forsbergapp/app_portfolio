@@ -941,7 +941,8 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
                                                 (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
                                                 id_token_decoded.ip == ip &&
                                                 log_id_token)){
-                if (scope=='APP_ID' || scope=='APP_EXTERNAL')
+                //External token is not authenticated here
+                if (scope=='APP_ID' || scope=='APP_EXTERNAL' ||scope=='APP_ACCESS_EXTERNAL')
                     next();
                 else{
                     //validate scope, app_id and authorization
@@ -958,8 +959,7 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
                         }
                         case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
                         case scope=='APP_ACCESS_VERIFICATION' && authorization.toUpperCase().startsWith('BEARER'):
-                        case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):
-                        case scope=='APP_ACCESS_EXTERNAL':{
+                        case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
                             const access_token_decoded = iamUtilDecodeVerify(app_id_host, access_token, scope);
@@ -967,7 +967,8 @@ const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRec
                             /**@type{server_db_file_iam_app_access[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
-                                access_token_decoded.ip == ip){
+                                access_token_decoded.ip == ip && 
+                                access_token_decoded.db == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE'))){
                                 /**@type{server_db_file_iam_app_access}*/
                                 const iam_user_app_access = fileModelIamAppAccess.get(app_id_host, null).result
                                                         .filter((/**@type{server_db_file_iam_app_access}*/row)=>

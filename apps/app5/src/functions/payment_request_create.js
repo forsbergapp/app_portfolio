@@ -7,6 +7,48 @@
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
+ * @param {{app_id:number,
+ *          authorization:string,
+ *          ip:string}} parameters
+ * @returns Promise.<{boolean>}
+ */
+const getToken = async parameters => {
+    const {default:jwt} = await import('jsonwebtoken');
+    
+    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('../../../../server/db/fileModelIamAppAccess.js')} */
+    const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
+    /**@type{import('../../../../server/db/fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('../../../../server/server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+    
+    /**@type{*} */
+    const token_verify = jwt.verify(parameters.authorization.replace('Bearer ',''), fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
+
+    return  token_verify.app_id         == parameters.app_id && 
+            token_verify.ip             == parameters.ip && 
+            token_verify.db             == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')) &&
+            token_verify.scope          == 'APP_EXTERNAL' &&
+            //authenticated saved values in iam_app_access
+            fileModelIamAppAccess.get(parameters.app_id, null).result
+                        .filter((/**@type{server_db_file_iam_app_access}*/row)=>
+                                                                //Authenticate the token type
+                                                                row.type                    == 'APP_ACCESS_EXTERNAL' &&
+                                                                //Authenticate database
+                                                                row.db                      == token_verify.db &&
+                                                                //Authenticate app id corresponds to current subdomain
+                                                                row.app_id                  == token_verify.app_id &&
+                                                                //Authenticate IP address, the server should use 'X-Forwarded-For' to authenticate client ip
+                                                                row.ip                      == token_verify.ip &&
+                                                                //Authenticate token is valid
+                                                                row.res                     == 1 &&
+                                                                //Authenticate the token string
+                                                                row.token                   == parameters.authorization.replace('Bearer ','')
+                                                            )[0];
+};
+/**
  * @name paymentRequestCreate
  * @description Create payment request
  * @function
@@ -152,8 +194,10 @@ const paymentRequestCreate = async parameters =>{
                                                                                                 iam_user_id:        null,
                                                                                                 iam_user_username:  null,
                                                                                                 user_account_id:    null,
-                                                                                                app_custom_id:      body_decrypted.payerid,
+                                                                                                //save the payment request id
+                                                                                                app_custom_id:      payment_request_id,
                                                                                                 db:                 serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                                                                                //authorize to client IP, the server should use 'X-Forwarded-For'
                                                                                                 ip:                 parameters.ip,
                                                                                                 scope:              'APP_EXTERNAL'});
                 //Save access info in IAM_APP_ACCESS table
@@ -164,13 +208,14 @@ const paymentRequestCreate = async parameters =>{
                                         iam_user_id:            null,
                                         iam_user_username:      null,
                                         user_account_id:        null,
-                                        app_custom_id:          body_decrypted.payerid,
+                                        //save the payment request id
+                                        app_custom_id:          payment_request_id,
                                         app_id:                 parameters.app_id,
                                         db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
                                         res:		            1,
                                         token:                  jwt_data?jwt_data.token:null,
                                         ip:                     parameters.ip,
-                                        ua:                     null};
+                                        ua:                     parameters.user_agent};
                 await fileModelIamAppAccess.post(parameters.app_id, file_content);
     
                 /**
@@ -228,4 +273,5 @@ const paymentRequestCreate = async parameters =>{
         };
 
 };
+export {getToken};
 export default paymentRequestCreate;

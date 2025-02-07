@@ -14,7 +14,7 @@
  * @param {{app_id:number,
  *          data:{  data_app_id:number,
  *                  user_account_id:number,
- *                  payment_request_id: string},
+ *                  token: string},
  *          user_agent:string,
  *          ip:string,
  *          host:string,
@@ -42,14 +42,20 @@ const paymentRequestGet = async parameters =>{
 
     /**@type{import('../../../../server/iam.js')} */
     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+    
+    /**@type{import('./payment_request_create.js')} */
+    const {getToken} = await import('./payment_request_create.js');
 
+    const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
+
+    //get payment request using app_custom_id that should be the payment request id
     const payment_request = await dbModelAppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  data_app_id:parameters.data.data_app_id,
                                                                             resource_name:'PAYMENT_REQUEST',
                                                                             user_null:'0'
                                                                     }})
-                                    .then(result=>result.result.filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==parameters.data.payment_request_id)[0]);
+                                    .then(result=>result.result.filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==token.app_custom_id)[0]);
     if (payment_request){
         const account_payer = await dbModelAppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
@@ -75,10 +81,10 @@ const paymentRequestGet = async parameters =>{
                                         .then(result=>JSON.parse(result.result[0].json_data));
         if (account_payer && merchant && currency){
             return  {result:[{   payment_request_message:'Authorize this payment',
-                                token:                  payment_request.token,
-                                exp:                    payment_request.exp,
-                                iat:                    payment_request.iat,
-                                tokentimestamp:         payment_request.tokentimestamp,
+                                token:                  token,
+                                exp:                    token.exp,
+                                iat:                    token.iat,
+                                tokentimestamp:         token.tokentimestamp,
                                 payment_request_id:     payment_request.payment_request_id,
                                 status:                 payment_request.status,
                                 merchant_name:          merchant.merchant_name,

@@ -4,7 +4,7 @@
 
 /**
  * 
- * @import {server_iam_access_token_claim, server_server_response} from '../../../../server/types.js'
+ * @import {server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
@@ -24,10 +24,8 @@
  */
 const paymentRequestGetStatus = async parameters =>{
      
-    const {default:jwt} = await import('jsonwebtoken');
-
-    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./payment_request_create.js')} */
+    const {getToken} = await import('./payment_request_create.js');
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
@@ -72,15 +70,13 @@ const paymentRequestGetStatus = async parameters =>{
                                                 .map((/**@type{payment_request}*/payment_request)=>JSON.parse(payment_request.json_data??''))
                                                 .filter((/**@type{payment_request}*/payment_request)=>payment_request.payment_request_id==body_decrypted.payment_request_id)[0]);
             try {
-                /**@type{*} */
-                const token_verify = jwt.verify(parameters.authorization, fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_app_id_secret);
-                //check the alkready authenticated token that payerid in the token is the same as in the payment request
-                if (token_verify.app_custom_id == payment_request.payerid ){
+                const access_token = await getToken({app_id:parameters.app_id, authorization:parameters.authorization, ip:parameters.ip});
+                //authenticate the app_custom_id is the payment request id
+                if (access_token && access_token.app_custom_id == body_decrypted.payment_request_id){
                     /**
                      * @type {{ status:string}}
                      */
-                    const data_return = {   status:                 payment_request.status
-                    };
+                    const data_return = {   status:                 payment_request.status};
                     const data_encrypted = securityPublicEncrypt(merchant.merchant_public_key, JSON.stringify(data_return));
 
                     const account_payer =  await dbModelAppDataResourceDetail.get({ app_id:parameters.app_id, 
@@ -104,8 +100,8 @@ const paymentRequestGetStatus = async parameters =>{
                             for (const user_connected of socketConnectedGet(customer.user_account_app_user_account_id ?? 0)){
                                 const message = {
                                     type: 'PAYMENT_REQUEST', 
-                                    payment_request_id:payment_request.payment_request_id, 
-                                    exp:payment_request.exp
+                                    token:parameters.authorization.split('Bearer ')[1], 
+                                    exp:access_token.exp
                                 };
                                 socketClientSend(user_connected.response, btoa(JSON.stringify(message)), 'APP_FUNCTION');    
                             }

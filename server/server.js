@@ -903,8 +903,7 @@ const serverREST_API = async (routesparameters) =>{
     /**
      * Authenticates if user has access to given resource
      * Authenticates using IAM token claims if path requires
-     * @param {{config_path:string,
-     *          IAM_iam_user_id:number|null,
+     * @param {{IAM_iam_user_id:number|null,
      *          IAM_user_account_id:number|null
      *          IAM_data_app_id:number|null,
      *          resource_id_required?: boolean}} params
@@ -919,7 +918,7 @@ const serverREST_API = async (routesparameters) =>{
                 if (iam.iamAuthenticateResource({   app_id:                     routesparameters.app_id, 
                                                     ip:                         routesparameters.ip, 
                                                     idToken:                    routesparameters.idToken,
-                                                    authorization:              routesparameters.authorization, 
+                                                    authorization:              routesparameters.endpoint=='APP_ACCESS_EXTERNAL'?null:routesparameters.authorization, 
                                                     claim_iam_user_id:          serverUtilNumberValue(params.IAM_iam_user_id),
                                                     claim_iam_user_account_id:  serverUtilNumberValue(params.IAM_user_account_id),
                                                     claim_iam_data_app_id:      serverUtilNumberValue(params.IAM_data_app_id)}))
@@ -1014,8 +1013,7 @@ const serverREST_API = async (routesparameters) =>{
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};
                                                         },{}):{});
-            if (Authenticate({config_path:            configPath[0],
-                                IAM_iam_user_id:        parametersData['IAM_iam_user_id'],
+            if (Authenticate({ IAM_iam_user_id:        parametersData['IAM_iam_user_id'],
                                 IAM_user_account_id:    parametersData['IAM_user_account_id'],
                                 IAM_data_app_id:        parametersData['IAM_data_app_id'],
                                 resource_id_required:   (   getParameter('IAM_iam_user_id', true) ??            //check if used as resource id
