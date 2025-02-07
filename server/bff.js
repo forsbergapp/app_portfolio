@@ -198,7 +198,7 @@ const bffStart = async (req, res) =>{
         else{
             //REST API route
             //REST API requests from client are encoded
-            const decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString():'';   
+            const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString()):'';   
             
             serverResponse({app_id:app_id,
                             result_request:await serverREST_API({   app_id:app_id, 

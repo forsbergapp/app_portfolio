@@ -58,7 +58,7 @@ const component = async props => {
     const cities = props.data.search==''?[]:await props.methods.commonFFB({path:'/app-module/COMMON_WORLDCITIES_CITY', 
         method:'POST', 
         authorization_type:'APP_ID', 
-        body:{type:'FUNCTION',search:encodeURI(props.data.search), IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
+        body:{type:'FUNCTION',search:props.data.search, IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
 
     const onMounted = async () =>{
         if (props.data.search.length>0)

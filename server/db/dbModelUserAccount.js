@@ -59,6 +59,8 @@ const get = async parameters =>dbCommonExecute(   parameters.app_id,
 const getProfile = async parameters =>{
   /**@type{import('./fileModelIamUser.js')} */
   const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+  /**@type{import('../../apps/common/src/common.js')} */
+  const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
   /**
    * Clear private data if private
    * @param {server_db_sql_result_user_account_getProfileUser[]} result_getProfileUser 
@@ -88,7 +90,7 @@ const getProfile = async parameters =>{
   const result_getProfileUser = await  dbCommonExecute(parameters.app_id, 
                                           dbSql.USER_ACCOUNT_SELECT_PROFILE,
                                           {
-                                              user_accound_id_current_user: serverUtilNumberValue(parameters.data.id),
+                                              user_accound_id_current_user: serverUtilNumberValue(parameters.data?.id),
                                               id: parameters.resource_id
                                           }
                                           ,
@@ -96,23 +98,31 @@ const getProfile = async parameters =>{
                                           null)
                                           .then(result=>result.result
                                                           .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
-                                                              // get username, bio, private, user_level, avatar from iam_user
-                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                              if (user.active==1 && user.private !=1 &&
-                                                                  /**@ts-ignore */
-                                                                  (user.username.indexOf((parameters.data.search!=''&parameters.data.search!=null)?parameters.data.search:user.username)>-1 ||
-                                                                  /**@ts-ignore */
-                                                                  user.username.indexOf((parameters.data.name!='' &&parameters.data.name!=null)?parameters.data.name:user.username)>-1)
-                                                                  ){
-                                                                  row.username    = user.username;
-                                                                  row.bio         = user.bio;
-                                                                  row.private     = user.private;
-                                                                  row.user_level  = user.user_level;
-                                                                  row.avatar      = user.avatar;
-                                                                  return row;
-                                                              }
-                                                              
-                                                          }))
+                                                              // get active, username, bio, private, user_level, avatar from iam_user
+                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];                                                                 
+                                                                return {id:             row.id,
+                                                                        active:         user.active,
+                                                                        username:       user.username, 
+                                                                        bio:            user.bio,
+                                                                        private:        user.private,
+                                                                        user_level:     user.user_level,
+                                                                        avatar:         user.avatar,
+                                                                        friends:        row.friends,
+                                                                        date_created:   row.date_created,
+                                                                        iam_user_id:    row.iam_user_id,
+                                                                        count_following:row.count_following,
+                                                                        count_followed: row.count_followed,
+                                                                        count_likes:    row.count_likes,
+                                                                        count_liked:    row.count_liked,
+                                                                        count_views:    row.count_views,
+                                                                        followed:       row.followed,
+                                                                        liked:          row.liked};
+                                                          })
+                                                            .filter((/**@type{server_db_sql_result_user_account_getProfileUser & {active:number}}*/row)=>   
+                                                                            row.active==1 && 
+                                                                            row.private !=1 &&
+                                                                            commonSearchMatch(row.username, parameters.data.search??'') &&
+                                                                            commonSearchMatch(row.username, parameters.data.name??'')))
                                           .catch(error=>{throw error;});  
   if (parameters.data.search){
       //searching, return result

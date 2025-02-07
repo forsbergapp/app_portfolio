@@ -1727,19 +1727,18 @@ const iamUserGet = async parameters =>{
 const iamUserGetAdmin = async parameters => {
     /**@type{import('./db/fileModelIamUser.js')} */
     const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    /**@type{import('../apps/common/src/common.js')} */
+    const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     const order_by_num = parameters.data.order_by =='asc'?1:-1;
     const users = fileModelIamUser.get(parameters.app_id, null).result
-                    .filter((/**@type{server_db_file_iam_user}*/row)=>row.username.indexOf(parameters.data?.search??'')>-1 ||
-                                /**@ts-ignore */
-                                row.bio?.indexOf(parameters.data?.search??'')>-1 ||
-                                /**@ts-ignore */
-                                row.email?.indexOf(parameters.data?.search??'')>-1 ||
-                                /**@ts-ignore */
-                                row.email_unverified?.indexOf(parameters.data?.search??'')>-1 ||
-                                /**@ts-ignore */
-                                row.id.toString().indexOf(parameters.data?.search??'')>-1 ||
-                                parameters.data.search=='*'
-                                )
+                    .filter((/**@type{server_db_file_iam_user}*/row)=>
+                                parameters.data.search=='*'?row:
+                                (commonSearchMatch(row.username??'', parameters.data?.search??'') ||
+                                commonSearchMatch(row.bio??'', parameters.data?.search??'') ||
+                                commonSearchMatch(row.email??'', parameters.data?.search??'') ||
+                                commonSearchMatch(row.email_unverified??'', parameters.data?.search??'') ||
+                                commonSearchMatch(row.id?.toString()??'', parameters.data?.search??''))
+                            )
                     .sort((/**@type{server_db_file_iam_user}*/first, /**@type{server_db_file_iam_user}*/second)=>{
                         const default_sort = 'id';
                         /**@ts-ignore */
