@@ -134,8 +134,8 @@ const serverResponse = async parameters =>{
         const message = {error:{
                                 http:parameters.result_request.http, 
                                 code:parameters.result_request.code, 
-                                //return SERVER ERROR if status code starts with 5 and not admin app or show full error
-                                text:(common_app_id!=app_id_host && parameters.result_request.http?.toString().startsWith('5'))?'SERVER ERROR':parameters.result_request.text, 
+                                //return SERVER ERROR if status code ==500
+                                text:(common_app_id!=app_id_host && parameters.result_request.http == 500)?'SERVER ERROR':parameters.result_request.text, 
                                 developer_text:parameters.result_request.developerText, 
                                 more_info:parameters.result_request.moreInfo}};
         //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
