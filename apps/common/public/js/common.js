@@ -1844,8 +1844,7 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
         const password = COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password').textContent;
         switch (choice){
             case null:{
-                if (COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_local').style.display == 'block' &&
-                    commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
+                if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit'),
                                     {
                                         password: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password')
                                     })==false)
@@ -1861,7 +1860,7 @@ const commonUserDelete = async (choice=null, function_delete_event ) => {
                 
                 const json_data = { password: password};
     
-               commonFFB({path:`/server-db/user_account/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
+               commonFFB({path:`/server-iam/iam_user-db/${COMMON_GLOBAL.iam_user_id}`, method:'DELETE', authorization_type:'APP_ACCESS', body:json_data, spinner_id:'common_dialogue_iam_edit_btn_user_delete_account'})
                 .then(()=>  resolve({deleted: 1}))
                 .catch(err=>reject(err));
                 break;
@@ -2029,7 +2028,7 @@ const commonUserUpdatePassword = () => {
                      password_confirm: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_password_new_confirm'),
                      
                      })==true){
-       commonFFB({path:`/server-db/user_account-password/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS_VERIFICATION', body:json_data, spinner_id:'common_dialogue_iam_password_new_icon'})
+       commonFFB({path:`/server-iam/iam_user-password/${COMMON_GLOBAL.iam_user_id}`, method:'PATCH', authorization_type:'APP_ACCESS_VERIFICATION', body:json_data, spinner_id:'common_dialogue_iam_password_new_icon'})
         .then(()=>{
             commonComponentRemove('common_dialogue_iam_password_new', true);
             commonDialogueShow('LOGIN');
@@ -2927,9 +2926,7 @@ const commonEvent = async (event_type,event=null) =>{
                         }
                         case 'common_dialogue_iam_edit_btn_user_delete_account':{
                             const function_delete_user_account = () => { 
-                                commonUserDelete(1, null)
-                                .then(()=>COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null)
-                                .catch(()=>null);
+                                commonUserDelete(1, null);
                             };
                             await commonUserDelete(null, function_delete_user_account);
                             
