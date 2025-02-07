@@ -814,9 +814,8 @@ const commonWindowWait = async milliseconds => new Promise ((resolve)=>{commonWi
  * @param {string} str 
  * @returns {string}
  */
-const commonWindowToBase64 = str => {
-    return COMMON_WINDOW.btoa(unescape(encodeURIComponent(str)));
-};	
+const commonWindowToBase64 = str => COMMON_WINDOW.btoa(COMMON_WINDOW.encodeURIComponent(str));
+
 /**
  * @name commonWindowFromBase64
  * @description Convert base64 to string
@@ -824,9 +823,7 @@ const commonWindowToBase64 = str => {
  * @param {string} str 
  * @returns {string}
  */
-const commonWindowFromBase64 = (str) => {
-    return decodeURIComponent(escape(COMMON_WINDOW.atob(str)));
-};
+const commonWindowFromBase64 = str => COMMON_WINDOW.decodeURIComponent(COMMON_WINDOW.atob(str));
 
 /**
  * @name commonWindowNavigatorLocale
