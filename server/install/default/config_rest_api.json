@@ -1375,7 +1375,7 @@
                 }
             }
         },
-        "/bff/app_access_verification/v1/server-db/user_account-password/${IAM_user_account_id}": {
+        "/bff/app_access_verification/v1/server-iam/iam_user-password/${IAM_iam_user_id}": {
             "patch": {
                 "summary": "",
                 "operationId": "server.iam.iamAuthenticateUserUpdatePassword",
@@ -1389,7 +1389,7 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
                             "in":"path",
                             "required":true
                         },
@@ -1447,99 +1447,6 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/user_account/${IAM_user_account_id}": {
-            "patch": {
-                "summary": "",
-                "operationId": "server_db.dbModelUserAccount.update",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
-                        },
-                        {
-                            "$ref": "#/components/parameters/server_ip",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_user_agent",
-                            "required":true
-                        },
-			            {
-                            "$ref": "#/components/parameters/server_accept_language",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "username":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "password_new":{
-                                                "type":"string"
-                                            },
-                                            "password_reminder":{
-                                                "type":"string"
-                                            },
-                                            "bio":{
-                                                "type":"string"
-                                            },
-                                            "private":{
-                                                "type":"string"
-                                            },
-                                            "avatar":{
-                                                "type":"string"
-                                            },
-                                            "email":{
-                                                "type":"string"
-                                            },
-                                            "new_email":{
-                                                "type":"string"
-                                            },
-                                            "verification_code":{
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/app_access/v1/server-db/user_account/${IAM_user_account_id}": {
             "get": {
                 "summary": "",
@@ -1559,57 +1466,6 @@
                             "required":true
                         }
                 ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
-                                            {"properties": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            },
-            "delete": {
-                "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserDelete",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "$ref": "#/components/parameters/IAM_user_account_id",
-                            "in":"path",
-                            "required":true
-                        }
-                ],
-                "requestBody":{
-                            "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "password":{
-                                                "required":true,
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-			            },
                 "responses": {
                     "oneOf":[
                         {"allOf":[
@@ -2389,6 +2245,79 @@
                                             "user_account_app_data_post_id":{
                                                 "required":true,
                                                 "type":"number"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+			            },
+                "responses": {
+                    "oneOf":[
+                        {"allOf":[
+                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
+                                {
+                                    "allOf":[
+                                            {"$ref": "#/components/schema/SuccessResponseSingleResource"},
+                                            {"properties": ""}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"$ref": "#/components/schema/ErrorResponse"}
+                    ]
+                }
+            }
+        },
+        "/bff/app_access/v1/server-iam/iam_user-db/${IAM_iam_user_id}":{
+            "delete": {
+                "summary": "",
+                "operationId": "server.iam.iamAuthenticateUserDbDelete",
+                "security":[
+                    {"$ref": "#/components/securitySchemes/id-token"},
+                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
+                ],
+                "parameters": [
+                        {"description": "parameters"},
+                        {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_iam_user_id",
+                            "in":"path",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_ip",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_user_agent",
+                            "required":true
+                        },
+			            {
+                            "$ref": "#/components/parameters/server_accept_language",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_idtoken",
+                            "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/server_authorization",
+                            "required":true
+                        }
+                ],
+                "requestBody":{
+                            "description":"",
+                            "required":true,
+                            "content":{
+                                "application/json":{
+                                    "schema":{
+                                        "type":"object" ,
+                                        "properties":{
+                                            "password":{
+                                                "required":true,
+                                                "type":"string"
                                             }
                                         }
                                     }
