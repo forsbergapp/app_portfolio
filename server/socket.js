@@ -514,4 +514,4 @@ const CheckOnline = parameters => { /**@ts-ignore */
                                                         {online:0}, 
                                             type:'JSON'};};
 
-export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline};
+export {socketClientSend, socketClientGet, socketConnectedUpdate, socketConnectedGet, socketConnectedList, socketAdminSend, socketAppServerFunctionSend, socketConnectedCount, socketConnect, socketIntervalCheck, CheckOnline, socketExpiredTokensUpdate};

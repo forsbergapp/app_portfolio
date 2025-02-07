@@ -104,8 +104,9 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
  */
 const iamUtilTokenExpired = (app_id, token_type, token) =>{
     try {
-        iamUtilTokenGet(app_id, token, token_type);
-        return false;
+        return iamUtilTokenGet(app_id, token, token_type) && 
+                    fileModelIamAppAccess.get(app_id,null).result
+                    .filter((/**@type{server_db_file_iam_app_access}*/row)=>row.token==token)[0].res!=1;
     } catch (error) {
         return true;   
     }
@@ -305,7 +306,7 @@ const iamAuthenticateUser = async parameters =>{
                 if (dbUser.result){
                     const user_account_id = dbUser.result.length>0?
                                                 dbUser.result[0].id:
-                                                    await dbModelUserAccount.userPost(parameters.app_id, 
+                                                    await dbModelUserAccount.post(parameters.app_id, 
                                                                                         /**@ts-ignore */
                                                                                         {iam_user_id:user.id})
                                                             .then(result=>result.http?
@@ -817,7 +818,7 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
             /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
             const eventData = {
                 /**@ts-ignore */
-                user_account_id: parameters.resource_id,
+                user_account_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS').user_account_id,
                 event: 'PASSWORD_RESET',
                 event_status: 'SUCCESSFUL'
             };
@@ -838,7 +839,7 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
             return result_update.http?result_update:{   http:404,
                                                         code:'IAM',
                                                         text:'?!',
-                                                        developerText:'iamAuthenticateUserUpdatePassword',
+                                                        developerText:null,
                                                         moreInfo:null,
                                                         type:'JSON'
                                                     };
@@ -849,17 +850,79 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
 };
 /**
  * @name iamAuthenticateUserDelete
- * @description IAM Authenticates user delete
+ * @description IAM Authenticates user delete of IAM user
  * @function 
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
+ *          ip:string,
+ *          idToken:string,
+ *          authorization:string,
+ *          user_agent:string,
+ *          accept_language:string,
  *          data:{password:string},
  *          locale:string}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const iamAuthenticateUserDelete = async parameters => fileModelIamUser.deleteRecord(parameters.app_id, parameters.resource_id, {password:parameters.data.password});
+
+/**
+ * @name iamAuthenticateUserDbDelete
+ * @description IAM Authenticates user delete of database user and logs out
+ * @function 
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+*          resource_id:number,
+*          ip:string,
+*          idToken:string,
+*          authorization:string,
+*          user_agent:string,
+*          accept_language:string,
+*          data:{password:string},
+*          locale:string}} parameters
+* @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+*/
+const iamAuthenticateUserDbDelete = async parameters => {
+    /**@type{import('./db/dbModelUserAccount.js')} */
+    const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
+    /**@type{import('./security.js')} */
+    const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);    
+
+    if (parameters.resource_id!=null){
+        const user = fileModelIamUser.get(parameters.app_id, parameters.resource_id);
+        if (user.result)
+            if (await securityPasswordCompare(parameters.data.password, user.result[0]?.password))
+                return await iamUserLogout({app_id:parameters.app_id,
+                                            idToken:parameters.idToken,
+                                            ip:parameters.ip,
+                                            authorization:parameters.authorization,
+                                            user_agent:parameters.user_agent,
+                                            accept_language:parameters.accept_language})
+                            .then(result_logout=>result_logout.http?
+                                                        result_logout:
+                                                            dbModelUserAccount.deleteUser(parameters.app_id, 
+                                                                                            /**@ts-ignore */
+                                                                                            iamUtilTokenGet(parameters.app_id, 
+                                                                                                            parameters.authorization, 'APP_ACCESS').user_account_id));
+            else
+                return {http:401,
+                        code:'IAM',
+                        text:iamUtilMessageNotAuthorized(),
+                        developerText:null,
+                        moreInfo:null,
+                        type:'JSON'
+                    };
+        else
+            return user;
+    }
+    return {http:400,
+            code:'IAM',
+            text:iamUtilMessageNotAuthorized(),
+            developerText:null,
+            moreInfo:null,
+            type:'JSON'
+        };
     
+};
 
 /**
  * @name iamAuthenticateUserCommon
@@ -1760,13 +1823,12 @@ const iamUserGetLastLogin = (app_id, id) =>fileModelIamAppAccess.get(app_id, nul
 
 const iamUserLogout = async parameters =>{
     /**@type{import('./socket.js')} */
-    const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
+    const {socketConnectedUpdate, socketExpiredTokensUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
 
     //set token expired after user is logged out in app
-    return await iamUtilTokenExpiredSet(parameters.app_id, parameters.authorization, parameters.ip)
-    .then(result=>{
-        return result.http?result:
-        //remove token from connected list
+    const result = await iamUtilTokenExpiredSet(parameters.app_id, parameters.authorization, parameters.ip);
+    if (result.result){
+        socketExpiredTokensUpdate();
         socketConnectedUpdate(parameters.app_id, 
             {   idToken:parameters.idToken,
                 user_account_id:null,
@@ -1778,7 +1840,12 @@ const iamUserLogout = async parameters =>{
                 ip:parameters.ip,
                 headers_user_agent:parameters.user_agent,
                 headers_accept_language:parameters.accept_language});
-    });       
+        return result;
+    }
+    else
+        return result;
+
+        
 };
 
 export{ iamUtilMessageNotAuthorized,
@@ -1792,6 +1859,7 @@ export{ iamUtilMessageNotAuthorized,
         iamAuthenticateUserUpdate,
         iamAuthenticateUserUpdatePassword,
         iamAuthenticateUserDelete,
+        iamAuthenticateUserDbDelete,
         iamAuthenticateUserCommon,
         iamAuthenticateRequest,
         iamAuthenticateApp,
