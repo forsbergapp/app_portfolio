@@ -1042,11 +1042,10 @@ const appComponentSettingUpdate = async (setting_tab, setting_type, item_id=null
  * @name appUserLogin
  * @description User login
  * @function
- * @param {boolean} admin
  * @returns {Promise.<void>}
  */
-const appUserLogin = async (admin=false) => {
-    await common.commonUserLogin(admin)
+const appUserLogin = async () => {
+    await common.commonUserLogin()
     .then(()=>{
         //create intitial user setting if not exist, send initial=true
         appUserSettingFunction('ADD_LOGIN', true)

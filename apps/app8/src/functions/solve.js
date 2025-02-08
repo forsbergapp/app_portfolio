@@ -80,7 +80,7 @@ const cubeSolve = async parameters =>{
 				if (solver2_moves_from_solved=='')
 						return {result:[], type:'JSON'};
 				else{
-					await socketAppServerFunctionSend(parameters.app_id, parameters.idToken, 'PROGRESS', btoa(JSON.stringify({part:1, total:3, text:''})));
+					await socketAppServerFunctionSend(parameters.app_id, parameters.idToken, 'PROGRESS', Buffer.from(JSON.stringify({part:1, total:3, text:''})).toString('base64'));
 					// Solve using Kociemba algorithm from calculated moves from solved using first Thistlewaite
 					/**
 					 * @param {string} moves
@@ -99,7 +99,7 @@ const cubeSolve = async parameters =>{
 						});
 					};					
 					const solution1 = await solve1(solver2_moves_from_solved);
-					await socketAppServerFunctionSend(parameters.app_id, parameters.idToken, 'PROGRESS', btoa(JSON.stringify({part:2, total:3, text:''})));
+					await socketAppServerFunctionSend(parameters.app_id, parameters.idToken, 'PROGRESS', Buffer.from(JSON.stringify({part:2, total:3, text:''})).toString('base64'));
 					const timer2 = Date.now();
 					const solution2 = solver2.solve(parameters.data.cube_currentstate, parameters.data.cube_goalstate ?? GOAL_SOLVE);
 					const timer3 = Date.now();

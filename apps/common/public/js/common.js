@@ -812,9 +812,10 @@ const commonWindowWait = async milliseconds => new Promise ((resolve)=>{commonWi
  * @description Convert string to Base64
  * @function
  * @param {string} str 
+ * @aram {boolean} btoa_only
  * @returns {string}
  */
-const commonWindowToBase64 = str => COMMON_WINDOW.btoa(COMMON_WINDOW.encodeURIComponent(str));
+const commonWindowToBase64 = (str,btoa=false) => COMMON_WINDOW.btoa(btoa?str:COMMON_WINDOW.encodeURIComponent(str));
 
 /**
  * @name commonWindowFromBase64
@@ -1570,20 +1571,14 @@ const commonProfileUpdateStat = async () => {
  * @name commonUserLogin
  * @description User login
  * @function
- * @param {boolean|null} admin 
  * @returns {Promise. <{    avatar: string|null}>}
  */
-const commonUserLogin = async (admin=false) => {
-    let json_data = {};
+const commonUserLogin = async () => {
     let spinner_item = '';
     let current_dialogue = '';
-    if (admin) {
+    if (COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id) {
         spinner_item = 'common_dialogue_iam_start_login_admin_button';
         current_dialogue = 'common_dialogue_iam_start';
-        // ES6 object spread operator for user variables
-        json_data = {   username:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username').textContent),
-                        password:  encodeURI(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent)
-        };
         if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                         {
                         username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username'),
@@ -1592,17 +1587,11 @@ const commonUserLogin = async (admin=false) => {
                                             COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password_confirm'):
                                                 null
                         })==false)
-            throw 'ERROR';
-        
+            throw 'ERROR';        
     }
     else{
         spinner_item = 'common_dialogue_iam_start_login_button';
         current_dialogue = 'common_dialogue_iam_start';
-
-        // ES6 object spread operator for user variables
-        json_data = {   username:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent,
-                        password:  COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent
-        };
         if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start'),
                         {
                         username: COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username'),
@@ -1610,7 +1599,16 @@ const commonUserLogin = async (admin=false) => {
                         })==false)
             throw 'ERROR';
     }
-    const result_iam = await commonFFB({path:'/server-iam-login', method:'POST', authorization_type:'IAM', body:json_data, spinner_id:spinner_item});
+    const result_iam = await commonFFB({path:'/server-iam-login', 
+                                        method:'POST', 
+                                        authorization_type:'IAM', 
+                                        username:encodeURI(COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id?
+                                                            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_username').textContent:
+                                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_username').textContent),
+                                        password:encodeURI(COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id?
+                                                            COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_admin_password').textContent:
+                                                                COMMON_DOCUMENT.querySelector('#common_dialogue_iam_start_login_password').textContent),
+                                        spinner_id:spinner_item});
     if (JSON.parse(result_iam).active==1){
         COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
         COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
@@ -1619,7 +1617,7 @@ const commonUserLogin = async (admin=false) => {
         COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
         COMMON_GLOBAL.token_timestamp =         JSON.parse(result_iam).tokentimestamp;
 
-        if (admin){
+        if (COMMON_GLOBAL.admin_app_id == COMMON_GLOBAL.app_id){
             COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
             COMMON_GLOBAL.token_at	    = null;
             commonComponentRemove(current_dialogue, true);
@@ -2194,6 +2192,8 @@ const commonModuleLeafletInit = async parameters => {
  *          query?:string|null,
  *          method:import('../../../common_types.js').CommonRESTAPIMethod,
  *          authorization_type:import('../../../common_types.js').CommonRESTAPIAuthorizationType,
+ *          username?:string,
+ *          password?:string,
  *          body?:*,
  *          spinner_id?:string|null}} parameter
  * @returns {Promise.<*>} 
@@ -2224,7 +2224,7 @@ const commonFFB = async parameter => {
             break;
         }
         case 'IAM':{
-            authorization = `Basic ${COMMON_WINDOW.btoa(parameter.body.username + ':' + parameter.body.password)}`;
+            authorization = `Basic ${commonWindowToBase64(parameter.username + ':' + parameter.password)}`;
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
             break;
         }
@@ -2270,7 +2270,7 @@ const commonFFB = async parameter => {
                                 'id-token': `Bearer ${COMMON_GLOBAL.token_dt}`,
                                 ...(authorization && {Authorization: authorization})
                             },
-                    body: JSON.stringify(parameter.body)
+                    body: JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameter.body))})
                 };
         if (parameter.spinner_id && COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`))
             COMMON_DOCUMENT.querySelector(`#${parameter.spinner_id}`).classList.add('css_spinner');

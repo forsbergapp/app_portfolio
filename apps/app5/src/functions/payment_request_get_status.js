@@ -103,7 +103,7 @@ const paymentRequestGetStatus = async parameters =>{
                                     token:parameters.authorization.split('Bearer ')[1], 
                                     exp:access_token.exp
                                 };
-                                socketClientSend(user_connected.response, btoa(JSON.stringify(message)), 'APP_FUNCTION');    
+                                socketClientSend(user_connected.response, Buffer.from(JSON.stringify(message)).toString('base64'), 'APP_FUNCTION');    
                             }
                         }
                         return {result:{message:data_encrypted}, type:'JSON'};
