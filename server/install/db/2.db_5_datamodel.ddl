@@ -201,19 +201,6 @@ CREATE TABLE <DB_SCHEMA/>.app_setting_type (
             ON DELETE CASCADE
 );
 
-CREATE TABLE <DB_SCHEMA/>.app_translation (
-    language_id                            INTEGER NOT NULL,
-    app_setting_id                         INTEGER NOT NULL,
-    text                                   VARCHAR(2000),
-    json_data                              TEXT,
-    CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id, language_id ),
-    CONSTRAINT app_translation_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_setting ( id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id )
-);
-
 CREATE TABLE <DB_SCHEMA/>.event (
     id            INTEGER NOT NULL CONSTRAINT event_pk PRIMARY KEY AUTOINCREMENT,
     event_name    VARCHAR(100) NOT NULL,

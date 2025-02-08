@@ -11,37 +11,12 @@
 <rejectLimit></rejectLimit>
 <storeAs>CLOB</storeAs>
 <columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
-<ColumnProxy name="avatar" id="3D220786-434F-B374-BDF2-10BB003E1971">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:12:32 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="bio" id="5A0C7DF7-65A7-DB7D-B712-DB9425A3E7D8">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="date_modified" id="6C712634-00F5-7454-3893-2CD8CBD78016">
 <createdBy>admin</createdBy>
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="user_level" id="72C6171D-C807-45E6-03ED-A9B48AC33903">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="date_created" id="77419BEB-CB94-49E7-2C51-38AD031A26C1">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="username" id="8B447387-4E64-ED95-2993-BDC63FFCBCFC">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="private" id="B41DDF52-F455-0CFA-E640-DDBE36166563">
 <createdBy>admin</createdBy>
 <createdTime>2022-05-03 21:13:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -66,12 +41,4 @@
 <indexSort>SORTED</indexSort>
 </PrimaryKey>
 </primaryKeys>
-<uniqueKeys>
-<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="user_account_username_UN" id="A048C95B-47FC-7FD5-5549-96E9BB11397E">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-<indexSort>SORTED</indexSort>
-</UniqueKey>
-</uniqueKeys>
 </TableProxyOraclev20c>

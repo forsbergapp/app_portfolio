@@ -26,6 +26,5 @@ const get = parameters =>
                         dbSql.APP_DATA_ENTITY_SELECT, 
                         {   resource_id: parameters.resource_id,
                             data_app_id : serverUtilNumberValue(parameters.data?.data_app_id)}, 
-                        null, 
                         null));
 export{get};

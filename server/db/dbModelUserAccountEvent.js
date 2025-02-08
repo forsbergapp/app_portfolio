@@ -27,7 +27,6 @@ const post = async (app_id, data) =>
                             event : data.event,
                             event_status : data.event_status
                         },
-                        null, 
                         null));
 /**
  * @name getLastUserEvent
@@ -46,7 +45,6 @@ const getLastUserEvent = async (app_id, user_account_id, event) =>
                             user_account_id: user_account_id,
                             event : event
                         },
-                        null, 
                         null));
 
 export {post, getLastUserEvent};

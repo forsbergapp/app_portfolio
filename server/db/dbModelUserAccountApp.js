@@ -32,7 +32,6 @@ const get = parameters =>
                            user_account_id: parameters.resource_id,
                            app_id: parameters.app_id
                        },
-                       null, 
                        null));
 
 /**
@@ -57,7 +56,6 @@ const getApps = async parameters => {
                        {
                            user_account_id: parameters.resource_id
                            },
-                       null, 
                        null));
 
     if (apps_db.result)
@@ -85,7 +83,6 @@ const post = async (app_id, user_account_id) =>
                             app_id: app_id,
                             user_account_id: user_account_id
                         }, 
-                        null, 
                         null));
 /**
  * @name update
@@ -112,7 +109,6 @@ const update = parameters =>
                             user_account_id: parameters.resource_id,
                             app_id: parameters.app_id
                             }, 
-                        null, 
                         null));
 
 /**
@@ -133,7 +129,6 @@ const deleteRecord = parameters =>
                             user_account_id: parameters.resource_id,
                             app_id: serverUtilNumberValue(parameters.data?.delete_app_id)
                         },
-                        null, 
                         null));
 
 export {get, getApps, post,update, deleteRecord};

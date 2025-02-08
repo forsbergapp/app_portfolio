@@ -164,19 +164,6 @@ CREATE TABLE <DB_SCHEMA/>.app_setting_type (
 
 GRANT SELECT ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_common;
 
-CREATE TABLE <DB_SCHEMA/>.app_translation (
-    language_id                            INTEGER NOT NULL,
-    app_setting_id                         INTEGER NOT NULL,
-    text                                   VARCHAR(2000),
-    json_data                              TEXT
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_translation TO app_portfolio_role_app_common;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
-                                                                                                 language_id );
-
-
 CREATE TABLE <DB_SCHEMA/>.event (
     id            INT NOT NULL AUTO_INCREMENT,
     event_name    VARCHAR(100) NOT NULL,
@@ -423,15 +410,6 @@ ALTER TABLE <DB_SCHEMA/>.app_setting_type
     ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES <DB_SCHEMA/>.app_setting ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_translation
-    ADD CONSTRAINT app_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES <DB_SCHEMA/>.language ( id );
 
 ALTER TABLE <DB_SCHEMA/>.event
     ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )

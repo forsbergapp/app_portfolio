@@ -28,7 +28,6 @@ const post = async (app_id, data) =>
                             user_account_app_data_post_id: data.user_account_app_data_post_id,
                             app_id: app_id
                         },
-                        null, 
                         null));
 
 export {post};

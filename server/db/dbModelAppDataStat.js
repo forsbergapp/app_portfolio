@@ -33,7 +33,6 @@ const get = parameters =>
                         {   resource_id         : serverUtilNumberValue(parameters.data.id),
 							data_app_id         : serverUtilNumberValue(parameters.data.data_app_id),
                             resource_name_entity: parameters.data.resource_name_entity},
-                        null, 
                         null));
 /**
  * @name getLog
@@ -69,7 +68,6 @@ const getLog = parameters =>
                             app_data_entity_resource_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_id),
                             app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_app_id),
                             app_data_entity_resource_app_data_entity_id :  serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_id)},
-                        null, 
                         null))
         .then(result =>{
                 if (result.result)
@@ -142,7 +140,6 @@ const getStatUniqueVisitor = parameters =>{
                                 app_data_entity_resource_id: 0,
                                 app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
                                 app_data_entity_resource_app_data_entity_id : 0},
-                            null, 
                             null))
             .then(result_logs =>{
                 if (result_logs.result)
@@ -198,7 +195,6 @@ const post = async (app_id, data) =>
                             app_data_entity_resource_app_data_entity_app_id:    data.app_data_entity_resource_app_data_entity_app_id,
                             app_data_entity_resource_app_data_entity_id:        data.app_data_entity_resource_app_data_entity_id
                             },
-                        null, 
                         null));
 
 export{get, getLog, getStatUniqueVisitor, post};
