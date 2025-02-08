@@ -34,7 +34,6 @@ const getUserPost = async (app_id, id) =>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_ID, 
                         {id: id},
-                        null, 
                         null);
 /**
  * @name getUserPostsByUserId
@@ -52,7 +51,6 @@ const getUserPostsByUserId = async parameters =>
                             user_account_id: parameters.resource_id,
                             app_id: parameters.app_id
                         },
-                        null, 
                         null)
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
                                 
@@ -74,7 +72,6 @@ const getProfileUserPosts = async parameters =>
                             user_account_id: parameters.resource_id,
                             app_id: parameters.app_id
                             },
-                        null, 
                         null)
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
@@ -93,7 +90,6 @@ const getProfileUserPosts = async parameters =>
                             id: parameters.resource_id,
                             app_id: parameters.app_id
                         },
-                        null, 
                         null)
                         .then(result=>(result.http ||result.result[0])?result:dbCommonRecordError(parameters.app_id, 404));
 /**
@@ -119,7 +115,6 @@ const getProfileStatPost = async parameters =>
                                         app_id: parameters.app_id,
                                         statchoice: serverUtilNumberValue(parameters.data?.statchoice)
                                     },
-                                    null, 
                                     null)
                                     .then(result=>{return {result:result.result
                                                                     .filter((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
@@ -159,7 +154,6 @@ const getProfileUserPostDetail = async parameters =>{
                                 app_id: parameters.app_id,
                                 detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
                             },
-                            null, 
                             null)
                             .then(result=>{return {result:result.result
                                                             .filter((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
@@ -202,7 +196,6 @@ const createUserPost = parameters => {
                                     DB_RETURN_ID:'id',
                                     DB_CLOB: ['json_data']
                                 },
-                                null, 
                                 null)
                                 .then(result=>resolve({ result:{
                                                                 id: result.result.insertId,
@@ -259,7 +252,6 @@ const updateUserPost = parameters =>
                             id: parameters.resource_id,
                             DB_CLOB: ['json_data']
                         },
-                        null, 
                         null)
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
@@ -278,7 +270,6 @@ const deleteUserPost = parameters =>
                         {   id: parameters.resource_id,
                             user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
                             app_id:parameters.app_id},
-                        null, 
                         null)
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 

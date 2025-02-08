@@ -14,8 +14,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
         /**@type{import('./db.js')} */
         const db = await import(`file://${process.cwd()}/server/db/db.js`);
-        /**@type{import('./common.js')} */
-        const common = await import(`file://${process.cwd()}/server/db/common.js`);
 
         /**@type{import('./dbSql.js')} */
         const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
@@ -63,12 +61,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
          */
         const adjustSqlParams = (sql, parameters) =>{
             sql = sql.replaceAll('<DB_SCHEMA/>', db_name);
-            if (sql.indexOf('<LOCALE/>')>0){
-                sql = sql.replaceAll('<LOCALE/>', ':locale1, :locale2, :locale3');
-                parameters = {...parameters, ...{	locale1: common.dbCommonLocaleGet(locale, 1),
-                                                    locale2: common.dbCommonLocaleGet(locale, 2),
-                                                    locale3: common.dbCommonLocaleGet(locale, 3)}};
-            }
             return {sql:sql, parameters:parameters};
                                 
         };
@@ -76,14 +68,13 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         //test as non DBA, app_id 0, current database
         const DBA = 1;
         const app_id = 0; //also pool_id
-        const locale = 'en';
         const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
         //Use default 5 if none is configured
         const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')) ?? 5;
         const db_name = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB',`DB${db_use}_NAME`);
         const connection = (db_use==1 ||db_use==2)?await pool_1_2(app_id, db_use):null;
         
-        //Test sql and parameters SELECT that contains <LOCALE/> and <DB_SCHEMA/> tags
+        //Test sql and parameters SELECT that contains <DB_SCHEMA/> tags
         const {sql:sql_select, parameters:sql_select_params} = adjustSqlParams(dbSql.APP_SETTING_SELECT, {  app_id : app_id,
                                                                                                             common_app_id: common_app_id,
                                                                                                             app_setting_type_name: 'PAPER_SIZE'
@@ -167,10 +158,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         //expect deleted key DB_CLOB
         expect(result_update.parameters?.DB_CLOB).toBeUndefined();
         if (db_use==1||db_use==2){
-            //expect locale variables IN SELECT
-            expect(result_select.sql.indexOf('\'en\', \'en\', \'en\'')).toBeGreaterThan(-1);
-            expect(result_select.parameters?.locale1 == 'en' && result_select.parameters?.locale2 == 'en' && result_select.parameters?.locale3 == 'en').toBe(true);
-
             //expect correct parameters in INSERT
             //expect NULL to occur 17 times in INSERT sql
             expect(result_insert.sql.match(/NULL/g).length).toBe(17);
@@ -217,12 +204,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
             expect(result_update.parameters?.verification_code).toBe(null);
         }
         if (db_use==3){
-            //expect locale variables
-            //expect '$4, $5 and $6' to occur 1 time in SELECT sql (these arre added to after the 3 parameters used in test)
-            expect(result_select.sql.match(/\$4, \$5, \$6/g).length).toBe(1);
-            //expect value 'en' to occur in array index 3,4 and 5 in SELECT parameter array
-            expect(result_select.parameters[3] == 'en' && result_select.parameters[4] == 'en' &&result_select.parameters[5] == 'en').toBe(true);
-
             //expect return statement IN INSERT
             expect(result_insert.sql.indexOf('RETURNING id')).toBeGreaterThan(-1);
             //expect correct parameters in INSERT
@@ -277,10 +258,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         }
         //expect different result in each database
         if (db_use==4){
-            //expect locale variables IN SELECT
-            expect(result_select.sql.indexOf(':locale1, :locale2, :locale3')).toBeGreaterThan(-1);
-            expect(result_select.parameters?.locale1 == 'en' && result_select.parameters?.locale2 == 'en' && result_select.parameters?.locale3 == 'en').toBe(true);
-
             //expect return statement IN INSERT
             expect(result_insert.sql.indexOf('RETURNING id INTO :insertId')).toBeGreaterThan(-1);
             expect(result_insert.parameters?.insertId.type).not.toBeUndefined();
@@ -305,11 +282,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
             expect(result_update.parameters?.insertId.dir).not.toBeUndefined();
         }        
         if (db_use==5){
-            //expect $locale to occur 3 times in SELECT sql
-            expect(result_select.sql.match(/\$locale/g).length).toBe(3);
-            //expect $locale to occur 3 times in SELECT parameter key names
-            expect(Object.keys(result_select.parameters).join().match(/\$locale/g)?.length).toBe(3);
-
             //expect $username to occur 1 time in sql INSERT
             expect(result_insert.sql.match(/\$bio/g).length).toBe(1);
             expect(result_insert.sql.match(/\$private/g).length).toBe(1);

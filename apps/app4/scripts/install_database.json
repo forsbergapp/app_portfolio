@@ -1,7 +1,6 @@
 {
     "install":[
-        {"db": null, "script": "1.db_all_app.sql"},
-        {"db": null, "script": "2.db_all_app_en.sql"}
+        {"db": null, "script": "1.db_all_app.sql"}
     ],
     "users":[
         {"db": 1, "sql": "CREATE USER <APP_USERNAME/> IDENTIFIED BY <APP_PASSWORD/> ACCOUNT UNLOCK"},

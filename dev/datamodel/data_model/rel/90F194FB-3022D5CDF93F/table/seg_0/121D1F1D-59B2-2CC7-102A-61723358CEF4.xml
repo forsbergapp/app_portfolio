@@ -140,9 +140,10 @@
 <colAssociation fkAssociation="ABF7CEF5-385E-08B8-5F54-FD0AA1FF4DFF" referredColumn="004CF753-1DEA-BA1F-3AE9-1FEF2B157FAF"/>
 </associations>
 </Column>
-<Column name="user_account_id" id="D6B8CE4F-E0F0-968E-DD5D-C0853FB28648">
+<Column name="user_account_id" id="3DF866D4-F092-15FF-3A5C-480347F5539A">
 <createdBy>admin</createdBy>
-<createdTime>2024-08-08 16:06:55 UTC</createdTime>
+<createdTime>2025-02-07 23:47:36 UTC</createdTime>
+<generatorID>7AB862C1-AF81-796A-C311-D6B532469403</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -200,7 +201,7 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="D6B8CE4F-E0F0-968E-DD5D-C0853FB28648"/>
+<colUsage columnID="3DF866D4-F092-15FF-3A5C-480347F5539A"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="B96F70BD-FAB8-F549-7ED7-D124306D2844" name="app_data_stat_user_account_app_FK">

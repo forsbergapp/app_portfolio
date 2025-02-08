@@ -41,7 +41,6 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                       entity_id           : serverUtilNumberValue(parameters.data.entity_id) ?? null,
                       user_null           : serverUtilNumberValue(parameters.data.user_null)?1:0
                       }, 
-                    null, 
                     null));
 /**
  * @name post
@@ -73,7 +72,6 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                       app_data_entity_resource_app_data_entity_id     : parameters.data.app_data_entity_resource_app_data_entity_id ?? null,
                       app_data_resource_master_attribute_id           : parameters.data.app_data_resource_master_attribute_id ?? null,
                       }, 
-                    null, 
                     null));
 
 /**
@@ -108,7 +106,6 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                       app_data_entity_resource_app_data_entity_id:parameters.data.app_data_entity_resource_app_data_entity_id ?? null,
                       app_data_resource_master_attribute_id:      parameters.data.app_data_resource_master_attribute_id ?? null
                       }, 
-                    null, 
                     null));
 /**
  * @name deleteRecord
@@ -131,6 +128,5 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
                       user_account_id:    parameters.data.user_account_id ?? null,
                       user_account_app_id:parameters.data.user_account_id?parameters.data.data_app_id:null,
                       data_app_id:        parameters.data.data_app_id ?? null}, 
-                    null, 
                     null));
 export{get, post, update, deleteRecord};

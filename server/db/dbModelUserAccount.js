@@ -38,7 +38,6 @@ const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.
 const get = async parameters =>dbCommonExecute(   parameters.app_id, 
                                             dbSql.USER_ACCOUNT_SELECT,
                                             {id: parameters.resource_id},
-                                            null, 
                                             null);
 
 /**
@@ -94,7 +93,6 @@ const getProfile = async parameters =>{
                                               id: parameters.resource_id
                                           }
                                           ,
-                                          null, 
                                           null)
                                           .then(result=>result.result
                                                           .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
@@ -177,7 +175,6 @@ const getProfileStat = async parameters =>{
                                               statchoice: serverUtilNumberValue(parameters.data?.statchoice),
                                               app_id: parameters.app_id
                                           },
-                          null, 
                           null)
                           .then(result=>{return {result:result.result
                                                           .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
@@ -215,7 +212,6 @@ const getProfileStat = async parameters =>{
                                 user_account_id: parameters.resource_id,
                                 detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
                             },
-                            null, 
                             null)
                             .then(result=>{return {result:result.result
                                                         .filter((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
@@ -245,7 +241,6 @@ const getStatCountAdmin = parameters =>
     dbCommonExecute(parameters.app_id, 
                     dbSql.USER_ACCOUNT_SELECT_STAT_COUNT,
                     {},
-                    null, 
                     null);
 
 /**
@@ -260,7 +255,6 @@ const getStatCountAdmin = parameters =>
 const getIamUser = async parameters =>dbCommonExecute(   parameters.app_id, 
                                           dbSql.USER_ACCOUNT_SELECT_IAM_USER,
                                           {iam_user_id: parameters.iam_user_id},
-                                          null, 
                                           null);
 
 /**
@@ -279,7 +273,6 @@ const update = async parameters =>dbCommonExecute(parameters.app_id,
                                    iam_user_id:parameters.data.iam_user_id,
                                    id: parameters.resource_id
                                },
-                               null, 
                                null);
 
 /**
@@ -297,7 +290,6 @@ const post = async (app_id, data) =>
                         iam_user_id:data.iam_user_id,
                         DB_RETURN_ID:'id'
                     },
-                    null, 
                     null);
 
                     /**
@@ -312,7 +304,6 @@ const deleteUser = async (app_id, id) =>
     dbCommonExecute(app_id, 
                     dbSql.USER_ACCOUNT_DELETE,
                     {id: id},
-                    null, 
                     null);
 
 export {get, 
