@@ -197,8 +197,9 @@ const bffStart = async (req, res) =>{
         }
         else{
             //REST API route
-            //REST API requests from client are encoded
-            const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8').toString()):'';   
+            //REST API requests from client are encoded using base64
+            const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
+            const decodedbody = bff_parameters.body?.data?JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):'';   
             
             serverResponse({app_id:app_id,
                             result_request:await serverREST_API({   app_id:app_id, 
@@ -213,7 +214,7 @@ const bffStart = async (req, res) =>{
                                                                     idToken:bff_parameters.idToken, 
                                                                     authorization:bff_parameters.authorization ?? '', 
                                                                     parameters:decodedquery, 
-                                                                    body:bff_parameters.body,
+                                                                    body:decodedbody,
                                                                     res:bff_parameters.res})
                                                     .then((/**@type{*}*/result_service) => {
                                                         const log_result = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';

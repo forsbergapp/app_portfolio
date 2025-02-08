@@ -249,7 +249,9 @@ const appInit = async () => {
                     commonLovClose:common.commonLovClose,
                     commonMessageShow:common.commonMessageShow,
                     commonComponentRemove:common.commonComponentRemove,
-                   commonFFB:common.commonFFB},
+                    commonWindowToBase64:common.commonWindowToBase64,
+                    commonWindowFromBase64:common.commonWindowFromBase64,
+                    commonFFB:common.commonFFB},
         path:       '/component/cube.js'})
     .then((/**@type{{   data:null,
                         methods:{   cube_init:                  function, 

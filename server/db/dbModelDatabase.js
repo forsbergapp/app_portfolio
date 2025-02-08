@@ -191,7 +191,7 @@ const dbInstallGetFiles = async (install_type) =>{
                             data:{app_id:null,
                                 client_id:socketClientGet(parameters.idToken),
                                 broadcast_type:'PROGRESS',
-                                broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))}});
+                                broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:files.length, text:file[1]})).toString('base64')}});
         install_count++;
         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const install_obj = JSON.parse(install_json);
@@ -407,7 +407,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                 data:{  app_id:null, 
                                         client_id:socketClientGet(parameters.idToken),
                                         broadcast_type:'PROGRESS',
-                                        broadcast_message:btoa(JSON.stringify({part:install_count, total:files.length, text:file[1]}))
+                                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:files.length, text:file[1]})).toString('base64')
 
                                 }});
             install_count++;
@@ -719,7 +719,7 @@ const dbInstallGetFiles = async (install_type) =>{
                             data:{  app_id:null,
                                     client_id:socketClientGet(parameters.idToken),
                                     broadcast_type:'PROGRESS',
-                                    broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'}))
+                                    broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:'Generating key pair...'})).toString('base64')
                                 }});
         const {publicKey, privateKey} = await securityKeyPairCreate();
         const demo_public_key = publicKey;
@@ -731,7 +731,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                 data:{  app_id:null,        
                                         client_id:socketClientGet(parameters.idToken),
                                         broadcast_type:'PROGRESS',
-                                        broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username}))
+                                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})).toString('base64')
                                 }
                             });
             install_count++;
@@ -1018,7 +1018,7 @@ const dbInstallGetFiles = async (install_type) =>{
                                 data:{  app_id:null,
                                         client_id:socketClientGet(parameters.idToken),
                                         broadcast_type:'PROGRESS',
-                                        broadcast_message:btoa(JSON.stringify({part:install_count, total:install_total_count, text:social_type}))
+                                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total_count, text:social_type})).toString('base64')
                                 }
                             });
             //4A.Create random sample
@@ -1160,7 +1160,7 @@ const dbDemoUninstall = async parameters => {
                                         data:{  app_id:null,
                                                 client_id:socketClientGet(parameters.idToken),
                                                 broadcast_type:'PROGRESS',
-                                                broadcast_message:btoa(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username}))
+                                                broadcast_message:Buffer.from(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})).toString('base64')
                                         }
                                     });
                     //delete database user then iam user

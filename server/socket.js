@@ -78,8 +78,7 @@ const socketConnectedUserDataGet = async (app_id, user_account_id, ip, headers_u
  * @returns {void}
  */
  const socketClientSend = (res, message, message_type) => {
-    res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
-                               "broadcast_message": "${ message }"}`)}\n\n`);
+    res.write (`data: ${Buffer.from(JSON.stringify({broadcast_type : message_type, broadcast_message: message})).toString('base64')}\n\n`);
     res.flush();
 };
 /**
@@ -176,11 +175,12 @@ const socketClientAdd = (newClient) => {
                 connected.timezone = connectUserData.timezone;
                 //send message to client with updated data
                 socketClientSend( connected.response, 
-                            btoa(JSON.stringify({   client_id: connected.id, 
-                                                    latitude: connectUserData.latitude,
-                                                    longitude: connectUserData.longitude,
-                                                    place: connectUserData.place,
-                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
+                                    Buffer.from(JSON.stringify({   client_id: connected.id, 
+                                        latitude: connectUserData.latitude,
+                                        longitude: connectUserData.longitude,
+                                        place: connectUserData.place,
+                                        timezone: connectUserData.timezone})).toString('base64')
+                                    , 'CONNECTINFO');
             }
         }
         return {result:null, type:'JSON'};
@@ -446,11 +446,10 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
     
         socketClientAdd(newClient);
         //send message to client with data
-        
-        socketClientSend(parameters.data.res, btoa(JSON.stringify({ latitude: connectUserData.latitude,
-                                                                    longitude: connectUserData.longitude,
-                                                                    place: connectUserData.place,
-                                                                    timezone: connectUserData.timezone})), 'CONNECTINFO');
+        socketClientSend(parameters.data.res, Buffer.from(JSON.stringify({ latitude: connectUserData.latitude,
+                                                                            longitude: connectUserData.longitude,
+                                                                            place: connectUserData.place,
+                                                                            timezone: connectUserData.timezone})).toString('base64'), 'CONNECTINFO');
     }
 };
 

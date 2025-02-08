@@ -5600,24 +5600,7 @@
                 ],
                 "requestBody":{
                             "description":"",
-                            "required":true,
-                            "content":{
-                                "application/json":{
-                                    "schema":{
-                                        "type":"object" ,
-                                        "properties":{
-                                            "username":{
-                                                "required":true,
-                                                "type":"string"
-                                            },
-                                            "password":{
-                                                "required":true,
-                                                "type":"string"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            "content":{}
 			            },
                 "responses": {
                     "oneOf":[

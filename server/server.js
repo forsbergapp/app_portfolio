@@ -38,7 +38,7 @@ const zlib = await import('node:zlib');
  *  @param {{app_id?:number|null,
  *           result_request:{   http?:number|null,
  *                              code?:number|string|null,
- *                              text?:string|null,
+ *                              text?:*,
  *                              developerText?:string|null,
  *                              moreInfo?:string|null,
  *                              result?:*,
@@ -58,6 +58,7 @@ const serverResponse = async parameters =>{
     /**@type{import('./db/fileModelConfig.js')} */
     const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
     const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+    const admin_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'));
     /**
      * Sets response type
      * @param {server_server_response_type} type
@@ -135,7 +136,11 @@ const serverResponse = async parameters =>{
                                 http:parameters.result_request.http, 
                                 code:parameters.result_request.code, 
                                 //return SERVER ERROR if status code ==500
-                                text:(common_app_id!=app_id_host && parameters.result_request.http == 500)?'SERVER ERROR':parameters.result_request.text, 
+                                text:(admin_app_id!=app_id_host && parameters.result_request.http == 500)?
+                                        'SERVER ERROR':
+                                            parameters.result_request.text?.message?
+                                                parameters.result_request.text?.message:
+                                                    parameters.result_request.text, 
                                 developer_text:parameters.result_request.developerText, 
                                 more_info:parameters.result_request.moreInfo}};
         //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
@@ -1005,12 +1010,12 @@ const serverREST_API = async (routesparameters) =>{
                                         }:
                                         //all other methods use body to send data
                                         //if addtional properties allowed then add to defined parameters or only parameters matching defined parameters
-                                        (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json'].schema.additionalProperties)?
-                                            {...routesparameters.body,...Object.entries(methodObj.requestBody.content['application/json'].schema.properties)
+                                        (methodObj.requestBody?.content && methodObj.requestBody?.content['application/json']?.schema?.additionalProperties)?
+                                            {...routesparameters.body,...Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
                                                                             .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                                                 return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};
                                                                             },{})}:
-                                                        (methodObj.requestBody?.content?Object.entries(methodObj.requestBody?.content['application/json'].schema.properties)
+                                                        ((methodObj?.requestBody?.content && Object.keys(methodObj?.requestBody?.content).length>0)?Object.entries(methodObj.requestBody?.content['application/json']?.schema?.properties)
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};
                                                         },{}):{});
