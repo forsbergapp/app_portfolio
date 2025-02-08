@@ -142,7 +142,7 @@ const timetable = async (timetable_parameters) => {
 
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
-	const urlParams = new URLSearchParams(decodedReportparameters);
+	const urlParams = new URLSearchParams(decodeURIComponent(decodedReportparameters));
 	const user_account_id = Number(urlParams.get('id'));
 	const user_account_app_data_post_id = Number(urlParams.get('sid'));
 	const reporttype = Number(urlParams.get('type'));
