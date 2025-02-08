@@ -424,34 +424,6 @@ const APP_SETTING_SELECT =
             s.data3 "data3",
             s.data4 "data4",
             s.data5 "data5",
-            (SELECT str.text
-            FROM <DB_SCHEMA/>.language l,
-                    <DB_SCHEMA/>.app_translation str
-            WHERE l.id = str.language_id
-                AND str.app_setting_id = s.id
-                AND l.locale = (SELECT COALESCE(MAX(l1.locale),'en')
-                                    FROM <DB_SCHEMA/>.app_translation str1,
-                                        <DB_SCHEMA/>.language l1
-                                    WHERE l1.id  = str1.language_id
-                                    AND str1.app_setting_id = str.app_setting_id
-                                    AND l1.locale IN (<LOCALE/>)
-                                    )
-            ) "text"
-      FROM <DB_SCHEMA/>.app_setting s
-     WHERE s.app_setting_type_app_setting_type_name LIKE COALESCE(:app_setting_type_name, s.app_setting_type_app_setting_type_name)
-       AND (((s.app_setting_type_app_id = :app_id) OR :app_id IS NULL)
-            OR
-            s.app_setting_type_app_id = :common_app_id)
-       AND s.display_data IS NULL
-     UNION ALL
-     SELECT s.id "id",
-            s.app_setting_type_app_id "app_id",
-            s.app_setting_type_app_setting_type_name "app_setting_type_name",
-            s.value "value",
-            s.data2 "data2",
-            s.data3 "data3",
-            s.data4 "data4",
-            s.data5 "data5",
             s.display_data "text"
        FROM <DB_SCHEMA/>.app_setting s
       WHERE s.app_setting_type_app_setting_type_name LIKE COALESCE(:app_setting_type_name, s.app_setting_type_app_setting_type_name)

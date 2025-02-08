@@ -25,68 +25,6 @@
 <autoIncrementCache>30</autoIncrementCache>
 <autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
 </Column>
-<Column name="username" id="8B447387-4E64-ED95-2993-BDC63FFCBCFC">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<generatorID>2E3343B3-F78D-7A14-0E8F-BBC895EB0EB6</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="bio" id="5A0C7DF7-65A7-DB7D-B712-DB9425A3E7D8">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<generatorID>AFBC41CF-1075-7D41-3628-499C8A77E0B3</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>150</dataTypeSize>
-<ownDataTypeParameters>150,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="private" id="B41DDF52-F455-0CFA-E640-DDBE36166563">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<generatorID>89554DCD-3D54-1281-7F96-C67E74864D89</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT026</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="avatar" id="3D220786-434F-B374-BDF2-10BB003E1971">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:12:32 UTC</createdTime>
-<generatorID>59BDC355-2C1A-1BC8-8C05-88F7C55ECCED</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT028</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="user_level" id="72C6171D-C807-45E6-03ED-A9B48AC33903">
-<createdBy>admin</createdBy>
-<createdTime>2022-05-03 21:13:06 UTC</createdTime>
-<generatorID>E14B262D-4F42-5956-EC9D-1FC8486CC9E5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>1</dataTypePrecision>
-<ownDataTypeParameters>,1,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="iam_user_id" id="EAE49D5D-7CBD-A691-A006-276D634CD459">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-04 12:12:32 UTC</createdTime>
@@ -135,17 +73,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="B9A82B48-5B54-90A2-6E38-A75563F07C00"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="A048C95B-47FC-7FD5-5549-96E9BB11397E" name="user_account_username_UN">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-17 18:49:13 UTC</createdTime>
-<generatorID>0AEC17CD-C2F5-B40B-6C02-090C17600FBF</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Unique Constraint</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="8B447387-4E64-ED95-2993-BDC63FFCBCFC"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>

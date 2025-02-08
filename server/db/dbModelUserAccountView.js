@@ -28,7 +28,6 @@ const post = async (app_id, data) =>
 							client_ip: data.client_ip,
 							client_user_agent: data.client_user_agent
 						},
-                        null, 
                         null));
 
 export {post};

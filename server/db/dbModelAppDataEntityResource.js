@@ -32,6 +32,5 @@ const get = parameters =>
                         entity_id: serverUtilNumberValue(parameters.data?.entity_id),
                         resource_name: parameters.data?.resource_name
                         }, 
-                    null, 
                     null));
 export {get};

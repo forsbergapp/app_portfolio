@@ -52,8 +52,7 @@ const dbInfo = parameters =>
                         {   database: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), 
                             database_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)
                         }, 
-                        DBA, 
-                        null));
+                        DBA));
 /**
  * @name dbInfoSpace
  * @description Database info space
@@ -69,8 +68,7 @@ const dbInfoSpace = parameters =>
                         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                             {}:
                                 {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}, 
-                        DBA, 
-                        null));
+                        DBA));
 /**
  * @name dbInfoSpaceSum
  * @description Database info space sum
@@ -86,8 +84,7 @@ const dbInfoSpaceSum = parameters =>
                         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                             {}:
                                 {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)},
-                        DBA, 
-                        null));
+                        DBA));
 
 /**
  * @name dbInstallGetFiles
@@ -356,8 +353,7 @@ const dbInstallGetFiles = async (install_type) =>{
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_SELECT_INSTALLED_CHECK, 
                         {app_id: parameters.app_id},
-                        DBA, 
-                        null)
+                        DBA)
                         .then((result)=>{
                             return {result:[{installed: result.http?0:1}], type:'JSON'};
                         })

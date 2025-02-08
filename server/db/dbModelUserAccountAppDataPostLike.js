@@ -31,7 +31,6 @@ const post = parameters =>
                             user_account_app_data_post_id: serverUtilNumberValue(parameters.data.user_account_app_data_post_id),
                             app_id: parameters.app_id
                         },
-                        null, 
                         null));
 /**
  * @name deleteRecord
@@ -52,7 +51,6 @@ const deleteRecord = parameters =>
                             user_account_app_data_post_id: serverUtilNumberValue(parameters.data.user_account_app_data_post_id),
                             app_id: parameters.app_id
                         },
-                        null, 
                         null));
 
 export{post, deleteRecord};

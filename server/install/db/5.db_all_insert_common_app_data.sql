@@ -6,7 +6,6 @@ INSERT INTO <DB_SCHEMA/>.app (id) VALUES (<APP_ID/>);
 --
 -- setting_type
 --
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('APP_THEME', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('ARABIC_SCRIPT', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_HIJRI_TYPE', <APP_ID/>);
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('DIRECTION', <APP_ID/>);
@@ -19,12 +18,8 @@ INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES
 INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PAPER_SIZE', <APP_ID/>);
 
 --
--- app setting with display data only
+-- app setting
 --
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'APP_THEME','1','Light',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'APP_THEME','2','Dark',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'APP_THEME','3','Caffè Latte',NULL,NULL,NULL,NULL);
-
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'ARABIC_SCRIPT','font_arabic_sans','Arabic Sans',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'ARABIC_SCRIPT','font_arabic_kufi','Arabic Kufi',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'ARABIC_SCRIPT','font_arabic_nashk','Arabic Nashk',NULL,NULL,NULL,NULL);
@@ -35,6 +30,9 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_HIJRI_TYPE','islamic-tbla','islamic-tbla',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_HIJRI_TYPE','islamic-civil','islamic-civil',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_HIJRI_TYPE','islamic-rgsa','islamic-rgsa',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_TYPE','GREGORIAN','Gregorian',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_TYPE','HIJRI','Hijri',NULL,NULL,NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'DIRECTION','ltr','🠆',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'DIRECTION','rtl','🠄',NULL,NULL,NULL,NULL);
@@ -60,6 +58,9 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'NUMBER_SYSTEM','telu','telu',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'NUMBER_SYSTEM','thai','thai',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'NUMBER_SYSTEM','tibt','tibt',NULL,NULL,NULL,NULL);
+
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PAPER_SIZE','A4','A4 (210 x 297 mm) portrait',NULL,NULL,NULL,NULL);
+INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PAPER_SIZE','Letter','Letter (8.5in x 11 in) portrait',NULL,NULL,NULL,NULL);
 
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'RESOURCE_TYPE','LOG','Log',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'RESOURCE_TYPE','PROFILE_SEARCH','Profile search',NULL,NULL,NULL,NULL);
@@ -517,21 +518,6 @@ INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'TIMEZONE','Etc/UTC','Etc/UTC',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'TIMEZONE','Etc/Universal','Etc/Universal',NULL,NULL,NULL,NULL);
 INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'TIMEZONE','Etc/Zulu','Etc/Zulu',NULL,NULL,NULL,NULL);
-
---
--- app setting with translation
---
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_TYPE','GREGORIAN',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'CALENDAR_TYPE','HIJRI',NULL,NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PAPER_SIZE','A4',NULL,NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PAPER_SIZE','Letter',NULL,NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'PAPER_SIZE' and app_setting_type_app_id = <APP_ID/> AND value='A4'),147,'A4 (210 x 297 mm) portrait');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'PAPER_SIZE' and app_setting_type_app_id = <APP_ID/> AND value='Letter'),147,'Letter (8.5in x 11 in) portrait');
-
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = <APP_ID/> AND value='GREGORIAN'),147,'Gregorian');
-INSERT INTO <DB_SCHEMA/>.app_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = <APP_ID/> AND value='HIJRI'),147,'Hijri');
 
 --
 -- app_data_entity

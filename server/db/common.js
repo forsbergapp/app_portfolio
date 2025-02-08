@@ -36,42 +36,6 @@ const dbCommonRecordError = (app_id, statusCode, error=null) =>{
 };
 
 /**
- * @name dbCommonLocaleGet
- * @description	Get locale part
- * 				1 = complete lang code
- * 				2 = ex zh-hant from zh-hant-cn
- * 				3 = ex zh from zh-hant-cn
- * @function
- * @param {string} locale 
- * @param {number} part 
- * @returns {string|null}
- */
-const dbCommonLocaleGet = (locale, part) => {
-	if (locale==null)
-		return null;
-	else
-		switch (part){
-			case 1:{
-				return locale;
-			}
-			case 2:{
-				if (locale.indexOf('-',locale.indexOf('-')+1) >-1)
-					return locale.substring(0,locale.indexOf('-',locale.indexOf('-')+1));
-				else
-					return locale;
-			}
-			case 3:{
-				if (locale.indexOf('-')>-1)
-					return locale.substring(0,locale.indexOf('-'));
-				else
-					return locale;
-			}
-			default:
-				return null;
-		}
-};
-
-/**
  * @name dbCommonRowsLimit
  * @description	Sets pagination using limit and offset or limit records on SQL rows
  * @function
@@ -130,10 +94,9 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
  * @param {string} sql 
  * @param {*} parameters 
  * @param {number|null} dba 
- * @param {string|null} locale 
  * @returns {Promise.<server_server_response>}
  */
- const dbCommonExecute = async (app_id, sql, parameters, dba = null, locale=null) =>{
+ const dbCommonExecute = async (app_id, sql, parameters, dba = null) =>{
 	/**@type{import('./db.js')} */
 	const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
 	/**@type{import('./fileModelLog.js')} */
@@ -154,14 +117,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod(DB_USE, 'YEAR'));
 		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod(DB_USE, 'MONTH'));
 		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod(DB_USE, 'DAY'));
-		//manage locale search
-		//syntax in SQL: WHERE [column ] IN ('<LOCALE/>')
-		if (locale && sql.indexOf('<LOCALE/>')>0){
-			sql = sql.replaceAll('<LOCALE/>', ':locale1, :locale2, :locale3');
-			parameters = {...parameters, ...{	locale1: dbCommonLocaleGet(locale, 1),
-												locale2: dbCommonLocaleGet(locale, 2),
-												locale3: dbCommonLocaleGet(locale, 3)}};
-		}
+		
 		//manage pagination
 		let pagination = false;
 		if (sql.indexOf('<APP_PAGINATION_LIMIT_OFFSET/>')>0){
@@ -224,5 +180,5 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 };
 
 export{
-		dbCommonRecordError, dbCommonLocaleGet, dbCommonExecute
+		dbCommonRecordError, dbCommonExecute
 };

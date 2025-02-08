@@ -32,8 +32,7 @@ const get = parameters =>
                             common_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
                             app_setting_type_name: parameters.data.setting_type==''?null:parameters.data.setting_type
                             },
-                        null, 
-                        parameters.locale));
+                        null));
 /**
  * @name getDisplayData
  * @description Get setting display data without translation
@@ -54,7 +53,6 @@ const getDisplayData = parameters =>
                             app_id : serverUtilNumberValue(parameters.data.data_app_id),
                             value:parameters.data.value ==''?null:parameters.data.value
                             },
-                        null, 
                         null));    
                                         
 export{get, getDisplayData};
