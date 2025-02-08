@@ -994,7 +994,7 @@ const appLogout = () => {
  * @returns {Promise.<void>}
  */
 const appLogin = async () => {
-    await common.commonUserLogin(true)
+    await common.commonUserLogin()
     .then(result=>{
         common.commonComponentRender({
             mountDiv:   'app',

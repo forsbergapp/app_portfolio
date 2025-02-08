@@ -182,7 +182,7 @@
  *          route_path:string,
  *          method: string,
  *          query: string,
- *          body:server_server_req['body']|{},
+ *          body:server_server_req['body'] & {data?:string},
  *          idToken:  server_server_req['headers']['id-token'], 
  *          authorization:string|null,
  *          ip: string,

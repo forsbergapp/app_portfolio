@@ -216,11 +216,10 @@ const appThemeUpdate = (toggle_theme=false) => {
  * @name appUserLogin
  * @description User login app
  * @function
- * @param {boolean|null} admin
  * @returns {Promise.<void>}
  */
-const appUserLogin = async (admin=false) =>{
-    common.commonUserLogin(admin)
+const appUserLogin = async () =>{
+    common.commonUserLogin()
     .then(()=>appAppsGet());
 };
 /**

@@ -184,7 +184,7 @@ const iamUtilVerificationCode = () => {
  *          accept_language:string}} parameters
  * @returns {Promise.<server_server_response & {result?:{
  *                                              iam_user_id:        number,
- *                                              iam_user_username:      string,
+ *                                              iam_user_username:  string,
  *                                              user_account_id:    number,
  *                                              bio?:               string | null,
  *                                              email?:             string,
@@ -195,7 +195,7 @@ const iamUtilVerificationCode = () => {
  *                                              tokentimestamp:     number} }>}
  */
 const iamAuthenticateUser = async parameters =>{
-    const userpass =  Buffer.from((parameters.authorization || '').split(' ')[1] || '', 'base64').toString();
+    const userpass =  decodeURIComponent(Buffer.from((parameters.authorization || '').split(' ')[1] || '', 'base64').toString('utf-8'));
     const username = userpass.split(':')[0];
     const password = userpass.split(':')[1];
 
