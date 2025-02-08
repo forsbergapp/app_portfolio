@@ -203,7 +203,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
-                    appUserLogout();
+                    common.commonUserLogout().then(()=>appUserLogout());
                     break;
                 }
                 /*Dialogue user start */
@@ -281,14 +281,12 @@ const appUserLogin = () =>{
  * @returns {void}
  */
 const appUserLogout = () =>{
-    common.commonUserLogout()
-    .then(()=>common.commonComponentRemove('app_main_page'))
-    .then(()=>
-        common.commonComponentRender({
-            mountDiv:   'app_main_page', 
-            data:       null,
-            methods:    null,
-            path:       '/component/page_start.js'}));
+    common.commonComponentRemove('app_main_page');
+    common.commonComponentRender({
+        mountDiv:   'app_main_page', 
+        data:       null,
+        methods:    null,
+        path:       '/component/page_start.js'});
 };
 /**
  * @name appFrameworkSet

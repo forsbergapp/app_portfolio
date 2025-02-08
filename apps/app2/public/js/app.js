@@ -94,6 +94,7 @@ const appEventClick = event => {
                     break;
                 }
                 case 'common_dialogue_user_menu_log_out':{
+                    common.commonUserLogout();
                     appUserLogout();
                     break;
                 }
@@ -228,10 +229,7 @@ const appUserLogin = async (admin=false) =>{
  * @function
  * @returns {Promise.<void>}
  */
- const appUserLogout = async () =>{
-    common.commonUserLogout()
-    .then(()=>appAppsGet());
-};
+ const appUserLogout = async () =>appAppsGet();
 
 /**
  * @name appAppsGet
