@@ -983,11 +983,9 @@ const appSecureInit = () => {
  * @returns {void}
  */
 const appLogout = () => {
-    common.commonUserLogout().then(() => {
-        appSecureGlobalDelete();
-        common.commonComponentRemove('app');
-        common.commonDialogueShow('LOGIN_ADMIN');
-    });
+    appSecureGlobalDelete();
+    common.commonComponentRemove('app');
+    common.commonDialogueShow('LOGIN_ADMIN');
 };
 /**
  * @name appLogin
@@ -1063,7 +1061,9 @@ const appEventClick = event => {
                     break;
                 }
                 case 'secure_menu_11': {
-                    appLogout();
+                    common.commonUserLogout().then(() => {
+                        appLogout();
+                    });
                     break;
                 }
                 case 'common_dialogue_iam_start_login_admin_button':{

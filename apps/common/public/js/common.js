@@ -1717,7 +1717,6 @@ const commonUserLogin = async (admin=false) => {
  * @returns {Promise.<void>}
  */
 const commonUserLogout = async () => {
-    commonComponentRemove('common_dialogue_user_menu');
     await commonFFB({path:'/server-iam-logout', 
                     method:'DELETE', 
                     authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.admin_app_id)?'ADMIN':'APP_ACCESS'})
@@ -1725,6 +1724,17 @@ const commonUserLogout = async () => {
                 //ignore error since token can be expired
                 null;
             });
+    commonLogout();
+};
+
+/**
+ * @name commonLogout
+ * @description User logout
+ * @function
+ * @returns {Promise.<void>}
+ */
+const commonLogout = async () => {
+    commonComponentRemove('common_dialogue_user_menu');
     if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.admin_app_id){
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'none';
         COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'inline-block';
@@ -2338,6 +2348,7 @@ const commonSocketBroadcastShow = async (broadcast_message) => {
             break;
         }
         case 'SESSION_EXPIRED':{
+            commonLogout();
             COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null;
             break;
         }
