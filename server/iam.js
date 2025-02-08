@@ -340,8 +340,8 @@ const iamAuthenticateUser = async parameters =>{
             /**@type{server_db_file_iam_app_access} */
             const file_content = {	
                         /**@ts-ignore */ 
-                        iam_user_id:            user.id,
-                        iam_user_username:      user.username,
+                        iam_user_id:            user?.id,
+                        iam_user_username:      user?.username,
                         user_account_id:        null,
                         app_id:                 parameters.app_id,
                         db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),

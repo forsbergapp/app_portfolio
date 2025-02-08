@@ -156,7 +156,7 @@ const appInit = async () =>{
 const appCommonInit = parameters => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.COMMON_GLOBAL.app_function_exception = appException;
-    common.COMMON_GLOBAL.app_function_session_expired = common.commonUserLogout;
+    common.COMMON_GLOBAL.app_function_session_expired = null;
     common.commonInit(parameters).then(()=>{
         appInit();
     });

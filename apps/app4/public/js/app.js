@@ -1085,16 +1085,13 @@ const appUserFunction = async (function_name) => {
  * @returns {void}
  */
 const appUserLogout = () => {
-    
-    common.commonUserLogout().then(() => {
-        common.commonComponentRemove('settings_tab_nav_7');
-        common.commonComponentRemove('common_dialogue_profile', true);
-        //set default settings
-        appUserSettingDefaultSet().then(() => {
-            //show default startup
-            appToolbarButton(APP_GLOBAL.app_default_startup_page);
-        });
-    });    
+    common.commonComponentRemove('settings_tab_nav_7');
+    common.commonComponentRemove('common_dialogue_profile', true);
+    //set default settings
+    appUserSettingDefaultSet().then(() => {
+        //show default startup
+        appToolbarButton(APP_GLOBAL.app_default_startup_page);
+    });
 };
 
 /**
@@ -2064,7 +2061,9 @@ const appEventClick = event => {
                     break;
                     }
                 case 'common_dialogue_user_menu_log_out':{
-                    appUserLogout();
+                    common.commonUserLogout().then(() => {
+                        appUserLogout();
+                    });
                     break;
                 }
                 case 'common_dialogue_user_menu_username':{
