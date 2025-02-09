@@ -1,6 +1,6 @@
 /** 
  *  File database using race condition, pessimistic lock and database transaction pattern
- *  Tables implemented using object mapping relation (ORM) pattern
+ *  Tables implemented using object mapping relation (ORM), PK and UK patterns
  *  each JSON_TABLE has fileModel*.js file with methods
  *  LOG*, CONFIG* and MESSAGE_QUEUE* tables use subtypes and common fileModel*.js files.
  *  See ER Model for an overview.
@@ -67,19 +67,19 @@ const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',        
                     {NAME:'CONFIG_IAM_POLICY',              TYPE:'JSON',            PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_iam_policy.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE',            TYPE:'JSON',            PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_MICROSERVICE_SERVICES',   TYPE:'JSON',            PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_microservice_services.json', CACHE_CONTENT:null},
-                    {NAME:'APP',                            TYPE:'JSON_TABLE',      PK:'id', UK:null,                         LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app.json', CACHE_CONTENT:null},
-                    {NAME:'APP_MODULE',                     TYPE:'JSON_TABLE',      PK:'id', UK:['common_type, common_name'], LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module.json', CACHE_CONTENT:null},
-                    {NAME:'APP_MODULE_QUEUE',               TYPE:'JSON_TABLE',      PK:'id', UK:null,                         LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module_queue.json', CACHE_CONTENT:null},
-                    {NAME:'APP_PARAMETER',                  TYPE:'JSON_TABLE',      PK:'app_id', UK:null,                     LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_parameter.json', CACHE_CONTENT:null},
-                    {NAME:'APP_SECRET',                     TYPE:'JSON_TABLE',      PK:'app_id', UK:null,                     LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_secret.json', CACHE_CONTENT:null},
-                    {NAME:'APP_TRANSLATION',                TYPE:'JSON_TABLE',      PK:'id', UK:null,                         LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_translation.json', CACHE_CONTENT:null},
+                    {NAME:'APP',                            TYPE:'JSON_TABLE',      PK:'id', UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app.json', CACHE_CONTENT:null},
+                    {NAME:'APP_MODULE',                     TYPE:'JSON_TABLE',      PK:'id', UK:['common_type, common_name'],   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module.json', CACHE_CONTENT:null},
+                    {NAME:'APP_MODULE_QUEUE',               TYPE:'JSON_TABLE',      PK:'id', UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_module_queue.json', CACHE_CONTENT:null},
+                    {NAME:'APP_PARAMETER',                  TYPE:'JSON_TABLE',      PK:'app_id', UK:null,                       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_parameter.json', CACHE_CONTENT:null},
+                    {NAME:'APP_SECRET',                     TYPE:'JSON_TABLE',      PK:'app_id', UK:null,                       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_secret.json', CACHE_CONTENT:null},
+                    {NAME:'APP_TRANSLATION',                TYPE:'JSON_TABLE',      PK:'id', UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'app_translation.json', CACHE_CONTENT:null},
                     {NAME:'DB_FILE',                        TYPE:'BINARY',          PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}db${SLASH}`,           FILENAME:'sqlite.db'},
-                    {NAME:'IAM_APP_ID_TOKEN',               TYPE:'JSON_TABLE',      PK:'created', UK:['token'],               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_id_token.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_APP_ACCESS',                 TYPE:'JSON_TABLE',      PK:'id', UK:['token'],                    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_access.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_CONTROL_IP',                 TYPE:'JSON_TABLE',      PK:'id', UK:null,                         LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_ip.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_CONTROL_USER_AGENT',         TYPE:'JSON_TABLE',      PK:'id', UK:null,                         LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_user_agent.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_CONTROL_OBSERVE',            TYPE:'JSON_TABLE',      PK:'id', UK:null,                         LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_observe.json', CACHE_CONTENT:null},
-                    {NAME:'IAM_USER',                       TYPE:'JSON_TABLE',      PK:'id', UK:['username'],                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},                    
+                    {NAME:'IAM_APP_ID_TOKEN',               TYPE:'JSON_TABLE',      PK:'created', UK:['token'],                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_id_token.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_APP_ACCESS',                 TYPE:'JSON_TABLE',      PK:'id', UK:['token'],                      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_app_access.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_CONTROL_IP',                 TYPE:'JSON_TABLE',      PK:'id', UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_ip.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_CONTROL_USER_AGENT',         TYPE:'JSON_TABLE',      PK:'id', UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_user_agent.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_CONTROL_OBSERVE',            TYPE:'JSON_TABLE',      PK:'id', UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_control_observe.json', CACHE_CONTENT:null},
+                    {NAME:'IAM_USER',                       TYPE:'JSON_TABLE',      PK:'id', UK:['username'],                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam${SLASH}`,          FILENAME:'iam_user.json', CACHE_CONTENT:null},                    
                     {NAME:'LOG_APP_INFO',                   TYPE:'JSON_LOG_DATE',   PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_INFO_'},
                     {NAME:'LOG_APP_ERROR',                  TYPE:'JSON_LOG_DATE',   PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'APP_ERROR_'},
                     {NAME:'LOG_DB_INFO',                    TYPE:'JSON_LOG_DATE',   PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}logs${SLASH}`,         FILENAME:'DB_INFO_'},
@@ -481,6 +481,8 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
 /**
  * @name fileConstraints
  * @description Authenticates PK constraint that can have one primary key column and UK constraint that can have several columns. 
+ *              Implements contraints pattern using some() function for best performane to check if value already exist
+ * @function
  * @param {server_db_file_db_name} table
  * @param {[]} table_rows
  * @param {*} data

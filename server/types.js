@@ -575,7 +575,7 @@
  */
 
 /**
- * @descriotn token_type
+ * @description token_type
  * @typedef {'APP_ID'|server_db_file_iam_app_access_type} token_type
 
 /**

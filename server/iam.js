@@ -65,7 +65,7 @@ const iamRequestRateLimiterCount = {};
 const iamUtilMessageNotAuthorized = () => '⛔';
 /**
  * @name iamUtilTokenGet
- * @descriotion IAM util decode token using secret and returns claim
+ * @description IAM util decode token using secret and returns claim
  * @function
  * @param {number} app_id
  * @param {string} token
