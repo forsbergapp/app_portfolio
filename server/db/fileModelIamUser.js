@@ -2,13 +2,14 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_iam_user} from '../types.js'
+ *          server_db_file_iam_user, server_db_file_iam_user_admin} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
-
+/**@type{import('../server.js')} */
+const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**
  * @name get
  * @description Get user 
@@ -133,29 +134,22 @@ const update = async (app_id, resource_id, data) => {
             /**@type{server_db_file_iam_user} */
             const data_update = {};
             //allowed parameters to update:
-            if (data.username!=null)
+            if (data.username!=null && data.username != '')
                 data_update.username = data.username;
-            if (data.password!=null)
+            if (data.password!=null && data.password != '')
                 data_update.password = await securityPasswordCreate(data.password_new ?? data.password);
             if (data.password_reminder!=null)
                 data_update.password_reminder = data.password_reminder;
             if (data.bio!=null)
                 data_update.bio = data.bio;
             if (data.private!=null)
-                data_update.private = data.private;
+                data_update.private = serverUtilNumberValue(data.private);
             if (data.email!=null)
                 data_update.email = data.email;
             if (data.email_unverified!=null)
                 data_update.email_unverified = data.email_unverified;
             if (data.avatar!=null)
                 data_update.avatar = data.avatar;
-            //admin columns
-            if (data.status!=null)
-                data_update.status = data.status;
-            if (data.active!=null)
-                data_update.active = data.active;
-            if (data.verification_code!=null)
-                data_update.verification_code = data.verification_code;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
@@ -181,8 +175,7 @@ const update = async (app_id, resource_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data :server_db_file_iam_user,
- *          locale:string}} parameters
+ *          data :server_db_file_iam_user_admin}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateAdmin = async parameters => {
@@ -194,33 +187,33 @@ const updateAdmin = async parameters => {
             /**@type{server_db_file_iam_user} */
             const data_update = {};
             //allowed parameters to update:
-            if (parameters.data.username!=null)
+            if (parameters.data?.username!=null && parameters.data?.username!='')
                 data_update.username = parameters.data.username;
-            if (parameters.data.password!=null)
-                data_update.password = await securityPasswordCreate(parameters.data.password_new ?? parameters.data.password);
-            if (parameters.data.password_reminder!=null)
+            if (parameters.data?.password!=null && parameters.data?.password!='')
+                data_update.password = await securityPasswordCreate(parameters.data?.password_new ?? parameters.data.password);
+            if (parameters.data?.password_reminder!=null)
                 data_update.password_reminder = parameters.data.password_reminder;
-            if (parameters.data.bio!=null)
+            if (parameters.data?.bio!=null)
                 data_update.bio = parameters.data.bio;
-            if (parameters.data.private!=null)
-                data_update.private = parameters.data.private;
-            if (parameters.data.email!=null)
+            if (parameters.data?.private!=null)
+                data_update.private = serverUtilNumberValue(parameters.data.private) ?? 0;
+            if (parameters.data?.email!=null)
                 data_update.email = parameters.data.email;
-            if (parameters.data.email_unverified!=null)
+            if (parameters.data?.email_unverified!=null)
                 data_update.email_unverified = parameters.data.email_unverified;
-            if (parameters.data.avatar!=null)
+            if (parameters.data?.avatar!=null)
                 data_update.avatar = parameters.data.avatar;
             //admin columns
-            if (parameters.data.type!=null)
+            if (parameters.data?.type!=null)
                 data_update.type = parameters.data.type;
-            if (parameters.data.user_level!=null)
-                data_update.user_level = parameters.data.user_level;
-            if (parameters.data.verification_code!=null)
+            if (parameters.data?.user_level!=null)
+                data_update.user_level = serverUtilNumberValue(parameters.data.user_level);
+            if (parameters.data?.verification_code!=null)
                 data_update.verification_code = parameters.data.verification_code;
-            if (parameters.data.status!=null)
+            if (parameters.data?.status!=null)
                 data_update.status = parameters.data.status;
-            if (parameters.data.active!=null)
-                data_update.active = parameters.data.active;
+            if (parameters.data?.active!=null)
+                data_update.active = serverUtilNumberValue(parameters.data.active) ?? 0;
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
@@ -268,37 +261,6 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
         }
         else
             return dbCommonRecordError(app_id, 401);
-    }
-    else
-        return dbCommonRecordError(app_id, 404);
-};
-/**
- * @name updateVerificationCodeAdd
- * @description updateVerificationCodeAdd
- * @function
- * @param {number} app_id
- * @param {number} resource_id
- * @param {{verification_code:string}} data
- * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
- */
-const updateVerificationCodeAdd = async (app_id, resource_id, data) => {
-    /**@type{server_db_file_iam_user}*/
-    const user = get(app_id, resource_id).result[0];
-    if (user){
-        /**@type{server_db_file_iam_user} */
-        const data_update = {};
-        data_update.verification_code = data.verification_code;
-        data_update.active = 0;
-        data_update.modified = new Date().toISOString();
-        if (Object.entries(data_update).length>0)
-            return fileDBUpdate(app_id, 'IAM_USER', resource_id, null, data_update).then((result)=>{
-                if (result.affectedRows>0)
-                    return {result:result, type:'JSON'};
-                else
-                    return dbCommonRecordError(app_id, 404);
-            });
-        else
-            return dbCommonRecordError(app_id, 400);
     }
     else
         return dbCommonRecordError(app_id, 404);
@@ -387,4 +349,4 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
         return user;
 };
 
-export {get, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, updateVerificationCodeAdd, updatePassword, deleteRecord, deleteRecordAdmin};
+export {get, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, updatePassword, deleteRecord, deleteRecordAdmin};

@@ -499,7 +499,10 @@ const appSecureCommonButtonSave = async (item) => {
                                                         bio:                record.querySelector('[data-column=\'bio\']').textContent,
                                                         email:              record.querySelector('[data-column=\'email\']').textContent,
                                                         email_unverified:   record.querySelector('[data-column=\'email_unverified\']').textContent,
-                                                        password:           record.querySelector('[data-column=\'password\']').textContent,
+                                                        password:           (record.querySelector('[data-column=\'password\']').textContent=='' ||
+                                                                             record.querySelector('[data-column=\'password\']').textContent==null)?
+                                                                                null:
+                                                                                    record.querySelector('[data-column=\'password\']').textContent,
                                                         password_reminder:  record.querySelector('[data-column=\'password_reminder\']').textContent,
                                                         verification_code:  record.querySelector('[data-column=\'verification_code\']').textContent
                                                     });
