@@ -448,6 +448,27 @@
  *          created?:string, 
  *          modified?:string}} server_db_file_iam_user
  */
+/**
+ * @description DB FILE server_db_file_iam_user_admin
+ * @typedef {{
+*          id?:number, 
+*          username?:string, 
+*          password?:string, 
+*          password_new?:string|null, 
+*          password_reminder?:string|null, 
+*          bio?:string|null, 
+*          private?:number|null, 
+*          email?:string|null, 
+*          email_unverified?:string|null, 
+*          avatar?:string|null,
+*          type?: 'ADMIN'|'USER', 
+*          user_level?:number|null, 
+*          verification_code?: string|null, 
+*          status?:number|null, 
+*          active?:number,
+*          created?:string, 
+*          modified?:string}} server_db_file_iam_user_admin
+*/
 
 /**
  * @description DB FILE server_db_file_iam_user_update
@@ -1399,24 +1420,6 @@
  */
 
 /**
- * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateAdmin
- * @typedef {{  active:number|null,
- *              user_level:number|null,
- *              private:number|null,
- *              username:string,
- *              bio:string|null,
- *              email:string,
- *              email_unverified:string|null,
- *              password:string|null,
- *              password_new:string|null,
- *              password_reminder:string|null,
- *              verification_code:string|null,
- *              provider_id: string|null,
- *              avatar:string|null,
- *              admin:number}} server_db_sql_parameter_user_account_updateAdmin
- */
-
-/**
  * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account
  * @typedef {{  id?:number,
  *              iam_user_id:number,
@@ -1476,22 +1479,6 @@
  */
 
 /**
- * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserLocal
- * @typedef {{  bio:string,
- *              private:number,
- *              username:string,
- *              password:string|null, 
- *              password_new:string|null,
- *              password_reminder:string|null,
- *              email:string,
- *              email_unverified:string|null,
- *              avatar:string|null,
- *              verification_code:string|null,
- *              provider_id:string|null,
- *              admin:number}} server_db_sql_parameter_user_account_updateUserLocal
- */
-
-/**
  * @description DB SQL USER ACCOUNT server_db_sql_parameter_user_account_updateUserCommon
  * @typedef {{  bio:string|null,
  *              private: number|null,
@@ -1515,27 +1502,6 @@
  *              avatar:string|null}} server_db_sql_result_user_account_userLogin
  */
 
-/**
- * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_providerSignIn
- * @typedef {{  id:number,
- *              bio:string|null,
- *              username:string, 
- *              password:string, 
- *              password_reminder:string, 
- *              email:string, 
- *              avatar:string|null,
- *              verification_code:string, 
- *              active:number, 
- *              identity_provider_id:number|null,
- *              provider_id:string|null,
- *              provider_first_name:string|null,
- *              provider_last_name:string|null,
- *              provider_image:string|null,
- *              provider_image_url:string|null,
- *              provider_image_email:string|null,
- *              date_created:string
- *              date_modified:string}} server_db_sql_result_user_account_providerSignIn
- */
 /**
  * @description DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApps
  * @typedef {{  app_id:number,
