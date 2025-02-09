@@ -1127,6 +1127,11 @@
 <colorRGB>-16776961</colorRGB>
 <foTypeID>7</foTypeID>
 </FontObject>
+<FontObject>
+<foType>UK Element</foType>
+<colorRGB>-16776961</colorRGB>
+<foTypeID>9</foTypeID>
+</FontObject>
 </fonts>
 </OView>
 <OView class="oracle.dbtools.crest.swingui.logical.TVEntity" oid="9C229D81-CB86-342F-671F-573E88025256" otype="Entity" vid="0C45567A-ACE8-6A9C-80A4-1AFD15FFBA04">

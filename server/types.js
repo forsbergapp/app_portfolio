@@ -516,9 +516,11 @@
  */
 
 /** 
- * @description DB FILE server_db_file_db_record
+ * @description DB FILE server_db_file_db_record, supports one PK and one UK per table using one or more columns
  * @typedef {{  NAME:server_db_file_db_name, 
  *              TYPE:'JSON'|'JSON_TABLE'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
+ *              PK:string|null,
+ *              UK:string[]|null,
  *              LOCK:number, 
  *              TRANSACTION_ID:number|null, 
  *              TRANSACTION_CONTENT: object|string|[]|null, 

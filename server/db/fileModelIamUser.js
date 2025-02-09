@@ -37,7 +37,7 @@ const post = async (app_id, data) => {
     //check required attributes
     if (!data.username || !data.password || !data.type||
         //check not allowed attributes when creating a user
-        data.id||data.user_level ||data.verification_code||data.status||data.created||data.modified){
+        data.id||data.user_level ||data.status||data.created||data.modified){
             return dbCommonRecordError(app_id, 400);
     }
     else{
