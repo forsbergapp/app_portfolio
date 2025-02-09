@@ -1785,7 +1785,7 @@ const commonUserUpdate = async () => {
         const password_new =        COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_new').textContent;
         const password_reminder =   COMMON_DOCUMENT.querySelector('#common_dialogue_iam_edit_input_password_reminder').textContent;
 
-       commonFFB({  path:`/server-iam/user/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
+       commonFFB({  path:`/server-iam/iam_user/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
                     method:'PATCH', 
                     authorization_type:COMMON_GLOBAL.app_id==COMMON_GLOBAL.admin_app_id?'ADMIN':'APP_ACCESS', 
                     body:{  username:           username,
