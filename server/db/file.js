@@ -503,9 +503,9 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
         else
             //max one record can exist having given values for UPDATE
             if (dml=='UPDATE' && fileRecord(table).UK && table_rows.some((/**@type{server_db_file_db_record}*/record)=>
-                //check value is the same
+                //check value is the same, ignore empty UK
                 /**@ts-ignore */
-                fileRecord(table).UK.filter(column=>record[column]==data[column]).length==fileRecord(table).UK.length &&
+                fileRecord(table).UK.filter(column=>record[column] && record[column]==data[column]).length==fileRecord(table).UK.length &&
                 //check it is NOT the same user
                 /**@ts-ignore */
                 record[fileRecord(table).PK]!=resource_id))

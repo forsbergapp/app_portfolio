@@ -249,13 +249,11 @@ const iamAuthenticateUser = async parameters =>{
                 //save verification code if user account is not active
                 const verification = user.active==1?
                                     null:
-                                        await fileModelIamUser.update(
-                                            parameters.app_id, 
-                                            /**@ts-ignore */
-                                            user.id, {  username:user.username, 
-                                                        password:password,
-                                                        active:0,
-                                                        verification_code:iamUtilVerificationCode()});
+                                        await fileModelIamUser.updateAdmin({app_id:parameters.app_id,
+                                                                            /**@ts-ignore */
+                                                                            resource_id:user.id,
+                                                                            data :{ active:0,
+                                                                                    verification_code:iamUtilVerificationCode()}});
                 if (verification?.http){
                     //return error
                     return verification.result;
@@ -696,10 +694,11 @@ const iamAuthenticateUserForgot = async parameters =>{
                         };
                         data_body.token = jwt_data.token;
                         await fileModelIamAppAccess.post(parameters.app_id, data_body);
-                        return await fileModelIamUser.updateVerificationCodeAdd(
-                                        parameters.app_id, 
-                                        /**@ts-ignore */
-                                        user.id, {   verification_code:iamUtilVerificationCode()})
+                        return await fileModelIamUser.updateAdmin({app_id:parameters.app_id,
+                                                                    /**@ts-ignore */
+                                                                    resource_id:user.id,
+                                                                    data :{ active:0,
+                                                                            verification_code:iamUtilVerificationCode()}})
                                     .then((result_updateUserVerificationCode)=>
                                         result_updateUserVerificationCode.result?
                                             socketConnectedUpdate(parameters.app_id, 

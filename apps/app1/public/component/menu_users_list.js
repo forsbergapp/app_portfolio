@@ -47,7 +47,7 @@ const template = props => ` <div class='menu_users_list_row'>
                                     <div data-column='bio' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.bio ?? ''}</div>
                                     <div data-column='email' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.email ?? ''}</div>
                                     <div data-column='email_unverified' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.email_unverified ?? ''}</div>
-                                    <div data-column='password' class='menu_users_list_col common_input list_edit common_input_password' contentEditable='true' placeholder='******'></div>
+                                    <div data-column='password' class='menu_users_list_col common_input list_edit' contentEditable='true' ></div>
                                     <div data-column='password_reminder' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.password_reminder ?? ''}</div>
                                     <div data-column='verification_code' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.verification_code ?? ''}</div>
                                     <div data-column='created' class='menu_users_list_col list_readonly'>${user.created ?? ''}</div>
