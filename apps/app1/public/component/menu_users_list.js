@@ -36,7 +36,7 @@ const template = props => ` <div class='menu_users_list_row'>
                             </div>
                             ${props.users.map(user=>
                                 `<div data-changed-record='0' data-user_account_id='${user.id}' class='menu_users_list_row ${user.id==props.user_account_id?'list_current_user_row':''} common_row' >
-                                    <div data-column='avatar' class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='${user.avatar==null?'':`background-image:url(${user.avatar});`}'></div>
+                                    <div data-column='avatar' data-image=${user.avatar} class='menu_users_list_col list_readonly common_image common_image_avatar_list' style='${user.avatar==null?'':`background-image:url(${user.avatar});`}'></div>
                                     <div data-column='id' class='menu_users_list_col list_readonly'>${user.id}</div>
                                     <div data-column='type' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.type ?? ''}</div>
                                     <div data-column='active' class='menu_users_list_col common_input list_edit' contentEditable='true'>${user.active ?? ''}</div>
