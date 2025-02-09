@@ -64,7 +64,7 @@ class Vector {
 
 	/**
 	 * @name getRotationFromNormals
-	 * @descriotion Finds the rotation axis and angle to get from one normal to another.
+	 * @description Finds the rotation axis and angle to get from one normal to another.
 	 * @method
 	 * @param {[]} normal1 - The from normal.
 	 * @param {[]} normal2 - The to normal.

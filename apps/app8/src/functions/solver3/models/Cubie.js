@@ -13,7 +13,7 @@ import { Face } from './Face.js';
 class Cubie {
 	/**
 	 * @name FromFaces
-	 * @descriotion Factory method. Returns an instance of a cubie identified by the faces it
+	 * @description Factory method. Returns an instance of a cubie identified by the faces it
 	 * 				sits on.
 	 * @method
 	 * @param {[]} faces - A list of all the faces this cubie sits on.

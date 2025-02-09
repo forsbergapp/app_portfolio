@@ -10,7 +10,7 @@
  *              rt_percent:[string,number][]}} report_data  //[percent %, time ms]
  */
 /**
- * @descriotion test_function_result
+ * @description test_function_result
  * @typedef {{ result:string,
  *             reqSize:number,
  *             resSize:number,
