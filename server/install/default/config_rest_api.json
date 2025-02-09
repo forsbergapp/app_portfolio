@@ -2341,7 +2341,7 @@
                 }
             }
         },
-        "/bff/app_access/v1/server-iam/user/${IAM_iam_user_id}": {
+        "/bff/app_access/v1/server-iam/iam_user/${IAM_iam_user_id}": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGet",
@@ -2424,6 +2424,9 @@
                                                 "type":"string"
                                             },
                                             "bio":{
+                                                "type":"string"
+                                            },
+                                            "private":{
                                                 "type":"string"
                                             },
                                             "email":{
@@ -5078,7 +5081,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/user/${resource_id_number}": {
+        "/bff/admin/v1/server-iam/iam_user/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserGet",
@@ -5124,7 +5127,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server.iam.iamAuthenticateUserUpdate",
+                "operationId": "server_db.fileModelIamUser.updateAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -5161,6 +5164,9 @@
                                             "bio":{
                                                 "type":"string"
                                             },
+                                            "private":{
+                                                "type":"string"
+                                            },
                                             "email":{
                                                 "type":"string"
                                             },
@@ -5169,6 +5175,22 @@
                                             },
                                             "avatar":{
                                                 "type":"string"
+                                            },
+                                            "type":{
+                                                "required":true,
+                                                "type":"string"
+                                            },
+                                            "user_level":{
+                                                "type":"string"
+                                            },
+                                            "verification_code":{
+                                                "type":"string"
+                                            },
+                                            "status":{
+                                                "type":"string"
+                                            },
+                                            "active":{
+                                                "type":"number"
                                             }
                                         }
                                     }

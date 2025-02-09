@@ -141,6 +141,8 @@ const update = async (app_id, resource_id, data) => {
                 data_update.password_reminder = data.password_reminder;
             if (data.bio!=null)
                 data_update.bio = data.bio;
+            if (data.private!=null)
+                data_update.private = data.private;
             if (data.email!=null)
                 data_update.email = data.email;
             if (data.email_unverified!=null)
@@ -171,6 +173,68 @@ const update = async (app_id, resource_id, data) => {
     }
     else
         return dbCommonRecordError(app_id, 404);
+};
+/**
+ * @name updateAdmin
+ * @description UpdateAdmin
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          data :server_db_file_iam_user,
+ *          locale:string}} parameters
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ */
+const updateAdmin = async parameters => {
+    /**@type{import('../security.js')} */
+    const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
+    /**@type{server_db_file_iam_user}*/
+    const user = get(parameters.app_id, parameters.resource_id).result[0];
+    if (user){
+            /**@type{server_db_file_iam_user} */
+            const data_update = {};
+            //allowed parameters to update:
+            if (parameters.data.username!=null)
+                data_update.username = parameters.data.username;
+            if (parameters.data.password!=null)
+                data_update.password = await securityPasswordCreate(parameters.data.password_new ?? parameters.data.password);
+            if (parameters.data.password_reminder!=null)
+                data_update.password_reminder = parameters.data.password_reminder;
+            if (parameters.data.bio!=null)
+                data_update.bio = parameters.data.bio;
+            if (parameters.data.private!=null)
+                data_update.private = parameters.data.private;
+            if (parameters.data.email!=null)
+                data_update.email = parameters.data.email;
+            if (parameters.data.email_unverified!=null)
+                data_update.email_unverified = parameters.data.email_unverified;
+            if (parameters.data.avatar!=null)
+                data_update.avatar = parameters.data.avatar;
+            //admin columns
+            if (parameters.data.type!=null)
+                data_update.type = parameters.data.type;
+            if (parameters.data.user_level!=null)
+                data_update.user_level = parameters.data.user_level;
+            if (parameters.data.verification_code!=null)
+                data_update.verification_code = parameters.data.verification_code;
+            if (parameters.data.status!=null)
+                data_update.status = parameters.data.status;
+            if (parameters.data.active!=null)
+                data_update.active = parameters.data.active;
+            data_update.modified = new Date().toISOString();
+
+            if (Object.entries(data_update).length>0)
+                return fileDBUpdate(parameters.app_id, 'IAM_USER', parameters.resource_id, null, data_update).then((result)=>{
+                    if (result.affectedRows>0)
+                        return {result:result, type:'JSON'};
+                    else
+                        return dbCommonRecordError(parameters.app_id, 404);
+                });
+            else
+                return dbCommonRecordError(parameters.app_id, 400);
+    }
+    else
+        return dbCommonRecordError(parameters.app_id, 404);
 };
 
 /**
@@ -323,4 +387,4 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
         return user;
 };
 
-export {get, post, postAdmin, update, updateVerificationCodeAuthenticate, updateVerificationCodeAdd, updatePassword, deleteRecord, deleteRecordAdmin};
+export {get, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, updateVerificationCodeAdd, updatePassword, deleteRecord, deleteRecordAdmin};

@@ -487,7 +487,12 @@ const appSecureCommonButtonSave = async (item) => {
                                                     record,
                                                     item,
                                                     record.querySelector('[data-column=\'id\']').textContent,
-                                                    {   active:             record.querySelector('[data-column=\'active\']').textContent,
+                                                    {   avatar:             record.querySelector('[data-column=\'avatar\']').getAttribute('data-image')=='null'?
+                                                                                null:
+                                                                                    record.querySelector('[data-column=\'avatar\']').getAttribute('data-image'),
+                                                        active:             record.querySelector('[data-column=\'active\']').textContent,
+                                                        status:             record.querySelector('[data-column=\'status\']').textContent,
+                                                        type:               record.querySelector('[data-column=\'type\']').textContent,
                                                         user_level:         record.querySelector('[data-column=\'user_level\']').textContent,
                                                         private:            record.querySelector('[data-column=\'private\']').textContent,
                                                         username:           record.querySelector('[data-column=\'username\']').textContent,
@@ -556,7 +561,7 @@ const appSecureCommonRecordUpdate = async ( table,
     let method;
     switch (table){
         case 'user_account':{
-            path = `/server-db_admin/user_account/${resource_id}`;
+            path = `/server-iam/iam_user/${resource_id}`;
             method = 'PATCH';
             break;
         }
