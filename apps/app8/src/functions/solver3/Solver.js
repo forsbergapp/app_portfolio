@@ -201,7 +201,7 @@ class Solver {
 	 * @name isF2LPairSolved
 	 * @description isF2LPairSolved
 	 * @method
-	 * @param {{corner:*, edge:*}}
+	 * @param {{corner:*, edge:*}} param
 	 * @returns {*}
 	 */
 	isF2LPairSolved({ corner, edge }) {
