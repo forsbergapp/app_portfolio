@@ -18,7 +18,7 @@ const parallelMoves = {
 
 /**
  * @name algorithmShortener
- * @descriotion algorithmShortener
+ * @description algorithmShortener
  * @param {[]|string} notations - The array of move notations.
  * @function
  * @param {*} notations

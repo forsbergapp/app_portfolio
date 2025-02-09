@@ -293,7 +293,7 @@ const post = async (app_id, data) =>
                     null);
 
                     /**
- * @name userDelete
+ * @name deleteUser
  * @description Delete user
  * @function
  * @param {number} app_id 
