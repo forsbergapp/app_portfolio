@@ -256,7 +256,7 @@ const iamAuthenticateUser = async parameters =>{
                                                         password:password,
                                                         active:0,
                                                         verification_code:iamUtilVerificationCode()});
-                if (verification?.result.http){
+                if (verification?.http){
                     //return error
                     return verification.result;
                 }
@@ -506,7 +506,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                 ip:                     parameters.ip,
                 headers_user_agent:     parameters.user_agent,
                 headers_accept_language:parameters.accept_language})
-        .then(result_socket=>result_socket.result?
+        .then(result_socket=>result_socket.http?result_socket:
                                 {result:{
                                                 token_at:       jwt_data.token,
                                                 exp:            jwt_data.exp,
@@ -514,7 +514,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                 tokentimestamp: jwt_data.tokentimestamp,
                                                 iam_user_id:    new_user.result.id,
                                                 user_account_id:new_user.result.user_account_id},
-                                        type:'JSON'}:result_socket);
+                                        type:'JSON'});
             
     }
     else
@@ -929,7 +929,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
  * @description IAM Middleware authenticate IAM users
  * @function
  * @param {string} idToken
- * @param {server_bff_endpoint_type} scope
+ * @param {server_bff_endpoint_type} endpoint
  * @param {string} authorization
  * @param {string} host
  * @param {string} ip
@@ -937,29 +937,29 @@ const iamAuthenticateUserDbDelete = async parameters => {
  * @param {function} next
  * @returns {Promise.<void>}
  */
- const iamAuthenticateUserCommon = async (idToken, scope, authorization, host, ip, res, next) =>{
+ const iamAuthenticateUserCommon = async (idToken, endpoint, authorization, host, ip, res, next) =>{
     const app_id_host = commonAppHost(host);
     //APP_EXTERNAL and APP_ACCESS_EXTERNALK do not use idToken
-    if ((idToken ||scope=='APP_EXTERNAL' ||scope=='APP_ACCESS_EXTERNAL') && scope && app_id_host !=null){
+    if ((idToken ||endpoint=='APP_EXTERNAL' ||endpoint=='APP_ACCESS_EXTERNAL') && endpoint && app_id_host !=null){
         const app_id_admin = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'));
         try {
             //authenticate id token
-            const id_token_decoded = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, idToken, 'APP_ID');
+            const id_token_decoded = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, idToken, 'APP_ID');
             /**@type{server_db_file_iam_app_id_token}*/
-            const log_id_token = (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL')?null:fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_id_token}*/row)=> 
+            const log_id_token = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:fileModelIamAppToken.get(app_id_host).result.filter((/**@type{server_db_file_iam_app_id_token}*/row)=> 
                                                                                     row.app_id == app_id_host && row.ip == ip && row.token == idToken
                                                                                     )[0];
-            if (scope=='APP_EXTERNAL' || scope=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
-                                                (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
-                                                id_token_decoded.ip == ip &&
-                                                log_id_token)){
+            if (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
+                (id_token_decoded.scope == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
+                id_token_decoded.ip == ip &&
+                log_id_token)){
                 //External token is not authenticated here
-                if (scope=='APP_ID' || scope=='APP_EXTERNAL' ||scope=='APP_ACCESS_EXTERNAL')
+                if (endpoint=='APP_ID' || endpoint=='APP_EXTERNAL' ||endpoint=='APP_ACCESS_EXTERNAL')
                     next();
                 else{
-                    //validate scope, app_id and authorization
+                    //validate endpoint, app_id and authorization
                     switch (true){
-                        case scope=='IAM' && authorization.toUpperCase().startsWith('BASIC'):{
+                        case endpoint=='IAM' && authorization.toUpperCase().startsWith('BASIC'):{
                             if (app_id_host=== app_id_admin)
                                 next();
                             else
@@ -969,12 +969,12 @@ const iamAuthenticateUserDbDelete = async parameters => {
                                     iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case scope=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
-                        case scope=='APP_ACCESS_VERIFICATION' && authorization.toUpperCase().startsWith('BEARER'):
-                        case scope=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
+                        case endpoint=='ADMIN' && app_id_host== app_id_admin && authorization.toUpperCase().startsWith('BEARER'):
+                        case endpoint=='APP_ACCESS_VERIFICATION' && authorization.toUpperCase().startsWith('BEARER'):
+                        case endpoint=='APP_ACCESS' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_LOGIN'))==1 && authorization.toUpperCase().startsWith('BEARER'):{
                             //authenticate access token
                             const access_token = authorization?.split(' ')[1] ?? '';
-                            const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, scope);
+                            const access_token_decoded = iamUtilTokenGet(app_id_host, access_token, endpoint);
                             
                             /**@type{server_db_file_iam_app_access[]}*/
                             if (access_token_decoded.app_id == app_id_host && 
@@ -988,8 +988,8 @@ const iamAuthenticateUserDbDelete = async parameters => {
                                                                                                 row.iam_user_id           == access_token_decoded.iam_user_id && 
                                                                                                 row.iam_user_username       == access_token_decoded.iam_user_username && 
                                                                                                 // Authenticate DB user, admin does not use this
-                                                                                                (row.user_account_id        == access_token_decoded.user_account_id ||scope=='ADMIN') && 
-                                                                                                (row.db                     == access_token_decoded.db ||scope=='ADMIN') && 
+                                                                                                (row.user_account_id        == access_token_decoded.user_account_id ||endpoint=='ADMIN') && 
+                                                                                                (row.db                     == access_token_decoded.db ||endpoint=='ADMIN') && 
                                                                                                 //Authenticate app id corresponds to current subdomain
                                                                                                 row.app_id                  == app_id_host &&
                                                                                                 //Authenticate token is valid
@@ -1008,7 +1008,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
                                 iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case scope=='APP_ID_SIGNUP' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin:{
+                        case endpoint=='APP_ID_SIGNUP' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin:{
                             next();
                             break;
                         }
@@ -1661,7 +1661,7 @@ const iamUserPost = async (app_id, data) => {
                                                     email_unverified:   data.email_unverified, 
                                                     avatar:             data.avatar,
                                                     user_level:         null, 
-                                                    verification_code:  null, 
+                                                    verification_code:  data.verification_code, 
                                                     status:             null,
                                                     active:             data.active
                                                 });
