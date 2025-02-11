@@ -74,7 +74,7 @@ const component = async props => {
         case 'SERVER_LOG_FILES':{
             method = 'GET';
             lov_column = 'filename';
-            path = '/server-log/log-files';
+            path = '/server-db/log-files';
             query= null;
             token_type = 'ADMIN';
             break;
