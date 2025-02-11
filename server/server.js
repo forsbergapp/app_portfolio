@@ -564,13 +564,13 @@ const serverUtilAppLine = () =>{
  *				            			                                                                                                    and to admin subdomain if first time, 
  *							                                                                                                                responds to SSL verification if enabled
  *              /bff/app_id/v1*                             all     iamMiddleware.iamAuthenticateIdToken                    bffAppId
- *              /bff/app_id_signup/v1*                      post    iamMiddleware.iamAuthenticateIdTokenRegistration        bffAppIdSignup
  *              /bff/app_access/v1*                         all     iamMiddleware.iamAuthenticateAccessToken                bffAppAccess
  *              /bff/app_access_verification/v1*            all     iamMiddleware.iamAuthenticateAccessVerificationToken    bffAppAccessVerification
  *              /bff/app_external/v1*                       post    iamMiddleware.iamAuthenticateExternal                   bffAppExternal
  *              /bff/app_access_external/v1*                post    iamMiddleware.iamAuthenticateAccessExternal             bffAppAccessExternal
  *              /bff/admin/v1*                              all     iamMiddleware.iamAuthenticateAdminAccessToken           bffAdmin
  *              /bff/iam/v1*                                post    iamMiddleware.iamAuthenticateIAM                        bffIAM
+ *              /bff/iam_signup/v1*                         post    iamMiddleware.iamAuthenticateIAMSignup                  bffIamSignup
  *	            *	                                        get	                                                            bffApp		    app asset
  *				        			                                                                                                        common asset
  *						            	                                                                                                    info page
@@ -623,14 +623,14 @@ const serverUtilAppLine = () =>{
     //URI syntax implemented:
     //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
 	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_id/v1*').all                            (iamMiddleware.iamAuthenticateIdToken,                bff.bffAppId);
-    app.route('/bff/app_id_signup/v1*').post                    (iamMiddleware.iamAuthenticateIdTokenRegistration,    bff.bffAppIdSignup);
-    app.route('/bff/app_access/v1*').all                        (iamMiddleware.iamAuthenticateAccessToken,            bff.bffAppAccess);
-    app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,bff.bffAppAccessVerification);
-    app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,               bff.bffAppExternal);
-    app.route('/bff/app_access_external/v1/*').post             (iamMiddleware.iamAuthenticateAccessExternal,         bff.bffAppAccessExternal);
-    app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,       bff.bffAdmin);
-    app.route('/bff/iam/v1/server-iam-login').post              (iamMiddleware.iamAuthenticateIAM,                    bff.bffIAM);
+    app.route('/bff/app_id/v1*').all                            (iamMiddleware.iamAuthenticateIdToken,                  bff.bffAppId);
+    app.route('/bff/app_access/v1*').all                        (iamMiddleware.iamAuthenticateAccessToken,              bff.bffAppAccess);
+    app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,  bff.bffAppAccessVerification);
+    app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,                 bff.bffAppExternal);
+    app.route('/bff/app_access_external/v1/*').post             (iamMiddleware.iamAuthenticateAccessExternal,           bff.bffAppAccessExternal);
+    app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,         bff.bffAdmin);
+    app.route('/bff/iam/v1*').post                              (iamMiddleware.iamAuthenticateIAM,                      bff.bffIAM);
+    app.route('/bff/iam_signup/v1*').post                       (iamMiddleware.iamAuthenticateIAMSignup,                bff.bffIamSignup);
     
     //app asset, common asset, info page, report and app
     app.route('*').get                                          (bff.bffApp);
@@ -696,13 +696,6 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/app_id_signup/v1') &&req.method=='POST':{
-                    req.route.path = '/bff/app_id_signup/v1*';
-                    await iamMiddleware.iamAuthenticateIdTokenRegistration(req, res, () =>
-                            bff.bffAppIdSignup(req, res)
-                    );
-                    break;
-                }
                 case req.path.startsWith('/bff/app_access/v1') :{
                     req.route.path = '/bff/app_access/v1*';
                     await iamMiddleware.iamAuthenticateAccessToken(req, res, () =>
@@ -738,10 +731,17 @@ const serverJs = async () => {
                     );
                     break;
                 }
-                case req.path.startsWith('/bff/iam/v1/server-iam-login') && req.method=='POST':{
-                    req.route.path = '/bff/iam/v1/server-iam-login';
+                case req.path.startsWith('/bff/iam/v1') && req.method=='POST':{
+                    req.route.path = '/bff/iam/v1*';
                     await iamMiddleware.iamAuthenticateIAM(req, res, () =>
                         bff.bffIAM(req, res)
+                    );
+                    break;
+                }
+                case req.path.startsWith('/bff/iam_signup/v1') &&req.method=='POST':{
+                    req.route.path = '/bff/iam_signup/v1*';
+                    await iamMiddleware.iamAuthenticateIAMSignup(req, res, () =>
+                            bff.bffIamSignup(req, res)
                     );
                     break;
                 }

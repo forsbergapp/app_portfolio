@@ -208,7 +208,7 @@ const component = async props => {
                     props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
                         props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
 
-    const roleOrder = ['app_id', 'app_id_signup', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'iam_user', 'iam_admin', 'socket'];
+    const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'socket'];
     /**
      * Sort paths by defined role order
      * @param {*[]} paths

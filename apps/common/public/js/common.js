@@ -1829,7 +1829,7 @@ const commonUserSignup = () => {
                             active:             0
                             };
            
-       commonFFB({path:'/server-iam/iam_user', method:'POST', authorization_type:'APP_ID_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
+       commonFFB({path:'/server-iam/iam_user', method:'POST', authorization_type:'IAM_SIGNUP', body:json_data, spinner_id:'common_dialogue_iam_start_signup_button'})
         .then(result=>{
             COMMON_GLOBAL.user_account_id = JSON.parse(result).user_account_id;
             COMMON_GLOBAL.iam_user_id =     JSON.parse(result).iam_user_id;
@@ -2207,7 +2207,7 @@ const commonFFB = async parameter => {
     parameter.body = parameter.body?parameter.body:null;
     switch (parameter.authorization_type){
         case 'APP_ID':
-        case 'APP_ID_SIGNUP':{
+        case 'IAM_SIGNUP':{
             service_path = `${COMMON_GLOBAL.rest_resource_bff}/${parameter.authorization_type.toLowerCase()}`;
             break;
         }
