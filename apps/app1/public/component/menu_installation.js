@@ -57,7 +57,7 @@ const template = props => ` <div id='menu_installation_content_widget1' class='w
 const component = async props => {
     //checks installed if admin
     /**@type{boolean|null} */
-    const installed = await props.methods.commonFFB({path:'/server-db_admin/database-installation', method:'GET', authorization_type:'ADMIN'})
+    const installed = await props.methods.commonFFB({path:'/server-db/database-installation', method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows[0].installed==1?true:false);
    return {
        lifecycle:   null,

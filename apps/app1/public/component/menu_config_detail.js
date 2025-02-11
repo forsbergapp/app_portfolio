@@ -66,7 +66,7 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
  */
 const component = async props => {
     const server_groups = [0,1,2,3,4];
-    const config_server = await props.methods.commonFFB({path:`/server-config/config/${props.data.file}`, query:'saved=1', method:'GET', authorization_type:'ADMIN'})
+    const config_server = await props.methods.commonFFB({path:`/server-db/config/${props.data.file}`, query:'saved=1', method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
 
    const onMounted = async () =>{        

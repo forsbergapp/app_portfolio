@@ -3478,7 +3478,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/app_data_stat-log": {
+        "/bff/admin/v1/server-db/app_data_stat-log": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.getLog",
@@ -3594,7 +3594,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/app_data_stat-log-stat": {
+        "/bff/admin/v1/server-db/app_data_stat-log-stat": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelAppDataStat.getStatUniqueVisitor",
@@ -4341,7 +4341,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/user_account-stat": {
+        "/bff/admin/v1/server-db/user_account-stat": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.getStatCountAdmin",
@@ -4369,7 +4369,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/user_account/${resource_id_number}": {
+        "/bff/admin/v1/server-db/user_account/${resource_id_number}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelUserAccount.get",
@@ -4404,7 +4404,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-config/config/${resource_id_string}": {
+        "/bff/admin/v1/server-db/config/${resource_id_string}": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelConfig.getFile",
@@ -4533,7 +4533,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server/info": {
+        "/bff/admin/v1/server-info": {
             "get": {
                 "summary": "",
                 "operationId": "server.info.info",
@@ -4561,7 +4561,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/database-demo": {
+        "/bff/admin/v1/server-db/database-demo": {
             "post": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbDemoInstall",
@@ -4646,7 +4646,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/database-installation": {
+        "/bff/admin/v1/server-db/database-installation": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInstalledCheck",
@@ -4677,7 +4677,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/database-space": {
+        "/bff/admin/v1/server-db/database-space": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInfoSpace",
@@ -4705,7 +4705,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/database-spacesum": {
+        "/bff/admin/v1/server-db/database-spacesum": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInfoSpaceSum",
@@ -4733,7 +4733,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db_admin/database": {
+        "/bff/admin/v1/server-db/database": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.dbModelDatabase.dbInfo",
@@ -4827,7 +4827,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-log/log": {
+        "/bff/admin/v1/server-db/log": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.get",
@@ -4946,7 +4946,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server/info-statuscode": {
+        "/bff/admin/v1/server-info-statuscode": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.getStatusCodes",
@@ -4974,7 +4974,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-log/log-stat": {
+        "/bff/admin/v1/server-db/log-stat": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.getStat",
@@ -5053,7 +5053,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-log/log-files": {
+        "/bff/admin/v1/server-db/log-files": {
             "get": {
                 "summary": "",
                 "operationId": "server_db.fileModelLog.getFiles",
@@ -5285,7 +5285,7 @@
                 }
             }
         },
-        "/bff/admin/v1/server-iam/iam_user_app_access": {
+        "/bff/admin/v1/server-iam/iam_app_access": {
             "get": {
                 "summary": "",
                 "operationId": "server.iam.iamUserAppAccessGet",
