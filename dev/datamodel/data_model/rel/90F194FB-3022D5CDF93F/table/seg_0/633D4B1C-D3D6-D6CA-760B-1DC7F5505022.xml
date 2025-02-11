@@ -48,9 +48,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="D91CC27E-67C1-D230-DDEB-95CA978E4208" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
-</associations>
 </Column>
 <Column name="app_data_entity_app_id" id="A1870791-2B31-50D4-B767-4BF3BBDD7546">
 <createdBy>admin</createdBy>
@@ -96,17 +93,6 @@
 <colUsage columnID="A1870791-2B31-50D4-B767-4BF3BBDD7546"/>
 <colUsage columnID="004CF753-1DEA-BA1F-3AE9-1FEF2B157FAF"/>
 <colUsage columnID="E54DA55D-2AB7-D0E4-3D84-653D8CE48BB6"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="C1649F83-3221-3C2D-ADDE-DD66EB44D4C6" name="app_data_entity_resource_app_setting_FK">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:02:42 UTC</createdTime>
-<generatorID>62354BB9-1DA8-A837-489E-A33AC330999F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="F653A1C0-9B99-2A62-C9EB-3A9DB2D240AA"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="97B43EB2-9A84-01D4-4B1D-62028E3176AF" name="app_data_entity_resource_app_data_entity_FK">

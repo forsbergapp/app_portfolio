@@ -135,35 +135,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_common;
 
-CREATE TABLE <DB_SCHEMA/>.app_setting (
-    id                                      INT NOT NULL AUTO_INCREMENT,
-    app_setting_type_app_id                 INTEGER NOT NULL,
-    app_setting_type_app_setting_type_name  VARCHAR(100) NOT NULL,
-    value                                   VARCHAR(500) NOT NULL,
-    display_data                            VARCHAR(500),
-    data2                                   VARCHAR(500),
-    data3                                   VARCHAR(500),
-    data4                                   VARCHAR(500),
-    data5                                   VARCHAR(500),
-    CONSTRAINT app_setting_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_setting TO app_portfolio_role_app_common;
-
-ALTER TABLE <DB_SCHEMA/>.app_setting
-    ADD CONSTRAINT app_setting_un UNIQUE ( app_setting_type_app_setting_type_name,
-                                           value,
-                                           app_setting_type_app_id );
-                                                               
-CREATE TABLE <DB_SCHEMA/>.app_setting_type (
-    app_id                  INTEGER NOT NULL,
-    app_setting_type_name   VARCHAR(100) NOT NULL,
-    CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_setting_type_name,
-                                                 app_id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_setting_type TO app_portfolio_role_app_common;
-
 CREATE TABLE <DB_SCHEMA/>.event (
     id            INT NOT NULL AUTO_INCREMENT,
     event_name    VARCHAR(100) NOT NULL,
@@ -215,10 +186,6 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account TO app_portfol
 CREATE TABLE <DB_SCHEMA/>.user_account_app (
     user_account_id                                   INTEGER NOT NULL,
     app_id                                            INTEGER NOT NULL,
-    preference_locale                                 VARCHAR(100),
-    app_setting_preference_timezone_id                INTEGER,
-    app_setting_preference_direction_id               INTEGER,
-    app_setting_preference_arabic_script_id           INTEGER,
     date_created                                      DATETIME NOT NULL,
     json_data                                         TEXT,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
@@ -308,10 +275,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
                                                    id )
             ON DELETE CASCADE;
 
-ALTER TABLE <DB_SCHEMA/>.app_data_entity_resource
-    ADD CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES <DB_SCHEMA/>.app_setting ( id );
-
 ALTER TABLE <DB_SCHEMA/>.app_data_resource_detail
     ADD CONSTRAINT app_data_resource_detail_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id
     ,
@@ -399,18 +362,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES <DB_SCHEMA/>.language ( id );
 
-ALTER TABLE <DB_SCHEMA/>.app_setting
-    ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
-                                                                 app_setting_type_app_id )
-        REFERENCES <DB_SCHEMA/>.app_setting_type ( app_setting_type_name,
-                                                    app_id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_setting_type
-    ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE;
-
 ALTER TABLE <DB_SCHEMA/>.event
     ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
         REFERENCES <DB_SCHEMA/>.event_type ( id );
@@ -419,18 +370,6 @@ ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
             ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.user_account_app
-    ADD CONSTRAINT user_account_app_app_setting_arabic_script_fk FOREIGN KEY ( app_setting_preference_arabic_script_id )
-        REFERENCES <DB_SCHEMA/>.app_setting ( id );
-
-ALTER TABLE <DB_SCHEMA/>.user_account_app
-    ADD CONSTRAINT user_account_app_app_setting_direction_fk FOREIGN KEY ( app_setting_preference_direction_id )
-        REFERENCES <DB_SCHEMA/>.app_setting ( id );
-
-ALTER TABLE <DB_SCHEMA/>.user_account_app
-    ADD CONSTRAINT user_account_app_app_setting_timezone_fk FOREIGN KEY ( app_setting_preference_timezone_id )
-        REFERENCES <DB_SCHEMA/>.app_setting ( id );
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app_data_post_like
     ADD CONSTRAINT user_account_app_data_post_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,

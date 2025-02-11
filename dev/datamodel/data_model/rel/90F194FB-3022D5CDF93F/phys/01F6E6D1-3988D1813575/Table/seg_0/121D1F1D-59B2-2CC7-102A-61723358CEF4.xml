@@ -89,4 +89,12 @@
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ForeignKey>
 </foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_data_stat_PK" id="D037A250-42AA-3419-9663-FC3DF8F39360">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 16:20:20 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
 </TableProxyOraclev20c>
