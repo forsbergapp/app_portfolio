@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number,server_server_express} from './types.js'
+ * @import {server_req_method, server_REST_API_parameters, server_server_response, server_server_response_type, server_server_error, server_server_req, server_server_res, server_server_req_id_number} from './types.js'
  */
 const zlib = await import('node:zlib');
 
@@ -551,107 +551,6 @@ const serverUtilAppLine = () =>{
 };
 
 /**
- * @name serverExpress
- * @description Gets Express app with following settings in this order
- *	            1.Middleware	JSON maximum size setting
- *	            2.Routes	
- *	            path	                                    method	middleware                                              controller      comment
- *	            *	                                        all	                                                            bffInit	        logs SSE and response when closed, 
- *                                                                                                                                          authenticates request and will end request if not passing controls,
- *                                                                                                                                          sets headers, 
- *                                                                                                                                          returns disallow for robots.txt and empty favicon.ico
- *	            *	                                        get	                                                            bffStart	    redirects naked domain, http to https if enabled 
- *				            			                                                                                                    and to admin subdomain if first time, 
- *							                                                                                                                responds to SSL verification if enabled
- *              /bff/app_id/v1*                             all     iamMiddleware.iamAuthenticateIdToken                    bffAppId
- *              /bff/app_access/v1*                         all     iamMiddleware.iamAuthenticateAccessToken                bffAppAccess
- *              /bff/app_access_verification/v1*            all     iamMiddleware.iamAuthenticateAccessVerificationToken    bffAppAccessVerification
- *              /bff/app_external/v1*                       post    iamMiddleware.iamAuthenticateExternal                   bffAppExternal
- *              /bff/app_access_external/v1*                post    iamMiddleware.iamAuthenticateAccessExternal             bffAppAccessExternal
- *              /bff/admin/v1*                              all     iamMiddleware.iamAuthenticateAdminAccessToken           bffAdmin
- *              /bff/iam/v1*                                post    iamMiddleware.iamAuthenticateIAM                        bffIAM
- *              /bff/iam_signup/v1*                         post    iamMiddleware.iamAuthenticateIAMSignup                  bffIamSignup
- *	            *	                                        get	                                                            bffApp		    app asset
- *				        			                                                                                                        common asset
- *						            	                                                                                                    info page
- *							                                                                                                                app
- *              3.Middleware error logging
-
- * @function
- * @returns {Promise<server_server_express>} app
- */
- const serverExpress = async () => {
-    /**@type{import('./db/fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-    /**@type{import('./db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    /**@type{import('./iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-    const {default:express} = await import('express');
-    
-    /**@type{server_server_express} */
-    const app = express();
-    //
-    //MIDDLEWARES
-    //
-    
-    app.set('trust proxy', true);
-    
-
-    // set JSON maximum size
-    app.use(
-        express.json({ limit: fileModelConfig.get('CONFIG_SERVER','SERVER', 'JSON_LIMIT') ?? ''})
-    );
-    
-    //ROUTES MIDDLEWARE
-    //apps
-    /**@type{import('./bffMiddleware.js')} */
-    const bff = await import(`file://${process.cwd()}/server/bffMiddleware.js`);
-    //auth
-    /**@type{import('./iamMiddleware.js')} */
-    const iamMiddleware = await import(`file://${process.cwd()}/server/iamMiddleware.js`);
-    
-    //ROUTES 
-    //logs SSE and response when closed, authenticates request and will end request if not passing controls, 
-    //sets headers, returns disallow for robots.txt and empty favicon.ico
-    app.route('*').all                          (bff.bffInit);
-    
-    //redirects naked domain, http to https if enabled and to admin subdomain if first time, responds to SSL verification if enabled
-    app.route('*').get                          (bff.bffStart);
-    
-    //REST API 
-    //URI syntax implemented:
-    //https://[subdomain].[domain]/[backend for frontend (bff)]/[role authorization]/version/[resource collection/service]/[resource]/[optional resource id]?URI query
-	//URI query: iam=[iam parameters base64 encoded]&parameters=[app parameters base64 encoded]
-    app.route('/bff/app_id/v1*').all                            (iamMiddleware.iamAuthenticateIdToken,                  bff.bffAppId);
-    app.route('/bff/app_access/v1*').all                        (iamMiddleware.iamAuthenticateAccessToken,              bff.bffAppAccess);
-    app.route('/bff/app_access_verification/v1*').all           (iamMiddleware.iamAuthenticateAccessVerificationToken,  bff.bffAppAccessVerification);
-    app.route('/bff/app_external/v1/*').post                    (iamMiddleware.iamAuthenticateExternal,                 bff.bffAppExternal);
-    app.route('/bff/app_access_external/v1/*').post             (iamMiddleware.iamAuthenticateAccessExternal,           bff.bffAppAccessExternal);
-    app.route('/bff/admin/v1*').all                             (iamMiddleware.iamAuthenticateAccessTokenAdmin,         bff.bffAdmin);
-    app.route('/bff/iam/v1*').post                              (iamMiddleware.iamAuthenticateIAM,                      bff.bffIAM);
-    app.route('/bff/iam_signup/v1*').post                       (iamMiddleware.iamAuthenticateIAMSignup,                bff.bffIamSignup);
-    
-    //app asset, common asset, info page, report and app
-    app.route('*').get                                          (bff.bffApp);
-    
-    //ERROR LOGGING
-    app.use((/**@type{server_server_error}*/err,/**@type{server_server_req}*/req,/**@type{server_server_res}*/res) => {
-        fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), err).then(() => {
-            serverResponse({result_request:{http:err?.name=='PayloadTooLargeError'?400:500, 
-                                            code:null, 
-                                            text:err?.name=='PayloadTooLargeError'?iamUtilMessageNotAuthorized():'SERVER ERROR',
-                                            developerText:'',
-                                            moreInfo:'',
-                                            type:'JSON'},
-                            host:req.headers.host,
-                            route:null,
-                            res:res});
-        });
-    });
-    return app;
-};
-/**
  * @name serverJs
  * @description Server app using Express pattern
  * @function
@@ -1180,21 +1079,11 @@ const serverStart = async () =>{
     try {
         await fileModelConfig.configInit();
         await dbModelDatabase.dbStart();
-        /**
-         * Use framework JS or Express
-         * This is switchable in runtime at any time
-         * @param {server_server_req} req
-         * @param {server_server_res} res
-         */
-        const app = async (req, res) => {
-            const framework = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'FRAMEWORK')) ==1?await serverJs():await serverExpress();
-            framework(req, res);
-        };
         socketIntervalCheck();
         const NETWORK_INTERFACE = fileModelConfig.get('CONFIG_SERVER','SERVER', 'NETWORK_INTERFACE');
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(app).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
+        http.createServer(await serverJs()).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
             fileModelLog.postServerI('HTTP Server up and running on PORT: ' + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
@@ -1209,7 +1098,7 @@ const serverStart = async () =>{
                 cert: HTTPS_CERT.toString()
             };
             /**@ts-ignore*/
-            https.createServer(options,  app).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
+            https.createServer(options,  await serverJs()).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
                 fileModelLog.postServerI('HTTPS Server up and running on PORT: ' + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });

@@ -1838,18 +1838,6 @@
  * @typedef {string|number|null|undefined} server_server_req_id_number
  */
 
-
-/**
- * @description SERVER server_server_express
- * @typedef {object} server_server_express
- * @property {function} use
- * @property {function} get
- * @property {function} set
- * @property {function} route
- * @property {function} listen
- * 
- */
-
 /**
  * @description SERVER server_server_error
  * @typedef {Object.<Error | null , undefined>} server_server_error
