@@ -128,21 +128,6 @@ const bffService = await import('./bff.js');
     bffService.bff(bff_parameters);
 };
 /**
- * @name bffAppIdSignup
- * @description Backend for frontend (BFF) APP_ID_SIGNUP
- * @function
- * @param {server_server_req} req - Request
- * @param {server_server_res} res
- * @returns {*}
- */
- const bffAppIdSignup = (req, res) =>{
-    /**@type{import('./types.js').server_bff_parameters} */
-    const bff_parameters = {endpoint:'APP_ID_SIGNUP', 
-                            ...bffCommon(req, res)
-                            };
-    bffService.bff(bff_parameters);
-};
-/**
  * @name bffAppAccess
  * @description Backend for frontend (BFF) APP_ACCESS
  * @function
@@ -233,7 +218,21 @@ const bffIAM = (req, res) =>{
                             };
     bffService.bff(bff_parameters);
 };
+/**
+ * @name bffAppIdSignup
+ * @description Backend for frontend (BFF) IAM_SIGNUP
+ * @function
+ * @param {server_server_req} req - Request
+ * @param {server_server_res} res
+ * @returns {*}
+ */
+const bffIamSignup = (req, res) =>{
+    /**@type{import('./types.js').server_bff_parameters} */
+    const bff_parameters = {endpoint:'IAM_SIGNUP', 
+                            ...bffCommon(req, res)
+                            };
+    bffService.bff(bff_parameters);
+};
 
-
-export{ bffInit, bffStart, bffApp, bffAppId, bffAppIdSignup, bffAppAccess, bffAppAccessVerification, bffAppExternal, bffAppAccessExternal, bffAdmin, 
-        bffIAM};
+export{ bffInit, bffStart, bffApp, bffAppId, bffAppAccess, bffAppAccessVerification, bffAppExternal, bffAppAccessExternal, bffAdmin, 
+        bffIAM, bffIamSignup};

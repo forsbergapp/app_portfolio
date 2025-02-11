@@ -43,7 +43,7 @@ const iamAuthenticateIdToken = (req, res, next) => iamService.iamAuthenticateUse
  * @param {function} next
  * @returns {Promise.<void>}
  */
-const iamAuthenticateIdTokenRegistration = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'APP_ID_SIGNUP', req.headers.authorization, req.headers.host, req.ip, res, next);
+const iamAuthenticateIAMSignup = (req, res, next) => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM_SIGNUP', req.headers.authorization, req.headers.host, req.ip, res, next);
 
 /**
  * @name iamAuthenticateAccessToken
@@ -99,7 +99,7 @@ const iamAuthenticateAccessExternal = (req, res, next) => iamService.iamAuthenti
  */
 const iamAuthenticateIAM = (req, res, next)  => iamService.iamAuthenticateUserCommon(req.headers[ID_TOKEN_KEY].replace('Bearer ',''), 'IAM', req.headers.authorization, req.headers.host, req.ip, res, next);
 
-export{ iamAuthenticateIdToken, iamAuthenticateIdTokenRegistration,
+export{ iamAuthenticateIdToken, iamAuthenticateIAMSignup,
         iamAuthenticateAccessTokenAdmin, iamAuthenticateAccessToken, iamAuthenticateAccessVerificationToken,
         iamAuthenticateExternal, iamAuthenticateAccessExternal,
         iamAuthenticateIAM};

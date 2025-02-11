@@ -1007,7 +1007,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
                                 iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
                             break;
                         }
-                        case endpoint=='APP_ID_SIGNUP' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin:{
+                        case endpoint=='IAM_SIGNUP' && serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_USER_REGISTRATION'))==1 && app_id_host!= app_id_admin:{
                             next();
                             break;
                         }
@@ -1205,13 +1205,13 @@ const iamAuthenticateUserDbDelete = async parameters => {
                             //REST API paths
                             path.startsWith('/bff/app/v1') ||
                             path.startsWith('/bff/app_id/v1') ||
-                            path.startsWith('/bff/app_id_signup/v1') ||
                             path.startsWith('/bff/app_access/v1') ||
                             path.startsWith('/bff/app_access_verification/v1') ||
                             path.startsWith('/bff/app_external/v1') ||
                             path.startsWith('/bff/app_access_external/v1') ||
                             path.startsWith('/bff/admin/v1') ||
                             path.startsWith('/bff/iam/v1') ||
+                            path.startsWith('/bff/iam_signup/v1') ||
                             //APP paths
                             path == '/' ||
                             path.startsWith('/js/') ||
