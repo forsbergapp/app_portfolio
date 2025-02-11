@@ -1,0 +1,131 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D53BC318-FA90-1029-9C8F-4D2E14FA9DEF" name="APP_SETTING">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:36:08 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="C857E504-CDAE-7038-D163-5EF2181B7F60">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:39:25 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="name" id="F74B0EB2-2FF1-0506-4EDE-D5936AE815D3">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:39:33 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="value" id="BDDB209D-5796-9416-3D2D-045D596C9B7C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:10 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="display_data" id="9E4D0E73-E9DB-7097-98DD-ACFAA3E3C267">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:14 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data2" id="75A0A9AC-5BB2-B269-BC7F-6B2FF4B5D05D">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:19 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data3" id="49EACC89-09A3-5AE1-8C56-8E85D351E5A7">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:22 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data4" id="D66CAE8F-2D0E-5B91-BE4F-8071F7B3B193">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:25 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="data5" id="1EE4C9D9-B92D-5205-1CBD-9A0CBB557944">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:28 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_id" id="95AD60E0-9597-1109-B700-BED6E2C0E23E">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:41:44 UTC</createdTime>
+<generatorID>73CF4EE2-2A71-F6E1-3B6D-DCE8FCC8D162</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="18568DC1-BDA0-D170-98DC-580EF18BC4E0" name="APP_SETTING_UK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:40:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>95AD60E0-9597-1109-B700-BED6E2C0E23E,F74B0EB2-2FF1-0506-4EDE-D5936AE815D3,BDDB209D-5796-9416-3D2D-045D596C9B7C</newElementsIDs>
+<usedAttributes>
+<attributeRef>95AD60E0-9597-1109-B700-BED6E2C0E23E</attributeRef>
+<attributeRef>F74B0EB2-2FF1-0506-4EDE-D5936AE815D3</attributeRef>
+<attributeRef>BDDB209D-5796-9416-3D2D-045D596C9B7C</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

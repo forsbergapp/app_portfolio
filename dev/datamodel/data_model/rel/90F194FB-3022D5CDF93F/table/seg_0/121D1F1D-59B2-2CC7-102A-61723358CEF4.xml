@@ -158,6 +158,15 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="D037A250-42AA-3419-9663-FC3DF8F39360" name="app_data_stat_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 16:20:20 UTC</createdTime>
+<generatorID>2A7222AC-4098-4A8E-5792-CF37B93F3ECF</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+</ind_PK_UK>
 <ind_PK_UK id="A8E70172-6B3C-7F54-D692-B1CFC0F538C0" name="app_data_stat_app_FK">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:02:42 UTC</createdTime>
