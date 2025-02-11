@@ -158,7 +158,7 @@ const component = async props => {
      *          day:number,
      *          amount:number,
      *          statValue:string}[]} */
-    const charts = await props.methods.commonFFB({path:'/server-log/log-stat', query:query, method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    const charts = await props.methods.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
       
     return {
         lifecycle:  null,

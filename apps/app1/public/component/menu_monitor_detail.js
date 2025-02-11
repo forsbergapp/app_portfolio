@@ -376,7 +376,7 @@ const component = async props => {
             break;
         }
         case 'APP_DATA_STAT':{
-            path = '/server-db_admin/app_data_stat-log';
+            path = '/server-db/app_data_stat-log';
             break;
         }
     }
@@ -598,7 +598,7 @@ const component = async props => {
         props.methods.commonComponentRender(
                 {   mountDiv:'menu_monitor_detail_server_log',
                     data:{  
-                                path:'/server-log/log',
+                                path:'/server-db/log',
                                 query:`${get_query('SERVER_LOG', offset, sort, order_by)}&search=${search ?? ''}`,
                                 token_type: 'ADMIN',
                                 sort:sort,

@@ -1,4 +1,4 @@
-/** @module server/info */
+/** @module server-info */
 
 /**
  * @import {server_server_response,server_info_result_Info} from './types.js'

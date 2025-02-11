@@ -382,7 +382,7 @@ const appSecureDialogueSendBroadcastMaintenanceSet = () => {
     else
         check_value = 0;
     const json_data = {maintenance:check_value};
-    common.commonFFB({path:'/server-config/config/CONFIG_SERVER', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
+    common.commonFFB({path:'/server-db/config/CONFIG_SERVER', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
 };
 /**
  * @name appSecureMenuUsers
@@ -538,7 +538,7 @@ const appSecureCommonButtonSave = async (item) => {
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};
 
-            common.commonFFB({path:`/server-config/config/${file}`, method: 'PUT', authorization_type:'ADMIN', body:json_data, spinner_id:item});
+            common.commonFFB({path:`/server-db/config/${file}`, method: 'PUT', authorization_type:'ADMIN', body:json_data, spinner_id:item});
             break;
         }
     }
@@ -631,7 +631,7 @@ const appSecureMenuInstallationDbInstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
     appSecureMenuInstallationDbInstallationFunction('menu_installation_db_button_install', 
                                                     true, 
-                                                    '/server-db_admin/database', 
+                                                    '/server-db/database', 
                                                     'POST', 
                                                     null);
 };
@@ -645,7 +645,7 @@ const appSecureMenuInstallationDbUninstall = () =>{
     common.commonComponentRemove('common_dialogue_message');
     appSecureMenuInstallationDbInstallationFunction('menu_installation_db_button_uninstall', 
                                                     false, 
-                                                    '/server-db_admin/database', 
+                                                    '/server-db/database', 
                                                     'DELETE', 
                                                     null);
 };
@@ -662,7 +662,7 @@ const appSecureMenuInstallationDemoInstall = () =>{
                         })==true){
         const json_data = { demo_password: COMMON_DOCUMENT.querySelector('#menu_installation_demo_password').textContent};
         appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_install', null, 
-                                '/server-db_admin/database-demo', 
+                                '/server-db/database-demo', 
                                 'POST', 
                                 json_data);
     }
@@ -675,7 +675,7 @@ const appSecureMenuInstallationDemoInstall = () =>{
  */
 const appSecureMenuInstallationDemoUninstall = () =>{
     appSecureMenuInstallationDbInstallationFunction(  'menu_installation_demo_button_uninstall', null, 
-                            '/server-db_admin/database-demo', 
+                            '/server-db/database-demo', 
                             'DELETE', 
                             null);
 };
@@ -904,10 +904,10 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     if (APP_SECURE_GLOBAL.previous_row != common.commonMiscElementRow(event.target)){
                         APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                         common.commonComponentRender({
-                            mountDiv:   'menu_users_iam_user_app_access',
+                            mountDiv:   'menu_users_iam_app_access',
                             data:       {user_account_id:parseInt(common.commonMiscElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
-                            path:       '/component/menu_users_iam_user_app_access.js'});
+                            path:       '/component/menu_users_iam_app_access.js'});
                     }
                     break;
                 }   

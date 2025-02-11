@@ -139,7 +139,7 @@ const component = async props => {
      */
     const get_log_parameters = async () => {
        return new Promise((resolve)=>{
-           props.methods.commonFFB({path:'/server-config/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
+           props.methods.commonFFB({path:'/server-db/config/CONFIG_SERVER', query:'config_group=SERVICE_LOG', method:'GET', authorization_type:'ADMIN'})
            .then((/**@type{string}*/result)=>{
                const log_parameters = {
                    SCOPE_REQUEST : JSON.parse(result).filter((/**@type{*}*/row)=>'SCOPE_REQUEST' in row)[0]['SCOPE_REQUEST'],

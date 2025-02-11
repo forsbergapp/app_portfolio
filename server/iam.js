@@ -124,10 +124,10 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
 const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
     const token = authorization?.split(' ')[1] ?? '';
     /**@type{server_db_file_iam_app_access}*/
-    const iam_user_app_access_row = fileModelIamAppAccess.get(app_id,null).result.filter((/**@type{server_db_file_iam_app_access}*/row)=>row.token==token &&row.ip == ip)[0];
-    if (iam_user_app_access_row){
+    const iam_app_access_row = fileModelIamAppAccess.get(app_id,null).result.filter((/**@type{server_db_file_iam_app_access}*/row)=>row.token==token &&row.ip == ip)[0];
+    if (iam_app_access_row){
         //set token expired
-        return fileModelIamAppAccess.update(app_id, iam_user_app_access_row.id??null, {res:2});
+        return fileModelIamAppAccess.update(app_id, iam_app_access_row.id??null, {res:2});
     }
     else
         return {http:401,
@@ -981,7 +981,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
                                 access_token_decoded.ip == ip && 
                                 access_token_decoded.db == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE'))){
                                 /**@type{server_db_file_iam_app_access}*/
-                                const iam_user_app_access = fileModelIamAppAccess.get(app_id_host, null).result
+                                const iam_app_access = fileModelIamAppAccess.get(app_id_host, null).result
                                                         .filter((/**@type{server_db_file_iam_app_access}*/row)=>
                                                                                                 //Authenticate IAM user
                                                                                                 row.iam_user_id           == access_token_decoded.iam_user_id && 
@@ -998,7 +998,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
                                                                                                 //Authenticate the token string
                                                                                                 row.token                   == access_token
                                                                                             )[0];
-                                if (iam_user_app_access)
+                                if (iam_app_access)
                                     next();
                                 else
                                     iamUtilResponseNotAuthorized(res, 401, 'iamAuthenticateUserCommon');
