@@ -38,67 +38,6 @@
 <colAssociation fkAssociation="98B65253-3341-6036-BCFC-292F40DD58E8" referredColumn="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
 </associations>
 </Column>
-<Column name="preference_locale" id="CC402F8F-40EF-5A2E-EACB-2CAC05174BDE">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>62FC0FE5-40B5-6DD9-BD67-60CC16062AA2</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="app_setting_preference_timezone_id" id="6B7F8C6C-28E1-5082-5641-0A5F15440102">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>BCC22102-3491-6C68-3735-0D886E73BC1F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="936B1EF9-7E37-5B53-D40C-EC65CCE33C95" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
-</associations>
-</Column>
-<Column name="app_setting_preference_direction_id" id="CEDB330A-DE14-4A94-65A6-D29BD1BC3E58">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>BF49DA62-DFCD-182E-B5A3-FCBA966BE35F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="233FC6F2-ECED-BF1B-799E-435440E54197" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
-</associations>
-</Column>
-<Column name="app_setting_preference_arabic_script_id" id="85BED80F-E124-54B0-F476-93D7F7A894EF">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>9E1E0ABD-C3CE-7147-E26B-4810AEAF0C20</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="2B60852C-E0F2-6DA0-BBF5-DB7B6349D887" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
-</associations>
-</Column>
 <Column name="date_created" id="4083B5C6-1194-DF9A-D6F3-D4F2A28F533F">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-04 12:25:23 UTC</createdTime>
@@ -135,39 +74,6 @@
 <indexColumnUsage>
 <colUsage columnID="30F6315E-6F05-F9A0-75C9-69DFAFC5E778"/>
 <colUsage columnID="C151CEF5-2FAC-5528-4B42-D80240397DC8"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="E76B07B5-ACD9-917F-54B3-F494C166C2F2" name="user_account_app_app_setting_timezone_FK">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>3F787C20-749A-C3C0-4724-065859A4B696</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="6B7F8C6C-28E1-5082-5641-0A5F15440102"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="97CE9F9A-9CCF-D798-1E94-4EA987646447" name="user_account_app_app_setting_direction_FK">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>05C685FC-4958-FAC6-2F14-D550867E99D5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="CEDB330A-DE14-4A94-65A6-D29BD1BC3E58"/>
-</indexColumnUsage>
-</ind_PK_UK>
-<ind_PK_UK id="98B137DD-F5EB-4BFE-FD77-B7C728C8535D" name="user_account_app_app_setting_arabic_script_FK">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-04 12:25:23 UTC</createdTime>
-<generatorID>AE30193B-36D2-7C48-8BCE-D13207C8A358</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<indexState>Foreign Key</indexState>
-<isSurrogateKey>false</isSurrogateKey>
-<indexColumnUsage>
-<colUsage columnID="85BED80F-E124-54B0-F476-93D7F7A894EF"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="3FE7263E-F730-227B-7655-2A3F16C5F283" name="user_account_app_user_account_FK">

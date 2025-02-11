@@ -3,6 +3,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
 <partitionedRowMovement>DISABLE</partitionedRowMovement>
 <temporaryChanged>false</temporaryChanged>
 <user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
@@ -39,11 +40,6 @@
 </columnProxies>
 <foreignKeys>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_data_entity_resource_app_data_entity_FK" id="97B43EB2-9A84-01D4-4B1D-62028E3176AF">
-<createdBy>admin</createdBy>
-<createdTime>2024-03-02 19:12:43 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ForeignKey>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_data_entity_resource_app_setting_FK" id="C1649F83-3221-3C2D-ADDE-DD66EB44D4C6">
 <createdBy>admin</createdBy>
 <createdTime>2024-03-02 19:12:43 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>

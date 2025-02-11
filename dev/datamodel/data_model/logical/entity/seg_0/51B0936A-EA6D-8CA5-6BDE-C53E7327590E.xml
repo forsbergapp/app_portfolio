@@ -46,21 +46,6 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="preference_locale" id="62FC0FE5-40B5-6DD9-BD67-60CC16062AA2">
-<createdBy>admin</createdBy>
-<createdTime>2022-08-07 19:29:39 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<dataTypeSize>100</dataTypeSize>
-<ownDataTypeParameters>100,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="json_data" id="89A1C916-59E0-6EDF-DE2C-19912AB657EF">
 <createdBy>admin</createdBy>
 <createdTime>2024-02-25 18:36:13 UTC</createdTime>
@@ -73,54 +58,6 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT028</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_setting_preference_timezone_id" id="9E1E0ABD-C3CE-7147-E26B-4810AEAF0C20">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 02:17:03 UTC</createdTime>
-<generatorID>AE30193B-36D2-7C48-8BCE-D13207C8A358</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_setting_preference_direction_id" id="BCC22102-3491-6C68-3735-0D886E73BC1F">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 02:17:03 UTC</createdTime>
-<generatorID>3F787C20-749A-C3C0-4724-065859A4B696</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_setting_preference_arabic_script_id" id="BF49DA62-DFCD-182E-B5A3-FCBA966BE35F">
-<createdBy>admin</createdBy>
-<createdTime>2023-12-12 02:17:03 UTC</createdTime>
-<generatorID>05C685FC-4958-FAC6-2F14-D550867E99D5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="date_created" id="3BBA7A42-FFDC-984E-D731-8D4B3914DE95">

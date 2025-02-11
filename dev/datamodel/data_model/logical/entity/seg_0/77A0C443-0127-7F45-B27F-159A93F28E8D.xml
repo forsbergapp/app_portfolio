@@ -40,20 +40,6 @@
 <logicalDatatype>LOGDT028</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_setting_id" id="F8C086E6-5EC9-1303-AA67-9E2C2F72753C">
-<createdBy>admin</createdBy>
-<createdTime>2024-02-27 18:55:13 UTC</createdTime>
-<generatorID>62354BB9-1DA8-A837-489E-A33AC330999F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<logicalDatatype>LOGDT011</logicalDatatype>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="app_data_entity_app_id" id="B0F4D935-C425-7CB0-9349-1A9CAE72AFAE">
 <createdBy>admin</createdBy>
 <createdTime>2024-02-25 21:20:13 UTC</createdTime>
@@ -77,6 +63,18 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <referedAttribute>E72CD50A-49C5-F620-1D9F-55BA28B51EA9</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_setting_id" id="592C309D-88BF-4DA6-172B-1CF88FCA50CC">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:37:27 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>

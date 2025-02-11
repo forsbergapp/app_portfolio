@@ -30,9 +30,7 @@ CREATE TABLE <DB_SCHEMA/>.app_data_entity_resource (
                                                                              app_data_entity_id )
         REFERENCES app_data_entity (    app_id,
                                         id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_data_entity_resource_app_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_setting ( id )
+            ON DELETE CASCADE
 );
 CREATE INDEX <DB_SCHEMA/>.app_data_entity_resource_id_index ON app_data_entity_resource (id);
 
@@ -171,36 +169,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
         REFERENCES language ( id )
 );
 
-CREATE TABLE <DB_SCHEMA/>.app_setting (
-    id                                      INTEGER NOT NULL CONSTRAINT app_setting_pk PRIMARY KEY AUTOINCREMENT,
-    app_setting_type_app_id                 INTEGER NOT NULL,
-    app_setting_type_app_setting_type_name  VARCHAR(100) NOT NULL,
-    value                                   VARCHAR(500) NOT NULL,
-    display_data                            VARCHAR(500),
-    data2                                   VARCHAR(500),
-    data3                                   VARCHAR(500),
-    data4                                   VARCHAR(500),
-    data5                                   VARCHAR(500),
-    CONSTRAINT app_setting_un UNIQUE ( app_setting_type_app_setting_type_name,
-                                           value,
-                                           app_setting_type_app_id ),
-    CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
-                                                                 app_setting_type_app_id )
-        REFERENCES app_setting_type ( app_setting_type_name,
-                                                    app_id )
-            ON DELETE CASCADE
-);
-                                                               
-CREATE TABLE <DB_SCHEMA/>.app_setting_type (
-    app_id                  INTEGER NOT NULL,
-    app_setting_type_name   VARCHAR(100) NOT NULL,
-    CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_setting_type_name,
-                                                 app_id ),
-    CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id )
-            ON DELETE CASCADE
-);
-
 CREATE TABLE <DB_SCHEMA/>.event (
     id            INTEGER NOT NULL CONSTRAINT event_pk PRIMARY KEY AUTOINCREMENT,
     event_name    VARCHAR(100) NOT NULL,
@@ -239,10 +207,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account (
 CREATE TABLE <DB_SCHEMA/>.user_account_app (
     user_account_id                                   INTEGER NOT NULL,
     app_id                                            INTEGER NOT NULL,
-    preference_locale                                 VARCHAR(100),
-    app_setting_preference_timezone_id                INTEGER,
-    app_setting_preference_direction_id               INTEGER,
-    app_setting_preference_arabic_script_id           INTEGER,
     date_created                                      DATETIME NOT NULL,
     json_data                                         TEXT,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
@@ -251,12 +215,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app (
     CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
         REFERENCES app ( id )
             ON DELETE CASCADE,
-    CONSTRAINT user_account_app_app_setting_arabic_script_fk FOREIGN KEY ( app_setting_preference_arabic_script_id )
-        REFERENCES app_setting ( id ),
-    CONSTRAINT user_account_app_app_setting_direction_fk FOREIGN KEY ( app_setting_preference_direction_id )
-        REFERENCES app_setting ( id ),
-    CONSTRAINT user_account_app_app_setting_timezone_fk FOREIGN KEY ( app_setting_preference_timezone_id )
-        REFERENCES app_setting ( id ),
     CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES user_account ( id )
             ON DELETE CASCADE

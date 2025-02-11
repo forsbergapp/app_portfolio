@@ -382,6 +382,7 @@
  *              server_db_file_app_module[]|
  *              server_db_file_app_parameter[]|
  *              server_db_file_app_secret[]|
+ *              server_db_file_app_setting[]|
  *              server_db_file_app_translation[]} server_db_file_config_files
  */
 
@@ -492,6 +493,7 @@
  *              'APP_MODULE_QUEUE'|
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
+ *              'APP_SETTING'|
  *              'APP_TRANSLATION'|
  *              'IAM_APP_ID_TOKEN'|
  *              'IAM_APP_ACCESS'|
@@ -727,6 +729,23 @@
  *              common_app_access_verification_secret:string, 
  *              common_app_access_verification_expire:string}} server_db_file_app_secret
  */
+/**
+ * @description DB_FILE_server_db_file_app_setting_name, with common names specified
+ * @typedef {'ARABIC_SCRIPT'|'CALENDAR_HIJRI_TYPE'|'CALENDAR_TYPE'|'DIRECTION'|'NUMBER_SYSTEM'|'PAPER_SIZE'|'RESOURCE_TYPE'|'TIMEZONE'|[key:string, string]} DB_FILE_server_db_file_app_setting_name
+ */
+/**
+ * @description DB FILE server_db_file_app_setting
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              name: DB_FILE_server_db_file_app_setting_name,
+ *              value:string,
+ *              display_data:string,
+ *              data2:string|number|null,
+ *              data3:string|number|null,
+ *              data4:string|number|null,
+ *              data5:string|number|null}} server_db_file_app_setting
+ */
+
 /** 
  * @description DB FILE server_db_file_iam_app_id_token
  * @typedef {{	app_id: 	number,
