@@ -156,29 +156,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_stat (
             ON DELETE CASCADE
 );
 
-CREATE TABLE <DB_SCHEMA/>.app_data_translation (
-    json_data                   TEXT,
-    language_id                 INTEGER NOT NULL,
-    app_data_resource_master_id INTEGER NOT NULL,
-    CONSTRAINT app_data_translation_pk PRIMARY KEY ( language_id,
-                                                    app_data_resource_master_id ),
-    CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_data_resource_master ( id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES language ( id )
-);
-
-CREATE TABLE <DB_SCHEMA/>.language (
-    id         INTEGER NOT NULL CONSTRAINT language_pk PRIMARY KEY AUTOINCREMENT,
-    locale     VARCHAR(10) NOT NULL
-);
-
-CREATE INDEX <DB_SCHEMA/>.locale_index ON
-    language (
-        locale
-    ASC );
-
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INTEGER NOT NULL CONSTRAINT user_account_pk PRIMARY KEY AUTOINCREMENT,
     iam_user_id           INTEGER,
