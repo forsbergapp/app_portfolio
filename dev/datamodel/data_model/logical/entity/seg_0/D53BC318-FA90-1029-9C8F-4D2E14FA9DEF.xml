@@ -25,6 +25,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="app_id" id="95AD60E0-9597-1109-B700-BED6E2C0E23E">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-11 15:41:44 UTC</createdTime>
+<generatorID>73CF4EE2-2A71-F6E1-3B6D-DCE8FCC8D162</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="name" id="F74B0EB2-2FF1-0506-4EDE-D5936AE815D3">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-11 15:39:33 UTC</createdTime>
@@ -96,18 +108,6 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_id" id="95AD60E0-9597-1109-B700-BED6E2C0E23E">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-11 15:41:44 UTC</createdTime>
-<generatorID>73CF4EE2-2A71-F6E1-3B6D-DCE8FCC8D162</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
