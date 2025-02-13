@@ -3,14 +3,14 @@
  */
 
 /**
- * @import {server_db_file_iam_app_access, server_server_response} from '../../../../server/types.js'
+ * @import {server_iam_access_token_claim, server_db_file_iam_app_access, server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
  * @param {{app_id:number,
  *          authorization:string,
  *          ip:string}} parameters
- * @returns Promise.<{boolean>}
+ * @returns Promise.<server_iam_access_token_claim & {exp:number, iat:number}>}
  */
 const getToken = async parameters => {
     
@@ -23,15 +23,14 @@ const getToken = async parameters => {
     /**@type{import('../../../../server/iam.js')} */
     const {iamUtilTokenGet} = await import(`file://${process.cwd()}/server/iam.js`);
     
-    /**@type{*} */
+    /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
     const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
-
-    return  token_verify.app_id         == parameters.app_id && 
-            token_verify.ip             == parameters.ip && 
-            token_verify.db             == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')) &&
-            token_verify.scope          == 'APP_EXTERNAL' &&
-            //authenticated saved values in iam_app_access
-            fileModelIamAppAccess.get(parameters.app_id, null).result
+    if (token_verify.app_id         == parameters.app_id && 
+        token_verify.ip             == parameters.ip && 
+        token_verify.db             == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')) &&
+        token_verify.scope          == 'APP_EXTERNAL' &&
+        //authenticated saved values in iam_app_access
+        fileModelIamAppAccess.get(parameters.app_id, null).result
                         .filter((/**@type{server_db_file_iam_app_access}*/row)=>
                                                                 //Authenticate the token type
                                                                 row.type                    == 'APP_ACCESS_EXTERNAL' &&
@@ -45,7 +44,10 @@ const getToken = async parameters => {
                                                                 row.res                     == 1 &&
                                                                 //Authenticate the token string
                                                                 row.token                   == parameters.authorization.replace('Bearer ','')
-                                                            )[0];
+                                                            )[0])
+        return token_verify;
+    else
+        return null;
 };
 /**
  * @name paymentRequestCreate

@@ -81,7 +81,8 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
                                                                                                                     token_type=='APP_ACCESS_VERIFICATION'?'common_app_access_verification_secret':
                                                                                                                     'common_app_id_secret']);
     /**@type{server_iam_access_token_claim & {exp:number, iat:number}} */
-    return {app_id:                 verify.app_id,
+    return {app_custom_id:          verify.app_custom_id,
+            app_id:                 verify.app_id,
             iam_user_id:            verify.iam_user_id,
             iam_user_username:      verify.iam_user_username,
             user_account_id:        verify.user_account_id,
@@ -470,7 +471,8 @@ const iamAuthenticateUserSignup = async parameters =>{
     if (new_user.result){
         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                             'APP_ACCESS_VERIFICATION', 
-                                            {   app_id:                 parameters.app_id, 
+                                            {   app_custom_id:          null,
+                                                app_id:                 parameters.app_id, 
                                                 iam_user_id:            new_user.result.id, 
                                                 iam_user_username:      parameters.data.username, 
                                                 user_account_id:        new_user.result.user_account_id, 
@@ -574,7 +576,8 @@ const iamAuthenticateUserActivate = async parameters =>{
             if (result_activate.result.affectedRows==1){
                 //verification type 3 FORGOT/ PASSWORD RESET
                 const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_VERIFICATION', 
-                                                    {   app_id:                 parameters.app_id, 
+                                                    {   app_custom_id:          null,
+                                                        app_id:                 parameters.app_id, 
                                                         iam_user_id:            parameters.resource_id, 
                                                         iam_user_username:      null, 
                                                         user_account_id:        parameters.resource_id, 
@@ -672,7 +675,8 @@ const iamAuthenticateUserForgot = async parameters =>{
                     if (result_dbModelUserAccountEvent.result){
                         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                             'APP_ACCESS_VERIFICATION', 
-                                                            {   app_id:                 parameters.app_id, 
+                                                            {   app_custom_id:          null,
+                                                                app_id:                 parameters.app_id, 
                                                                 iam_user_id:            user.id, 
                                                                 iam_user_username:      user.username, 
                                                                 user_account_id:        user.id, 
@@ -1417,7 +1421,8 @@ const iamAuthenticateResource = parameters =>  {
  * @returns {Promise.<string>}
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
-    const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', {  app_id: app_id, 
+    const jwt_data = iamAuthorizeToken(app_id, 'APP_ID', {  app_custom_id:null,
+                                                            app_id: app_id, 
                                                             iam_user_id:null,
                                                             iam_user_username:null,
                                                             user_account_id:null,

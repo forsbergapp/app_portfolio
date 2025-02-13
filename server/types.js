@@ -1635,7 +1635,7 @@
  */
 /**
  * @description IAM server_iam_access_token_claim
- * @typedef {{  app_custom_id?:         number|string,
+ * @typedef {{  app_custom_id:          number|string|null,
  *              app_id:                 number,
  *              iam_user_id:            number|null,
  *              iam_user_username:      string|null,
