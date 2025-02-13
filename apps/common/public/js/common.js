@@ -102,21 +102,6 @@ const COMMON_ICONS = {
 Object.seal(COMMON_ICONS);
 
 /**
- * @name commonMiscDbAppSettingsGet
- * @description Get db app settings
- * @function
- * @returns {Promise<{  id:number,
- *                      app_id:number,
- *                      value:string,
- *                      text:string,
- *                      app_setting_type_name:string,
- *                      data2:string,
- *                      data3:string,
- *                      data4:string,
- *                      data5:string}[]>}
- */
-const commonMiscDbAppSettingsGet = async () =>await commonFFB({path:'/server-db/app_settings', method:'GET', authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-/**
  * @name commonMiscElementId
  * @description Finds recursive parent id. Use when current element can be an image or svg attached to an event element
  * @function
@@ -1312,6 +1297,7 @@ const commonLovShow = parameters => {
         mountDiv:   'common_dialogue_lov',
         data:       {
                     common_app_id:COMMON_GLOBAL.common_app_id,  
+                    app_id:COMMON_GLOBAL.app_id,  
                     user_locale:COMMON_GLOBAL.user_locale,
                     lov:parameters.lov,
                     lov_custom_list:parameters.lov_custom_list,
@@ -1643,14 +1629,14 @@ const commonUserLogin = async () => {
             else
                 COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
             //timezone
-            if (user_account_app.app_setting_preference_timezone_id==null)
+            if (user_account_app.preference_timezone==null)
                 commonUserPreferencesGlobalSetDefault('TIMEZONE');
             else
-                COMMON_GLOBAL.user_timezone = user_account_app.app_setting_preference_timezone_value;
+                COMMON_GLOBAL.user_timezone = user_account_app.preference_timezone;
             //direction
-            COMMON_GLOBAL.user_direction = user_account_app.app_setting_preference_direction_value;
+            COMMON_GLOBAL.user_direction = user_account_app.preference_direction;
             //arabic script
-            COMMON_GLOBAL.user_arabic_script = user_account_app.app_setting_preference_arabic_script_value;
+            COMMON_GLOBAL.user_arabic_script = user_account_app.preference_arabic_script;
             //update body class with app theme, direction and arabic script usage classes
             commonMiscPreferencesUpdateBodyClassFromPreferences();
             commonComponentRemove(current_dialogue, true);
@@ -2055,18 +2041,20 @@ const commonUserUpdatePassword = () => {
  */
 const commonUserPreferenceSave = async () => {
     if (COMMON_GLOBAL.user_account_id != null){
-        const json_data =
-            {  
-                preference_locale:                      COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
-                                                            .getAttribute('data-value'),
-                app_setting_preference_timezone_id:     COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_timezone_select .common_select_dropdown_value')
-                                                            .getAttribute('data-value'),
-                app_setting_preference_direction_id:    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_direction_select .common_select_dropdown_value')
-                                                            .getAttribute('data-value'),
-                app_setting_preference_arabic_script_id:COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_arabic_script_select .common_select_dropdown_value')
-                                                            .getAttribute('data-value'),
-            };
-        await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:json_data});
+        const body = {
+                        json_data: 
+                        {  
+                            preference_locale:       COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')
+                                                                        .getAttribute('data-value'),
+                            preference_timezone:     COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_timezone_select .common_select_dropdown_value')
+                                                                        .getAttribute('data-value'),
+                            preference_direction:    COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_direction_select .common_select_dropdown_value')
+                                                                        .getAttribute('data-value'),
+                            preference_arabic_script:COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_arabic_script_select .common_select_dropdown_value')
+                                                                        .getAttribute('data-value'),
+                        }
+                    };
+        await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
     }
 };
 /**
@@ -2860,7 +2848,6 @@ const commonEvent = async (event_type,event=null) =>{
                                             iam_user_username:COMMON_GLOBAL.iam_user_username,
                                             common_app_id:COMMON_GLOBAL.common_app_id,
                                             admin_app_id:COMMON_GLOBAL.admin_app_id,
-                                            data_app_id:COMMON_GLOBAL.common_app_id,
                                             token_exp:COMMON_GLOBAL.token_exp,
                                             token_iat:COMMON_GLOBAL.token_iat,
                                             token_timestamp: COMMON_GLOBAL.token_timestamp,
@@ -3755,7 +3742,6 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, 
        COMMON_ICONS,
        /* MISC */
-       commonMiscDbAppSettingsGet,
        commonMiscElementId, 
        commonMiscElementRow, 
        commonMiscElementListTitle, 

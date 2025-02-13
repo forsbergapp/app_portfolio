@@ -24,8 +24,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *          resource_id:number|null}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_getUserAccountApp[] }>}
  */
-const get = parameters => 
-   import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+const get = async parameters =>
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
        dbCommonExecute(parameters.app_id, 
                        dbSql.USER_ACCOUNT_APP_SELECT_USER_APP,
                        {
@@ -91,10 +91,7 @@ const post = async (app_id, user_account_id) =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{  preference_locale:string,
- *                  app_setting_preference_timezone_id:number,
- *                  app_setting_preference_direction_id:number|null,
- *                  app_setting_preference_arabic_script_id:number|null}}} parameters
+ *          data:{  json_data:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = parameters =>
@@ -102,10 +99,7 @@ const update = parameters =>
         dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_UPDATE, 
                         {
-                            preference_locale: parameters.data.preference_locale,
-                            app_setting_preference_timezone_id: serverUtilNumberValue(parameters.data?.app_setting_preference_timezone_id),
-                            app_setting_preference_direction_id: serverUtilNumberValue(parameters.data?.app_setting_preference_direction_id),
-                            app_setting_preference_arabic_script_id: serverUtilNumberValue(parameters.data?.app_setting_preference_arabic_script_id),
+                            json_data:JSON.stringify(parameters.data.json_data),
                             user_account_id: parameters.resource_id,
                             app_id: parameters.app_id
                             }, 

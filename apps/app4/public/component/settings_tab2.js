@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, CommonModuleRegional, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonAppSettingRecord, CommonModuleCommon, CommonModuleRegional, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import {APP_REPORT_GLOBAL, APP_user_setting_record}  from '../js/types.js'
  */
@@ -66,7 +66,7 @@ const template = () => `<div id='mapid'></div>
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
  *                      REPORT_GLOBAL:APP_REPORT_GLOBAL,
  *                      getTimezone:CommonModuleRegional['getTimezone'],
- *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet'],
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      commonMiscTimezoneDate:CommonModuleCommon['commonMiscTimezoneDate'],
  *                      commonModuleLeafletInit:CommonModuleCommon['commonModuleLeafletInit'],
  *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
@@ -82,9 +82,12 @@ const template = () => `<div id='mapid'></div>
  *                      template:string}>}
  */
 const component = async props => {
-    const settings = (await props.methods.commonMiscDbAppSettingsGet()).filter((/**@type{*}*/setting)=>
-        setting.app_id == props.data.app_id && 
-        setting.app_setting_type_name.startsWith('PLACE'));
+    //fetch all settings for current app id
+    /**@type{CommonAppSettingRecord[]} */
+    const settings = await props.methods.commonFFB({path:'/server-db/app_setting/',
+                                                    query:`IAM_data_app_id=${props.data.app_id}&name=PLACE`,
+                                                    method:'GET', 
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
     const empty_place = {value:JSON.stringify({id:null, latitude:'0', longitude:'0', timezone:''}), text:'...'};
 
@@ -96,7 +99,7 @@ const component = async props => {
                         default_data_value:empty_place.value,
                         default_value:empty_place.text,
                         options: [empty_place].concat(settings.map(place=>{
-                                        return {value:JSON.stringify({id:place.value, latitude:place.data2, longitude:place.data3, timezone:place.data4}), text:`${place.data5} ${place.text}`};
+                                        return {value:JSON.stringify({id:place.value, latitude:place.data2, longitude:place.data3, timezone:place.data4}), text:`${place.data5} ${place.display_data}`};
                                     })),
                         path:null,
                         query:null,

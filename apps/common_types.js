@@ -23,6 +23,7 @@
  *  commonInitAppParameters
  *  CommonAppParametersRecord
  *  CommonAppSecretsRecord
+ *  CommonAppSettingRecord
  *  CommonAppModulesRecord
  *  CommonAppModuleMetadata
  *  CommonAppModuleWithMetadata
@@ -414,6 +415,20 @@
 *               common_app_access_secret:           string,
 *               common_app_access_expire:           string}} CommonAppSecretsRecord
 */
+
+/**
+ * @description Type CommonAppSettingRecord
+ * @typedef {{  id:number,
+ *              app_id: number,
+ *              name: string,
+ *              value:string,
+ *              display_data:string,
+ *              data2:string|number|null,
+ *              data3:string|number|null,
+ *              data4:string|number|null,
+ *              data5:string|number|null}} CommonAppSettingRecord
+ */
+
 /**
  * @description Type CommonAppModulesRecord
  * @typedef {{  id:number,
