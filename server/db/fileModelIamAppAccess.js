@@ -1,12 +1,12 @@
 /** @module server/db/fileModelIamAppAccess */
 
 /**
- * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,
+ * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_file_iam_app_access} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
-const {fileDBPost, fileDBGet, fileDBUpdate} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBPost, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -109,4 +109,26 @@ const update = async (app_id, resource_id, data) =>{
         return dbCommonRecordError(app_id, 400);
 };
 
-export {get, post, update};
+/**
+ * @name deleteRecord
+ * @description Delete record
+ * @function
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ */
+const deleteRecord = async (app_id, resource_id) => {
+    /**@type{server_db_file_iam_app_access}*/
+    const user = get(app_id, resource_id).result[0];
+    if (user){
+        return fileDBDelete(app_id, 'IAM_APP_ACCESS', resource_id, null).then(result=>{
+            if (result.affectedRows>0)
+                return {result:result, type:'JSON'};
+            else
+                return dbCommonRecordError(app_id, 404);
+        });
+    }
+    else
+        return user;
+};
+export {get, post, update, deleteRecord};
