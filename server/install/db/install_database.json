@@ -10,7 +10,6 @@
         {"db": 3, "script": "2.db_3_datamodel.ddl"},
         {"db": 4, "script": "2.db_4_datamodel.ddl"},
         {"db": 5, "script": "2.db_5_datamodel.ddl"},
-        {"db": null, "script": "4.db_all_insert_system_data.sql"},
         {"db": null, "script": "5.db_all_insert_common_app_data.sql"}
     ]
 }
