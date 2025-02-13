@@ -1170,22 +1170,25 @@ const dbDemoUninstall = async parameters => {
                     const dbUser = await dbModelUserAccount.getIamUser({app_id:parameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         iam_user_id: user.id});
-                    await dbModelUserAccount.deleteUser(parameters.app_id,dbUser.result[0]?.id)
-                            .then((result)=>{
-                                        if (result.result)
-                                            fileModelIamUser.deleteRecordAdmin(parameters.app_id,user.id)
-                                            .then((result)=>{
-                                                if (result.result){
-                                                    deleted_user++;
-                                                    if (deleted_user == result_demo_users.length)
-                                                        return null;
-                                                }
-                                                else
-                                                    throw result;
-                                            });
-                                        else
-                                            throw result;
-                    });
+                    if (dbUser.result)
+                        await dbModelUserAccount.deleteUser(parameters.app_id,dbUser.result[0]?.id)
+                                .then((result)=>{
+                                            if (result.result)
+                                                fileModelIamUser.deleteRecordAdmin(parameters.app_id,user.id)
+                                                .then((result)=>{
+                                                    if (result.result){
+                                                        deleted_user++;
+                                                        if (deleted_user == result_demo_users.length)
+                                                            return null;
+                                                    }
+                                                    else
+                                                        throw result;
+                                                });
+                                            else
+                                                throw result;
+                        });
+                    else
+                        throw dbUser;
                 }
             };
             await delete_users().catch(error=>{

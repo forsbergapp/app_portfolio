@@ -449,6 +449,25 @@
  *          created?:string, 
  *          modified?:string}} server_db_file_iam_user
  */
+
+/**
+ * @description DB FILE server_db_file_iam_user_event_name
+ * @typedef {'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_FORGOT'|'PASSWORD_RESET'|'OTP_2FA'|'SUSPENDED'|'UNSUSPENDED'} server_db_file_iam_user_event_name
+ */
+/**
+ * @description DB FILE server_db_file_iam_user_event_status
+ * @typedef {'INPROGRESS'|'SUCCESSFUL'|'FAIL'} server_db_file_iam_user_event_status
+ */
+/**
+ * @description DB FILE server_db_file_iam_user_event
+ * @typedef {{
+ *          id?:number, 
+ *          iam_user_id:number,
+ *          event:server_db_file_iam_user_event_name, 
+ *          event_status:server_db_file_iam_user_event_status
+ *          created?:string}} server_db_file_iam_user_event
+ */
+
 /**
  * @description DB FILE server_db_file_iam_user_admin
  * @typedef {{
@@ -501,6 +520,7 @@
  *              'IAM_CONTROL_USER_AGENT'|
  *              'IAM_CONTROL_OBSERVE'|
  *              'IAM_USER'|
+ *              'IAM_USER_EVENT'|
  *              server_db_file_db_name_log|
  *              server_db_file_db_name_message_queue} server_db_file_db_name
  */
@@ -1600,26 +1620,6 @@
  *              user_account_id:number|null,
  *              user_account_app_data_post_id:number|null}} server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  */
-
-/**
- * @description DB SQL USER ACCOUNT EVENT server_db_sql_parameter_user_account_event_insertUserEvent
- * @typedef {{  user_account_id:number,
- *              event:string,
- *              event_status:string}} server_db_sql_parameter_user_account_event_insertUserEvent
- */
-
-/**
- * @description DB SQL USER ACCOUNT EVENT server_db_sql_result_user_account_event_getLastUserEvent
- * @typedef {{  user_account_id:number,
- *              event_id:number,
- *              event_name:string,
- *              event_status_id:number,
- *              status_name:string,
- *              date_created:string,
- *              date_modified:string,
- *              current_timestamp:string}} server_db_sql_result_user_account_event_getLastUserEvent
- */
-
 
 /**
  * @description DB SQL USER ACCOUNT VIEW server_db_sql_parameter_user_account_view_insertUserAccountView

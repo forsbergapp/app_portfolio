@@ -10,7 +10,7 @@
  *          server_bff_endpoint_type,
  *          server_db_common_result_delete,
  *          server_db_file_iam_user,
- *          server_db_sql_parameter_user_account_event_insertUserEvent,
+ *          server_db_file_iam_user_event,
  *          token_type,
  *          server_db_file_iam_app_access_type,
  *          server_server_res} from './types.js'
@@ -536,7 +536,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          user_agent:string,
  *          accept_language:string,
  *          locale:string,
- *          data:{  verification_type:string,   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET
+ *          data:{  verification_type:'1'|'2'|'3',   //1 LOGIN, 2 SIGNUP, 3 FORGOT/ PASSWORD RESET
  *                  verification_code:string}}} parameters
  * @returns {Promise.<server_server_response & { result?:{
  *                                              token_at: string|null,
@@ -555,25 +555,45 @@ const iamAuthenticateUserActivate = async parameters =>{
                                     parameters.resource_id, 
                                     { verification_code:parameters.data.verification_code});
     if (result_activate.result){
-        if (result_activate.result.affectedRows==1 && (serverUtilNumberValue(parameters.data.verification_type)==1||serverUtilNumberValue(parameters.data.verification_type)==2))
-            return await iamUserLogout({app_id:parameters.app_id,
-                                idToken:parameters.idToken,
-                                ip:parameters.ip,
-                                authorization:parameters.authorization,
-                                user_agent:parameters.user_agent,
-                                accept_language:parameters.accept_language})
-                .then(result=>result.http?result:{result:{
-                                                        token_at: null,
-                                                        exp:null,
-                                                        iat:null,
-                                                        tokentimestamp:null,
-                                                        activated:1,
-                                                        iam_user_id:null,
-                                                        iam_user_username:null,
-                                                        user_account_id:null
-                                                    }, type:'JSON'});
+        /**@type{import('./db/fileModelIamUserEvent.js')} */
+        const fileModelIamUserEvent = await import(`file://${process.cwd()}/server/db/fileModelIamUserEvent.js`);
+        /**@type{server_db_file_iam_user_event}*/
+        const eventData = {
+            /**@ts-ignore */
+            iam_user_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
+            event: serverUtilNumberValue(parameters.data.verification_type)==1?
+                        'OTP_LOGIN':
+                            serverUtilNumberValue(parameters.data.verification_type)==2?
+                                'OTP_SIGNUP':
+                                    'OTP_FORGOT'
+        };
+        if (result_activate.result.affectedRows==1 && (serverUtilNumberValue(parameters.data.verification_type)==1||serverUtilNumberValue(parameters.data.verification_type)==2)){
+            eventData.event_status='SUCCESSFUL';
+            return fileModelIamUserEvent.post(parameters.app_id, eventData)
+                        .then(result=>result.http?result:
+                                iamUserLogout(  {app_id:parameters.app_id,
+                                                idToken:parameters.idToken,
+                                                ip:parameters.ip,
+                                                authorization:parameters.authorization,
+                                                user_agent:parameters.user_agent,
+                                                accept_language:parameters.accept_language})
+                                    .then(result=>result.http?result:
+                                                    {result:{
+                                                            token_at: null,
+                                                            exp:null,
+                                                            iat:null,
+                                                            tokentimestamp:null,
+                                                            activated:1,
+                                                            iam_user_id:null,
+                                                            iam_user_username:null,
+                                                            user_account_id:null
+                                                        }, 
+                                                        type:'JSON'
+                                                    }));
+        }
         else{
             if (result_activate.result.affectedRows==1){
+                eventData.event_status='SUCCESSFUL';
                 //verification type 3 FORGOT/ PASSWORD RESET
                 const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_VERIFICATION', 
                                                     {   app_custom_id:          null,
@@ -598,31 +618,38 @@ const iamAuthenticateUserActivate = async parameters =>{
                     token:                  jwt_data.token,
                     ip:                     parameters.ip,
                     ua:                     parameters.user_agent};
-                return fileModelIamAppAccess.post(parameters.app_id, data_body)
-                        .then(()=>{
-                            return {result:{
-                                        token_at:               jwt_data.token,
-                                        exp:                    jwt_data.exp,
-                                        iat:                    jwt_data.iat,
-                                        tokentimestamp:         jwt_data.tokentimestamp,
-                                        activated:              1,
-                                        iam_user_id:            parameters.resource_id,
-                                        iam_user_username:      null,
-                                        user_account_id:        parameters.resource_id}, 
-                                    type:'JSON'};
-                        });
+                return fileModelIamUserEvent.post(parameters.app_id, eventData)
+                        .then(result=>result.http?result:
+                                        fileModelIamAppAccess.post(parameters.app_id, data_body)
+                                        .then(()=>{
+                                            return {result:{
+                                                        token_at:               jwt_data.token,
+                                                        exp:                    jwt_data.exp,
+                                                        iat:                    jwt_data.iat,
+                                                        tokentimestamp:         jwt_data.tokentimestamp,
+                                                        activated:              1,
+                                                        iam_user_id:            parameters.resource_id,
+                                                        iam_user_username:      null,
+                                                        user_account_id:        parameters.resource_id}, 
+                                                    type:'JSON'};
+                                        }));
             }
-            else
-                return {result:{
-                                token_at: null,
-                                exp:null,
-                                iat:null,
-                                tokentimestamp:null,
-                                activated:0,
-                                iam_user_id:null,
-                                iam_user_username:null,
-                                user_account_id:null}, 
-                        type:'JSON'};
+            else{
+                eventData.event_status='FAIL';
+                return fileModelIamUserEvent.post(parameters.app_id, eventData)
+                        .then(result=>result.http?result:
+                            {result:{
+                                        token_at: null,
+                                        exp:null,
+                                        iat:null,
+                                        tokentimestamp:null,
+                                        activated:0,
+                                        iam_user_id:null,
+                                        iam_user_username:null,
+                                        user_account_id:null}, 
+                                type:'JSON'});
+            }
+                
         }
     }
     else
@@ -650,94 +677,84 @@ const iamAuthenticateUserActivate = async parameters =>{
  */
 const iamAuthenticateUserForgot = async parameters =>{
 
-    /**@type{import('./db/dbModelUserAccountEvent.js')} */
-    const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
+    /**@type{import('./db/fileModelIamUserEvent.js')} */
+    const fileModelIamUserEvent = await import(`file://${process.cwd()}/server/db/fileModelIamUserEvent.js`);
     /**@type{import('./socket.js')} */
     const {socketConnectedUpdate} = await import(`file://${process.cwd()}/server/socket.js`);
 
     if (parameters.data.email != '' && parameters.data.email != null){
         const user = fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_file_iam_user}*/row)=>row.email==parameters.data.email)[0];
         if (user){
-            const result_user_event = await dbModelUserAccountEvent.getLastUserEvent(parameters.app_id, serverUtilNumberValue(user.id), 'PASSWORD_RESET');
-            if (result_user_event.result)
-                if (result_user_event.result[0] &&
-                    result_user_event.result[0].status_name == 'INPROGRESS' &&
-                    (+ new Date(result_user_event.result[0].current_timestamp) - + new Date(result_user_event.result[0].date_created))/ (1000 * 60 * 60 * 24) < 1)
-                    return {result:{sent: 0}, type:'JSON'};
-                else{
-                    /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
-                    const eventData = {
-                                        user_account_id: user.id,
-                                        event: 'PASSWORD_RESET',
-                                        event_status: 'INPROGRESS'
-                                    };
-                    const result_dbModelUserAccountEvent = await dbModelUserAccountEvent.post(parameters.app_id, eventData);
-                    if (result_dbModelUserAccountEvent.result){
-                        const jwt_data = iamAuthorizeToken( parameters.app_id, 
-                                                            'APP_ACCESS_VERIFICATION', 
-                                                            {   app_custom_id:          null,
-                                                                app_id:                 parameters.app_id, 
-                                                                iam_user_id:            user.id, 
-                                                                iam_user_username:      user.username, 
-                                                                user_account_id:        user.id, 
-                                                                db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                                                                ip:                     parameters.ip, 
-                                                                scope:                  'USER'});
-                        /**@type{server_db_file_iam_app_access} */
-                        const data_body = { 
-                            type:                   'APP_ACCESS_VERIFICATION',
-                            iam_user_id:            user?.id,
-                            iam_user_username:      user.username,
-                            user_account_id:        user?.id,
-                            app_id:                 parameters.app_id,
-                            db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
-                            res:                    1,
-                            token:                  null,
-                            ip:                     parameters.ip,
-                            ua:                     parameters.user_agent
-                        };
-                        data_body.token = jwt_data.token;
-                        await fileModelIamAppAccess.post(parameters.app_id, data_body);
-                        return await fileModelIamUser.updateAdmin({app_id:parameters.app_id,
-                                                                    /**@ts-ignore */
-                                                                    resource_id:user.id,
-                                                                    data :{ active:0,
-                                                                            verification_code:iamUtilVerificationCode()}})
-                                    .then((result_updateUserVerificationCode)=>
-                                        result_updateUserVerificationCode.result?
-                                            socketConnectedUpdate(parameters.app_id, 
-                                                {   idToken:                parameters.idToken,
-                                                    user_account_id:        user.id,
-                                                    iam_user_id:            user.id,
-                                                    iam_user_username:      user.username, 
-                                                    iam_user_type:          'USER',
-                                                    token_access:           jwt_data.token,
-                                                    token_admin:            null,
-                                                    ip:                     parameters.ip,
-                                                    headers_user_agent:     parameters.user_agent,
-                                                    headers_accept_language:parameters.accept_language})
-                                            .then((result_socket)=>
-                                                result_socket.http?
-                                                    result_socket:
-                                                        {result:{
-                                                                sent:                   1,
-                                                                token_at:               jwt_data.token,
-                                                                exp:                    jwt_data.exp,
-                                                                iat:                    jwt_data.iat,
-                                                                tokentimestamp:         jwt_data.tokentimestamp,
-                                                                iam_userid:             user.id,
-                                                                user_account_id:        user.id
-                                                            }, 
-                                                            type:'JSON'}
-                                            ):
-                                            result_updateUserVerificationCode
-                                    );
-                    }
-                    else
-                        return {result:{sent: 0}, type:'JSON'};
-                }
+            /**@type{server_db_file_iam_user_event}*/
+            const eventData = {
+                                iam_user_id: user.id,
+                                event: 'PASSWORD_RESET',
+                                event_status: 'INPROGRESS'
+                            };
+            const result_fileModelIamUserEvent = await fileModelIamUserEvent.post(parameters.app_id, eventData);
+            if (result_fileModelIamUserEvent.result){
+                const jwt_data = iamAuthorizeToken( parameters.app_id, 
+                                                    'APP_ACCESS_VERIFICATION', 
+                                                    {   app_custom_id:          null,
+                                                        app_id:                 parameters.app_id, 
+                                                        iam_user_id:            user.id, 
+                                                        iam_user_username:      user.username, 
+                                                        user_account_id:        user.id, 
+                                                        db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                                        ip:                     parameters.ip, 
+                                                        scope:                  'USER'});
+                /**@type{server_db_file_iam_app_access} */
+                const data_body = { 
+                    type:                   'APP_ACCESS_VERIFICATION',
+                    iam_user_id:            user?.id,
+                    iam_user_username:      user.username,
+                    user_account_id:        user?.id,
+                    app_id:                 parameters.app_id,
+                    db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                    res:                    1,
+                    token:                  null,
+                    ip:                     parameters.ip,
+                    ua:                     parameters.user_agent
+                };
+                data_body.token = jwt_data.token;
+                await fileModelIamAppAccess.post(parameters.app_id, data_body);
+                return await fileModelIamUser.updateAdmin({app_id:parameters.app_id,
+                                                            /**@ts-ignore */
+                                                            resource_id:user.id,
+                                                            data :{ active:0,
+                                                                    verification_code:iamUtilVerificationCode()}})
+                            .then((result_updateUserVerificationCode)=>
+                                result_updateUserVerificationCode.result?
+                                    socketConnectedUpdate(parameters.app_id, 
+                                        {   idToken:                parameters.idToken,
+                                            user_account_id:        user.id,
+                                            iam_user_id:            user.id,
+                                            iam_user_username:      user.username, 
+                                            iam_user_type:          'USER',
+                                            token_access:           jwt_data.token,
+                                            token_admin:            null,
+                                            ip:                     parameters.ip,
+                                            headers_user_agent:     parameters.user_agent,
+                                            headers_accept_language:parameters.accept_language})
+                                    .then((result_socket)=>
+                                        result_socket.http?
+                                            result_socket:
+                                                {result:{
+                                                        sent:                   1,
+                                                        token_at:               jwt_data.token,
+                                                        exp:                    jwt_data.exp,
+                                                        iat:                    jwt_data.iat,
+                                                        tokentimestamp:         jwt_data.tokentimestamp,
+                                                        iam_user_id:            user.id,
+                                                        user_account_id:        null
+                                                    }, 
+                                                    type:'JSON'}
+                                    ):
+                                    result_updateUserVerificationCode
+                            );
+            }
             else
-                return result_user_event;
+                return result_fileModelIamUserEvent;
         }
         else
             return user.http?user:{result:{sent: 0}, type:'JSON'};                   
@@ -807,6 +824,8 @@ const iamAuthenticateUserUpdate = async parameters => {
  * @returns {Promise.<server_server_response>}
  */
 const iamAuthenticateUserUpdatePassword = async parameters => {
+    /**@type{import('./db/fileModelIamUserEvent.js')} */
+    const fileModelIamUserEvent = await import(`file://${process.cwd()}/server/db/fileModelIamUserEvent.js`);
     const error = iamUserValidation_password(parameters.data);
     if (error==null){
         const result_update = await  iamUserPasswordSet(parameters.data.password_new)
@@ -817,17 +836,15 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
                                                         {
                                                             password_new: password
                                                         }));
+        /**@type{server_db_file_iam_user_event}*/
+        const eventData = {
+            /**@ts-ignore */
+            iam_user_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
+            event: 'PASSWORD_RESET'
+        };
         if (result_update.result) {
-            /**@type{server_db_sql_parameter_user_account_event_insertUserEvent}*/
-            const eventData = {
-                /**@ts-ignore */
-                user_account_id: iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS').user_account_id,
-                event: 'PASSWORD_RESET',
-                event_status: 'SUCCESSFUL'
-            };
-            /**@type{import('./db/dbModelUserAccountEvent.js')} */
-            const dbModelUserAccountEvent = await import(`file://${process.cwd()}/server/db/dbModelUserAccountEvent.js`);
-            return  dbModelUserAccountEvent.post(parameters.app_id, eventData)
+            eventData.event_status='SUCCESSFUL';
+            return  fileModelIamUserEvent.post(parameters.app_id, eventData)
                     .then(result=>result.http?
                                     result:
                                         iamUserLogout({app_id:parameters.app_id,
@@ -838,14 +855,20 @@ const iamAuthenticateUserUpdatePassword = async parameters => {
                                             accept_language:parameters.accept_language})
                     );
         }
-        else
-            return result_update.http?result_update:{   http:404,
-                                                        code:'IAM',
-                                                        text:'?!',
-                                                        developerText:null,
-                                                        moreInfo:null,
-                                                        type:'JSON'
-                                                    };
+        else{
+            eventData.event_status='FAIL';
+            return fileModelIamUserEvent.post(parameters.app_id, eventData)
+                    .then(result=>result.http?
+                                    result:
+                                        result_update.http?result_update:{   http:404,
+                                            code:'IAM',
+                                            text:'?!',
+                                            developerText:null,
+                                            moreInfo:null,
+                                            type:'JSON'
+                                        }
+                    );
+        }
     }
     else
         return error;

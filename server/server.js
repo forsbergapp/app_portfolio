@@ -138,9 +138,11 @@ const serverResponse = async parameters =>{
                                 //return SERVER ERROR if status code ==500
                                 text:(admin_app_id!=app_id_host && parameters.result_request.http == 500)?
                                         'SERVER ERROR':
-                                            parameters.result_request.text?.message?
-                                                parameters.result_request.text?.message:
-                                                    parameters.result_request.text, 
+                                            parameters.result_request.text?.code=='DB'?
+                                                parameters.result_request.text.text:
+                                                    parameters.result_request.text?.message?
+                                                        parameters.result_request.text?.message:
+                                                            parameters.result_request.text, 
                                 developer_text:parameters.result_request.developerText, 
                                 more_info:parameters.result_request.moreInfo}};
         //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message

@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_iam_user, server_db_file_iam_user_admin} from '../types.js'
+ *          server_db_file_iam_user, server_db_file_iam_app_access, server_db_file_iam_user_event,server_db_file_iam_user_admin} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -313,19 +313,70 @@ const deleteRecord = async (app_id, resource_id, data) => {
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (data.password && await securityPasswordCompare(data.password, user.password))
-            return fileDBDelete(app_id, 'IAM_USER', resource_id, null).then((result)=>{
-                if (result.affectedRows>0)
-                    return {result:result, type:'JSON'};
-                else
-                    return dbCommonRecordError(app_id, 404);
-            });
+            return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
+                                                            result_cascade:fileDBDelete(app_id, 'IAM_USER', resource_id, null).then((result)=>{
+                                                            if (result.affectedRows>0)
+                                                                return {result:result, type:'JSON'};
+                                                            else
+                                                                return dbCommonRecordError(app_id, 404);
+                                                        }));
         else
             return dbCommonRecordError(app_id, 400);
     }
     else
         return user;
 };
-                   
+/**
+ * @name deleteCascade
+ * @description delete records in table with FK to IAM_USER
+ * @function
+ * @param {number} app_id
+ * @param {number} resource_id
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
+ */
+const deleteCascade = async (app_id, resource_id) =>{
+    /**@type{import('./fileModelIamUserEvent.js')} */
+    const fileModelIamUserEvent = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./fileModelIamAppAccess.js')} */
+    const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
+
+    const result_recordsUserEvent = fileModelIamUserEvent.get(app_id, resource_id);        
+    if (result_recordsUserEvent.result){
+        let count_delete = 0;
+        let error ;
+        for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_file_iam_user_event}*/row)=>row.iam_user_id == resource_id)){
+            count_delete++;
+            const result_delete = await fileModelIamUserEvent.deleteRecord( app_id, 
+                                                                            /**@ts-ignore */
+                                                                            record.id);
+            if (result_delete.http)
+                error = result_delete;
+        }
+        if (error)
+            return error;
+        else{
+            const result_recordsIamAppAccess = fileModelIamAppAccess.get(app_id, null);
+            if (result_recordsIamAppAccess.result){
+                for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_file_iam_app_access}*/row)=>row.iam_user_id == resource_id)){
+                    count_delete++;
+                    const result_delete = await fileModelIamAppAccess.deleteRecord( app_id, 
+                                                                                    /**@ts-ignore */
+                                                                                    record.id);
+                    if (result_delete.http)
+                        error = result_delete;
+                }
+                if (error)
+                    return error;
+                else
+                    return {result:{affectedRows:count_delete}, type:'JSON'};
+            }
+            else
+                return result_recordsIamAppAccess;
+        }
+    }
+    else
+        return result_recordsUserEvent;
+};
 /**
  * @name deleteRecordAdmin
  * @description Delete record admin
@@ -338,12 +389,15 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
     /**@type{server_db_file_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        return fileDBDelete(app_id, 'IAM_USER', resource_id, null).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return dbCommonRecordError(app_id, 404);
-        });
+        return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
+                                result_cascade:
+                                    fileDBDelete(app_id, 'IAM_USER', resource_id, null)
+                                    .then(result=>{
+                                            if (result.affectedRows>0)
+                                                return {result:result, type:'JSON'};
+                                            else
+                                                return dbCommonRecordError(app_id, 404);
+                                            }));
     }
     else
         return user;
