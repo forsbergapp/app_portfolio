@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonAppSettingRecord, CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * 
  */
@@ -136,7 +136,6 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet'],
  *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
@@ -146,8 +145,13 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      template:string}>}
  */
 const component = async props => {
-    const settings = await props.methods.commonMiscDbAppSettingsGet();
-    //get locales using user locale
+    //fetch all settings for common app id
+    /**@type{CommonAppSettingRecord[]} */
+    const settings = await props.methods.commonFFB({path:'/server-db/app_setting/',
+                                                    query:`IAM_data_app_id=${props.data.common_app_id}`,
+                                                    method:'GET', 
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    //fetch locales using user locale
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
                                                     path:'/app-module/COMMON_LOCALE', 
@@ -194,15 +198,15 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_timezone',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE')[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'TIMEZONE'),
+                        default_data_value:settings.filter(setting=>setting.name == 'TIMEZONE')[0].value,
+                        default_value:settings.filter(setting=>setting.name == 'TIMEZONE')[0].display_data,
+                        options: settings.filter(setting=>setting.name == 'TIMEZONE'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
@@ -210,15 +214,15 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_numbersystem',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM')[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'NUMBER_SYSTEM'),
+                        default_data_value:settings.filter(setting=>setting.name == 'NUMBER_SYSTEM')[0].value,
+                        default_value:settings.filter(setting=>setting.name == 'NUMBER_SYSTEM')[0].display_data,
+                        options: settings.filter(setting=>setting.name == 'NUMBER_SYSTEM'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
@@ -226,15 +230,15 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_direction',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')[0].text,
-                        options: [{value:'', text:''}].concat(settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'DIRECTION')),
+                        default_data_value:settings.filter(setting=>setting.name == 'DIRECTION')[0].value,
+                        default_value:settings.filter(setting=>setting.name == 'DIRECTION')[0].display_data,
+                        options: [{value:'', display_data:''}].concat(settings.filter(setting=>setting.name == 'DIRECTION')),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
@@ -242,15 +246,15 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_arabic_script',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')[0].text,
-                        options: [{value:'', text:''}].concat(settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'ARABIC_SCRIPT')),
+                        default_data_value:settings.filter(setting=>setting.name == 'ARABIC_SCRIPT')[0].value,
+                        default_value:settings.filter(setting=>setting.name == 'ARABIC_SCRIPT')[0].display_data,
+                        options: [{value:'', display_data:''}].concat(settings.filter(setting=>setting.name == 'ARABIC_SCRIPT')),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
@@ -258,15 +262,15 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_calendartype',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE')[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_TYPE'),
+                        default_data_value:settings.filter(setting=>setting.name == 'CALENDAR_TYPE')[0].value,
+                        default_value:settings.filter(setting=>setting.name == 'CALENDAR_TYPE')[0].display_data,
+                        options: settings.filter(setting=>setting.name == 'CALENDAR_TYPE'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
@@ -274,15 +278,15 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_calendar_hijri_type',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE')[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>setting.app_setting_type_name == 'CALENDAR_HIJRI_TYPE'),
+                        default_data_value:settings.filter(setting=>setting.name == 'CALENDAR_HIJRI_TYPE')[0].value,
+                        default_value:settings.filter(setting=>setting.name == 'CALENDAR_HIJRI_TYPE')[0].display_data,
+                        options: settings.filter(setting=>setting.name == 'CALENDAR_HIJRI_TYPE'),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});

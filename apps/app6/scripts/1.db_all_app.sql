@@ -5,78 +5,6 @@
 INSERT INTO <DB_SCHEMA/>.app (id) VALUES (<APP_ID/>);
 
 --
--- app setting type
---
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PRODUCT_COLOR', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PRODUCT_SIZE', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('PAYMENT_METHOD', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('STORE_TYPE', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('STORE_ROLE', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('ENTITY_TYPE', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('RESOURCE_TYPE', <APP_ID/>);
-INSERT INTO <DB_SCHEMA/>.app_setting_type (app_setting_type_name, app_id) VALUES ('CUSTOMER_TYPE', <APP_ID/>);
-
---settings used as relations
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','LOCATION','Location',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','LOCATION_METADATA','Location',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','CUSTOMER','Customer',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','MEMBERCARD','Member card',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','MEMBERCARD_TRANSACTION','Membercard transaction',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','ORDER','Order',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','ORDER_LINE','Order line',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','INVOICE','Invoice',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','INVOICE_LINE','Invoice line',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAGE','Page',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT','Product',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_METADATA','Product metadata',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_VARIANT','Product variant',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_VARIANT_METADATA','Product variant',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_VARIANT_LOCATION_METADATA','Product variant location metadata',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAYMENT_REQUEST','Payment request',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAYMENT_REQUEST_METADATA','Payment request metadata',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PAYMENT_METADATA','Payment metadata',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','CURRENCY','Currency',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','PRODUCT_CATEGORY','Product category',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','BRAND','Brand',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'RESOURCE_TYPE','CATALOG','Product',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'CUSTOMER_TYPE','ANONYMOUS', 'Anonymous',NULL,NULL,NULL,NULL);
---settings used as attributes
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'ENTITY_TYPE','SHOP','Shop',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PAYMENT_METHOD','VPA','Virtual Payment Address',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_COLOR','BLUE_LIGHT','Light Blue',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_COLOR','BLUE','Blue',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_COLOR','BLUE_DARK','Dark blue',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_SIZE','S','Small',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_SIZE','M','Medium',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_SIZE','L','Large',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_SIZE','XL','X Large',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'PRODUCT_SIZE','XXL','XX Large',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','SINGLE_RETAIL','Single-location retailer',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','CHAIN_STORE','Chain store',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','FRANCHISE','Franchise',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','DEPARTMENT','Department',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','GROCERY','Grocery, supermarket, hypermarket',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','DISCOUNT_RETAILER','Discount retailer',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','OUTLET','outlet retailer',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','WAREHOUSE','Warehouse',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','CONVENIENCE','Convenience store',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_TYPE','INTERNET','Internet retailer',NULL,NULL,NULL,NULL);
-
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','MANAGER','Manager',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','MANAGER_ASSISTANT','Assistant manager',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','CASHIER','Cashier',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','CLERK','Clerk',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','INVENTORY','Inventory',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','RETAIL_ASSOCIATE','Retail associate',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','VISUAL_MERCHANDISER','Visual merchandiser',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','CUSTOMER_SERVICE','Customer service',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','MANAGER_PRODUCT','Product manager',NULL,NULL,NULL,NULL);
-INSERT INTO <DB_SCHEMA/>.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>, 'STORE_ROLE','MANAGER_MARKETING','Marketing manager',NULL,NULL,NULL,NULL);
-
---
 --initial data
 --
 --app data entity
@@ -85,25 +13,25 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (6000, <
 --
 --app data entity resource
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6000, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PRODUCT'), '{"description":"products"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6001, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PRODUCT_CATEGORY'), '{"description":"product categories"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6002, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'BRAND'), '{"description":"brands"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6003, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'CATALOG'), '{"description":"catalogs"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6004, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'LOCATION'), '{"description":"locations"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6005, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAGE'), '{"description":"pages"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6006, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'CUSTOMER'), '{"description":"customers"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6007, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'ORDER'), '{"description":"order settings"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6008, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'INVOICE'), '{"description":"invoice settings "}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6009, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'MEMBERCARD'), '{"description":"membercard settings"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6010, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PRODUCT_VARIANT'), '{"description":"product variants"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6011, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PRODUCT_METADATA'), '{"description":"product metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6012, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PRODUCT_VARIANT_METADATA'), '{"description":"product variant metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6013, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'LOCATION_METADATA'), '{"description":"location metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6014, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PRODUCT_VARIANT_LOCATION_METADATA'), '{"description":"Product variant location metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6015, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAYMENT_REQUEST'), '{"description":"Payment request"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6016, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAYMENT_REQUEST_METADATA'), '{"description":"Payment request metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6017, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'PAYMENT_METADATA'), '{"description":"Payment metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6018, <APP_ID/>, 6000, (SELECT id FROM <DB_SCHEMA/>.app_setting WHERE app_setting_type_app_id = <APP_ID/> AND app_setting_type_app_setting_type_name = 'RESOURCE_TYPE' AND value = 'CURRENCY'), '{"description":"currencies"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6000, <APP_ID/>, 6000, 622, '{"description":"products"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6001, <APP_ID/>, 6000, 631, '{"description":"product categories"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6002, <APP_ID/>, 6000, 632, '{"description":"brands"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6003, <APP_ID/>, 6000, 633, '{"description":"catalogs"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6004, <APP_ID/>, 6000, 612, '{"description":"locations"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6005, <APP_ID/>, 6000, 621, '{"description":"pages"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6006, <APP_ID/>, 6000, 614, '{"description":"customers"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6007, <APP_ID/>, 6000, 617, '{"description":"order settings"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6008, <APP_ID/>, 6000, 619, '{"description":"invoice settings "}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6009, <APP_ID/>, 6000, 615, '{"description":"membercard settings"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6010, <APP_ID/>, 6000, 624, '{"description":"product variants"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6011, <APP_ID/>, 6000, 623, '{"description":"product metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6012, <APP_ID/>, 6000, 625, '{"description":"product variant metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6013, <APP_ID/>, 6000, 613, '{"description":"location metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6014, <APP_ID/>, 6000, 626, '{"description":"Product variant location metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6015, <APP_ID/>, 6000, 627, '{"description":"Payment request"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6016, <APP_ID/>, 6000, 628, '{"description":"Payment request metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6017, <APP_ID/>, 6000, 629, '{"description":"Payment metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6018, <APP_ID/>, 6000, 630, '{"description":"currencies"}');
 --
 --app data resource master
 --

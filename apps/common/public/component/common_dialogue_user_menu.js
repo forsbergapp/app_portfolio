@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonAppSettingRecord, CommonModuleCommon, COMMON_DOCUMENT, CommonComponentLifecycle}  from '../../../common_types.js'
  */
 
 /**
@@ -74,7 +74,6 @@ const template = props =>`  ${props.app_id == props.admin_app_id?
  *                      iam_user_username:string|null,
  *                      common_app_id:number,
  *                      admin_app_id:number,
- *                      data_app_id:number,
  *                      username:string,
  *                      token_exp:number|null,
  *                      token_iat:number|null,
@@ -102,10 +101,10 @@ const component = async props => {
     props.methods.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_dialogue_show1');
     props.methods.COMMON_DOCUMENT.querySelector('#common_dialogues').classList.add('common_dialogues_modal');
 
-    //Fetch settings with direction, timezone and arabic script
-    /**@type{{id:number, app_setting_type_name:string, value:string, display_data:string}[]} */
-    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({  path:'/server-db/app_settings_display', 
-                                                                                    query:`IAM_data_app_id=${props.data.data_app_id}`, 
+    //fetch all settings for common app id
+    /**@type{CommonAppSettingRecord[]} */
+    const settings = props.data.admin_only == 1?[]:await props.methods.commonFFB({  path:'/server-db/app_setting/', 
+                                                                                    query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                     method:'GET', 
                                                                                     authorization_type:'APP_ID'})
                                                                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
@@ -121,7 +120,7 @@ const component = async props => {
     const onMounted = async () =>{                                                               
         
         //mount select
-        //Locale, no db access
+        //Locale
         await props.methods.commonComponentRender({
             mountDiv:   'common_dialogue_user_menu_user_locale_select', 
             data:       {
@@ -138,14 +137,13 @@ const component = async props => {
             methods:    {commonFFB:props.methods.commonFFB},
             path:       '/common/component/common_select.js'});
         if (props.data.admin_only!=1){
-            //db access
             //Timezone
             await props.methods.commonComponentRender({
                 mountDiv:  'common_dialogue_user_menu_user_timezone_select', 
                 data:       {
                             default_data_value:props.data.user_timezone,
                             default_value:'',
-                            options: settings.filter(setting=>setting.app_setting_type_name=='TIMEZONE'),
+                            options: settings.filter(setting=>setting.name=='TIMEZONE'),
                             path:null,
                             query:null,
                             method:null,
@@ -161,7 +159,7 @@ const component = async props => {
                 data:       {
                             default_data_value:props.data.user_direction,
                             default_value:' ',
-                            options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='DIRECTION')),
+                            options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.name=='DIRECTION')),
                             path:null,
                             query:null,
                             method:null,
@@ -177,7 +175,7 @@ const component = async props => {
                 data:       {
                             default_data_value:props.data.user_arabic_script,
                             default_value:' ',
-                            options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.app_setting_type_name=='ARABIC_SCRIPT')),
+                            options: [{value:'', display_data:' '}].concat(settings.filter(setting=>setting.name=='ARABIC_SCRIPT')),
                             path:null,
                             query:null,
                             method:null,

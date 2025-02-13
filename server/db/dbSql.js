@@ -6,20 +6,16 @@
 const APP_DATA_ENTITY_RESOURCE_SELECT =
     `SELECT ader.id 										"id",
             ader.json_data 									"json_data",
-            ader.app_setting_id 							"app_setting_id",
             ader.app_data_entity_app_id 					"app_data_entity_app_id",
             ader.app_data_entity_id 						"app_data_entity_id",
-            app_s.app_setting_type_app_setting_type_name   	"app_setting_type_app_setting_type_name",
-            app_s.value                                    	"app_setting_value",
-            app_s.display_data                             	"app_setting_display_data"
-       FROM <DB_SCHEMA/>.app_data_entity_resource 	ader,
-            <DB_SCHEMA/>.app_setting            	app_s
-      WHERE app_s.id                       	= ader.app_setting_id
-        AND app_s.app_setting_type_app_id  	= ader.app_data_entity_app_id
-        AND (ader.id						= :resource_id OR :resource_id IS NULL)
+            ader.app_setting_id                             "app_setting_id",
+            null   	                                        "app_setting_name",
+            null                                    	    "app_setting_value",
+            null                             	            "app_setting_display_data"
+       FROM <DB_SCHEMA/>.app_data_entity_resource 	ader
+      WHERE (ader.id						= :resource_id OR :resource_id IS NULL)
         AND (ader.app_data_entity_app_id	= :data_app_id OR :data_app_id IS NULL)
-        AND (ader.app_data_entity_id 		= :entity_id OR :entity_id IS NULL)
-        AND (app_s.value 					= :resource_name OR :resource_name IS NULL)`;
+        AND (ader.app_data_entity_id 		= :entity_id OR :entity_id IS NULL)`;
 const APP_DATA_ENTITY_SELECT = 
     `SELECT id "id",
             app_id "app_id",
@@ -34,9 +30,11 @@ const APP_DATA_RESOURCE_DETAIL_DATA_SELECT =
             adrdd.date_modified                                             "date_modified",
             adrdd.app_data_resource_detail_id                               "app_data_resource_detail_id",
             adrdd.app_data_resource_master_attribute_id                     "app_data_resource_master_attribute_id",
-            as_attribute_master.app_setting_type_app_setting_type_name		  "as_attribute_master_app_setting_type_app_setting_type_name",
-            as_attribute_master.value										                    "as_attribute_master_value",
-            adrm_attribute_master.json_data									                "adrm_attribute_master_json_data",
+            ader_attribute_master.app_setting_id                            "as_attribute_master_app_setting_id",
+            null		                                                    "as_attribute_master_app_setting_name",
+            null										                    "as_attribute_master_app_setting_value",
+            null										                    "as_attribute_master_app_setting_display_data",
+            adrm_attribute_master.json_data									 "adrm_attribute_master_json_data",
             adrd.app_data_resource_master_id                                "app_data_detail_app_data_resource_master_id",
             adrd.app_data_entity_resource_id                                "app_data_detail_app_data_entity_resource_id",
             adrd.app_data_entity_resource_app_data_entity_app_id            "app_data_detail_app_data_entity_resource_app_data_entity_app_id",
@@ -52,37 +50,30 @@ const APP_DATA_RESOURCE_DETAIL_DATA_SELECT =
             adrm_attribute.app_data_entity_resource_id                      "app_data_resource_master_attribute_app_data_entity_resource_id",
             adrm_attribute.user_account_app_user_account_id                 "app_data_resource_master_attribute_user_account_app_user_account_id",
             adrm_attribute.user_account_app_app_id                          "app_data_resource_master_attribute_user_account_app_app_id",
-            app_s.id                                                        "app_data_resource_master_app_setting_id",
-            as_attribute.app_setting_type_app_setting_type_name             "app_data_resource_master_app_setting_type_app_setting_type_name",
-            as_attribute.value                                              "app_data_resource_master_app_setting_value",
-            as_attribute.display_data                                       "app_setting_attribute_display_data",
-            app_s.id                                                        "app_setting_id",
-            app_s.app_setting_type_app_setting_type_name                    "app_setting_type_app_setting_type_name",
-            app_s.value                                                     "app_setting_value",
-            app_s.display_data                                              "app_setting_display_data"
+            ader_attribute.app_setting_id                                   "app_data_resource_master_app_setting_id",
+            null                                                            "app_data_resource_master_app_setting_name",
+            null                                                            "app_data_resource_master_app_setting_value",
+            null                                                            "app_setting_attribute_display_data",
+            ader.app_setting_id                                             "app_setting_id",
+            null                                                            "app_setting_name",
+            null                                                            "app_setting_value",
+            null                                                            "app_setting_display_data"
     FROM <DB_SCHEMA/>.app_data_resource_detail_data  adrdd
             LEFT OUTER JOIN MAIN.app_data_resource_master   adrm_attribute_master
                 ON adrm_attribute_master.id	= adrdd.app_data_resource_master_attribute_id
                 LEFT JOIN MAIN.app_data_entity_resource     ader_attribute_master
-                ON ader_attribute_master.id = adrm_attribute_master.app_data_entity_resource_id
-                LEFT JOIN MAIN.app_setting                  as_attribute_master
-                ON as_attribute_master.id 	= ader_attribute_master.app_setting_id,
+                ON ader_attribute_master.id = adrm_attribute_master.app_data_entity_resource_id,
             <DB_SCHEMA/>.app_data_resource_detail       adrd,
             <DB_SCHEMA/>.app_data_resource_master       adrm
             LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute
                 ON adrm_attribute.id        = adrd.app_data_resource_master_id
                 LEFT JOIN <DB_SCHEMA/>.app_data_entity_resource     ader_attribute
-                ON ader_attribute.id        = adrm_attribute.app_data_entity_resource_id
-                LEFT JOIN <DB_SCHEMA/>.app_setting                  as_attribute
-                ON as_attribute.id          = ader_attribute.app_setting_id,
-            <DB_SCHEMA/>.app_data_entity_resource ader,
-            <DB_SCHEMA/>.app_setting              app_s
-    WHERE adrdd.app_data_resource_detail_id                       = adrd.id
+                ON ader_attribute.id        = adrm_attribute.app_data_entity_resource_id,
+            <DB_SCHEMA/>.app_data_entity_resource ader
+      WHERE adrdd.app_data_resource_detail_id                       = adrd.id
         AND ader.id                                                 = adrd.app_data_entity_resource_id
         AND ader.app_data_entity_app_id                             = adrd.app_data_entity_resource_app_data_entity_app_id
         AND adrm.id                                                 = adrd.app_data_resource_master_id
-        AND app_s.id                                                = ader.app_setting_id
-        AND app_s.app_setting_type_app_id                           = ader.app_data_entity_app_id
         AND (adrdd.id                                               = :resource_id OR :resource_id IS NULL)
         AND ( (
             (adrm.user_account_app_user_account_id                  = COALESCE(:user_account_id, adrm.user_account_app_user_account_id)
@@ -94,12 +85,6 @@ const APP_DATA_RESOURCE_DETAIL_DATA_SELECT =
         )
         AND (adrm.app_data_entity_resource_app_data_entity_app_id       = :data_app_id OR :data_app_id IS NULL)
         AND (adrm.app_data_entity_resource_app_data_entity_id           = :entity_id OR :entity_id IS NULL)
-        AND (app_s.app_setting_type_app_setting_type_name               = :resource_name_type OR :resource_name_type IS NULL)
-        AND (app_s.value                                                = :resource_name_value OR :resource_name_value IS NULL)
-        AND (as_attribute.app_setting_type_app_setting_type_name        = :resource_name_master_attribute_type OR :resource_name_master_attribute_type IS NULL)
-        AND (as_attribute.value                                         = :resource_name_master_attribute_value OR :resource_name_master_attribute_value IS NULL)
-        AND (as_attribute_master.app_setting_type_app_setting_type_name = :resource_name_data_master_attribute_type OR :resource_name_data_master_attribute_type IS NULL)
-        AND (as_attribute_master.value    							                = :resource_name_data_master_attribute_value OR :resource_name_data_master_attribute_value IS NULL)
         AND (adrdd.app_data_resource_detail_id                          = :resource_app_data_detail_id OR :resource_app_data_detail_id IS NULL)`;
 const APP_DATA_RESOURCE_DETAIL_DATA_INSERT = 
     `INSERT INTO <DB_SCHEMA/>.app_data_resource_detail_data (   json_data, 
@@ -164,29 +149,24 @@ const APP_DATA_RESOURCE_DETAIL_SELECT =
             adrm_attribute.app_data_entity_resource_id                      "app_data_resource_master_attribute_app_data_entity_resource_id",
             adrm_attribute.user_account_app_user_account_id                 "app_data_resource_master_attribute_user_account_app_user_account_id",
             adrm_attribute.user_account_app_app_id                          "app_data_resource_master_attribute_user_account_app_app_id",
-            app_s.id                                                        "app_data_resource_master_app_setting_id",
-            as_attribute.app_setting_type_app_setting_type_name             "app_data_resource_master_app_setting_type_app_setting_type_name",
-            as_attribute.value                                              "app_data_resource_master_app_setting_value",
-            as_attribute.display_data                                       "app_setting_attribute_display_data",
-            app_s.id                                                        "app_setting_id",
-            app_s.app_setting_type_app_setting_type_name                    "app_setting_type_app_setting_type_name",
-            app_s.value                                                     "app_setting_value",
-            app_s.display_data                                              "app_setting_display_data"
-        FROM <DB_SCHEMA/>.app_data_resource_detail adrd,
+            ader_attribute.app_setting_id                                   "app_data_resource_master_app_setting_id",
+            null                                                            "app_data_resource_master_app_setting_name",
+            null                                                            "app_data_resource_master_app_setting_value",
+            null                                                            "app_setting_attribute_display_data",
+            ader.app_setting_id                                             "app_setting_id",
+            null                                                            "app_setting_name",
+            null                                                            "app_setting_value",
+            null                                                            "app_setting_display_data"
+       FROM <DB_SCHEMA/>.app_data_resource_detail adrd,
             <DB_SCHEMA/>.app_data_resource_master adrm
                 LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute
                     ON adrm_attribute.id           = adrd.app_data_resource_master_id
                     LEFT JOIN <DB_SCHEMA/>.app_data_entity_resource     ader_attribute
-                    ON ader_attribute.id = adrm_attribute.app_data_entity_resource_id
-                    LEFT JOIN <DB_SCHEMA/>.app_setting                  as_attribute
-                    ON as_attribute.id = ader_attribute.app_setting_id,
-            <DB_SCHEMA/>.app_data_entity_resource ader,
-            <DB_SCHEMA/>.app_setting              app_s
-        WHERE ader.id                                                 = adrd.app_data_entity_resource_id
+                    ON ader_attribute.id = adrm_attribute.app_data_entity_resource_id,
+            <DB_SCHEMA/>.app_data_entity_resource ader
+      WHERE ader.id                                                 = adrd.app_data_entity_resource_id
         AND ader.app_data_entity_app_id                             = adrd.app_data_entity_resource_app_data_entity_app_id
         AND adrm.id                                                 = adrd.app_data_resource_master_id
-        AND app_s.id                                                = ader.app_setting_id
-        AND app_s.app_setting_type_app_id                           = ader.app_data_entity_app_id
         AND (adrm.id                                                = :resource_id OR :resource_id IS NULL)
         AND (adrm.id                                                = :master_id OR :master_id IS NULL)
         AND ( (
@@ -198,7 +178,6 @@ const APP_DATA_RESOURCE_DETAIL_SELECT =
                 (adrm.user_account_app_user_account_id                IS NULL AND :user_null=1)
             )
         AND (adrm.app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)
-        AND (app_s.value                                            = :resource_name OR :resource_name IS NULL)
         AND (adrm.app_data_entity_resource_app_data_entity_id       = :entity_id OR :entity_id IS NULL)`;
 
 const APP_DATA_RESOURCE_DETAIL_INSERT = 
@@ -256,16 +235,13 @@ const APP_DATA_RESOURCE_MASTER_SELECT =
 
             ader.json_data                                          "app_data_entity_resource_json_data",
             ader.app_setting_id                                     "app_setting_id",
-            app_s.app_setting_type_app_setting_type_name            "app_setting_type_app_setting_type_name",
-            app_s.value                                             "app_setting_value",
-            app_s.display_data                                      "app_setting_display_data"
+            null                                                    "app_setting_name",
+            null                                                    "app_setting_value",
+            null                                                    "app_setting_display_data"
        FROM <DB_SCHEMA/>.app_data_resource_master adrm,
-            <DB_SCHEMA/>.app_data_entity_resource ader,
-            <DB_SCHEMA/>.app_setting              app_s
+            <DB_SCHEMA/>.app_data_entity_resource ader
       WHERE ader.id                                                   = adrm.app_data_entity_resource_id
             AND ader.app_data_entity_app_id                               = adrm.app_data_entity_resource_app_data_entity_app_id
-            AND app_s.id                                                  = ader.app_setting_id
-            AND app_s.app_setting_type_app_id                             = ader.app_data_entity_app_id
             AND (adrm.id                                                  = :resource_id OR :resource_id IS NULL)
             AND ( (
                     (adrm.user_account_app_user_account_id                  = COALESCE(:user_account_id, adrm.user_account_app_user_account_id)
@@ -276,8 +252,7 @@ const APP_DATA_RESOURCE_MASTER_SELECT =
                     (adrm.user_account_app_user_account_id                   IS NULL AND :user_null=1)
                     )
             AND (adrm.app_data_entity_resource_app_data_entity_app_id     = :data_app_id OR :data_app_id IS NULL)
-            AND (adrm.app_data_entity_resource_app_data_entity_id         = :entity_id OR :entity_id IS NULL)
-            AND (app_s.value                                              = :resource_name OR :resource_name IS NULL)`;
+            AND (adrm.app_data_entity_resource_app_data_entity_id         = :entity_id OR :entity_id IS NULL)`;
 const APP_DATA_RESOURCE_MASTER_INSERT =
     `INSERT INTO <DB_SCHEMA/>.app_data_resource_master (json_data, 
                                                         user_account_app_user_account_id, 
@@ -327,23 +302,19 @@ const APP_DATA_STAT_SELECT =
             adrm.user_account_app_app_id                            "app_data_resource_master_user_account_app_app_id",
 
             ads.app_data_entity_resource_id                         "app_data_entity_resource_id",
-            as.id                                                   "app_setting_id",
-            as.app_setting_type_app_setting_type_name               "app_setting_type_app_setting_type_name"
-            as.value                                                "app_setting_value"
-            as.display_data                                         "app_setting_display_data"
-
+            ader.app_setting_id                                     "app_setting_id",
+            null                                                    "app_setting_name",
+            null                                                    "app_setting_value",
+            null                                                    "app_setting_display_data",
             ads.app_data_entity_resource_app_data_entity_app_id     "app_data_entity_resource_app_data_entity_app_id",
             ads.app_data_entity_resource_app_data_entity_id         "app_data_entity_resource_app_data_entity_id"
-                    FROM <DB_SCHEMA/>.app_data_stat  ads,
-            <DB_SCHEMA/>.app_data_entity_resource ader,
-            <DB_SCHEMA/>.app_setting    as
-            LEFT OUTER JOIND <DB_SCHEMA/>.app_data_resource_master adrm
+       FROM <DB_SCHEMA/>.app_data_stat  ads,
+            LEFT OUTER JOIN <DB_SCHEMA/>.app_data_entity_resource ader
+                    ON ader.id = ads.app_data_entity_resource_id
+            LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master adrm
                     ON adrm.id = ads.app_data_resource_master_id
-      WHERE ader.id     = app_data_entity_resource_id
-        AND as.id       = ader.app_setting_id
-        AND (ads.id		= :resource_id OR :resource_id IS NULL)
-                    AND (ads.app_id = :data_app_id OR :data_app_id IS NULL)
-        AND (as.app_setting_type_app_setting_type_name = :resource_name_entity OR :resource_name_entity IS NULL)`;
+      WHERE (ads.id		= :resource_id OR :resource_id IS NULL)
+        AND (ads.app_id = :data_app_id OR :data_app_id IS NULL)`;
 
 const APP_DATA_STAT_SELECT_LOG =
     `SELECT app_id                                          "app_id",
@@ -415,39 +386,6 @@ const APP_DATA_STAT_INSERT =
                 :app_data_entity_resource_app_data_entity_app_id,
                 :app_data_entity_resource_app_data_entity_id)`;
 
-const APP_SETTING_SELECT = 
-    `SELECT s.id "id",
-            s.app_setting_type_app_id "app_id",
-            s.app_setting_type_app_setting_type_name "app_setting_type_name",
-            s.value "value",
-            s.data2 "data2",
-            s.data3 "data3",
-            s.data4 "data4",
-            s.data5 "data5",
-            s.display_data "text"
-       FROM <DB_SCHEMA/>.app_setting s
-      WHERE s.app_setting_type_app_setting_type_name LIKE COALESCE(:app_setting_type_name, s.app_setting_type_app_setting_type_name)
-        AND (((s.app_setting_type_app_id = :app_id) OR :app_id IS NULL)
-            OR
-            s.app_setting_type_app_id = :common_app_id)
-        AND s.display_data IS NOT NULL
-        ORDER BY 1, 2, 3`;
-const APP_SETTING_SELECT_DISPLAYDATA = 
-    `SELECT s.id                                         "id", 
-            s.app_setting_type_app_setting_type_name     "app_setting_type_name",
-            s.value                                      "value", 
-            null                                         "name", 
-            s.display_data                               "display_data", 
-            data2                                        "data2", 
-            data3                                        "data3", 
-            data4                                        "data4",
-            data5                                        "data5"
-       FROM <DB_SCHEMA/>.app_setting s
-      WHERE (s.app_setting_type_app_setting_type_name = :app_setting_type_name OR :app_setting_type_name IS NULL)
-        AND s.app_setting_type_app_id = :app_id
-        AND (s.value = :value OR :value IS NULL)
-        AND s.display_data IS NOT NULL
-        ORDER BY 1`;
 const USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT =
       `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post_like(
 					user_account_app_user_account_id, user_account_app_data_post_id, user_account_app_app_id, date_created)
@@ -642,29 +580,14 @@ const USER_ACCOUNT_APP_SELECT_USER_APPS =
       WHERE a.id = uap.app_id
         AND uap.user_account_id = :user_account_id`;
 const USER_ACCOUNT_APP_SELECT_USER_APP = 
-    `SELECT uaa.preference_locale "preference_locale",
-            uaa.app_setting_preference_timezone_id "app_setting_preference_timezone_id",
-            (SELECT s.value
-                FROM <DB_SCHEMA/>.app_setting s
-                WHERE s.id = uaa.app_setting_preference_timezone_id) "app_setting_preference_timezone_value",
-            uaa.app_setting_preference_direction_id "app_setting_preference_direction_id",
-            (SELECT s.value
-                FROM <DB_SCHEMA/>.app_setting s
-                WHERE s.id = uaa.app_setting_preference_direction_id) "app_setting_preference_direction_value",
-            uaa.app_setting_preference_arabic_script_id "app_setting_preference_arabic_script_id",
-            (SELECT s.value
-                FROM <DB_SCHEMA/>.app_setting s
-                WHERE s.id = uaa.app_setting_preference_arabic_script_id) "app_setting_preference_arabic_script_value",
+    `SELECT uaa.json_data "json_data",
             uaa.date_created "date_created"
        FROM <DB_SCHEMA/>.user_account_app uaa
       WHERE uaa.user_account_id = :user_account_id
         AND uaa.app_id = :app_id`;
 const USER_ACCOUNT_APP_UPDATE =
     `UPDATE <DB_SCHEMA/>.user_account_app
-        SET preference_locale = :preference_locale,
-            app_setting_preference_timezone_id = :app_setting_preference_timezone_id,
-            app_setting_preference_direction_id = :app_setting_preference_direction_id,
-            app_setting_preference_arabic_script_id = :app_setting_preference_arabic_script_id,
+        SET json_data = :json_data,
             date_created = CURRENT_TIMESTAMP
       WHERE user_account_id = :user_account_id
         AND app_id = :app_id`;
@@ -915,8 +838,6 @@ export {/**APP_DATA_ENTITIY_RESOURCE */
         APP_DATA_RESOURCE_MASTER_SELECT,APP_DATA_RESOURCE_MASTER_INSERT, APP_DATA_RESOURCE_MASTER_UPDATE, APP_DATA_RESOURCE_MASTER_DELETE,
         /**APP_DATA_STAT */
         APP_DATA_STAT_SELECT, APP_DATA_STAT_SELECT_LOG, APP_DATA_STAT_SELECT_UNIQUE_VISITORS,APP_DATA_STAT_INSERT,
-        /**APP_SETTING */
-        APP_SETTING_SELECT, APP_SETTING_SELECT_DISPLAYDATA,
         /**USER_ACCOUNT_APP_DATA_POST_LIKE */
         USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT,USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE,
         /**USER_ACCOUNT_APP_DATA_POST_VIEW */
