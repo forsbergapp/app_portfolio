@@ -1,0 +1,86 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="2A12C975-58C5-4C4D-12BC-CE949E269EE5" name="IAM_USER_EVENT">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:19:58 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="ED4335D5-1D40-F2F3-4815-FD61E582DD12">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:20:36 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="event" id="0C789A58-86EF-2E1F-8A3C-D34DEDEBC446">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:20:43 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="event_status" id="949D739D-898A-62EF-F01C-AEFEE7FABD3C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:20:57 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="created" id="AF01EF4E-E603-38A8-6F84-34DC5073ECE0">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:21:00 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="iam_user_id" id="EB52B9B2-99C6-5959-1FD4-D57B09EEEEF0">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:21:31 UTC</createdTime>
+<generatorID>B2C9736F-1391-A4B2-46F1-E05D89999703</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>D0D873C1-E83E-4DB8-964C-B4EFCA59A1DE</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="5B48743F-1F23-E0DF-517E-551E41EC22E7" name="IAM_USER_EVENT PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-13 17:20:40 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>ED4335D5-1D40-F2F3-4815-FD61E582DD12</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
