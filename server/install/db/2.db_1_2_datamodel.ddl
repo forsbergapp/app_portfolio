@@ -125,29 +125,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_common;
 
-CREATE TABLE <DB_SCHEMA/>.app_data_translation (
-    json_data                   TEXT,
-    language_id                 INTEGER NOT NULL,
-    app_data_resource_master_id INTEGER NOT NULL,
-    CONSTRAINT app_data_translation_pk PRIMARY KEY ( language_id,
-                                                    app_data_resource_master_id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_common;
-
-CREATE TABLE <DB_SCHEMA/>.language (
-    id         INT NOT NULL AUTO_INCREMENT,
-    locale     VARCHAR(10) NOT NULL,
-	CONSTRAINT language_pk PRIMARY KEY ( id )
-);
-
-CREATE INDEX locale_index ON
-    <DB_SCHEMA/>.language (
-        locale
-    ASC );
-
-GRANT SELECT ON <DB_SCHEMA/>.language TO app_portfolio_role_app_common;
-
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
     iam_user_id           INTEGER,
@@ -317,15 +294,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_stat
     ADD CONSTRAINT app_data_stat_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_translation
-    ADD CONSTRAINT app_data_translation_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_translation
-    ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES <DB_SCHEMA/>.language ( id );
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )

@@ -1,15 +1,6 @@
 /** 
  * Tables implemented using object mapping relation (ORM) pattern
  * each table has dbModel*.js file with methods
- * not implemented for tables:
- *       app (fileModelApp is used)
- *       app_data_translation
- *       app_translation
- *       event
- *       event_status
- *       event_type
- *       language
- * since dml logic not implemented and some SQL use select from these tables using joins
  * 
  * @module server/db/db 
  */
@@ -19,7 +10,7 @@
  *          server_db_db_pool_connection_1_2, server_db_db_pool_connection_1_2_result, 
  *          server_db_db_pool_connection_3_fields,server_db_db_pool_connection_3_result,
  *          server_db_db_pool_connection_4_result} from '../types.js'
-*/
+ */
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
