@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab3
  */
 /**
- * @import {CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonAppSettingRecord,CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
  * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
  */
@@ -114,6 +114,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
  * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
+ *                      common_app_id:number,
  *                      app_id:number,
  *                      user_settings:APP_user_setting_record,
  *                      themes:APP_GLOBAL['themes']
@@ -123,22 +124,32 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
  *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonMiscDbAppSettingsGet:CommonModuleCommon['commonMiscDbAppSettingsGet']}}} props
+ *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-
-    const settings = await props.methods.commonMiscDbAppSettingsGet();
+    //fetch PAPER_SIZE for common app id
+    /**@type{CommonAppSettingRecord[]} */
+    const settings_common = await props.methods.commonFFB({path:'/server-db/app_setting/',
+                                                    query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
+                                                    method:'GET', 
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+    //fetch HIGHLIGHT_ROW for current app id
+    /**@type{CommonAppSettingRecord[]} */
+    const settings_app = await props.methods.commonFFB({ path:'/server-db/app_setting/',
+                                                            query:`IAM_data_app_id=${props.data.app_id}&name=HIGHLIGHT_ROW`,
+                                                            method:'GET', 
+                                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //update APP_GLOBAL with themes
-    /**@type{import('../js//types.js').APP_GLOBAL['themes']} */
-    props.data.themes.data = settings.filter(setting=>
+    /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
+    props.data.themes.data = settings_app.filter(setting=>
             setting.app_id == props.data.app_id && 
-            setting.app_setting_type_name.startsWith('REPORT_THEME'))
+            setting.name.startsWith('REPORT_THEME'))
             .map(theme=>{
-                return {type:theme.app_setting_type_name, value:theme.value, text:theme.text};
+                return {type:theme.name, value:theme.value, text:theme.display_data};
             });
 
     const onMounted = async () =>{
@@ -146,18 +157,18 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_papersize',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>
-                                                setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>
-                                        setting.app_setting_type_name.startsWith('PAPER_SIZE'))[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>
-                                    setting.app_setting_type_name.startsWith('PAPER_SIZE')),
+                        default_data_value:settings_common.filter(setting=>
+                                                setting.name.startsWith('PAPER_SIZE'))[0].value,
+                        default_value:settings_common.filter(setting=>
+                                        setting.name.startsWith('PAPER_SIZE'))[0].display_data,
+                        options: settings_common.filter(setting=>
+                                    setting.name.startsWith('PAPER_SIZE')),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:       '/common/component/common_select.js'});
@@ -165,21 +176,21 @@ const component = async props => {
         await props.methods.commonComponentRender({
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
-                        default_data_value:settings.filter((/**@type{*}*/setting)=>
+                        default_data_value:settings_app.filter(setting=>
                                                 setting.app_id == props.data.app_id && 
-                                                setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].value,
-                        default_value:settings.filter((/**@type{*}*/setting)=>
+                                                setting.name.startsWith('HIGHLIGHT_ROW'))[0].value,
+                        default_value:settings_app.filter(setting=>
                                         setting.app_id == props.data.app_id && 
-                                        setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW'))[0].text,
-                        options: settings.filter((/**@type{*}*/setting)=>
+                                        setting.name.startsWith('HIGHLIGHT_ROW'))[0].display_data,
+                        options: settings_app.filter(setting=>
                                     setting.app_id == props.data.app_id && 
-                                    setting.app_setting_type_name.startsWith('HIGHLIGHT_ROW')),
+                                    setting.name.startsWith('HIGHLIGHT_ROW')),
                         path:null,
                         query:null,
                         method:null,
                         authorization_type:null,
                         column_value:'value',
-                        column_text:'text'
+                        column_text:'display_data'
                         },
             methods:    {commonFFB:null},
             path:'/common/component/common_select.js'});

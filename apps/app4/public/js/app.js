@@ -675,7 +675,6 @@ const SettingShow = async (tab_selected) => {
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet,
                             commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
                             commonFFB:common.commonFFB
@@ -698,7 +697,7 @@ const SettingShow = async (tab_selected) => {
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
                             commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet
+                            commonFFB:common.commonFFB
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -707,6 +706,7 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
+                            common_app_id:common.COMMON_GLOBAL.common_app_id,
                             app_id:common.COMMON_GLOBAL.app_id,
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
                             themes:APP_GLOBAL.themes},
@@ -714,7 +714,7 @@ const SettingShow = async (tab_selected) => {
                             appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
                             commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet
+                            commonFFB:common.commonFFB
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -753,7 +753,7 @@ const SettingShow = async (tab_selected) => {
                             appComponentSettingUpdate:appComponentSettingUpdate,
                             commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonMiscDbAppSettingsGet:common.commonMiscDbAppSettingsGet
+                            commonFFB:common.commonFFB
                             },
                 path:`/component/settings_tab${tab_selected}.js`});
             break;

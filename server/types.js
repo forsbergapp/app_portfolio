@@ -1250,7 +1250,7 @@
  *              app_setting_id:number, 
  *              app_data_entity_app_id:number, 
  *              app_data_entity_id:number, 
- *              app_setting_type_app_setting_type_name:string, 
+ *              app_setting_name:string, 
  *              app_setting_value:string, 
  *              app_setting_display_data:string}} server_db_sql_result_app_data_entity_resource_get
  */
@@ -1266,7 +1266,7 @@
  *              app_data_entity_resource_id:number,
  *              app_data_entity_resource_json_data:string,
  *              app_setting_id:number,
- *              app_setting_type_app_setting_type_name:string,
+ *              app_setting_name:string,
  *              app_setting_value:string,
  *              app_setting_display_data:string,
  *              resource_metadata:string}} server_db_sql_result_app_data_resource_master_get
@@ -1293,11 +1293,11 @@
  *              app_data_resource_master_attribute_user_account_app_user_account_id:number,
  *              app_data_resource_master_attribute_user_account_app_app_id:number,
  *              app_data_resource_master_app_setting_id:number,
- *              app_data_resource_master_app_setting_type_app_setting_type_name:string,
+ *              app_data_resource_master_app_setting_name:string,
  *              app_data_resource_master_app_setting_value:string,
  *              app_setting_attribute_display_data:string,
  *              app_setting_id:number,
- *              app_setting_type_app_setting_type_name:string,
+ *              app_setting_name:string,
  *              app_setting_value:string,
  *              app_setting_display_data:string,
  *              resource_metadata:string}} server_db_sql_result_app_data_resource_detail_get
@@ -1311,6 +1311,11 @@
  *              date_modified:string|null,
  *              app_data_resource_detail_id:number,
  *              app_data_resource_master_attribute_id:number,
+ *              as_attribute_master_app_setting_id:number,
+ *              as_attribute_master_app_setting_name:string,
+ *              as_attribute_master_app_setting_value:string,
+ *              as_attribute_master_app_setting_display_data:string,
+ *              adrm_attribute_master_json_data:string,
  *              app_data_detail_app_data_resource_master_id:number,
  *              app_data_detail_app_data_entity_resource_id:number,
  *              app_data_detail_app_data_entity_resource_app_data_entity_app_id:number,
@@ -1327,11 +1332,11 @@
  *              app_data_resource_master_attribute_user_account_app_user_account_id:number|null,
  *              app_data_resource_master_attribute_user_account_app_app_id:number|null,
  *              app_data_resource_master_app_setting_id:number,
- *              app_data_resource_master_app_setting_type_app_setting_type_name:string,
+ *              app_data_resource_master_app_setting_name:string,
  *              app_data_resource_master_app_setting_value:string,
  *              app_setting_attribute_display_data:string,
  *              app_setting_id:number,
- *              app_setting_type_app_setting_type_name:string,
+ *              app_setting_name:string,
  *              app_setting_value:string,
  *              app_setting_display_data:string}} server_db_sql_result_app_data_resource_detail_data_get
  */
@@ -1352,7 +1357,7 @@
  *              app_data_resource_master_user_account_app_app_id:                           number|null,
  *              app_data_entity_resource_id:                                                number,
  *              app_setting_id:                                                             number,
- *              app_setting_type_app_setting_type_name:                                     string,
+ *              app_setting_name:                                                           string,
  *              app_setting_value:                                                          string,
  *              app_setting_display_data:                                                   string,
  *              app_data_entity_resource_app_data_entity_app_id:                            number,
@@ -1400,30 +1405,6 @@
  *              json_data:string}} server_db_sql_result_app_data_stat_getStatUniqueVisitor
  */
 
-/**
- * @description DB SQL APP SETTING server_db_sql_result_app_setting_getSettings
- * @typedef {{  id:string,
- *              app_id:number, 
- *              app_setting_type_name:string,
- *              value:string, 
- *              data2:string|null, 
- *              data3:string|null, 
- *              data4:string|null, 
- *              data5:string|null,
- *              text:string}} server_db_sql_result_app_setting_getSettings
- */
-
-/**
- * @description DB SQL APP SETTING server_db_sql_result_app_setting_getDisplayData
- * @typedef {{  id:string,
- *              value:string, 
- *              name:null, 
- *              display_data: string, 
- *              data2:string|null, 
- *              data3:string|null, 
- *              data4:string|null, 
- *              data5:string|null}} server_db_sql_result_app_setting_getDisplayData
- */
 
 /** 
  * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_get
@@ -1529,19 +1510,13 @@
 
 /**
  * @description DB SQL USER ACCOUNT APP server_db_sql_result_user_account_app_getUserAccountApp
- * @typedef {{  preference_locale:string,
- *              app_setting_preference_timezone_id:number,
- *              app_setting_preference_direction_id:number,
- *              app_setting_preference_arabic_script_id:number,
+ * @typedef {{  json_data:string
  *              date_created:string}} server_db_sql_result_user_account_app_getUserAccountApp
  */
 
 /**
  * @description DB SQL USER ACCOUNT APP server_db_sql_parameter_user_account_app_updateUserAccountApp
- * @typedef {{  preference_locale:string,
- *              app_setting_preference_timezone_id:number|null,
- *              app_setting_preference_direction_id:number|null,
- *              app_setting_preference_arabic_script_id:number|null}} server_db_sql_parameter_user_account_app_updateUserAccountApp
+ * @typedef {{  json_data:string}} server_db_sql_parameter_user_account_app_updateUserAccountApp
  */
 
 /**

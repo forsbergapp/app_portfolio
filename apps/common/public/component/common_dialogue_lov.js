@@ -23,7 +23,7 @@ const template = props =>`  <div id='common_lov_form'>
                                 </div>
                             <div id='common_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
                                 ${props.list.map((/**@type{*}*/list_row)=>
-                                    `<div data-id='${props.lov_column_value.startsWith('text')?list_row.value:list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
+                                    `<div data-id='${(props.lov_column_value.startsWith('text')||props.lov_column_value.startsWith('display_data'))?list_row.value:list_row.id}' data-value='${list_row[props.lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                                         <div class='common_list_lov_col1'>
                                             <div>${props.lov_column_value=='text'?list_row.value:list_row.id}</div>
                                         </div>
@@ -43,6 +43,7 @@ const template = props =>`  <div id='common_lov_form'>
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      common_app_id:number,
+ *                      app_id:number,
  *                      user_locale:string,
  *                      lov:string,
  *                      lov_custom_list?:{}[],
@@ -71,6 +72,7 @@ const component = async props => {
     let body = null;
     let lov_column = '';
     switch (props.data.lov){
+        //server logs files for admin
         case 'SERVER_LOG_FILES':{
             method = 'GET';
             lov_column = 'filename';
@@ -79,6 +81,7 @@ const component = async props => {
             token_type = 'ADMIN';
             break;
         }
+        //country for common app id
         case 'COUNTRY':{
             method = 'POST', 
             lov_column = 'text';
@@ -89,10 +92,11 @@ const component = async props => {
             break;
         }
         default:{
+            //lov for current app id
             method = 'GET';
-            lov_column = 'text';
-            path = '/server-db/app_settings';
-            query= `setting_type=${props.data.lov}`;
+            lov_column = 'display_data';
+            path = '/server-db/app_setting/';
+            query= `name=${props.data.lov}&IAM_data_app_id=${props.data.app_id}`;
             token_type = 'APP_ID';
         }
     }
@@ -102,7 +106,7 @@ const component = async props => {
                                                                                                                     method:method, 
                                                                                                                     authorization_type:token_type,
                                                                                                                     body:body
-                                                                                                                }).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                                                                                }).then(result=>JSON.parse(result).rows);
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**

@@ -585,15 +585,18 @@ const dbInstallGetFiles = async (install_type) =>{
                                         };
                     //create iam user then database user
                     return await fileModelIamUser.postAdmin(parameters.app_id,data_create)
-                                 .then(new_iam_user=>new_iam_user.result?
-                                                        dbModelUserAccount.post(parameters.app_id, {iam_user_id:new_iam_user.result.insertId })
-                                                            .then(result=>{
-                                                                if (result.result)
-                                                                    return result;
-                                                                else
-                                                                    throw result;
-                                                            }):
-                                                    new_iam_user);
+                                 .then(new_iam_user=>{
+                                        if (new_iam_user.result)
+                                                return dbModelUserAccount.post(parameters.app_id, {iam_user_id:new_iam_user.result.insertId })
+                                                    .then(result=>{
+                                                        if (result.result)
+                                                            return result;
+                                                        else
+                                                            throw result;
+                                                            });
+                                        else
+                                            throw new_iam_user;
+                                });
                 };
                 for (const demo_user of demo_users){
                     demo_user.id = await create_update_id(demo_user).then(user=>user.result.insertId);

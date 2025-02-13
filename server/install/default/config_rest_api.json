@@ -91,10 +91,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/app_settings": {
+        "/bff/app_id/v1/server-db/app_setting/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelAppSetting.get",
+                "operationId": "server_db.fileModelAppSetting.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -104,7 +104,11 @@
                             "$ref": "#/components/parameters/server_app_id"
                         },
                         {
-                            "name":"setting_type",
+                            "$ref": "#/components/parameters/resource_id_number",
+                            "description":"db app_setting.id"
+                        },
+                        {
+                            "name":"name",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -112,41 +116,7 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/locale",
-                            "required":true
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                        {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/app_id/v1/server-db/app_settings_display": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.dbModelAppSetting.getDisplayData",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        },
-                        {
-                            "name":"setting_type",
+                            "name":"value",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -158,12 +128,8 @@
                             "in":"query"
                         },
                         {
-                            "name":"value",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "string"
-                            }    
+                            "$ref": "#/components/parameters/locale",
+                            "required":true
                         }
                 ],
                 "responses": {
@@ -1806,19 +1772,9 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "preference_locale":{
+                                            "json_data":{
                                                 "required":true,
                                                 "type":"string"
-                                            },
-                                            "app_setting_preference_timezone_id":{
-                                                "required":true,
-                                                "type":"number"
-                                            },
-                                            "app_setting_preference_direction_id":{
-                                                "type":"number"
-                                            },
-                                            "app_setting_preference_arabic_script_id":{
-                                                "type":"number"
                                             }
                                         }
                                     }
