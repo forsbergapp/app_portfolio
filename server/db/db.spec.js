@@ -56,11 +56,13 @@ describe('Unit test, dbSQLParamConvert', ()=> {
             });
         };
         /**
+         * @description Extract logic from dbCommonExecute since SQL should not be executed
          * @param {string} sql
          * @param {{[key:string]:any}} parameters
          */
         const adjustSqlParams = (sql, parameters) =>{
-            sql = sql.replaceAll('<DB_SCHEMA/>', db_name);
+            const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+            sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
             return {sql:sql, parameters:parameters};
                                 
         };
@@ -70,18 +72,24 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         const app_id = 0; //also pool_id
         const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
         //Use default 5 if none is configured
-        const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')) ?? 5;
-        const db_name = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB',`DB${db_use}_NAME`);
+        /**@type{*} */
+        const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE'));
         const connection = (db_use==1 ||db_use==2)?await pool_1_2(app_id, db_use):null;
         
         //Test sql and parameters SELECT that contains <DB_SCHEMA/> tags
-        const {sql:sql_select, parameters:sql_select_params} = adjustSqlParams(dbSql.APP_SETTING_SELECT, {  app_id : app_id,
-                                                                                                            common_app_id: common_app_id,
-                                                                                                            app_setting_type_name: 'PAPER_SIZE'
-                                                                                                            });
-                                                                                                            
+        const {sql:sql_select, parameters:sql_select_params} = adjustSqlParams(dbSql.APP_DATA_RESOURCE_DETAIL_DATA_SELECT, {app_id : app_id,
+                                                                                                                            common_app_id: common_app_id,
+                                                                                                                            resource_id: 1,
+                                                                                                                            user_account_id:1,
+                                                                                                                            user_account_app_id:1,
+                                                                                                                            user_null:1,
+                                                                                                                            data_app_id:1,
+                                                                                                                            entity_id:1,
+                                                                                                                            resource_app_data_detail_id:1
+                                                                                                                            });
+
         const result_select = db.dbSQLParamConvert(db_use, connection, sql_select, sql_select_params);
-        
+
         //Test sql and parameters INSERT that uses DB_RETURN_ID and DB_CLOB 
         const {sql:sql_insert, parameters:sql_insert_params} = adjustSqlParams(dbSql.USER_ACCOUNT_APP_DATA_POST_INSERT, {
                                                                                                             description: null,
@@ -105,7 +113,7 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         console.log('Unit test dbSQLParamConvert parameter DBA:', DBA);
         console.log('Unit test dbSQLParamConvert parameter app_id/pool_id:', app_id);
         console.log('Unit test dbSQLParamConvert parameter DB_USE:', db_use);
-        console.log('Unit test dbSQLParamConvert parameter db name:', db_name);
+        console.log('Unit test dbSQLParamConvert parameter db name:', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`) ?? '');
 
         console.log('Unit test dbSQLParamConvert parameter SELECT sql:', sql_select);
         console.log('Unit test dbSQLParamConvert parameter SELECT parameters:', sql_select_params);
@@ -124,6 +132,8 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         console.log('Unit test dbSQLParamConvert parameter UPDATE result:', result_update);
 
         //expect common result
+        //expect <DB_SCHEMA/> not to be found, should be replaced by schema name
+        expect(result_select.sql.indexOf('<DB_SCHEMA/>')).toBe(-1);
         //expect deleted key DB_RETURN_ID
         expect(result_insert.parameters?.DB_RETURN_ID).toBeUndefined();
         //expect deleted key DB_CLOB
