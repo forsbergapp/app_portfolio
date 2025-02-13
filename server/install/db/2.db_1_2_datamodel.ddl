@@ -135,31 +135,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
 
 GRANT SELECT ON <DB_SCHEMA/>.app_data_translation TO app_portfolio_role_app_common;
 
-CREATE TABLE <DB_SCHEMA/>.event (
-    id            INT NOT NULL AUTO_INCREMENT,
-    event_name    VARCHAR(100) NOT NULL,
-    event_type_id INTEGER NOT NULL,
-    CONSTRAINT event_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.event TO app_portfolio_role_app_common;
-
-CREATE TABLE <DB_SCHEMA/>.event_status (
-    id          INT NOT NULL AUTO_INCREMENT,
-    status_name VARCHAR(100) NOT NULL,
-    CONSTRAINT event_status_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.event_status TO app_portfolio_role_app_common;
-
-CREATE TABLE <DB_SCHEMA/>.event_type (
-    id              INT NOT NULL AUTO_INCREMENT,
-    event_type_name VARCHAR(100) NOT NULL,
-    CONSTRAINT event_type_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON <DB_SCHEMA/>.event_type TO app_portfolio_role_app_common;
-
 CREATE TABLE <DB_SCHEMA/>.language (
     id         INT NOT NULL AUTO_INCREMENT,
     locale     VARCHAR(10) NOT NULL,
@@ -227,16 +202,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_view (
 );
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_app_data_post_view TO app_portfolio_role_app_common;
-
-CREATE TABLE <DB_SCHEMA/>.user_account_event (
-    user_account_id             INTEGER NOT NULL,
-    event_id                    INTEGER NOT NULL,
-    event_status_id             INTEGER NOT NULL,
-    date_created                DATETIME NOT NULL,
-    date_modified               DATETIME
-);
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON <DB_SCHEMA/>.user_account_event TO app_portfolio_role_app_common;
 
 CREATE TABLE <DB_SCHEMA/>.user_account_follow (
     user_account_id         INTEGER NOT NULL,
@@ -362,10 +327,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_translation
     ADD CONSTRAINT app_data_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES <DB_SCHEMA/>.language ( id );
 
-ALTER TABLE <DB_SCHEMA/>.event
-    ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
-        REFERENCES <DB_SCHEMA/>.event_type ( id );
-
 ALTER TABLE <DB_SCHEMA/>.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
         REFERENCES <DB_SCHEMA/>.app ( id )
@@ -407,19 +368,6 @@ ALTER TABLE <DB_SCHEMA/>.user_account_app
         REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE <DB_SCHEMA/>.user_account_event
-    ADD CONSTRAINT user_account_event_event_fk FOREIGN KEY ( event_id )
-        REFERENCES <DB_SCHEMA/>.event ( id );
-
-ALTER TABLE <DB_SCHEMA/>.user_account_event
-    ADD CONSTRAINT user_account_event_event_status_fk FOREIGN KEY ( event_status_id )
-        REFERENCES <DB_SCHEMA/>.event_status ( id );
-
-ALTER TABLE <DB_SCHEMA/>.user_account_event
-    ADD CONSTRAINT user_account_event_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES <DB_SCHEMA/>.user_account ( id )
-            ON DELETE CASCADE;
-	
 ALTER TABLE <DB_SCHEMA/>.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES <DB_SCHEMA/>.user_account ( id )
