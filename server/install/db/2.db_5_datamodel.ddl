@@ -169,24 +169,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_translation (
         REFERENCES language ( id )
 );
 
-CREATE TABLE <DB_SCHEMA/>.event (
-    id            INTEGER NOT NULL CONSTRAINT event_pk PRIMARY KEY AUTOINCREMENT,
-    event_name    VARCHAR(100) NOT NULL,
-    event_type_id INTEGER NOT NULL,
-    CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
-        REFERENCES event_type ( id )
-);
-
-CREATE TABLE <DB_SCHEMA/>.event_status (
-    id          INTEGER NOT NULL CONSTRAINT event_status_pk PRIMARY KEY AUTOINCREMENT,
-    status_name VARCHAR(100) NOT NULL
-);
-
-CREATE TABLE <DB_SCHEMA/>.event_type (
-    id              INTEGER NOT NULL CONSTRAINT event_type_pk PRIMARY KEY AUTOINCREMENT,
-    event_type_name VARCHAR(100) NOT NULL
-);
-
 CREATE TABLE <DB_SCHEMA/>.language (
     id         INTEGER NOT NULL CONSTRAINT language_pk PRIMARY KEY AUTOINCREMENT,
     locale     VARCHAR(10) NOT NULL
@@ -265,21 +247,6 @@ CREATE TABLE <DB_SCHEMA/>.user_account_app_data_post_view (
             ON DELETE CASCADE,
     CONSTRAINT user_account_app_data_post_view_user_account_app_data_post_fk FOREIGN KEY ( user_account_app_data_post_id )
         REFERENCES user_account_app_data_post ( id )
-            ON DELETE CASCADE
-);
-
-CREATE TABLE <DB_SCHEMA/>.user_account_event (
-    user_account_id             INTEGER NOT NULL,
-    event_id                    INTEGER NOT NULL,
-    event_status_id             INTEGER NOT NULL,
-    date_created                DATETIME NOT NULL,
-    date_modified               DATETIME,
-    CONSTRAINT user_account_event_event_fk FOREIGN KEY ( event_id )
-        REFERENCES event ( id ),
-    CONSTRAINT user_account_event_event_status_fk FOREIGN KEY ( event_status_id )
-        REFERENCES event_status ( id ),
-    CONSTRAINT user_account_event_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
             ON DELETE CASCADE
 );
 
