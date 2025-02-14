@@ -1,9 +1,4 @@
 --
--- app
---
-INSERT INTO <DB_SCHEMA/>.app (id) VALUES (<APP_ID/>);
-
---
 -- app_data_entity
 --
 INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (1, <APP_ID/>, '{"description":"Entity info: Common", "name":"COMMON"}');

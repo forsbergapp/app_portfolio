@@ -182,7 +182,7 @@
  *          route_path:string,
  *          method: string,
  *          query: string,
- *          body:server_server_req['body'] & {data?:string},
+ *          body:server_server_req['body'] & {type?:string, IAM_data_app_id?:number|null, data?:string},
  *          idToken:  server_server_req['headers']['id-token'], 
  *          authorization:string|null,
  *          ip: string,
@@ -1256,6 +1256,11 @@
  *              data_used:      number,
  *              data_free:      number,
  *              pct_used:       number}} server_db_sql_result_admin_DBInfoSpaceSum
+ */
+
+/**
+ * @description DB SQL APP server_db_sql_result_app_get
+ * @typedef {{id:number}} server_db_sql_result_app_get
  */
 
 /**

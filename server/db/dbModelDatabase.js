@@ -29,14 +29,6 @@ const DB_DEMO_FILE              = 'demo.json';
 const DB_INSTALL_PATH           = '/server/install/db/';
 const DB_INSTALL                = 'install_database.json';
 const DB_UNINSTALL              = 'uninstall_database.json';
-
-const DB_ADMIN_INSTALL_PATH     = '/apps/app1/scripts/';
-const DB_APPS_DIR               = '/apps';
-const DB_APP_PATH               = '/apps/app';
-//each app should be installed in /apps[appid] and have these files:
-const DB_APP_INSTALL_PATH       = '/scripts/';
-const DB_APP_INSTALL            = 'install_database.json';
-const DB_APP_UNINSTALL          = 'uninstall_database.json';
 /**
  * @name dbInfo
  * @description Database info
@@ -87,39 +79,6 @@ const dbInfoSpaceSum = parameters =>
                         DBA));
 
 /**
- * @name dbInstallGetFiles
- * @description Database install get files
- * @function
- * @param {'install'|'uninstall'} install_type 
- * @returns {Promise.<server_db_database_script_files>}
- */
-const dbInstallGetFiles = async (install_type) =>{
-    const fs = await import('node:fs');
-    
-    /**@type{server_db_database_script_files} */
-    const files = [
-       //add main and common script
-       [0, install_type=='install'?(DB_INSTALL_PATH + DB_INSTALL):(DB_INSTALL_PATH + DB_UNINSTALL), serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))??0]
-    ];
-    //Loop file directories
-    for (const file of await fs.promises.readdir(`${process.cwd()}${DB_APPS_DIR}`, { withFileTypes: true })){
-        if (file.isDirectory() && file.name.startsWith('app')){
-            try {
-                await fs.promises.access(`${process.cwd()}${DB_APPS_DIR}/${file.name}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`);
-                //add app script, first index not used for apps, save app id instead
-                files.push([null, 
-                            `${DB_APPS_DIR}/${file.name}${install_type=='install'?(DB_APP_INSTALL_PATH + DB_APP_INSTALL):(DB_APP_INSTALL_PATH + DB_APP_UNINSTALL)}`, 
-                            //save app_id here, directory using format app + id
-                            /**@ts-ignore */
-                            serverUtilNumberValue(file.name.split('app')[1])]);
-             } catch (error) {
-                null;
-             }   
-        }
-    }
-    return files;
- };
-/**
  * @name dbInstall
  * @description Install db and sends server side events of progress
  * @function
@@ -140,8 +99,18 @@ const dbInstallGetFiles = async (install_type) =>{
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
+    /**@type{import('./dbModelApp.js')} */
+    const dbModelApp = await import(`file://${process.cwd()}/server/db/dbModelApp.js`);
+
     /**@type{import('../security.js')} */
-	const {securityPasswordCreate, securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
+	const {securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
+
+    /**@type{import('../db/fileModelApp.js')} */
+    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    
+    /**@type{import('../db/dbModelDatabase.js')} */
+    const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
+
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -160,180 +129,158 @@ const dbInstallGetFiles = async (install_type) =>{
        let password;
        
        if (db_use==4){
-          // max 30 characters for passwords and without double quotes
-          // also fix ORA-28219: password verification failed for mandatory profile
-          // ! + random A-Z character
-          password = securitySecretCreate(true, 30);
-          //use singlequote for INSERT, else doublequote for CREATE USER
-          if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${await securityPasswordCreate(password)}'`);
-          else
-             sql = sql.replace(password_tag, `"${password}"`);
+            // max 30 characters for passwords and without double quotes
+            // also fix ORA-28219: password verification failed for mandatory profile
+            // ! + random A-Z character
+            password = securitySecretCreate(true, 30);
+            sql = sql.replace(password_tag, `"${password}"`);
        }   
        else{
             password = securitySecretCreate();
-            if (sql.toUpperCase().includes('INSERT INTO'))
-                sql = sql.replace(password_tag, `'${await securityPasswordCreate(password)}'`);
-            else
-                sql = sql.replace(password_tag, `'${password}'`);
+            sql = sql.replace(password_tag, `'${password}'`);
        }
-          
-       sql = sql.replace('<APP_USERNAME/>', username);
        install_result.push({[`${username}`]: password});         
        return [sql, password];
     };
-    const files = await dbInstallGetFiles('install');
     const DB_SCHEMA = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '';
+    
     let install_count = 0;
-    for (const file of files){
+    install_count++;
+    const install_json = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_INSTALL}`, 'utf8');
+    const install_obj = JSON.parse(install_json);
+    //filter for current database or for all databases
+    install_obj.install = install_obj.install.filter((/**@type{server_db_database_install_database_script|server_db_database_install_database_app_script}*/row) =>  
+        row.db == db_use || row.db == null);
+
+    const apps = fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result;
+    
+    for (const install_row of install_obj.install){
+        install_count++;
+        socketAdminSend({   app_id:parameters.app_id,
+            idToken:parameters.idToken,
+            data:{app_id:null,
+                client_id:socketClientGet(parameters.idToken),
+                broadcast_type:'PROGRESS',
+                broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_obj.install.length + apps.length, text:DB_INSTALL_PATH + install_row.script})).toString('base64')}});
+
+        let install_sql;
+        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + install_row.script}`, 'utf8');
+
+        //remove comments
+        //rows starting with '--' and ends width '\r\n' or '\n'
+        const sql_split = process.platform == 'win32'?'\r\n':'\n';
+        //remove rows starting with '--' and contains only '\r\n' or '\n'
+        install_sql = install_sql.split(sql_split).filter(row=>!row.startsWith('--') && (row != sql_split)).join(sql_split);
+        //split script file into separate sql statements
+        for (let sql of install_sql.split(';')){
+            if (sql.startsWith(sql_split))
+                sql = sql.substring(sql_split.length);
+            if (sql.length>0){
+                if (sql.includes(password_tag)){
+                    const sql_and_pw = await sql_with_password('app_portfolio', sql);
+                    sql = sql_and_pw[0];
+                }
+                sql = sql.replaceAll('<APP_ID/>', install_row.app_id);
+                sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
+                    
+                //if ; must be in wrong place then set tag in import script and convert it
+                if (sql.includes('<SEMICOLON/>'))
+                    sql = sql.replace('<SEMICOLON/>', ';');
+                //close and start pool when creating database, some modules dont like database name when creating database
+                //exclude db 4 and db 5
+                if (db_use != 4 && db_use != 5)
+                    if (sql.toUpperCase().includes('CREATE DATABASE')){
+                        //remove database name in dba pool
+                        await dbPoolClose(null, db_use, DBA);
+                        /**@type{server_db_db_pool_parameters} */
+                        const json_data = {
+                                use:                       db_use,
+                                pool_id:                   null,
+                                port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                dba:                       DBA,
+                                user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                database:                  null,
+                                //db 1 + 2 parameters
+                                charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                // db 3 parameters
+                                connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                // db 4 parameters not used here
+                                connectString:             null,
+                                poolMin:                   null,
+                                poolMax:                   null,
+                                poolIncrement:             null
+                            };
+                        await dbPoolStart(json_data);
+                    }
+                    else{
+                        if (change_DBA_pool == true){
+                            //add database name in dba pool
+                            await dbPoolClose(null, db_use, DBA);
+                            /**@type{server_db_db_pool_parameters} */
+                            const json_data = {
+                                use:                       db_use,
+                                pool_id:                   null,
+                                port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                dba:                       DBA,
+                                user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+                                //db 1 + 2 parameters
+                                charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                // db 3 parameters
+                                connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                // db 4 parameters not used here
+                                connectString:             null,
+                                poolMin:                   null,
+                                poolMax:                   null,
+                                poolIncrement:             null
+                            };
+                            await dbPoolStart(json_data);
+                            //change to database value for the rest of the function
+                            change_DBA_pool = false;
+                        }
+                    }
+                await dbCommonExecute(parameters.app_id, sql, {}, DBA);
+                count_statements += 1;
+            }
+        }
         socketAdminSend({   app_id:parameters.app_id,
                             idToken:parameters.idToken,
                             data:{app_id:null,
                                 client_id:socketClientGet(parameters.idToken),
                                 broadcast_type:'PROGRESS',
-                                broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:files.length, text:file[1]})).toString('base64')}});
-        install_count++;
-        const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-        const install_obj = JSON.parse(install_json);
-        //filter for current database or for all databases
-        install_obj.install = install_obj.install.filter((/**@type{server_db_database_install_database_script|server_db_database_install_database_app_script}*/row) =>  
-            row.db == db_use || row.db == null);
-        
-        for (const install_row of install_obj.install){
-            let install_sql;
-            switch (file[0]){
-                case 0:{
-                    //main script
-                    install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + install_row.script}`, 'utf8');
-                    break;
-                }
-                case 1:{
-                    //admin script
-                    install_sql = await fs.promises.readFile(`${process.cwd()}${DB_ADMIN_INSTALL_PATH + install_row.script}`, 'utf8');
-                    break;
-                }
-                default:{
-                    //app scripts
-                    install_sql = await fs.promises.readFile(`${process.cwd()}${DB_APP_PATH + file[2]}${DB_APP_INSTALL_PATH + install_row.script}`, 'utf8');
-                }
-            }
-            //remove comments
-            //rows starting with '--' and ends width '\r\n' or '\n'
-            const sql_split = process.platform == 'win32'?'\r\n':'\n';
-            //remove rows starting with '--' and contains only '\r\n' or '\n'
-            install_sql = install_sql.split(sql_split).filter(row=>!row.startsWith('--') && (row != sql_split)).join(sql_split);
-            //split script file into separate sql statements
-            for (let sql of install_sql.split(';')){
-                if (sql.startsWith(sql_split))
-                    sql = sql.substring(sql_split.length);
-                if (sql.length>0){
-                    if (file[0] == 0 && sql.includes(password_tag)){
-                        const sql_and_pw = await sql_with_password('app_portfolio', sql);
-                        sql = sql_and_pw[0];
-                    }
-                    sql = sql.replaceAll('<APP_ID/>', file[2].toString());
-                    sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
-                        
-                    //if ; must be in wrong place then set tag in import script and convert it
-                    if (sql.includes('<SEMICOLON/>'))
-                        sql = sql.replace('<SEMICOLON/>', ';');
-                    //close and start pool when creating database, some modules dont like database name when creating database
-                    //exclude db 4 and db 5
-                    if (db_use != 4 && db_use != 5)
-                        if (sql.toUpperCase().includes('CREATE DATABASE')){
-                            //remove database name in dba pool
-                            await dbPoolClose(null, db_use, DBA);
-                            /**@type{server_db_db_pool_parameters} */
-                            const json_data = {
-                                    use:                       db_use,
-                                    pool_id:                   null,
-                                    port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                    host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                                    dba:                       DBA,
-                                    user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                    password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                    database:                  null,
-                                    //db 1 + 2 parameters
-                                    charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                    connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
-                                    // db 3 parameters
-                                    connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                    idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                    max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
-                                    // db 4 parameters not used here
-                                    connectString:             null,
-                                    poolMin:                   null,
-                                    poolMax:                   null,
-                                    poolIncrement:             null
-                                };
-                            await dbPoolStart(json_data);
-                        }
-                        else{
-                            if (change_DBA_pool == true){
-                                //add database name in dba pool
-                                await dbPoolClose(null, db_use, DBA);
-                                /**@type{server_db_db_pool_parameters} */
-                                const json_data = {
-                                    use:                       db_use,
-                                    pool_id:                   null,
-                                    port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                    host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                                    dba:                       DBA,
-                                    user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                    password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                    database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
-                                    //db 1 + 2 parameters
-                                    charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                    connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
-                                    // db 3 parameters
-                                    connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                    idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                    max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
-                                    // db 4 parameters not used here
-                                    connectString:             null,
-                                    poolMin:                   null,
-                                    poolMax:                   null,
-                                    poolIncrement:             null
-                                };
-                                await dbPoolStart(json_data);
-                                //change to database value for the rest of the function
-                                change_DBA_pool = false;
-                            }
-                        }
-                    await dbCommonExecute(parameters.app_id, sql, {}, DBA);
-                    count_statements += 1;
-                }
-            }
-        }
-        if (install_obj.users){
-            let sql_and_pw = null;
-            for (const users_row of install_obj.users.filter((/**@type{server_db_database_install_database_app_user_script}*/row) => row.db == db_use || row.db == null)){
-                switch (file[0]){
-                    case 1:{
-                        //do not install any database user for admin app, admin app uses database dba user
-                        break;
-                    }
-                    default:{
-                        const app_username = 'app_portfolio_app' + file[2];
-                        if (users_row.sql.includes(password_tag)){
-                            
-                            sql_and_pw = await sql_with_password(app_username, users_row.sql);
-                            users_row.sql = sql_and_pw[0];
-                            await fileModelAppSecret.update({app_id:file[2]??0, resource_id:file[2]??0,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
-                                                                                    parameter_value:    app_username}});
-                            await fileModelAppSecret.update({app_id:file[2]??0, resource_id:file[2]??0,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
-                                                                                    parameter_value:    sql_and_pw[1]}});
-                        }
-                        users_row.sql = users_row.sql.replaceAll('<APP_ID/>', file[2]);
-                        users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
-                        break;
-                    }
-                }
-                await dbCommonExecute(parameters.app_id, users_row.sql, {}, DBA);
+                                broadcast_message:Buffer.from(JSON.stringify({  part:install_count, 
+                                                                                total:install_obj.install.length + apps.length, 
+                                                                                text:'Inserting apps and users'})).toString('base64')}});
+    
+        for (const app of apps){
+            await dbModelApp.post({app_id:parameters.app_id, data:{data_app_id:app.id}});
+            count_statements += 1;
+            //if db has DB[DB]_DBA_USER parameter means users can be created
+            if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`) &&
+                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))){
+                //create db users except for common app id and admin app id
+                const sql_and_pw = await sql_with_password(`app_portfolio_app${app.id}`, password_tag);
+                dbModelDatabase.dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[1]});
                 count_statements += 1;
-            }
-        }   
+                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
+                                                        parameter_value:    `app_portfolio_app${app.id}`}});
+                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
+                                                        parameter_value:    sql_and_pw[1]}});
+            }   
+        }
     }
+    
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
     fileModelLog.postServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
@@ -370,9 +317,10 @@ const dbInstallGetFiles = async (install_type) =>{
   * @returns {Promise.<server_server_response & {result?:server_db_database_install_uninstall_result }>} 
   */
  const dbUninstall = async parameters => {
-    /**@type{import('../../apps/common/src/common.js')} */
-    const {commonRegistryAppSecretDBReset} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
+    /**@type{import('./fileModelAppSecret.js')} */
+    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+
     /**@type{import('../db/file.js')} */
     const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.js`);
 
@@ -385,6 +333,12 @@ const dbInstallGetFiles = async (install_type) =>{
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
+    /**@type{import('../db/fileModelApp.js')} */
+    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    
+    /**@type{import('../db/dbModelDatabase.js')} */
+    const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
+    
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -400,61 +354,65 @@ const dbInstallGetFiles = async (install_type) =>{
     }
     else{
         let install_count=0;
-        const files = await dbInstallGetFiles('uninstall');
-        for (const file of  files){
-            socketAdminSend({   app_id:parameters.app_id, 
-                                idToken:parameters.idToken,
-                                data:{  app_id:null, 
-                                        client_id:socketClientGet(parameters.idToken),
-                                        broadcast_type:'PROGRESS',
-                                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:files.length, text:file[1]})).toString('base64')
+        socketAdminSend({   app_id:parameters.app_id, 
+                            idToken:parameters.idToken,
+                            data:{  app_id:null, 
+                                    client_id:socketClientGet(parameters.idToken),
+                                    broadcast_type:'PROGRESS',
+                                    broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:1, text:DB_INSTALL_PATH + DB_UNINSTALL})).toString('base64')
 
-                                }});
-            install_count++;
-            const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-            const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
-            for (const sql_row of uninstall_sql){
-                if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
-                    //add database name in dba pool
-                    await dbPoolClose(null, db_use, DBA);
-                    /**@type{server_db_db_pool_parameters} */
-                    const json_data = {
-                        use:                       db_use,
-                        pool_id:                   null,
-                        port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                        host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                        dba:                       DBA,
-                        user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                        password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                        database:                  null,
-                        //db 1 + 2 not used here
-                        charset:                   null,
-                        connectionLimit:           null,
-                        //db 3
-                        connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                        idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                        max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
-                        //db 4 not used here
-                        connectString:             null,
-                        poolMin:                   null,
-                        poolMax:                   null,
-                        poolIncrement:             null
-                    };
-                    await dbPoolStart(json_data);
-                }
-                if (file[2]==null)
-                    sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app_admin');
-                else
-                    sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
-                sql_row.sql = sql_row.sql.replaceAll('<APP_ID/>', file[2]?file[2]:'0');
-                await dbCommonExecute(parameters.app_id, sql_row.sql, {}, DBA)
-                .then(()=>{count_statements += 1;})
-                .catch(()=>{count_statements_fail += 1;});
-                
-            }      
+                            }});
+        install_count++;
+        const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_UNINSTALL}`, 'utf8');
+        const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
+        for (const sql_row of uninstall_sql){
+            if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
+                //add database name in dba pool
+                await dbPoolClose(null, db_use, DBA);
+                /**@type{server_db_db_pool_parameters} */
+                const json_data = {
+                    use:                       db_use,
+                    pool_id:                   null,
+                    port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                    host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                    dba:                       DBA,
+                    user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                    password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                    database:                  null,
+                    //db 1 + 2 not used here
+                    charset:                   null,
+                    connectionLimit:           null,
+                    //db 3
+                    connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                    idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                    max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                    //db 4 not used here
+                    connectString:             null,
+                    poolMin:                   null,
+                    poolMax:                   null,
+                    poolIncrement:             null
+                };
+                await dbPoolStart(json_data);
+            }
+            await dbCommonExecute(parameters.app_id, sql_row.sql, {}, DBA)
+            .then(()=>{count_statements += 1;})
+            .catch(()=>{count_statements_fail += 1;});
+            
+        }      
+        //if db has DB[DB]_DBA_USER parameter means users can be dropped
+        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
+            //drop db users except for common app id and admin app id
+            for (const app of fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result
+                                .filter((/**@type{server_db_file_app}*/app)=>
+                                        app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                                        app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
+                dbModelDatabase.dbUserDrop({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`});
+                fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_user`,
+                                                                                                parameter_value:''}});
+                fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_password`,
+                                                                                                parameter_value:''}});
+            }
         }
-        //remove db users and password
-        commonRegistryAppSecretDBReset(parameters.app_id);
     }
     fileModelLog.postServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     /**@ts-ignore */
@@ -1307,4 +1265,66 @@ const dbStart = async () => {
         }
     }
  };
-export{dbInfo, dbInfoSpace, dbInfoSpaceSum, dbInstall, dbInstalledCheck, dbUninstall, dbDemoInstall, dbDemoUninstall, dbStart};
+ /**
+  * @name dbUserCreate
+  * @description Creates app user in database with basic grant and default role if the database supports it
+  * @function
+  * @param {{   app_id:number,
+  *             username:string,
+  *             password:string}} parameters
+  * @returns {*}
+  */
+ const dbUserCreate = parameters =>{
+    //using template literals since bind variables not supported for DDL
+    const user_sql = [
+        {db: 1, sql: `CREATE USER ${parameters.username} IDENTIFIED BY ${parameters.password} ACCOUNT UNLOCK`},
+        {db: 1, sql: `GRANT app_portfolio_role_app_common TO ${parameters.username}`},
+        {db: 1, sql: `SET DEFAULT ROLE app_portfolio_role_app_common FOR ${parameters.username}`},
+        {db: 2, sql: `CREATE USER ${parameters.username} IDENTIFIED BY ${parameters.password} ACCOUNT UNLOCK`},
+        {db: 2, sql: `GRANT app_portfolio_role_app_common TO ${parameters.username}`},
+        {db: 2, sql: `SET DEFAULT ROLE ALL TO ${parameters.username}`},
+        {db: 3, sql: `CREATE USER ${parameters.username} PASSWORD ${parameters.password}`},
+        {db: 3, sql: `GRANT app_portfolio_role_app_common TO ${parameters.username}`},
+        {db: 4, sql: `CREATE USER ${parameters.username} IDENTIFIED BY ${parameters.password}`},
+        {db: 4, sql: `GRANT app_portfolio_role_app_common TO ${parameters.username}`},
+        {db: 4, sql: `GRANT UNLIMITED TABLESPACE TO ${parameters.username}`}
+    ];
+    if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
+        return null;
+    else
+        //return all result in an arrray
+        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+            /**@ts-ignore */
+            user_sql[serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))]
+            .map((/**@type{string}*/sql)=>
+                dbCommonExecute(parameters.app_id, 
+                    /**@ts-ignore */
+                    sql, 
+                    {},
+                    DBA))
+            );
+ };
+ /**
+  * @name dbUserDrop
+  * @description Drops user in database
+  * @function
+  * @param {{   app_id:number,
+  *             username:string}} parameters
+  * @returns {*}
+  */
+const dbUserDrop = parameters =>{
+    if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
+        return null;
+    else
+        //return all result in an arrray
+        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+                dbCommonExecute(parameters.app_id, 
+                    /**@ts-ignore */
+                    `DROP USER ${parameters.username}`, 
+                    {},
+                    DBA));
+ };
+ 
+export{dbInfo, dbInfoSpace, dbInfoSpaceSum, dbInstall, dbInstalledCheck, dbUninstall, dbDemoInstall, dbDemoUninstall, dbStart,
+    dbUserCreate, dbUserDrop
+};

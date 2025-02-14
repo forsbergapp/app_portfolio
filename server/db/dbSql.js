@@ -3,6 +3,18 @@
  * @module server/db/dbSql
  */
 
+const APP_SELECT =
+    `SELECT id "id"
+       FROM <DB_SCHEMA/>.app
+      WHERE id						= :id OR :id IS NULL`;
+const APP_INSERT =
+      `INSERT INTO  <DB_SCHEMA/>.app (id)
+       VALUES (:id)`;
+
+const APP_DELETE =
+      `DELETE FROM  <DB_SCHEMA/>.app (id)
+       WHERE id = :id`;
+  
 const APP_DATA_ENTITY_RESOURCE_SELECT =
     `SELECT ader.id 										"id",
             ader.json_data 									"json_data",
@@ -794,7 +806,10 @@ const USER_ACCOUNT_UPDATE =
 const USER_ACCOUNT_DELETE =
     `DELETE FROM <DB_SCHEMA/>.user_account
 	 WHERE id = :id `;
-export {/**APP_DATA_ENTITIY_RESOURCE */
+export {
+        /**APP */
+        APP_SELECT, APP_INSERT, APP_DELETE, 
+        /**APP_DATA_ENTITIY_RESOURCE */
         APP_DATA_ENTITY_RESOURCE_SELECT, 
         /**APP_DATA_ENTITIY */
         APP_DATA_ENTITY_SELECT,
