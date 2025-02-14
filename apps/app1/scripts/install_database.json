@@ -1,5 +1,0 @@
-{
-    "install":[
-        {"db": null, "script": "1.db_all_app.sql"}
-    ]
-}

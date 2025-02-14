@@ -1,9 +1,4 @@
--- COMMON
---
--- app
---
-INSERT INTO <DB_SCHEMA/>.app (id) VALUES (<APP_ID/>);
-
+-- APP 5
 --
 -- app data entity
 --

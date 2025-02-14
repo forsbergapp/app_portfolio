@@ -1182,41 +1182,9 @@ const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get({
                                                                app.common_name==parameters.name && 
                                                                app.common_role == parameters.role)[0];
 
-/**
- * @name commonRegistryAppSecretDBReset
- * @description App Registry APP SECRET reset db username and passwords for database in use
- * @function
- * @param {number}  app_id
- * @returns {Promise.<void>}
- */
-const commonRegistryAppSecretDBReset = async app_id => {
-    /**@type{import('../../../server/db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    /**@type{import('../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-
-    /**@type{server_db_file_app_secret[]}*/
-    const APP_SECRETS = fileModelAppSecret.get({app_id:app_id, resource_id:app_id}).result;
-    
-    const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
-    for (const app_secret of APP_SECRETS){
-        /**@ts-ignore */
-        if (app_secret[`service_db_db${db_use}_app_user`]){
-            fileModelAppSecret.update({app_id:app_id, resource_id:app_secret.app_id, data:{  parameter_name:`service_db_db${db_use}_app_user`,
-                                                                        parameter_value:''}});
-            
-        }
-        /**@ts-ignore */
-        if (app_secret[`service_db_db${db_use}_app_password`]){
-            fileModelAppSecret.update({app_id:app_id, resource_id:app_secret.app_id, data:{  parameter_name:`service_db_db${db_use}_app_password`,
-                                                                        parameter_value:''}});
-        }   
-    }
-};
 export {commonSearchMatch,
         commonMailCreate, commonMailSend,
         commonAppStart, commonAppHost, commonAssetfile,
         commonModuleAsset,commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonApp, commonBFE, commonAppsGet, 
-        commonRegistryAppModule,
-        commonRegistryAppSecretDBReset};
+        commonRegistryAppModule};
