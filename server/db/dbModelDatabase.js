@@ -5,12 +5,12 @@
  *          server_db_file_app_secret,
  *          server_db_sql_parameter_user_account_view_insertUserAccountView,
  *          server_db_sql_parameter_user_account_app_data_post_createUserPost, server_server_error, 
- *          server_db_sql_parameter_user_account, server_db_file_iam_user,server_db_database_demo_user,
+ *          server_db_file_iam_user,server_db_database_demo_user,
  *          server_db_database_uninstall_database_script,server_db_database_uninstall_database_app_script,
  *          server_db_database_install_uninstall_result, server_db_database_install_db_check,
- *          server_db_database_install_database_app_user_script, server_db_db_pool_parameters,
+ *          server_db_db_pool_parameters,
  *          server_db_database_install_database_app_script, server_db_database_install_database_script, 
- *          server_db_database_install_result, server_db_database_script_files, 
+ *          server_db_database_install_result, 
  *          server_db_sql_result_admin_DBInfoSpaceSum, server_db_sql_result_admin_DBInfoSpace, server_db_sql_result_admin_DBInfo} from '../types.js'
  */
 
@@ -29,6 +29,7 @@ const DB_DEMO_FILE              = 'demo.json';
 const DB_INSTALL_PATH           = '/server/install/db/';
 const DB_INSTALL                = 'install_database.json';
 const DB_UNINSTALL              = 'uninstall_database.json';
+const DB_INSTALL_DATA           = 'install_database_data.json';
 /**
  * @name dbInfo
  * @description Database info
@@ -81,6 +82,9 @@ const dbInfoSpaceSum = parameters =>
 /**
  * @name dbInstall
  * @description Install db and sends server side events of progress
+ *              1.Installs scripts with datamodel
+ *              2.Inserts apps and creates database user for each app and updates secrets in app_secret table
+ *              3.Installs scripts with data
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -153,18 +157,17 @@ const dbInfoSpaceSum = parameters =>
         row.db == db_use || row.db == null);
 
     const apps = fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result;
+    const install_data_json = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_INSTALL_DATA}`, 'utf8');
+    const install_data_obj = JSON.parse(install_data_json);
     
-    for (const install_row of install_obj.install){
-        install_count++;
-        socketAdminSend({   app_id:parameters.app_id,
-            idToken:parameters.idToken,
-            data:{app_id:null,
-                client_id:socketClientGet(parameters.idToken),
-                broadcast_type:'PROGRESS',
-                broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_obj.install.length + apps.length, text:DB_INSTALL_PATH + install_row.script})).toString('base64')}});
-
+    const install_total = install_obj.install.length + apps.length + install_data_obj;
+    /**
+     * @param {{app_id:number,
+     *          script:string}} parameters
+     */
+    const executeDatabase = async parameters =>{
         let install_sql;
-        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + install_row.script}`, 'utf8');
+        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + parameters.script}`, 'utf8');
 
         //remove comments
         //rows starting with '--' and ends width '\r\n' or '\n'
@@ -180,7 +183,7 @@ const dbInfoSpaceSum = parameters =>
                     const sql_and_pw = await sql_with_password('app_portfolio', sql);
                     sql = sql_and_pw[0];
                 }
-                sql = sql.replaceAll('<APP_ID/>', install_row.app_id);
+                sql = sql.replaceAll('<APP_ID/>', parameters.app_id?.toString());
                 sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
                     
                 //if ; must be in wrong place then set tag in import script and convert it
@@ -249,21 +252,36 @@ const dbInfoSpaceSum = parameters =>
                             change_DBA_pool = false;
                         }
                     }
-                await dbCommonExecute(parameters.app_id, sql, {}, DBA);
-                count_statements += 1;
+                const db_result = await dbCommonExecute(parameters.app_id, sql, {}, DBA);
+                if (db_result.result)
+                    count_statements += 1;
+                else
+                    throw  db_result;
             }
         }
+    };
+    for (const install_row of install_obj.install){
+        install_count++;
         socketAdminSend({   app_id:parameters.app_id,
-                            idToken:parameters.idToken,
-                            data:{app_id:null,
-                                client_id:socketClientGet(parameters.idToken),
-                                broadcast_type:'PROGRESS',
-                                broadcast_message:Buffer.from(JSON.stringify({  part:install_count, 
-                                                                                total:install_obj.install.length + apps.length, 
-                                                                                text:'Inserting apps and users'})).toString('base64')}});
-    
-        for (const app of apps){
-            await dbModelApp.post({app_id:parameters.app_id, data:{data_app_id:app.id}});
+            idToken:parameters.idToken,
+            data:{app_id:null,
+                client_id:socketClientGet(parameters.idToken),
+                broadcast_type:'PROGRESS',
+                broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total, text:DB_INSTALL_PATH + install_row.script})).toString('base64')}});
+        await executeDatabase({app_id:parameters.app_id, script:install_row.script});
+    }
+    socketAdminSend({   app_id:parameters.app_id,
+                        idToken:parameters.idToken,
+                        data:{app_id:null,
+                            client_id:socketClientGet(parameters.idToken),
+                            broadcast_type:'PROGRESS',
+                            broadcast_message:Buffer.from(JSON.stringify({  part:install_count, 
+                                                                            total:install_total, 
+                                                                            text:'Inserting apps and users'})).toString('base64')}});
+
+    for (const app of apps){
+        const result_app_create = await dbModelApp.post({app_id:parameters.app_id, data:{data_app_id:app.id}});
+        if (result_app_create.result){
             count_statements += 1;
             //if db has DB[DB]_DBA_USER parameter means users can be created
             if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`) &&
@@ -271,16 +289,31 @@ const dbInfoSpaceSum = parameters =>
                 app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))){
                 //create db users except for common app id and admin app id
                 const sql_and_pw = await sql_with_password(`app_portfolio_app${app.id}`, password_tag);
-                dbModelDatabase.dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[1]});
-                count_statements += 1;
-                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
-                                                        parameter_value:    `app_portfolio_app${app.id}`}});
-                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
-                                                        parameter_value:    sql_and_pw[1]}});
+                const result_user_create = await dbModelDatabase.dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[0]});
+                if (result_user_create.result?.filter((/**@type{server_server_response}*/row)=>row.result).length==result_user_create.result?.length){
+                    count_statements += 1;
+                    await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
+                                                            parameter_value:    `app_portfolio_app${app.id}`}});
+                    await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
+                                                            parameter_value:    sql_and_pw[1]}});
+                }
+                else
+                    throw result_user_create;
             }   
         }
+        else
+            throw result_app_create;
     }
-    
+    for (const install_row of install_data_obj.install){
+        install_count++;
+        socketAdminSend({   app_id:parameters.app_id,
+            idToken:parameters.idToken,
+            data:{app_id:null,
+                client_id:socketClientGet(parameters.idToken),
+                broadcast_type:'PROGRESS',
+                broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total, text:DB_INSTALL_PATH + install_row.script})).toString('base64')}});
+        await executeDatabase({app_id:parameters.app_id, script:install_row.script});
+    }
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
     fileModelLog.postServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
@@ -1250,8 +1283,10 @@ const dbStart = async () => {
                 await DB_POOL(db_use, dba, user, password, null);
                 }
                 dba = 0;
-                for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result){
-                    const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_file_app_secret}*/app)=> app.app_id == common_app_id)[0];
+                for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_file_app}*/app)=>
+                    app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                    app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
+                    const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_file_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
                     /**@ts-ignore */
                     if (app_secret[`service_db_db${db_use}_app_user`])
                         await DB_POOL(  db_use, 
@@ -1272,9 +1307,11 @@ const dbStart = async () => {
   * @param {{   app_id:number,
   *             username:string,
   *             password:string}} parameters
-  * @returns {*}
+  * @returns {Promise.<server_server_response & {result:server_server_response[]}>}
   */
- const dbUserCreate = parameters =>{
+ const dbUserCreate = async parameters =>{
+    /**@type{import('./common.js')} */
+    const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
     //using template literals since bind variables not supported for DDL
     const user_sql = [
         {db: 1, sql: `CREATE USER ${parameters.username} IDENTIFIED BY ${parameters.password} ACCOUNT UNLOCK`},
@@ -1290,19 +1327,20 @@ const dbStart = async () => {
         {db: 4, sql: `GRANT UNLIMITED TABLESPACE TO ${parameters.username}`}
     ];
     if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
-        return null;
+        return {result:[],type:'JSON'};
     else
         //return all result in an arrray
-        return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-            /**@ts-ignore */
-            user_sql[serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))]
-            .map((/**@type{string}*/sql)=>
-                dbCommonExecute(parameters.app_id, 
-                    /**@ts-ignore */
-                    sql, 
-                    {},
-                    DBA))
-            );
+        return {result : /**@ts-ignore */
+                        await Promise.all(user_sql.filter(row=>row.db == [serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))])
+                        .map(row=>
+                            dbCommonExecute(parameters.app_id, 
+                                /**@ts-ignore */
+                                row.sql, 
+                                {},
+                                DBA)))
+                        ,
+                type:'JSON'};
+
  };
  /**
   * @name dbUserDrop
