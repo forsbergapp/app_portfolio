@@ -178,7 +178,10 @@ const commonAppStart = async (app_id=null) =>{
         const NO_MAINTENANCE = fileModelConfig.get('CONFIG_SERVER','METADATA','MAINTENANCE')==0;
         const DB_START = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
         const APP_START = fileModelAppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_start.value=='1';
-        const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).result[0][`service_db_db${db_use}_app_user`];
+        const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).
+                                            result?.filter((/**@type{server_db_file_app_secret}*/row)=> `service_db_db${db_use}_app_user` in row).length == 
+                                                //compare count of db with db credentials with app counts minuts common app id and admin app id that does not save db credentials
+                                                fileModelApp.get({app_id:app_id, resource_id:null}).result.length - 2;
         const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>result.result[0].installed).catch(()=>false);
         if (NO_MAINTENANCE && DB_START && APP_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
             if (app_id == null)

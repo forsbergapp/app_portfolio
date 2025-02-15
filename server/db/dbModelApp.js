@@ -32,7 +32,7 @@ const get = async parameters =>
 
 /**
  * @name post
- * @description Create record
+ * @description Create record, only allowed as admin
  * @function
  * @param {{app_id:Number,
  *          data:{data_app_id:number}}} parameters
@@ -45,10 +45,10 @@ const post = async parameters =>
                         {
                             id: parameters.data.data_app_id
                         }, 
-                        null));
+                        1));
 /**
  * @name deleteRecord
- * @description Delete record
+ * @description Delete record, ony allowed as admin
  * @function
   * @param {{app_id:number,
  *          resource_id:number|null}} parameters
@@ -61,6 +61,6 @@ const deleteRecord = parameters =>
                         {
                             id: serverUtilNumberValue(parameters.resource_id)
                         },
-                        null));
+                        1));
 
 export {get, post,deleteRecord};
