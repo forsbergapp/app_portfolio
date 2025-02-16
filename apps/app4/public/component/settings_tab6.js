@@ -176,9 +176,10 @@ const template = () =>`   <div class='setting_horizontal_row'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:CommonModuleCommon['commonFFB']
+ *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64']
  *                       }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
@@ -191,7 +192,7 @@ const component = async props => {
     const settings = await props.methods.commonFFB({path:'/server-db/app_setting/',
                                                     query:`IAM_data_app_id=${props.data.app_id}`,
                                                     method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
         //Method
         await props.methods.commonComponentRender({ 

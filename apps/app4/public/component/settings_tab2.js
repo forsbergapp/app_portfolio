@@ -63,14 +63,15 @@ const template = () => `<div id='mapid'></div>
  *                      user_timezone:string
  *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                      lib_timetable_APP_REPORT_GLOBAL:APP_REPORT_GLOBAL, 
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      REPORT_GLOBAL:APP_REPORT_GLOBAL,
  *                      getTimezone:CommonModuleRegional['getTimezone'],
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'], 
  *                      commonFFB:CommonModuleCommon['commonFFB'],
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'], 
  *                      commonMiscTimezoneDate:CommonModuleCommon['commonMiscTimezoneDate'],
  *                      commonModuleLeafletInit:CommonModuleCommon['commonModuleLeafletInit'],
- *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender']}}} props
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64']}}} props
  * @param {{COMMON_DOCUMENT:COMMON_DOCUMENT,
  *          commonMountdiv:string,
  *          app_id:number,
@@ -87,7 +88,7 @@ const component = async props => {
     const settings = await props.methods.commonFFB({path:'/server-db/app_setting/',
                                                     query:`IAM_data_app_id=${props.data.app_id}&name=PLACE`,
                                                     method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
 
     const empty_place = {value:JSON.stringify({id:null, latitude:'0', longitude:'0', timezone:''}), text:'...'};
 
@@ -126,7 +127,7 @@ const component = async props => {
                 //Update GPS position
                 props.methods.appComponentSettingUpdate('GPS', 'POSITION');
                 const timezone = props.methods.getTimezone(   event.latlng.lat, event.latlng.lng);
-                props.methods.REPORT_GLOBAL.session_currentDate = props.methods.commonMiscTimezoneDate(timezone);
+                props.methods.lib_timetable_APP_REPORT_GLOBAL.session_currentDate = props.methods.commonMiscTimezoneDate(timezone);
             }   
         };
         await props.methods.commonModuleLeafletInit({

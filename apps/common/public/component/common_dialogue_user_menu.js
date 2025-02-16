@@ -86,6 +86,7 @@ const template = props =>`  ${props.app_id == props.admin_app_id?
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
  *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonUserSessionCountdown:CommonModuleCommon['commonUserSessionCountdown'],
@@ -107,7 +108,7 @@ const component = async props => {
                                                                                     query:`IAM_data_app_id=${props.data.common_app_id}`, 
                                                                                     method:'GET', 
                                                                                     authorization_type:'APP_ID'})
-                                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                                .then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
 
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
@@ -116,7 +117,7 @@ const component = async props => {
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}
                                                 })
-                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                .then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{                                                               
         
         //mount select
