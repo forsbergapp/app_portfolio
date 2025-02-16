@@ -346,36 +346,6 @@ const APP_DATA_STAT_SELECT_LOG =
         AND <DATE_PERIOD_DAY/> = :day
         ORDER BY <SORT/> <ORDER_BY/>
         <APP_PAGINATION_LIMIT_OFFSET/>`;
-const APP_DATA_STAT_SELECT_UNIQUE_VISITORS = 
-    `SELECT t.chart "chart",
-            t.app_id 		"app_id",
-            :year_log 	"year",
-            :month_log 	"month",
-            t.day_log 	"day",
-            json_data 	"json_data"
-       FROM (SELECT 1								chart,
-                    app_id,
-                    NULL 							day_log,
-                    json_data
-                FROM <DB_SCHEMA/>.app_data_stat
-            WHERE <DATE_PERIOD_YEAR/> =                             :year_log
-                AND <DATE_PERIOD_MONTH/> =                            :month_log
-                AND app_data_entity_resource_id =                     :app_data_entity_resource_id
-                AND app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id
-                AND app_data_entity_resource_app_data_entity_id =     :app_data_entity_resource_app_data_entity_id
-            UNION ALL
-            SELECT 2								chart,
-                    NULL 							app_id,
-                    <DATE_PERIOD_DAY/> 			    day_log,
-                    json_data
-                FROM <DB_SCHEMA/>.app_data_stat
-            WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
-                AND <DATE_PERIOD_YEAR/> =                             :year_log
-                AND <DATE_PERIOD_MONTH/> =                            :month_log
-                AND app_data_entity_resource_id =                     :app_data_entity_resource_id
-                AND app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id
-                AND app_data_entity_resource_app_data_entity_id =     :app_data_entity_resource_app_data_entity_id) t
-    ORDER BY 1, 2`;
 const APP_DATA_STAT_INSERT = 
     `INSERT INTO <DB_SCHEMA/>.app_data_stat (   json_data, 
                                                 date_created,
@@ -820,7 +790,7 @@ export {
         /**APP_DATA_RESOURCE_MASTER */
         APP_DATA_RESOURCE_MASTER_SELECT,APP_DATA_RESOURCE_MASTER_INSERT, APP_DATA_RESOURCE_MASTER_UPDATE, APP_DATA_RESOURCE_MASTER_DELETE,
         /**APP_DATA_STAT */
-        APP_DATA_STAT_SELECT, APP_DATA_STAT_SELECT_LOG, APP_DATA_STAT_SELECT_UNIQUE_VISITORS,APP_DATA_STAT_INSERT,
+        APP_DATA_STAT_SELECT, APP_DATA_STAT_SELECT_LOG, APP_DATA_STAT_INSERT,
         /**USER_ACCOUNT_APP_DATA_POST_LIKE */
         USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT,USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE,
         /**USER_ACCOUNT_APP_DATA_POST_VIEW */
