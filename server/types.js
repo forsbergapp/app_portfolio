@@ -973,7 +973,7 @@
  * @property {number|null}  pool_id
  * @property {number|null}  port
  * @property {string|null}  host
- * @property {number|null}  dba
+ * @property {boolean}  dba
  * @property {string|null}  user
  * @property {string|null}  password
  * @property {string|null}  database
@@ -1622,6 +1622,7 @@
  * @description DB SQL USER ACCOUNT APP DATA POST VIEW server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  * @typedef {{  client_ip:string|null,
  *              client_user_agent:string|null
+ *              data_app_id:number,
  *              user_account_id:number|null,
  *              user_account_app_data_post_id:number|null}} server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView
  */

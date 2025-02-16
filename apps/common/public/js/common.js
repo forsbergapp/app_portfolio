@@ -1620,7 +1620,9 @@ const commonUserLogin = async () => {
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_in').style.display = 'inline-block';
             COMMON_DOCUMENT.querySelector('#common_iam_avatar_logged_out').style.display = 'none';
     
-            const result = await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
+            const result = await commonFFB({path:`/server-db/user_account_app/${COMMON_GLOBAL.user_account_id ?? ''}`, 
+                                            query:`IAM_data_app_id=${COMMON_GLOBAL.app_id}`,
+                                            method:'GET', authorization_type:'APP_ACCESS', spinner_id:spinner_item});
             const user_account_app = JSON.parse(result)[0];
     
             //locale
@@ -1930,7 +1932,8 @@ const commonUserAccountAppDelete = (choice=null, user_account_id, app_id, functi
         }
         case 1:{
             commonComponentRemove('common_dialogue_message');
-            commonFFB({path:`/server-db/user_account_app/${user_account_id}`, body:{delete_app_id:app_id}, method:'DELETE', authorization_type:'APP_ACCESS'})
+            commonFFB({path:`/server-db/user_account_app/${user_account_id}`, 
+                        body:{IAM_data_app_id:app_id}, method:'DELETE', authorization_type:'APP_ACCESS'})
             .then(()=>{
                 //execute event and refresh app list
                 COMMON_DOCUMENT.querySelector('#common_profile_info_main_btn_cloud').click();
@@ -2042,6 +2045,7 @@ const commonUserUpdatePassword = () => {
 const commonUserPreferenceSave = async () => {
     if (COMMON_GLOBAL.user_account_id != null){
         const body = {
+                        IAM_data_app_id: COMMON_GLOBAL.app_id,
                         json_data: 
                         {  
                             preference_locale:       COMMON_DOCUMENT.querySelector('#common_dialogue_user_menu_user_locale_select .common_select_dropdown_value')

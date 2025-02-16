@@ -72,7 +72,7 @@ const dbPoolDeleteAll = (db)=>{
  *                pool_id:                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
  *                port:                    port,
  *                host:                    host,
- *                dba:                     1/0,
+ *                dba:                     true/false,
  *                user:                    username,
  *                password:                password,
  *                database:                database,
@@ -114,7 +114,7 @@ const dbPoolStart = async (dbparameters) =>{
                               });
             DB_POOL.map(db=>
                {if (db[0]==dbparameters.use)
-                  if (dbparameters.dba==1)
+                  if (dbparameters.dba)
                      db[1]= mysql_pool;
                   else
                      if (db[2])
@@ -140,7 +140,7 @@ const dbPoolStart = async (dbparameters) =>{
                   }));
                });
             };
-            if (dbparameters.dba==1)
+            if (dbparameters.dba)
                createpoolPostgreSQL()
                .then(pool=>{
                   DB_POOL.map(db=>{ if (db[0]==dbparameters.use)
@@ -182,7 +182,7 @@ const dbPoolStart = async (dbparameters) =>{
                      resolve(null);
                });
             };
-            if (dbparameters.dba==1){
+            if (dbparameters.dba){
                const pool_id_dba = 'DBA';
                DB_POOL.map(db=>{ if (db[0]==dbparameters.use) 
                                     db[1]={pool_id_dba};
@@ -226,12 +226,12 @@ const dbPoolStart = async (dbparameters) =>{
  * @function
  * @param {number|null} pool_id 
  * @param {number|null} db_use 
- * @param {number} dba 
+ * @param {boolean} dba 
  * @returns {Promise.<void>}
  */
 const dbPoolClose = async (pool_id, db_use, dba) =>{
 
-      if (dba==1)
+      if (dba)
          DB_POOL.map(db=>{
                            if (db[0]==db_use)
                               db[1] = null;
@@ -259,7 +259,7 @@ const dbPoolClose = async (pool_id, db_use, dba) =>{
  * @function
  * @param {number|null} pool_id 
  * @param {number} db_use 
- * @param {number|null} dba 
+ * @param {boolean} dba 
  * @returns {object|string|null}
  */
 const dbPoolGet = (pool_id, db_use, dba) => {
@@ -269,7 +269,7 @@ const dbPoolGet = (pool_id, db_use, dba) => {
          return DB_POOL.filter(db=>db[0]==db_use)[0][1];
       else
          if (pool_id!=null)
-            if (dba==1)
+            if (dba)
                if (db_use==4){
                   /**@ts-ignore */
                   return DB_POOL.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
@@ -343,6 +343,34 @@ const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
          if (!params) 
             return {sql:parameterizedSql, 
                      parameters:params};
+         /**@type{*[]} */
+         const values = [];
+         /**
+          * @description Check if escape function should be used, null and JSON string do not work
+          *              JSON strings are saved only in json_data columns
+          * @param{string} key
+          * @param {*} value
+          */
+         const shouldEscape = (key, value) => {
+            if (value==null)
+               return false;
+            else
+               if (key.toLowerCase()=='json_data')
+                     return false;
+               else
+                  return true;
+        };
+         const preparedSql = parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
+               if (key in params) {
+                  //JSON strings and null are not escaped
+                  values.push(shouldEscape(key, params[key])?connection?.escape(params[key]):null);
+                  return '?';
+               } else
+                  return txt;
+         });
+      
+         return { sql:preparedSql, parameters:values };
+         /*
          return { sql:parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
                         if (key in params)
                            return connection?.escape(params[key]);
@@ -350,6 +378,8 @@ const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
                            return txt;
                      }), 
                   parameters:params};
+         */
+
       }
       case 4:{
          //Oracle 
@@ -525,7 +555,7 @@ const dbSQLResultConvert = (db, result, fields=[{type:0, name:''}]) =>{
  *                               - 5 SQLite
  * @param {string} sql
  * @param {*} parameters      - can have an extra DB_RETURN_ID and DB_CLOB key
- * @param {number|null} dba 
+ * @param {boolean} dba 
  * @returns {Promise.<*>}
  */
 const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
@@ -539,8 +569,9 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                   if (err)
                      return reject (err);
                   else{
-                     conn.config.queryFormat = dbSQLParamConvert(db_use, conn, sql, parameters).sql; 
-                     conn.query(sql, parameters, (/**@type{server_server_error}*/err, /**@type{[server_db_db_pool_connection_1_2_result]}*/result, /**@type{server_db_db_pool_connection_3_fields}*/fields) => {
+                     //conn.config.queryFormat = dbSQLParamConvert(db_use, conn, sql, parameters).sql; 
+                     const parsed_result = dbSQLParamConvert(db_use, conn, sql, parameters); 
+                     conn.query(parsed_result.sql, parsed_result.parameters, (/**@type{server_server_error}*/err, /**@type{[server_db_db_pool_connection_1_2_result]}*/result, /**@type{server_db_db_pool_connection_3_fields}*/fields) => {
                         if (err)
                            return reject (err);
                         else{
