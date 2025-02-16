@@ -36,27 +36,6 @@ const dbCommonRecordError = (app_id, statusCode, error=null) =>{
 };
 
 /**
- * @name dbCommonRowsLimit
- * @description	Sets pagination using limit and offset or limit records on SQL rows
- * @function
- * @param {number|null} db_use
- * @param {boolean} pagination
- * @returns {string}
- */
-const dbCommonRowsLimit = (db_use, pagination = true) => {
-	if (db_use == 4)
-		if (pagination)
-			return ' 	OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
-		else
-			return '	FETCH NEXT :limit ROWS ONLY';
-	else
-		if (pagination)
-			return ' 	LIMIT :limit OFFSET :offset';
-		else
-			return 	' 	LIMIT :limit ';			
-};
-
-/**
  * @name dbCommonDatePeriod
  * @description	Get SQL date string using EXTRACT or STRFTIME depending database
  * 				examples in WHERE clause:
@@ -83,12 +62,8 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
  * 				Updates SQL before execution:
  * 				sets DB schema
  * 				sets date period syntax depending database used
- * 				sets locale search string
- * 				sets pagination info
- * 				sets limit record
  * 				Modifies SQL result:
  * 				parses json_data column so json_data columns are returned also if any
- * 				returns pagination in ISO20022 format if used
  * @function
  * @param {number|null} app_id 
  * @param {string} sql 
@@ -100,13 +75,11 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 	const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
 	/**@type{import('./fileModelLog.js')} */
 	const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-	/**@type{import('./fileModelAppParameter.js')} */
-	const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
 	/**@type{import('./fileModelConfig.js')} */
 	const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 	const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
-	const COMMON_APP_ID = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
+
 	return new Promise ((resolve)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
@@ -117,24 +90,6 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod(DB_USE, 'MONTH'));
 		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod(DB_USE, 'DAY'));
 		
-		//manage pagination
-		let pagination = false;
-		if (sql.indexOf('<APP_PAGINATION_LIMIT_OFFSET/>')>0){
-			//parameters must contain limit and offset keys
-			pagination = true;
-			sql = sql.replaceAll('<APP_PAGINATION_LIMIT_OFFSET/>', 	dbCommonRowsLimit(DB_USE, true));
-			if (!parameters.limit)
-				parameters.limit = 	serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? COMMON_APP_ID,
-																						resource_id:COMMON_APP_ID}).result[0].common_app_limit_records.value);
-		}
-		//manage limit records
-		if (sql.indexOf('<APP_LIMIT_RECORDS/>')>0){
-			//parameters should not contain any limit or offset keys
-			sql = sql.replaceAll('<APP_LIMIT_RECORDS/>', 		dbCommonRowsLimit(DB_USE, false));
-			parameters = {...parameters, ...{limit:serverUtilNumberValue(fileModelAppParameter.get( {	app_id:app_id ?? COMMON_APP_ID,
-																										resource_id:COMMON_APP_ID}).result[0].common_app_limit_records.value)}};
-		}
-
 		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
 		.then((/**@type{server_db_common_result}*/result)=> {
 			fileModelLog.postDBI(app_id, DB_USE, sql, parameters, result)
@@ -145,20 +100,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 					const rows = sql.trimStart().toUpperCase().startsWith('SELECT')?result.map(row=>{
 						return {...row, ...row.json_data?JSON.parse(row.json_data.replaceAll(process.platform == 'win32'?'\r\n':'\n','')):null};
 						}) ?? []:null;	
-					if (pagination){
-						//return pagination ISO20022 format
-						//use pagination OR multiple resource 
-						/**@ts-ignore */
-						result.page_header = {	total_count:	result.length>0?result[0].total_rows:0,
-												offset: 		parameters.offset?parameters.offset:0,
-												count:			Math.min(	parameters.limit, 
-																			/**@ts-ignore */
-																			result.length)};
-						/**@ts-ignore */
-						resolve({result:{page_header:result.page_header, rows:rows}, type:'JSON'});
-					}
-					else
-						resolve({result:rows ?? result, type:'JSON'});
+					resolve({result:rows ?? result, type:'JSON'});
 				} catch (error) {
 					return resolve(dbCommonRecordError(app_id, 500, error));
 				}

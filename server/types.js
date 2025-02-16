@@ -1420,17 +1420,6 @@
  *              total_rows:number}} server_db_sql_result_app_data_stat_logGet
  */
 
-/**
- * @description DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_getStatUniqueVisitor
- * @typedef {{  chart:number, 
- *              app_id:number, 
- *              year:number, 
- *              month:number, 
- *              day:number, 
- *              json_data:string}} server_db_sql_result_app_data_stat_getStatUniqueVisitor
- */
-
-
 /** 
  * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_get
  * @typedef {{  id:number,

@@ -2,15 +2,19 @@
 
 /**
  * @import {server_server_response,
- *          server_db_common_result_insert, server_db_sql_result_app_data_stat_getStatUniqueVisitor, 
+ *          server_db_common_result_insert,
  *          server_db_sql_result_app_data_stat_logGet, server_db_sql_result_app_data_stat_get} from '../types.js'
  */
 
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 
+/**@type{import('./fileModelConfig.js')} */
+const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+
 
 /**
  * @name get
@@ -18,7 +22,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  id?:number|null,
+ *          data:{  id?:number|null, 
  *                  data_app_id?:number|null,
  *                  resource_name_entity?:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_stat_get[] }>}
@@ -60,7 +64,6 @@ const get = async parameters =>{
  *                  month?:string|null,
  *                  day?:string|null,
  *                  offset?:string|null,
- *                  limit?:string|null,
  *                  app_data_entity_resource_id?:number|null,
  *                  app_data_entity_resource_app_data_entity_app_id?:number|null,
  *                  app_data_entity_resource_app_data_entity_id?:number|null}}} parameters
@@ -77,7 +80,6 @@ const getLog = parameters =>
                             month:serverUtilNumberValue(parameters.data.month),
                             day:serverUtilNumberValue(parameters.data.day),
                             offset:serverUtilNumberValue(parameters.data.offset),
-                            limit:serverUtilNumberValue(parameters.data.limit),
                             app_data_entity_resource_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_id),
                             app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_app_id),
                             app_data_entity_resource_app_data_entity_id :  serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_id)}))
@@ -118,7 +120,7 @@ const getLog = parameters =>
  */
 const post = async (app_id, data) =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
-        dbCommonExecute(app_id, 
+        dbCommonExecute(serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID')), 
                         dbSql.APP_DATA_STAT_INSERT, 
                         {json_data:                                             JSON.stringify(data.json_data),
                             app_id:                                             data.app_id ?? null,

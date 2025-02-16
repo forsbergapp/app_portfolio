@@ -261,7 +261,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                       page:number|null,
  *                       page_last:number|null,
  *                       iam_user_id:number,
- *                       LIMIT:number,
  *                       SERVICE_LOG_FILE_INTERVAL:string,
  *                       SERVICE_LOG_DATA:{parameters:{  SCOPE_REQUEST:string,
  *                                                       SCOPE_SERVER:string, 
@@ -327,12 +326,12 @@ const component = async props => {
             case 'CONNECTED':{
                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${props.data.LIMIT}`;
+                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}`;
             }
             case 'APP_DATA_STAT':{
                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                 //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${props.data.LIMIT}` +
+                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}` +
                         'app_data_entity_resource_id=&app_data_entity_resource_app_data_entity_app_id=&app_data_entity_resource_app_data_entity_id=';
             }
             case 'SERVER_LOG':{
@@ -356,7 +355,7 @@ const component = async props => {
                     url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
                 else
                     url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-                return `${url_parameters}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${props.data.LIMIT}`;
+                return `${url_parameters}&sort=${sort}&order_by=${order_by}&offset=${offset}`;
                 
             }
             default:{
@@ -367,7 +366,7 @@ const component = async props => {
     //use page navigation values or 1 if component with new query
     let page =      props.data.page?props.data.page:1;
     let page_last=  props.data.page_last?props.data.page_last:1;
-
+    let page_limit= 0;
     let path = '';
     
     switch (props.data.monitor_detail){
@@ -381,9 +380,13 @@ const component = async props => {
         }
     }
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({path:path, query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({ path:path, 
+                                                                                            query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), 
+                                                                                            method:'GET', 
+                                                                                            authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
     if (props.data.monitor_detail=='APP_DATA_STAT'||props.data.monitor_detail=='CONNECTED'){
-        page_last = logs.rows.length>0?(Math.ceil(logs.page_header.total_count/props.data.LIMIT)):0;
+        page_last = logs.rows.length>0?(Math.ceil(logs.page_header.total_count/logs.page_header.count)):0;
+        page_limit = logs.page_header.count;
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_total_count').textContent = logs.page_header.total_count;
@@ -461,11 +464,11 @@ const component = async props => {
             }
         }
         if (props.data.monitor_detail=='CONNECTED')
-            props.methods.monitorShow('CONNECTED',  (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+            props.methods.monitorShow('CONNECTED',  (page==1?0:page-1) * page_limit, sort, order_by, page, page_last);
         if (props.data.monitor_detail=='APP_DATA_STAT')
-            props.methods.monitorShow('APP_DATA_STAT',    (page==1?0:page-1) * props.data.LIMIT, sort, order_by, page, page_last);
+            props.methods.monitorShow('APP_DATA_STAT',    (page==1?0:page-1) * page_limit, sort, order_by, page, page_last);
         if (props.data.monitor_detail=='SERVER_LOG')
-            monitorDetailShowServerLog(             (page==1?0:page-1) * props.data.LIMIT,props.data.sort, props.data.order_by);
+            monitorDetailShowServerLog(             (page==1?0:page-1) * page_limit,props.data.sort, props.data.order_by);
 
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
@@ -602,14 +605,14 @@ const component = async props => {
                                 query:`${get_query('SERVER_LOG', offset, sort, order_by)}&search=${search ?? ''}`,
                                 token_type: 'ADMIN',
                                 sort:sort,
-                                order_by:order_by,
-                                LIMIT:props.data.LIMIT
+                                order_by:order_by
                     },
                     methods:{   commonMiscRoundOff:props.methods.commonMiscRoundOff,
                                 commonFFB:props.methods.commonFFB},
                     path:'/component/menu_monitor_detail_server_log.js'})
                     .then(result=>{
                         page_last=result.data.page_last;
+                        page_limit = result.data.count;
                         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
                         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_last').textContent = page_last;
                         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page_total_count').textContent = result.data.total_count;
