@@ -326,14 +326,13 @@ const template = props => ` ${  /*
  *                       query:string,
  *                       token_type:CommonRESTAPIAuthorizationType,
  *                       sort:string,
- *                       order_by:string,
- *                       LIMIT:number},
+ *                       order_by:string},
  *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                       commonFFB:CommonModuleCommon['commonFFB']},
  *           lifeycle:   null}} props 
  * @returns {Promise.<{ lifecycle:   CommonComponentLifecycle, 
- *                      data:        {page_last:number, total_count:number},
+ *                      data:        {page_last:number, count:Number, total_count:number},
  *                      methods:     null,
  *                      template:    string}>}
  */
@@ -347,8 +346,9 @@ const component = async props => {
 
     return {
         lifecycle:  null,
-        data:       {page_last :logs.rows.length>0?(Math.ceil(logs.page_header.total_count/props.data.LIMIT)):0,
-                     total_count: logs.page_header.total_count
+        data:       {page_last :    logs.rows.length>0?(Math.ceil(logs.page_header.total_count/logs.page_header.count)):0,
+                     count:         logs.page_header.count,
+                     total_count:   logs.page_header.total_count
         },
         methods:    null,
         template:   template({  function_get_order_by:get_order_by,

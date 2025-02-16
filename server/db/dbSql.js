@@ -344,8 +344,7 @@ const APP_DATA_STAT_SELECT_LOG =
         AND <DATE_PERIOD_YEAR/> = :year
         AND <DATE_PERIOD_MONTH/> = :month
         AND <DATE_PERIOD_DAY/> = :day
-        ORDER BY <SORT/> <ORDER_BY/>
-        <APP_PAGINATION_LIMIT_OFFSET/>`;
+        ORDER BY <SORT/> <ORDER_BY/>`;
 const APP_DATA_STAT_INSERT = 
     `INSERT INTO <DB_SCHEMA/>.app_data_stat (   json_data, 
                                                 date_created,
@@ -479,8 +478,7 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL =
                                     AND us.id = u_like.user_account_app_data_post_id
                                     AND u_like.user_account_app_app_id = us.user_account_app_app_id)
                 AND  7 = :detailchoice) t
-            ORDER BY 1
-            <APP_LIMIT_RECORDS/>`;
+            ORDER BY 1`;
 const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_LIKE =
     ` SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
                 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
@@ -535,8 +533,7 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST =
                             AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
                 FROM  <DB_SCHEMA/>.user_account u
                 WHERE  5 = :statchoice) t
-        ORDER BY 1,6 DESC
-        <APP_LIMIT_RECORDS/>`;
+        ORDER BY 1,6 DESC`;
 const USER_ACCOUNT_APP_DATA_POST_UPDATE = 
     `UPDATE <DB_SCHEMA/>.user_account_app_data_post
         SET description = :description,
@@ -720,8 +717,7 @@ const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
             WHERE u_liked.user_account_id_like = :user_account_id
             AND u.id = u_liked.user_account_id
             AND 4 = :detailchoice) t
-        ORDER BY 1
-        <APP_LIMIT_RECORDS/>`;
+        ORDER BY 1`;
 const USER_ACCOUNT_SELECT_PROFILE_STAT = 
     `SELECT	top "top", 
             id "id", 
@@ -766,8 +762,7 @@ const USER_ACCOUNT_SELECT_PROFILE_STAT =
                       FROM <DB_SCHEMA/>.user_account_app uap
                      WHERE uap.user_account_id = t.id
                        AND uap.app_id = :app_id)
-      ORDER BY 1,6 DESC
-      <APP_LIMIT_RECORDS/>`;
+      ORDER BY 1,6 DESC`;
 const USER_ACCOUNT_UPDATE =
     `UPDATE <DB_SCHEMA/>.user_account
         SET iam_user_id = :iam_user_id,

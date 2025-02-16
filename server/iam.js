@@ -1748,11 +1748,8 @@ const iamUserGet = async parameters =>{
 *          data:{  sort?:string|null,
 *                  order_by?:string|null,
 *                  search?:string|null,
-*                  offset?:string|null,
-*                  limit?:string|null}}} parameters
-* @returns {Promise.<server_server_response & {result?:{page_header :{total_count:number, offset:number, count:number},
-*                                                        rows:server_db_file_iam_user[]
-*                                                       }}>}
+*                  offset?:string|null}}} parameters
+* @returns {Promise.<server_server_response & {result?:server_db_file_iam_user[]}>}
 */
 const iamUserGetAdmin = async parameters => {
     /**@type{import('./db/fileModelIamUser.js')} */
@@ -1760,7 +1757,8 @@ const iamUserGetAdmin = async parameters => {
     /**@type{import('../apps/common/src/common.js')} */
     const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
     const order_by_num = parameters.data.order_by =='asc'?1:-1;
-    const users = fileModelIamUser.get(parameters.app_id, null).result
+    return {
+            result:fileModelIamUser.get(parameters.app_id, null).result
                     .filter((/**@type{server_db_file_iam_user}*/row)=>
                                 parameters.data.search=='*'?row:
                                 (commonSearchMatch(row.username??'', parameters.data?.search??'') ||
@@ -1799,27 +1797,8 @@ const iamUserGetAdmin = async parameters => {
                             else
                                 return 0;
                         }
-                    });
-        //return with page navigation info            
-        return {result:{ page_header:  {
-                                            total_count:	users.length,
-                                            offset: 		serverUtilNumberValue(parameters.data.offset)??0,
-                                            count:			users
-                                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(serverUtilNumberValue(parameters.data?.offset)??0)>0?
-                                                                                                                        (index+1)>=(serverUtilNumberValue(parameters.data?.offset)??0):
-                                                                                                                            true)
-                                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(serverUtilNumberValue(parameters.data.limit)??0)>0?
-                                                                                                                        (index+1)<=(serverUtilNumberValue(parameters.data?.limit)??0)
-                                                                                                                            :true).length
-                                            },
-                            rows:           users
-                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(serverUtilNumberValue(parameters.data?.offset)??0)>0?
-                                                                                                        (index+1)>=(serverUtilNumberValue(parameters.data?.offset)??0):
-                                                                                                            true)
-                                                .filter((/**@type{*}*/row, /**@type{number}*/index)=>(serverUtilNumberValue(parameters.data.limit)??0)>0?
-                                                                                                        (index+1)<=(serverUtilNumberValue(parameters.data?.limit)??0)
-                                                                                                            :true)},
-                type:'JSON'};
+                    }),
+        type:'JSON'};
 };
 /**
  * @name iamUserGetLastLogin
