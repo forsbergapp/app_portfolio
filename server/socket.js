@@ -248,7 +248,6 @@ const socketClientAdd = (newClient) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
- *                  limit?:string|null,
  *                  offset?:string|null,
  *                  year?:string|null,
  *                  month?:string|null,
@@ -256,14 +255,10 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:server_socket_connected_list_no_res[]} }>}
+ * @returns{Promise.<server_server_response & {result?:server_socket_connected_list_no_res[]}>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = serverUtilNumberValue(parameters.data.select_app_id);
-    /**@type{number} */
-    const limit = serverUtilNumberValue(parameters.data.limit) ?? 0;
-    /**@type{number} */
-    const offset = serverUtilNumberValue(parameters.data.offset) ?? 0;
     /**@type{number|null} */
     const year = serverUtilNumberValue(parameters.data.year);
     /**@type{number|null} */
@@ -276,72 +271,58 @@ const socketClientAdd = (newClient) => {
     const sort = parameters.data.sort;
 
     const order_by_num = order_by =='asc'?1:-1;
-    const result =  SOCKET_CONNECTED_CLIENTS
-        .filter(client =>
-            //filter rows
-            (client.app_id == app_id_select || app_id_select==null) &&
-            parseInt(client.connection_date.substring(0,4)) == year && 
-            parseInt(client.connection_date.substring(5,7)) == month &&
-            parseInt(client.connection_date.substring(8,10)) == day
-            )
-        .map(client=>{
-            return {id:                     client.id,
-                    app_id:                 client.app_id, 
-                    authorization_bearer:   client.authorization_bearer,
-                    iam_user_id:            client.iam_user_id,
-                    iam_user_username:      client.iam_user_username,
-                    iam_user_type:          client.iam_user_type,
-                    user_account_id:        client.user_account_id,
-                    connection_date:        client.connection_date,
-                    gps_latitude:           client.gps_latitude ?? '',
-                    gps_longitude:          client.gps_longitude ?? '',
-                    place:                  client.place ?? '',
-                    timezone:               client.timezone ?? '',
-                    ip:                     client.ip,
-                    user_agent:             client.user_agent};
-        })
-        //sort result
-        .sort((first, second)=>{
-            //sort default is connection_date if sort missing as argument
-            if (typeof first[sort==null?'connection_date':sort] == 'number'){
-                //number sort
-                const first_sort_num = first[sort==null?'connection_date':sort];
-                const second_sort_num = second[sort==null?'connection_date':sort];
-                if ((first_sort_num??0) < (second_sort_num??0) )
-                    return -1 * order_by_num;
-                else if ((first_sort_num??0) > (second_sort_num??0))
-                    return 1 * order_by_num;
-                else
-                    return 0;
-            }
-            else{
-                //string sort with lowercase and localcompare
-                const first_sort = (first[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
-                const second_sort = (second[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
-                //using localeCompare as collation method
-                if (first_sort.localeCompare(second_sort)<0 )
-                    return -1 * order_by_num;
-                else if (first_sort.localeCompare(second_sort)>0 )
-                    return 1 * order_by_num;
-                else
-                    return 0;
-            }
-        });
-        return {result:{ page_header:  {
-                                    total_count:	result.length,
-                                    offset: 		offset,
-                                    count:			result
-                                                    //set offset
-                                                    .filter((client, index)=>offset>0?index+1>=offset:true)
-                                                    //set limit
-                                                    .filter((client, index)=>limit>0?index+1<=limit:true).length
-                                    },
-                    rows:           result
-                                    //set offset
-                                    .filter((client, index)=>offset>0?index+1>=offset:true)
-                                    //set limit
-                                    .filter((client, index)=>limit>0?index+1<=limit:true)
-                }, type:'JSON'};
+    return {result:SOCKET_CONNECTED_CLIENTS
+                    .filter(client =>
+                        //filter rows
+                        (client.app_id == app_id_select || app_id_select==null) &&
+                        parseInt(client.connection_date.substring(0,4)) == year && 
+                        parseInt(client.connection_date.substring(5,7)) == month &&
+                        parseInt(client.connection_date.substring(8,10)) == day
+                        )
+                    .map(client=>{
+                        return {id:                     client.id,
+                                app_id:                 client.app_id, 
+                                authorization_bearer:   client.authorization_bearer,
+                                iam_user_id:            client.iam_user_id,
+                                iam_user_username:      client.iam_user_username,
+                                iam_user_type:          client.iam_user_type,
+                                user_account_id:        client.user_account_id,
+                                connection_date:        client.connection_date,
+                                gps_latitude:           client.gps_latitude ?? '',
+                                gps_longitude:          client.gps_longitude ?? '',
+                                place:                  client.place ?? '',
+                                timezone:               client.timezone ?? '',
+                                ip:                     client.ip,
+                                user_agent:             client.user_agent};
+                    })
+                    //sort result
+                    .sort((first, second)=>{
+                        //sort default is connection_date if sort missing as argument
+                        if (typeof first[sort==null?'connection_date':sort] == 'number'){
+                            //number sort
+                            const first_sort_num = first[sort==null?'connection_date':sort];
+                            const second_sort_num = second[sort==null?'connection_date':sort];
+                            if ((first_sort_num??0) < (second_sort_num??0) )
+                                return -1 * order_by_num;
+                            else if ((first_sort_num??0) > (second_sort_num??0))
+                                return 1 * order_by_num;
+                            else
+                                return 0;
+                        }
+                        else{
+                            //string sort with lowercase and localcompare
+                            const first_sort = (first[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
+                            const second_sort = (second[sort==null?'connection_date':sort] ?? '').toString().toLowerCase();
+                            //using localeCompare as collation method
+                            if (first_sort.localeCompare(second_sort)<0 )
+                                return -1 * order_by_num;
+                            else if (first_sort.localeCompare(second_sort)>0 )
+                                return 1 * order_by_num;
+                            else
+                                return 0;
+                        }
+                    }),
+            type:'JSON'};
 };
 /**
  * @name socketAppServerFunctionSend

@@ -222,14 +222,47 @@ const serverResponse = async parameters =>{
                             if (parameters.result_request.singleResource || parameters.result_request.result.page_header)
                                 parameters.res.write(JSON.stringify(parameters.result_request.result), 'utf8');
                             else{
-                                const offset = parameters.decodedquery?serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset')):null;
-                                const limit = parameters.decodedquery?serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('limit')):null;
-
-                                const list_header = {	total_count:	parameters.result_request.result.length,
-                                                        offset: 		offset ?? 0,
-                                                        count:			limit ?? parameters.result_request.result.length
-                                                    };
-                                parameters.res.write(JSON.stringify({list_header:list_header, rows:parameters.result_request.result}), 'utf8');
+                                //limit records in controlled by server, apps can not set limits
+                                const limit = serverUtilNumberValue(fileModelAppParameter.get( {app_id:parameters.app_id ?? common_app_id,
+                                                                                                resource_id:common_app_id}).result[0].common_app_limit_records.value);
+                                let result;
+                                if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).has('offset')){
+                                    const offset = serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset'));
+                                    //return pagination format
+                                    result = {  
+                                                page_header:
+                                                    {	total_count:	parameters.result_request.result.length,
+                                                        offset: 		offset??0,
+                                                        count:			parameters.result_request.result
+                                                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>(offset??0)>0?
+                                                                                                                                (index+1)>=(offset??0):
+                                                                                                                                    true)
+                                                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
+                                                                                                                                (index+1)<=(limit??0)
+                                                                                                                                    :true).length
+                                                    },
+                                                rows:               parameters.result_request.result
+                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(offset??0)>0?
+                                                                                                                            (index+1)>=(offset??0):
+                                                                                                                                true)
+                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
+                                                                                                                            (index+1)<=(limit??0)
+                                                                                                                                :true)
+                                    };
+                                }
+                                else{
+                                    //return list header format
+                                    result = {  
+                                                list_header:
+                                                    {	
+                                                        total_count:	parameters.result_request.result.length,
+                                                        offset: 		0,
+                                                        count:			Math.min(limit??0,parameters.result_request.result.length)
+                                                    },
+                                                rows:               parameters.result_request.result
+                                            };
+                                }
+                                parameters.res.write(JSON.stringify(result), 'utf8');    
                             }    
                         }
                         else

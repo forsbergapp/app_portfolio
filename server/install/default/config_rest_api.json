@@ -3464,6 +3464,9 @@
                 ],
                 "parameters": [
                         {
+                            "$ref": "#/components/parameters/server_app_id"
+                        },
+                        {
                             "name":"sort",
                             "in":"query",
                             "required":false,
@@ -3513,14 +3516,6 @@
                         },
                         {
                             "name":"offset",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        },
-                        {
-                            "name":"limit",
                             "in":"query",
                             "required":false,
                             "schema":{
@@ -4846,14 +4841,6 @@
                             }    
                         },
                         {
-                            "name":"limit",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        },
-                        {
                             "name":"offset",
                             "in":"query",
                             "required":false,
@@ -5191,15 +5178,8 @@
                             "schema":{
                                 "type": "number"
                             }    
-                        },
-                        {
-                            "name":"limit",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
                         }
+                        
                 ],
                 "responses": {
                     "oneOf":[

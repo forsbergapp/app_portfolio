@@ -407,9 +407,8 @@ const postAppE = async (app_id, app_filename, app_function_name, app_line, logte
  *                  year?:string|null,
  *                  month?:string|null,
  *                  day?:string|null,
- *                  limit?:string|null,
  *                  offset?:string|null}}} parameters
- * @returns{Promise.<server_server_response & {result?:{page_header:{total_count:number, offset:number, count:number}, rows:[]} }>}
+ * @returns{Promise.<server_server_response & {result?:[]}>}
  */
 const get = async parameters => {
     /**@type{import('../server.js')} */
@@ -433,9 +432,7 @@ const get = async parameters => {
                     /**@ts-ignore */
                     month:			parameters.data.month?.toString(),
                     /**@ts-ignore */
-                    day:			parameters.data.day,
-                    limit:			serverUtilNumberValue(parameters.data.limit) ?? 0,
-                    offset:			serverUtilNumberValue(parameters.data.offset) ?? 0
+                    day:			parameters.data.day
     };
     return new Promise (resolve=>{
         /**
@@ -521,30 +518,15 @@ const get = async parameters => {
                         return 0;
                 }
             });
-            //return with page navigation info
             /**@ts-ignore */
-            resolve({result:{ page_header:  {
-                                                total_count:	log_rows_array_obj.rows.length,
-                                                offset: 		data.offset,
-                                                count:			log_rows_array_obj.rows
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.offset>0?index+1>=data.offset:true)
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.limit>0?index+1<=data.limit:true).length
-                                                },
-                                rows:           log_rows_array_obj.rows
-                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.offset>0?index+1>=data.offset:true)
-                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>data.limit>0?index+1<=data.limit:true)},
+            resolve({result:log_rows_array_obj.rows,
                     type:'JSON'});
             
         })
         //return empty and not error
         /**@ts-ignore */
-        .catch(()=> resolve({result:{   page_header:    {
-                                                total_count:	0,
-                                                offset: 		data.offset,
-                                                count:			0
-                                                },
-                                        rows:           []},
-                            type:'JSON'}));
+        .catch(()=> resolve({  result:[],
+                                type:'JSON'}));
     });
     
 };
