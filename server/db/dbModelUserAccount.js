@@ -175,8 +175,8 @@ const getProfileStat = async parameters =>{
                           .then(result=>{return {result:result.result
                                                           .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               //add condition active and private
-                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
-                                                              return user.active==1 && user.private !=1;
+                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result?.[0];
+                                                              return user && user.active==1 && user.private !=1;
                                                           })              
                                                           .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               //add avatar and username from iam_user
