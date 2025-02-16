@@ -71,12 +71,12 @@ const APP_DATA_RESOURCE_DETAIL_DATA_SELECT =
             null                                                            "app_setting_value",
             null                                                            "app_setting_display_data"
     FROM <DB_SCHEMA/>.app_data_resource_detail_data  adrdd
-            LEFT OUTER JOIN MAIN.app_data_resource_master   adrm_attribute_master
+            LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute_master
                 ON adrm_attribute_master.id	= adrdd.app_data_resource_master_attribute_id
-                LEFT JOIN MAIN.app_data_entity_resource     ader_attribute_master
+                LEFT JOIN <DB_SCHEMA/>.app_data_entity_resource     ader_attribute_master
                 ON ader_attribute_master.id = adrm_attribute_master.app_data_entity_resource_id,
-            <DB_SCHEMA/>.app_data_resource_detail       adrd,
-            <DB_SCHEMA/>.app_data_resource_master       adrm
+            <DB_SCHEMA/>.app_data_resource_master       adrm,
+            <DB_SCHEMA/>.app_data_resource_detail       adrd
             LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute
                 ON adrm_attribute.id        = adrd.app_data_resource_master_id
                 LEFT JOIN <DB_SCHEMA/>.app_data_entity_resource     ader_attribute
@@ -169,8 +169,8 @@ const APP_DATA_RESOURCE_DETAIL_SELECT =
             null                                                            "app_setting_name",
             null                                                            "app_setting_value",
             null                                                            "app_setting_display_data"
-       FROM <DB_SCHEMA/>.app_data_resource_detail adrd,
-            <DB_SCHEMA/>.app_data_resource_master adrm
+       FROM <DB_SCHEMA/>.app_data_resource_master adrm,
+            <DB_SCHEMA/>.app_data_resource_detail adrd
                 LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute
                     ON adrm_attribute.id           = adrd.app_data_resource_master_id
                     LEFT JOIN <DB_SCHEMA/>.app_data_entity_resource     ader_attribute
@@ -366,7 +366,7 @@ const APP_DATA_STAT_SELECT_UNIQUE_VISITORS =
             UNION ALL
             SELECT 2								chart,
                     NULL 							app_id,
-                    <DATE_PERIOD_DAY/> 			day_log,
+                    <DATE_PERIOD_DAY/> 			    day_log,
                     json_data
                 FROM <DB_SCHEMA/>.app_data_stat
             WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
@@ -483,8 +483,8 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL =
         FROM (SELECT 'LIKE_POST' detail,
                     u.id,
                     u.iam_user_id,
-                    null,
-                    null
+                    null avatar,
+                    null username
                 FROM <DB_SCHEMA/>.user_account u
             WHERE u.id IN (SELECT us.user_account_app_user_account_id
                                 FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
@@ -498,8 +498,8 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_DETAIL =
                 SELECT 'LIKED_POST' detail,
                         u.id,
                         u.iam_user_id,
-                        null,
-                        null
+                        null avatar,
+                        null username
                 FROM  <DB_SCHEMA/>.user_account u
                 WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
                                 FROM <DB_SCHEMA/>.user_account_app_data_post us,
@@ -539,8 +539,8 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST =
         FROM (	SELECT 'LIKE_POST' top,
                         u.id,
                         u.iam_user_id,
-                        null,
-                        null,
+                        null avatar,
+                        null username,
                         (SELECT COUNT(us.user_account_app_user_account_id)
                         FROM <DB_SCHEMA/>.user_account_app_data_post_like u_like,
                                 <DB_SCHEMA/>.user_account_app_data_post us
@@ -554,8 +554,8 @@ const USER_ACCOUNT_APP_DATA_POST_SELECT_USER_PROFILE_STAT_POST =
                 SELECT 'VISITED_POST' top,
                         u.id,
                         u.iam_user_id,
-                        null,
-                        null,
+                        null avatar,
+                        null username,
                         (SELECT COUNT(us.user_account_app_user_account_id)
                         FROM <DB_SCHEMA/>.user_account_app_data_post_view u_view,
                                 <DB_SCHEMA/>.user_account_app_data_post us
@@ -709,9 +709,9 @@ const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
             count(*) over() "total_rows"
     FROM (SELECT 	'FOLLOWING' detail,
                     u.id,
-                    u.iam_user_id
-                    null,
-                    null
+                    u.iam_user_id,
+                    null avatar,
+                    null username
             FROM <DB_SCHEMA/>.user_account_follow u_follow,
                 <DB_SCHEMA/>.user_account u
             WHERE u_follow.user_account_id = :user_account_id
@@ -721,8 +721,8 @@ const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
         SELECT 	'FOLLOWED' detail,
                     u.id,
                     u.iam_user_id,
-                    null,
-                    null
+                    null avatar,
+                    null username
             FROM <DB_SCHEMA/>.user_account_follow u_followed,
                 <DB_SCHEMA/>.user_account u
             WHERE u_followed.user_account_id_follow = :user_account_id
@@ -732,8 +732,8 @@ const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
         SELECT	'LIKE_USER' detail,
                     u.id,
                     u.iam_user_id,
-                    null,
-                    null
+                    null avatar,
+                    null username
             FROM <DB_SCHEMA/>.user_account_like u_like,
                 <DB_SCHEMA/>.user_account u
             WHERE u_like.user_account_id = :user_account_id
@@ -743,8 +743,8 @@ const USER_ACCOUNT_SELECT_PROFILE_DETAIL =
         SELECT	'LIKED_USER' detail,
                     u.id,
                     u.iam_user_id,
-                    null,
-                    null
+                    null avatar,
+                    null username
             FROM <DB_SCHEMA/>.user_account_like u_liked,
                 <DB_SCHEMA/>.user_account u
             WHERE u_liked.user_account_id_like = :user_account_id
@@ -763,8 +763,8 @@ const USER_ACCOUNT_SELECT_PROFILE_STAT =
        FROM (SELECT 'VISITED' top,
                     u.id,
                     u.iam_user_id,
-                    null,
-                    null,
+                    null avatar,
+                    null username,
                     (SELECT COUNT(u_visited.user_account_id_view)
                     FROM <DB_SCHEMA/>.user_account_view u_visited
                     WHERE u_visited.user_account_id_view = u.id) count
@@ -774,8 +774,8 @@ const USER_ACCOUNT_SELECT_PROFILE_STAT =
             SELECT 	'FOLLOWING' top,
                         u.id,
                         u.iam_user_id,
-                        null,
-                        null,
+                        null avatar,
+                        null username,
                         (SELECT COUNT(u_follow.user_account_id_follow)
                         FROM <DB_SCHEMA/>.user_account_follow u_follow
                         WHERE u_follow.user_account_id_follow = u.id) count
@@ -785,8 +785,8 @@ const USER_ACCOUNT_SELECT_PROFILE_STAT =
             SELECT 	'LIKE_USER' top,
                         u.id,
                         u.iam_user_id,
-                        null,
-                        null,
+                        null avatar,
+                        null username,
                         (SELECT COUNT(u_like.user_account_id_like)
                         FROM <DB_SCHEMA/>.user_account_like u_like
                         WHERE u_like.user_account_id_like = u.id) count

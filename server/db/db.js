@@ -345,41 +345,15 @@ const dbSQLParamConvert = (db, connection, parameterizedSql, params) => {
                      parameters:params};
          /**@type{*[]} */
          const values = [];
-         /**
-          * @description Check if escape function should be used, null and JSON string do not work
-          *              JSON strings are saved only in json_data columns
-          * @param{string} key
-          * @param {*} value
-          */
-         const shouldEscape = (key, value) => {
-            if (value==null)
-               return false;
-            else
-               if (key.toLowerCase()=='json_data')
-                     return false;
-               else
-                  return true;
-        };
          const preparedSql = parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
                if (key in params) {
-                  //JSON strings and null are not escaped
-                  values.push(shouldEscape(key, params[key])?connection?.escape(params[key]):null);
+                  values.push(params[key]);
                   return '?';
                } else
                   return txt;
          });
       
          return { sql:preparedSql, parameters:values };
-         /*
-         return { sql:parameterizedSql.replace(/:(\w+)/g, (txt, key) => {
-                        if (key in params)
-                           return connection?.escape(params[key]);
-                        else
-                           return txt;
-                     }), 
-                  parameters:params};
-         */
-
       }
       case 4:{
          //Oracle 
@@ -569,7 +543,6 @@ const dbSQL = async (pool_id, db_use, sql, parameters, dba) => {
                   if (err)
                      return reject (err);
                   else{
-                     //conn.config.queryFormat = dbSQLParamConvert(db_use, conn, sql, parameters).sql; 
                      const parsed_result = dbSQLParamConvert(db_use, conn, sql, parameters); 
                      conn.query(parsed_result.sql, parsed_result.parameters, (/**@type{server_server_error}*/err, /**@type{[server_db_db_pool_connection_1_2_result]}*/result, /**@type{server_db_db_pool_connection_3_fields}*/fields) => {
                         if (err)
