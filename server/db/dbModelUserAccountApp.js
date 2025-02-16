@@ -21,7 +21,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null}} parameters
+ *          resource_id:number|null,
+ *          data:{data_app_id:number}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_getUserAccountApp[] }>}
  */
 const get = async parameters =>
@@ -30,9 +31,8 @@ const get = async parameters =>
                        dbSql.USER_ACCOUNT_APP_SELECT_USER_APP,
                        {
                            user_account_id: parameters.resource_id,
-                           app_id: parameters.app_id
-                       },
-                       null));
+                           app_id: parameters.data.data_app_id
+                       }));
 
 /**
  * @name getApps
@@ -55,8 +55,7 @@ const getApps = async parameters => {
                        dbSql.USER_ACCOUNT_APP_SELECT_USER_APPS,
                        {
                            user_account_id: parameters.resource_id
-                           },
-                       null));
+                        }));
 
     if (apps_db.result)
         return {result:(await commonAppsGet({app_id:parameters.app_id, resource_id:parameters.app_id, locale:parameters.locale})).result
@@ -71,19 +70,19 @@ const getApps = async parameters => {
  * @name post
  * @description Create user account app record
  * @function
- * @param {number} app_id 
- * @param {number} user_account_id 
+ * @param {number} app_id  
+ * @param {{data_app_id:number,
+ *          user_account_id:number}} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
-const post = async (app_id, user_account_id) => 
+const post = async (app_id, data) => 
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_INSERT, 
                         {
-                            app_id: app_id,
-                            user_account_id: user_account_id
-                        }, 
-                        null));
+                            app_id:             data.data_app_id,
+                            user_account_id:    data.user_account_id
+                        }));
 /**
  * @name update
  * @description Update user account app
@@ -91,7 +90,8 @@ const post = async (app_id, user_account_id) =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{  json_data:string}}} parameters
+ *          data:{  data_app_id:number,
+ *                  json_data:string}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = parameters =>
@@ -101,9 +101,8 @@ const update = parameters =>
                         {
                             json_data:JSON.stringify(parameters.data.json_data),
                             user_account_id: parameters.resource_id,
-                            app_id: parameters.app_id
-                            }, 
-                        null));
+                            app_id: parameters.data.data_app_id
+                        }));
 
 /**
  * @name deleteRecord
@@ -112,7 +111,7 @@ const update = parameters =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{delete_app_id:number}}} parameters
+ *          data:{data_app_id:number}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = parameters => 
@@ -121,8 +120,7 @@ const deleteRecord = parameters =>
                         dbSql.USER_ACCOUNT_APP_DELETE,
                         {
                             user_account_id: parameters.resource_id,
-                            app_id: serverUtilNumberValue(parameters.data?.delete_app_id)
-                        },
-                        null));
+                            app_id: serverUtilNumberValue(parameters.data?.data_app_id)
+                        }));
 
 export {get, getApps, post,update, deleteRecord};

@@ -31,7 +31,7 @@ describe('Unit test, dbSQLParamConvert', ()=> {
                                 pool_id:        app_id, 
                                 port:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_PORT')),
                                 host:           fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_HOST'),
-                                dba:            1,
+                                dba:            true,
                                 user:           fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_DBA_USER'),
                                 password:       fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_DBA_PASS'),
                                                 //test with empty database if not installed
@@ -48,7 +48,7 @@ describe('Unit test, dbSQLParamConvert', ()=> {
                             };
             await db.dbPoolStart(parameters);
             return new Promise(resolve=>{
-                db.dbPoolGet(app_id, db_use, DBA)
+                db.dbPoolGet(app_id, db_use, true)
                     /**@ts-ignore */
                     ?.getConnection((/**@type{server_server_error}*/err, /**@type{server_db_db_pool_connection_1_2}*/conn) => {
                         resolve(conn);
@@ -68,7 +68,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         };
         //set parameters
         //test as non DBA, app_id 0, current database
-        const DBA = 1;
         const app_id = 0; //also pool_id
         const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
         //Use default 5 if none is configured
@@ -110,7 +109,6 @@ describe('Unit test, dbSQLParamConvert', ()=> {
                                                                                                             id: null});
         const result_update = db.dbSQLParamConvert(db_use, connection, sql_update, sql_update_params);
         
-        console.log('Unit test dbSQLParamConvert parameter DBA:', DBA);
         console.log('Unit test dbSQLParamConvert parameter app_id/pool_id:', app_id);
         console.log('Unit test dbSQLParamConvert parameter DB_USE:', db_use);
         console.log('Unit test dbSQLParamConvert parameter db name:', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`) ?? '');

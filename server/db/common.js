@@ -93,10 +93,9 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
  * @param {number|null} app_id 
  * @param {string} sql 
  * @param {*} parameters 
- * @param {number|null} dba 
  * @returns {Promise.<server_server_response>}
  */
- const dbCommonExecute = async (app_id, sql, parameters, dba = null) =>{
+ const dbCommonExecute = async (app_id, sql, parameters) =>{
 	/**@type{import('./db.js')} */
 	const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
 	/**@type{import('./fileModelLog.js')} */
@@ -136,7 +135,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 																										resource_id:COMMON_APP_ID}).result[0].common_app_limit_records.value)}};
 		}
 
-		dbSQL(app_id, DB_USE, sql, parameters, dba)
+		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
 		.then((/**@type{server_db_common_result}*/result)=> {
 			fileModelLog.postDBI(app_id, DB_USE, sql, parameters, result)
 			.then(()=>{

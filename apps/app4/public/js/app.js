@@ -1154,7 +1154,7 @@ const appUserProfileDetail = (detailchoice) => {
  */
 const appUserSettingsGet = async () => {
     return new Promise(resolve=>{
-        common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, method:'GET', authorization_type:'APP_ID'})
+        common.commonFFB({path:`/server-db/user_account_app_data_post/${common.COMMON_GLOBAL.user_account_id??''}`, query:`IAM_data_app_id=${common.COMMON_GLOBAL.app_id}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
             const settings = JSON.parse(result).map((/** @type{APP_user_setting_record}*/setting)=>{
                 const json_data = {description:setting.description,
@@ -1274,6 +1274,7 @@ const appUserSettingFunction = async (function_name, initial_user_setting, add_s
         
         const body = {  description:            APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data.description,
                         json_data:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].json_data,
+                        IAM_data_app_id:        common.COMMON_GLOBAL.app_id,
                         IAM_user_account_id:    common.COMMON_GLOBAL.user_account_id
                     };
         /**@type {CommonRESTAPIMethod}*/
@@ -1627,7 +1628,7 @@ const appUserSettingProfileLink = item => {
 const appUserSettingsLike = user_account_app_data_post_id => {
     /**@type{CommonRESTAPIMethod} */
     let method;
-    const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
+    const json_data = {user_account_app_data_post_id: user_account_app_data_post_id, IAM_data_app_id:common.COMMON_GLOBAL.app_id};
     if (common.COMMON_GLOBAL.user_account_id == null)
         common.commonDialogueShow('LOGIN');
     else {

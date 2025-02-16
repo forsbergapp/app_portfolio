@@ -27,7 +27,6 @@ const post = async (app_id, data) =>
 							user_account_id_view: data.user_account_id_view,
 							client_ip: data.client_ip,
 							client_user_agent: data.client_user_agent
-						},
-                        null));
+						}));
 
 export {post};

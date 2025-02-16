@@ -22,7 +22,6 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 /**@type{import('./fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
-const DBA                       = 1;
 const DB_DEMO_PATH              = '/server/install/db/demo/';
 const DB_DEMO_FILE              = 'demo.json';
 
@@ -44,8 +43,7 @@ const dbInfo = parameters =>
                         dbSqlDatabase.DATABASE_INFO_SELECT(), 
                         {   database: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), 
                             database_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)
-                        }, 
-                        DBA));
+                        }));
 /**
  * @name dbInfoSpace
  * @description Database info space
@@ -60,8 +58,7 @@ const dbInfoSpace = parameters =>
                         dbSqlDatabase.DATABASE_INFO_SELECT_SPACE(), 
                         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                             {}:
-                                {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}, 
-                        DBA));
+                                {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
 /**
  * @name dbInfoSpaceSum
  * @description Database info space sum
@@ -76,8 +73,7 @@ const dbInfoSpaceSum = parameters =>
                         dbSqlDatabase.DATABASE_INFO_SELECT_SPACE_SUM(), 
                         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                             {}:
-                                {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)},
-                        DBA));
+                                {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
 
 /**
  * @name dbInstall
@@ -112,9 +108,6 @@ const dbInfoSpaceSum = parameters =>
     /**@type{import('../db/fileModelApp.js')} */
     const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
     
-    /**@type{import('../db/dbModelDatabase.js')} */
-    const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
-
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -162,12 +155,12 @@ const dbInfoSpaceSum = parameters =>
     
     const install_total = install_obj.install.length + apps.length + install_data_obj;
     /**
-     * @param {{app_id:number,
-     *          script:string}} parameters
+     * @param {{app_id:number|null,
+     *          script:string}} parametersDB
      */
-    const executeDatabase = async parameters =>{
+    const executeDatabase = async parametersDB =>{
         let install_sql;
-        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + parameters.script}`, 'utf8');
+        install_sql = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + parametersDB.script}`, 'utf8');
 
         //remove comments
         //rows starting with '--' and ends width '\r\n' or '\n'
@@ -183,7 +176,8 @@ const dbInfoSpaceSum = parameters =>
                     const sql_and_pw = await sql_with_password('app_portfolio', sql);
                     sql = sql_and_pw[0];
                 }
-                sql = sql.replaceAll('<APP_ID/>', parameters.app_id?.toString());
+                if (parametersDB.app_id !=null)
+                    sql = sql.replaceAll('<APP_ID/>', parametersDB.app_id.toString());
                 sql = sql.replaceAll('<DB_SCHEMA/>', DB_SCHEMA);
                     
                 //if ; must be in wrong place then set tag in import script and convert it
@@ -194,14 +188,14 @@ const dbInfoSpaceSum = parameters =>
                 if (db_use != 4 && db_use != 5)
                     if (sql.toUpperCase().includes('CREATE DATABASE')){
                         //remove database name in dba pool
-                        await dbPoolClose(null, db_use, DBA);
+                        await dbPoolClose(null, db_use, true);
                         /**@type{server_db_db_pool_parameters} */
                         const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
                                 port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
                                 host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                                dba:                       DBA,
+                                dba:                       true,
                                 user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
                                 password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                                 database:                  null,
@@ -223,14 +217,14 @@ const dbInfoSpaceSum = parameters =>
                     else{
                         if (change_DBA_pool == true){
                             //add database name in dba pool
-                            await dbPoolClose(null, db_use, DBA);
+                            await dbPoolClose(null, db_use, true);
                             /**@type{server_db_db_pool_parameters} */
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
                                 port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
                                 host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                                dba:                       DBA,
+                                dba:                       true,
                                 user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
                                 password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                                 database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
@@ -252,7 +246,8 @@ const dbInfoSpaceSum = parameters =>
                             change_DBA_pool = false;
                         }
                     }
-                const db_result = await dbCommonExecute(parameters.app_id, sql, {}, DBA);
+                //all SQL uses admin pool and app id
+                const db_result = await dbCommonExecute(parameters.app_id, sql, {});
                 if (db_result.result)
                     count_statements += 1;
                 else
@@ -268,7 +263,8 @@ const dbInfoSpaceSum = parameters =>
                 client_id:socketClientGet(parameters.idToken),
                 broadcast_type:'PROGRESS',
                 broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total, text:DB_INSTALL_PATH + install_row.script})).toString('base64')}});
-        await executeDatabase({app_id:parameters.app_id, script:install_row.script});
+        //app id not used in DDL SQL
+        await executeDatabase({app_id:null, script:install_row.script});
     }
     socketAdminSend({   app_id:parameters.app_id,
                         idToken:parameters.idToken,
@@ -289,16 +285,12 @@ const dbInfoSpaceSum = parameters =>
                 app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))){
                 //create db users except for common app id and admin app id
                 const sql_and_pw = await sql_with_password(`app_portfolio_app${app.id}`, password_tag);
-                const result_user_create = await dbModelDatabase.dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[0]});
-                if (result_user_create.result?.filter((/**@type{server_server_response}*/row)=>row.result).length==result_user_create.result?.length){
-                    count_statements += 1;
-                    await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
-                                                            parameter_value:    `app_portfolio_app${app.id}`}});
-                    await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
+                await dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[0]});
+                count_statements += 1;
+                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
+                                                        parameter_value:    `app_portfolio_app${app.id}`}});
+                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
                                                             parameter_value:    sql_and_pw[1]}});
-                }
-                else
-                    throw result_user_create;
             }   
         }
         else
@@ -312,7 +304,8 @@ const dbInfoSpaceSum = parameters =>
                 client_id:socketClientGet(parameters.idToken),
                 broadcast_type:'PROGRESS',
                 broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:install_total, text:DB_INSTALL_PATH + install_row.script})).toString('base64')}});
-        await executeDatabase({app_id:parameters.app_id, script:install_row.script});
+        //use app_id from installation script for DML SQL
+        await executeDatabase({app_id:install_row.app_id, script:install_row.script});
     }
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
@@ -332,8 +325,7 @@ const dbInfoSpaceSum = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_SELECT_INSTALLED_CHECK, 
-                        {app_id: parameters.app_id},
-                        DBA)
+                        {app_id: parameters.app_id})
                         .then((result)=>{
                             return {result:[{installed: result.http?0:1}], type:'JSON'};
                         })
@@ -368,10 +360,7 @@ const dbInfoSpaceSum = parameters =>
 
     /**@type{import('../db/fileModelApp.js')} */
     const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-    
-    /**@type{import('../db/dbModelDatabase.js')} */
-    const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
-    
+     
     const fs = await import('node:fs');
 
     let count_statements = 0;
@@ -380,35 +369,66 @@ const dbInfoSpaceSum = parameters =>
     
     const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
     if (db_use==5){
-        await dbPoolClose(null, db_use, 0);
+        await dbPoolClose(null, db_use, false);
         await fileFsWriteAdmin('DB_FILE', null);
-        await DB_POOL(db_use, 0, null, null, null);
+        await DB_POOL(db_use, false, null, null, null);
         count_statements++;
     }
     else{
         let install_count=0;
-        socketAdminSend({   app_id:parameters.app_id, 
-                            idToken:parameters.idToken,
-                            data:{  app_id:null, 
-                                    client_id:socketClientGet(parameters.idToken),
-                                    broadcast_type:'PROGRESS',
-                                    broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:1, text:DB_INSTALL_PATH + DB_UNINSTALL})).toString('base64')
-
-                            }});
         install_count++;
         const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_UNINSTALL}`, 'utf8');
         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
+        //get apps if db credentials configured or use empty array for progress message count
+        const apps = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)?fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result
+                    .filter((/**@type{server_db_file_app}*/app)=>
+                            app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                            app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))):[];
+        //drop users first to avoid db connection error
+        //if db has DB[DB]_DBA_USER parameter means users can be dropped
+        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
+            socketAdminSend({   app_id:parameters.app_id, 
+                idToken:parameters.idToken,
+                data:{  app_id:null, 
+                        client_id:socketClientGet(parameters.idToken),
+                        broadcast_type:'PROGRESS',
+                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:uninstall_sql.length + apps.length, text:'Dropping users...'})).toString('base64')
+    
+                }});    
+            //drop db users except for common app id and admin app id
+            for (const app of apps){
+                const result_drop = await dbUserDrop({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`});
+                if (result_drop.result){
+                    fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_user`,
+                        parameter_value:''}});
+                    fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_password`,
+                        parameter_value:''}});
+                }
+                else
+                    throw result_drop;
+            }
+        }
+        
         for (const sql_row of uninstall_sql){
+            install_count++;
+            socketAdminSend({   app_id:parameters.app_id, 
+                idToken:parameters.idToken,
+                data:{  app_id:null, 
+                        client_id:socketClientGet(parameters.idToken),
+                        broadcast_type:'PROGRESS',
+                        broadcast_message:Buffer.from(JSON.stringify({part:install_count, total:uninstall_sql.length, text:'Dropping database...'})).toString('base64')
+    
+                }});    
             if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                 //add database name in dba pool
-                await dbPoolClose(null, db_use, DBA);
+                await dbPoolClose(null, db_use, true);
                 /**@type{server_db_db_pool_parameters} */
                 const json_data = {
                     use:                       db_use,
                     pool_id:                   null,
                     port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
                     host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-                    dba:                       DBA,
+                    dba:                       true,
                     user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
                     password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                     database:                  null,
@@ -427,25 +447,11 @@ const dbInfoSpaceSum = parameters =>
                 };
                 await dbPoolStart(json_data);
             }
-            await dbCommonExecute(parameters.app_id, sql_row.sql, {}, DBA)
+            await dbCommonExecute(parameters.app_id, sql_row.sql, {})
             .then(()=>{count_statements += 1;})
             .catch(()=>{count_statements_fail += 1;});
             
         }      
-        //if db has DB[DB]_DBA_USER parameter means users can be dropped
-        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
-            //drop db users except for common app id and admin app id
-            for (const app of fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result
-                                .filter((/**@type{server_db_file_app}*/app)=>
-                                        app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                                        app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
-                dbModelDatabase.dbUserDrop({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`});
-                fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_user`,
-                                                                                                parameter_value:''}});
-                fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_password`,
-                                                                                                parameter_value:''}});
-            }
-        }
     }
     fileModelLog.postServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     /**@ts-ignore */
@@ -499,23 +505,21 @@ const dbInfoSpaceSum = parameters =>
     /**@type{import('./dbModelUserAccountApp.js')} */
     const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
     /**@type{import('./dbModelUserAccountLike.js')} */
-    const user_account_like = await import(`file://${process.cwd()}/server/db/dbModelUserAccountLike.js`);
+    const dbModelUserAccountLike = await import(`file://${process.cwd()}/server/db/dbModelUserAccountLike.js`);
     /**@type{import('./dbModelUserAccountView.js')} */
     const dbModelUserAccountView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountView.js`);
     /**@type{import('./dbModelUserAccountFollow.js')} */
-    const user_account_follow = await import(`file://${process.cwd()}/server/db/dbModelUserAccountFollow.js`);
+    const dbModelUserAccountFollow = await import(`file://${process.cwd()}/server/db/dbModelUserAccountFollow.js`);
     /**@type{import('./dbModelUserAccountAppDataPost.js')} */
-    const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
+    const dbModelUserAccountAppDataPost = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
     /**@type{import('./dbModelUserAccountAppDataPostLike.js')} */
-    const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostLike.js`);
+    const dbModelUserAccountAppDataPostLike = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostLike.js`);
     /**@type{import('./dbModelUserAccountAppDataPostView.js')} */
     const dbModelUserAccountAppDataPostView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
     /**@type{import('./dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
-
     /**@type{import('./dbModelAppDataResourceDetail.js')} */
     const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
-
     /**@type{import('./dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
@@ -601,8 +605,8 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<null>}
          */
         const create_user_account_app = async (app_id, user_account_id) =>{
-            return new Promise((resolve) => {
-                dbModelUserAccountApp.post(app_id, user_account_id)
+            return new Promise((resolve, reject) => {
+                dbModelUserAccountApp.post(parameters.app_id, {data_app_id:app_id, user_account_id:user_account_id})
                 .then(result=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
@@ -610,21 +614,20 @@ const dbInfoSpaceSum = parameters =>
                         resolve(null);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
         /**
          * Create user post
-         * @param {number} user_account_post_app_id 
          * @param {server_db_sql_parameter_user_account_app_data_post_createUserPost} data 
          * @returns {Promise.<null>}
          */
-        const create_user_post = async (user_account_post_app_id, data) => {
-            return new Promise((resolve) => {
+        const create_user_post = async (data) => {
+            return new Promise((resolve, reject) => {
                 /**@ts-ignore */
                 data.initial=0;
-                createUserPost({app_id:user_account_post_app_id, 
+                dbModelUserAccountAppDataPost.createUserPost({app_id:parameters.app_id, 
                                 /**@ts-ignore */
                                 data:data})
                 .then(result=>{
@@ -634,7 +637,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(null);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -646,7 +649,7 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<number>}
          */
         const create_resource_master = async (user_account_post_app_id, data) => {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 dbModelAppDataResourceMaster.post({app_id:user_account_post_app_id, data:data})
                 .then(result=>{
                     if(result.result){
@@ -655,7 +658,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(result.result.insertId);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -666,7 +669,7 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<number>}
          */
         const create_resource_detail = async (user_account_post_app_id, data) => {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 dbModelAppDataResourceDetail.post({app_id:user_account_post_app_id, data:data})
                 .then(result=>{
                     if(result.result){
@@ -675,7 +678,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(result.result.insertId);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -687,7 +690,7 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<number>}
          */
         const create_resource_detail_data = async (user_account_post_app_id, data) => {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 dbModelAppDataResourceDetailData.post({app_id:user_account_post_app_id, data:data})
                 .then(result=>{
                     if(result.result){
@@ -696,7 +699,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(result.result.insertId);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -761,9 +764,10 @@ const dbInfoSpaceSum = parameters =>
                 const json_data_user_account_app_data_post = {
                                                 description: demo_user_account_app_data_post.description,
                                                 json_data: settings_no_app_id,
+                                                data_app_id: demo_user_account_app_data_post.app_id,
                                                 user_account_id: demo_user.id
                                             };	
-                await create_user_post(demo_user_account_app_data_post.app_id, json_data_user_account_app_data_post);
+                await create_user_post(json_data_user_account_app_data_post);
             }
             /**
              * Updates resource values
@@ -880,8 +884,8 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<null>}
          */
         const create_likeuser = async (app_id, id, id_like ) =>{
-            return new Promise((resolve) => {
-                user_account_like.post({app_id:app_id, resource_id:id, data:{user_account_id:id_like}})
+            return new Promise((resolve, reject) => {
+                dbModelUserAccountLike.post({app_id:app_id, resource_id:id, data:{user_account_id:id_like}})
                 .then(result => {
                     if(result.result){
                         if (result.result.affectedRows == 1)
@@ -889,7 +893,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(null);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -900,7 +904,7 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<null>}
          */
         const create_user_account_view = async (app_id, data ) =>{
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 dbModelUserAccountView.post(app_id, data)
                 .then(result => {
                     if(result.result){
@@ -909,7 +913,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(null);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -921,8 +925,8 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<null>}
          */
         const create_user_account_follow = async (app_id, id, id_follow ) =>{
-            return new Promise((resolve) => {
-                user_account_follow.post({app_id:app_id, resource_id:id, data:{user_account_id:id_follow}})
+            return new Promise((resolve, reject) => {
+                dbModelUserAccountFollow.post({app_id:app_id, resource_id:id, data:{user_account_id:id_follow}})
                 .then(result=>{
                     if(result.result){
                         if (result.result.affectedRows == 1)
@@ -930,7 +934,7 @@ const dbInfoSpaceSum = parameters =>
                         resolve(null);
                     }
                     else
-                        throw result;
+                        reject(result);
                 });
             });
         };
@@ -942,14 +946,15 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<null>}
          */
         const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
-            return new Promise((resolve) => {
-                getUserPostsByUserId({app_id:app_id, resource_id:user1})
+            return new Promise((resolve, reject) => {
+                dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:parameters.app_id, resource_id:user1, data_app_id:app_id})
                 .then(result_posts=>{
                     if (result_posts.result){
                         const random_posts_index = Math.floor(1 + Math.random() * result_posts.result.length - 1 );
-                        user_account_app_data_post_like.post({  app_id:app_id, 
+                        dbModelUserAccountAppDataPostLike.post({app_id:parameters.app_id, 
                                                                 resource_id:user2, 
-                                                                data:{user_account_app_data_post_id:result_posts.result[random_posts_index].id}})
+                                                                data:{  data_app_id:app_id,
+                                                                        user_account_app_data_post_id:result_posts.result[random_posts_index].id}})
                         .then(result => {
                             if (result.result){
                                 if (result.result.affectedRows == 1)
@@ -957,11 +962,11 @@ const dbInfoSpaceSum = parameters =>
                                 resolve(null);
                             }
                             else
-                                throw result_posts;
+                                reject(result_posts);
                         });
                     }
                     else
-                        throw result_posts;
+                        reject(result_posts);
                 });
             });
         };
@@ -974,8 +979,8 @@ const dbInfoSpaceSum = parameters =>
          * @returns {Promise.<null>}
          */
         const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
-            return new Promise((resolve) => {
-                getUserPostsByUserId({app_id:app_id, resource_id:user1})
+            return new Promise((resolve, reject) => {
+                dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:parameters.app_id, resource_id:user1, data_app_id:app_id})
                 .then(result_posts=>{
                     if (result_posts.result){
                         //choose random post from user
@@ -985,8 +990,9 @@ const dbInfoSpaceSum = parameters =>
                             user_account_id = user2;
                         else
                             user_account_id = null;
-                            dbModelUserAccountAppDataPostView.post(app_id, {user_account_id: user_account_id,
+                            dbModelUserAccountAppDataPostView.post(parameters.app_id, {user_account_id: user_account_id,
                                                                             user_account_app_data_post_id: result_posts.result[random_index].id,
+                                                                            data_app_id:app_id,
                                                                             client_ip: null,
                                                                             client_user_agent: null
                                                                             })
@@ -997,11 +1003,11 @@ const dbInfoSpaceSum = parameters =>
                                     resolve(null);
                                 }
                                 else
-                                    throw result;
+                                    reject(result);
                             });
                     }
                     else
-                        throw result_posts;
+                        reject(result_posts);
                 });
             });
         };
@@ -1157,14 +1163,15 @@ const dbDemoUninstall = async parameters => {
                                                 broadcast_message:Buffer.from(JSON.stringify({part:deleted_user, total:result_demo_users.length, text:user.username})).toString('base64')
                                         }
                                     });
-                    //delete database user then iam user
+                    //delete database user if found
                     const dbUser = await dbModelUserAccount.getIamUser({app_id:parameters.app_id, 
                                                                         /**@ts-ignore */
                                                                         iam_user_id: user.id});
                     if (dbUser.result)
                         await dbModelUserAccount.deleteUser(parameters.app_id,dbUser.result[0]?.id)
                                 .then((result)=>{
-                                            if (result.result)
+                                            if (result.result ||result.http==404)
+                                                //delete iam user
                                                 fileModelIamUser.deleteRecordAdmin(parameters.app_id,user.id)
                                                 .then((result)=>{
                                                     if (result.result){
@@ -1172,14 +1179,13 @@ const dbDemoUninstall = async parameters => {
                                                         if (deleted_user == result_demo_users.length)
                                                             return null;
                                                     }
-                                                    else
-                                                        throw result;
                                                 });
                                             else
                                                 throw result;
                         });
                     else
-                        throw dbUser;
+                        if (dbUser.result.http!=404)
+                            throw dbUser;
                 }
             };
             await delete_users().catch(error=>{
@@ -1205,7 +1211,7 @@ const dbDemoUninstall = async parameters => {
  * @description Starts pool with parameters
  * @function
  * @param {number|null} db_use 
- * @param {number|null} dba 
+ * @param {boolean} dba 
  * @param {string|null} user 
  * @param {string|null} password 
  * @param {number|null} pool_id 
@@ -1270,32 +1276,29 @@ const dbStart = async () => {
     if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
-        let dba = 0;
         const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
        
         if (db_use == 5)
-            await DB_POOL(db_use, dba, null, null, null);
+            await DB_POOL(db_use, false, null, null, null);
         else{
             if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
                 user = `${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
                 password = `${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
-                dba = 1;
-                await DB_POOL(db_use, dba, user, password, null);
-                }
-                dba = 0;
-                for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_file_app}*/app)=>
-                    app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                    app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
-                    const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_file_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
-                    /**@ts-ignore */
-                    if (app_secret[`service_db_db${db_use}_app_user`])
-                        await DB_POOL(  db_use, 
-                                        dba, 
-                                        /**@ts-ignore */
-                                        app_secret[`service_db_db${db_use}_app_user`],
-                                        /**@ts-ignore */
-                                        app_secret[`service_db_db${db_use}_app_password`],
-                                        app.id);
+                await DB_POOL(db_use, true, user, password, null);
+            }
+            for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_file_app}*/app)=>
+                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
+                const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_file_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
+                /**@ts-ignore */
+                if (app_secret[`service_db_db${db_use}_app_user`])
+                    await DB_POOL(  db_use, 
+                                    false, 
+                                    /**@ts-ignore */
+                                    app_secret[`service_db_db${db_use}_app_user`],
+                                    /**@ts-ignore */
+                                    app_secret[`service_db_db${db_use}_app_password`],
+                                    app.id);
             }  
         }
     }
@@ -1307,7 +1310,7 @@ const dbStart = async () => {
   * @param {{   app_id:number,
   *             username:string,
   *             password:string}} parameters
-  * @returns {Promise.<server_server_response & {result:server_server_response[]}>}
+  * @returns {Promise.<server_server_response & {result:null}>}
   */
  const dbUserCreate = async parameters =>{
     /**@type{import('./common.js')} */
@@ -1327,20 +1330,20 @@ const dbStart = async () => {
         {db: 4, sql: `GRANT UNLIMITED TABLESPACE TO ${parameters.username}`}
     ];
     if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
-        return {result:[],type:'JSON'};
-    else
-        //return all result in an arrray
-        return {result : /**@ts-ignore */
-                        await Promise.all(user_sql.filter(row=>row.db == [serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))])
-                        .map(row=>
-                            dbCommonExecute(parameters.app_id, 
+        return {result:null,type:'JSON'};
+    else{
+        for (const row of user_sql.filter(row=>
                                 /**@ts-ignore */
-                                row.sql, 
-                                {},
-                                DBA)))
-                        ,
-                type:'JSON'};
-
+                                row.db == [serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))])){
+            const result = await dbCommonExecute(parameters.app_id, 
+                            /**@ts-ignore */
+                            row.sql, 
+                            {});
+            if (result.http) 
+                throw result;
+        }
+        return {result : null, type:'JSON'};
+    }
  };
  /**
   * @name dbUserDrop
@@ -1359,8 +1362,7 @@ const dbUserDrop = parameters =>{
                 dbCommonExecute(parameters.app_id, 
                     /**@ts-ignore */
                     `DROP USER ${parameters.username}`, 
-                    {},
-                    DBA));
+                    {}));
  };
  
 export{dbInfo, dbInfoSpace, dbInfoSpaceSum, dbInstall, dbInstalledCheck, dbUninstall, dbDemoInstall, dbDemoUninstall, dbStart,

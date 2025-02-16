@@ -156,7 +156,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
         }
         default:{
             //0 is default, other levels not implemented
-            return dbCommonRecordError(null, 404);
+            return {result:{affectedRows:0}, type:'JSON'};
         }
     }   
     return post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server);
@@ -240,7 +240,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
         }
         default:{
             //0 is default, other levels not implemented
-            return dbCommonRecordError(app_id, 404);
+            return {result:{affectedRows:0}, type:'JSON'};
         }
     }
     return post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db);
@@ -305,7 +305,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
         }
         default:{
             //0 is default, other levels not implemented
-            return dbCommonRecordError(app_id, 404);
+            return {result:{affectedRows:0}, type:'JSON'};
         }
     }
     return post(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json);
@@ -372,7 +372,7 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
     if (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'APP_LEVEL')=='1' || fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'APP_LEVEL')=='2')
         return postApp(app_id, fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext);
     else
-        return dbCommonRecordError(app_id, 400);
+        return {result:{affectedRows:0}, type:'JSON'};
 };
 /**
  * @name postAppE

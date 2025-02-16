@@ -33,8 +33,7 @@ const get = async parameters =>{
                 {   resource_id: parameters.resource_id,
                     data_app_id: serverUtilNumberValue(parameters.data?.data_app_id),
                     entity_id: serverUtilNumberValue(parameters.data?.entity_id)
-                    }, 
-                null)
+                    })
                 .then(result=>result.http?result:
                     {result:result.result
                         .map((/**@type{server_db_sql_result_app_data_entity_resource_get}*/row)=>{

@@ -25,6 +25,5 @@ const get = parameters =>
         dbCommonExecute(parameters.app_id, 
                         dbSql.APP_DATA_ENTITY_SELECT, 
                         {   resource_id: parameters.resource_id,
-                            data_app_id : serverUtilNumberValue(parameters.data?.data_app_id)}, 
-                        null));
+                            data_app_id : serverUtilNumberValue(parameters.data?.data_app_id)}));
 export{get};
