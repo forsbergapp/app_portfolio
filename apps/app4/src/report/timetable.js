@@ -97,8 +97,9 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 	const user_account_app_data_posts = [];
 	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
     const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
-    return getUserPostsByUserId({app_id:app_id, 
-								resource_id:user_account_id})
+    return getUserPostsByUserId({	app_id:app_id, 
+									data:{data_app_id:app_id},
+									resource_id:user_account_id})
 	.then(result_user_account_app_data_posts=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts.result) {
 			//use settings that can be used on a day timetable showing different user settings
