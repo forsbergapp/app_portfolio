@@ -13,6 +13,9 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
 /**
  * @name get
  * @description Get records for given appid
+ *              Returns records in base64 format to avoid records limit
+ *              Data key contains:
+ *              server_db_file_app_setting[]
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
@@ -20,12 +23,14 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  *          data:{  name?:string,
  *                  value?:string,
  *                  data_app_id?:string|number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_file_app_setting[] }}
+ * @returns {server_server_response & {result?:{data:string}[]}}
  */
 const get = parameters => {
     const result = fileDBGet(parameters.app_id, 'APP_SETTING',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
     if (result.rows.length>0 || parameters.resource_id==null)
-        return {result:result.rows.filter(row=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)),
+        return {result:[{
+                            data:Buffer.from (JSON.stringify(result.rows.filter(row=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)))).toString('base64')
+                        }], 
                 type:'JSON'};
     else
         return dbCommonRecordError(parameters.app_id, 404);

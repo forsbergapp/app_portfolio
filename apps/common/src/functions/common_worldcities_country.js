@@ -9,6 +9,9 @@
 /**
  * @name appFunction
  * @description Get cities for given country from worldcities db
+ *              Returns records in base64 format to avoid records limit
+ *              Data key contains:
+ *              commonWorldCitiesCity[]
  * @function
  * @param {{app_id:number,
  *          data:{country:string},
@@ -18,7 +21,7 @@
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:commonWorldCitiesCity[]}>}
+ * @returns {Promise.<server_server_response & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');
@@ -32,7 +35,7 @@ const appFunction = async parameters =>{
         const FILE = 'worldcities.json';
         return fs.promises.readFile(`${PATH}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
     };
-    return {result:await getFile().then(cities=>cities.filter((item) => item.iso2 == parameters.data.country)), type:'JSON'};
+    return {result:[{data:Buffer.from (JSON.stringify(await getFile().then(cities=>cities.filter((item) => item.iso2 == parameters.data.country)))).toString('base64')}], type:'JSON'};
     
 };
 export default appFunction;

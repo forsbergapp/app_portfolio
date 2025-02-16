@@ -122,9 +122,10 @@ const template = props =>`  <div class='setting_horizontal_row'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
+ *                      commonComponentRender:CommonModuleCommon['commonComponentRender'], 
+ *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
- *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -136,13 +137,13 @@ const component = async props => {
     const settings_common = await props.methods.commonFFB({path:'/server-db/app_setting/',
                                                     query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
                                                     method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch HIGHLIGHT_ROW for current app id
     /**@type{CommonAppSettingRecord[]} */
     const settings_app = await props.methods.commonFFB({ path:'/server-db/app_setting/',
                                                             query:`IAM_data_app_id=${props.data.app_id}&name=HIGHLIGHT_ROW`,
                                                             method:'GET', 
-                                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //update APP_GLOBAL with themes
     /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
     props.data.themes.data = settings_app.filter(setting=>
