@@ -33,8 +33,7 @@ const get = async parameters =>{
         dbCommonExecute(parameters.app_id, 
                         dbSql.APP_DATA_STAT_SELECT, 
                         {   resource_id         : serverUtilNumberValue(parameters.data.id),
-							data_app_id         : serverUtilNumberValue(parameters.data.data_app_id)},
-                        null)
+							data_app_id         : serverUtilNumberValue(parameters.data.data_app_id)})
                         .then(result=>result.http?result:
                             {result:result.result
                                     .map((/**@type{server_db_sql_result_app_data_stat_get}*/row)=>{
@@ -84,8 +83,7 @@ const getLog = parameters =>
                             limit:serverUtilNumberValue(parameters.data.limit),
                             app_data_entity_resource_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_id),
                             app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_app_id),
-                            app_data_entity_resource_app_data_entity_id :  serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_id)},
-                        null))
+                            app_data_entity_resource_app_data_entity_id :  serverUtilNumberValue(parameters.data.app_data_entity_resource_app_data_entity_id)}))
         .then(result =>{
                 if (result.result)
                     if (parameters.data.sort!='date_created' && parameters.data.sort!='app_id'){
@@ -156,8 +154,7 @@ const getStatUniqueVisitor = parameters =>{
                                 month_log: serverUtilNumberValue(parameters.data.month),
                                 app_data_entity_resource_id: 0,
                                 app_data_entity_resource_app_data_entity_app_id: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')),
-                                app_data_entity_resource_app_data_entity_id : 0},
-                            null))
+                                app_data_entity_resource_app_data_entity_id : 0}))
             .then(result_logs =>{
                 if (result_logs.result)
                     if (result_logs.result.length>0){
@@ -211,7 +208,6 @@ const post = async (app_id, data) =>
                             app_data_entity_resource_id:                        data.app_data_entity_resource_id,
                             app_data_entity_resource_app_data_entity_app_id:    data.app_data_entity_resource_app_data_entity_app_id,
                             app_data_entity_resource_app_data_entity_id:        data.app_data_entity_resource_app_data_entity_id
-                            },
-                        null));
+                            }));
 
 export{get, getLog, getStatUniqueVisitor, post};

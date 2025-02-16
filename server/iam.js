@@ -317,12 +317,12 @@ const iamAuthenticateUser = async parameters =>{
                         /**@type{import('./db/dbModelUserAccountApp.js')} */
                         const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
                         
-                        const dbUserAccountApp = await dbModelUserAccountApp.get({app_id:parameters.app_id, 
-                                                                            /**@ts-ignore */
-                                                                            resource_id: user_account_id});
+                        const dbUserAccountApp = await dbModelUserAccountApp.get({  app_id:parameters.app_id, 
+                                                                                    resource_id: user_account_id,
+                                                                                    data:{data_app_id:parameters.app_id}});
                         if (dbUserAccountApp.result){
                             if (dbUserAccountApp.result.length==0)
-                                await dbModelUserAccountApp.post(parameters.app_id, user_account_id);
+                                await dbModelUserAccountApp.post(parameters.app_id, {data_app_id:parameters.app_id, user_account_id:user_account_id});
                             //return result with database user account for users
                             return return_result(user_account_id);
                         }
@@ -1006,7 +1006,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
                             if (access_token_decoded.app_id == app_id_host && 
                                 access_token_decoded.scope == 'USER' && 
                                 access_token_decoded.ip == ip && 
-                                access_token_decoded.db == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE'))){
+                                (access_token_decoded.db == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE'))||endpoint=='ADMIN')){
                                 /**@type{server_db_file_iam_app_access}*/
                                 const iam_app_access = fileModelIamAppAccess.get(app_id_host, null).result
                                                         .filter((/**@type{server_db_file_iam_app_access}*/row)=>
@@ -1517,7 +1517,10 @@ const iamAuthenticateResource = parameters =>  {
                                 iam_user_id:            claim.iam_user_id,
                                 iam_user_username:      claim.iam_user_username,
                                 user_account_id:        claim.user_account_id,
-                                db:                     claim.db,
+                                //do not save db for admin
+                                db:                     app_id==serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_ADMIN_APP_ID'))?
+                                                            null:
+                                                                claim.db,
                                 ip:                     claim.ip,
                                 scope:                  claim.scope,
                                 tokentimestamp:         Date.now()}; //this key is provided here, not from calling function

@@ -33,25 +33,24 @@ const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.
 const getUserPost = async (app_id, id) => 
         dbCommonExecute(app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_ID, 
-                        {id: id},
-                        null);
+                        {id: id});
 /**
  * @name getUserPostsByUserId
  * @description Get user post by id
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null}} parameters
+ *          resource_id:number|null,
+ *          data_app_id:number|null}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[] }>}
  */
 const getUserPostsByUserId = async parameters =>
         dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER, 
                         {
-                            user_account_id: parameters.resource_id,
-                            app_id: parameters.app_id
-                        },
-                        null)
+                            user_account_id:    parameters.resource_id,
+                            app_id:             parameters.data_app_id
+                        })
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
                                 
 /**
@@ -71,8 +70,7 @@ const getProfileUserPosts = async parameters =>
                             user_account_id_current: serverUtilNumberValue(parameters.data?.id_current_user),
                             user_account_id: parameters.resource_id,
                             app_id: parameters.app_id
-                            },
-                        null)
+                            })
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name getProfileStatLike
@@ -89,8 +87,7 @@ const getProfileUserPosts = async parameters =>
                         {
                             id: parameters.resource_id,
                             app_id: parameters.app_id
-                        },
-                        null)
+                        })
                         .then(result=>(result.http ||result.result[0])?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name getProfileStatPost
@@ -114,8 +111,7 @@ const getProfileStatPost = async parameters =>
                                     {
                                         app_id: parameters.app_id,
                                         statchoice: serverUtilNumberValue(parameters.data?.statchoice)
-                                    },
-                                    null)
+                                    })
                                     .then(result=>{return {result:result.result
                                                                     .filter((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
                                                                         //add condition active and private
@@ -153,8 +149,7 @@ const getProfileUserPostDetail = async parameters =>{
                                 user_account_id: parameters.resource_id,
                                 app_id: parameters.app_id,
                                 detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
-                            },
-                            null)
+                            })
                             .then(result=>{return {result:result.result
                                                             .filter((/**@type{server_db_sql_result_user_account_app_data_post_getProfileStatPost}*/row)=>{
                                                                 //add condition active and private
@@ -176,10 +171,11 @@ const getProfileUserPostDetail = async parameters =>{
  * @description Create user post
  * @function
  * @memberof ROUTE_REST_API
- * @param {{app_id:Number,
+ * @param {{app_id:number,
  *          data:{  initial:number,
  *                  description:string,
  *                  json_data:*,
+ *                  data_app_id:number,
  *                  user_account_id:number}}} parameters
  * @returns {Promise.<server_server_response & {result?:{id:number|null,data: server_db_common_result_insert|null} }>}
  */
@@ -192,11 +188,10 @@ const createUserPost = parameters => {
                                     description: parameters.data?.description,
                                     json_data: JSON.stringify(parameters.data?.json_data),
                                     user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
-                                    app_id: parameters.app_id,
+                                    app_id: parameters.data.data_app_id,
                                     DB_RETURN_ID:'id',
                                     DB_CLOB: ['json_data']
-                                },
-                                null)
+                                })
                                 .then(result=>resolve({ result:{
                                                                 id: result.result.insertId,
                                                                 data: result.result
@@ -207,6 +202,7 @@ const createUserPost = parameters => {
         //Check if first time
         if (serverUtilNumberValue(parameters.data?.initial)==1){
             getUserPostsByUserId({  app_id:parameters.app_id, 
+                                    data_app_id:parameters.data.data_app_id, 
                                     resource_id:serverUtilNumberValue(parameters.data?.user_account_id)})
             .then(result=>{
                 if (result.result)
@@ -251,8 +247,7 @@ const updateUserPost = parameters =>
                             app_id: parameters.app_id,
                             id: parameters.resource_id,
                             DB_CLOB: ['json_data']
-                        },
-                        null)
+                        })
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 /**
  * @name deleteUserPost
@@ -267,10 +262,11 @@ const updateUserPost = parameters =>
 const deleteUserPost = parameters =>
         dbCommonExecute(parameters.app_id, 
                         dbSql.USER_ACCOUNT_APP_DATA_POST_DELETE, 
-                        {   id: parameters.resource_id,
+                        {   
+                            id: parameters.resource_id,
                             user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
-                            app_id:parameters.app_id},
-                        null)
+                            app_id:parameters.app_id
+                        })
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
 
 export{ getUserPost, getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,

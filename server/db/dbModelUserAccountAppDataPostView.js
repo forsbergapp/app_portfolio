@@ -26,8 +26,7 @@ const post = async (app_id, data) =>
                             client_user_agent: data.client_user_agent,
                             user_account_id: data.user_account_id,
                             user_account_app_data_post_id: data.user_account_app_data_post_id,
-                            app_id: app_id
-                        },
-                        null));
+                            app_id: data.data_app_id
+                        }));
 
 export {post};

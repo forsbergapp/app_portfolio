@@ -58,8 +58,7 @@ const get = async parameters =>{
                       data_app_id                               : serverUtilNumberValue(parameters.data.data_app_id),
                       entity_id                                 : serverUtilNumberValue(parameters.data.entity_id) ?? null,
                       user_null                                 : serverUtilNumberValue(parameters.data.user_null)?1:0
-                      }, 
-                    null)
+                      })
                     .then(result=>result.http?result:
                       {result:result.result
                         .filter((/**@type{server_db_sql_result_app_data_resource_detail_data_get}*/row)=>
@@ -118,8 +117,7 @@ const post = parameters =>
                       data_app_id                             : parameters.data.data_app_id ?? null,
                       app_data_resource_detail_id             : parameters.data.app_data_resource_detail_id ?? null,
                       app_data_resource_master_attribute_id   : parameters.data.app_data_resource_master_attribute_id ?? null
-                      }, 
-                    null));
+                      }));
 
 /**
  * @name update
@@ -147,8 +145,7 @@ const update = parameters =>
                       data_app_id                             :parameters.data.data_app_id ?? null,
                       app_data_resource_detail_id             :parameters.data.app_data_resource_detail_id ?? null,
                       app_data_resource_master_attribute_id   :parameters.data.app_data_resource_master_attribute_id ?? null
-                      }, 
-                    null));
+                      }));
 
 /**
  * @name deleteRecord
@@ -169,7 +166,6 @@ const deleteRecord = parameters =>
                     { resource_id         : parameters.resource_id,
                       user_account_id     : parameters.data.user_account_id ?? null,
                       user_account_app_id : parameters.data.user_account_id?parameters.data.data_app_id:null,
-                      data_app_id         : parameters.data.data_app_id ?? null},
-                    null));
+                      data_app_id         : parameters.data.data_app_id ?? null}));
 
 export{ get,  post, update, deleteRecord};

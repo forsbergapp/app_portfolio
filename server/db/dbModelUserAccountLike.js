@@ -29,8 +29,7 @@ const post = parameters =>
                         {
                             user_account_id: parameters.resource_id,
                             user_account_id_like: serverUtilNumberValue(parameters.data?.user_account_id)
-                            },
-                        null));
+                        }));
 /**
  * @name deleteRecord
  * @description Unlike
@@ -48,7 +47,6 @@ const deleteRecord = parameters =>
                         {
                             user_account_id: parameters.resource_id,
                             user_account_id_like: serverUtilNumberValue(parameters.data?.user_account_id)
-                            },
-                        null));
+                        }));
                         
 export {post, deleteRecord};

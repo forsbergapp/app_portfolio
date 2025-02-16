@@ -27,8 +27,7 @@ const get = async parameters =>
                        dbSql.APP_SELECT,
                        {
                            id: parameters.app_id
-                       },
-                       null));
+                       }));
 
 /**
  * @name post
@@ -44,8 +43,7 @@ const post = async parameters =>
                         dbSql.APP_INSERT, 
                         {
                             id: parameters.data.data_app_id
-                        }, 
-                        1));
+                        }));
 /**
  * @name deleteRecord
  * @description Delete record, ony allowed as admin
@@ -60,7 +58,6 @@ const deleteRecord = parameters =>
                         dbSql.APP_DELETE,
                         {
                             id: serverUtilNumberValue(parameters.resource_id)
-                        },
-                        1));
+                        }));
 
 export {get, post,deleteRecord};

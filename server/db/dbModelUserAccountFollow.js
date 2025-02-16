@@ -29,8 +29,7 @@ const post = parameters =>
                         {
                             user_account_id: parameters.resource_id,
                             user_account_id_follow: serverUtilNumberValue(parameters.data?.user_account_id)
-                            },
-                        null));
+                        }));
 /**
  * @name deleteRecord
  * @description Unfollow
@@ -48,6 +47,5 @@ const deleteRecord = parameters =>
                         {
                             user_account_id: parameters.resource_id,
                             user_account_id_follow: serverUtilNumberValue(parameters.data?.user_account_id)
-                            },
-                        null));
+                        }));
 export {post, deleteRecord};

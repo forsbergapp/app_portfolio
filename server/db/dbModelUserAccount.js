@@ -37,8 +37,7 @@ const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.
  */                            
 const get = async parameters =>dbCommonExecute(   parameters.app_id, 
                                             dbSql.USER_ACCOUNT_SELECT,
-                                            {id: parameters.resource_id},
-                                            null);
+                                            {id: parameters.resource_id});
 
 /**
  * @name getProfile
@@ -91,9 +90,7 @@ const getProfile = async parameters =>{
                                           {
                                               user_accound_id_current_user: serverUtilNumberValue(parameters.data?.id),
                                               id: parameters.resource_id
-                                          }
-                                          ,
-                                          null)
+                                          })
                                           .then(result=>result.result
                                                           .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               // get active, username, bio, private, user_level, avatar from iam_user
@@ -174,8 +171,7 @@ const getProfileStat = async parameters =>{
                                           {
                                               statchoice: serverUtilNumberValue(parameters.data?.statchoice),
                                               app_id: parameters.app_id
-                                          },
-                          null)
+                                          })
                           .then(result=>{return {result:result.result
                                                           .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               //add condition active and private
@@ -211,8 +207,7 @@ const getProfileStat = async parameters =>{
                             {
                                 user_account_id: parameters.resource_id,
                                 detailchoice: serverUtilNumberValue(parameters.data?.detailchoice)
-                            },
-                            null)
+                            })
                             .then(result=>{return {result:result.result
                                                         .filter((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
                                                             //add condition active and private
@@ -240,8 +235,7 @@ const getProfileStat = async parameters =>{
 const getStatCountAdmin = parameters => 
     dbCommonExecute(parameters.app_id, 
                     dbSql.USER_ACCOUNT_SELECT_STAT_COUNT,
-                    {},
-                    null);
+                    {});
 
 /**
 * @name getIamUser
@@ -254,8 +248,7 @@ const getStatCountAdmin = parameters =>
 */                            
 const getIamUser = async parameters =>dbCommonExecute(   parameters.app_id, 
                                           dbSql.USER_ACCOUNT_SELECT_IAM_USER,
-                                          {iam_user_id: parameters.iam_user_id},
-                                          null);
+                                          {iam_user_id: parameters.iam_user_id});
 
 /**
  * @name update
@@ -272,8 +265,7 @@ const update = async parameters =>dbCommonExecute(parameters.app_id,
                                {
                                    iam_user_id:parameters.data.iam_user_id,
                                    id: parameters.resource_id
-                               },
-                               null);
+                               });
 
 /**
  * @name post
@@ -289,10 +281,9 @@ const post = async (app_id, data) =>
                     {
                         iam_user_id:data.iam_user_id,
                         DB_RETURN_ID:'id'
-                    },
-                    null);
+                    });
 
-                    /**
+/**
  * @name deleteUser
  * @description Delete user
  * @function
@@ -303,8 +294,7 @@ const post = async (app_id, data) =>
 const deleteUser = async (app_id, id) =>
     dbCommonExecute(app_id, 
                     dbSql.USER_ACCOUNT_DELETE,
-                    {id: id},
-                    null);
+                    {id: id});
 
 export {get, 
         getProfile, getProfileStat,getProfileDetail,
@@ -312,4 +302,4 @@ export {get,
         getIamUser,
         post,
         update,
-        deleteUser };
+        deleteUser};

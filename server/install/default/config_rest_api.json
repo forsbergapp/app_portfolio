@@ -432,6 +432,10 @@
                             "$ref": "#/components/parameters/resource_id_number",
                             "description":"db user_account.id",
                             "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "in":"query"
                         }
                 ],
                 "responses": {
@@ -1718,6 +1722,10 @@
                             "$ref": "#/components/parameters/IAM_user_account_id",
                             "in":"path",
                             "required":true
+                        },
+                        {
+                            "$ref": "#/components/parameters/IAM_data_app_id",
+                            "in":"query"
                         }
                 ],
                 "responses": {
@@ -1772,6 +1780,9 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
+                                            },
                                             "json_data":{
                                                 "required":true,
                                                 "type":"string"
@@ -1823,9 +1834,8 @@
                                     "schema":{
                                         "type":"object" ,
                                         "properties":{
-                                            "delete_app_id":{
-                                                "required":true,
-                                                "type":"number"
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             }
                                         }
                                     }
@@ -1983,6 +1993,10 @@
                                             },
                                             "json_data":{
                                                 "type":"string"
+                                            },
+                                            "IAM_data_app_id":{
+                                                "required":true,
+                                                "type":"number"
                                             },
                                             "IAM_user_account_id":{
                                                 "required":true,
@@ -2150,6 +2164,9 @@
                                             "user_account_app_data_post_id":{
                                                 "required":true,
                                                 "type":"number"
+                                            },
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             }
                                         }
                                     }
@@ -2201,6 +2218,9 @@
                                             "user_account_app_data_post_id":{
                                                 "required":true,
                                                 "type":"number"
+                                            },
+                                            "IAM_data_app_id": {
+                                                "$ref": "#/components/parameters/IAM_data_app_id"
                                             }
                                         }
                                     }
