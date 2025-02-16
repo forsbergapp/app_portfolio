@@ -41,7 +41,7 @@ const getUserPost = async (app_id, id) =>
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data_app_id:number|null}} parameters
+ *          data:{data_app_id:number|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_app_data_post_getUserPostsByUserId[] }>}
  */
 const getUserPostsByUserId = async parameters =>
@@ -49,7 +49,7 @@ const getUserPostsByUserId = async parameters =>
                         dbSql.USER_ACCOUNT_APP_DATA_POST_SELECT_USER, 
                         {
                             user_account_id:    parameters.resource_id,
-                            app_id:             parameters.data_app_id
+                            app_id:             parameters.data.data_app_id
                         })
                         .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
                                 
@@ -202,7 +202,7 @@ const createUserPost = parameters => {
         //Check if first time
         if (serverUtilNumberValue(parameters.data?.initial)==1){
             getUserPostsByUserId({  app_id:parameters.app_id, 
-                                    data_app_id:parameters.data.data_app_id, 
+                                    data:{data_app_id:parameters.data.data_app_id}, 
                                     resource_id:serverUtilNumberValue(parameters.data?.user_account_id)})
             .then(result=>{
                 if (result.result)

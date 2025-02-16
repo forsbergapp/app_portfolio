@@ -947,7 +947,7 @@ const dbInfoSpaceSum = parameters =>
          */
         const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
             return new Promise((resolve, reject) => {
-                dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:parameters.app_id, resource_id:user1, data_app_id:app_id})
+                dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:parameters.app_id, resource_id:user1, data:{data_app_id:app_id}})
                 .then(result_posts=>{
                     if (result_posts.result){
                         const random_posts_index = Math.floor(1 + Math.random() * result_posts.result.length - 1 );
@@ -980,7 +980,7 @@ const dbInfoSpaceSum = parameters =>
          */
         const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
             return new Promise((resolve, reject) => {
-                dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:parameters.app_id, resource_id:user1, data_app_id:app_id})
+                dbModelUserAccountAppDataPost.getUserPostsByUserId({app_id:parameters.app_id, resource_id:user1, data:{data_app_id:app_id}})
                 .then(result_posts=>{
                     if (result_posts.result){
                         //choose random post from user
