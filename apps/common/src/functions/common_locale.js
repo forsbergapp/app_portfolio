@@ -56,6 +56,11 @@ const formatLocale = locale =>{
 /**
  * @name appFunction
  * @description Get locales using ISO 639-1 for language code and ISO 3166-1 for country code
+ *              Returns records in base64 format to avoid records limit
+ *              Data key contains array with:
+ *              locale:string
+ *              text:string
+ *              
  * @function
  * @param {{app_id:number,
  *          data:*,
@@ -65,7 +70,7 @@ const formatLocale = locale =>{
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{locale: string, text:string}[]}>}
+ * @returns {Promise.<server_server_response & {result?:{data: string}[]}>}
  */
 const appFunction = async parameters =>{
     const fs = await import('node:fs');
@@ -81,22 +86,23 @@ const appFunction = async parameters =>{
         return fs.promises.readFile(`${PATH}${formatLocale(locale)}/${FILE}`, 'utf8').then(file=>JSON.parse(file.toString()));
     };
     const locales = await getFile(parameters.locale).catch(()=>getFile('en'));
-    //format result and order by text
-    return {result:Object.entries(locales)
-                        .map(locale => {
-                            return { locale:locale[0].replaceAll('_','-').toLowerCase(), text:locale[1]};
-                        })
-                        .sort((first, second)=>{
-                            const first_sort = first.text.toLowerCase();
-                            const second_sort = second.text.toLowerCase();
-                            //using localeCompare as collation method
-                            if (first_sort.localeCompare(second_sort)<0 )
-                                return -1;
-                            else if (first_sort.localeCompare(second_sort)>0 )
-                                return 1;
-                            else
-                                return 0;
-                        }), type:'JSON'};
+    //format result and order by text using base 64 to avoid record limit
+    return {result:[{data:Buffer.from (JSON.stringify(Object.entries(locales)
+                                                        .map(locale => {
+                                                            return { locale:locale[0].replaceAll('_','-').toLowerCase(), text:locale[1]};
+                                                        })
+                                                        .sort((first, second)=>{
+                                                            const first_sort = first.text.toLowerCase();
+                                                            const second_sort = second.text.toLowerCase();
+                                                            //using localeCompare as collation method
+                                                            if (first_sort.localeCompare(second_sort)<0 )
+                                                                return -1;
+                                                            else if (first_sort.localeCompare(second_sort)>0 )
+                                                                return 1;
+                                                            else
+                                                                return 0;
+                                                        }))).toString('base64')}], type:'JSON'};
+
 };
 export {formatLocale};
 export default appFunction;

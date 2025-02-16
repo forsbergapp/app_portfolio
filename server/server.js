@@ -219,12 +219,19 @@ const serverResponse = async parameters =>{
                                     parameters.result_request.result = result_service_fields;
                                 }
                             }
-                            if (parameters.result_request.singleResource || parameters.result_request.result.page_header)
-                                parameters.res.write(JSON.stringify(parameters.result_request.result), 'utf8');
+                            //records limit in controlled by server, apps can not set limits
+                            const limit = serverUtilNumberValue(fileModelAppParameter.get( {app_id:parameters.app_id ?? common_app_id,
+                                                                                            resource_id:common_app_id}).result[0].common_app_limit_records.value);
+                            if (parameters.result_request.singleResource)
+                                //limit rows if single resource response contains rows
+                                parameters.res.write(JSON.stringify(parameters.result_request.result?.length>0?
+                                                                        parameters.result_request.result
+                                                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
+                                                                        (index+1)<=(limit??0)
+                                                                            :true):
+                                                                            parameters.result_request.result), 'utf8');
                             else{
-                                //limit records in controlled by server, apps can not set limits
-                                const limit = serverUtilNumberValue(fileModelAppParameter.get( {app_id:parameters.app_id ?? common_app_id,
-                                                                                                resource_id:common_app_id}).result[0].common_app_limit_records.value);
+                                
                                 let result;
                                 if (parameters.decodedquery && new URLSearchParams(parameters.decodedquery).has('offset')){
                                     const offset = serverUtilNumberValue(new URLSearchParams(parameters.decodedquery).get('offset'));
@@ -260,6 +267,9 @@ const serverResponse = async parameters =>{
                                                         count:			Math.min(limit??0,parameters.result_request.result.length)
                                                     },
                                                 rows:               parameters.result_request.result
+                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
+                                                                                                                            (index+1)<=(limit??0)
+                                                                                                                                :true)
                                             };
                                 }
                                 parameters.res.write(JSON.stringify(result), 'utf8');    

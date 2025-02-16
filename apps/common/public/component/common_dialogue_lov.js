@@ -52,6 +52,7 @@ const template = props =>`  <div id='common_lov_form'>
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      function_event:function,
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
  *                      commonFFB:CommonModuleCommon['commonFFB']
  *                      }}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -106,7 +107,10 @@ const component = async props => {
                                                                                                                     method:method, 
                                                                                                                     authorization_type:token_type,
                                                                                                                     body:body
-                                                                                                                }).then(result=>JSON.parse(result).rows);
+                                                                                                                }).then(result=>props.data.lov=='SERVER_LOG_FILES'?
+                                                                                                                                JSON.parse(result).rows:
+                                                                                                                                //COUNTRY and default use base64
+                                                                                                                                JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const lov_column_value  = props.data.lov=='CUSTOM'?(props.data.lov_custom_value ??''):lov_column;
 
     /**

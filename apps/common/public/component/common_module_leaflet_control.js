@@ -65,6 +65,7 @@ const template = props =>` <div id='common_module_leaflet_control_search' class=
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
  *                      commonMicroserviceGeolocationPlace:CommonModuleCommon['commonMicroserviceGeolocationPlace'],
  *                      commonMiscElementRow:CommonModuleCommon['commonMiscElementRow'],
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64'],
  *                      commonFFB:CommonModuleCommon['commonFFB'],
  *                      moduleLeafletContainer:function,
  *                      moduleLeafletLibrary:function
@@ -268,8 +269,8 @@ const component = async props => {
                                                                                                             authorization_type:'APP_ID', 
                                                                                                             body:{type:'FUNCTION',IAM_data_app_id:props.data.data_app_id}
                                                                                                         })
-                                                .then((/**@type{string}*/result)=>JSON.parse(result).rows)
-                                                .then((/**@type{[{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}]}*/result)=>
+                                                .then((/**@type{*}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
+                                                .then((/**@type{{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}[]}*/result)=>
                                                     result.map(country=>{
                                                                 return {value:JSON.stringify({  id:country.id, 
                                                                                                 country_code:country.country_code, 
@@ -287,7 +288,7 @@ const component = async props => {
             const cities = await props.methods.commonFFB({path:'/app-module/COMMON_WORLDCITIES_COUNTRY', 
                 method:'POST', 
                 authorization_type:'APP_ID', 
-                body:{type:'FUNCTION',country:country_code.toUpperCase(), IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(result).rows);
+                body:{type:'FUNCTION',country:country_code.toUpperCase(), IAM_data_app_id:props.data.data_app_id}}).then(result=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
             
             //sort admin name + city
             cities.sort((a, b) => {

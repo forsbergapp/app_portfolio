@@ -136,9 +136,10 @@ const template = props => ` <div class='setting_horizontal_row'>
  *                      },
  *          methods:    {COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      appComponentSettingUpdate:appComponentSettingUpdate,
- *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
  *                      commonComponentRender:CommonModuleCommon['commonComponentRender'],
- *                      commonFFB:CommonModuleCommon['commonFFB']}}} props
+ *                      commonFFB:CommonModuleCommon['commonFFB'], 
+ *                      commonMiscSelectCurrentValueSet:CommonModuleCommon['commonMiscSelectCurrentValueSet'],
+ *                      commonWindowFromBase64:CommonModuleCommon['commonWindowFromBase64']}}} props
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
@@ -150,7 +151,7 @@ const component = async props => {
     const settings = await props.methods.commonFFB({path:'/server-db/app_setting/',
                                                     query:`IAM_data_app_id=${props.data.common_app_id}`,
                                                     method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch locales using user locale
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.commonFFB({
@@ -159,7 +160,7 @@ const component = async props => {
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{type:'FUNCTION',IAM_data_app_id : props.data.common_app_id}
                                                 })
-                            .then((/**@type{string}*/result)=>JSON.parse(result).rows);
+                            .then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
         //Locale using setting locale
         await props.methods.commonComponentRender({

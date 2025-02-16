@@ -675,9 +675,11 @@ const SettingShow = async (tab_selected) => {
                             user_timezone:common.COMMON_GLOBAL.user_timezone},
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB
+                            commonFFB:common.commonFFB,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
+                            commonWindowFromBase64:common.commonWindowFromBase64,
+                            
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -693,11 +695,12 @@ const SettingShow = async (tab_selected) => {
                             lib_timetable_APP_REPORT_GLOBAL:appLibTimetable.APP_REPORT_GLOBAL,
                             appComponentSettingUpdate:appComponentSettingUpdate,
                             getTimezone:getTimezone,
+                            commonComponentRender:common.commonComponentRender,
+                            commonFFB:common.commonFFB,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonMiscTimezoneDate:common.commonMiscTimezoneDate,
                             commonModuleLeafletInit:common.commonModuleLeafletInit,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
-                            commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB
+                            commonWindowFromBase64:common.commonWindowFromBase64
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -712,9 +715,10 @@ const SettingShow = async (tab_selected) => {
                             themes:APP_GLOBAL.themes},
                 methods:    {
                             appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB
+                            commonFFB:common.commonFFB,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
+                            commonWindowFromBase64:common.commonWindowFromBase64
                             },
                 path:       `/component/settings_tab${tab_selected}.js`});
             break;
@@ -751,9 +755,10 @@ const SettingShow = async (tab_selected) => {
                             },
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate,
-                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
                             commonComponentRender:common.commonComponentRender,
-                            commonFFB:common.commonFFB
+                            commonFFB:common.commonFFB,
+                            commonMiscSelectCurrentValueSet:common.commonMiscSelectCurrentValueSet,
+                            commonWindowFromBase64:common.commonWindowFromBase64
                             },
                 path:`/component/settings_tab${tab_selected}.js`});
             break;

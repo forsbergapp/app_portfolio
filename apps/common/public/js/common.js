@@ -1304,8 +1304,9 @@ const commonLovShow = parameters => {
                     lov_custom_value:parameters.lov_custom_value
                     },
         methods:    {
-                   commonFFB:commonFFB, 
-                    function_event:parameters.function_event
+                    function_event:parameters.function_event,
+                    commonWindowFromBase64:commonWindowFromBase64,
+                    commonFFB:commonFFB
                     },
         path:       '/common/component/common_dialogue_lov.js'});        
 };
@@ -2159,6 +2160,7 @@ const commonModuleLeafletInit = async parameters => {
                     commonComponentRender:commonComponentRender,
                     commonMicroserviceGeolocationPlace:commonMicroserviceGeolocationPlace,
                     commonMiscElementRow:commonMiscElementRow,
+                    commonWindowFromBase64:commonWindowFromBase64,
                     commonFFB:commonFFB,
                     moduleLeafletContainer:module_leaflet.methods.leafletContainer,
                     moduleLeafletLibrary:module_leaflet.methods.leafletLibrary
@@ -2575,7 +2577,7 @@ const commonEventSelectAction = async (event_target_id, target) =>{
                                                 method:'POST', authorization_type:'APP_ID',
                                                 body:{type:'FUNCTION',IAM_data_app_id : COMMON_GLOBAL.common_app_id}
                                             })
-                                            .then((/**@type{string}*/result)=>JSON.parse(result).rows),
+                                            .then((/**@type{string}*/result)=>JSON.parse(commonWindowFromBase64(JSON.parse(result).rows[0].data))),
                     path:null,
                     query:null,
                     method:null,
@@ -2862,6 +2864,7 @@ const commonEvent = async (event_type,event=null) =>{
                                             },
                                 methods:    {
                                             commonMiscSelectCurrentValueSet:commonMiscSelectCurrentValueSet,
+                                            commonWindowFromBase64:commonWindowFromBase64,
                                             commonFFB:commonFFB,
                                             commonComponentRender:commonComponentRender,
                                             commonUserSessionCountdown:commonUserSessionCountdown,

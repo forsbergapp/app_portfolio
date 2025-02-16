@@ -9,6 +9,13 @@
 /**
  * @name appFunction
  * @description Get countries using ISO 3166-1 country code and language code using ISO 639-1
+ *              Returns records in base64 format to avoid records limit
+ *              Data key contains array with:
+ *              value:string,
+ *              group_name:string, 
+ *              country_code:string, 
+ *              flag_emoji:string, 
+ *              text:string
  * @function
  * @param {{app_id:number,
  *          data:*,
@@ -18,11 +25,7 @@
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:{value:string,
- *                                              group_name:string, 
- *                                              country_code:string, 
- *                                              flag_emoji:string, 
- *                                              text:string}[]}>}
+ * @returns {Promise.<server_server_response & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
     /**@type{import('./common_locale.js')} */
@@ -339,6 +342,6 @@ const appFunction = async parameters =>{
                                         return 0;
                                 });
     
-     return {result:countries_map, type:'JSON'};
+     return {result:[{data:Buffer.from (JSON.stringify(countries_map)).toString('base64')}], type:'JSON'};
 };
 export default appFunction;
