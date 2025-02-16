@@ -3570,58 +3570,6 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/app_data_stat-log-stat": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.dbModelAppDataStat.getStatUniqueVisitor",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {
-                            "name":"select_app_id",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        },
-                        {
-                            "name":"year",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        },
-                        {
-                            "name":"month",
-                            "in":"query",
-                            "required":false,
-                            "schema":{
-                                "type": "number"
-                            }    
-                        },
-                        {"description": "parameters"}
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                        {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
         "/bff/admin/v1/server-socket/message": {
             "post": {
                 "summary": "",
