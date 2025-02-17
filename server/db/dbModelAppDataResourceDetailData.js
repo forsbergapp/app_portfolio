@@ -37,14 +37,14 @@ const get = async parameters =>{
   /**@type{import('./fileModelAppSetting.js')} */
   const fileModelAppSetting = await import(`file://${process.cwd()}/server/db/fileModelAppSetting.js`);
   /**@type{server_db_file_app_setting[]}*/
-  const app_setting = fileModelAppSetting.get({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
+  const app_setting = fileModelAppSetting.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
   /**@type{server_db_file_app_setting[]}*/
-  const app_setting_master = fileModelAppSetting.get({  app_id:parameters.app_id, 
+  const app_setting_master = fileModelAppSetting.getServer({  app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{name:parameters.data?.resource_name_master_attribute_type??'', 
                                                               value:parameters.data?.resource_name_master_attribute??''}}).result;
   /**@type{server_db_file_app_setting[]}*/
-  const app_setting_master_attribute = fileModelAppSetting.get({  app_id:parameters.app_id, 
+  const app_setting_master_attribute = fileModelAppSetting.getServer({  app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{name:parameters.data?.resource_name_data_master_attribute_type??'', 
                                                               value:parameters.data?.resource_name_data_master_attribute??''}}).result;

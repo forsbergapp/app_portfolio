@@ -30,7 +30,7 @@ const get = async parameters =>{
   /**@type{import('./fileModelAppSetting.js')} */
   const fileModelAppSetting = await import(`file://${process.cwd()}/server/db/fileModelAppSetting.js`);
   /**@type{server_db_file_app_setting[]}*/
-  const app_setting = fileModelAppSetting.get({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
+  const app_setting = fileModelAppSetting.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
 
   return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
     dbCommonExecute(parameters.app_id, 
