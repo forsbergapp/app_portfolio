@@ -1366,59 +1366,6 @@
  *              app_setting_display_data:string}} server_db_sql_result_app_data_resource_detail_data_get
  */
 
-/**
- * @description DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_get
- * @typedef {{  app_id:                                                                     number|null,
- *				json_data:                                                                  string,
- *              date_created:                                                               string,            
- *              user_account_id:                                                            number|null,
- *              user_account_app_user_account_id:                                           number|null,
- *              user_account_app_app_id:                                                    number|null,
- *              app_data_resource_master_id:                                                number|null,
- *              app_data_resource_master_app_data_entity_resource_app_data_entity_app_id:   number|null,
- *              app_data_resource_master_app_data_entity_resource_app_data_entity_id:       number|null,
- *              app_data_resource_master_app_data_entity_resource_id:                       number|null,
- *              app_data_resource_master_user_account_app_user_account_id:                  number|null,
- *              app_data_resource_master_user_account_app_app_id:                           number|null,
- *              app_data_entity_resource_id:                                                number,
- *              app_setting_id:                                                             number,
- *              app_setting_name:                                                           string,
- *              app_setting_value:                                                          string,
- *              app_setting_display_data:                                                   string,
- *              app_data_entity_resource_app_data_entity_app_id:                            number,
- *              app_data_entity_resource_app_data_entity_id:                                number}} server_db_sql_result_app_data_stat_get
- */
-
-/**
- * @description DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_post
- * @typedef {{  json_data:                                          {},
- *              app_id:                                             number|null,
- *              user_account_id:                                    number|null,
- *              user_account_app_user_account_id:                   number|null,
- *              user_account_app_app_id:                            number|null,
- *              app_data_resource_master_id:                        number|null,
- *              app_data_entity_resource_id:                        number,
- *              app_data_entity_resource_app_data_entity_app_id:    number,
- *              app_data_entity_resource_app_data_entity_id:        number}} server_db_sql_parameter_app_data_stat_post
- */
-
-/**
- * @description DB SQL APP_DATA_STAT server_db_sql_parameter_app_data_stat_createLog
- * @typedef {{  app_module:string,
- *              app_module_type : string,
- *              app_module_request : string|null,
- *              app_module_result : string,
- *              app_user_id : null}} server_db_sql_parameter_app_data_stat_createLog
- */
-
-/**
- * @description DB SQL APP_DATA_STAT server_db_sql_result_app_data_stat_logGet
- * @typedef {{  id:number,
- *              app_id:number,
- *              json_data:string,
- *              date_created:string,
- *              total_rows:number}} server_db_sql_result_app_data_stat_logGet
- */
 
 /** 
  * @description DB SQL USER ACCOUNT server_db_sql_result_user_account_get

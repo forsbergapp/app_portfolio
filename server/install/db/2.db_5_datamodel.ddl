@@ -102,60 +102,6 @@ CREATE TABLE <DB_SCHEMA/>.app_data_resource_master (
 
 UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_resource_master';
 
-CREATE TABLE <DB_SCHEMA/>.app_data_stat (
-    json_data                                       TEXT,
-    date_created                                    DATE,
-    app_id                                          INTEGER,
-    user_account_app_user_account_id                INTEGER,
-    user_account_app_app_id                         INTEGER,
-    app_data_resource_master_id                     INTEGER,
-    app_data_entity_resource_id                     INTEGER NOT NULL,
-    app_data_entity_resource_app_data_entity_app_id INTEGER NOT NULL,
-    app_data_entity_resource_app_data_entity_id     INTEGER NOT NULL,
-    user_account_id                                 INTEGER,
-    CONSTRAINT arc_2 CHECK ( ( ( app_data_resource_master_id IS NOT NULL )
-                                   AND ( user_account_id IS NULL )
-                                   AND ( app_id IS NULL )
-                                   AND ( user_account_app_user_account_id IS NULL )
-                                   AND ( user_account_app_app_id IS NULL ) )
-                                 OR ( ( user_account_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( user_account_app_user_account_id IS NULL )
-                                      AND ( user_account_app_app_id IS NULL ) )
-                                 OR ( ( app_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( user_account_id IS NULL )
-                                      AND ( user_account_app_user_account_id IS NULL )
-                                      AND ( user_account_app_app_id IS NULL ) )
-                                 OR ( ( user_account_app_user_account_id IS NOT NULL )
-                                      AND ( user_account_app_app_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( user_account_id IS NULL )
-                                      AND ( app_id IS NULL ) ) ),
-    CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
-                                                                           app_data_entity_resource_app_data_entity_id,
-                                                                           app_data_entity_resource_id )
-        REFERENCES app_data_entity_resource ( app_data_entity_app_id,
-                                                            app_data_entity_id,
-                                                            id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES app_data_resource_master ( id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app ( id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
-                                                                   user_account_app_app_id )
-        REFERENCES user_account_app ( user_account_id,
-                                        app_id )
-            ON DELETE CASCADE,
-    CONSTRAINT app_data_stat_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES user_account ( id )
-            ON DELETE CASCADE
-);
-
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    INTEGER NOT NULL CONSTRAINT user_account_pk PRIMARY KEY AUTOINCREMENT,
     iam_user_id           INTEGER,

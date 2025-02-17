@@ -3,9 +3,6 @@
  * 
  * Connected
  *      menu_monitor_detail_connected          contains records
- * App log
- *      menu_monitor_detail_app_data_stat            contains records
- *      list_app_pagination     contains page navigation buttons
  * Server log 
  *      menu_monitor_detail_server_log_form    contains log parameters and is mounted first so records knows what logscope is used
  *      menu_monitor_detail_server_log         contains records
@@ -23,7 +20,7 @@
  * @function
  * @param {{
  *          iam_user_id:number,
- *          monitor_detail:'CONNECTED'|'APP_DATA_STAT'|'SERVER_LOG',
+ *          monitor_detail:'CONNECTED'|'SERVER_LOG',
  *          function_commonWindowUserAgentPlatform:CommonModuleCommon['commonWindowUserAgentPlatform'],
  *          function_get_order_by:function,
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
@@ -156,62 +153,6 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 </div>`:
                                 ''
                             }
-                            ${props.monitor_detail=='APP_DATA_STAT'?`
-                                <div id='menu_monitor_detail_app_data_stat_form'>
-                                    <div id='menu_monitor_detail_app_data_stat' class='common_list_scrollbar'>
-                                        <div class='menu_monitor_detail_app_data_stat_row'>
-                                            <div data-column='date_created' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('date_created')}'>
-                                                DATE
-                                            </div>
-                                            <div  data-column='app_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
-                                                APP ID
-                                            </div>
-                                            <div data-column='app_data_entity_resource_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_data_entity_resource_id')}'>
-                                                ENTITY RESOURCE ID
-                                            </div>
-                                            <div data-column='app_data_entity_resource_app_data_entity_app_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_data_entity_resource_app_data_entity_app_id')}'>
-                                                ENTITY RESOURCE APP DATA ENTITY APP ID
-                                            </div>
-                                            <div data-column='app_data_entity_resource_app_data_entity_id' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('app_data_entity_resource_app_data_entity_id')}'>
-                                                ENTITY RESOURCE APP DATA ENTITY ID
-                                            </div>
-                                            <div data-column='json_data' class='menu_monitor_detail_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('json_data')}'>
-                                                JSON DATA
-                                            </div>
-                                        </div>
-                                        ${props.logs.map((/**@type{{date_created:string,
-                                                                    app_id:number,
-                                                                    app_data_entity_resource_id:number|null,
-                                                                    app_data_entity_resource_app_data_entity_app_id:number|null,
-                                                                    app_data_entity_resource_app_data_entity_id:number|null,
-                                                                    json_data:string
-                                                                    }}*/log)=>
-                                            `<div class='menu_monitor_detail_app_data_stat_row'>
-                                                <div class='menu_monitor_detail_app_data_stat_col'>
-                                                    ${log.date_created}
-                                                </div>
-                                                <div class='menu_monitor_detail_app_data_stat_col'>
-                                                    ${log.app_id}
-                                                </div>
-                                                <div class='menu_monitor_detail_app_data_stat_col'>
-                                                    ${log.app_data_entity_resource_id}
-                                                </div>
-                                                <div class='menu_monitor_detail_app_data_stat_col'>
-                                                    ${log.app_data_entity_resource_app_data_entity_app_id}
-                                                </div>
-                                                <div class='menu_monitor_detail_app_data_stat_col common_wide_list_column'>
-                                                    ${log.app_data_entity_resource_app_data_entity_id}
-                                                </div>
-                                                <div class='menu_monitor_detail_app_data_stat_col common_wide_list_column'>
-                                                    ${log.json_data}
-                                                </div>
-                                            </div>`
-                                            ).join('')
-                                        }
-                                    </div>
-                                </div>`:
-                                ''
-                            }
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='menu_monitor_detail_server_log_form'>
                                     <div id='menu_monitor_detail_select_logscope'></div>
@@ -254,7 +195,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  * @param {{ data:       {
  *                       commonMountdiv:string,
  *                       app_id:number,
- *                       monitor_detail:'CONNECTED'|'APP_DATA_STAT'|'SERVER_LOG',
+ *                       monitor_detail:'CONNECTED'|'SERVER_LOG',
  *                       offset:number,
  *                       sort:string,
  *                       order_by:string,
@@ -328,12 +269,6 @@ const component = async props => {
                 //search month + 1 for CONNECTED
                 return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}`;
             }
-            case 'APP_DATA_STAT':{
-                props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
-                //search month + 1 for CONNECTED
-                return `select_app_id=${app_id}&year=${year}&month=${month}&day=${day}&sort=${sort}&order_by=${order_by}&offset=${offset}` +
-                        'app_data_entity_resource_id=&app_data_entity_resource_app_data_entity_app_id=&app_data_entity_resource_app_data_entity_id=';
-            }
             case 'SERVER_LOG':{
                 //search default logscope REQUEST and loglevel INFO
                 const logscope = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
@@ -367,24 +302,13 @@ const component = async props => {
     let page =      props.data.page?props.data.page:1;
     let page_last=  props.data.page_last?props.data.page_last:1;
     let page_limit= 0;
-    let path = '';
     
-    switch (props.data.monitor_detail){
-        case 'CONNECTED':{
-            path = '/server-socket/socket';
-            break;
-        }
-        case 'APP_DATA_STAT':{
-            path = '/server-db/app_data_stat-log';
-            break;
-        }
-    }
     //fetch logs except for SERVER_LOG
-    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({ path:path, 
+    const logs = props.data.monitor_detail=='SERVER_LOG'?[]:await props.methods.commonFFB({ path:'/server-socket/socket', 
                                                                                             query:get_query(props.data.monitor_detail, props.data.offset, props.data.sort, props.data.order_by), 
                                                                                             method:'GET', 
                                                                                             authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result));
-    if (props.data.monitor_detail=='APP_DATA_STAT'||props.data.monitor_detail=='CONNECTED'){
+    if (props.data.monitor_detail=='CONNECTED'){
         page_last = logs.rows.length>0?(Math.ceil(logs.page_header.total_count/logs.page_header.count)):0;
         page_limit = logs.page_header.count;
         props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_pagination_page').textContent = page; 
@@ -406,33 +330,18 @@ const component = async props => {
          */
         const get_sort = (order_by=0) => {
             const sort = '';
-            if (props.data.monitor_detail=='APP_DATA_STAT')
-                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_monitor_detail_app_data_stat .list_title')){
-                    if (col_title.classList.contains('asc'))
-                        if (order_by==0)
-                            return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-                        else
-                            return 'asc';
-                    if (col_title.classList.contains('desc'))
-                        if (order_by==0)
-                            return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
-                        else
-                            return 'desc';
-                }
-            if (props.data.monitor_detail=='CONNECTED' || props.data.monitor_detail=='SERVER_LOG')
-                for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll(`#menu_monitor_detail_${props.data.monitor_detail.toLowerCase()} .list_title`)){
-                    if (col_title.classList.contains('asc'))
-                        if (order_by==0)
-                                return col_title.getAttribute('data-column');
-                        else
-                            return 'asc';
-                    if (col_title.classList.contains('desc'))
-                        if (order_by==0)
-                                return col_title.getAttribute('data-column');
-                        else
-                            return 'desc';
-                }
-                    
+            for (const col_title of props.methods.COMMON_DOCUMENT.querySelectorAll(`#menu_monitor_detail_${props.data.monitor_detail.toLowerCase()} .list_title`)){
+                if (col_title.classList.contains('asc'))
+                    if (order_by==0)
+                            return col_title.getAttribute('data-column');
+                    else
+                        return 'asc';
+                if (col_title.classList.contains('desc'))
+                    if (order_by==0)
+                            return col_title.getAttribute('data-column');
+                    else
+                        return 'desc';
+            }        
             return sort;
         };    
         let sort = get_sort();
@@ -465,8 +374,6 @@ const component = async props => {
         }
         if (props.data.monitor_detail=='CONNECTED')
             props.methods.monitorShow('CONNECTED',  (page==1?0:page-1) * page_limit, sort, order_by, page, page_last);
-        if (props.data.monitor_detail=='APP_DATA_STAT')
-            props.methods.monitorShow('APP_DATA_STAT',    (page==1?0:page-1) * page_limit, sort, order_by, page, page_last);
         if (props.data.monitor_detail=='SERVER_LOG')
             monitorDetailShowServerLog(             (page==1?0:page-1) * page_limit,props.data.sort, props.data.order_by);
 
@@ -482,10 +389,6 @@ const component = async props => {
      */
     const monitorDetailClickSort = (list, sortcolumn, order_by) => {
         switch (list){
-            case 'menu_monitor_detail_app_data_stat':{
-                props.methods.monitorShow('APP_DATA_STAT', 0,  sortcolumn, order_by);
-                break;
-            }
             case 'menu_monitor_detail_connected':{
                 props.methods.monitorShow('CONNECTED', 
                     '', 
