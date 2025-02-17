@@ -296,76 +296,6 @@ const APP_DATA_RESOURCE_MASTER_DELETE =
        AND ((user_account_app_user_account_id                 = :user_account_id AND
              user_account_app_app_id                          = :user_account_app_id) OR :user_account_id IS NULL)
        AND (app_data_entity_resource_app_data_entity_app_id   = :data_app_id OR :data_app_id IS NULL)`;
-const APP_DATA_STAT_SELECT =
-    `SELECT ads.app_id                                              "app_id",
-            ads.json_data                                           "json_data",
-            ads.date_created                                        "date_created",
-            
-            ads.user_account_id                                     "user_account_id",
-
-            ads.user_account_app_user_account_id                    "user_account_app_user_account_id",
-            ads.user_account_app_app_id                             "user_account_app_app_id",
-
-            ads.app_data_resource_master_id                         "app_data_resource_master_id",
-            adrm.app_data_entity_resource_app_data_entity_app_id    "app_data_resource_master_app_data_entity_resource_app_data_entity_app_id",
-            adrm.app_data_entity_resource_app_data_entity_id        "app_data_resource_master_app_data_entity_resource_app_data_entity_id",
-            adrm.app_data_entity_resource_id                        "app_data_resource_master_app_data_entity_resource_id",
-            adrm.user_account_app_user_account_id                   "app_data_resource_master_user_account_app_user_account_id",
-            adrm.user_account_app_app_id                            "app_data_resource_master_user_account_app_app_id",
-
-            ads.app_data_entity_resource_id                         "app_data_entity_resource_id",
-            ader.app_setting_id                                     "app_setting_id",
-            null                                                    "app_setting_name",
-            null                                                    "app_setting_value",
-            null                                                    "app_setting_display_data",
-            ads.app_data_entity_resource_app_data_entity_app_id     "app_data_entity_resource_app_data_entity_app_id",
-            ads.app_data_entity_resource_app_data_entity_id         "app_data_entity_resource_app_data_entity_id"
-       FROM <DB_SCHEMA/>.app_data_stat  ads,
-            LEFT OUTER JOIN <DB_SCHEMA/>.app_data_entity_resource ader
-                    ON ader.id = ads.app_data_entity_resource_id
-            LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master adrm
-                    ON adrm.id = ads.app_data_resource_master_id
-      WHERE (ads.id		= :resource_id OR :resource_id IS NULL)
-        AND (ads.app_id = :data_app_id OR :data_app_id IS NULL)`;
-
-const APP_DATA_STAT_SELECT_LOG =
-    `SELECT app_id                                          "app_id",
-            app_data_entity_resource_id                     "app_data_entity_resource_id",
-            app_data_entity_resource_app_data_entity_app_id "app_data_entity_resource_app_data_entity_app_id",
-            app_data_entity_resource_app_data_entity_id     "app_data_entity_resource_app_data_entity_id",
-            json_data                                       "json_data",
-            date_created                                    "date_created",
-            count(*) over()                                 "total_rows"
-       FROM <DB_SCHEMA/>.app_data_stat
-      WHERE ((app_id = :app_id) OR :app_id IS NULL)
-        AND (app_data_entity_resource_id = :app_data_entity_resource_id OR :app_data_entity_resource_id IS NULL)
-        AND (app_data_entity_resource_app_data_entity_app_id = :app_data_entity_resource_app_data_entity_app_id OR :app_data_entity_resource_app_data_entity_app_id IS NULL)
-        AND (app_data_entity_resource_app_data_entity_id = :app_data_entity_resource_app_data_entity_id OR :app_data_entity_resource_app_data_entity_id IS NULL)
-        AND <DATE_PERIOD_YEAR/> = :year
-        AND <DATE_PERIOD_MONTH/> = :month
-        AND <DATE_PERIOD_DAY/> = :day
-        ORDER BY <SORT/> <ORDER_BY/>`;
-const APP_DATA_STAT_INSERT = 
-    `INSERT INTO <DB_SCHEMA/>.app_data_stat (   json_data, 
-                                                date_created,
-                                                app_id,
-                                                user_account_id,
-                                                user_account_app_user_account_id,
-                                                user_account_app_app_id,
-                                                app_data_resource_master_id,
-                                                app_data_entity_resource_id,
-                                                app_data_entity_resource_app_data_entity_app_id,
-                                                app_data_entity_resource_app_data_entity_id)
-        VALUES( :json_data, 
-                CURRENT_TIMESTAMP,
-                :app_id,
-                :user_account_id,
-                :user_account_app_user_account_id,
-                :user_account_app_app_id,
-                :app_data_resource_master_id,
-                :app_data_entity_resource_id,
-                :app_data_entity_resource_app_data_entity_app_id,
-                :app_data_entity_resource_app_data_entity_id)`;
 
 const USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT =
       `INSERT INTO <DB_SCHEMA/>.user_account_app_data_post_like(
@@ -784,8 +714,6 @@ export {
         APP_DATA_RESOURCE_DETAIL_SELECT, APP_DATA_RESOURCE_DETAIL_INSERT,APP_DATA_RESOURCE_DETAIL_UPDATE,APP_DATA_RESOURCE_DETAIL_DELETE,
         /**APP_DATA_RESOURCE_MASTER */
         APP_DATA_RESOURCE_MASTER_SELECT,APP_DATA_RESOURCE_MASTER_INSERT, APP_DATA_RESOURCE_MASTER_UPDATE, APP_DATA_RESOURCE_MASTER_DELETE,
-        /**APP_DATA_STAT */
-        APP_DATA_STAT_SELECT, APP_DATA_STAT_SELECT_LOG, APP_DATA_STAT_INSERT,
         /**USER_ACCOUNT_APP_DATA_POST_LIKE */
         USER_ACCOUNT_APP_DATA_POST_LIKE_INSERT,USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE,
         /**USER_ACCOUNT_APP_DATA_POST_VIEW */

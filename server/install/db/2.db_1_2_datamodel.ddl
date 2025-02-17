@@ -88,42 +88,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_master AUTO_INCREMENT=1000000;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON <DB_SCHEMA/>.app_data_resource_master TO app_portfolio_role_app_common;
 
-CREATE TABLE <DB_SCHEMA/>.app_data_stat (
-    json_data                                       LONGTEXT,
-    date_created                                    DATE,
-    app_id                                          BIGINT,
-    user_account_app_user_account_id                BIGINT,
-    user_account_app_app_id                         BIGINT,
-    app_data_resource_master_id                     BIGINT,
-    app_data_entity_resource_id                     BIGINT NOT NULL,
-    app_data_entity_resource_app_data_entity_app_id BIGINT NOT NULL,
-    app_data_entity_resource_app_data_entity_id     BIGINT NOT NULL,
-    user_account_id                                 BIGINT
-);
-
-ALTER TABLE <DB_SCHEMA/>.app_data_stat
-    ADD CONSTRAINT arc_2 CHECK ( ( ( app_data_resource_master_id IS NOT NULL )
-                                   AND ( user_account_id IS NULL )
-                                   AND ( app_id IS NULL )
-                                   AND ( user_account_app_user_account_id IS NULL )
-                                   AND ( user_account_app_app_id IS NULL ) )
-                                 OR ( ( user_account_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( app_id IS NULL )
-                                      AND ( user_account_app_user_account_id IS NULL )
-                                      AND ( user_account_app_app_id IS NULL ) )
-                                 OR ( ( app_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( user_account_id IS NULL )
-                                      AND ( user_account_app_user_account_id IS NULL )
-                                      AND ( user_account_app_app_id IS NULL ) )
-                                 OR ( ( user_account_app_user_account_id IS NOT NULL )
-                                      AND ( user_account_app_app_id IS NOT NULL )
-                                      AND ( app_data_resource_master_id IS NULL )
-                                      AND ( user_account_id IS NULL )
-                                      AND ( app_id IS NULL ) ) );
-
-GRANT SELECT ON <DB_SCHEMA/>.app_data_stat TO app_portfolio_role_app_common;
 
 CREATE TABLE <DB_SCHEMA/>.user_account (
     id                    BIGINT NOT NULL AUTO_INCREMENT,
@@ -262,37 +226,6 @@ ALTER TABLE <DB_SCHEMA/>.app_data_resource_master
                                                                               user_account_app_app_id )
         REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
                                                     app_id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_stat
-    ADD CONSTRAINT app_data_stat_app_data_entity_resource_fk FOREIGN KEY ( app_data_entity_resource_app_data_entity_app_id,
-                                                                           app_data_entity_resource_app_data_entity_id,
-                                                                           app_data_entity_resource_id )
-        REFERENCES <DB_SCHEMA/>.app_data_entity_resource ( app_data_entity_app_id,
-                                                            app_data_entity_id,
-                                                            id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_stat
-    ADD CONSTRAINT app_data_stat_app_data_resource_master_fk FOREIGN KEY ( app_data_resource_master_id )
-        REFERENCES <DB_SCHEMA/>.app_data_resource_master ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_stat
-    ADD CONSTRAINT app_data_stat_app_fk FOREIGN KEY ( app_id )
-        REFERENCES <DB_SCHEMA/>.app ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_stat
-    ADD CONSTRAINT app_data_stat_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
-                                                                   user_account_app_app_id )
-        REFERENCES <DB_SCHEMA/>.user_account_app ( user_account_id,
-                                                    app_id )
-            ON DELETE CASCADE;
-
-ALTER TABLE <DB_SCHEMA/>.app_data_stat
-    ADD CONSTRAINT app_data_stat_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES <DB_SCHEMA/>.user_account ( id )
             ON DELETE CASCADE;
 
 ALTER TABLE <DB_SCHEMA/>.user_account_app
