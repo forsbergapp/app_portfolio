@@ -17,7 +17,6 @@
 const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor' class='list_nav'>
                                     <div id='menu_monitor_connected' class='list_nav_list list_button common_icon'></div>
-                                    <div id='menu_monitor_app_data_stat' class='list_nav_list list_button common_icon'></div>
                                     <div id='menu_monitor_server_log' class='list_nav_list list_button common_icon'></div>
                                 </div>
                                 <div id='menu_monitor_sample'>

@@ -8,7 +8,6 @@
  *          server_db_sql_result_user_account_get,
  *          server_db_sql_result_user_account_getStatCountAdmin,
  *          server_db_sql_result_user_account_getProfileStat,
- *          server_db_sql_parameter_app_data_stat_post,
  *          server_db_sql_result_user_account_getProfileUser,
  *          server_server_response,
  *          server_db_sql_parameter_user_account} from '../types.js'
@@ -16,9 +15,6 @@
 
 /**@type{import('./dbSql.js')} */
 const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
-
-/**@type{import('./fileModelConfig.js')} */
-const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -120,25 +116,7 @@ const getProfile = async parameters =>{
                                                                             commonSearchMatch(row.username, parameters.data.name??'')))
                                           .catch(error=>{throw error;});  
   if (parameters.data.search){
-      //searching, return result
-      /**@type{import('./dbModelAppDataStat.js')} */
-      const { post } = await import(`file://${process.cwd()}/server/db/dbModelAppDataStat.js`);
-      /**@type{server_db_sql_parameter_app_data_stat_post} */
-      const data_insert = {json_data:                                         {   search:             parameters.data.search ?? parameters.resource_id,
-                                                                                  client_ip:          parameters.ip,
-                                                                                  client_user_agent:  parameters.user_agent},
-                          //if user logged is not logged in then save resource on app
-                          app_id:                                             serverUtilNumberValue(parameters.data.id)?null:parameters.app_id,
-                          user_account_id:                                    null,
-                          //save user account if logged in else set null in both user account app columns
-                          user_account_app_user_account_id:                   serverUtilNumberValue(parameters.data.id) ?? null,
-                          user_account_app_app_id:                            serverUtilNumberValue(parameters.data.id)?parameters.app_id:null,
-                          app_data_resource_master_id:                        null,
-                          app_data_entity_resource_id:                        1,  //PROFILE_SEARCH
-                          app_data_entity_resource_app_data_entity_app_id:    serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0,
-                          app_data_entity_resource_app_data_entity_id:        1   //COMMON
-                          };
-      return await post(parameters.app_id, data_insert).then(()=>{return {result:clear_private(result_getProfileUser), type:'JSON'};});
+      return {result:clear_private(result_getProfileUser), type:'JSON'};
   }
   else
       if (result_getProfileUser[0]){
