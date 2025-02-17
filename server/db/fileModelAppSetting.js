@@ -37,6 +37,26 @@ const get = parameters => {
 };
 
 /**
+ * @name getServer
+ * @description Get records for given appid, called from server without base64 encoding
+ * @function
+ * @param {{app_id:Number,
+*          resource_id:number|null,
+*          data:{  name?:string,
+*                  value?:string,
+*                  data_app_id?:string|number|null}}} parameters
+* @returns {server_server_response & {result?:server_db_file_app_setting[]}}
+*/
+const getServer = parameters => {
+   const result = fileDBGet(parameters.app_id, 'APP_SETTING',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
+   if (result.rows.length>0 || parameters.resource_id==null)
+       return {result:result.rows.filter(row=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)), 
+               type:'JSON'};
+   else
+       return dbCommonRecordError(parameters.app_id, 404);
+};
+
+/**
  * @name post
  * @description Add record
  * @function
@@ -128,4 +148,4 @@ const deleteRecord = async (app_id, resource_id) => {
     });
 };
                    
-export {get, post, update, deleteRecord};
+export {get, getServer, post, update, deleteRecord};

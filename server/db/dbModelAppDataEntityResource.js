@@ -37,7 +37,7 @@ const get = async parameters =>{
                 .then(result=>result.http?result:
                     {result:result.result
                         .map((/**@type{server_db_sql_result_app_data_entity_resource_get}*/row)=>{
-                            const app_setting = fileModelAppSetting.get({   app_id:parameters.app_id, 
+                            const app_setting = fileModelAppSetting.getServer({   app_id:parameters.app_id, 
                                                                             resource_id:row.app_setting_id,
                                                                             data:{data_app_id:row.app_data_entity_app_id}}).result[0];
                             row.app_setting_name = app_setting?.name;
