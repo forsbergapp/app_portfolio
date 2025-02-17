@@ -224,7 +224,7 @@ const serverResponse = async parameters =>{
                                                                                             resource_id:common_app_id}).result[0].common_app_limit_records.value);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
-                                parameters.res.write(JSON.stringify(parameters.result_request.result?.length>0?
+                                parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
                                                                         parameters.result_request.result
                                                                         .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
                                                                         (index+1)<=(limit??0)
@@ -266,10 +266,12 @@ const serverResponse = async parameters =>{
                                                         offset: 		0,
                                                         count:			Math.min(limit??0,parameters.result_request.result.length)
                                                     },
-                                                rows:               parameters.result_request.result
-                                                                    .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
-                                                                                                                            (index+1)<=(limit??0)
-                                                                                                                                :true)
+                                                rows:               (typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
+                                                                        parameters.result_request.result
+                                                                        .filter((/**@type{*}*/row, /**@type{number}*/index)=>(limit??0)>0?
+                                                                                                                                (index+1)<=(limit??0)
+                                                                                                                                    :true):
+                                                                            parameters.result_request.result
                                             };
                                 }
                                 parameters.res.write(JSON.stringify(result), 'utf8');    
