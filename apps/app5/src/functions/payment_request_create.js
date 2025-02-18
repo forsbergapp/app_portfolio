@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_iam_access_token_claim, server_db_file_iam_app_access, server_server_response} from '../../../../server/types.js'
+ * @import {server_iam_access_token_claim, server_db_iam_app_access, server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
@@ -31,7 +31,7 @@ const getToken = async parameters => {
         token_verify.scope          == 'APP_EXTERNAL' &&
         //authenticated saved values in iam_app_access
         fileModelIamAppAccess.get(parameters.app_id, null).result
-                        .filter((/**@type{server_db_file_iam_app_access}*/row)=>
+                        .filter((/**@type{server_db_iam_app_access}*/row)=>
                                                                 //Authenticate the token type
                                                                 row.type                    == 'APP_ACCESS_EXTERNAL' &&
                                                                 //Authenticate database
@@ -202,7 +202,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                 ip:                 parameters.ip,
                                                                                                 scope:              'APP_EXTERNAL'});
                 //Save access info in IAM_APP_ACCESS table
-                /**@type{server_db_file_iam_app_access} */
+                /**@type{server_db_iam_app_access} */
                 const file_content = {	
                                         type:                   'APP_ACCESS_EXTERNAL',
                                         /**@ts-ignore */ 

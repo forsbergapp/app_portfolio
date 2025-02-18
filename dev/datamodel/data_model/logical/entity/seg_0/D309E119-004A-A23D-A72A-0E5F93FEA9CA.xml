@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D309E119-004A-A23D-A72A-0E5F93FEA9CA" name="MESSAGE_QUEUE">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D309E119-004A-A23D-A72A-0E5F93FEA9CA" name="message_queue">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-12 12:05:39 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="883D61A3-7F72-660C-16D7-B4C8F7EEAF2F" name="DB_ERROR">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="883D61A3-7F72-660C-16D7-B4C8F7EEAF2F" name="db_error">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>C4D60A24-6C0E-5915-CB1C-5227E1BED0EB</generatorID>
@@ -17,46 +17,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="db" id="0380D2CE-39C1-30B8-3774-4FD665DE2943">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>959A3CA3-79E8-6342-B092-B44D4DE8F118</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="sql" id="0136F26B-A90A-D5EA-AF54-3F344E10931E">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>70528613-120C-5528-B0DB-7605EB247113</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="parameters" id="105EA2AA-78DA-D4D4-2743-11BD75730762">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>3E51E4E6-7DE9-231C-AEF2-5DBE7A5844CC</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="logtext" id="0AB76E50-0C69-EB0D-ED44-E802C22F2C99">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>BF8C23A1-CA60-EED2-15A1-16B41BA3C34D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="app_id" id="6C89BA49-B10D-4272-0CFA-08A94E0DEBBC">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -69,6 +29,24 @@
 <associations>
 <colAssociation fkAssociation="691799A5-0959-A2B2-2C40-0DD51E2068AF" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
 </associations>
+</Column>
+<Column name="parameters" id="105EA2AA-78DA-D4D4-2743-11BD75730762">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>3E51E4E6-7DE9-231C-AEF2-5DBE7A5844CC</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="logtext" id="0AB76E50-0C69-EB0D-ED44-E802C22F2C99">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>BF8C23A1-CA60-EED2-15A1-16B41BA3C34D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">

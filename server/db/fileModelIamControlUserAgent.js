@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_iam_control_user_agent} from '../types.js'
+ *          server_db_table_iam_control_user_agent} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -15,7 +15,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {number|null} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_file_iam_control_user_agent[] }}
+ * @returns {server_server_response & {result?:server_db_table_iam_control_user_agent[] }}
  */
 const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_CONTROL_USER_AGENT',resource_id, null);
@@ -30,7 +30,7 @@ const get = (app_id, resource_id) =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_control_user_agent} data
+ * @param {server_db_table_iam_control_user_agent} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -56,11 +56,11 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_db_file_iam_control_user_agent} data
+ * @param {server_db_table_iam_control_user_agent} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server_db_file_iam_control_user_agent}*/
+    /**@type{server_db_table_iam_control_user_agent}*/
     const record = get(app_id, resource_id).result[0];
     if (record){
         if (data.name!=null && data.user_agent!=null){

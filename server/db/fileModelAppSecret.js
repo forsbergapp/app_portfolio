@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_update,server_db_common_result_insert,server_db_common_result_delete,
- *          server_db_file_app_secret} from '../types.js'
+ *          server_db_table_app_secret} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileFsRead, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -17,7 +17,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_file_app_secret[] }}
+ * @returns {server_server_response & {result?:server_db_table_app_secret[] }}
  */
 const get = parameters => {
     const result = fileDBGet(parameters.app_id, 'APP_SECRET',null, serverUtilNumberValue(parameters.resource_id));
@@ -32,10 +32,10 @@ const get = parameters => {
  * @description Get records from file
  * @function
  * @param {number} app_id
- * @returns {Promise.<server_server_response & {result?:server_db_file_app_secret }>}
+ * @returns {Promise.<server_server_response & {result?:server_db_table_app_secret }>}
  */
 const getFile = async app_id => {
-    return {result:await fileFsRead('APP_SECRET').then(result=>result.file_content.filter((/**@type{server_db_file_app_secret}*/row)=> row.app_id == app_id)[0]),
+    return {result:await fileFsRead('APP_SECRET').then(result=>result.file_content.filter((/**@type{server_db_table_app_secret}*/row)=> row.app_id == app_id)[0]),
             type:'JSON'};};
 
 /**

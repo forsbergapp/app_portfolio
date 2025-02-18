@@ -1,8 +1,8 @@
 /** @module server/db/fileModelAppParameter */
 
 /**
- * @import {server_server_response,server_server_res,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_app_parameter} from '../types.js'
+ * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
+ *          server_db_app_parameter} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -20,7 +20,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_file_app_parameter[] }}
+ * @returns {server_server_response & {result?:server_db_app_parameter[] }}
  */
 const get = parameters =>{
     const result = fileDBGet(parameters.app_id, 'APP_PARAMETER',null, serverUtilNumberValue(parameters.resource_id));

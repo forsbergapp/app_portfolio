@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="21CF94F4-68EC-252E-B021-AF2FAC77461F" name="MESSAGE_QUEUE_PUBLISH">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="21CF94F4-68EC-252E-B021-AF2FAC77461F" name="message_queue_publish">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>674D4981-DB4B-9ECF-7A02-697290C9910D</generatorID>
@@ -25,7 +25,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>4E716B22-3729-0AFE-A08F-88028EAB7B02</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -35,7 +34,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>2069BB07-BD15-687E-9C43-983396A52F83</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -45,7 +43,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>4184AD9C-24DE-D46F-875A-B39BB7020CEF</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
