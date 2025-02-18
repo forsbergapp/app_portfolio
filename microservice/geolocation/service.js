@@ -3,10 +3,6 @@
  * @module microservice/geolocation/service 
  */
 
-/**
- * @import {microservice_config_service_record} from '../types.js'
- */
-
 /**@type{import('../../microservice/registry.js')} */
 const {REGISTRY_CONFIG, registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
@@ -77,7 +73,6 @@ const getGeodataEmpty = (geotype) => {
  * @returns {Promise.<*>}
  */
 const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
-    /**@type{microservice_config_service_record}*/
     const config_service = registryConfigServices('GEOLOCATION');
     let geodata_cache;
     try {
@@ -147,7 +142,6 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
  * @param {*} geodata 
  */
 const writeCacheGeodata = async (cachetype, geodata) =>{
-    /**@type{microservice_config_service_record}*/
     const config_service = registryConfigServices('GEOLOCATION');
     switch (cachetype){
         case 'IP':{

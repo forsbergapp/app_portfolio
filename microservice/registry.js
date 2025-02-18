@@ -1,26 +1,28 @@
 /** @module microservice/registry */
 
 /**
- * @import {server_db_file_result_fileFsRead} from '../server/types.js'
- * @import {microservice_config_service_record,microservice_registry_service} from './types.js'
+ * @import {server_db_result_fileFsRead, server_db_document_config_microservice} from '../server/types.js'
+ * @import {server_db_document_config_microservice_services,microservice_registry_service} from './types.js'
  */
 
 /**@type{import('../server/db/file.js')} */
 const {fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
 
-const REGISTRY_CONFIG = await fileFsRead('CONFIG_MICROSERVICE').then((/**@type{server_db_file_result_fileFsRead}*/file)=>file.file_content);
+/**@type{server_db_document_config_microservice} */
+const REGISTRY_CONFIG = await fileFsRead('CONFIG_MICROSERVICE').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content);
 
-const REGISTRY_CONFIG_SERVICES = await fileFsRead('CONFIG_MICROSERVICE_SERVICES').then((/**@type{server_db_file_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
+/**@type{server_db_document_config_microservice_services['SERVICES']} */
+const REGISTRY_CONFIG_SERVICES = await fileFsRead('CONFIG_MICROSERVICE_SERVICES').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 /**
  * @name registryConfigServices
  * @description Reads config services
  * @function
  * @param {string} servicename
- * @returns {microservice_config_service_record}
+ * @returns {server_db_document_config_microservice_services['SERVICES'][0]}
  */
-const registryConfigServices = (servicename) =>{
-    return REGISTRY_CONFIG_SERVICES.filter((/**@type{microservice_config_service_record}*/service)=>service.NAME == servicename)[0];        
+const registryConfigServices = servicename =>{
+    return REGISTRY_CONFIG_SERVICES.filter(service=>service.NAME == servicename)[0];        
 };
 
 /**
@@ -64,7 +66,6 @@ const registryMicroServiceServer = async (service) =>{
  * @returns {number}
  */
 const registryMicroserviceApiVersion = service =>{
-    /**@type{microservice_config_service_record} */
     const config_service = registryConfigServices(service);
     return config_service.CONFIG.filter((/**@type{*}*/row)=>'APP_REST_API_VERSION' in row)[0].APP_REST_API_VERSION;
 }; 

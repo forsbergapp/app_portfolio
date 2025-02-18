@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="9727D06E-33F6-366E-C573-60211074450F" name="APP_INFO">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="9727D06E-33F6-366E-C573-60211074450F" name="app_info">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>A3C6E3A4-F9EB-A23A-0FAE-3A14124ABC75</generatorID>
@@ -17,12 +17,24 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="app_id" id="0BA1CC8E-6C82-57FE-0E35-4A4FAA372DA9">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>5C5A1C29-2DC9-4C30-3115-EEA08F578EF7</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="55D505A9-4AEC-6F15-D262-7AD7D08698C2" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
+</associations>
+</Column>
 <Column name="app_filename" id="41DE52CC-19D6-38E3-B8CF-9D3B7A4E3FCF">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>F2B84BB7-5E2E-CC55-B0B8-5576539AC986</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -32,7 +44,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>34F28010-2F8E-5FD2-290B-51AA27362DA9</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -42,7 +53,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>69223148-7012-39AF-8A1E-78F979657824</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -56,19 +66,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="app_id" id="0BA1CC8E-6C82-57FE-0E35-4A4FAA372DA9">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>5C5A1C29-2DC9-4C30-3115-EEA08F578EF7</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="55D505A9-4AEC-6F15-D262-7AD7D08698C2" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
-</associations>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">

@@ -1,9 +1,9 @@
 /** @module server/db/fileModelAppModuleQueue */
 
 /**
- * @import {server_server_response,server_db_file_app_module_queue_status,
+ * @import {server_server_response,server_db_app_module_queue_status,
  *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_app_module_queue} from '../types.js'
+ *          server_db_table_app_module_queue} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -20,7 +20,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_file_app_module_queue[] }}
+ * @returns {server_server_response & {result?:server_db_table_app_module_queue[] }}
  */
 const get = parameters =>{ 
     const result = fileDBGet(parameters.app_id, 'APP_MODULE_QUEUE',parameters.resource_id, parameters.app_id);
@@ -53,19 +53,19 @@ const getResult = async parameters => {
  *          iam_user_id:number,
  *          name:string,
  *          parameters:string,
- *          status:server_db_file_app_module_queue_status
+ *          status:server_db_app_module_queue_status
  *          user:string}} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.type!=null && data.name!=null && data.parameters!=null && data.user!=null){
-        /**@type{server_db_file_app_module_queue} */
+        /**@type{server_db_table_app_module_queue} */
         const job =     {
                             id:Date.now(),
-                            app_id:app_id,                      //copied from app
-                            app_module_id:data.app_module_id,   //FK app_module
                             iam_user_id:data.iam_user_id,       //FK iam_user
+                            app_module_id:data.app_module_id,   //FK app_module
+                            app_id:app_id,                      //copied from app
                             type: data.type,                    //copied from app_module
                             name:data.name,                     //copied from app_module
                             parameters:data.parameters,
@@ -110,7 +110,7 @@ const postResult = async (app_id, id, result) =>{
  * @param {{start?:string|null,
  *          end?:string|null,
  *          progress?:number|null,
- *          status?:server_db_file_app_module_queue_status,
+ *          status?:server_db_app_module_queue_status,
  *          message?:string|null}} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */

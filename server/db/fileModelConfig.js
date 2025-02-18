@@ -2,12 +2,12 @@
 
 /**
  * @import {server_server_response,server_db_common_result_update,
- *          server_db_file_db_name, server_db_file_db_name_config, server_server_error, 
- *          server_db_file_config_server,server_db_file_config_rest_api, server_db_file_config_iam_policy,
- *          server_db_file_config_server_server, server_db_file_config_server_service_iam,
- *          server_db_file_iam_user, server_db_file_app, server_db_file_app_module, server_db_file_app_parameter, server_db_file_app_secret,server_db_file_app_setting,
- *          server_db_file_app_translation} from '../types.js'
- * @import {microservice_config_service_record, microservice_config, microservice_config_service} from '../../microservice/types.js'
+ *          server_db_object, server_db_db_name_config, server_server_error, 
+ *          server_db_document_config_server,server_db_document_config_rest_api, server_db_document_config_iam_policy,
+ *          server_db_config_server_server, server_db_config_server_service_iam,
+ *          server_db_table_iam_user, server_db_table_app, server_db_table_app_module, server_db_table_app_parameter, server_db_table_app_secret,server_db_table_app_setting,
+ *          server_db_table_app_translation, server_db_document_config_microservice} from '../types.js'
+ * @import {server_db_document_config_microservice_services} from '../../microservice/types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -22,7 +22,7 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
  * @name get
  * @description Config get
  * @function
- * @param {server_db_file_db_name_config} file
+ * @param {server_db_db_name_config} file
  * @param {string|null} [config_group]
  * @param {string|null} [parameter]
  * @returns {*}
@@ -87,18 +87,18 @@ const configDefault = async () => {
     //read all default files
 
     /**
-     * @type{[  [server_db_file_db_name, server_db_file_config_server],
-     *           [server_db_file_db_name, server_db_file_config_rest_api],
-     *           [server_db_file_db_name, server_db_file_config_iam_policy],
-     *           [server_db_file_db_name, microservice_config],
-     *           [server_db_file_db_name, microservice_config_service],
-     *           [server_db_file_db_name, server_db_file_iam_user[]],
-     *           [server_db_file_db_name, server_db_file_app[]],
-     *           [server_db_file_db_name, server_db_file_app_module[]],
-     *           [server_db_file_db_name, server_db_file_app_parameter[]],
-     *           [server_db_file_db_name, server_db_file_app_secret[]],
-     *           [server_db_file_db_name, server_db_file_app_setting[]],
-     *           [server_db_file_db_name, server_db_file_app_translation[]]
+     * @type{[  [server_db_object, server_db_document_config_server],
+     *           [server_db_object, server_db_document_config_rest_api],
+     *           [server_db_object, server_db_document_config_iam_policy],
+     *           [server_db_object, microservice_config],
+     *           [server_db_object, server_db_document_config_microservice_services],
+     *           [server_db_object, server_db_table_iam_user[]],
+     *           [server_db_object, server_db_table_app[]],
+     *           [server_db_object, server_db_table_app_module[]],
+     *           [server_db_object, server_db_table_app_parameter[]],
+     *           [server_db_object, server_db_table_app_secret[]],
+     *           [server_db_object, server_db_table_app_setting[]],
+     *           [server_db_object, server_db_table_app_translation[]]
      *       ]}
     */
     const config_obj = [
@@ -116,7 +116,7 @@ const configDefault = async () => {
                             ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_translation.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
     //set server parameters
-    config_obj[0][1].SERVER.map((/**@type{server_db_file_config_server_server}*/row)=>{
+    config_obj[0][1].SERVER.map((/**@type{server_db_config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
                 row.HTTPS_KEY = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -125,7 +125,7 @@ const configDefault = async () => {
         } 
     });
     //generate hash
-    config_obj[0][1].SERVICE_IAM.map((/**@type{server_db_file_config_server_service_iam}*/row)=>{
+    config_obj[0][1].SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row)){
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = securitySecretCreate();
@@ -144,7 +144,7 @@ const configDefault = async () => {
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for app secrets
-    config_obj[9][1].map((/**@type{server_db_file_app_secret}*/row)=>{
+    config_obj[9][1].map((/**@type{server_db_table_app_secret}*/row)=>{
         row.common_client_id = securitySecretCreate();
         row.common_client_secret = securitySecretCreate();
         row.common_app_id_secret = securitySecretCreate();
@@ -152,11 +152,11 @@ const configDefault = async () => {
         row.common_app_access_verification_secret = securitySecretCreate();
     });        
     //set paths in microservice config
-    /**@type{microservice_config} */
+    /**@type{server_db_document_config_microservice} */
     const microservice_config = config_obj[3][1];
     microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
     //set paths in microservice services
-    config_obj[4][1].SERVICES.map((/**@type{microservice_config_service_record}*/row)=>{
+    config_obj[4][1].SERVICES.map((/**@type{server_db_document_config_microservice_services['SERVICES'][0]}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -199,7 +199,7 @@ const configInit = async () => {
  * @description Config get saved
  * @function
  * @memberof ROUTE_REST_API
- * @param {{resource_id:server_db_file_db_name_config,
+ * @param {{resource_id:server_db_db_name_config,
  *          data:{  config_group?:string|null,
  *                  parameter?:string|null,
  *                  saved?:string|null}|null}} parameters
@@ -224,12 +224,12 @@ const getFile = async parameters => {
  * @description Config save
  * @function
  * @memberof ROUTE_REST_API
- * @param {{resource_id:server_db_file_db_name_config,
- *          data:{  config: server_db_file_config_server|
- *                          server_db_file_app[]|
- *                          server_db_file_config_iam_policy|
- *                          microservice_config|
- *                          microservice_config_service|null,
+ * @param {{resource_id:server_db_db_name_config,
+ *          data:{  config: server_db_document_config_server|
+ *                          server_db_table_app[]|
+ *                          server_db_document_config_iam_policy|
+ *                          server_db_document_config_microservice|
+ *                          server_db_document_config_microservice_services|null,
  *                  maintenance:string,
  *                  comment:string,
  *                  configuration:string}}} parameters

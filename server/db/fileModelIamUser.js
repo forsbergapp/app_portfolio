@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_iam_user, server_db_file_iam_app_access, server_db_file_iam_user_event,server_db_file_iam_user_admin} from '../types.js'
+ *          server_db_table_iam_user, server_db_table_iam_app_access, server_db_table_iam_user_event,server_db_iam_user_admin} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -16,7 +16,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_file_iam_user[] }}
+ * @returns {server_server_response & {result?:server_db_table_iam_user[] }}
  */
 const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_USER',resource_id, null);
@@ -31,7 +31,7 @@ const get = (app_id, resource_id) =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_user} data
+ * @param {server_db_table_iam_user} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -44,7 +44,7 @@ const post = async (app_id, data) => {
     else{
         /**@type{import('../security.js')} */
         const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-        /**@type{server_db_file_iam_user} */
+        /**@type{server_db_iam_user_admin} */
         const data_new =     {
                                 id:Date.now(),
                                 username:data.username, 
@@ -79,13 +79,13 @@ const post = async (app_id, data) => {
  * @description Add record admin
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_user} data
+ * @param {server_db_table_iam_user} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAdmin = async (app_id, data) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);
-    /**@type{server_db_file_iam_user} */
+    /**@type{server_db_iam_user_admin} */
     const data_new =     {
                             id:Date.now(),
                             username:data.username, 
@@ -121,17 +121,17 @@ const postAdmin = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_db_file_iam_user} data
+ * @param {server_db_table_iam_user} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
-    /**@type{server_db_file_iam_user}*/
+    /**@type{server_db_table_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
-            /**@type{server_db_file_iam_user} */
+            /**@type{server_db_table_iam_user} */
             const data_update = {};
             //allowed parameters to update:
             if (data.username!=null && data.username != '')
@@ -175,16 +175,16 @@ const update = async (app_id, resource_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data :server_db_file_iam_user_admin}} parameters
+ *          data :server_db_iam_user_admin}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateAdmin = async parameters => {
     /**@type{import('../security.js')} */
     const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
-    /**@type{server_db_file_iam_user}*/
+    /**@type{server_db_table_iam_user}*/
     const user = get(parameters.app_id, parameters.resource_id).result[0];
     if (user){
-            /**@type{server_db_file_iam_user} */
+            /**@type{server_db_table_iam_user} */
             const data_update = {};
             //allowed parameters to update:
             if (parameters.data?.username!=null && parameters.data?.username!='')
@@ -240,11 +240,11 @@ const updateAdmin = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => {
-    /**@type{server_db_file_iam_user}*/
+    /**@type{server_db_table_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (user.verification_code==data.verification_code){
-            /**@type{server_db_file_iam_user} */
+            /**@type{server_db_table_iam_user} */
             const data_update = {};
             data_update.verification_code = null;
             data_update.active = 1;
@@ -276,10 +276,10 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updatePassword = async (app_id, resource_id, data) => {
-    /**@type{server_db_file_iam_user}*/
+    /**@type{server_db_table_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        /**@type{server_db_file_iam_user} */
+        /**@type{server_db_table_iam_user} */
         const data_update = {};
         data_update.password = data.password_new;
         data_update.modified = new Date().toISOString();
@@ -309,7 +309,7 @@ const updatePassword = async (app_id, resource_id, data) => {
 const deleteRecord = async (app_id, resource_id, data) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);    
-    /**@type{server_db_file_iam_user}*/
+    /**@type{server_db_table_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (data.password && await securityPasswordCompare(data.password, user.password))
@@ -344,7 +344,7 @@ const deleteCascade = async (app_id, resource_id) =>{
     if (result_recordsUserEvent.result){
         let count_delete = 0;
         let error ;
-        for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_file_iam_user_event}*/row)=>row.iam_user_id == resource_id)){
+        for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_table_iam_user_event}*/row)=>row.iam_user_id == resource_id)){
             count_delete++;
             const result_delete = await fileModelIamUserEvent.deleteRecord( app_id, 
                                                                             /**@ts-ignore */
@@ -357,7 +357,7 @@ const deleteCascade = async (app_id, resource_id) =>{
         else{
             const result_recordsIamAppAccess = fileModelIamAppAccess.get(app_id, null);
             if (result_recordsIamAppAccess.result){
-                for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_file_iam_app_access}*/row)=>row.iam_user_id == resource_id)){
+                for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_table_iam_app_access}*/row)=>row.iam_user_id == resource_id)){
                     count_delete++;
                     const result_delete = await fileModelIamAppAccess.deleteRecord( app_id, 
                                                                                     /**@ts-ignore */
@@ -386,7 +386,7 @@ const deleteCascade = async (app_id, resource_id) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecordAdmin = async (app_id, resource_id) => {
-    /**@type{server_db_file_iam_user}*/
+    /**@type{server_db_table_iam_user}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?

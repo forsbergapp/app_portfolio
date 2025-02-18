@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="AD9E42D7-053D-57BE-0BF1-6D694A347469" name="CONFIG_REST_API">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="AD9E42D7-053D-57BE-0BF1-6D694A347469" name="config_rest_api">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>F934CF57-3CDB-6745-1199-B666E51633AB</generatorID>
@@ -13,7 +13,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>D8952938-C45A-46AA-0E62-E0A75CDFB50D</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -23,7 +22,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>8ACA0F86-C17E-3627-89CE-9543D6049114</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -33,7 +31,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>B0D2A50A-30C5-B9E1-6865-4ED301186A17</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -43,7 +40,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>67863C31-D83F-C0E9-267A-DCB4F258BBFA</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

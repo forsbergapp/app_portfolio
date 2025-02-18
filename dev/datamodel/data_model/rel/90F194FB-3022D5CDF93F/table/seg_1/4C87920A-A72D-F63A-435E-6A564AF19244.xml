@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="4C87920A-A72D-F63A-435E-6A564AF19244" name="CONFIG_IAM_POLICY">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="4C87920A-A72D-F63A-435E-6A564AF19244" name="config_iam_policy">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>8BBAD050-9925-EE5F-758E-8E553F6ECA8E</generatorID>
@@ -13,7 +13,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>E4F8C6B9-0052-32DD-992C-F370F94AC525</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

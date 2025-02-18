@@ -41,9 +41,9 @@
  */
 
 /**
- * @import {server_db_file_result_fileFsRead,
+ * @import {server_db_result_fileFsRead,
  *          server_db_common_result_select, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete,
- *          server_server_error, server_db_file_config_files, server_db_file_db_name, server_db_file_db_record} from '../types.js'
+ *          server_server_error, server_db_config_files, server_db_object, server_db_object_record} from '../types.js'
  */
 
 const fs = await import('node:fs');
@@ -60,7 +60,7 @@ const SLASH = process.platform == 'win32'?'\\':'/';
  * @name FILE_DB
  * @description File database using ORM pattern
  * @constant
- * @type{server_db_file_db_record[]} 
+ * @type{server_db_object_record[]} 
  */
 const FILE_DB = [   {NAME:'CONFIG_SERVER',                  TYPE:'JSON',            PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_server.json', CACHE_CONTENT:null},
                     {NAME:'CONFIG_REST_API',                TYPE:'JSON',            PK:null, UK:null,                           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}`,                     FILENAME:'config_rest_api.json', CACHE_CONTENT:null},
@@ -102,8 +102,8 @@ Object.seal(FILE_DB);
  * @name fileRecord
  * @description Get file record from file db
  * @function
- * @param {server_db_file_db_name} filename 
- * @returns {server_db_file_db_record}
+ * @param {server_db_object} filename 
+ * @returns {server_db_object_record}
  */
 const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
@@ -112,7 +112,7 @@ const fileRecord = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[
  * @description Start transaction
  *              Using race condition, pessmistic lock and database transaction pattern
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @param {string} filepath
  * @returns {Promise.<number>}
  */
@@ -155,7 +155,7 @@ const fileTransactionStart = async (file, filepath)=>{
  * @name fileTransactionCommit
  * @description Transation commit
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -173,7 +173,7 @@ const fileTransactionCommit = (file, transaction_id)=>{
  * @name fileTransactionRollback
  * @description Transaction rollback
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @param {number} transaction_id 
  * @returns {boolean}
  */
@@ -223,7 +223,7 @@ const fileTransactionRollback = (file, transaction_id)=>{
  * @name filePath
  * @description Returns file path for given file
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @returns {string}
  */
 const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
@@ -232,7 +232,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * @name fileCache
  * @description Get file from cache already JSON parsed
  * @function
- * @param {server_db_file_db_name} file
+ * @param {server_db_object} file
  * @returns {*}
  */
  const fileCache = file => JSON.parse(JSON.stringify(fileRecord(file).CACHE_CONTENT));
@@ -241,7 +241,7 @@ const filePath = file =>fileRecord(file).PATH + fileRecord(file).FILENAME;
  * @name fileFsDir
  * @description Get files from directory
  * @function
- * @param {server_db_file_db_name} file
+ * @param {server_db_object} file
  * @returns {Promise.<string[]>}
  */
 const fileFsDir = async file => await fs.promises.readdir(`${process.cwd()}${fileRecord(file).PATH}`);
@@ -253,9 +253,9 @@ const fileFsDir = async file => await fs.promises.readdir(`${process.cwd()}${fil
  *              Function returns file content after a lock of file and transaction id is given, lock info and transaction id.
  *              This transaction id must be provided when updating file in fileFsWrite()
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @param {boolean} lock
- * @returns {Promise.<import('../types.js').server_db_file_result_fileFsRead>}
+ * @returns {Promise.<import('../types.js').server_db_result_fileFsRead>}
  */
 const fileFsRead = async (file, lock=false) =>{
     const filepath = fileRecord(file).PATH + fileRecord(file).FILENAME;
@@ -296,7 +296,7 @@ const fileFsRead = async (file, lock=false) =>{
  *              to be able to update a file
  *              Backup of old file will be written to backup directory
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @param {number|null} transaction_id 
  * @param {[]} file_content 
  * @returns {Promise.<string|null>}
@@ -381,8 +381,8 @@ const fileFsAccessMkdir = async () => {
  * @description Write to a file.
  *              Should only be used by admin since no transaction is used
  * @function
- * @param {server_db_file_db_name} file 
- * @param {server_db_file_config_files} file_content 
+ * @param {server_db_object} file 
+ * @param {server_db_config_files} file_content 
  * @returns {Promise.<void>}
  */
 const fileFsWriteAdmin = async (file, file_content) =>{
@@ -397,7 +397,7 @@ const fileFsWriteAdmin = async (file, file_content) =>{
  * @name fileFsDeleteAdmin
  * @description Delete a file
  * @function
- * @param {server_db_file_db_name} file 
+ * @param {server_db_object} file 
  * @returns {Promise.<void>}
  */
 const fileFsDeleteAdmin = async file => {
@@ -412,7 +412,7 @@ const fileFsDeleteAdmin = async file => {
   *              Filters for given resource_id if requested
   * @function
   * @param {number|null} app_id
-  * @param {server_db_file_db_name} file
+  * @param {server_db_object} file
   * @param {number|null} resource_id
   * @param {string|null} filesuffix 
   * @param {string|null} sample
@@ -429,7 +429,7 @@ const fileFsDeleteAdmin = async file => {
  * @description Create log record with given suffix or none
  * @function
  * @param {number|null} app_id
- * @param {server_db_file_db_name} file
+ * @param {server_db_object} file
  * @param {object} file_content 
  * @param {string|null} filesuffix
  * @returns {Promise.<server_db_common_result_insert>}
@@ -462,7 +462,7 @@ const fileFsDBLogPost = async (app_id, file, file_content, filesuffix = null) =>
  *              JSON_TABLE should have column id as primary key using this function
  * @function
  * @param {number|null} app_id
- * @param {server_db_file_db_name} table
+ * @param {server_db_object} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
  * @returns {server_db_common_result_select}
@@ -485,7 +485,7 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
  * @description Authenticates PK constraint that can have one primary key column and UK constraint that can have several columns. 
  *              Implements contraints pattern using some() function for best performane to check if value already exist
  * @function
- * @param {server_db_file_db_name} table
+ * @param {server_db_object} table
  * @param {[]} table_rows
  * @param {*} data
  * @param {'UPDATE'|'POST'} dml
@@ -494,19 +494,19 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
  */
 const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
     //update of PK not alllowed
-    if (dml=='POST' && fileRecord(table).PK && table_rows.some((/**@type{server_db_file_db_record}*/record)=>
+    if (dml=='POST' && fileRecord(table).PK && table_rows.some((/**@type{server_db_object_record}*/record)=>
         /**@ts-ignore */
         record[fileRecord(table).PK]==data[fileRecord(table).PK]))
             return false;
     else{
         //no record can exist having given values for POST
-        if (dml=='POST' && fileRecord(table).UK && table_rows.some((/**@type{server_db_file_db_record}*/record)=>
+        if (dml=='POST' && fileRecord(table).UK && table_rows.some((/**@type{server_db_object_record}*/record)=>
             /**@ts-ignore */
             fileRecord(table).UK?.filter(column=>record[column]==data[column]).length==fileRecord(table).UK?.length))
                 return false;
         else
             //max one record can exist having given values for UPDATE
-            if (dml=='UPDATE' && fileRecord(table).UK && table_rows.some((/**@type{server_db_file_db_record}*/record)=>
+            if (dml=='UPDATE' && fileRecord(table).UK && table_rows.some((/**@type{server_db_object_record}*/record)=>
                 //check value is the same, ignore empty UK
                 /**@ts-ignore */
                 fileRecord(table).UK.filter(column=>record[column] && record[column]==data[column]).length==fileRecord(table).UK.length &&
@@ -524,13 +524,13 @@ const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
  *              and returns the record
  * @function
  * @param {number} app_id
- * @param {server_db_file_db_name} table
+ * @param {server_db_object} table
  * @param {*} data
  * @returns {Promise.<server_db_common_result_insert>}
  */
 const fileDBPost = async (app_id, table, data) =>{
     if (app_id!=null){
-        /**@type{server_db_file_result_fileFsRead} */
+        /**@type{server_db_result_fileFsRead} */
         const file = await fileFsRead(table, true);
         if (fileConstraints(table, file.file_content, data, 'POST')){
             await fileFsWrite(table, file.transaction_id, file.file_content.concat(data))
@@ -556,7 +556,7 @@ const fileDBPost = async (app_id, table, data) =>{
  *              JSON_TABLE should have column id as primary key using this function
  * @function
  * @param {number} app_id
- * @param {server_db_file_db_name} table
+ * @param {server_db_object} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
  * @param {*} data
@@ -564,7 +564,7 @@ const fileDBPost = async (app_id, table, data) =>{
  */
 const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
     if (app_id!=null){
-        /**@type{server_db_file_result_fileFsRead} */
+        /**@type{server_db_result_fileFsRead} */
         const file = await fileFsRead(table, true);
         if (fileConstraints(table, file.file_content, data, 'UPDATE', resource_id)){
             let update = false;
@@ -604,13 +604,13 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
  *              JSON_TABLE should have column id as primary key using this function
  * @function
  * @param {number} app_id
- * @param {server_db_file_db_name} table
+ * @param {server_db_object} table
  * @param {number|null} resource_id
  * @param {number|null} data_app_id
  * @returns {Promise<server_db_common_result_delete>}
  */
 const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
-    /**@type{server_db_file_result_fileFsRead} */
+    /**@type{server_db_result_fileFsRead} */
     const file = await fileFsRead(table, true);
     if (file.file_content.filter((/**@type{*}*/row)=>(row.id==resource_id && resource_id!=null)|| (row.app_id == data_app_id && data_app_id != null)).length>0){
         await fileFsWrite(  table, 

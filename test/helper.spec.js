@@ -3,7 +3,7 @@
  * @module test/helper.spec
  */
 /**
- * @import {server_server_res, server_bff_parameters, server_db_file_app, 
+ * @import {server_server_res, server_bff_parameters, server_db_app, 
  *          server_db_db_pool_parameters, server_db_db_pool_connection_1_2} from '../server/types.js'
  */
 /**

@@ -15,91 +15,15 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="service_db_db1_app_user" id="C352BAC6-9272-3B4F-6EC7-96A3C1C1BFE7">
+<Attribute name="app_id" id="C53DDF5D-23B8-C0C4-4EA3-DBEF138534F6">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:23:01 UTC</createdTime>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>CACCD4CA-8354-1EDB-CE1F-D2704718A406</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db1_app_password" id="D0A73965-5830-98FC-07AA-C271D93129D4">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:23:03 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db2_app_user" id="26A231A3-A330-D386-B522-3B28543BA2D2">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:23:09 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db2_app_password" id="8006AD6C-35F4-7A86-21AF-87E99B2D68C9">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:23:15 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db3_app_user" id="272CD498-1F1F-07BE-3EAA-C73FE3DF69DA">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:23:34 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db3_app_password" id="37942E18-6828-2953-5EA1-8DE0BFC90A2E">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:23:36 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db4_app_user" id="B12F7E49-8B3A-3A80-4632-6D14FA2CE303">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:24:01 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="service_db_db4_app_password" id="3CB1A26D-6D3B-EC30-95A2-41A38D29FD3F">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:24:07 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -309,18 +233,6 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="id" id="C53DDF5D-23B8-C0C4-4EA3-DBEF138534F6">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 23:08:40 UTC</createdTime>
-<generatorID>CACCD4CA-8354-1EDB-CE1F-D2704718A406</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

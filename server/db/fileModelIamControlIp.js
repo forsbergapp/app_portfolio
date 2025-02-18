@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_iam_control_ip} from '../types.js'
+ *          server_db_table_iam_control_ip} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -16,7 +16,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_file_iam_control_ip[] }}
+ * @returns {server_server_response & {result?:server_db_table_iam_control_ip[] }}
  */
 const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_CONTROL_IP',resource_id, null);
@@ -31,7 +31,7 @@ const get = (app_id, resource_id) =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_control_ip} data
+ * @param {server_db_table_iam_control_ip} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -65,11 +65,11 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_db_file_iam_control_ip} data
+ * @param {server_db_table_iam_control_ip} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server_db_file_iam_control_ip}*/
+    /**@type{server_db_table_iam_control_ip}*/
     const ip_record = get(app_id, resource_id).result[0];
     if (ip_record){
         if (data.from && data.to){

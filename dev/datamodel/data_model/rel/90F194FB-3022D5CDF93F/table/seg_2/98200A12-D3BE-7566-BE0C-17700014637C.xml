@@ -50,7 +50,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>BFE11B78-48CB-53DF-E921-0E3C18CA9B90</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -70,7 +69,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>CF4FD466-9363-8BC8-8D1F-A339B4975FA2</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -90,7 +88,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>CAA8B675-001F-6696-DF92-5F9E6E4DD40B</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -100,7 +97,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>B1014F63-897E-B058-BA34-49D7BA71850D</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -110,7 +106,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>A5A50878-B5F7-AE13-9111-652534EF3B04</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -120,7 +115,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>22FF195B-9F0D-E756-4D5C-7E8CCC35A123</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

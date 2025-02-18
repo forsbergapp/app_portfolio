@@ -6,7 +6,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{APP:import('../../../../server/types.js').server_db_file_app, APP_PARAMETERS:string}} props
+ * @param {{APP:import('../../../../server/types.js').server_db_app, APP_PARAMETERS:string}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
@@ -37,7 +37,7 @@ const template = props =>`  <!DOCTYPE html>
  * @name component
  * @description Component
  * @function
- * @param {{data:       {APP:import('../../../../server/types.js').server_db_file_app, APP_PARAMETERS:string},
+ * @param {{data:       {APP:import('../../../../server/types.js').server_db_app, APP_PARAMETERS:string},
  *        methods:    null}} props 
  * @returns {Promise.<string>}
  */

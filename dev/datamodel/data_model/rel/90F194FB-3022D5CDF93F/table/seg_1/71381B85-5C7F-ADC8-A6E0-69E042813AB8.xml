@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="71381B85-5C7F-ADC8-A6E0-69E042813AB8" name="CONFIG_SERVER">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="71381B85-5C7F-ADC8-A6E0-69E042813AB8" name="config_server">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>18C3F644-F28D-891B-DF6F-007D0FFCBF75</generatorID>
@@ -13,7 +13,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>7264BD09-C63A-B547-5BA4-9FE9EF545E41</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

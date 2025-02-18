@@ -22,7 +22,6 @@
  *  CommonAppRecord
  *  commonInitAppParameters
  *  CommonAppParametersRecord
- *  CommonAppSecretsRecord
  *  CommonAppSettingRecord
  *  CommonAppModulesRecord
  *  CommonAppModuleMetadata
@@ -397,25 +396,6 @@
 *              common_image_avatar_height:         {value:string, comment: string},
 *              common_image_avatar_width:          {value:string, comment: string}}} CommonAppParametersRecord
 */
-/**
-* @description Type CommonAppSecretsRecord
-* @typedef {{   app_id:                             number,
-*               service_db_db1_app_user:            string,
-*               service_db_db1_app_password:        string,
-*               service_db_db2_app_user:            string,
-*               service_db_db2_app_password:        string,
-*               service_db_db3_app_user:            string,
-*               service_db_db3_app_password:        string,
-*               service_db_db4_app_user:            string,
-*               service_db_db4_app_password:        string,
-*               common_client_id:                   string,
-*               common_client_secret:               string,
-*               common_app_id_secret:               string,
-*               common_app_id_expire:               string,
-*               common_app_access_secret:           string,
-*               common_app_access_expire:           string}} CommonAppSecretsRecord
-*/
-
 /**
  * @description Type CommonAppSettingRecord
  * @typedef {{  id:number,

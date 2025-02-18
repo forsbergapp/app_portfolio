@@ -3,7 +3,7 @@
 /**
  * @import {server_server_response,
  *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_app_setting, server_db_sql_result_app_data_resource_master_get} from '../types.js'
+ *          server_db_app_setting, server_db_sql_result_app_data_resource_master_get} from '../types.js'
  */
 
 /**@type{import('./dbSql.js')} */
@@ -29,7 +29,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 const get = async parameters =>{
   /**@type{import('./fileModelAppSetting.js')} */
   const fileModelAppSetting = await import(`file://${process.cwd()}/server/db/fileModelAppSetting.js`);
-  /**@type{server_db_file_app_setting[]}*/
+  /**@type{server_db_app_setting[]}*/
   const app_setting = fileModelAppSetting.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
 
   return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>

@@ -363,8 +363,8 @@ const menuRender = async parameters =>{
                 //return menu for app with updated id and app name
                 menu.menu_sub = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
-                                .sort((/**@type{server_db_file_app}*/a,/**@type{server_db_file_app}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
-                                .map((/**@type{server_db_file_app}*/app)=>{
+                                .sort((/**@type{server_db_app}*/a,/**@type{server_db_app}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
+                                .map((/**@type{server_db_app}*/app)=>{
                     return { 
                             id:app.id,
                             menu:app.name,

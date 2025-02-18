@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A3C6E3A4-F9EB-A23A-0FAE-3A14124ABC75" name="APP_INFO">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A3C6E3A4-F9EB-A23A-0FAE-3A14124ABC75" name="app_info">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:52:29 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -28,6 +28,18 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="app_id" id="5C5A1C29-2DC9-4C30-3115-EEA08F578EF7">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>71A9B5CF-2654-6766-2A06-CB449A82E5DF</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="app_filename" id="F2B84BB7-5E2E-CC55-B0B8-5576539AC986">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:15:49 UTC</createdTime>
@@ -36,7 +48,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -48,7 +59,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -60,7 +70,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -73,18 +82,6 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_id" id="5C5A1C29-2DC9-4C30-3115-EEA08F578EF7">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 23:08:40 UTC</createdTime>
-<generatorID>71A9B5CF-2654-6766-2A06-CB449A82E5DF</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

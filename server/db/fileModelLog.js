@@ -2,10 +2,16 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,
- *          server_db_file_log_request, server_db_file_log_server,server_db_file_log_db,server_db_file_log_service,server_db_file_db_name_log,server_db_file_log_app,
+ *          server_db_table_log_log_request_info, server_db_table_log_log_request_error, 
+ *          server_db_table_log_log_server_info,
+ *          server_db_table_log_log_db_info,server_db_table_log_log_db_error,
+ *          server_db_table_log_log_service_info,server_db_table_log_log_service_error,
+ *          server_db_tables_log,
+ *          server_db_table_log_log_app_info,
  *          server_log_scope, server_log_level,
  *          server_log_result_logFilesGet, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
- *          server_server_error, server_server_req, server_server_req_verbose, server_db_common_result, server_db_common_result_error} from '../types.js'
+ *          server_server_error, server_server_req, server_server_req_verbose, 
+ *          server_db_common_result} from '../types.js'
  */
 /**@type{import('./fileModelConfig.js')} */
 const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
@@ -52,7 +58,7 @@ const logDate = () => new Date().toISOString();
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
-    /**@type{server_db_file_log_request}*/
+    /**@type{server_db_table_log_log_request_error}*/
     const log_json_server = {   logdate:            logDate(),
                                 host:               req.headers.host,
                                 ip:                 req.ip,
@@ -85,7 +91,7 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
  */
 const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     let log_level;
-    /**@type{server_db_file_log_request|{}}*/
+    /**@type{server_db_table_log_log_request_info|{}}*/
     let log_json_server = {};
     switch (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL')){
         case '1':{
@@ -170,7 +176,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServer = async (log_level, logtext) =>{
-    /**@type{server_db_file_log_server} */
+    /**@type{server_db_table_log_log_server_info} */
     const log_json_server = {
                             logdate: logDate(),
                             logtext: logtext
@@ -209,7 +215,7 @@ const postServerE = async (logtext)=>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postDBI = async (app_id, db, sql, parameters, result) => {
-    /**@type{server_db_file_log_db} */
+    /**@type{server_db_table_log_log_db_info} */
     let log_json_db;
     let level_info;
     switch (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'DB_LEVEL')){
@@ -253,11 +259,11 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
  * @param {number|null} db 
  * @param {string} sql 
  * @param {object} parameters 
- * @param {server_db_common_result_error} result 
+ * @param {*} result 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postDBE = async (app_id, db, sql, parameters, result) => {
-    /**@type{server_db_file_log_db} */
+    /**@type{server_db_table_log_log_db_error} */
     const log_json_db = {
         logdate:        logDate(),
         app_id:         app_id,
@@ -279,7 +285,7 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceI = async (app_id, service, parameters, logtext) => {
-    /**@type{server_db_file_log_service}*/
+    /**@type{server_db_table_log_log_service_info}*/
     let log_json;
     let level_info;
     switch (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'SERVICE_LEVEL')){
@@ -321,7 +327,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceE = async (app_id, service, parameters, logtext) => {
-    /**@type{server_db_file_log_service}*/   
+    /**@type{server_db_table_log_log_service_error}*/   
     const log_json = {
                     logdate:    logDate(),
                     app_id:     app_id,
@@ -344,7 +350,7 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
-    /**@type{server_db_file_log_app} */
+    /**@type{server_db_table_log_log_app_info} */
     const log_json ={
                     logdate:            logDate(),
                     app_id:             app_id,
@@ -453,7 +459,7 @@ const get = async parameters => {
             }
             return false;
         };
-        /**@type{server_db_file_db_name_log} */
+        /**@type{server_db_tables_log} */
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         
@@ -611,7 +617,7 @@ const getStat = async parameters => {
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
             await fileFsDBLogGet(parameters.app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
             .then((logs)=>{
-                logs.rows.forEach((/**@type{server_db_file_log_request|''}*/record) => {
+                logs.rows.forEach((/**@type{server_db_table_log_log_request_info|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
                             const domain_app_id = record.host?commonAppHost(record.host):null;

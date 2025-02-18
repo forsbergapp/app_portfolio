@@ -2,10 +2,10 @@
 
 /**
  * @import {server_server_response,
- *          server_db_file_app_secret,
+ *          server_db_app_secret,
  *          server_db_sql_parameter_user_account_view_insertUserAccountView,
  *          server_db_sql_parameter_user_account_app_data_post_createUserPost, server_server_error, 
- *          server_db_file_iam_user,server_db_database_demo_user,
+ *          server_db_iam_user,server_db_database_demo_user,
  *          server_db_database_uninstall_database_script,server_db_database_uninstall_database_app_script,
  *          server_db_database_install_uninstall_result, server_db_database_install_db_check,
  *          server_db_db_pool_parameters,
@@ -381,7 +381,7 @@ const dbInfoSpaceSum = parameters =>
         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
         //get apps if db credentials configured or use empty array for progress message count
         const apps = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)?fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result
-                    .filter((/**@type{server_db_file_app}*/app)=>
+                    .filter((/**@type{server_db_app}*/app)=>
                             app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
                             app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))):[];
         //drop users first to avoid db connection error
@@ -564,7 +564,7 @@ const dbInfoSpaceSum = parameters =>
                  * @returns 
                  */
                 const create_update_id = async demo_user=>{
-                /**@type{server_db_file_iam_user}*/
+                /**@type{server_db_iam_user}*/
                     const data_create = {   username:               demo_user.username,
                                             bio:                    demo_user.bio,
                                             avatar:                 demo_user.avatar,
@@ -706,7 +706,7 @@ const dbInfoSpaceSum = parameters =>
 
         //1.Create all users first and update with id
         await create_users(demo_users);
-        /**@type{server_db_file_app[]}*/
+        /**@type{server_db_app[]}*/
         const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result;
         
         //2.Generate key pairs for each user that can be saved both in resource and apps configuration
@@ -1149,7 +1149,7 @@ const dbDemoUninstall = async parameters => {
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
-    const result_demo_users = fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_file_iam_user}*/row)=>row.user_level==2);
+    const result_demo_users = fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_iam_user}*/row)=>row.user_level==2);
     if (result_demo_users){
         let deleted_user = 0;
         if (result_demo_users.length>0){
@@ -1286,10 +1286,10 @@ const dbStart = async () => {
                 password = `${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
                 await DB_POOL(db_use, true, user, password, null);
             }
-            for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_file_app}*/app)=>
+            for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_app}*/app)=>
                 app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
                 app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
-                const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_file_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
+                const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
                 /**@ts-ignore */
                 if (app_secret[`service_db_db${db_use}_app_user`])
                     await DB_POOL(  db_use, 

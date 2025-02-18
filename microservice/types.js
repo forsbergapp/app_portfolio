@@ -17,33 +17,20 @@
  */
 
 /** 
- * @description Microservice Config
- * @typedef {{  PATH_DATA                                   : string,
- *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
- *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} microservice_config
- */
-
-/** 
- * @description Microservice config service record
- * @typedef {{NAME:string, 
- *            HOST:number, 
- *            PORT:number,
- *            HTTPS_ENABLE:number,
- *            HTTPS_KEY:string,
- *            HTTPS_CERT:string,
- *            HTTPS_SSL_VERIFICATION:number,
- *            HTTPS_SSL_VERIFICATION_PATH:string,
- *            HTTPS_PORT:number,
- *            STATUS: string,
- *            PATH:string,
- *            CONFIG:[*]}} microservice_config_service_record
- */
-
-/** 
- * @description Microservice config service
- * @typedef {{['SERVICES']:microservice_config_service_record[]}} microservice_config_service
+ * @description DB DOCUMENT config_microservice_services
+ * @memberof dbObjects
+ * @typedef {{['SERVICES']:{NAME:string, 
+ *                          HOST:number, 
+ *                          PORT:number,
+ *                          HTTPS_ENABLE:number,
+ *                          HTTPS_KEY:string,
+ *                          HTTPS_CERT:string,
+ *                          HTTPS_SSL_VERIFICATION:number,
+ *                          HTTPS_SSL_VERIFICATION_PATH:string,
+ *                          HTTPS_PORT:number,
+ *                          STATUS: string,
+ *                          PATH:string,
+ *                          CONFIG:[*]}[]}} server_db_document_config_microservice_services
  */
 
 /** 

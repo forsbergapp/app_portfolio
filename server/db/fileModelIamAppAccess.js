@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_file_iam_app_access} from '../types.js'
+ *          server_db_table_iam_app_access} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -16,7 +16,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_file_iam_app_access[] }}
+ * @returns {server_server_response & {result?:server_db_table_iam_app_access[] }}
  */
 const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_APP_ACCESS',null, resource_id);
@@ -30,7 +30,7 @@ const get = (app_id, resource_id) =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_app_access} data
+ * @param {server_db_table_iam_app_access} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) =>{
@@ -40,8 +40,8 @@ const post = async (app_id, data) =>{
         data.res != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IAM_APP_ACCESS', null, null).rows.filter((/**@type{server_db_file_iam_app_access} */row)=>row.token==data.token && data.token !=null).length==0){
-            /**@type{server_db_file_iam_app_access} */
+        if (fileDBGet(app_id, 'IAM_APP_ACCESS', null, null).rows.filter((/**@type{server_db_table_iam_app_access} */row)=>row.token==data.token && data.token !=null).length==0){
+            /**@type{server_db_table_iam_app_access} */
             const data_new = {};
             data_new.id =  Date.now();
             //required
@@ -89,7 +89,7 @@ const post = async (app_id, data) =>{
 const update = async (app_id, resource_id, data) =>{
     //check required attributes
     if (app_id!=null && resource_id != null){
-        /**@type{server_db_file_iam_app_access} */
+        /**@type{server_db_table_iam_app_access} */
         const data_update = {};
         //check allowed attributes to update
         if (data.res!=null)
@@ -118,7 +118,7 @@ const update = async (app_id, resource_id, data) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    /**@type{server_db_file_iam_app_access}*/
+    /**@type{server_db_table_iam_app_access}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         return fileDBDelete(app_id, 'IAM_APP_ACCESS', resource_id, null).then(result=>{

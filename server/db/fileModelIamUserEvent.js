@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_delete,
- *          server_db_file_iam_user_event} from '../types.js'
+ *          server_db_table_iam_user_event} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -15,7 +15,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_file_iam_user_event[] }}
+ * @returns {server_server_response & {result?:server_db_table_iam_user_event[] }}
  */
 const get = (app_id, resource_id) =>{
     const result = fileDBGet(app_id, 'IAM_USER_EVENT',resource_id, null);
@@ -30,7 +30,7 @@ const get = (app_id, resource_id) =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_file_iam_user_event} data
+ * @param {server_db_table_iam_user_event} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -41,7 +41,7 @@ const post = async (app_id, data) => {
             return dbCommonRecordError(app_id, 400);
     }
     else{
-        /**@type{server_db_file_iam_user_event} */
+        /**@type{server_db_table_iam_user_event} */
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_id:data.iam_user_id, 
@@ -68,7 +68,7 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    /**@type{server_db_file_iam_user_event}*/
+    /**@type{server_db_table_iam_user_event}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         return fileDBDelete(app_id, 'IAM_USER_EVENT', resource_id, null).then((result)=>{
