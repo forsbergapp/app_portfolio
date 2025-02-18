@@ -1,0 +1,104 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="908658D4-3781-1C9E-E27F-C69FC41DEF6F" name="IAM_USER_LIKE">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>45089201-A2B6-A396-07F9-7F43164190EF</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="ECEEE9DA-E02B-24F6-4FB3-6839F480886C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>0DA7156F-1902-08E2-05E6-A939C9922D02</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="iam_user_id" id="BA38FD6A-19B6-C320-E5EF-79D84433345D">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>F002E23E-0E1B-31AA-BBF4-872D22833296</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="8330D2DC-9D5B-3F8E-B6F0-B2E7DA16E944" referredColumn="5099074C-FDEC-600E-794B-BC4F1BBD3C08"/>
+</associations>
+</Column>
+<Column name="iam_user_id_like" id="4533AB06-4ECD-B384-D261-632A6551DD28">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>C7A9AB12-A9BB-64BB-C3F1-E391B722AD88</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="08B24931-542C-4C64-3FBE-7C9244EE4EC6" referredColumn="5099074C-FDEC-600E-794B-BC4F1BBD3C08"/>
+</associations>
+</Column>
+<Column name="created" id="6600CC5A-B409-E9DD-ECCE-3A4E1E737642">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>2FE7FBC3-E46E-8FAE-D372-D521E07A281C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="BCEFE56F-9F6A-1711-6134-ED64E570E15D" name="IAM_USER_LIKE_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>4CC44EBE-0406-C82F-2B93-85098BBFFB47</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="ECEEE9DA-E02B-24F6-4FB3-6839F480886C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="2F3F3485-B896-B90C-61D4-71226C2563C6" name="IAM_USER_LIKE_iam_user_id_iam_user_id_like_UN">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>7E6D6FBA-150A-9935-B03C-184AE59595DB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BA38FD6A-19B6-C320-E5EF-79D84433345D"/>
+<colUsage columnID="4533AB06-4ECD-B384-D261-632A6551DD28"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C5153D8F-0C61-FD87-E1C9-AF224BD8ED40" name="IAM_USER_LIKE_iam_user_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>00A75786-F86A-424B-E6E2-DC6E1C2669CD</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4533AB06-4ECD-B384-D261-632A6551DD28"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="0C0A07ED-82BB-F22C-56E6-B0E0A0D46199" name="IAM_USER_LIKE_iam_user_FKv2">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>ACE540A6-C137-5DF1-76BE-8B642F1EBE7D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BA38FD6A-19B6-C320-E5EF-79D84433345D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
