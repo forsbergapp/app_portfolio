@@ -1,11 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="BA3E3F88-1DB1-B803-D672-6A55FA68ED7D" name="APP_MODULE_QUEUE">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="BA3E3F88-1DB1-B803-D672-6A55FA68ED7D" name="app_module_queue">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:04:55 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -23,6 +22,41 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_id" id="B1F5E8E7-2D69-2E78-F733-9BD8CE5F4078">
+<createdBy>admin</createdBy>
+<createdTime>2025-01-23 12:37:12 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_module_id" id="B22FCD0B-5870-9C23-98B8-F776EA383B1E">
+<createdBy>admin</createdBy>
+<createdTime>2025-01-23 09:26:04 UTC</createdTime>
+<generatorID>6FC2EE6B-3C01-AFE2-3050-C311881AD18F</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>DBE179DE-0783-A3EB-3E98-01678D33F210</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="iam_user_id" id="55CE3664-557B-94E8-4290-604B1E56F812">
+<createdBy>admin</createdBy>
+<createdTime>2025-01-23 11:19:44 UTC</createdTime>
+<generatorID>E97400C3-8E70-CFFE-4A4F-2D70B78D0F48</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>D0D873C1-E83E-4DB8-964C-B4EFCA59A1DE</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -125,49 +159,15 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_module_id" id="B22FCD0B-5870-9C23-98B8-F776EA383B1E">
-<createdBy>admin</createdBy>
-<createdTime>2025-01-23 09:26:04 UTC</createdTime>
-<generatorID>6FC2EE6B-3C01-AFE2-3050-C311881AD18F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>DBE179DE-0783-A3EB-3E98-01678D33F210</referedAttribute>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="iam_user_id" id="55CE3664-557B-94E8-4290-604B1E56F812">
-<createdBy>admin</createdBy>
-<createdTime>2025-01-23 11:19:44 UTC</createdTime>
-<generatorID>E97400C3-8E70-CFFE-4A4F-2D70B78D0F48</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>D0D873C1-E83E-4DB8-964C-B4EFCA59A1DE</referedAttribute>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_id" id="B1F5E8E7-2D69-2E78-F733-9BD8CE5F4078">
-<createdBy>admin</createdBy>
-<createdTime>2025-01-23 12:37:12 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="251F3BE9-8F76-7DD3-0942-F12ED5F5E8C4" name="APP_MODULE PK">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:06:06 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

@@ -1,0 +1,106 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="02FF546F-DBFA-28EC-9672-91C6F646BB10" name="iam_app_id_token">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>278AAE9F-A468-4E43-AEFB-476D1AC25D1A</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="app_id" id="A233BB75-8F7B-BAF6-A5D9-57F1F7B19CCB">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>2DF91222-F698-24E6-CB4D-503D73668439</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D1F85247-E307-E41C-B595-2FED97E638AC" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
+</associations>
+</Column>
+<Column name="res" id="8E37272F-5943-0F2F-B28A-2A48717C8940">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>982CF8C3-A790-0D80-87A1-5A442E081ACF</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="token" id="7EBEA2FD-3DB6-87AA-F9CF-14A51CEDC44B">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>5FBFE8F1-3A05-414A-44BB-6F2B0F881E0D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ip" id="4A62FFCE-B9F7-209B-6F65-C5D4FEFAC9EA">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>A2FE42F7-AB08-9D86-B1FE-2490069072DD</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ua" id="708A9ADA-9214-588D-4A9A-D2B0A383F005">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:44:50 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="created" id="0D55D495-6D39-2138-2A20-652DD0D096B7">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>D6D5957D-46E8-EE76-EE43-CFC769D2009A</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="61C37DFE-4F6B-E16B-3149-C81ADFA8C149" name="iam_app_id_token_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>54DCE980-6088-A10C-4C15-A4F3FA38362C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0D55D495-6D39-2138-2A20-652DD0D096B7"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="573BAD65-5BC9-EED9-168F-EE8851AB438B" name="iam_app_id_token_token_UN">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>C0F8519C-EE21-296B-7975-8F2DD63F79EB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="7EBEA2FD-3DB6-87AA-F9CF-14A51CEDC44B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="37A6F7B0-9B1D-D48A-E6F6-720CE2FEAF55" name="iam_app_id_token_app_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>9A732563-7051-ED96-4B06-4C68486F6F33</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="A233BB75-8F7B-BAF6-A5D9-57F1F7B19CCB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
