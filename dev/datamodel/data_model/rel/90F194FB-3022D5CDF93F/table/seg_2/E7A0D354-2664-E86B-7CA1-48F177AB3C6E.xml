@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="E7A0D354-2664-E86B-7CA1-48F177AB3C6E" name="REQUEST_INFO">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="E7A0D354-2664-E86B-7CA1-48F177AB3C6E" name="request_info">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>FC875B81-B604-1FA7-6A9A-DDF54CA83C01</generatorID>
@@ -22,7 +22,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>A14EEAAB-C93C-E5FF-705C-5BB94D3CAFA3</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -32,7 +31,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>B017AD49-9D7A-0F05-5566-71F97E6663A3</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -62,7 +60,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>C9B10539-040A-F79A-6173-11D518D4D402</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -72,7 +69,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>5FD25246-29D2-4565-C1DF-42C29A662C0D</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -82,7 +78,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>8BCE96AC-5868-CAC1-FE9C-F1DF1ABEDF97</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -92,7 +87,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>FB983F8B-769A-0FF9-DF0F-7DC7EC55B10E</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -112,7 +106,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>CB26AC3C-BE3D-68C3-24F4-FEF3FC3B87C8</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -122,7 +115,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>4351FB69-5F49-AA9E-31F5-69287551A7B2</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

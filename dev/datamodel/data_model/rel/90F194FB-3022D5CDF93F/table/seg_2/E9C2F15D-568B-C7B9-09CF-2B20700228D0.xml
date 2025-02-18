@@ -36,7 +36,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>47F2835F-2B25-B80F-C0FD-2874A4D6BF74</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -46,7 +45,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>6156B348-B0F4-89EB-7D3B-7C61DBEE4C28</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

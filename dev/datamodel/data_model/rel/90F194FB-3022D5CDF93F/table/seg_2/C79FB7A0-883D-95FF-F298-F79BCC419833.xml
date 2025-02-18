@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="C79FB7A0-883D-95FF-F298-F79BCC419833" name="MESSAGE_QUEUE">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="C79FB7A0-883D-95FF-F298-F79BCC419833" name="message_queue">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>D309E119-004A-A23D-A72A-0E5F93FEA9CA</generatorID>

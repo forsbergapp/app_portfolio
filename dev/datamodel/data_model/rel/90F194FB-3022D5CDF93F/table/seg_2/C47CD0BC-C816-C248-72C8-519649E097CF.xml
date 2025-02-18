@@ -17,6 +17,19 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="iam_user_id" id="9E3A54BF-12DB-D2DB-6630-D9361EE73EF1">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>EB52B9B2-99C6-5959-1FD4-D57B09EEEEF0</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="D82727F8-6C16-81E2-D4BD-145505F57F47" referredColumn="5099074C-FDEC-600E-794B-BC4F1BBD3C08"/>
+</associations>
+</Column>
 <Column name="event" id="DF31F552-498C-FBDB-5928-FA14B915ECCE">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -43,19 +56,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="iam_user_id" id="9E3A54BF-12DB-D2DB-6630-D9361EE73EF1">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>EB52B9B2-99C6-5959-1FD4-D57B09EEEEF0</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="D82727F8-6C16-81E2-D4BD-145505F57F47" referredColumn="5099074C-FDEC-600E-794B-BC4F1BBD3C08"/>
-</associations>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">

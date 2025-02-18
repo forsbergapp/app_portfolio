@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C4D60A24-6C0E-5915-CB1C-5227E1BED0EB" name="DB_ERROR">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="C4D60A24-6C0E-5915-CB1C-5227E1BED0EB" name="db_error">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 09:53:24 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -28,27 +28,15 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="db" id="959A3CA3-79E8-6342-B092-B44D4DE8F118">
+<Attribute name="app_id" id="367C28F1-10ED-D76A-1E81-9B214071E15A">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:36:02 UTC</createdTime>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>4DF83C5E-6FAF-FAFE-FE7C-C1AE74EEF4F8</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="sql" id="70528613-120C-5528-B0DB-7605EB247113">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 10:36:04 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -60,7 +48,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -72,19 +59,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_id" id="367C28F1-10ED-D76A-1E81-9B214071E15A">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 23:08:40 UTC</createdTime>
-<generatorID>4DF83C5E-6FAF-FAFE-FE7C-C1AE74EEF4F8</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

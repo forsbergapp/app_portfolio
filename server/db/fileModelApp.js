@@ -1,7 +1,7 @@
 /** @module server/db/fileModelApp */
 
 /**
- * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, server_db_file_app} from '../types.js'
+ * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, server_db_table_app} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -16,7 +16,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_file_app[] }}
+ * @returns {server_server_response & {result?:server_db_table_app[] }}
  */
 const get = parameters =>{ 
     const result = fileDBGet(parameters.app_id, 'APP',parameters.resource_id, null);
@@ -37,10 +37,10 @@ const get = parameters =>{
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null){
-        /**@type{server_db_file_app} */
+        /**@type{server_db_table_app} */
         const app =     {
             //fetch max app id + 1
-            id:Math.max(...fileDBGet(app_id, 'APP',null, null).rows.map((/**@type{server_db_file_app}*/app)=>app.id)) +1,
+            id:Math.max(...fileDBGet(app_id, 'APP',null, null).rows.map((/**@type{server_db_table_app}*/app)=>app.id)) +1,
             name: data.name,
             subdomain: data.subdomain,
             path: data.path,
@@ -89,7 +89,7 @@ const post = async (app_id, data) => {
  */
 const update = async parameters => {
     if (parameters.app_id!=null){
-        /**@type{server_db_file_app} */
+        /**@type{server_db_table_app} */
         const data_update = {};
         //allowed parameters to update:
         if (parameters.data.name!=null)

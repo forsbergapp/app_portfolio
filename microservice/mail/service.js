@@ -2,10 +2,6 @@
  * Microservice mail service
  * @module microservice/mail/service 
  */
-/**
- * @import {microservice_config_service_record} from '../types.js'
- */
-
 /**@type{import('../../microservice/microservice.js')} */
 const { microserviceUtilNumberValue} = await import(`file://${process.cwd()}/microservice/microservice.js`);
 /**@type{import('../../microservice/registry.js')} */
@@ -30,7 +26,6 @@ const nodemailer = await import('nodemailer');
  * @returns {Promise.<object>}
  */
 const sendEmail = async (data) => {
-    /**@type{microservice_config_service_record}*/
 
     if (microserviceUtilNumberValue(registryConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
         return {test: 'ok'};

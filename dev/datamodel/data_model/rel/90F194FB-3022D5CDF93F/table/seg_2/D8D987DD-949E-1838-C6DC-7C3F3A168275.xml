@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="D8D987DD-949E-1838-C6DC-7C3F3A168275" name="MESSAGE_QUEUE_ERROR">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="D8D987DD-949E-1838-C6DC-7C3F3A168275" name="message_queue_error">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>58935CCB-EB26-2DEC-CAC8-6A725FA1209E</generatorID>
@@ -25,7 +25,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>23CB1F61-FFFF-ABEF-67DA-73EB61FBCBAD</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
@@ -35,7 +34,6 @@
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>AC170C27-864C-0177-691E-E84C67499B81</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>

@@ -1,7 +1,7 @@
 /** @module server/db/common */
 
 /**
- * @import {server_server_response, server_db_common_result, server_server_error, server_db_common_result_error} from '../types.js'
+ * @import {server_server_response, server_db_common_result, server_server_error} from '../types.js'
 */
 
 /**@type{import('../server.js')} */

@@ -1,7 +1,8 @@
 /** @module microservice/messagequeue */
 
 /**
- * @import {server_server_error, server_db_file_db_name_message_queue, server_db_file_message_queue_publish, server_db_file_message_queue_consume, server_db_file_message_queue_error} from '../server/types.js'
+ * @import {server_server_error, 
+ *          server_db_db_name_message_queue, server_db_table_message_queue_publish, server_db_table_message_queue_consume, server_db_table_message_queue_error} from '../server/types.js'
  */
 
 /**
@@ -25,8 +26,8 @@ const messageQueue = async (service, message_type, message, message_id) => {
     return new Promise((resolve, reject) =>{
         /**
          * 
-         * @param {server_db_file_db_name_message_queue} file 
-         * @param {server_db_file_message_queue_publish|server_db_file_message_queue_consume|server_db_file_message_queue_error} message 
+         * @param {server_db_db_name_message_queue} file 
+         * @param {server_db_table_message_queue_publish|server_db_table_message_queue_consume|server_db_table_message_queue_error} message 
          * @returns {Promise.<void>}
          */
         const write_file = async (file, message) =>{
@@ -38,7 +39,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                 case 'PUBLISH': {
                     //message PUBLISH message in message_queue_publish.json
                     const new_message_id = Date.now();
-                    /**@type{server_db_file_message_queue_publish} */
+                    /**@type{server_db_table_message_queue_publish} */
                     const message_queue = {message_id: new_message_id, created: new Date().toISOString(), service: service, message:   message};
                     write_file('MESSAGE_QUEUE_PUBLISH', message_queue)
                     .then(()=>{
@@ -53,15 +54,15 @@ const messageQueue = async (service, message_type, message, message_id) => {
                     //message CONSUME
                     //direct microservice call
                     fileModelMessageQueue.get('MESSAGE_QUEUE_PUBLISH')
-                    .then((/**@type{server_db_file_message_queue_publish[]}*/message_queue)=>{
-                        /**@type{server_db_file_message_queue_consume} */
+                    .then(message_queue=>{
+                        /**@type{server_db_table_message_queue_consume} */
                         const message_consume = { message_id: message_id,
                                                 service:    null,
                                                 message:    null,
                                                 start:      null,
                                                 finished:   null,
                                                 result:     null};
-                        for (const row of message_queue){
+                        for (const row of message_queue.result){
                             if (row.message_id == message_id){
                                 message_consume.service = row.service;
                                 message_consume.message = row.message;

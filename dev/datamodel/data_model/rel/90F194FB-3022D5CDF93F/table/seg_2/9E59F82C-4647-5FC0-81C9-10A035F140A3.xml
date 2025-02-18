@@ -44,6 +44,24 @@
 <colAssociation fkAssociation="1D731FFB-0408-AC4D-ECE5-E37BBD87E577" referredColumn="5099074C-FDEC-600E-794B-BC4F1BBD3C08"/>
 </associations>
 </Column>
+<Column name="client_ip" id="6D94595B-DC18-0B09-09CE-8E6F8BE2B117">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-18 16:44:22 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="client_user_agent" id="12513C23-D1A8-E5CA-D45C-F898B3544A47">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-18 16:44:22 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="created" id="9FC321FE-26E6-0541-EFB7-F0A428D00EDA">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
