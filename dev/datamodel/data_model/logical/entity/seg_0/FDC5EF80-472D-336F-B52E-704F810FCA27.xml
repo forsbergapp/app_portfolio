@@ -1,11 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="FDC5EF80-472D-336F-B52E-704F810FCA27" name="APP ">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="FDC5EF80-472D-336F-B52E-704F810FCA27" name="app">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 08:55:14 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -150,8 +149,9 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 23:08:18 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <usedAttributes>

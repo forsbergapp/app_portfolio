@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_2" id="B428F224-9BB3-DA31-A1B3-213AB574B3F0" containerWithKeyObject="D8D987DD-949E-1838-C6DC-7C3F3A168275" localFKIndex="4DD1AE86-6114-D675-0393-FD05D45FE9F1" name="MESSAGE_QUEUE_ERROR_MESSAGE_QUEUE_FK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>4C958413-FBC8-35E3-BCB4-37CB128E8EC1</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<referredTableLongName>MESSAGE_QUEUE</referredTableLongName>
+<arc>1A3C2F40-361A-2D08-CA5E-BF080F2F0E93</arc>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>C79FB7A0-883D-95FF-F298-F79BCC419833</referredTableID>
+<keyObject>5E1AE292-E0A9-5757-3C1F-6A72B74ECEE8</keyObject>
+<referredKeyID>5E1AE292-E0A9-5757-3C1F-6A72B74ECEE8</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>message_id</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

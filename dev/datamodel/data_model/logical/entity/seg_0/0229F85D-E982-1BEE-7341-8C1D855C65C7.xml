@@ -1,0 +1,126 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="0229F85D-E982-1BEE-7341-8C1D855C65C7" name="app_data_resourec_master">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:21:04 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="56C50536-4474-60E9-AC4B-C194E446E7CB">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:21:19 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="json_data" id="89F2E76B-60C7-6EE2-B413-839DF1947749">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:21:26 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="iam_user_app_id" id="F25011E2-B0AA-8A08-E615-0F619435239C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:22:07 UTC</createdTime>
+<generatorID>F4DC720A-2045-58D0-7930-0C044D17579D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>7FBFB51D-9077-C03B-C96E-F42E247BBF89</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_data_entity_id" id="1A22CD03-BADB-328F-817D-5843D679452B">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:23:12 UTC</createdTime>
+<generatorID>5C3DE2B9-89D8-2D54-B58E-1DD7226416AB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>7AE56DD0-85D6-54FD-3167-02204289C890</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_data_entity_resource_id" id="7D83169F-8D87-BBF4-7A36-1A0B5938EB3F">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:23:12 UTC</createdTime>
+<generatorID>5C3DE2B9-89D8-2D54-B58E-1DD7226416AB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>2B9A7F19-F73B-A3CF-68A9-3BD6520EE34F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="created" id="A18233D4-C896-95A0-7401-306EE2FCAAD4">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:40:31 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="modified" id="E59681B7-61EA-7657-11EC-33CF96B0EDA0">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:40:36 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_id" id="E02F8748-AB33-BCA2-67DA-4CE61E9EC8B3">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:22:31 UTC</createdTime>
+<generatorID>5C3DE2B9-89D8-2D54-B58E-1DD7226416AB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A74E5302-BC04-17D1-CA26-BAAAA4D9F0E2</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="B14B914E-0688-3843-32C3-812F09AFF58A" name="APP_DATA_RESOURCE_MASTER2 PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 21:21:23 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>56C50536-4474-60E9-AC4B-C194E446E7CB</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
