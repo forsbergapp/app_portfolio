@@ -1,4 +1,4 @@
-/** @module server/db/fileModelIamUserEvent */
+/** @module server/db/IamUserEvent */
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_delete,

@@ -14,10 +14,10 @@
  */
 const getToken = async parameters => {
     
-    /**@type{import('../../../../server/db/fileModelIamAppAccess.js')} */
-    const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
-    /**@type{import('../../../../server/db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('../../../../server/db/IamAppAccess.js')} */
+    const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
+    /**@type{import('../../../../server/db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../../server/iam.js')} */
@@ -27,10 +27,10 @@ const getToken = async parameters => {
     const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
     if (token_verify.app_id         == parameters.app_id && 
         token_verify.ip             == parameters.ip && 
-        token_verify.db             == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')) &&
+        token_verify.db             == serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE')) &&
         token_verify.scope          == 'APP_EXTERNAL' &&
         //authenticated saved values in iam_app_access
-        fileModelIamAppAccess.get(parameters.app_id, null).result
+        IamAppAccess.get(parameters.app_id, null).result
                         .filter((/**@type{server_db_iam_app_access}*/row)=>
                                                                 //Authenticate the token type
                                                                 row.type                    == 'APP_ACCESS_EXTERNAL' &&
@@ -68,11 +68,11 @@ const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
-    /**@type{import('../../../../server/db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('../../../../server/db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
-    /**@type{import('../../../../server/db/fileModelIamAppAccess.js')} */
-    const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
+    /**@type{import('../../../../server/db/IamAppAccess.js')} */
+    const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
     const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
@@ -197,7 +197,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                 user_account_id:    null,
                                                                                                 //save the payment request id
                                                                                                 app_custom_id:      payment_request_id,
-                                                                                                db:                 serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                                                                                db:                 serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE')),
                                                                                                 //authorize to client IP, the server should use 'X-Forwarded-For'
                                                                                                 ip:                 parameters.ip,
                                                                                                 scope:              'APP_EXTERNAL'});
@@ -212,12 +212,12 @@ const paymentRequestCreate = async parameters =>{
                                         //save the payment request id
                                         app_custom_id:          payment_request_id,
                                         app_id:                 parameters.app_id,
-                                        db:                     serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                        db:                     serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE')),
                                         res:		            1,
                                         token:                  jwt_data?jwt_data.token:null,
                                         ip:                     parameters.ip,
                                         ua:                     parameters.user_agent};
-                await fileModelIamAppAccess.post(parameters.app_id, file_content);
+                await IamAppAccess.post(parameters.app_id, file_content);
     
                 /**
                 * @type {{ token:string,

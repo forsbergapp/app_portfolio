@@ -13,17 +13,17 @@ describe('Performance test, calling main server url according to configured valu
     it('should handle 100 concurrent requests without any error within 10 seconds', async () =>{ 
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-        /**@type{import('../server/db/fileModelConfig.js')} */
-        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+        /**@type{import('../server/db/Config.js')} */
+        const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
         /**@type{number} */
         let status;
-        const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+        const HTTPS_ENABLE = Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
         const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+        const HOST = Config.get('CONFIG_SERVER','SERVER', 'HOST');
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                        Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                            Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
         const requests = [];
         const totalRequests = 100;
         //set parameter to avoid certificate errors

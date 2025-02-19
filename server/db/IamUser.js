@@ -1,4 +1,4 @@
-/** @module server/db/fileModelIamUser */
+/** @module server/db/IamUser */
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
@@ -335,18 +335,18 @@ const deleteRecord = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteCascade = async (app_id, resource_id) =>{
-    /**@type{import('./fileModelIamUserEvent.js')} */
-    const fileModelIamUserEvent = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
-    /**@type{import('./fileModelIamAppAccess.js')} */
-    const fileModelIamAppAccess = await import(`file://${process.cwd()}/server/db/fileModelIamAppAccess.js`);
+    /**@type{import('./IamUserEvent.js')} */
+    const IamUserEvent = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
+    /**@type{import('./IamAppAccess.js')} */
+    const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
 
-    const result_recordsUserEvent = fileModelIamUserEvent.get(app_id, resource_id);        
+    const result_recordsUserEvent = IamUserEvent.get(app_id, resource_id);        
     if (result_recordsUserEvent.result){
         let count_delete = 0;
         let error ;
         for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_table_iam_user_event}*/row)=>row.iam_user_id == resource_id)){
             count_delete++;
-            const result_delete = await fileModelIamUserEvent.deleteRecord( app_id, 
+            const result_delete = await IamUserEvent.deleteRecord( app_id, 
                                                                             /**@ts-ignore */
                                                                             record.id);
             if (result_delete.http)
@@ -355,11 +355,11 @@ const deleteCascade = async (app_id, resource_id) =>{
         if (error)
             return error;
         else{
-            const result_recordsIamAppAccess = fileModelIamAppAccess.get(app_id, null);
+            const result_recordsIamAppAccess = IamAppAccess.get(app_id, null);
             if (result_recordsIamAppAccess.result){
                 for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_table_iam_app_access}*/row)=>row.iam_user_id == resource_id)){
                     count_delete++;
-                    const result_delete = await fileModelIamAppAccess.deleteRecord( app_id, 
+                    const result_delete = await IamAppAccess.deleteRecord( app_id, 
                                                                                     /**@ts-ignore */
                                                                                     record.id);
                     if (result_delete.http)

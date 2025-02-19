@@ -94,7 +94,7 @@
         "/bff/app_id/v1/server-db/app_setting/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppSetting.get",
+                "operationId": "server_db.AppSetting.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -792,7 +792,7 @@
         "/bff/admin/v1/app-module-report-queue/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppModuleQueue.get",
+                "operationId": "server_db.AppModuleQueue.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -902,7 +902,7 @@
         "/bff/admin/v1/app-module-report-queue-result/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppModuleQueue.getResult",
+                "operationId": "server_db.AppModuleQueue.getResult",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3688,7 +3688,7 @@
         "/bff/admin/v1/app-common": {
             "get": {
                 "summary": "Gets all apps",
-                "operationId": "server_db.fileModelApp.get",
+                "operationId": "server_db.App.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3716,7 +3716,7 @@
         "/bff/admin/v1/app-common-app/${resource_id_number}": {
             "put": {
                 "summary": "",
-                "operationId": "server_db.fileModelApp.update",
+                "operationId": "server_db.App.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3801,7 +3801,7 @@
         "/bff/admin/v1/app-common-app-module/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppModule.get",
+                "operationId": "server_db.AppModule.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3852,7 +3852,7 @@
             },
             "put": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppModule.update",
+                "operationId": "server_db.AppModule.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3919,7 +3919,7 @@
         "/bff/admin/v1/app-common-app-parameter/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppParameter.get",
+                "operationId": "server_db.AppParameter.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3953,7 +3953,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppParameter.update",
+                "operationId": "server_db.AppParameter.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4011,7 +4011,7 @@
         "/bff/admin/v1/app-common-app-secret/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppSecret.get",
+                "operationId": "server_db.AppSecret.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4045,7 +4045,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server_db.fileModelAppSecret.update",
+                "operationId": "server_db.AppSecret.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4163,7 +4163,7 @@
         "/bff/admin/v1/server-db/config/${resource_id_string}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelConfig.getFile",
+                "operationId": "server_db.Config.getFile",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4231,7 +4231,7 @@
             },
             "put": {
                 "summary": "",
-                "operationId": "server_db.fileModelConfig.update",
+                "operationId": "server_db.Config.update",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4595,7 +4595,7 @@
         "/bff/admin/v1/server-db/log": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelLog.get",
+                "operationId": "server_db.Log.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4706,7 +4706,7 @@
         "/bff/admin/v1/server-info-statuscode": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelLog.getStatusCodes",
+                "operationId": "server_db.Log.getStatusCodes",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4734,7 +4734,7 @@
         "/bff/admin/v1/server-db/log-stat": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelLog.getStat",
+                "operationId": "server_db.Log.getStat",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4813,7 +4813,7 @@
         "/bff/admin/v1/server-db/log-files": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.fileModelLog.getFiles",
+                "operationId": "server_db.Log.getFiles",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4884,7 +4884,7 @@
             },
             "patch": {
                 "summary": "",
-                "operationId": "server_db.fileModelIamUser.updateAdmin",
+                "operationId": "server_db.IamUser.updateAdmin",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}

@@ -90,10 +90,10 @@ const component = async props => {
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     /**@type{import('../../../common/src/common.js')} */
     const {commonRegistryAppModule} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-    /**@type{import('../../../../server/db/fileModelAppModuleQueue.js')} */
-    const fileModelAppModuleQueue = await import(`file://${process.cwd()}/server/db/fileModelAppModuleQueue.js`);
-    /**@type{import('../../../../server/db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('../../../../server/db/AppModuleQueue.js')} */
+    const AppModuleQueue = await import(`file://${process.cwd()}/server/db/AppModuleQueue.js`);
+    /**@type{import('../../../../server/db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     
     class Benchmark {
         /**
@@ -356,7 +356,7 @@ const component = async props => {
                         }
                         if (this._finished % Math.min(Math.floor((this.requests * this.concurrency) / 10),10000) === 0) {
                             if (props.queue_parameters.appModuleQueueId)
-                                fileModelAppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
+                                AppModuleQueue.update(props.app_id, props.queue_parameters.appModuleQueueId, {progress:(this._finished / (this.requests * this.concurrency))});
                         }
                         if (this._finished >= (this.requests * this.concurrency)) 
                             return resolve(this.done(startTime));
@@ -382,12 +382,12 @@ const component = async props => {
     const test_function = async () => {
         /**@type{number} */
         let status;
-        const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+        const HTTPS_ENABLE = Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
         const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+        const HOST = Config.get('CONFIG_SERVER','SERVER', 'HOST');
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                        Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                            Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
         return await fetch(PROTOCOL + HOST + ':' + PORT)
                     .then((response=>{
                             status = response.status;

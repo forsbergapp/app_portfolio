@@ -18,7 +18,7 @@
 
 /**
  * Spy test, commonApp as called from bff 
- *  should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
+ *  should call AppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
  */
 import '../apps/common/src/common.spec.js';
 
@@ -30,7 +30,7 @@ import '../server/db/db.spec.js';
 
 /**
  * Integration test, setting FILE_DB cache
- *  should return values when using ORM pattern for fileModelConfig
+ *  should return values when using ORM pattern for Config
  * Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps
  *  should return values
  * Integration test, server function worldcities random city called from BFF and from all apps

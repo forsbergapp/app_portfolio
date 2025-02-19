@@ -5,22 +5,22 @@
 /**
  * @name describe
  * @description describe: Integration test, setting FILE_DB cache
- *              it: should return values when using ORM pattern for fileModelConfig
+ *              it: should return values when using ORM pattern for Config
  * @function
  * @returns {void}
  */
 describe('Integration test, setting FILE_DB cache', ()=> {
-    it('should return values when using ORM pattern for fileModelConfig', async () =>{
+    it('should return values when using ORM pattern for Config', async () =>{
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-        /**@type{import('../server/db/fileModelConfig.js')} */
-        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+        /**@type{import('../server/db/Config.js')} */
+        const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     
-        const HTTPS_ENABLE = fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-        const HOST = fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+        const HTTPS_ENABLE = Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+        const HOST = Config.get('CONFIG_SERVER','SERVER', 'HOST');
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                            fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                        Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                            Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
         console.log('Integration test FILE_DB cache HTTPS_ENABLE:', HTTPS_ENABLE);
         console.log('Integration test FILE_DB cache HOST:', HOST);
         console.log('Integration test FILE_DB cache POR:', PORT);
@@ -38,11 +38,11 @@ describe('Integration test, setting FILE_DB cache', ()=> {
  */
 describe('Integration test, microservice geolocation IP cache (should exist before test) called from BFF and from all apps', ()=> {
     it('should return values', async () =>{
-        /**@type{import('../server/db/fileModelApp.js')} */
-        const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+        /**@type{import('../server/db/App.js')} */
+        const App = await import(`file://${process.cwd()}/server/db/App.js`);
 
         /**@type{server_db_app[]}*/
-        const apps = fileModelApp.get({app_id:null, resource_id:null}).result;
+        const apps = App.get({app_id:null, resource_id:null}).result;
 
         for (const app of apps){
             /**@type{import('../server/bff.js')} */
@@ -83,12 +83,12 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
  */
 describe('Integration test, server function worldcities random city called from BFF and from all apps', ()=> {    
     it('should return values ', async () =>{
-        /**@type{import('../server/db/fileModelApp.js')} */
-        const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
-        /**@type{import('../server/db/fileModelConfig.js')} */
-        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+        /**@type{import('../server/db/App.js')} */
+        const App = await import(`file://${process.cwd()}/server/db/App.js`);
+        /**@type{import('../server/db/Config.js')} */
+        const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
         /**@type{server_db_app[]}*/
-        const apps = fileModelApp.get({app_id:null, resource_id:null}).result;
+        const apps = App.get({app_id:null, resource_id:null}).result;
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
         for (const app of apps){
@@ -101,7 +101,7 @@ describe('Integration test, server function worldcities random city called from 
                 route_path:'/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
                 method:'POST', 
                 query:'',
-                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
+                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
                 authorization:null,
                 ip:':1', 
                 user_agent:'*', 

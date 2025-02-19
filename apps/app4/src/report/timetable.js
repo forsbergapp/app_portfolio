@@ -138,8 +138,8 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
-	/**@type{import('../../../../server/db/fileModelAppParameter.js')} */
-	const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
+	/**@type{import('../../../../server/db/AppParameter.js')} */
+	const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
 
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
@@ -154,7 +154,7 @@ const timetable = async (timetable_parameters) => {
 	 * @returns 
 	 */
 	
-	const parametersApp = fileModelAppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
+	const parametersApp = AppParameter.get({app_id:timetable_parameters.app_id, resource_id:timetable_parameters.app_id}).result[0]; 
 	return await new Promise((resolve) => {
 		APP_REPORT_GLOBAL.app_copyright = parametersApp.app_copyright.value;
 		/**@ts-ignore */

@@ -53,20 +53,20 @@ const zlib = await import('node:zlib');
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
-    /**@type{import('./db/fileModelAppParameter.js')} */
-    const fileModelAppParameter = await import(`file://${process.cwd()}/server/db/fileModelAppParameter.js`);
-    /**@type{import('./db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
-    const admin_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'));
+    /**@type{import('./db/AppParameter.js')} */
+    const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
+    /**@type{import('./db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    const common_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+    const admin_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'));
     /**
      * Sets response type
      * @param {server_server_response_type} type
      */
     const setType = type => {
         
-        const app_cache_control = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control.value;
-        const app_cache_control_font = fileModelAppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control_font.value;
+        const app_cache_control = AppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control.value;
+        const app_cache_control_font = AppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control_font.value;
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -122,15 +122,15 @@ const serverResponse = async parameters =>{
         }
     };
     if (parameters.result_request.http){
-        /**@type{import('./db/fileModelLog.js')} */
-        const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+        /**@type{import('./db/Log.js')} */
+        const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
 
         /**@type{import('../apps/common/src/common.js')} */
         const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
         const app_id_host = app_common.commonAppHost((parameters.host??'').substring(0,(parameters.host??'').indexOf(':')==-1?
                                                 (parameters.host??'').length:
                                                     (parameters.host??'').indexOf(':')));
-        await fileModelLog.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.result_request.http ?? '').toString(), parameters.result_request.code?.toString()??'', parameters.result_request.text??'');
+        await Log.postServiceI(parameters.app_id ?? app_id_host ?? common_app_id, (parameters.result_request.http ?? '').toString(), parameters.result_request.code?.toString()??'', parameters.result_request.text??'');
         //ISO20022 error format
         const message = {error:{
                                 http:parameters.result_request.http, 
@@ -169,8 +169,8 @@ const serverResponse = async parameters =>{
                     parameters.res.statusCode =200;
                 if (parameters.result_request?.sendfile){
                     const fs = await import('node:fs');
-                    /**@type{import('./db/fileModelLog.js')} */
-                    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+                    /**@type{import('./db/Log.js')} */
+                    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
                     /**@type{import('./iam.js')} */
                     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
                     await fs.promises.access(parameters.result_request.sendfile)
@@ -179,7 +179,7 @@ const serverResponse = async parameters =>{
                         parameters.res.sendFile(parameters.result_request.sendfile);
                     })
                     .catch(error=>{
-                        fileModelLog.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.result_request.sendfile ?? '', error)
+                        Log.postServiceI(parameters.app_id ?? common_app_id, '400', parameters.result_request.sendfile ?? '', error)
                         .then(result=>{if (result.http)
                             parameters.res.statusCode =400;
                             parameters.res.write(iamUtilMessageNotAuthorized(), 'utf8');
@@ -220,7 +220,7 @@ const serverResponse = async parameters =>{
                                 }
                             }
                             //records limit in controlled by server, apps can not set limits
-                            const limit = serverUtilNumberValue(fileModelAppParameter.get( {app_id:parameters.app_id ?? common_app_id,
+                            const limit = serverUtilNumberValue(AppParameter.get( {app_id:parameters.app_id ?? common_app_id,
                                                                                             resource_id:common_app_id}).result[0].common_app_limit_records.value);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
@@ -604,10 +604,10 @@ const serverUtilAppLine = () =>{
  * @returns {Promise<*>}
  */
 const serverJs = async () => {
-    /**@type{import('./db/fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-    /**@type{import('./db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('./db/Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+    /**@type{import('./db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     /**@type{import('./iam.js')} */
     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
@@ -743,9 +743,9 @@ const serverJs = async () => {
         await read_body();
         // check JSON maximum size, parameter uses megabytes (MB)
         if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-                (serverUtilNumberValue((fileModelConfig.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
+                (serverUtilNumberValue((Config.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
             //log error
-            fileModelLog.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
+            Log.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
                 serverResponse({
                                 result_request:{http:400, 
                                                 code:null, 
@@ -845,8 +845,8 @@ const serverJs = async () => {
 const serverREST_API = async (routesparameters) =>{
     /**@type{import('./iam.js')} */
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
-    /**@type{import('./db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('./db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     const URI_query = routesparameters.parameters;
     const URI_path = routesparameters.url.indexOf('?')>-1?routesparameters.url.substring(0, routesparameters.url.indexOf('?')):routesparameters.url;
     const app_query = URI_query?new URLSearchParams(URI_query):null;
@@ -885,7 +885,7 @@ const serverREST_API = async (routesparameters) =>{
             return false;
     };
         
-    const configPath = Object.entries(fileModelConfig.get('CONFIG_REST_API').paths)
+    const configPath = Object.entries(Config.get('CONFIG_REST_API').paths)
                         .filter(path=>
                             path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${IAM_user_account_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
@@ -1102,10 +1102,10 @@ const serverREST_API = async (routesparameters) =>{
  */
 const serverStart = async () =>{
     
-    /**@type{import('./db/fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-    /**@type{import('./db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    /**@type{import('./db/Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+    /**@type{import('./db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -1114,46 +1114,46 @@ const serverStart = async () =>{
     process.env.TZ = 'UTC';
     process.on('uncaughtException', err =>{
         console.log(err);
-        fileModelLog.postServerE('Process uncaughtException: ' + err.stack);
+        Log.postServerE('Process uncaughtException: ' + err.stack);
     });
     process.on('unhandledRejection', reason =>{
         console.log(reason);
-        fileModelLog.postServerE('Process unhandledRejection: ' + reason);
+        Log.postServerE('Process unhandledRejection: ' + reason);
     });
     try {
-        await fileModelConfig.configInit();
+        await Config.configInit();
         /**@type{import('./db/dbModelDatabase.js')} */
         const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
         await dbModelDatabase.dbStart();
         /**@type{import('./socket.js')} */
         const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
         socketIntervalCheck();
-        const NETWORK_INTERFACE = fileModelConfig.get('CONFIG_SERVER','SERVER', 'NETWORK_INTERFACE');
+        const NETWORK_INTERFACE = Config.get('CONFIG_SERVER','SERVER', 'NETWORK_INTERFACE');
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(await serverJs()).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
-            fileModelLog.postServerI('HTTP Server up and running on PORT: ' + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTP_PORT')).then(() => {
+        http.createServer(await serverJs()).listen(Config.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
+            Log.postServerI('HTTP Server up and running on PORT: ' + Config.get('CONFIG_SERVER','SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
         });
-        if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1'){
+        if (Config.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_KEY'), 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_CERT'), 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + Config.get('CONFIG_SERVER','SERVER', 'HTTPS_KEY'), 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + Config.get('CONFIG_SERVER','SERVER', 'HTTPS_CERT'), 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
             /**@ts-ignore*/
-            https.createServer(options,  await serverJs()).listen(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
-                fileModelLog.postServerI('HTTPS Server up and running on PORT: ' + fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT')).then(() => {
+            https.createServer(options,  await serverJs()).listen(Config.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
+                Log.postServerI('HTTPS Server up and running on PORT: ' + Config.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
             });            
         }
     } catch (/**@type{server_server_error}*/error) {
-        fileModelLog.postServerE('serverStart: ' + error.stack);
+        Log.postServerE('serverStart: ' + error.stack);
     }
     
 };

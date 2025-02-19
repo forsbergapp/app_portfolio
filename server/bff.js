@@ -7,14 +7,14 @@
 /**@type{import('./server.js')} */
 const {serverResponse, serverUtilResponseTime, serverUtilCompression, serverUtilNumberValue, serverREST_API} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('./db/fileModelConfig.js')} */
-const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+/**@type{import('./db/Config.js')} */
+const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
-/**@type{import('./db/fileModelIamUser.js')} */
-const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+/**@type{import('./db/IamUser.js')} */
+const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
 
-/**@type{import('./db/fileModelLog.js')} */
-const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+/**@type{import('./db/Log.js')} */
+const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
 /**@type{import('./iam.js')} */
 const {iamAuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.js`);
 /**@type{import('./security.js')} */
@@ -44,25 +44,25 @@ const fs = await import('node:fs');
 const bffInit = async (req, res) =>{
     if (req.headers.accept == 'text/event-stream'){
         //SSE, log since response is open and log again when closing
-        fileModelLog.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res));
+        Log.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res));
     }
     res.on('close',()=>{	
         //SSE response time will be time connected until disconnected
-        fileModelLog.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res)).then(() => {
+        Log.postRequestI(req, res.statusCode, typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'', serverUtilResponseTime(res)).then(() => {
             // do not return any StatusMessage to client, this is only used for logging purpose
             res.statusMessage = '';
             res.end();
         });
     });
     //redirect naked domain to www except for localhost
-    if (req.headers.host.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
-        if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
+    if (req.headers.host.startsWith(Config.get('CONFIG_SERVER','SERVER','HOST') ?? '') && req.headers.host.indexOf('localhost')==-1)
+        if (Config.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
             return {reason:'REDIRECT', redirect:`https://www.${req.headers.host}${req.originalUrl}`};
         else
             return {reason:'REDIRECT', redirect:`http://www.${req.headers.host}${req.originalUrl}`};
     else{
         //redirect from http to https if https is enabled
-        if (req.protocol=='http' && fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
+        if (req.protocol=='http' && Config.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1')
             return {reason:'REDIRECT', redirect:`https://${req.headers.host}${req.originalUrl}`};
         else{
             //access control that stops request if not passing controls
@@ -90,8 +90,8 @@ const bffInit = async (req, res) =>{
                 res.setHeader('Access-Control-Max-Age','5');
                 res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-                if (fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
-                    res.setHeader('content-security-policy', fileModelConfig.get('CONFIG_IAM_POLICY','content-security-policy'));
+                if (Config.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
+                    res.setHeader('content-security-policy', Config.get('CONFIG_IAM_POLICY','content-security-policy'));
                 }
                 res.setHeader('cross-origin-opener-policy','same-origin');
                 res.setHeader('cross-origin-resource-policy',	'same-origin');
@@ -141,12 +141,12 @@ const bffInit = async (req, res) =>{
  */
 const bffStart = async (req, res) =>{
     //if first time, when no user exists, then redirect everything to admin
-    if (fileModelIamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-        return {reason:'REDIRECT', redirect:`http://admin.${fileModelConfig.get('CONFIG_SERVER','SERVER','HOST')}`};
+    if (IamUser.get(app_common.commonAppHost(req.headers.host ?? '')??0, null).result.length==0 && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+        return {reason:'REDIRECT', redirect:`http://admin.${Config.get('CONFIG_SERVER','SERVER','HOST')}`};
     else{
         //check if SSL verification using letsencrypt is enabled when validating domains
-        if (fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
-            if (req.originalUrl.startsWith(fileModelConfig.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
+        if (Config.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
+            if (req.originalUrl.startsWith(Config.get('CONFIG_SERVER','SERVER', 'HTTPS_SSL_VERIFICATION_PATH') ?? '')){
                 res.type('text/plain');
                 res.write(await fs.promises.readFile(`${process.cwd()}${req.originalUrl}`, 'utf8'));
                 return {reason:'SEND', redirect:null};
@@ -189,7 +189,7 @@ const bffStart = async (req, res) =>{
                             route : 'APP',
                             res:bff_parameters.res})
             .catch((error)=>
-                fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() =>
+                Log.postServiceE(app_id, service, bff_parameters.query, error).then(() =>
                     import('../apps/common/src/component/common_server_error.js')
                         .then(({default:serverError})=>{
                             return {result:serverError({data:null, methods:null}), type:'HTML'};
@@ -217,11 +217,11 @@ const bffStart = async (req, res) =>{
                                                                     body:decodedbody,
                                                                     res:bff_parameters.res})
                                                     .then((/**@type{*}*/result_service) => {
-                                                        const log_result = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
-                                                        return fileModelLog.postServiceI(app_id, service, bff_parameters.query, log_result).then(result_log=>result_log.http?result_log:result_service);
+                                                        const log_result = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL'))==2?result_service:'✅';
+                                                        return Log.postServiceI(app_id, service, bff_parameters.query, log_result).then(result_log=>result_log.http?result_log:result_service);
                                                     })
                                                     .catch((/**@type{server_server_error}*/error) => {
-                                                        return fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
+                                                        return Log.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
                                                             return {http:500, code:null, text:error, developerText:'bff', moreInfo:null, type:'JSON'};
                                                         });
                                                     }), 
@@ -234,7 +234,7 @@ const bffStart = async (req, res) =>{
     }
     else{
         //unknown appid, domain or subdomain, redirect to hostname
-        bff_parameters.res?bff_parameters.res.redirect(`${bff_parameters.res.req.protocol}://${fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST')}`):null;
+        bff_parameters.res?bff_parameters.res.redirect(`${bff_parameters.res.req.protocol}://${Config.get('CONFIG_SERVER','SERVER', 'HOST')}`):null;
     }
 };
 /**
@@ -267,7 +267,7 @@ const bffStart = async (req, res) =>{
                             res:bff_parameters.res})
             .then(result=>resolve(result))
             .catch((/**@type{server_server_error}*/error)=>{
-                fileModelLog.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
+                Log.postServiceE(app_id, service, bff_parameters.query, error).then(() => {
                     reject(error);
                 });
             });

@@ -70,20 +70,20 @@ const microserviceRouteMatch = (route_path, route_method, request_path , request
 const microserviceRequest = async parameters =>{
     /**@type{import('./circuitbreaker.js')} */
     const {circuitBreaker} = await import(`file://${process.cwd()}/microservice/circuitbreaker.js`);
-    /**@type{import('../server/db/fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    /**@type{import('../server/db/fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('../server/db/Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    /**@type{import('../server/db/AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
     /**@type{import('./registry.js')} */
     const {registryMicroserviceApiVersion}= await import(`file://${process.cwd()}/microservice/registry.js`);
 
     /**@type{microservice_registry_service} */
     const microservice = parameters.path.split('/')[1].toUpperCase();
-    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
+    if ((microservice == 'GEOLOCATION' && microserviceUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_IAM', 'ENABLE_GEOLOCATION'))==1)||
         microservice != 'GEOLOCATION'){
         //use app id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-        const authorization = `Basic ${Buffer.from(     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
-                                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_secret,'utf-8').toString('base64')}`;
+        const authorization = `Basic ${Buffer.from(     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_id + ':' + 
+                                                        AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].common_client_secret,'utf-8').toString('base64')}`;
         //convert data object to string if method=GET, add always app_id parameter for authentication and send as base64 encoded
         const query = Buffer.from((parameters.method=='GET'?Object.entries(parameters.data).reduce((query, param)=>query += `${param[0]}=${param[1]}&`, ''):'')
                                     + `app_id=${parameters.app_id}`
@@ -91,7 +91,7 @@ const microserviceRequest = async parameters =>{
         /**@ts-ignore */
         return await circuitBreaker.MicroServiceCall( microserviceHttpRequest, 
                                                 microservice, 
-                                                parameters.app_id == microserviceUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin, 
+                                                parameters.app_id == microserviceUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then admin, 
                                                 `/api/v${registryMicroserviceApiVersion(microservice)}${parameters.path}`, 
                                                 query, 
                                                 parameters.data, 

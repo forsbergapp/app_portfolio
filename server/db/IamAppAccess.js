@@ -1,4 +1,4 @@
-/** @module server/db/fileModelIamAppAccess */
+/** @module server/db/IamAppAccess */
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,

@@ -10,7 +10,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 /**
  * Returns database error message in ISO20022 format
  * Does not check database for known errors
- * Use error when unknown error occurs for both fileModel and dbModel
+ * Use error when unknown error occurs for both  and dbModel
  * @param {number|null} app_id
  * @param {number} statusCode
  * @param {*} error
@@ -73,26 +73,26 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
  const dbCommonExecute = async (app_id, sql, parameters) =>{
 	/**@type{import('./db.js')} */
 	const {dbSQL} = await import(`file://${process.cwd()}/server/db/db.js`);
-	/**@type{import('./fileModelLog.js')} */
-	const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-	/**@type{import('./fileModelConfig.js')} */
-	const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+	/**@type{import('./Log.js')} */
+	const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+	/**@type{import('./Config.js')} */
+	const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
-	const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+	const DB_USE = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
 
 	return new Promise ((resolve)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
-		sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
+		sql = sql.replaceAll('<DB_SCHEMA/>', Config.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
 		//manage different syntax
 		//syntax in SQL: WHERE '<DATE_PERIOD_YEAR/>' = [bind variable] etc
 		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod(DB_USE, 'YEAR'));
 		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod(DB_USE, 'MONTH'));
 		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod(DB_USE, 'DAY'));
 		
-		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
+		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
 		.then((/**@type{server_db_common_result}*/result)=> {
-			fileModelLog.postDBI(app_id, DB_USE, sql, parameters, result)
+			Log.postDBI(app_id, DB_USE, sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				try {
@@ -114,7 +114,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 			//SQLite does not display sql in error
 			if (!error.sql)
 				error.sql = sql;
-			fileModelLog.postDBE(app_id, DB_USE, sql, parameters, error)
+			Log.postDBE(app_id, DB_USE, sql, parameters, error)
 			.then(()=>resolve(dbCommonRecordError(app_id, 500, error)));
 		});
 	});

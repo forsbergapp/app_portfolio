@@ -14,8 +14,8 @@
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./fileModelConfig.js')} */
-const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+/**@type{import('./Config.js')} */
+const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
 //mysql module used for both MariaDB and MySQL
 const MYSQL               = await import('mysql');
@@ -39,7 +39,7 @@ const DB_POOL =[
                   [5, null, null]  //SQLite           [db number, db object, null]
                ];                     
 
-if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==4){
+if (serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==4){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;

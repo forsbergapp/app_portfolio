@@ -1,4 +1,4 @@
-/** @module server/db/fileModelAppModuleQueue */
+/** @module server/db/AppModuleQueue */
 
 /**
  * @import {server_server_response,server_db_app_module_queue_status,
@@ -41,9 +41,9 @@ const get = parameters =>{
  * @returns {Promise.<server_server_response & {result?:{sendfile:String} }>}
  */
 const getResult = async parameters => {
-    /**@type{import('./fileModelConfig.js')} */
-    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
-    return {sendfile:process.cwd() + `${fileModelConfig.get('CONFIG_SERVER','SERVER','PATH_DATA_JOBS')}/${parameters.resource_id}.html`, type:'HTML'};
+    /**@type{import('./Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    return {sendfile:process.cwd() + `${Config.get('CONFIG_SERVER','SERVER','PATH_DATA_JOBS')}/${parameters.resource_id}.html`, type:'HTML'};
 };
 /**
  * @name post

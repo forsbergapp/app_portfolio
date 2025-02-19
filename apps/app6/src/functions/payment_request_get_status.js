@@ -25,8 +25,8 @@ const paymentRequestGetStatus = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('../../../../server/db/AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
     /**@type{import('../../../../apps/common/src/common.js')} */
     const {commonBFE} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
@@ -34,7 +34,7 @@ const paymentRequestGetStatus = async parameters =>{
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     
-    const url = fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_url_payment_request_get_status;
+    const url = AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_url_payment_request_get_status;
    
     /** 
      * @type {{ api_secret:             string,
@@ -42,15 +42,15 @@ const paymentRequestGetStatus = async parameters =>{
      *          origin:                 string}}
      */
     const body = {	api_secret:     
-                                        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_secret,
+                                        AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_secret,
                     payment_request_id: parameters.data.payment_request_id,
                     origin:             parameters.host
     };
     //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
     //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-    const body_encrypted = {id:         serverUtilNumberValue(fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id),
+    const body_encrypted = {id:         serverUtilNumberValue(AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id),
                             message:    securityPublicEncrypt(
-                                            fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_public_key, 
+                                            AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_public_key, 
                                             JSON.stringify(body))};
     
     const result_commonBFE = await commonBFE({  url:url, 
@@ -75,7 +75,7 @@ const paymentRequestGetStatus = async parameters =>{
          * @type {{ status:string}}
          */
         const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_private_key, 
+                                                AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_private_key, 
                                                 result_commonBFE.result.rows.message));
 
         return {result:[{status:body_decrypted.status}], type:'JSON'};

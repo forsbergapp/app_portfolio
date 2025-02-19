@@ -29,10 +29,10 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_resource_detail_get[] }>}
  */
  const get = async parameters =>{
-    /**@type{import('./fileModelAppSetting.js')} */
-    const fileModelAppSetting = await import(`file://${process.cwd()}/server/db/fileModelAppSetting.js`);
+    /**@type{import('./AppSetting.js')} */
+    const AppSetting = await import(`file://${process.cwd()}/server/db/AppSetting.js`);
     /**@type{server_db_app_setting[]}*/
-    const app_setting = fileModelAppSetting.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
+    const app_setting = AppSetting.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
     return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
       dbCommonExecute(parameters.app_id, 
                     dbSql.APP_DATA_RESOURCE_DETAIL_SELECT, 
@@ -58,7 +58,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 
                             //update optional master entity resource app setting 
                             if (row.app_data_resource_master_app_setting_id){
-                              const app_setting_master = fileModelAppSetting.getServer({  app_id:parameters.app_id, 
+                              const app_setting_master = AppSetting.getServer({  app_id:parameters.app_id, 
                                                                                     resource_id:row.app_data_resource_master_app_setting_id,
                                                                                     data:{data_app_id:row.app_data_entity_resource_app_data_entity_app_id}}).result[0];
                               row.app_data_resource_master_app_setting_name = app_setting_master?.name;

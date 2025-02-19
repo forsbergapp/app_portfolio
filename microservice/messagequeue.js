@@ -19,8 +19,8 @@ const messageQueue = async (service, message_type, message, message_id) => {
     /**@type{import('../microservice/mail/service.js')} */
     const {sendEmail} = await import(`file://${process.cwd()}/microservice/mail/service.js`);
     
-    /**@type{import('../server/db/fileModelMessageQueue.js')} */
-    const fileModelMessageQueue = await import(`file://${process.cwd()}/server/db/fileModelMessageQueue.js`);
+    /**@type{import('../server/db/MessageQueue.js')} */
+    const MessageQueue = await import(`file://${process.cwd()}/server/db/MessageQueue.js`);
 
 
     return new Promise((resolve, reject) =>{
@@ -31,7 +31,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
          * @returns {Promise.<void>}
          */
         const write_file = async (file, message) =>{
-            fileModelMessageQueue.post(file,message)
+            MessageQueue.post(file,message)
             .catch((/**@type{server_server_error}*/error)=>{throw error;});
         };
         try {
@@ -53,7 +53,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    fileModelMessageQueue.get('MESSAGE_QUEUE_PUBLISH')
+                    MessageQueue.get('MESSAGE_QUEUE_PUBLISH')
                     .then(message_queue=>{
                         /**@type{server_db_table_message_queue_consume} */
                         const message_consume = { message_id: message_id,

@@ -1,4 +1,4 @@
-/** @module server/db/fileModelAppTranslation */
+/** @module server/db/AppTranslation */
 
 /**
  * @import {server_server_response,

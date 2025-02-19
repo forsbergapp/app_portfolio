@@ -137,8 +137,8 @@ const template = props =>`
 * @function
 * @param {{data:        {app_id:number},
 *          methods:     {
-*                       fileModelApp:import('../../../../server/db/fileModelApp.js'),
-*                       fileModelConfig:import('../../../../server/db/fileModelConfig.js'),
+*                       App:import('../../../../server/db/App.js'),
+*                       Config:import('../../../../server/db/Config.js'),
 *                       serverUtilNumberValue:import('../../../../server/server.js')['serverUtilNumberValue']
 *                       }}} props
 * @returns {Promise.<string>}
@@ -202,11 +202,11 @@ const component = async props => {
             
     };
 
-    const HTTPS_ENABLE = props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-    const HOST = props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST');
+    const HTTPS_ENABLE = props.methods.Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+    const HOST = props.methods.Config.get('CONFIG_SERVER','SERVER', 'HOST');
     const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                        props.methods.fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                    props.methods.Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
+                        props.methods.Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
 
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'socket'];
     /**
@@ -215,9 +215,9 @@ const component = async props => {
      * @returns []
      */
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
-    const CONFIG_REST_API = props.methods.fileModelConfig.get('CONFIG_REST_API');
+    const CONFIG_REST_API = props.methods.Config.get('CONFIG_REST_API');
     //return object with 'servers key modified with list from configuration
-    CONFIG_REST_API.servers = props.methods.fileModelApp.get({app_id:props.data.app_id, resource_id:null}).result
+    CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
                         .map((/**@type{server_db_app}*/row)=>{
                             return {url:(HTTPS_ENABLE? 'https://':'http://') + 
                                                                         row.subdomain + '.' +
