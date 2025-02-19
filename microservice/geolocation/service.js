@@ -4,7 +4,7 @@
  */
 
 /**@type{import('../../microservice/registry.js')} */
-const {REGISTRY_CONFIG, registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 
 const fs = await import('node:fs');
 const http = await import('node:http');
@@ -78,7 +78,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     try {
         switch (cachetype){
             case 'IP':{
-                geodata_cache = await fs.promises.readFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${config_service.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 'utf8');
                 geodata_cache = geodata_cache.split('\r\n');
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
@@ -88,7 +88,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 return null;
             }
             case 'PLACE':{
-                geodata_cache = await fs.promises.readFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${config_service.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 'utf8');
                 geodata_cache =  geodata_cache.split('\r\n');
                 /**
                  * 
@@ -145,12 +145,12 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
     const config_service = registryConfigServices('GEOLOCATION');
     switch (cachetype){
         case 'IP':{
-            await fs.promises.appendFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 
+            await fs.promises.appendFile(`${process.cwd()}${config_service.PATH_DATA}${config_service.NAME}_geodata_cache_ip.log`, 
                                                           JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
         case 'PLACE':{
-            await fs.promises.appendFile(`${process.cwd()}${REGISTRY_CONFIG.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 
+            await fs.promises.appendFile(`${process.cwd()}${config_service.PATH_DATA}${config_service.NAME}_geodata_cache_place.log`, 
                                                              JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }

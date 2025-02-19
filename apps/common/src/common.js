@@ -1,12 +1,12 @@
 /** @module apps/common/src/common/service */
 
 /**
- * @import {server_db_app,
- *          server_db_app_secret,
- *          server_db_app_module,
+ * @import {server_db_table_app,
+ *          server_db_table_app_secret,
+ *          server_db_table_app_module,
  *          server_db_app_parameter_common,
- *          server_db_app_translation,
- *          server_db_iam_user,
+ *          server_db_table_app_translation,
+ *          server_db_table_iam_user,
  *          server_config_apps_with_db_columns,
  *          server_apps_report_create_parameters,
  *          server_apps_app_service_parameters,
@@ -179,7 +179,7 @@ const commonAppStart = async (app_id=null) =>{
         const DB_START = fileModelConfig.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
         const APP_START = fileModelAppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_start.value=='1';
         const DBOTHER_USER_INSTALLED = fileModelAppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).
-                                            result?.filter((/**@type{server_db_app_secret}*/row)=> `service_db_db${db_use}_app_user` in row).length == 
+                                            result?.filter((/**@type{server_db_table_app_secret}*/row)=> `service_db_db${db_use}_app_user` in row).length == 
                                                 //compare count of db with db credentials with app counts minuts common app id and admin app id that does not save db credentials
                                                 fileModelApp.get({app_id:app_id, resource_id:null}).result.length - 2;
         const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>result.result[0].installed).catch(()=>false);
@@ -590,7 +590,7 @@ const commonModuleRun = async parameters => {
                                             data:{data_app_id:parameters.data.data_app_id}});
     if (modules.result){
         if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
-            const module = modules.result.filter((/**@type{server_db_app_module}*/app)=>
+            const module = modules.result.filter((/**@type{server_db_table_app_module}*/app)=>
                                                                                                 //APP EXTERNAL only uses id and message keys, add function type
                                                                                                 app.common_type==((parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL')?'FUNCTION':parameters.data.type) && 
                                                                                                 app.common_name==parameters.resource_id && 
@@ -663,7 +663,7 @@ const commonAppReport = async parameters => {
     if (parameters.data?.type =='REPORT'){
         const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}})                                           ;
         if (modules.result){
-            const module = modules.result.filter((/**@type{server_db_app_module}*/app)=>
+            const module = modules.result.filter((/**@type{server_db_table_app_module}*/app)=>
                                                                                             app.common_type==parameters.data.type && 
                                                                                             app.common_name==parameters.resource_id && 
                                                                                             app.common_role == parameters.endpoint)[0];
@@ -786,7 +786,7 @@ const commonAppReportQueue = async parameters =>{
 
     const report = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
     if (report.result){
-        /**@type{server_db_iam_user} */
+        /**@type{server_db_table_iam_user} */
         const user = fileModelIamUser.get(  parameters.app_id, 
                                             serverUtilNumberValue(iamUtilTokenGet(  parameters.app_id, 
                                                                                     parameters.authorization, 
@@ -861,7 +861,7 @@ const commonModuleMetaDataGet = async parameters =>{
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
         const modules = fileModelAppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
         if (modules.result){
-            const module_reports = modules.result.filter((/**@type{server_db_app_module}*/row)=>row.common_type==parameters.data.type);
+            const module_reports = modules.result.filter((/**@type{server_db_table_app_module}*/row)=>row.common_type==parameters.data.type);
             if (module_reports){
                 for (const row of module_reports){
                     const module = await import(`file://${process.cwd()}${row.common_path}`);
@@ -1028,11 +1028,11 @@ const commonAppHost = host =>{
         case fileModelConfig.get('CONFIG_SERVER','SERVER', 'HOST'):
         case 'www':{
             //localhost
-            return fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_app}*/app)=>app.subdomain == 'www')[0].id;
+            return fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_app}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
+                return fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_app}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 return null;
             }
@@ -1140,10 +1140,10 @@ const commonAppsGet = async parameters =>{
     /**@type{import('../../../server/db/fileModelAppTranslation.js')} */
     const fileModelAppTranslation = await import(`file://${process.cwd()}/server/db/fileModelAppTranslation.js`);
     
-    /**@type{server_db_app[]}*/
+    /**@type{server_db_table_app[]}*/
     const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id
-                    .filter((/**@type{server_db_app}*/app)=>app.id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')));
+                    .filter((/**@type{server_db_table_app}*/app)=>app.id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')));
     for (const app of apps){
         const image = await fs.promises.readFile(`${process.cwd()}${app.path + app.logo}`);
         /**@ts-ignore */
@@ -1162,7 +1162,7 @@ const commonAppsGet = async parameters =>{
                             port : serverUtilNumberValue(HTTPS_ENABLE=='1'?
                                                 fileModelConfig.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
                                                     fileModelConfig.get('CONFIG_SERVER','SERVER','HTTP_PORT')),
-                            app_name_translation : fileModelAppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result.filter((/**@type{server_db_app_translation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
+                            app_name_translation : fileModelAppTranslation.get(parameters.app_id,null,parameters.locale, app.id).result.filter((/**@type{server_db_table_app_translation}*/appTranslation)=>appTranslation.app_id==app.id)[0].json_data.name,
                             logo:app.logo
                         };
             }), type:'JSON'};
@@ -1177,10 +1177,10 @@ const commonAppsGet = async parameters =>{
  * @param {{type:string,
  *          name:string,
  *          role:string|null}} parameters
- * @returns {server_db_app_module}
+ * @returns {server_db_table_app_module}
  */
 const commonRegistryAppModule = (app_id, parameters) => fileModelAppModule.get({app_id:app_id, resource_id:null, data:{data_app_id:app_id}}).result
-                                                           .filter((/**@type{server_db_app_module}*/app)=>
+                                                           .filter((/**@type{server_db_table_app_module}*/app)=>
                                                                app.common_type==parameters.type && 
                                                                app.common_name==parameters.name && 
                                                                app.common_role == parameters.role)[0];

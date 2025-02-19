@@ -1,15 +1,12 @@
 /** @module microservice/registry */
 
 /**
- * @import {server_db_result_fileFsRead, server_db_document_config_microservice} from '../server/types.js'
+ * @import {server_db_result_fileFsRead} from '../server/types.js'
  * @import {server_db_document_config_microservice_services,microservice_registry_service} from './types.js'
  */
 
 /**@type{import('../server/db/file.js')} */
 const {fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
-
-/**@type{server_db_document_config_microservice} */
-const REGISTRY_CONFIG = await fileFsRead('CONFIG_MICROSERVICE').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content);
 
 /**@type{server_db_document_config_microservice_services['SERVICES']} */
 const REGISTRY_CONFIG_SERVICES = await fileFsRead('CONFIG_MICROSERVICE_SERVICES').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
@@ -71,4 +68,4 @@ const registryMicroserviceApiVersion = service =>{
 }; 
 
 
-export {REGISTRY_CONFIG, registryConfigServices, registryMicroServiceServer, registryMicroserviceApiVersion};
+export {registryConfigServices, registryMicroServiceServer, registryMicroserviceApiVersion};

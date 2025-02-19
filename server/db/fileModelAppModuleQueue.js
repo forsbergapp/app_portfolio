@@ -7,7 +7,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {SLASH, fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
@@ -41,7 +41,9 @@ const get = parameters =>{
  * @returns {Promise.<server_server_response & {result?:{sendfile:String} }>}
  */
 const getResult = async parameters => {
-    return {sendfile:process.cwd() + `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${parameters.resource_id}.html`, type:'HTML'};
+    /**@type{import('./fileModelConfig.js')} */
+    const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+    return {sendfile:process.cwd() + `${fileModelConfig.get('CONFIG_SERVER','SERVER','PATH_DATA_JOBS')}/${parameters.resource_id}.html`, type:'HTML'};
 };
 /**
  * @name post
@@ -97,7 +99,7 @@ const post = async (app_id, data) => {
  */
 const postResult = async (app_id, id, result) =>{
     const fs = await import('node:fs');
-    const filepath = `${fileRecord('DB_FILE').PATH}${SLASH}jobs${SLASH}${id}.html`;
+    const filepath = `${fileRecord('DB_FILE').PATH}/jobs/${id}.html`;
     await fs.promises.writeFile(process.cwd() + filepath, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};
 };

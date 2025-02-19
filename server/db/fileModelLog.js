@@ -591,7 +591,7 @@ const getStat = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    const files = await fileFsDir('LOG_REQUEST_INFO');
+    const files = await fileFsDir();
     /**@type{string} */
     let sample;
     let day = '';
@@ -708,7 +708,7 @@ const getStat = async parameters => {
 const getFiles = async () => {
     /**@type{[server_log_result_logFilesGet]|[]} */
     const logfiles =[];
-    const files = await fileFsDir('LOG_REQUEST_INFO');
+    const files = await fileFsDir();
     let i =1;
     files.forEach((/**@type{string}*/file) => {
         if (file.startsWith('REQUEST_INFO_')||

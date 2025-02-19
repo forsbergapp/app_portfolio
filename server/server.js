@@ -1101,10 +1101,7 @@ const serverREST_API = async (routesparameters) =>{
  * @returns{Promise.<void>}
  */
 const serverStart = async () =>{
-    /**@type{import('./db/dbModelDatabase.js')} */
-    const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
-    /**@type{import('./socket.js')} */
-    const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
+    
     /**@type{import('./db/fileModelLog.js')} */
     const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
     /**@type{import('./db/fileModelConfig.js')} */
@@ -1125,7 +1122,11 @@ const serverStart = async () =>{
     });
     try {
         await fileModelConfig.configInit();
+        /**@type{import('./db/dbModelDatabase.js')} */
+        const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
         await dbModelDatabase.dbStart();
+        /**@type{import('./socket.js')} */
+        const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
         socketIntervalCheck();
         const NETWORK_INTERFACE = fileModelConfig.get('CONFIG_SERVER','SERVER', 'NETWORK_INTERFACE');
         //START HTTP SERVER
