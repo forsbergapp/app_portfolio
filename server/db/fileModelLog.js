@@ -598,16 +598,16 @@ const getStat = async parameters => {
     //declare ES6 Set to save unique status codes and days
     const log_stat_value = new Set();
     const log_days = new Set();
-    const regexp_request_day = /REQUEST_INFO_\d\d\d\d\d\d\d\d.log/g;
-    const regexp_verbose_day = /REQUEST_VERBOSE_\d\d\d\d\d\d\d\d.log/g;
-    const regexp_request_month = /REQUEST_INFO_\d\d\d\d\d\d.log/g;
-    const regexp_verbose_month = /REQUEST_VERBOSE_\d\d\d\d\d\d.log/g;
+    const regexp_request_day = /log_request_info_\d\d\d\d\d\d\d\d.log/g;
+    const regexp_verbose_day = /log_request_verbose_\d\d\d\d\d\d\d\d.log/g;
+    const regexp_request_month = /log_request_info_\d\d\d\d\d\d.log/g;
+    const regexp_verbose_month = /log_requst_verbose_\d\d\d\d\d\d.log/g;
     for (const file of files){
-        if ((file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+        if ((file.startsWith(`log_request_info_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
             (regexp_request_day.exec(file)!=null||regexp_request_month.exec(file)!=null)) ||
-            (file.startsWith(`REQUEST_VERBOSE_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+            (file.startsWith(`log_request_verbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
             (regexp_verbose_day.exec(file)!=null||regexp_verbose_month.exec(file)!=null))){
-            //filename format: REQUEST_INFO_YYYMMDD.log
+            //filename format: log_request_info_YYYMMDD.log
             if (fileModelConfig.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
                 day = file.slice(-6).substring(0,2);
@@ -615,7 +615,7 @@ const getStat = async parameters => {
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await fileFsDBLogGet(parameters.app_id, file.startsWith('REQUEST_INFO')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
+            await fileFsDBLogGet(parameters.app_id, file.startsWith('log_request_info')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
             .then((logs)=>{
                 logs.rows.forEach((/**@type{server_db_table_log_log_request_info|''}*/record) => {
                     if (record != ''){
@@ -703,29 +703,19 @@ const getStat = async parameters => {
  * @description Get log files
  * @function
  * @memberof ROUTE_REST_API
- * @returns{Promise.<server_server_response & {result?:[server_log_result_logFilesGet]|[]}>}
+ * @returns{Promise.<server_server_response & {result?:server_log_result_logFilesGet[]|[]}>}
  */
 const getFiles = async () => {
-    /**@type{[server_log_result_logFilesGet]|[]} */
-    const logfiles =[];
-    const files = await fileFsDir();
-    let i =1;
-    files.forEach((/**@type{string}*/file) => {
-        if (file.startsWith('REQUEST_INFO_')||
-            file.startsWith('REQUEST_ERROR_')||
-            file.startsWith('REQUEST_VERBOSE_')||
-            file.startsWith('SERVER_INFO_')||
-            file.startsWith('SERVER_ERROR_')||
-            file.startsWith('APP_INFO_')||
-            file.startsWith('APP_ERROR_')||
-            file.startsWith('DB_INFO_')||
-            file.startsWith('DB_ERROR_')||
-            file.startsWith('SERVICE_ERROR_')||
-            file.startsWith('SERVICE_INFO_'))
-        /**@ts-ignore */
-        logfiles.push({id: i++, filename:file});
-    });
-    return {result:logfiles, type:'JSON'};
+    return {result:await fileFsDir()
+                    .then(result=>
+                        result
+                        .filter(row=>row.startsWith('log'))
+                        .map((file, index)=>{return {id: index, 
+                                                    filename:file
+                                                    };
+                                            })
+                    ),
+            type:'JSON'};
 };
 
 export {postRequestE, postRequestI, postServerI, postServerE, postDBI, postDBE, postServiceI, postServiceE, postAppI, postAppE, get, getStatusCodes, getStat, getFiles};
