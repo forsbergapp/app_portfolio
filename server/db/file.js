@@ -3,18 +3,18 @@
  *  Database files are saved in /data/db
  *  /data directory is created automatically first server start
  *  Tables implemented using object mapping relation (ORM), PK and UK patterns
- *  each TABLE has fileModel*.js file with methods
- *  LOG*, CONFIG* and MESSAGE_QUEUE* tables use subtypes and common fileModel*.js files.
+ *  each TABLE has *.js file with methods
+ *  LOG*, CONFIG* and MESSAGE_QUEUE* tables use subtypes and common *.js files.
  *  See ER Model for an overview.
  *  
  *  File types supported
  *  DOCUMENT        json
  *                  uses fileFsRead and fileFsWrite by admin and config files
  *  TABLE           json that can be managed as table and implemented using object mapping relation (ORM) pattern
- *                  so each table is mapped to one fileModel*.js
+ *                  so each table is mapped to one *.js
  *                  consists of 3 layers
  *                  *.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.js
- *                  fileModel*.js   data model API with constraints, ex fileModelIamUser() in /server/db/fileModelIamUser.js
+ *                  *.js   data model API with constraints, ex IamUser() in /server/db/IamUser.js
  *                  file.js         file management API, ex fileDBGet() in /server/db/file.js
  *                                  fileDBGet               reads file content from `cache_content` and should be used by default for performance
  *                                                          so a synchronous function can be used and to avoid disk read
@@ -36,7 +36,7 @@
  *                  uses fileFsDBLogGet and fileFsDBLogPost
  *  TABLE_LOG_DATE  json record, comma separateed with file name suffixes
  *                  uses fileFsLogGet, fileFsDBLogPost and fileSuffix
- *  BINARY          used by sqLite database and fileModel*.js file not implemented
+ *  BINARY          used by sqLite database and *.js file not implemented
  *  Admin can also use fileFsWriteAdmin and fileFsDeleteAdmin without transaction if needed
  * 
  * @module server/db/file 

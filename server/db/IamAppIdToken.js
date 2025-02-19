@@ -1,4 +1,4 @@
-/** @module server/db/fileModelIamAppIdToken */
+/** @module server/db/IamAppIdToken */
 
 /**
  * @import {server_server_response,server_db_common_result_insert, server_db_iam_app_id_token_insert, server_db_table_iam_app_id_token} from '../types.js'

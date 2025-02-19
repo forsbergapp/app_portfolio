@@ -39,8 +39,8 @@ const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-    /**@type{import('../../../../server/db/fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('../../../../server/db/AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
     /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
@@ -54,7 +54,7 @@ const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/security.js')} */
     const {securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`); 
     
-    const url = fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_url_payment_request_create;
+    const url = AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_url_payment_request_create;
     const currency = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  data_app_id:parameters.data.data_app_id,
@@ -74,9 +74,9 @@ const paymentRequestCreate = async parameters =>{
         *          message:        string,
         *          origin:         string}}
         */
-        const body = {	api_secret:     fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_secret,
+        const body = {	api_secret:     AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_api_secret,
                         reference:      parameters.data.reference.substring(0,30),
-                        payeeid:        fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_vpa, 
+                        payeeid:        AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_vpa, 
                         payerid:        parameters.data.payerid,
                         currency_code:  currency.currency_code,
                         amount:         serverUtilNumberValue(parameters.data.amount) ?? 0, 
@@ -85,9 +85,9 @@ const paymentRequestCreate = async parameters =>{
         };
         //use merchant_id to lookup api key authorized request and public and private keys to read and send encrypted messages
         //use general id and message keys so no info about what type of message is sent, only the receinving function should know
-        const body_encrypted = {id:     serverUtilNumberValue(fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id),
+        const body_encrypted = {id:     serverUtilNumberValue(AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_id),
                                 message:securityPublicEncrypt(
-                                                                fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_public_key, 
+                                                                AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_public_key, 
                                                                 JSON.stringify(body))};
         const result_commonBFE = await commonBFE({url:url, 
                                                     method:'POST', 
@@ -120,7 +120,7 @@ const paymentRequestCreate = async parameters =>{
             *          currency_symbol:string}}
             */
             const body_decrypted = JSON.parse(securityPrivateDecrypt(
-                                                    fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_private_key, 
+                                                    AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_private_key, 
                                                     result_commonBFE.result.rows.message));
 
             return {result:[{token:                  body_decrypted.token,
@@ -130,7 +130,7 @@ const paymentRequestCreate = async parameters =>{
                             payment_request_id:     body_decrypted.payment_request_id,
                             payment_request_message:'Check your bank app to authorize this payment',
                             status:                 body_decrypted.status,
-                            merchant_name:          fileModelAppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_name,
+                            merchant_name:          AppSecret.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].merchant_name,
                             amount:			        body_decrypted.amount,
                             currency_symbol:        currency.currency_symbol,
                             countdown:              ''

@@ -10,8 +10,8 @@
  */
 describe('Unit test, dbSQLParamConvert', ()=> {
     it('should return converted sql and parameters in correct format for the database used for SELECT, INSERT, DELETE and UPDATE sql', async () =>{
-        /**@type{import('./fileModelConfig.js')} */
-        const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+        /**@type{import('./Config.js')} */
+        const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
         /**@type{import('./db.js')} */
         const db = await import(`file://${process.cwd()}/server/db/db.js`);
 
@@ -29,15 +29,15 @@ describe('Unit test, dbSQLParamConvert', ()=> {
             /**@type{server_db_db_pool_parameters} */
             const parameters = {use:            db_use, 
                                 pool_id:        app_id, 
-                                port:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_PORT')),
-                                host:           fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_HOST'),
+                                port:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'DB1_PORT')),
+                                host:           Config.get('CONFIG_SERVER','SERVICE_DB', 'DB1_HOST'),
                                 dba:            true,
-                                user:           fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_DBA_USER'),
-                                password:       fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'DB1_DBA_PASS'),
+                                user:           Config.get('CONFIG_SERVER','SERVICE_DB', 'DB1_DBA_USER'),
+                                password:       Config.get('CONFIG_SERVER','SERVICE_DB', 'DB1_DBA_PASS'),
                                                 //test with empty database if not installed
-                                database:       fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
-                                charset:        fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                database:       Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+                                charset:        Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 connectionTimeoutMillis:   null,
                                 idleTimeoutMillis:         null,
                                 max:                       null,
@@ -61,18 +61,18 @@ describe('Unit test, dbSQLParamConvert', ()=> {
          * @param {{[key:string]:any}} parameters
          */
         const adjustSqlParams = (sql, parameters) =>{
-            const DB_USE = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
-            sql = sql.replaceAll('<DB_SCHEMA/>', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
+            const DB_USE = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+            sql = sql.replaceAll('<DB_SCHEMA/>', Config.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
             return {sql:sql, parameters:parameters};
                                 
         };
         //set parameters
         //test as non DBA, app_id 0, current database
         const app_id = 0; //also pool_id
-        const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+        const common_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
         //Use default 5 if none is configured
         /**@type{*} */
-        const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB','USE'));
+        const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE'));
         const connection = (db_use==1 ||db_use==2)?await pool_1_2(app_id, db_use):null;
         
         //Test sql and parameters SELECT that contains <DB_SCHEMA/> tags
@@ -111,7 +111,7 @@ describe('Unit test, dbSQLParamConvert', ()=> {
         
         console.log('Unit test dbSQLParamConvert parameter app_id/pool_id:', app_id);
         console.log('Unit test dbSQLParamConvert parameter DB_USE:', db_use);
-        console.log('Unit test dbSQLParamConvert parameter db name:', fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`) ?? '');
+        console.log('Unit test dbSQLParamConvert parameter db name:', Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`) ?? '');
 
         console.log('Unit test dbSQLParamConvert parameter SELECT sql:', sql_select);
         console.log('Unit test dbSQLParamConvert parameter SELECT parameters:', sql_select_params);

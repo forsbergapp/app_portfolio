@@ -8,7 +8,7 @@ const ORIGINAL_FILTER = Array.prototype.filter;
 /**
  * @name describe
  * @description describe: Spy test, commonApp as called from bff
- *              it: should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
+ *              it: should call AppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app
  *              beforeAll:  Modifies Array.prototype.filter and reviews what filter function is doing and if used with APP_SECRET and APP_TOKEN
  *              afterAll:   restores Array.prototype.filter
  * @function
@@ -36,7 +36,7 @@ describe('Spy test, commonApp as called from bff', ()=> {
         };
         
     });
-    it('should call fileModelAppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app', async () =>{
+    it('should call AppSecret.get and read APP_SECRET and IAM_APP_ID_TOKEN at least 1 time each when requesting app', async () =>{
         //Solution to test if FILE_DB object is fetching the APP_SECRET or IAM_APP_ID_TOKEN record is to create a custom filter function 
         //that is available in global scope in NodeJS since FILE_DB object uses Object.seal() so no getter can be added 
         //and module is using closure pattern.
@@ -46,13 +46,13 @@ describe('Spy test, commonApp as called from bff', ()=> {
       
         //expected function calls:
         // app_common.commonApp() => 
-        //  app_common.commonAppStart() => fileModelAppSecret.get   1 time =>
+        //  app_common.commonAppStart() => AppSecret.get   1 time =>
         //      file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
         //
         //  app_common.commonComponentCreate() => 
-        //        iam_service.iamAuthorizeIdToken => fileModelAppSecret.get   2 times =>
+        //        iam_service.iamAuthorizeIdToken => AppSecret.get   2 times =>
         //          file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
-        //        app_common.commonAppStart() => fileModelAppSecret.get   1 time =>
+        //        app_common.commonAppStart() => AppSecret.get   1 time =>
         //          file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
         
         /**
