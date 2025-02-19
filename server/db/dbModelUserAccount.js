@@ -51,8 +51,8 @@ const get = async parameters =>dbCommonExecute(   parameters.app_id,
 * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileUser[] }>}
 */
 const getProfile = async parameters =>{
-  /**@type{import('./fileModelIamUser.js')} */
-  const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+  /**@type{import('./IamUser.js')} */
+  const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
   /**@type{import('../../apps/common/src/common.js')} */
   const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
   /**
@@ -90,7 +90,7 @@ const getProfile = async parameters =>{
                                           .then(result=>result.result
                                                           .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               // get active, username, bio, private, user_level, avatar from iam_user
-                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];                                                                 
+                                                              const user = IamUser.get(parameters.app_id, row.iam_user_id).result[0];                                                                 
                                                                 return {id:             row.id,
                                                                         active:         user.active,
                                                                         username:       user.username, 
@@ -142,8 +142,8 @@ const getProfile = async parameters =>{
 * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileStat[] }>}
 */
 const getProfileStat = async parameters =>{
-  /**@type{import('./fileModelIamUser.js')} */
-  const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+  /**@type{import('./IamUser.js')} */
+  const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
   return dbCommonExecute(parameters.app_id, 
                           dbSql.USER_ACCOUNT_SELECT_PROFILE_STAT,
                                           {
@@ -153,12 +153,12 @@ const getProfileStat = async parameters =>{
                           .then(result=>{return {result:result.result
                                                           .filter((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               //add condition active and private
-                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result?.[0];
+                                                              const user = IamUser.get(parameters.app_id, row.iam_user_id).result?.[0];
                                                               return user && user.active==1 && user.private !=1;
                                                           })              
                                                           .map((/**@type{server_db_sql_result_user_account_getProfileUser}*/row)=>{
                                                               //add avatar and username from iam_user
-                                                              const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                              const user = IamUser.get(parameters.app_id, row.iam_user_id).result[0];
                                                               row.username    = user.username;
                                                               row.avatar      = user.avatar;
                                                               return row;
@@ -178,8 +178,8 @@ const getProfileStat = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_user_account_getProfileDetail[] }>}
  */
  const getProfileDetail = async parameters =>{
-    /**@type{import('./fileModelIamUser.js')} */
-    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    /**@type{import('./IamUser.js')} */
+    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
     return dbCommonExecute(parameters.app_id, 
                             dbSql.USER_ACCOUNT_SELECT_PROFILE_DETAIL,
                             {
@@ -189,12 +189,12 @@ const getProfileStat = async parameters =>{
                             .then(result=>{return {result:result.result
                                                         .filter((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
                                                             //add condition active and private
-                                                            const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                            const user = IamUser.get(parameters.app_id, row.iam_user_id).result[0];
                                                             return user.active==1 && user.private !=1;
                                                         })              
                                                         .map((/**@type{server_db_sql_result_user_account_getProfileDetail}*/row)=>{
                                                             //add avatar and username from iam_user
-                                                            const user = fileModelIamUser.get(parameters.app_id, row.iam_user_id).result[0];
+                                                            const user = IamUser.get(parameters.app_id, row.iam_user_id).result[0];
                                                             row.username    = user.username;
                                                             row.avatar      = user.avatar;
                                                             return row;

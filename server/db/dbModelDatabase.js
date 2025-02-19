@@ -19,8 +19,8 @@ const dbSqlDatabase = await import(`file://${process.cwd()}/server/db/dbSqlDatab
 
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('./fileModelConfig.js')} */
-const fileModelConfig = await import(`file://${process.cwd()}/server/db/fileModelConfig.js`);
+/**@type{import('./Config.js')} */
+const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
 const DB_DEMO_FILE              = 'demo.json';
@@ -41,8 +41,8 @@ const dbInfo = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_INFO_SELECT(), 
-                        {   database: serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')), 
-                            database_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)
+                        {   database: serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')), 
+                            database_schema: Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)
                         }));
 /**
  * @name dbInfoSpace
@@ -56,9 +56,9 @@ const dbInfoSpace = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_INFO_SELECT_SPACE(), 
-                        serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
+                        serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                             {}:
-                                {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
+                                {db_schema: Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
 /**
  * @name dbInfoSpaceSum
  * @description Database info space sum
@@ -71,9 +71,9 @@ const dbInfoSpaceSum = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_INFO_SELECT_SPACE_SUM(), 
-                        serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
+                        serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
                             {}:
-                                {db_schema: fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
+                                {db_schema: Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
 
 /**
  * @name dbInstall
@@ -88,12 +88,12 @@ const dbInfoSpaceSum = parameters =>
  * @returns {Promise.<server_server_response & {result?:{info: {}[]} }>}
  */
  const dbInstall = async parameters => {
-    /**@type{import('./fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
-    /**@type{import('./fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     /**@type{import('../socket.js')} */
     const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
@@ -105,8 +105,8 @@ const dbInfoSpaceSum = parameters =>
     /**@type{import('../security.js')} */
 	const {securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
 
-    /**@type{import('../db/fileModelApp.js')} */
-    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    /**@type{import('../db/App.js')} */
+    const App = await import(`file://${process.cwd()}/server/db/App.js`);
     
     const fs = await import('node:fs');
 
@@ -115,7 +115,7 @@ const dbInfoSpaceSum = parameters =>
     const install_result = [];
     const password_tag = '<APP_PASSWORD/>';
     let change_DBA_pool=true;
-    const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
     /**
      * @param {string} username 
@@ -139,7 +139,7 @@ const dbInfoSpaceSum = parameters =>
        install_result.push({[`${username}`]: password});         
        return [sql, password];
     };
-    const DB_SCHEMA = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '';
+    const DB_SCHEMA = Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '';
     
     let install_count = 0;
     install_count++;
@@ -149,7 +149,7 @@ const dbInfoSpaceSum = parameters =>
     install_obj.install = install_obj.install.filter((/**@type{server_db_database_install_database_script|server_db_database_install_database_app_script}*/row) =>  
         row.db == db_use || row.db == null);
 
-    const apps = fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result;
+    const apps = App.get({app_id:parameters.app_id,resource_id:null}).result;
     const install_data_json = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_INSTALL_DATA}`, 'utf8');
     const install_data_obj = JSON.parse(install_data_json);
     
@@ -193,19 +193,19 @@ const dbInfoSpaceSum = parameters =>
                         const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
-                                port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
                                 dba:                       true,
-                                user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                user:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                                 database:                  null,
                                 //db 1 + 2 parameters
-                                charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                charset:                   Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 // db 3 parameters
-                                connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
                                 // db 4 parameters not used here
                                 connectString:             null,
                                 poolMin:                   null,
@@ -222,19 +222,19 @@ const dbInfoSpaceSum = parameters =>
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
-                                port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
                                 dba:                       true,
-                                user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+                                user:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                database:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
                                 //db 1 + 2 parameters
-                                charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                charset:                   Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 // db 3 parameters
-                                connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
                                 // db 4 parameters not used here
                                 connectString:             null,
                                 poolMin:                   null,
@@ -280,16 +280,16 @@ const dbInfoSpaceSum = parameters =>
         if (result_app_create.result){
             count_statements += 1;
             //if db has DB[DB]_DBA_USER parameter means users can be created
-            if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`) &&
-                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))){
+            if (Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`) &&
+                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))){
                 //create db users except for common app id and admin app id
                 const sql_and_pw = await sql_with_password(`app_portfolio_app${app.id}`, password_tag);
                 await dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[0]});
                 count_statements += 1;
-                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
+                await AppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_user`,
                                                         parameter_value:    `app_portfolio_app${app.id}`}});
-                await fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
+                await AppSecret.update({app_id:parameters.app_id, resource_id:app.id,data:{  parameter_name:     `service_db_db${db_use}_app_password`,
                                                             parameter_value:    sql_and_pw[1]}});
             }   
         }
@@ -309,7 +309,7 @@ const dbInfoSpaceSum = parameters =>
     }
     install_result.push({'SQL': count_statements});
     install_result.push({'finished': new Date().toISOString()});
-    fileModelLog.postServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+    Log.postServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {result:{info: install_result}, type:'JSON'};
  };
  /**
@@ -343,23 +343,23 @@ const dbInfoSpaceSum = parameters =>
   */
  const dbUninstall = async parameters => {
     
-    /**@type{import('./fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
     /**@type{import('../db/file.js')} */
     const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.js`);
 
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
-    /**@type{import('./fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     /**@type{import('../socket.js')} */
     const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
     /**@type{import('../db/common.js')} */
     const {dbCommonExecute} = await import(`file://${process.cwd()}/server/db/common.js`);
 
-    /**@type{import('../db/fileModelApp.js')} */
-    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    /**@type{import('../db/App.js')} */
+    const App = await import(`file://${process.cwd()}/server/db/App.js`);
      
     const fs = await import('node:fs');
 
@@ -367,7 +367,7 @@ const dbInfoSpaceSum = parameters =>
     let count_statements_fail = 0;
     
     
-    const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
     if (db_use==5){
         await dbPoolClose(null, db_use, false);
         await fileFsWriteAdmin('DB_FILE', null);
@@ -380,13 +380,13 @@ const dbInfoSpaceSum = parameters =>
         const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_UNINSTALL}`, 'utf8');
         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
         //get apps if db credentials configured or use empty array for progress message count
-        const apps = fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)?fileModelApp.get({app_id:parameters.app_id,resource_id:null}).result
+        const apps = Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)?App.get({app_id:parameters.app_id,resource_id:null}).result
                     .filter((/**@type{server_db_app}*/app)=>
-                            app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                            app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))):[];
+                            app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                            app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))):[];
         //drop users first to avoid db connection error
         //if db has DB[DB]_DBA_USER parameter means users can be dropped
-        if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
+        if (Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
             socketAdminSend({   app_id:parameters.app_id, 
                 idToken:parameters.idToken,
                 data:{  app_id:null, 
@@ -399,9 +399,9 @@ const dbInfoSpaceSum = parameters =>
             for (const app of apps){
                 const result_drop = await dbUserDrop({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`});
                 if (result_drop.result){
-                    fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_user`,
+                    AppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_user`,
                         parameter_value:''}});
-                    fileModelAppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_password`,
+                    AppSecret.update({app_id:parameters.app_id, resource_id:app.id, data:{ parameter_name:`service_db_db${db_use}_app_password`,
                         parameter_value:''}});
                 }
                 else
@@ -426,19 +426,19 @@ const dbInfoSpaceSum = parameters =>
                 const json_data = {
                     use:                       db_use,
                     pool_id:                   null,
-                    port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                    host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                    port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+                    host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
                     dba:                       true,
-                    user:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                    password:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                    user:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                    password:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                     database:                  null,
                     //db 1 + 2 not used here
                     charset:                   null,
                     connectionLimit:           null,
                     //db 3
-                    connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                    idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                    max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                    connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                    idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                    max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
                     //db 4 not used here
                     connectString:             null,
                     poolMin:                   null,
@@ -453,7 +453,7 @@ const dbInfoSpaceSum = parameters =>
             
         }      
     }
-    fileModelLog.postServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
+    Log.postServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     /**@ts-ignore */
     return {result:{info:[  { count    : count_statements},
                             {count_fail: count_statements_fail}]},
@@ -494,14 +494,14 @@ const dbInfoSpaceSum = parameters =>
  const dbDemoInstall = async parameters=> {
     /**@type{import('../socket.js')} */
     const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('./fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     /**@type{import('./dbModelUserAccount.js')} */
     const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
-    /**@type{import('./fileModelIamUser.js')} */
-    const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    /**@type{import('./IamUser.js')} */
+    const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
     /**@type{import('./dbModelUserAccountApp.js')} */
     const dbModelUserAccountApp = await import(`file://${process.cwd()}/server/db/dbModelUserAccountApp.js`);
     /**@type{import('./dbModelUserAccountLike.js')} */
@@ -523,11 +523,11 @@ const dbInfoSpaceSum = parameters =>
     /**@type{import('./dbModelAppDataResourceDetailData.js')} */
     const dbModelAppDataResourceDetailData = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetailData.js`);
 
-    /**@type{import('./fileModelApp.js')} */
-    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    /**@type{import('./App.js')} */
+    const App = await import(`file://${process.cwd()}/server/db/App.js`);
 
-    /**@type{import('./fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
     /**@type{import('../security.js')} */
     const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
@@ -579,7 +579,7 @@ const dbInfoSpaceSum = parameters =>
                                             verification_code:      null
                                         };
                     //create iam user then database user
-                    return await fileModelIamUser.postAdmin(parameters.app_id,data_create)
+                    return await IamUser.postAdmin(parameters.app_id,data_create)
                                  .then(new_iam_user=>{
                                         if (new_iam_user.result)
                                                 return dbModelUserAccount.post(parameters.app_id, {iam_user_id:new_iam_user.result.insertId })
@@ -707,7 +707,7 @@ const dbInfoSpaceSum = parameters =>
         //1.Create all users first and update with id
         await create_users(demo_users);
         /**@type{server_db_app[]}*/
-        const apps = fileModelApp.get({app_id:parameters.app_id, resource_id:null}).result;
+        const apps = App.get({app_id:parameters.app_id, resource_id:null}).result;
         
         //2.Generate key pairs for each user that can be saved both in resource and apps configuration
         //Use same for all demo users since key creation can be slow
@@ -736,7 +736,7 @@ const dbInfoSpaceSum = parameters =>
             //3A.Generate vpa for each user that can be saved both in resource and apps configuration
             const demo_vpa = securityUUIDCreate();
             //3B.Create user_account_app record for all apps except admin
-            for (const app of apps.filter(app=>app.id != serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))) ){
+            for (const app of apps.filter(app=>app.id != serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))) ){
                 await create_user_account_app(app.id, demo_user.id);
             }
             //3C.Create user posts if any
@@ -801,7 +801,7 @@ const dbInfoSpaceSum = parameters =>
                                 return demo_user.id.toString();
                             default:{
                                 //replace if containing HOST parameter
-                                return key_name[1].replaceAll('<HOST/>', fileModelConfig.get('CONFIG_SERVER','SERVER','HOST') ?? '');
+                                return key_name[1].replaceAll('<HOST/>', Config.get('CONFIG_SERVER','SERVER','HOST') ?? '');
                             }
                                 
                         }
@@ -812,7 +812,7 @@ const dbInfoSpaceSum = parameters =>
                 for (const key of Object.entries(resource.json_data)){
                     const value = value_set(key);
                     if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0] in secret_key).length>0)
-                        await fileModelAppSecret.update({   app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
+                        await AppSecret.update({   app_id:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                             resource_id:resource.app_registry_update_app_id,
                                                             data:{   
                                                                 parameter_name:     key[0],
@@ -824,7 +824,7 @@ const dbInfoSpaceSum = parameters =>
                 if (resource.app_update_secret)
                     for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
                         const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                        await fileModelAppSecret.update({   app_id:serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
+                        await AppSecret.update({   app_id:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
                                                             resource_id:resource.app_registry_update_app_id,
                                                             data:{   
                                                                 parameter_name:     Object.keys(key)[0],
@@ -1119,7 +1119,7 @@ const dbInfoSpaceSum = parameters =>
         install_result.push({'user_account_app_data_post_like': records_user_account_app_data_post_like});
         install_result.push({'user_account_app_data_post_view': records_user_account_app_data_post_view});
         install_result.push({'finished': new Date().toISOString()});
-        fileModelLog.postServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
+        Log.postServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
         return {result:{info: install_result}, type:'JSON'};
     } catch (error) {
         /**@ts-ignore */
@@ -1140,16 +1140,16 @@ const dbInfoSpaceSum = parameters =>
 const dbDemoUninstall = async parameters => {
     /**@type{import('../socket.js')} */
     const {socketClientGet, socketAdminSend} = await import(`file://${process.cwd()}/server/socket.js`);
-    /**@type{import('./fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
-    /**@type{import('./fileModelIamUser.js')} */
-	const fileModelIamUser = await import(`file://${process.cwd()}/server/db/fileModelIamUser.js`);
+    /**@type{import('./Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+    /**@type{import('./IamUser.js')} */
+	const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
     /**@type{import('./dbModelUserAccount.js')} */
 	const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
-    const result_demo_users = fileModelIamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_iam_user}*/row)=>row.user_level==2);
+    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_iam_user}*/row)=>row.user_level==2);
     if (result_demo_users){
         let deleted_user = 0;
         if (result_demo_users.length>0){
@@ -1172,7 +1172,7 @@ const dbDemoUninstall = async parameters => {
                                 .then((result)=>{
                                             if (result.result ||result.http==404)
                                                 //delete iam user
-                                                fileModelIamUser.deleteRecordAdmin(parameters.app_id,user.id)
+                                                IamUser.deleteRecordAdmin(parameters.app_id,user.id)
                                                 .then((result)=>{
                                                     if (result.result){
                                                         deleted_user++;
@@ -1194,11 +1194,11 @@ const dbDemoUninstall = async parameters => {
                 else
                     throw dbCommonRecordError(parameters.app_id, 500, error);
                 });
-            fileModelLog.postServerI(`Demo uninstall count: ${deleted_user}`);
+            Log.postServerI(`Demo uninstall count: ${deleted_user}`);
             return {result:{info: [{'count': deleted_user}]}, type:'JSON'};
         }
         else{
-            fileModelLog.postServerI(`Demo uninstall count: ${result_demo_users.length}`);
+            Log.postServerI(`Demo uninstall count: ${result_demo_users.length}`);
             return {result:{info: [{'count': result_demo_users.length}]},type:'JSON'};
         }
     }
@@ -1218,8 +1218,8 @@ const dbDemoUninstall = async parameters => {
  * @returns {Promise.<null>}
  */
  const DB_POOL = async (db_use, dba, user, password, pool_id) =>{
-    /**@type{import('./fileModelLog.js')} */
-    const fileModelLog = await import(`file://${process.cwd()}/server/db/fileModelLog.js`);
+    /**@type{import('./Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     /**@type{import('../db/db.js')} */
     const {dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
     
@@ -1228,32 +1228,32 @@ const dbDemoUninstall = async parameters => {
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
-          host:                      fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-          port:                      serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+          host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+          port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
           dba:                       dba,
           user:                      user,
           password:                  password,
-          database:                  fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+          database:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
           //db 1 + 2 parameters
-          charset:                   fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-          connectionLimit:           serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+          charset:                   Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+          connectionLimit:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
           // db 3 parameters
-          connectionTimeoutMillis:   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-          idleTimeoutMillis:         serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-          max:                       serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+          connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+          idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+          max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
           // db 4 parameters
-          connectString:             fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-          poolMin:                   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_MIN`)),
-          poolMax:                   serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-          poolIncrement:             serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+          connectString:             Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+          poolMin:                   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+          poolMax:                   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+          poolIncrement:             serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
        };
        dbPoolStart(dbparameters)
        .then((/**@type{null}*/result)=>{
-        fileModelLog.postServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
+        Log.postServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
           resolve(result);
        })
        .catch((/**@type{server_server_error}*/error)=>{
-        fileModelLog.postServerE('Starting pool error: ' + error);
+        Log.postServerE('Starting pool error: ' + error);
           reject(error);
        });
     });
@@ -1266,30 +1266,30 @@ const dbDemoUninstall = async parameters => {
   */
 const dbStart = async () => {
 
-    /**@type{import('./fileModelApp.js')} */
-    const fileModelApp = await import(`file://${process.cwd()}/server/db/fileModelApp.js`);
+    /**@type{import('./App.js')} */
+    const App = await import(`file://${process.cwd()}/server/db/App.js`);
 
-    /**@type{import('./fileModelAppSecret.js')} */
-    const fileModelAppSecret = await import(`file://${process.cwd()}/server/db/fileModelAppSecret.js`);
+    /**@type{import('./AppSecret.js')} */
+    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
-    const common_app_id = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
-    if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'START')=='1'){    
+    const common_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
+    if (Config.get('CONFIG_SERVER','SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
-        const db_use = serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+        const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
        
         if (db_use == 5)
             await DB_POOL(db_use, false, null, null, null);
         else{
-            if (fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
-                user = `${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
-                password = `${fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
+            if (Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
+                user = `${Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
+                password = `${Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
                 await DB_POOL(db_use, true, user, password, null);
             }
-            for (const app  of fileModelApp.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_app}*/app)=>
-                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                app.id !=serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
-                const app_secret = fileModelAppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
+            for (const app  of App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_app}*/app)=>
+                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
+                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
+                const app_secret = AppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
                 /**@ts-ignore */
                 if (app_secret[`service_db_db${db_use}_app_user`])
                     await DB_POOL(  db_use, 
@@ -1329,12 +1329,12 @@ const dbStart = async () => {
         {db: 4, sql: `GRANT app_portfolio_role_app_common TO ${parameters.username}`},
         {db: 4, sql: `GRANT UNLIMITED TABLESPACE TO ${parameters.username}`}
     ];
-    if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
+    if (serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
         return {result:null,type:'JSON'};
     else{
         for (const row of user_sql.filter(row=>
                                 /**@ts-ignore */
-                                row.db == [serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))])){
+                                row.db == [serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))])){
             const result = await dbCommonExecute(parameters.app_id, 
                             /**@ts-ignore */
                             row.sql, 
@@ -1354,7 +1354,7 @@ const dbStart = async () => {
   * @returns {*}
   */
 const dbUserDrop = parameters =>{
-    if (serverUtilNumberValue(fileModelConfig.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
+    if (serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
         return null;
     else
         //return all result in an arrray

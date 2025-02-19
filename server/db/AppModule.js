@@ -1,4 +1,4 @@
-/** @module server/db/fileModelAppModule */
+/** @module server/db/AppModule */
 
 /**
  * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_app_module} from '../types.js'
