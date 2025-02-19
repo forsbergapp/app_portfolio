@@ -406,7 +406,7 @@ const fileFsDeleteAdmin = async file => {
   */
  const fileFsDBLogGet = async (app_id, file, resource_id, filenamepartition=null, sample=null) =>{
     
-    const filepath = `${fileRecordFilename(file).filename}${fileNamePartition(filenamepartition, sample)}${fileRecordFilename(file).suffix}`;
+    const filepath = `${fileRecordFilename(file).filename}_${fileNamePartition(filenamepartition, sample)}${fileRecordFilename(file).suffix}`;
     const fileBuffer = await fs.promises.readFile(process.cwd() + '/data/db/' + filepath, 'utf8');
     return {rows:fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id))};
 };
@@ -424,7 +424,7 @@ const fileFsDBLogPost = async (app_id, file, file_content, filenamepartition = n
     /**@type{import('../iam.js')} */
     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
-    const filepath = `/data/db/${fileRecordFilename(file).filename}${fileNamePartition(filenamepartition, null)}${fileRecordFilename(file).suffix}`;
+    const filepath = `/data/db/${fileRecordFilename(file).filename}_${fileNamePartition(filenamepartition, null)}${fileRecordFilename(file).suffix}`;
     const transaction_id = await fileTransactionStart(file, filepath);
     
     return await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
