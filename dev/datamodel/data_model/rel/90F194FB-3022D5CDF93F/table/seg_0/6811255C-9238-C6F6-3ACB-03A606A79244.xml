@@ -1,0 +1,44 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="6811255C-9238-C6F6-3ACB-03A606A79244" name="log_server_error">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>54EE6566-3757-E69A-30F2-A283C069DF51</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>server_error</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="logdate" id="9A7090AF-4A0E-872A-102A-2965631CA216">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>0D747456-3133-393B-F633-31434A2FFAF5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="logtext" id="897250E4-70AA-FCD9-9A41-74A82733C807">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>ACA6ED12-67B6-099A-C3F8-A3173B8E1E23</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1D7DBA52-9F04-28BD-1D54-0A0170779D45" name="server_error_logdate_UN">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>89F61461-817B-3E72-7834-313B65A395B5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9A7090AF-4A0E-872A-102A-2965631CA216"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

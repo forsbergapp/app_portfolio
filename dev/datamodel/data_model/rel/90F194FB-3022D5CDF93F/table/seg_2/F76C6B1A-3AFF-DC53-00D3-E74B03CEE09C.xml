@@ -16,19 +16,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="iam_user_app_id" id="B3B6A071-44D4-459F-4947-78AE3E27D7FD">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>E4155F2F-5A02-4AE4-1F65-689359D84E47</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="46057FF7-7378-E94D-AF35-9BC9A8CD06D1" referredColumn="190EA51A-48C5-D629-EC4B-1B93E685C6B2"/>
-</associations>
-</Column>
 <Column name="iam_user_app_data_post_id" id="A540C893-B8ED-EAEE-F3B1-72284AAFD05D">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -40,6 +27,19 @@
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
 <colAssociation fkAssociation="BE94DBC8-FEFE-6C8C-2F51-C17BDD27645E" referredColumn="6916C5B3-C2AA-98D9-C6B1-6D715361A4B0"/>
+</associations>
+</Column>
+<Column name="iam_user_app_id" id="B3B6A071-44D4-459F-4947-78AE3E27D7FD">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>E4155F2F-5A02-4AE4-1F65-689359D84E47</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="46057FF7-7378-E94D-AF35-9BC9A8CD06D1" referredColumn="190EA51A-48C5-D629-EC4B-1B93E685C6B2"/>
 </associations>
 </Column>
 <Column name="client_ip" id="4A062C29-633E-F2CE-1EEC-5B913622DC44">

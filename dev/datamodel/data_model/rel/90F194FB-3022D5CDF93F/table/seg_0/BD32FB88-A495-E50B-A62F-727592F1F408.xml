@@ -1,0 +1,82 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="BD32FB88-A495-E50B-A62F-727592F1F408" name="message_queue_consume">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>587C9739-41D1-717D-1AE5-4104CBDC50F2</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="message_id" id="9FC98765-35FA-45A3-23A9-E0B917C8EDBB">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>43B7977B-4F83-9BEB-0B0D-71D3793EC313</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="service" id="4122D832-EFC6-6AE1-0874-C1E780471F7E">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>73C1EB1D-D9A8-CB5D-1E66-67BFC70D0D78</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="message" id="35BC36F8-5C55-5CFB-EC9B-E031662923A1">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>4BC37847-9DE7-8696-C372-0A3BAD2D5F27</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="start" id="194920F2-2CD4-FE1D-C160-34FA7E2F2EB5">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>C5A7DE39-DB58-E21B-6529-893E056C9694</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="finished" id="9459E00F-4637-5FD7-F084-E959F362BF6C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>391A15D9-03F8-E87B-D36A-057C16697E1B</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="result" id="77BE066B-35CE-BE53-E7EA-3C652B86AE02">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>5E1C9F16-E0A3-0216-FA59-6BDA49831D0D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="205F5A18-2AC5-3239-BADB-66DC6DB47A62" name="message_queue_consume_PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:18 UTC</createdTime>
+<generatorID>DC55ABE9-347F-5343-3692-8FC5F0DED457</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="9FC98765-35FA-45A3-23A9-E0B917C8EDBB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
