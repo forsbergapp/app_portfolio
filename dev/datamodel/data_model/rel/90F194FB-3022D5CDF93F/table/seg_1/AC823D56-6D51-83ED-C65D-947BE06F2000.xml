@@ -18,16 +18,18 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="json_data" id="868BAA65-5310-E18D-5AFA-85D179DA97CE">
+<Column name="app_data_entity_app_id" id="D2916AE5-B684-0538-DA54-105DEA6FD7C9">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>DE73C6C3-0531-71EE-DD48-615DD59EB338</generatorID>
+<generatorID>523E531C-CF3B-12BE-020E-5B896A5731F1</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
+<use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="4D74F139-61B3-7846-E6AF-78663D27A8B9" referredColumn="C3E56A78-E0E0-306F-F9B7-4743FBDA56DC"/>
+</associations>
 </Column>
 <Column name="app_data_entity_id" id="70008B0B-8EF4-3816-7556-F0F838AAD5B7">
 <createdBy>admin</createdBy>
@@ -41,19 +43,6 @@
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
 <colAssociation fkAssociation="4D74F139-61B3-7846-E6AF-78663D27A8B9" referredColumn="59BE791E-642A-67DE-5C31-1B712A309CAD"/>
-</associations>
-</Column>
-<Column name="app_data_entity_app_id" id="D2916AE5-B684-0538-DA54-105DEA6FD7C9">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>523E531C-CF3B-12BE-020E-5B896A5731F1</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="4D74F139-61B3-7846-E6AF-78663D27A8B9" referredColumn="C3E56A78-E0E0-306F-F9B7-4743FBDA56DC"/>
 </associations>
 </Column>
 <Column name="app_setting_id" id="8E47CA80-DF81-72AA-9AB1-DB1FAFC9AB1E">
@@ -85,6 +74,17 @@
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="json_data" id="868BAA65-5310-E18D-5AFA-85D179DA97CE">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>DE73C6C3-0531-71EE-DD48-615DD59EB338</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>

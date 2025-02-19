@@ -50,6 +50,18 @@
 <use>1</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="app_id" id="75BD3531-DF87-CDD0-5DEB-4FE3B7C00F49">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:22:31 UTC</createdTime>
+<generatorID>5B51BFBA-12BD-CE08-261B-DC7939D219D4</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A74E5302-BC04-17D1-CA26-BAAAA4D9F0E2</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="app_data_entity_resource_id" id="0FED73B2-CED3-C2CD-52D8-7ADABEA0891B">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 21:28:29 UTC</createdTime>
@@ -96,15 +108,14 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_id" id="75BD3531-DF87-CDD0-5DEB-4FE3B7C00F49">
+<Attribute name="json_data" id="8D8A46DD-63F5-6803-9736-8DD8920430C0">
 <createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:22:31 UTC</createdTime>
-<generatorID>5B51BFBA-12BD-CE08-261B-DC7939D219D4</generatorID>
+<createdTime>2025-02-19 19:13:23 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<referedAttribute>A74E5302-BC04-17D1-CA26-BAAAA4D9F0E2</referedAttribute>
+<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

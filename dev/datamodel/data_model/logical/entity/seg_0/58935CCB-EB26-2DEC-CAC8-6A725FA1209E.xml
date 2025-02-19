@@ -12,17 +12,27 @@
 <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
 <growthPercent>0</growthPercent>
 <growthType>Year</growthType>
-<hierarchicalParent>D309E119-004A-A23D-A72A-0E5F93FEA9CA</hierarchicalParent>
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="message_id" id="A8E9F654-AE89-DD20-E813-3DF6D7B940E4">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:32:34 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="message" id="23CB1F61-FFFF-ABEF-67DA-73EB61FBCBAD">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:04:43 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -31,11 +41,26 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:04:54 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="6B4C1777-ACB1-BCA9-8DDD-555E78226E34" name="message_queue_error PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:32:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>A8E9F654-AE89-DD20-E813-3DF6D7B940E4</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>
