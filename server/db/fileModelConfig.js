@@ -4,17 +4,14 @@
  * @import {server_server_response,server_db_common_result_update,
  *          server_db_object, server_db_db_name_config, server_server_error, 
  *          server_db_document_config_server,server_db_document_config_rest_api, server_db_document_config_iam_policy,
- *          server_db_config_server_server, server_db_config_server_service_iam,
+ *          server_db_config_server_service_iam,
  *          server_db_table_iam_user, server_db_table_app, server_db_table_app_module, server_db_table_app_parameter, server_db_table_app_secret,server_db_table_app_setting,
- *          server_db_table_app_translation, server_db_document_config_microservice} from '../types.js'
+ *          server_db_table_app_translation} from '../types.js'
  * @import {server_db_document_config_microservice_services} from '../../microservice/types.js'
  */
 
 /**@type{import('./file.js')} */
-const {SLASH, fileFsRead, fileFsWrite, fileCache, fileFsCacheSet, fileFsWriteAdmin, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.js`);
-
-/**@type{import('../server.js')} */
-const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+const {fileFsRead, fileFsWrite, fileCache, fileDbInit, fileFsWriteAdmin, fileFSDirDataExists, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
@@ -50,26 +47,6 @@ const get = (file, config_group, parameter) => {
     
 };
 /**
- * @name configExists
- * @description Config exists
- *              Checks if all config files exist
- * @function
- * @returns {Promise<boolean>}
- */
-const configExists = async () => {
-    try {
-        await fileFsRead('APP');
-        await fileFsRead('CONFIG_SERVER');
-        await fileFsRead('CONFIG_IAM_POLICY');
-        await fileFsRead('CONFIG_MICROSERVICE');
-        await fileFsRead('CONFIG_MICROSERVICE_SERVICES');
-        await fileFsRead('IAM_USER');
-        return true;
-    } catch (error) {
-        return false;
-    }
-};
-/**
  * @name configDefault
  * @description Default config
  * @function
@@ -79,18 +56,13 @@ const configDefault = async () => {
     const fs = await import('node:fs');
     /**@type{import('../security.js')} */
     const {securitySecretCreate}= await import(`file://${process.cwd()}/server/security.js`);
-    await fileFsAccessMkdir()
-    .catch((/**@type{server_server_error}*/err) => {
-        throw err;
-    }); 
-    const i = 0;
+    
     //read all default files
 
     /**
      * @type{[  [server_db_object, server_db_document_config_server],
      *           [server_db_object, server_db_document_config_rest_api],
      *           [server_db_object, server_db_document_config_iam_policy],
-     *           [server_db_object, microservice_config],
      *           [server_db_object, server_db_document_config_microservice_services],
      *           [server_db_object, server_db_table_iam_user[]],
      *           [server_db_object, server_db_table_app[]],
@@ -98,32 +70,24 @@ const configDefault = async () => {
      *           [server_db_object, server_db_table_app_parameter[]],
      *           [server_db_object, server_db_table_app_secret[]],
      *           [server_db_object, server_db_table_app_setting[]],
-     *           [server_db_object, server_db_table_app_translation[]]
+     *           [server_db_object, server_db_table_app_translation[]],
+     *           [server_db_object, server_db_object[]]
      *       ]}
     */
     const config_obj = [
-                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_server.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_REST_API',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_rest_api.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE',             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_microservice.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}config_microservice_services.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_USER',                        await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP',                             await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_MODULE',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_module.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_PARAMETER',                   await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_parameter.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_secret.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_SETTING',                     await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_setting.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}install${SLASH}default${SLASH}app_translation.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + '/server/install/default/config_server.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_REST_API',                 await fs.promises.readFile(process.cwd() + '/server/install/default/config_rest_api.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + '/server/install/default/config_iam_policy.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + '/server/install/default/config_microservice_services.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_USER',                        await fs.promises.readFile(process.cwd() + '/server/install/default/iam_user.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP',                             await fs.promises.readFile(process.cwd() + '/server/install/default/app.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP_MODULE',                      await fs.promises.readFile(process.cwd() + '/server/install/default/app_module.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP_PARAMETER',                   await fs.promises.readFile(process.cwd() + '/server/install/default/app_parameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + '/server/install/default/app_secret.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP_SETTING',                     await fs.promises.readFile(process.cwd() + '/server/install/default/app_setting.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + '/server/install/default/app_translation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['DB_OBJECTS',                      await fs.promises.readFile(process.cwd() + '/server/install/default/db_objects.json').then(filebuffer=>JSON.parse(filebuffer.toString()))]
                         ]; 
-    //set server parameters
-    config_obj[0][1].SERVER.map((/**@type{server_db_config_server_server}*/row)=>{
-        for (const key of Object.keys(row)){
-            if (key=='HTTPS_KEY')
-                row.HTTPS_KEY = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
-            if (key=='HTTPS_CERT')
-                row.HTTPS_CERT = `${SLASH}data${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
-        } 
-    });
     //generate hash
     config_obj[0][1].SERVICE_IAM.map((/**@type{server_db_config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row)){
@@ -144,23 +108,26 @@ const configDefault = async () => {
     config_obj[0][1].METADATA.MODIFIED      = '';
 
     //generate hash for app secrets
-    config_obj[9][1].map((/**@type{server_db_table_app_secret}*/row)=>{
+    config_obj[8][1].map((/**@type{server_db_table_app_secret}*/row)=>{
         row.common_client_id = securitySecretCreate();
         row.common_client_secret = securitySecretCreate();
         row.common_app_id_secret = securitySecretCreate();
         row.common_app_access_secret = securitySecretCreate();
         row.common_app_access_verification_secret = securitySecretCreate();
-    });        
-    //set paths in microservice config
-    /**@type{server_db_document_config_microservice} */
-    const microservice_config = config_obj[3][1];
-    microservice_config?microservice_config.PATH_DATA             = `${SLASH}data${SLASH}microservice${SLASH}data${SLASH}`:'';
-    //set paths in microservice services
-    config_obj[4][1].SERVICES.map((/**@type{server_db_document_config_microservice_services['SERVICES'][0]}*/row)=>{
-        row.HTTPS_KEY             = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_KEY}`;
-        row.HTTPS_CERT            = `${SLASH}data${SLASH}microservice${SLASH}ssl${SLASH}${row.HTTPS_CERT}`;
-        row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
     });
+    //create directories
+    await fileFsAccessMkdir(['/data',
+                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_DATA_JOBS' in key)[0].PATH_DATA_JOBS,
+                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH' in key)[0].PATH,
+                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_DATA' in key)[0].PATH_DATA,
+                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
+                             '/data/db',
+                             '/data/db/backup'])
+    .catch((/**@type{server_server_error}*/err) => {
+        throw err;
+    }); 
+    //load default db
+    await fileDbInit(config_obj[11][1]);
     for (const config_row of config_obj){
         await fileFsWriteAdmin(config_row[0], config_row[1]);
     }
@@ -173,9 +140,9 @@ const configDefault = async () => {
  */
 const configInit = async () => {
     return await new Promise((resolve, reject) => {
-        configExists().then((result) => {
+        fileFSDirDataExists().then((result) => {
             if (result==true)
-                fileFsCacheSet().then(() => {
+                fileDbInit().then(() => {
                     resolve(null);
                 })
                 .catch((/**@type{server_server_error}*/error)=>{
@@ -183,7 +150,7 @@ const configInit = async () => {
                 });
             else{
                 configDefault().then(() => {
-                    fileFsCacheSet().then(() => {
+                    fileDbInit().then(() => {
                         resolve(null);
                     })
                     .catch((/**@type{server_server_error}*/error)=>{
@@ -208,6 +175,8 @@ const configInit = async () => {
 const getFile = async parameters => {
     const config_group = parameters.data?.config_group?parameters.data.config_group:null;
     const parameter = parameters.data?.parameter?parameters.data.parameter:null;
+    /**@type{import('../server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const config = serverUtilNumberValue(parameters.data?.saved)?await fileFsRead(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):fileCache(parameters.resource_id);
     if (config_group)
         if (config_group =='METADATA')
@@ -228,7 +197,6 @@ const getFile = async parameters => {
  *          data:{  config: server_db_document_config_server|
  *                          server_db_table_app[]|
  *                          server_db_document_config_iam_policy|
- *                          server_db_document_config_microservice|
  *                          server_db_document_config_microservice_services|null,
  *                  maintenance:string,
  *                  comment:string,
@@ -236,6 +204,8 @@ const getFile = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
+    /**@type{import('../server.js')} */
+    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     const maintenance = serverUtilNumberValue(parameters.data.maintenance);
     const comment = parameters.data.comment;
     const configuration = parameters.data.configuration;

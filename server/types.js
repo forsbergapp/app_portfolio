@@ -662,6 +662,7 @@
  * @description DB DOCUMENT config_server
  * @memberof dbObjects
  * @typedef  {{ ['SERVER']:[server_db_config_server_server], 
+ *              ['SERVICE_MICROSERVICE']:[server_db_config_server_service_microservice],
  *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
  *              ['SERVICE_DB']:[server_db_config_server_service_db],
@@ -733,15 +734,6 @@
  * @typedef {{'content-security-policy':string}} server_db_document_config_iam_policy
  */
 
-/** 
- * @description DB DOCUMENT config_microservice
- * @memberof dbObjects
- * @typedef {{  PATH_DATA                                   : string,
- *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
- *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
- *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} server_db_document_config_microservice
- */
 
 /**
  * @description DB TABLE message_queue_publish
@@ -825,34 +817,51 @@
 
 /**
  * @description DB server_db_config_server_server
- * @typedef {{   HTTPS_KEY:string,
- *               HTTPS_CERT:string,
- *               PORT:string,
- *               HTTPS_ENABLE:string,
- *               HTTPS_PORT:string,
- *               HTTPS_SSL_VERIFICATION:string,
- *               HTTPS_SSL_VERIFICATION_PATH:string,
- *               JSON_LIMIT:string,
- *               TEST_subdomain:string,
- *               APP_LOG:string,
- *               APP_START:string,
- *               APP_COMMON_APP_ID:string,
- *               REST_RESOURCE_BFF:string}} server_db_config_server_server
+ * @typedef {{  HOST:string,
+ *              HTTP_PORT:string,
+ *              HTTPS_ENABLE:string,
+ *              HTTPS_PORT:string,
+ *              HTTPS_KEY:string,
+ *              HTTPS_CERT:string,
+ *              HTTPS_SSL_VERIFICATION:string,
+ *              HTTPS_SSL_VERIFICATION_PATH:string,
+ *              JSON_LIMIT:string,
+ *              APP_COMMON_APP_ID:string,
+ *              APP_ADMIN_APP_ID:string,
+ *              REST_RESOURCE_BFF:string,
+ *              REPOSITORY_GIT_URL:string,
+ *              NETWORK_INTERFACE:string,
+ *              PATH_DATA_JOBS:string}} server_db_config_server_server
+ */
+
+/** 
+ * @description DB server_db_config_server_service_microservice
+ * @memberof dbObjects
+ * @typedef {{PATH                                        : string,
+ *            PATH_DATA                                   : string,
+ *            PATH_SSL                                    : string,
+ *            CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
+ *            CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
+ *            CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
+ *            CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} server_db_config_server_service_microservice
  */
 
 /**
  * @description DB server_db_config_server_service_iam
- * @typedef {{ AUTHENTICATE_REQUEST_ENABLE:string,
- *             AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
- *             AUTHENTICATE_REQUEST_IP:string,
- *             ADMIN_TOKEN_EXPIRE_ACCESS:string,
- *             ADMIN_TOKEN_SECRET:string,
- *             ADMIN_PASSWORD_ENCRYPTION_KEY:string,
- *             ADMIN_PASSWORD_INIT_VECTOR:string,
- *             ENABLE_CONTENT_SECURITY_POLICY:string,
- *             ENABLE_GEOLOCATION:string,
- *             ENABLE_USER_REGISTRATION:string,
- *             ENABLE_USER_LOGIN:string}} server_db_config_server_service_iam
+ * @typedef {{  AUTHENTICATE_REQUEST_ENABLE:string,
+ *              AUTHENTICATE_REQUEST_OBSERVE_LIMIT:string,
+ *              AUTHENTICATE_REQUEST_IP:string,
+ *              ADMIN_TOKEN_EXPIRE_ACCESS:string,
+ *              ADMIN_TOKEN_SECRET:string,
+ *              ADMIN_PASSWORD_ENCRYPTION_KEY:string,
+ *              ADMIN_PASSWORD_INIT_VECTOR:string,
+ *              ENABLE_CONTENT_SECURITY_POLICY:string,
+ *              ENABLE_GEOLOCATION:string,
+ *              ENABLE_USER_REGISTRATION:string,
+ *              ENABLE_USER_LOGIN:string,
+ *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ANONYMOUS:number,
+ *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_USER:number,
+ *              RATE_LIMIT_MAX_REQUESTS_PER_WINDOW_ADMIN:number}} server_db_config_server_service_iam
  */
 
 /**
@@ -937,7 +946,6 @@
  * @typedef {   server_db_document_config_server|
  *              server_db_document_config_rest_api|
  *              server_db_document_config_iam_policy|
- *              server_db_document_config_microservice|
  *              import('../microservice/types.js').server_db_document_config_microservice_services|
  *              server_db_table_iam_user[]|
  *              server_db_table_app[]|
@@ -945,7 +953,8 @@
  *              server_db_table_app_parameter[]|
  *              server_db_table_app_secret[]|
  *              server_db_table_app_setting[]|
- *              server_db_table_app_translation[]} server_db_config_files
+ *              server_db_table_app_translation[]|
+ *              server_db_object[]} server_db_config_files
  */
 
 /**
@@ -1015,9 +1024,14 @@
 /**
  * @description DB object
  * 
- * @typedef {   server_db_db_name_config| 
+ * @typedef {   'DB_OBJECTS'| 
  *              'DB_FILE'| 
  *              'APP'|
+ *              'APP_DATA_ENTITY'|
+ *              'APP_DATA_ENTITY_RESOURCE'|
+ *              'APP_DATA_RESOURCE_DETAIL_DATA'|
+ *              'APP_DATA_RESOURCE_DETAIL'|
+ *              'APP_DATA_RESOURCE_MASTER'|
  *              'APP_MODULE'|
  *              'APP_MODULE_QUEUE'|
  *              'APP_PARAMETER'|
@@ -1030,8 +1044,16 @@
  *              'IAM_CONTROL_USER_AGENT'|
  *              'IAM_CONTROL_OBSERVE'|
  *              'IAM_USER'|
+ *              'IAM_USER_APP'|
+ *              'IAM_USER_APP_DATA_POST'|
+ *              'IAM_USER_APP_DATA_POST_LIKE'|
+ *              'IAM_USER_APP_DATA_POST_VIEW'|
+ *              'IAM_USER_FOLLOW'|
+ *              'IAM_USER_LIKE'|
+ *              'IAM_USER_VIEW'|
  *              'IAM_USER_EVENT'|
  *              server_db_tables_log|
+ *              server_db_db_name_config| 
  *              server_db_db_name_message_queue} server_db_object
  */
 
@@ -1041,7 +1063,6 @@
  * @typedef {   'CONFIG_SERVER'|
  *              'CONFIG_REST_API'|
  *              'CONFIG_IAM_POLICY'|
- *              'CONFIG_MICROSERVICE'|
  *              'CONFIG_MICROSERVICE_SERVICES'} server_db_db_name_config
  */
 
@@ -1056,16 +1077,14 @@
 /** 
  * @description DB object record
  * @namespace dbObjects
- * @typedef {{  NAME:server_db_object, 
- *              TYPE:'JSON'|'JSON_TABLE'|'JSON_LOG'|'JSON_LOG_DATE'|'BINARY',
- *              PK:string|null,
- *              UK:string[]|null,
- *              LOCK:number, 
- *              TRANSACTION_ID:number|null, 
- *              TRANSACTION_CONTENT: object|string|[]|null, 
- *              PATH:string, 
- *              FILENAME:string,
- *              CACHE_CONTENT?:* }} server_db_object_record
+ * @typedef {{  name:server_db_object, 
+ *              type:'DOCUMENT'|'TABLE'|'TABLE_LOG'|'TABLE_LOG_DATE'|'BINARY',
+ *              pk:string|null,
+ *              uk:string[]|null,
+ *              lock:number, 
+ *              transaction_id:number|null, 
+ *              transaction_content: object|string|[]|null, 
+ *              cache_content?:* }} server_db_object_record
  */
 
 /** 

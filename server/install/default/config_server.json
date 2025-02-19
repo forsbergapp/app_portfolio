@@ -4,8 +4,8 @@
         {"HTTP_PORT": "80", "COMMENT": ""},
         {"HTTPS_ENABLE": "0", "COMMENT": ""},
         {"HTTPS_PORT": "443", "COMMENT": ""},
-        {"HTTPS_KEY": "privkey.pem", "COMMENT": ""},
-        {"HTTPS_CERT": "fullchain.pem", "COMMENT": ""},
+        {"HTTPS_KEY": "/data/ssl/privkey.pem", "COMMENT": ""},
+        {"HTTPS_CERT": "/data/ssl/fullchain.pem", "COMMENT": ""},
         {"HTTPS_SSL_VERIFICATION": "1", "COMMENT": "1=YES, check if enable tempory path for Letsencrypt using certbot"},
         {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the tempory path for Letsencrypt using certbot"},
         {"JSON_LIMIT": "10MB", "COMMENT": ""},
@@ -13,8 +13,18 @@
         {"APP_ADMIN_APP_ID": "1", "COMMENT": "admin app id"},
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"},
         {"REPOSITORY_GIT_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
-        {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"}
+        {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"},
+        {"PATH_DATA_JOBS":"/jobs", "COMMENT": "Report queue jobs path"}
     ],
+    "SERVICE_MICROSERVICE":[
+        {"PATH":"/microservice", "COMMENT": "Microservice path"},
+        {"PATH_DATA": "/microservice/data/","COMMENT":"Microservice path data"},
+        {"PATH_SSL":"/microservice/ssl", "COMMENT": "Microservice path SSL"},
+        {"CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS": 5, "COMMENT":""},
+        {"CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS": 10,"COMMENT":""},
+        {"CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
+        {"CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
+  ],
     "SERVICE_IAM":[
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
         {"AUTHENTICATE_REQUEST_OBSERVE_LIMIT": "5", "COMMENT": "If observe limit reached then IP should be blocked"},
