@@ -48,17 +48,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="json_data" id="0B99CD67-0DA4-A9E9-937E-E87AB7D096E2">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 20:45:19 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="created" id="0D220337-AD97-8E49-CF52-DE62A2FFBF82">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 20:45:23 UTC</createdTime>
@@ -73,6 +62,17 @@
 <Attribute name="modified" id="5D103D26-FF0A-6062-23AD-9381550087EC">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 20:45:27 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="json_data" id="0B99CD67-0DA4-A9E9-937E-E87AB7D096E2">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 20:45:19 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

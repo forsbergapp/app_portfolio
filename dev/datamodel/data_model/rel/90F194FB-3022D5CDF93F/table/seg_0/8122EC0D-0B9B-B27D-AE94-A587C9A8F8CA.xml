@@ -1,0 +1,186 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="8122EC0D-0B9B-B27D-AE94-A587C9A8F8CA" name="log_request_info">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>FC875B81-B604-1FA7-6A9A-DDF54CA83C01</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>request_info</ordsAlias>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="logdate" id="65D35D57-4B7F-A08A-AB35-6D86381FBF31">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>AD9FFEAE-1DAE-A4DE-E3EA-0391411FCDFD</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="host" id="B87ABC9B-4DD2-0548-9418-362A3ECA80E2">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>A14EEAAB-C93C-E5FF-705C-5BB94D3CAFA3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ip" id="312C4B37-D73E-71D5-7C38-008C554326C5">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>B017AD49-9D7A-0F05-5566-71F97E6663A3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="requestid" id="48A5454B-C2BE-9240-F76F-94996783C271">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>1BEAB841-EF21-CEEE-144D-350A155B09FD</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="correlationid" id="F46426E3-5560-92FC-BBDB-2E602301B63D">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>E6171D3B-F9B3-9244-AD13-A944733A2587</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="url" id="0718C985-F38C-E502-F8A7-88920EC6F30D">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>C9B10539-040A-F79A-6173-11D518D4D402</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="http_info" id="BB5C5A74-67B7-8B02-5400-7D1AE44529DF">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>5FD25246-29D2-4565-C1DF-42C29A662C0D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="method" id="F0A42B30-C7C3-D525-17F3-2F691DED13BB">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>8BCE96AC-5868-CAC1-FE9C-F1DF1ABEDF97</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="statusCode" id="BEC3527E-2926-6D6F-3364-DDAAF6B16F46">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>FB983F8B-769A-0FF9-DF0F-7DC7EC55B10E</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="statusMessage" id="0BABCEC9-9F6E-88D6-610D-C72ADDE18627">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>AF306866-1985-1578-3276-5F83FF11A98A</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="user-agent" id="53F1978B-F855-B107-83D7-6EE805E4C37F">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>CB26AC3C-BE3D-68C3-24F4-FEF3FC3B87C8</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="accept-language" id="97B79991-BBA2-AEE1-B692-8A6D813F3647">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>4351FB69-5F49-AA9E-31F5-69287551A7B2</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="referer" id="BE019455-B2AA-FAC1-71CD-8CB1B5063D12">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>CF69E63E-A483-C0E1-61DC-89CC3E3755E2</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="size_received" id="9ADF9A62-421B-3057-5587-F212D98A3C96">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>2D7C0B3D-6CC0-BE50-DD57-9A4C1BF85190</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="size_sent" id="89C42BBA-A471-F6C1-77DF-6D150198AD91">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>DE7D689E-63EA-4B5F-8865-9D5F39310C68</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="responsetime" id="4476AD72-A684-08A4-4E6B-DE620D0A5C93">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>B9B178D6-886A-9EC7-9385-3DCFA8D503D8</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="logtext" id="E2D3F57C-3FFD-05F3-2E34-02E76AA981C5">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>5450C3B9-E17A-851C-50E0-9E051D501E47</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="EE9D0C6E-7633-B209-B57E-79D4FC8A96A4" name="request_info_logdate_UN">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>77675D73-DEA1-0073-B346-2AF1B70D2607</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="65D35D57-4B7F-A08A-AB35-6D86381FBF31"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -30,10 +30,10 @@
 <colAssociation fkAssociation="AD0D0C8F-0A1F-6CBA-1F91-CBB82AF5EC15" referredColumn="4E42A4E9-F9EF-BD2D-A5E3-AD9BE83A2281"/>
 </associations>
 </Column>
-<Column name="app_data_entity_resource_app_data_entity_id" id="1FCDBAEF-C4BB-281D-5B73-A6F02EB67F88">
+<Column name="app_data_entity_resource_id" id="0766EBAA-9809-1928-59BE-D2C3B2537DBA">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>4FB1DD1E-2BCF-E604-1B2D-399D9BE59B32</generatorID>
+<generatorID>0FED73B2-CED3-C2CD-52D8-7ADABEA0891B</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -41,7 +41,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="70008B0B-8EF4-3816-7556-F0F838AAD5B7"/>
+<colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="D706059D-F6BA-40E7-1A87-B930D8893865"/>
 </associations>
 </Column>
 <Column name="app_data_entity_resource_app_data_entity_app_id" id="1625DFC2-5BF6-A2F0-84E5-8AC537A67413">
@@ -57,10 +57,10 @@
 <colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="D2916AE5-B684-0538-DA54-105DEA6FD7C9"/>
 </associations>
 </Column>
-<Column name="app_data_entity_resource_id" id="0766EBAA-9809-1928-59BE-D2C3B2537DBA">
+<Column name="app_data_entity_resource_app_data_entity_id" id="1FCDBAEF-C4BB-281D-5B73-A6F02EB67F88">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>0FED73B2-CED3-C2CD-52D8-7ADABEA0891B</generatorID>
+<generatorID>4FB1DD1E-2BCF-E604-1B2D-399D9BE59B32</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -68,7 +68,7 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="D706059D-F6BA-40E7-1A87-B930D8893865"/>
+<colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="70008B0B-8EF4-3816-7556-F0F838AAD5B7"/>
 </associations>
 </Column>
 <Column name="app_data_resource_master_attribute_id" id="43C2225D-F8D5-9722-9E7C-04E063ABFCFE">
@@ -97,6 +97,15 @@
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>77887F48-20EC-FE46-1F2E-671636DAE45F</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="json_data" id="B41F424F-3DAB-365B-D017-62BB6D02370C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:12:41 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>

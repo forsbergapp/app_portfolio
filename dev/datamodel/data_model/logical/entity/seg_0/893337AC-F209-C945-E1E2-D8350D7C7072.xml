@@ -26,18 +26,6 @@
 <use>1</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="json_data" id="41B8477C-6AB2-5427-6FEA-D931B6CEEC6F">
-<createdBy>admin</createdBy>
-<createdTime>2024-02-25 19:30:04 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<useDomainConstraints>false</useDomainConstraints>
-<use>1</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="app_data_resource_detail_id" id="B1C77FEF-4BFF-31EE-EB66-B02D45174E1E">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 21:30:59 UTC</createdTime>
@@ -47,6 +35,18 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <referedAttribute>95026F59-07E7-DECE-96B6-E22B0C25E28A</referedAttribute>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_data_resource_master_attribute_id" id="A413BE04-4003-6822-83AB-B9C71E32AB6D">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:23:24 UTC</createdTime>
+<generatorID>4DAF6BFA-7987-3E4C-4AAA-58B35EDAC00C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>56C50536-4474-60E9-AC4B-C194E446E7CB</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -64,6 +64,18 @@
 <Attribute name="modified" id="8CD9E2A6-D0CA-29EC-FF5B-BD10A2F105BD">
 <createdBy>admin</createdBy>
 <createdTime>2024-02-25 21:10:40 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="json_data" id="41B8477C-6AB2-5427-6FEA-D931B6CEEC6F">
+<createdBy>admin</createdBy>
+<createdTime>2024-02-25 19:30:04 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>

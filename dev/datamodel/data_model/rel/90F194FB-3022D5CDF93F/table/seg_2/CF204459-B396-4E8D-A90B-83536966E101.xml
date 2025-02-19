@@ -17,16 +17,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="json_data" id="20BF58EB-D555-747D-DDE1-3F5218C373AD">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>AD6A58B3-63DF-EA44-90E8-2210E5128E51</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="iam_user_id" id="7E0CAEF6-4D1D-01D1-78CA-79AD46EAF9A9">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -65,6 +55,16 @@
 <Column name="modified" id="277A2B82-D575-73CD-A729-9E39AA35B3B4">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 23:11:42 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="json_data" id="20BF58EB-D555-747D-DDE1-3F5218C373AD">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-17 22:07:03 UTC</createdTime>
+<generatorID>AD6A58B3-63DF-EA44-90E8-2210E5128E51</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>

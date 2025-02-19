@@ -3,9 +3,8 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:52:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -17,9 +16,31 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="[NAME]" id="7264BD09-C63A-B547-5BA4-9FE9EF545E41">
+<Attribute name="SERVER" id="7264BD09-C63A-B547-5BA4-9FE9EF545E41">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 11:05:27 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SERVICE_MICROSERVICE" id="01E9091E-1E14-9EAC-7B73-B4FA6C606A2F">
+<createdBy>admin</createdBy>
+<createdTime>2024-11-11 11:05:32 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SERVICE_IAM" id="048EF926-064D-23D1-239D-63F5105DED8A">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:30:15 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
@@ -27,14 +48,43 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="COMMENT" id="01E9091E-1E14-9EAC-7B73-B4FA6C606A2F">
+<Attribute name="SERVICE_SOCKET" id="1BE0AA68-081B-CB5C-47A4-3F93271E8839">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 11:05:32 UTC</createdTime>
+<createdTime>2025-02-19 19:30:25 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SERVICE_DB" id="14144C8F-AF88-1BB3-EE6E-CA57E68EE433">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:30:32 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SERVICE_LOG" id="4ACACE82-E407-3D6F-4ACF-D3234780A6B8">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:30:39 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="METADATA" id="A78AC82D-C612-495D-67F9-C966BA4D9EB8">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:30:46 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

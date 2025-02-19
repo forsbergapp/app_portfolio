@@ -12,17 +12,27 @@
 <fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
 <growthPercent>0</growthPercent>
 <growthType>Year</growthType>
-<hierarchicalParent>D309E119-004A-A23D-A72A-0E5F93FEA9CA</hierarchicalParent>
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="message_id" id="640C252F-5A68-839C-2D2A-E360C00F2D1C">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:31:52 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="created" id="4E716B22-3729-0AFE-A08F-88028EAB7B02">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-16 21:07:48 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -31,8 +41,9 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:03:44 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
@@ -41,11 +52,26 @@
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:03:47 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="7250C717-4838-7F43-F2D4-9E9406385E03" name="message_queue_publish PK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:32:09 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>640C252F-5A68-839C-2D2A-E360C00F2D1C</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
 </Entity>

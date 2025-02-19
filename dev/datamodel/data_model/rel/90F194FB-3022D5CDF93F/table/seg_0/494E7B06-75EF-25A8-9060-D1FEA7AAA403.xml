@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="494E7B06-75EF-25A8-9060-D1FEA7AAA403" name="config_iam_policy">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>8BBAD050-9925-EE5F-758E-8E553F6ECA8E</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="content-security-policy" id="67044119-356F-08FE-CF07-A3FE770EA30F">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-19 19:36:34 UTC</createdTime>
+<generatorID>E4F8C6B9-0052-32DD-992C-F370F94AC525</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+</Table>
