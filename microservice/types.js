@@ -30,6 +30,7 @@
  *                          HTTPS_PORT:number,
  *                          STATUS: string,
  *                          PATH:string,
+ *                          PATH_DATA:string,
  *                          CONFIG:[*]}[]}} server_db_document_config_microservice_services
  */
 

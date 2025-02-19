@@ -533,7 +533,6 @@ const appSecureCommonButtonSave = async (item) => {
                 return config_server;
             };
             const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].id.substring('menu_config_'.length).toUpperCase();
-            //file:'CONFIG_SERVER', 'CONFIG_IAM_POLICY', 'CONFIG_MICROSERVICE', 'CONFIG_MICROSERVICE_SERVICES'
             const json_data = { config:    file=='CONFIG_SERVER'?
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};

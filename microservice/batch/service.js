@@ -4,7 +4,7 @@
  */
 
 /**@type{import('../../microservice/registry.js')} */
-const {REGISTRY_CONFIG, registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
+const {registryConfigServices} = await import(`file://${process.cwd()}/microservice/registry.js`);
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 
@@ -95,7 +95,7 @@ const getBatchLogFilename = () => {
     const logdate = new Date();
     const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
     const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${REGISTRY_CONFIG.PATH_DATA}${configservice.NAME}_${new Date().getFullYear()}${month}${day}.log`; 
+    return `${configservice.PATH_DATA}${configservice.NAME}_${new Date().getFullYear()}${month}${day}.log`; 
 };
 /**
  * @name jobLogAdd
