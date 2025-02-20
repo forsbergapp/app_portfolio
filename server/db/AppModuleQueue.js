@@ -32,7 +32,7 @@ const get = parameters =>{
 
 /**
  * @name getResult
- * @description Get result for given resource_id, returns HTML
+ * @description Get record, returns HTML
  *              (bff controls if file exists)
  * @function
  * @memberof ROUTE_REST_API
@@ -47,7 +47,7 @@ const getResult = async parameters => {
 };
 /**
  * @name post
- * @description Add record
+ * @description Create record
  * @function
  * @param {number} app_id 
  * @param {{type:'REPORT',
@@ -90,7 +90,7 @@ const post = async (app_id, data) => {
 };
 /**
  * @name postResult
- * @description Post result
+ * @description Create record
  * @function
  * @param {number} app_id
  * @param {number} id
@@ -105,7 +105,7 @@ const postResult = async (app_id, id, result) =>{
 };
 /**
  * @name update
- * @description Update
+ * @description Update record
  * @function
  * @param {number} app_id
  * @param {number} resource_id
@@ -142,7 +142,7 @@ const update = async (app_id, resource_id, data) => {
 
 /**
  * @name deleteRecord
- * @description Delete
+ * @description Delete record
  * @function
  * @param {number} app_id
  * @param {number} resource_id
