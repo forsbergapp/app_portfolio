@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_app_parameter} from '../types.js'
+ *          server_db_table_app_parameter} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -15,12 +15,12 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
 
 /**
  * @name get
- * @description Get records for given appid
+ * @description Get record
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_app_parameter[] }}
+ * @returns {server_server_response & {result?:server_db_table_app_parameter[] }}
  */
 const get = parameters =>{
     const result = fileDBGet(parameters.app_id, 'APP_PARAMETER',null, serverUtilNumberValue(parameters.resource_id));
@@ -47,7 +47,7 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
                                                         }) ;
 /**
  * @name update
- * @description Update
+ * @description Update record
  *              Table is designed to update one parameter in the same record
  * @function
  * @memberof ROUTE_REST_API
@@ -76,7 +76,7 @@ const update = async parameters => {
 
 /**
  * @name deleteRecord
- * @description Delete
+ * @description Delete record
  * @function
  * @param {number} app_id
  * @param {number} resource_id

@@ -11,7 +11,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
 
 /**
  * @name get
- * @description Get user 
+ * @description Get record 
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
@@ -27,7 +27,7 @@ const get = (app_id, resource_id) =>{
 
 /**
  * @name post
- * @description Add record
+ * @description Create record
  * @function
  * @param {number} app_id 
  * @param {server_db_table_iam_user_event} data

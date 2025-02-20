@@ -233,7 +233,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              app_id:number, 
- *              json_data:string,
+ *              json_data:string|null,
  *              created:string,
  *              modified:string|null}} server_db_table_app_data_entity
  */
@@ -242,7 +242,7 @@
  * @description DB TABLE app_data_entity_resource
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string, 
+ *              json_data:string|null, 
  *              app_data_entity_id:number, 
  *              app_data_entity_app_id:number, 
  *              app_setting_id:number, 
@@ -254,8 +254,8 @@
  * @description DB TABLE app_data_resource_master
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string, 
- *              iam_user_app_id:number,
+ *              json_data:string|null, 
+ *              iam_user_app_id:number|null,
  *              app_data_entity_resource_app_data_entity_id:number,
  *              app_data_entity_resource_app_data_entity_app_id:number,
  *              app_data_entity_resource_id:number,
@@ -268,7 +268,7 @@
  * @description DB TABLE app_data_resource_detail
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string, 
+ *              json_data:string|null, 
  *              app_data_resource_master_id:number,
  *              app_data_entity_resource_app_data_entity_id:number,
  *              app_data_entity_resource_app_data_entity_app_id:number,
@@ -282,9 +282,9 @@
  * @description DB TABLE app_data_resource_detail_data
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string, 
- *              date_created:string,
+ *              json_data:string|null, 
  *              app_data_resource_detail_id:number,
+ *              app_data_resource_master_attribute_id:number|null,
  *              created:string,
  *              modified:string|null}} server_db_table_app_data_resource_detail_data
  */
@@ -357,11 +357,11 @@
 /**
  * @description DB TABLE app_translation
  * @memberof dbObjects
- * @typedef {{  id: number,
- *              app_id: number,
- *			    locale: string,
- *			    json_data: string,                  //complex text
- *			    text: string			            //simple text
+ * @typedef {{id: number,
+ *            app_id: number,
+ *			      locale: string,
+ *			      json_data: string|null,       //complex text
+ *			      text: string|null	            //simple text
  *}} server_db_table_app_translation		
  */
 
@@ -483,7 +483,7 @@
  * @typedef {{  id:number|null,
  *              iam_user_id:number,
  *              iam_user_id_like:number
- *              created:string}} server_table_db_iam_user_like
+ *              created:string}} server_db_table_iam_user_like
  */
 /**
  * @description DB TABLE iam_user_view
@@ -493,7 +493,7 @@
  *              iam_user_id_view:number,
  *              client_ip:string|null,
  *              client_user_agent:string|null,
- *              created:string}} server_table_db_iam_user_view
+ *              created:string}} server_db_table_iam_user_view
  */
     
 /**
@@ -512,10 +512,9 @@
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_app_id:number
- *              description:string,
- *              json_data:string,
+ *              json_data:string|null,
  *              created:string,
- *              modified:string}} server_db_table_iam_user_app_data_post
+ *              modified:string|null}} server_db_table_iam_user_app_data_post
  */
 
 /**
@@ -524,7 +523,7 @@
  * @typedef {{  id:number,
  *              iam_user_app_data_post_id:number,
  *              iam_user_app_id:number,
- *              created:string}} server_db_table_iam_user_data_post_like
+ *              created:string}} server_db_table_iam_user_app_data_post_like
  */
 /**
  * @description DB TABLE iam_user_data_post_view
@@ -534,7 +533,7 @@
  *              iam_user_app_data_post_id:number,
  *              client_ip:string|null,
  *              client_user_agent:string|null,
- *              created:string}} server_db_table_iam_user_data_post_view
+ *              created:string}} server_db_table_iam_user_app_data_post_view
  */
     
 /**
@@ -1283,7 +1282,7 @@
 
 /**
 * @description DB server_db_iam_user_app_getIamUserApp
-* @typedef {{  json_data:string
+* @typedef {{  json_data:string|null,
 *              created:string}} server_db_iam_user_app_getIamUserApp
 */
 
@@ -1291,7 +1290,7 @@
 * @description DB server_db_iam_user_app_data_post_getUserPostsByUserId
 * @typedef {{  id:number, 
 *              description:string, 
-*              json_data:string, 
+*              json_data:string|null, 
 *              date_created:string, 
 *              date_modified:string, 
 *              user_account_app_user_account_id:number, 
@@ -1309,7 +1308,7 @@
 * @typedef {{  id:number,
 *              description:string,
 *              user_account_app_user_account_id:number,
-*              json_data:string,
+*              json_data:string|null,
 *              count_likes:number,
 *              count_views:number,
 *              liked:number}} server_db_iam_user_app_data_post_getProfileUserPosts
@@ -1398,7 +1397,7 @@
  *              app_data_entity_resource_app_data_entity_app_id:number, 
  *              app_data_entity_resource_app_data_entity_id:    number, 
  *              app_data_entity_resource_id:                    number, 
- *              json_data:string,
+ *              json_data:string|null,
  *              resource_detail:[{  app_data_resource_master_id:number,
  *                                  app_data_entity_resource_id: number,
  *                                  user_account_id:number|null,
@@ -1406,13 +1405,13 @@
  *                                  data_app_id:number,
  *                                  app_data_entity_resource_app_data_entity_id:number,
  *                                  app_data_resource_master_attribute_id:number|null,
- *                                  json_data:string,
+ *                                  json_data:string|null,
  *                                  resource_detail_data:[{ app_data_resource_detail_id: number,
  *                                                          user_account_id:number|null,
  *                                                          user_account_app_id:number|null,
  *                                                          data_app_id:number,
  *                                                          app_data_resource_master_attribute_id:number,
- *                                                          json_data: string}
+ *                                                          json_data: string|null}
  *                                                       ]}
  *                              ]}[]} resource_master
  */

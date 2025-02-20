@@ -12,7 +12,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 /**
  * @name get
- * @description Get records for given appid
+ * @description Get record
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
@@ -29,7 +29,7 @@ const get = parameters => {
 
 /**
  * @name getFile
- * @description Get records from file
+ * @description Get record from file
  * @function
  * @param {number} app_id
  * @returns {Promise.<server_server_response & {result?:server_db_table_app_secret }>}
@@ -40,7 +40,7 @@ const getFile = async app_id => {
 
 /**
  * @name post
- * @description Add record
+ * @description Create record
  * @function
  * @param {number} app_id 
  * @param {number} resource_id
@@ -51,7 +51,7 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
                                                         .then(result_update=>{return {result:{insertid:resource_id, affectedRows:result_update.result.affectedRows}, type:'JSON'};}) ;
 /**
  * @name update
- * @description Update
+ * @description Update record
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -76,7 +76,7 @@ const update = async parameters => {
 
 /**
  * @name deleteRecord
- * @description Delete
+ * @description Delete record
  * @function
  * @param {number} app_id
  * @param {number} resource_id
