@@ -37,17 +37,6 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="description" id="92873C30-C3D3-00A8-6DBD-E267F3EC8E35">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 20:45:12 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
 <Attribute name="created" id="0D220337-AD97-8E49-CF52-DE62A2FFBF82">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 20:45:23 UTC</createdTime>
@@ -55,7 +44,6 @@
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
