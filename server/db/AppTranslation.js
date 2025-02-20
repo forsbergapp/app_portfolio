@@ -12,7 +12,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
 
 /**
  * @name get
- * @description Get records for given appid
+ * @description Get record
  *              Returns translation in found order
  *              1 = requested locale
  *              2 = language and region/script of locale containing language, region/script and country, zh-hant from zh-hant-cn

@@ -12,7 +12,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
 
 /**
  * @name get
- * @description Get records for given appid
+ * @description Get record
  *              Returns records in base64 format to avoid records limit
  *              Data key contains:
  *              server_db_table_app_setting[]
@@ -38,7 +38,7 @@ const get = parameters => {
 
 /**
  * @name getServer
- * @description Get records for given appid, called from server without base64 encoding
+ * @description Get record, called from server without base64 encoding
  * @function
  * @param {{app_id:Number,
 *          resource_id:number|null,
@@ -58,7 +58,7 @@ const getServer = parameters => {
 
 /**
  * @name post
- * @description Add record
+ * @description Create record
  * @function
  * @param {number} app_id 
  * @param {*} data
@@ -133,7 +133,7 @@ const update = async parameters => {
 
 /**
  * @name deleteRecord
- * @description Delete
+ * @description Delete record
  * @function
  * @param {number} app_id
  * @param {number} resource_id

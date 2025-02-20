@@ -12,7 +12,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
 
 /**
  * @name get
- * @description Get records for given appid
+ * @description Get record
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
@@ -30,7 +30,7 @@ const get = parameters => {
 
 /**
  * @name post
- * @description Add record
+ * @description Create record
  * @function
  * @param {number} app_id 
  * @param {*} data
@@ -99,7 +99,7 @@ const update = async parameters => {
 
 /**
  * @name deleteRecord
- * @description Delete
+ * @description Delete record
  * @function
  * @param {number} app_id
  * @param {number} resource_id
