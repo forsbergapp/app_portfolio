@@ -30,22 +30,11 @@
 <colAssociation fkAssociation="10742CF0-BBEF-AAF2-F441-4D33D04472D8" referredColumn="190EA51A-48C5-D629-EC4B-1B93E685C6B2"/>
 </associations>
 </Column>
-<Column name="description" id="5CB75A18-2698-2C9C-27CE-29C315D3975A">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>92873C30-C3D3-00A8-6DBD-E267F3EC8E35</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="created" id="C6C18749-4194-DA10-4AEA-AB107D4A81CF">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>0D220337-AD97-8E49-CF52-DE62A2FFBF82</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
