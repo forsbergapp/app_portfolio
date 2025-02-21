@@ -457,7 +457,15 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
     try {
         const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
         if (records.length>0)
-            return {rows:records};
+            try {
+                //return parsed json_data columns
+                return {rows:records.map((/**@type(*)*/row)=>{
+                    return {...row, ...row.json_data?JSON.parse(row.json_data):null};
+                })};    
+            } catch (error) {
+                //json parse fail
+                return {rows:records};
+            }
         else{
             return {rows:[]};
         }    
