@@ -19,8 +19,8 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{  iam_user_id:number,
- *                  data_app_id:number}}} parameters
+ *          data:{  iam_user_id:number|null,
+ *                  data_app_id:number|null}}} parameters
  * @returns {server_server_response & {result?:server_db_table_iam_user_app[] }}
  */
 const get = parameters =>{
@@ -32,7 +32,7 @@ const get = parameters =>{
         return dbCommonRecordError(parameters.app_id, 404);
 };
 /**
- * @name getApps
+ * @name getViewApps
  * @description Get record with app info
  * @function
  * @memberof ROUTE_REST_API
@@ -49,7 +49,7 @@ const get = parameters =>{
  *                                                                                      host:string|null,
  *                                                                                      port:number|null}[] }>}
  */
-const getApps = async parameters => {
+const getViewApps = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppsGet} = await import(`file://${process.cwd()}/server/apps/src/common.js`);
     
@@ -170,4 +170,4 @@ const deleteRecord = async parameters =>{
         return dbCommonRecordError(parameters.app_id, 404);
 };
 
-export {get, getApps, post,update, deleteRecord};
+export {get, getViewApps, post,update, deleteRecord};
