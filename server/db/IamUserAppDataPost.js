@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_iam_user_app_data_post,server_db_table_iam_user_app,server_db_table_iam_user_app_data_post_like,
+ *          server_db_table_iam_user_app_data_post,server_db_table_iam_user, server_db_table_iam_user_app_data_post_like,
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 /**@type{import('./file.js')} */
@@ -92,6 +92,8 @@ const getViewProfileUserPosts = async parameters =>{
 /**
  * @name getViewProfileStatLike
  * @description Get profile stat like
+ *              likes:  count users where current user has liked a post
+ *              liked:  count users who have liked a post of current user
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -103,34 +105,157 @@ const getViewProfileUserPosts = async parameters =>{
     /**@type{import('./IamUserAppDataPostLike.js')} */
     const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
     return {result:{
-                    count_user_post_likes:get({ app_id:parameters.app_id, 
-                                                resource_id:null, 
-                                                data:{  iam_user_id:parameters.resource_id, 
-                                                        data_app_id:parameters.app_id}}).result
-                                            .filter((/**@type{server_db_table_iam_user_app_data_post}*/row)=>
-                                                IamUserAppDataPostLike.get({app_id:parameters.app_id, 
-                                                                            resource_id:null, 
-                                                                            data:{  iam_user_id:parameters.resource_id, 
-                                                                                    data_app_id:parameters.app_id}}).result
-                                                .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row_like)=>
-                                                    row.id == row_like.iam_user_app_data_post_id
-                                                ).length>0
-                                            ),
-                    count_user_post_liked:IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
+                    count_user_post_likes:IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:parameters.resource_id, 
                                                                                 data_app_id:parameters.app_id}}).result
-                                            .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row)=>
+                                            .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row_like)=>
+                                                row_like.iam_user_app_id == get({app_id:parameters.app_id, 
+                                                    resource_id:row_like.iam_user_app_data_post_id, 
+                                                    data:{  iam_user_id:null, 
+                                                            data_app_id:parameters.app_id}}).result[0]?.iam_user_app_id
+                                                
+                                            ).length,
+                    count_user_post_liked:IamUserAppDataPostLike.get({  app_id:parameters.app_id, 
+                                                                        resource_id:null, 
+                                                                        data:{  iam_user_id:null, 
+                                                                                data_app_id:parameters.app_id}}).result
+                                            .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row_like)=>
                                                 get({app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{  iam_user_id:parameters.resource_id, 
                                                             data_app_id:parameters.app_id}}).result
-                                                .filter((/**@type{server_db_table_iam_user_app_data_post}*/data_post)=>row.iam_user_app_data_post_id==data_post.id
+                                                .filter((/**@type{server_db_table_iam_user_app_data_post}*/data_post)=>
+                                                    row_like.iam_user_app_data_post_id==data_post.id
                                                 ).length>0
-                                            )
+                                            ).length
                     },
             type:'JSON'};
  };
+ /**
+ * @name getViewProfileStatPost
+ * @description Get profile post stat
+ *              liked:  return users sorted by most likes
+ *              viewed: return users sorted by most viewed
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *         data:{statchoice?:string|null}
+ *       }} parameters
+ * @returns {Promise.<server_server_response & {result?:{top:'LIKED_POST'|'VIEWED_POST',
+ *                                                      iam_user_id:server_db_table_iam_user_app['iam_user_id'],
+ *                                                      avatar:server_db_table_iam_user['avatar'],
+ *                                                      username:server_db_table_iam_user['username'],
+ *                                                      count:number}[] }>}
+ */
+const getViewProfileStatPost = async parameters =>{
+    /**@type{import('./IamUserAppDataPostLike.js')} */
+    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
+    /**@type{import('./IamUserAppDataPostView.js')} */
+    const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
+    if (parameters.data.statchoice==null)
+        return dbCommonRecordError(parameters.app_id, 400);
+    else{
+        /**@type{import('./IamUser.js')} */
+        const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+        return {result:IamUser.get(parameters.app_id, null).result
+                        .map((/**@type{server_db_table_iam_user}*/row)=>{
+                            return {
+                                top:serverUtilNumberValue(parameters.data.statchoice)==1?
+                                        'LIKED_POST':
+                                            'VIEWED_POST',
+                                iam_user_id:row.id,
+                                avatar:row.avatar,
+                                username:row.username,
+                                count:serverUtilNumberValue(parameters.data.statchoice)==1?
+                                        IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                                                    resource_id:null,
+                                                                    data:{  iam_user_id:row.id, 
+                                                                            data_app_id:parameters.app_id}}).result.length:
+                                            IamUserAppDataPostView.get({app_id:parameters.app_id, 
+                                                                        resource_id:null,
+                                                                        data:{  iam_user_id:row.id, 
+                                                                                data_app_id:parameters.app_id}}).result.length
+                            };
+                        })
+                        .sort(( /**@type{server_db_table_iam_user & {count:number}}*/a,
+                            /**@type{server_db_table_iam_user & {count:number}}*/b)=>a.count > b.count),
+                type:'JSON'};
+    }
+};
+
+/**
+ * @name getViewProfileUserPostDetail
+ * @description Get profile user detail post
+ *              like:   returns users sorted by most likes on posts
+ *              liked:  returns users sorted by most liked on posts
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          data:{detailchoice?:string|null}}} parameters
+ * @returns {Promise.<server_server_response & {result?:{detail:'LIKE_POST'|'LIKED_POST',
+ *                                                      iam_user_id:server_db_table_iam_user_app['iam_user_id'],
+ *                                                      avatar:server_db_table_iam_user['avatar'],
+ *                                                      username:server_db_table_iam_user['username']}[] }>}
+ */
+const getViewProfileUserPostDetail = async parameters =>{
+   /**@type{import('./IamUserAppDataPostLike.js')} */
+   const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
+   if (parameters.data.detailchoice==null)
+       return dbCommonRecordError(parameters.app_id, 400);
+   else{
+       /**@type{import('./IamUser.js')} */
+       const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
+       return { result: IamUser.get(parameters.app_id, null).result
+                        .filter((/**@type{server_db_table_iam_user}*/row_user)=>
+                            serverUtilNumberValue(parameters.data.detailchoice)==1?
+                                IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                                            resource_id:null, 
+                                                            data:{  iam_user_id:parameters.resource_id, 
+                                                                    data_app_id:parameters.app_id}}).result
+                                .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row_like)=>
+                                    row_user.id == IamUserApp.get({ app_id:parameters.app_id, 
+                                                                    resource_id:row_like.iam_user_app_id,
+                                                                    data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id &&
+                                    row_like.iam_user_app_id == get({   app_id:parameters.app_id, 
+                                                                        resource_id:row_like.iam_user_app_data_post_id, 
+                                                                        data:{  iam_user_id:null, 
+                                                                                data_app_id:parameters.app_id}}).result[0]?.iam_user_app_id
+                                    
+                                ):
+                                IamUserAppDataPostLike.get({app_id:parameters.app_id, 
+                                                            resource_id:null, 
+                                                            data:{  iam_user_id:null, 
+                                                                    data_app_id:parameters.app_id}}).result
+                                .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row_iam_user_app_data_post_like)=>
+                                    row_user.id == IamUserApp.get({ app_id:parameters.app_id, 
+                                                                    resource_id:row_iam_user_app_data_post_like.iam_user_app_id,
+                                                                    data:{iam_user_id:null, data_app_id:null}}).result[0]?.iam_user_id &&
+                                    get({app_id:parameters.app_id, 
+                                        resource_id:null, 
+                                        data:{  iam_user_id:parameters.resource_id, 
+                                                data_app_id:parameters.app_id}}).result
+                                    .filter((/**@type{server_db_table_iam_user_app_data_post}*/data_post)=>
+                                        row_iam_user_app_data_post_like.iam_user_app_data_post_id==data_post.id
+                                    ).length>0
+                                )
+                        )
+                        .map((/**@type{server_db_table_iam_user}*/row)=>{
+                            return {
+                                detail:serverUtilNumberValue(parameters.data.detailchoice)==1?
+                                        'LIKE_POST':
+                                            'LIKED_POST',
+                                iam_user_id:row.id,
+                                avatar:row.avatar,
+                                username:row.username
+                            };
+                        })
+                        .sort(( /**@type{server_db_table_iam_user}*/a,
+                                /**@type{server_db_table_iam_user}*/b)=>a.username > b.username),
+                type:'JSON'};
+   }
+};
 /**
  * @name post
  * @description Create record
@@ -240,4 +365,4 @@ const deleteRecord = async parameters =>{
     else
         return dbCommonRecordError(parameters.app_id, 404);
 };
-export {get, getViewProfileUserPosts, getViewProfileStatLike, post, update, deleteRecord};
+export {get, getViewProfileUserPosts, getViewProfileStatLike, getViewProfileStatPost, getViewProfileUserPostDetail, post, update, deleteRecord};
