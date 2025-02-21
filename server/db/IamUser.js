@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_iam_user, server_db_table_iam_app_access, server_db_table_iam_user_event,server_db_iam_user_admin} from '../types.js'
+ *          server_db_table_iam_user, server_db_table_iam_user_follow, server_db_table_iam_app_access, server_db_table_iam_user_event,server_db_iam_user_admin} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -25,6 +25,259 @@ const get = (app_id, resource_id) =>{
     else
         return dbCommonRecordError(app_id, 404);
 };
+
+/**
+ * @name getViewProfile
+ * @description Get user profile
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:Number,
+*          resource_id:number|null,
+*          ip:string,
+*          user_agent:string,
+*          data:{  name?:string|null,
+*                  id?:string|null,
+*                  search?:string|null,
+*                  POST_ID?:string |null}}} parameters
+* @returns {Promise.<server_server_response & {result?:server_db_table_iam_user & { count_following:number,
+*                                                                                   count_followed: number,
+*                                                                                   count_likes:    number,
+*                                                                                   count_liked:    number,
+*                                                                                   count_views:    number,
+*                                                                                   followed:       number,
+*                                                                                   liked:          number}[]}>}
+*/
+const getViewProfile = async parameters =>{
+  /**@type{import('./IamUserFollow.js')} */
+  const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
+  /**@type{import('./IamUserLike.js')} */
+  const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
+  /**@type{import('./IamUserView.js')} */
+  const IamUserView = await import(`file://${process.cwd()}/server/db/IamUserView.js`);
+  /**@type{import('../../apps/common/src/common.js')} */
+  const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
+  
+  const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
+                                .filter((/**@type{server_db_table_iam_user}*/row)=>   
+                                    row.active==1 && 
+                                    row.private !=1 &&
+                                    commonSearchMatch(row.username, parameters.data.search??'') &&
+                                    commonSearchMatch(row.username, parameters.data.name??''))
+                                .map((/**@type{server_db_table_iam_user}*/row)=>{
+                                    // check if friends
+                                    const friends =  IamUserFollow.get({app_id:parameters.app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
+                                                                            iam_user_id_follow:row.id}}).result[0] ??
+                                                    IamUserFollow.get({app_id:parameters.app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:row.id,
+                                                                            iam_user_id_follow:serverUtilNumberValue(parameters.data?.id)}}).result[0];
+                                    return {id:             row.id,
+                                            active:         row.active,
+                                            username:       row.username, 
+                                            bio:            row.bio,
+                                            private:        (row.id ==parameters.resource_id ||row.private==1 && friends)?null:row.private,
+                                            user_level:     row.user_level,
+                                            avatar:         row.avatar,
+                                            friends:        friends?1:null,
+                                            created:        row.created,
+                                            count_following:((row.private==1 && friends==null) || parameters.data.search!=null)?
+                                                                null:
+                                                                    IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                                        resource_id:null, 
+                                                                                        data:{  iam_user_id:row.id,
+                                                                                                iam_user_id_follow:null}}).result.length,
+                                            count_followed: ((row.private==1 && friends==null) || parameters.data.search!=null)?
+                                                                null:
+                                                                    IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                                        resource_id:null, 
+                                                                                        data:{  iam_user_id:null,
+                                                                                                iam_user_id_follow:row.id}}).result.length,
+                                            count_likes:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
+                                                                null:
+                                                                    IamUserLike.get({   app_id:parameters.app_id, 
+                                                                                resource_id:null, 
+                                                                                data:{  iam_user_id:row.id,
+                                                                                        iam_user_id_like:null}}).result.length,
+                                            count_liked:    ((row.private==1 && friends==null) || parameters.data.search!=null)?
+                                                                null:
+                                                                    IamUserLike.get({   app_id:parameters.app_id, 
+                                                                                resource_id:null, 
+                                                                                data:{  iam_user_id:null,
+                                                                                        iam_user_id_like:row.id}}).result.length,
+                                            count_views:    IamUserView.get({   app_id:parameters.app_id, 
+                                                                                resource_id:null, 
+                                                                                data:{  iam_user_id:null,
+                                                                                        iam_user_id_view:row.id}}).result.length,
+                                            followed:       IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                                resource_id:null, 
+                                                                                data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
+                                                                                        iam_user_id_follow:row.id}}).result.length,
+                                            liked:          IamUserLike.get({   app_id:parameters.app_id, 
+                                                                                resource_id:null, 
+                                                                                data:{  iam_user_id:serverUtilNumberValue(parameters.data?.id),
+                                                                                        iam_user_id_like:row.id}}).result.length};
+                                });
+  if (parameters.data.search){
+      return {result:result_getProfileUser, type:'JSON'};
+  }
+  else
+      if (result_getProfileUser[0]){
+          //always save stat who is viewing, same user, none or someone else
+          const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
+                              user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+                              client_ip:              parameters.ip,
+                              client_user_agent:      parameters.user_agent};
+          return await IamUserView.post(parameters.app_id, data_body).then(()=>{return {result:result_getProfileUser, type:'JSON'};});
+      }
+      else
+          return result_getProfileUser.http?result_getProfileUser:dbCommonRecordError(parameters.app_id, 404);
+};
+
+/**
+ * @name getProfileStat
+ * @description Get profile stat
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          data:{statchoice?:string|null}}} parameters
+ * @returns {Promise.<server_server_response & {result?:{   top:'VISITED|FOLLOWING|LIKE_USER', 
+ *                                                          id:server_db_table_iam_user['id'], 
+ *                                                          avatar:server_db_table_iam_user['avatar'],
+ *                                                          username:server_db_table_iam_user['username'],
+ *                                                          count:number}[] }>}
+ */
+const getViewProfileStat = async parameters =>{
+    /**@type{import('./IamUserApp.js')} */
+    const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
+    /**@type{import('./IamUserFollow.js')} */
+    const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
+    /**@type{import('./IamUserLike.js')} */
+    const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
+    /**@type{import('./IamUserView.js')} */
+    const IamUserView = await import(`file://${process.cwd()}/server/db/IamUserView.js`);
+    
+
+    return {result:get(parameters.app_id, null).result
+                            .filter((/**@type{server_db_table_iam_user}*/row)=>
+                                    row.active==1 && row.private !=1 &&
+                                    //user should have a record in current app
+                                    IamUserApp.get({  app_id:parameters.app_id, 
+                                                                resource_id:null,
+                                                                data: {
+                                                                    iam_user_id: row.id,
+                                                                    data_app_id: parameters.app_id}
+                                                                }).result[0]
+                            )              
+                            .map((/**@type{server_db_table_iam_user}*/row)=>{
+                                return {
+                                    top:    serverUtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
+                                            serverUtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
+                                            serverUtilNumberValue(parameters.data?.statchoice)==3?'LIKE_USER':null,
+                                    id:     row.id,
+                                    avatar: row.avatar,
+                                    username:row.username,
+                                    count:  serverUtilNumberValue(parameters.data?.statchoice)==1?
+                                                IamUserView.get({   app_id:parameters.app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:null,
+                                                                            iam_user_id_view:row.id}}).result.length:
+                                            serverUtilNumberValue(parameters.data?.statchoice)==2?
+                                                IamUserFollow.get({   app_id:parameters.app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:null,
+                                                                            iam_user_id_follow:row.id}}).result.length:
+                                            serverUtilNumberValue(parameters.data?.statchoice)==3?
+                                                IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    resource_id:null, 
+                                                                    data:{  iam_user_id:null,
+                                                                            iam_user_id_like:row.id}}).result.length:
+                                            null
+                                };
+                            })
+                            .sort(( /**@type{server_db_table_iam_user & {count:number}}*/a,
+                                    /**@type{server_db_table_iam_user & {count:number}}*/b)=>a.count > b.count),
+            type:'JSON'};
+};
+    
+/**
+ * @name getProfileDetail
+ * @description Get user profile detail
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          resource_id:number,
+ *          data:{detailchoice?:string|null}}} parameters
+ * @returns {Promise.<server_server_response & {result?:{detail:'FOLLOWING'|'FOLLOWED'|'LIKE_USER'|'LIKED_USER',
+ *                                                       iam_user_id:server_db_table_iam_user_follow['iam_user_id'],
+ *                                                       avatar:server_db_table_iam_user['avatar'],
+ *                                                       username:server_db_table_iam_user['username']
+ *                                                      }[] }>}
+ */
+const getViewProfileDetail = async parameters =>{
+   /**@type{import('./IamUserFollow.js')} */
+   const IamUserFollow = await import(`file://${process.cwd()}/server/db/IamUserFollow.js`);
+   /**@type{import('./IamUserLike.js')} */
+   const IamUserLike = await import(`file://${process.cwd()}/server/db/IamUserLike.js`);
+
+   return {result:( //following
+                    serverUtilNumberValue(parameters.data?.detailchoice)==1?
+                        IamUserFollow.get({ app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{  iam_user_id:parameters.resource_id,
+                                                    iam_user_id_follow:null}}).result:
+                    //followed
+                    serverUtilNumberValue(parameters.data?.detailchoice)==2?
+                        IamUserFollow.get({ app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{  iam_user_id:null,
+                                                    iam_user_id_follow:parameters.resource_id}}).result:
+                    //like user
+                    serverUtilNumberValue(parameters.data?.detailchoice)==3?
+                        IamUserLike.get({   app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{  iam_user_id:parameters.resource_id,
+                                                    iam_user_id_like:null}}).result:
+                    //liked user
+                    serverUtilNumberValue(parameters.data?.detailchoice)==4?
+                        IamUserLike.get({   app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{  iam_user_id:null,
+                                                    iam_user_id_like:parameters.resource_id}}).result:
+                    [])
+                    .filter((/**@type{server_db_table_iam_user_follow}*/row)=>{
+                        /**@type{server_db_table_iam_user}*/
+                        const user = get(parameters.app_id,row.iam_user_id).result[0];
+                        return user?.active == 1 && user?.private != 1;
+                    })              
+                    .map((/**@type{server_db_table_iam_user_follow}*/row)=>{
+                        return {
+                            detail: serverUtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
+                                    serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
+                                    serverUtilNumberValue(parameters.data?.detailchoice)==3?'LIKE_USER':
+                                    serverUtilNumberValue(parameters.data?.detailchoice)==4?'LIKED_USER':null,
+                            iam_user_id:  row.iam_user_id,
+                            avatar: get(parameters.app_id,row.iam_user_id).result[0]?.avatar,
+                            username:get(parameters.app_id,row.iam_user_id).result[0]?.username
+                        };
+                    })
+                    .sort(( /**@type{server_db_table_iam_user}*/a,
+                            /**@type{server_db_table_iam_user}*/b)=>a.username < b.username),
+           type:'JSON'};
+};
+
+/**
+ * @name getStatCountAdmin
+ * @description Get user stat
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number}}parameters
+ * @returns {server_server_response & {result?:{count_users:number}[]}}
+ */
+const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(parameters.app_id,null).result?.length}],
+                                                    type:'JSON'};};
+
 
 /**
  * @name post
@@ -403,4 +656,4 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
         return user;
 };
 
-export {get, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, updatePassword, deleteRecord, deleteRecordAdmin};
+export {get, getViewProfile, getViewProfileStat, getViewProfileDetail, getViewStatCountAdmin, post, postAdmin, update, updateAdmin, updateVerificationCodeAuthenticate, updatePassword, deleteRecord, deleteRecordAdmin};

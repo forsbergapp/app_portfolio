@@ -468,7 +468,7 @@
         "/bff/app_id/v1/server-db/user_account_app_data_post-profile-stat-like/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelUserAccountAppDataPost.getUserPostsByUserId",
+                "operationId": "server_db.dbModelUserAccountAppDataPost.getProfileStatLike",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],

@@ -10,7 +10,8 @@
 const {fileDBGet, fileDBPost, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
-
+/**@type{import('./IamUserApp.js')} */
+const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
 /**
  * @name get
  * @description Get record
@@ -23,7 +24,11 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  */
 const get = parameters =>{
     const result = fileDBGet(parameters.app_id, 'IAM_USER_APP_DATA_POST_LIKE',parameters.resource_id, parameters.data.data_app_id??null).rows
-                    .filter(row=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
+                        .filter((/**@type{server_db_table_iam_user_app_data_post_like}*/row)=>
+                        IamUserApp.get({app_id:parameters.app_id,
+                                        resource_id:row.iam_user_app_id, 
+                                        data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result.length>0
+                    );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
