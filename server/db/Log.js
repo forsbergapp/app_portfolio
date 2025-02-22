@@ -52,7 +52,7 @@ const logDate = () => new Date().toISOString();
  * @description Log request error
  * @param {server_server_req} req 
  * @param {number} statusCode 
- * @param {string|number|object|Error|null} statusMessage 
+ * @param {*} statusMessage 
  * @param {number} responsetime 
  * @param {server_server_error} err 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
@@ -68,7 +68,7 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
                                 http_info:          req.protocol + '/' + req.httpVersion,
                                 method:             req.method,
                                 statusCode:         statusCode,
-                                statusMessage:      typeof statusMessage=='object'?JSON.stringify(statusMessage):statusMessage?.toString(),
+                                statusMessage:      statusMessage,
                                 ['user-agent']:     req.headers['user-agent'], 
                                 ['accept-language']:req.headers['accept-language'], 
                                 referer:            req.headers.referer,
@@ -226,7 +226,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
                             app_id:         app_id,
                             db:             db,
                             sql:            sql,
-                            parameters:     JSON.stringify(parameters),
+                            parameters:     parameters,
                             /**@ts-ignore */
                             logtext:        `Rows:${result.affectedRows?result.affectedRows:result.length}`
                             };
@@ -239,8 +239,8 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
                             app_id:         app_id,
                             db:             db,
                             sql:            sql,
-                            parameters:     JSON.stringify(parameters),
-                            logtext:        typeof result=='object'?JSON.stringify(result):result
+                            parameters:     parameters,
+                            logtext:        result
                             };
             break;
         }
@@ -269,8 +269,8 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
         app_id:         app_id,
         db:             db,
         sql:            sql,
-        parameters:     JSON.stringify(parameters),
-        logtext:        typeof result=='object'?JSON.stringify(result):result
+        parameters:     parameters,
+        logtext:        result
         };
     return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_DB'), Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json_db);
 };
@@ -323,7 +323,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
  * @param {number} app_id 
  * @param {string} service 
  * @param {string} parameters 
- * @param {string} logtext 
+ * @param {*} logtext 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceE = async (app_id, service, parameters, logtext) => {
@@ -333,7 +333,7 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
                     app_id:     app_id,
                     service:    service,
                     parameters: parameters,
-                    logtext:    logtext
+                    logtext:    logtext.stack??logtext
                     };
     return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVICE'), Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json);
 };

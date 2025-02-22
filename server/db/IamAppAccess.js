@@ -6,7 +6,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileDBPost, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -59,7 +59,7 @@ const post = async (app_id, data) =>{
             data_new.ua =                   data.ua;
             //required server value
             data_new.created =              new Date().toISOString();
-            return fileDBPost(app_id, 'IAM_APP_ACCESS',data_new).then((result)=>{
+            return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_APP_ACCESS',post:{data:data_new}}).then((result)=>{
                 if (result.affectedRows>0){
                     result.insertId=data_new.id;
                     return {result:result,type:'JSON'};
@@ -96,7 +96,7 @@ const update = async (app_id, resource_id, data) =>{
             data_update.res = data.res;
         data_update.modified = data.modified;
         if (Object.entries(data_update).length>1){
-            const result = await fileDBUpdate(app_id, 'IAM_APP_ACCESS',resource_id, null, data);
+            const result = await fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_APP_ACCESS', update:{resource_id:resource_id, data_app_id:null, data:data}});
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -121,7 +121,7 @@ const deleteRecord = async (app_id, resource_id) => {
     /**@type{server_db_table_iam_app_access}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        return fileDBDelete(app_id, 'IAM_APP_ACCESS', resource_id, null).then(result=>{
+        return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_APP_ACCESS', delete:{resource_id:resource_id, data_app_id:null}}).then(result=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else

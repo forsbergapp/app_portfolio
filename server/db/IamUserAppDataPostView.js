@@ -7,7 +7,7 @@
  *          server_db_common_result_insert} from '../types.js'
  */
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 /**@type{import('./IamUserApp.js')} */
@@ -62,7 +62,7 @@ const post = async (app_id, data) =>{
                                 client_user_agent: data.client_user_agent,
                                 created:new Date().toISOString()
                         };
-        return fileDBPost(app_id, 'IAM_USER_APP_DATA_POST_LIKE', data_new).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER_APP_DATA_POST_LIKE', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -90,7 +90,10 @@ const deleteRecord = async parameters =>{
                                             data:{data_app_id:parameters.data.data_app_id, iam_user_id:parameters.data.iam_user_id}}).result[0];
     if (record){
         //delete using resource id or id for searched user and app
-        return fileDBDelete(parameters.app_id, 'IAM_USER_APP_DATA_POST_VIEW', parameters.resource_id ?? record.id, null).then((result)=>{
+        return fileCommonExecute({  app_id:parameters.app_id, 
+                                    dml:'DELETE', 
+                                    object:'IAM_USER_APP_DATA_POST_VIEW', 
+                                    delete:{resource_id:parameters.resource_id ?? record.id, data_app_id:null}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else

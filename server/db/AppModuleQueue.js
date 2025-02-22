@@ -7,7 +7,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileRecord, fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
@@ -78,7 +78,7 @@ const post = async (app_id, data) => {
                             status:data.status,
                             message:null
                         };
-        return fileDBPost(app_id, 'APP_MODULE_QUEUE', job).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'APP_MODULE_QUEUE', post:{data:job}}).then((result)=>{
             if (result.affectedRows>0)
                 return  {result:{insertId:job.id, affectedRows:result.affectedRows}, type:'JSON'};
             else
@@ -98,9 +98,10 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postResult = async (app_id, id, result) =>{
+    /**@type{import('./Config.js')} */
+    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     const fs = await import('node:fs');
-    const filepath = `${fileRecord('DB_FILE').PATH}/jobs/${id}.html`;
-    await fs.promises.writeFile(process.cwd() + filepath, result,  'utf8');
+    await fs.promises.writeFile(process.cwd() + `${Config.get('CONFIG_SERVER','SERVER','PATH_DATA_JOBS')}/${id}.html`, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};
 };
 /**
@@ -130,7 +131,7 @@ const update = async (app_id, resource_id, data) => {
     if (data.message!=null)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
-        return fileDBUpdate(app_id, 'APP_MODULE_QUEUE', resource_id, null, data_update).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'APP_MODULE_QUEUE', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -149,7 +150,7 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileDBDelete(app_id, 'APP_MODULE_QUEUE', resource_id, null).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP_MODULE_QUEUE', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

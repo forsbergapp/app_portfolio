@@ -5,7 +5,7 @@
  *          server_db_table_iam_user, server_db_table_iam_user_follow, server_db_table_iam_app_access, server_db_table_iam_user_event,server_db_iam_user_admin} from '../types.js'
  */
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 /**@type{import('../server.js')} */
@@ -317,7 +317,7 @@ const post = async (app_id, data) => {
                                 created:new Date().toISOString(), 
                                 modified:new Date().toISOString()
                         };
-        return fileDBPost(app_id, 'IAM_USER', data_new).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -358,7 +358,7 @@ const postAdmin = async (app_id, data) => {
                             created:new Date().toISOString(), 
                             modified:new Date().toISOString()
                     };
-    return fileDBPost(app_id, 'IAM_USER', data_new).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER', post:{data:data_new}}).then((result)=>{
         if (result.affectedRows>0){
             result.insertId=data_new.id;
             return {result:result, type:'JSON'};
@@ -406,7 +406,7 @@ const update = async (app_id, resource_id, data) => {
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return fileDBUpdate(app_id, 'IAM_USER', resource_id, null, data_update).then((result)=>{
+                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_USER', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -470,7 +470,10 @@ const updateAdmin = async parameters => {
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return fileDBUpdate(parameters.app_id, 'IAM_USER', parameters.resource_id, null, data_update).then((result)=>{
+                return fileCommonExecute({  app_id:parameters.app_id, 
+                                            dml:'UPDATE', 
+                                            object:'IAM_USER', 
+                                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -503,7 +506,10 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
             data_update.active = 1;
             data_update.modified = new Date().toISOString();
             if (Object.entries(data_update).length>0)
-                return fileDBUpdate(app_id, 'IAM_USER', resource_id, null, data_update).then((result)=>{
+                return fileCommonExecute({  app_id:app_id, 
+                                            dml:'UPDATE', 
+                                            object:'IAM_USER', 
+                                            update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -537,7 +543,10 @@ const updatePassword = async (app_id, resource_id, data) => {
         data_update.password = data.password_new;
         data_update.modified = new Date().toISOString();
         if (Object.entries(data_update).length>0)
-            return fileDBUpdate(app_id, 'IAM_USER', resource_id, null, data_update).then((result)=>{
+            return fileCommonExecute({  app_id:app_id, 
+                                        dml:'UPDATE', 
+                                        object:'IAM_USER', 
+                                        update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -567,7 +576,10 @@ const deleteRecord = async (app_id, resource_id, data) => {
     if (user){
         if (data.password && await securityPasswordCompare(data.password, user.password))
             return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
-                                                            result_cascade:fileDBDelete(app_id, 'IAM_USER', resource_id, null).then((result)=>{
+                                                            result_cascade:fileCommonExecute({  app_id:app_id, 
+                                                                                                dml:'DELETE', 
+                                                                                                object:'IAM_USER', 
+                                                                                                delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
                                                             if (result.affectedRows>0)
                                                                 return {result:result, type:'JSON'};
                                                             else
@@ -644,7 +656,7 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
     if (user){
         return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
                                 result_cascade:
-                                    fileDBDelete(app_id, 'IAM_USER', resource_id, null)
+                                    fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_USER', delete:{resource_id:resource_id, data_app_id:null}})
                                     .then(result=>{
                                             if (result.affectedRows>0)
                                                 return {result:result, type:'JSON'};

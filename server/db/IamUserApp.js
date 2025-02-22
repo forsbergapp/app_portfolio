@@ -9,7 +9,7 @@
  *          server_db_common_result_insert} from '../types.js'
  */
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -91,7 +91,7 @@ const post = async (app_id, data) =>{
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return fileDBPost(app_id, 'IAM_USER_APP', data_new).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER_APP', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -129,7 +129,10 @@ const update = async parameters =>{
         data_update.modified = new Date().toISOString();
 
         if (Object.entries(data_update).length>0)
-            return fileDBUpdate(parameters.app_id, 'IAM_USER_APP', parameters.resource_id ?? user_app.id, null, data_update).then((result)=>{
+            return fileCommonExecute({  app_id:parameters.app_id, 
+                                        dml:'UPDATE', 
+                                        object:'IAM_USER_APP', 
+                                        update:{resource_id:parameters.resource_id ?? user_app.id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -159,7 +162,7 @@ const deleteRecord = async parameters =>{
                             resource_id:parameters.resource_id, 
                             data:{data_app_id:parameters.data.data_app_id, iam_user_id:parameters.data.iam_user_id}}).result[0];
     if (user_app){
-        return fileDBDelete(parameters.app_id, 'APP', parameters.resource_id ?? user_app.id, null).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'APP', delete:{resource_id:parameters.resource_id ?? user_app.id, data_app_id:null}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else

@@ -6,7 +6,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -38,15 +38,16 @@ const post = async (app_id, data) => {
     //check required attributes
     if (data.from && data.to){
         const id = Date.now();
-        return fileDBPost(app_id, 'IAM_CONTROL_IP', {   id:id, 
-                                                        app_id:data.app_id,
-                                                        from:data.from, 
-                                                        to:data.to,
-                                                        hour_from:data.hour_from,
-                                                        hour_to:data.hour_to,
-                                                        date_from:data.date_from,
-                                                        date_to:data.date_to,
-                                                        action:data.action}).then((result)=>{
+        return fileCommonExecute({  app_id:app_id, dml:'POST', object:'IAM_CONTROL_IP', 
+                                    post:{data:{id:id, 
+                                                app_id:data.app_id,
+                                                from:data.from, 
+                                                to:data.to,
+                                                hour_from:data.hour_from,
+                                                hour_to:data.hour_to,
+                                                date_from:data.date_from,
+                                                date_to:data.date_to,
+                                                action:data.action}}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId = id;
                 return {result:result, type:'JSON'};
@@ -90,7 +91,7 @@ const update = async (app_id, resource_id, data) => {
                 data_update.action = data.action;
 
             if (Object.entries(data_update).length==2)
-                return fileDBUpdate(app_id, 'IAM_CONTROL_IP', resource_id, null, data_update).then((result)=>{
+                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_CONTROL_IP', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -115,7 +116,7 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileDBDelete(app_id, 'IAM_CONTROL_IP', resource_id, null).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_CONTROL_IP', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
