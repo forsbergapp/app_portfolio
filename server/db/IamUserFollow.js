@@ -7,7 +7,7 @@
  *          server_db_common_result_insert} from '../types.js'
  */
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -56,7 +56,7 @@ const post = async parameters =>{
                                 iam_user_id_follow:parameters.data.iam_user_id_follow,
                                 created:new Date().toISOString()
                         };
-        return fileDBPost(parameters.app_id, 'IAM_USER_FOLLOW', data_new).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'IAM_USER_FOLLOW', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -86,7 +86,10 @@ const deleteRecord = async parameters =>{
                             }}).result[0];
     if (record){
         //delete using resource id or id for searched user
-        return fileDBDelete(parameters.app_id, 'IAM_USER_FOLLOW', parameters.resource_id ?? record.id, null).then((result)=>{
+        return fileCommonExecute({  app_id:parameters.app_id, 
+                                    dml:'DELETE', 
+                                    object:'IAM_USER_FOLLOW', 
+                                    delete:{resource_id:parameters.resource_id ?? record.id, data_app_id:null}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else

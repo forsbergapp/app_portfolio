@@ -472,7 +472,7 @@
 /**
  * @description DB TABLE iam_user_follow
  * @memberof dbObjects
- * @typedef {{  id:number|null,
+ * @typedef {{  id:number,
  *              iam_user_id:number|null,
  *              iam_user_id_follow:number
  *              created:string}} server_db_table_iam_user_follow
@@ -480,7 +480,7 @@
 /**
  * @description DB TABLE iam_user_like
  * @memberof dbObjects
- * @typedef {{  id:number|null,
+ * @typedef {{  id:number,
  *              iam_user_id:number,
  *              iam_user_id_like:number
  *              created:string}} server_db_table_iam_user_like
@@ -488,7 +488,7 @@
 /**
  * @description DB TABLE iam_user_view
  * @memberof dbObjects
- * @typedef {{  id:number|null,
+ * @typedef {{  id:number,
  *              iam_user_id:number|null,
  *              iam_user_id_view:number,
  *              client_ip:string|null,

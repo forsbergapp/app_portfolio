@@ -5,7 +5,7 @@
  */
 
 /**@type{import('./file.js')} */
-const {fileDBPost, fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -46,7 +46,7 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return fileDBPost(app_id, 'IAM_APP_ID_TOKEN',data_new).then((result)=>{
+            return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_APP_ID_TOKEN', post:{data:data_new}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
