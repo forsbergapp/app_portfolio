@@ -3,19 +3,26 @@
  *  Database files are saved in /data/db
  *  /data directory is created automatically first server start
  *  Tables implemented using object mapping relation (ORM), PK and UK patterns
- *  each TABLE has *.js file with methods
- *  LOG*, CONFIG* and MESSAGE_QUEUE* tables use subtypes and common *.js files.
- *  See ER Model for an overview.
+ *  See data Model for an overview.
  *  
  *  File types supported
  *  DOCUMENT        json
  *                  uses fileFsRead and fileFsWrite by admin and config files
  *  TABLE           json that can be managed as table and implemented using object mapping relation (ORM) pattern
- *                  so each table is mapped to one *.js
  *                  consists of 3 layers
- *                  *.js            app logic that transforms and filter data, ex iamUserGet() in /server/iam.js
- *                  *.js   data model API with constraints, ex IamUser() in /server/db/IamUser.js
- *                  file.js         file management API, ex fileDBGet() in /server/db/file.js
+ *                  App layer
+ *                  *.js                app logic, ex iamAuthenticateUser() in /server/iam.js
+ *                  ORM layer
+ *                  /server/db/*.js     data model API with constraints, ex IamUser() in /server/db/IamUser.js
+ *                                      returns server response format
+ *                  Database layer
+ *                  file.js             file management API using async fileCommonExecute() with file read and write
+ *                                      and fileDBGet() reading directly from cached object in memory using closure pattern
+ *                                      in /server/db/file.js
+ *                                      manages objects, constraints, transactions with commit and rollback
+ *                                      returns database result
+ * 
+ *                  Explanation fileCommonExecute():
  *                                  fileDBGet               reads file content from `cache_content` and should be used by default for performance
  *                                                          so a synchronous function can be used and to avoid disk read
  *                                                          since TABLE files stores new content in `cache_content` after each change
@@ -25,6 +32,7 @@
  *                                  fileDBPost              saves file content to file and updates `cachec_content`
  *                                  fileDBUpdate            saves file content to file and updates `cache_content`
  *                                  fileDBDelete            saves file content to file and updates `cache_content`
+ *                                  fileConstraints         checks constraints for fileDBPost and fileDBDelete
  *                                  fileTransactionStart    reads and sets `transaction_id` and `lock` key in DB and 
  *                                                          uses setTimeout loop until lock is available,
  *                                                          waits maximum 10 seconds for lock,
@@ -238,7 +246,7 @@ const fileFsRead = async (file, lock=false) =>{
         return {   file_content:    await fs.promises.readFile(process.cwd() + filepath, 'utf8').then((file)=>JSON.parse(file.toString())),
                     lock:           lock,
                     transaction_id: null};
-    }
+    }    
 };
 /**
  * @name fileDbInit
@@ -277,43 +285,44 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
     /**@type{import('../iam.js')} */
     const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
     if (!transaction_id || fileRecord(file).transaction_id != transaction_id){
-        return (iamUtilMessageNotAuthorized());
+        return iamUtilMessageNotAuthorized();
     }
     else{
-        const filepath = '/data/db/' + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
-        const filepath_backup = '/data/db/backup/' + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
-        //write backup of old config file
-        await fs.promises.writeFile(process.cwd() + `${filepath_backup}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                    fileRecord(file).type=='TABLE'?
-                                    //save records in new row and compact format
-                                    /**@ts-ignore */
-                                    '[\n' + fileRecord(file).transaction_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
-                                        //JSON, convert to string
-                                        JSON.stringify(fileRecord(file).transaction_content, undefined, 2)
-                                    ,  
-                                    'utf8');
-        //write new file content
-        return await fs.promises.writeFile( process.cwd() + filepath, 
-                                            fileRecord(file).type=='TABLE'?
-                                            //save records in new row and compact format
-                                            '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
-                                                //JSON, convert to string
-                                                JSON.stringify(file_content, undefined, 2)
-                                            ,  
-                                            'utf8')
-        .then(()=>{
-            fileRecord(file).cache_content = file_content;
-            if (fileTransactionCommit(file, transaction_id))
-                return null;
-            else
-                throw (iamUtilMessageNotAuthorized());
-        })
-        .catch((error)=>{
+        try {
+            const filepath = '/data/db/' + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
+            const filepath_backup = '/data/db/backup/' + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
+            //write backup of old config file
+            await fs.promises.writeFile(process.cwd() + `${filepath_backup}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
+                                        fileRecord(file).type=='TABLE'?
+                                        //save records in new row and compact format
+                                        /**@ts-ignore */
+                                        '[\n' + fileRecord(file).transaction_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
+                                            //JSON, convert to string
+                                            JSON.stringify(fileRecord(file).transaction_content, undefined, 2)
+                                        ,  
+                                        'utf8');
+            //write new file content
+            return await fs.promises.writeFile( process.cwd() + filepath, 
+                                                fileRecord(file).type=='TABLE'?
+                                                //save records in new row and compact format
+                                                '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
+                                                    //JSON, convert to string
+                                                    JSON.stringify(file_content, undefined, 2)
+                                                ,  
+                                                'utf8')
+            .then(()=>{
+                fileRecord(file).cache_content = file_content;
+                if (fileTransactionCommit(file, transaction_id))
+                    return null;
+                else
+                    throw (iamUtilMessageNotAuthorized());
+            });    
+        } catch (error) {
             if (fileTransactionRollback(file, transaction_id))
                 throw(error);
             else
                 throw('⛔ ' + error);
-        });
+        }   
     }
 };
 
@@ -456,6 +465,12 @@ const fileFsDBLogPost = async (app_id, file, file_content, filenamepartition = n
 const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
     try {
         const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
+        
+        //log in background without waiting if db log is enabled
+        /**@type{import('./Log.js')} */
+        import(`file://${process.cwd()}/server/db/Log.js`)
+        .then(Log=>Log.postDBI(app_id, 0, JSON.stringify({dml:'GET', object:table}), {resource_id:resource_id, data_app_id:data_app_id}, records));
+
         if (records.length>0)
             try {
                 //return parsed json_data columns
@@ -463,6 +478,10 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
                     return {...row, ...row.json_data?JSON.parse(row.json_data):null};
                 })};    
             } catch (error) {
+                //log in background without waiting
+                /**@type{import('./Log.js')} */
+                import(`file://${process.cwd()}/server/db/Log.js`)
+                .then(Log=>Log.postDBE(app_id, 0, JSON.stringify({dml:'GET', object:table}), {resource_id:resource_id, data_app_id:data_app_id}, error));
                 //json parse fail
                 return {rows:records};
             }
@@ -624,6 +643,54 @@ const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
     else
         return {affectedRows:0};    
 };
+/**
+ * @name fileCommonExecute
+ * @description Execute a db statement
+ * @function
+ * @param {{app_id:number,
+ *          dml:'UPDATE'|'POST'|'DELETE',
+ *          object:server_db_object,
+ *          update?: {resource_id:number|null, data_app_id:number|null, data:*},
+ *          post?:   {data:*},
+ *          delete?: {resource_id:number|null, data_app_id:number|null}
+ *          }} parameters
+ * @returns {Promise<server_db_common_result_insert & server_db_common_result_delete & server_db_common_result_update>}
+ */
+const fileCommonExecute = async parameters =>{
+    /**@type{import('./Log.js')} */
+    const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
+    try{
+        if (parameters.dml!='UPDATE' && parameters.dml!='POST' && parameters.dml!='DELETE'){
+            /**@type{import('../iam.js')} */
+            const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+            throw iamUtilMessageNotAuthorized();
+        }
+        else{
+            const result =  parameters.dml=='UPDATE'?  await fileDBUpdate(  parameters.app_id, 
+                                                                            parameters.object, 
+                                                                            parameters.update?.resource_id??null, 
+                                                                            parameters.update?.data_app_id??null, 
+                                                                            parameters.update?.data):
+                            parameters.dml=='POST'?    await fileDBPost(    parameters.app_id,   
+                                                                            parameters.object, 
+                                                                            parameters.post?.data):
+                                await fileDBDelete(                         parameters.app_id, 
+                                                                            parameters.object, 
+                                                                            parameters.delete?.resource_id??null, 
+                                                                            parameters.delete?.data_app_id??null);
+            
+            return Log.postDBI(parameters.app_id, 0, JSON.stringify({dml:parameters.dml, object:parameters.object}), parameters, result)
+                    .then(()=>result);
+        }
+    } 
+    catch (error) {
+        return Log.postDBE(parameters.app_id, 0, JSON.stringify({dml:parameters.dml, object:parameters.object}), parameters, error)
+			.then(()=>{
+                throw error;
+            });
+    }
+};
+
 export {fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileDbInit, fileFsWrite, fileFSDirDataExists, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
         fileFsDBLogGet, fileFsDBLogPost,
-        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete};
+        fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete, fileCommonExecute};

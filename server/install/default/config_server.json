@@ -14,7 +14,7 @@
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"},
         {"REPOSITORY_GIT_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
         {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"},
-        {"PATH_DATA_JOBS":"/jobs", "COMMENT": "Report queue jobs path"}
+        {"PATH_DATA_JOBS":"/data/jobs", "COMMENT": "Report queue jobs path"}
     ],
     "SERVICE_MICROSERVICE":[
         {"PATH":"/microservice", "COMMENT": "Microservice path"},

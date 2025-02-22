@@ -5,7 +5,7 @@
  *          server_db_table_app_secret} from '../types.js'
  */
 /**@type{import('./file.js')} */
-const {fileFsRead, fileDBGet, fileDBUpdate, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileFsRead, fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../db/common.js')} */
@@ -65,7 +65,7 @@ const update = async parameters => {
         return dbCommonRecordError(parameters.app_id, 400);
     else{
         //updates only one key in the record
-        return fileDBUpdate(parameters.app_id, 'APP_SECRET', null, parameters.resource_id, {[parameters.data.parameter_name]:parameters.data.parameter_value}).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_SECRET', update:{resource_id:null, data_app_id:parameters.resource_id, data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -83,7 +83,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileDBDelete(app_id, 'APP_SECRET', null, resource_id).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP_SECRET', delete:{resource_id:null, data_app_id:resource_id}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

@@ -5,7 +5,7 @@
  *          server_db_table_iam_user_event} from '../types.js'
  */
 /**@type{import('./file.js')} */
-const {fileDBGet, fileDBPost, fileDBDelete} = await import(`file://${process.cwd()}/server/db/file.js`);
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
 /**@type{import('../db/common.js')} */
 const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
 
@@ -49,7 +49,7 @@ const post = async (app_id, data) => {
                                 event_status:data.event_status,
                                 created:new Date().toISOString()
                         };
-        return fileDBPost(app_id, 'IAM_USER_EVENT', data_new).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER_EVENT', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -71,7 +71,7 @@ const deleteRecord = async (app_id, resource_id) => {
     /**@type{server_db_table_iam_user_event}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        return fileDBDelete(app_id, 'IAM_USER_EVENT', resource_id, null).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_USER_EVENT', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
