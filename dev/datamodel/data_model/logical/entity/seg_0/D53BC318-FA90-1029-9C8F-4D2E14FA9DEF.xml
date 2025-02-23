@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D53BC318-FA90-1029-9C8F-4D2E14FA9DEF" name="app_setting">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D53BC318-FA90-1029-9C8F-4D2E14FA9DEF" name="app_data">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-11 15:36:08 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -113,7 +113,7 @@
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="18568DC1-BDA0-D170-98DC-580EF18BC4E0" name="APP_SETTING_UK">
+<identifier id="18568DC1-BDA0-D170-98DC-580EF18BC4E0" name="APP_DATA_UK">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-11 15:40:38 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -127,7 +127,7 @@
 <attributeRef>BDDB209D-5796-9416-3D2D-045D596C9B7C</attributeRef>
 </usedAttributes>
 </identifier>
-<identifier id="416DFC8C-4944-330B-3408-43537E936DAE" name="APP_SETTING PK">
+<identifier id="416DFC8C-4944-330B-3408-43537E936DAE" name="APP_DATA PK">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 21:51:45 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
@@ -135,6 +135,7 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <pk>true</pk>
+<newElementsIDs>C857E504-CDAE-7038-D163-5EF2181B7F60</newElementsIDs>
 <usedAttributes>
 <attributeRef>C857E504-CDAE-7038-D163-5EF2181B7F60</attributeRef>
 </usedAttributes>

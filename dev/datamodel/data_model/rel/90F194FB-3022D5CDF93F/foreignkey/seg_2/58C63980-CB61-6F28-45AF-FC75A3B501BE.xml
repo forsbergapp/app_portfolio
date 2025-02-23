@@ -1,10 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_2" id="58C63980-CB61-6F28-45AF-FC75A3B501BE" containerWithKeyObject="AC823D56-6D51-83ED-C65D-947BE06F2000" localFKIndex="E9FF2408-B6CD-FD0F-08AD-118460F070E4" name="app_data_entity_resource_app_setting_FK">
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_2" id="58C63980-CB61-6F28-45AF-FC75A3B501BE" containerWithKeyObject="AC823D56-6D51-83ED-C65D-947BE06F2000" localFKIndex="E9FF2408-B6CD-FD0F-08AD-118460F070E4" name="app_data_entity_resource_app_data_FK">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>12866CC8-F025-FF07-B024-CFC262B75849</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
-<referredTableLongName>app_setting</referredTableLongName>
+<referredTableLongName>app_data</referredTableLongName>
 <deleteRule>NO ACTION</deleteRule>
 <referredTableID>7BAEB0DB-C59C-E9A3-4571-3C1548690CB0</referredTableID>
 <keyObject>8FF7FAB4-8117-6538-9823-97E163158009</keyObject>

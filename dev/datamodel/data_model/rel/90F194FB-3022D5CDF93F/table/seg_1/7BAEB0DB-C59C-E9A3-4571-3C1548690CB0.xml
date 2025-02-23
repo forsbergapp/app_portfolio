@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="7BAEB0DB-C59C-E9A3-4571-3C1548690CB0" name="app_setting">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="7BAEB0DB-C59C-E9A3-4571-3C1548690CB0" name="app_data">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>D53BC318-FA90-1029-9C8F-4D2E14FA9DEF</generatorID>
@@ -99,7 +99,7 @@
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
-<ind_PK_UK id="8FF7FAB4-8117-6538-9823-97E163158009" name="app_setting_PK">
+<ind_PK_UK id="8FF7FAB4-8117-6538-9823-97E163158009" name="app_data_PK">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>416DFC8C-4944-330B-3408-43537E936DAE</generatorID>
@@ -111,7 +111,7 @@
 <colUsage columnID="0201A67F-ECC0-38AF-C4F2-3FB6897800A7"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="775CD5E0-8769-EF92-6B7B-EA05850BFE44" name="app_setting_app_id_name_value_UN">
+<ind_PK_UK id="775CD5E0-8769-EF92-6B7B-EA05850BFE44" name="app_data_app_id_name_value_UN">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>18568DC1-BDA0-D170-98DC-580EF18BC4E0</generatorID>
@@ -124,7 +124,7 @@
 <colUsage columnID="9B00C0A6-D8D5-F700-7323-A2D036028D48"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="1C5088CB-7268-3796-D095-323488D65FE6" name="app_setting_app_FK">
+<ind_PK_UK id="1C5088CB-7268-3796-D095-323488D65FE6" name="app_data_app_FK">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>73CF4EE2-2A71-F6E1-3B6D-DCE8FCC8D162</generatorID>
