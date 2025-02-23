@@ -186,6 +186,7 @@ const appSecureMenuShow = menu => {
                 mountDiv:   'secure_menu_content',
                 data:       null,
                 methods:    {
+                            commonMiscSecondsToTime:common.commonMiscSecondsToTime,
                             commonMiscRoundOff:common.commonMiscRoundOff,
                             commonFFB:common.commonFFB
                             },
@@ -213,7 +214,10 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {commonFFB:common.commonFFB},
+                methods:    {
+                            commonMiscSecondsToTime:common.commonMiscSecondsToTime,
+                            commonFFB:common.commonFFB
+                            },
                 path:       '/component/menu_server.js'});
             break;
         }
