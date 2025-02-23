@@ -20,7 +20,7 @@ UPDATE SQLITE_SEQUENCE SET seq = 1000000 WHERE name = 'app_data_entity';
 CREATE TABLE <DB_SCHEMA/>.app_data_entity_resource (
     id                     INTEGER NOT NULL CONSTRAINT app_data_entity_resource_pk PRIMARY KEY AUTOINCREMENT,
     json_data              TEXT,
-    app_setting_id         INTEGER NOT NULL,
+    app_data_id            INTEGER NOT NULL,
     app_data_entity_app_id INTEGER NOT NULL,
     app_data_entity_id     INTEGER NOT NULL,
     CONSTRAINT app_data_entity_resource_uk UNIQUE (app_data_entity_app_id,

@@ -30,7 +30,7 @@ GRANT SELECT ON <DB_SCHEMA/>.app_data_entity TO app_portfolio_role_app_common;
 CREATE TABLE <DB_SCHEMA/>.app_data_entity_resource (
     id                     BIGINT NOT NULL AUTO_INCREMENT,
     json_data              LONGTEXT,
-    app_setting_id         BIGINT NOT NULL,
+    app_data_id            BIGINT NOT NULL,
     app_data_entity_app_id BIGINT NOT NULL,
     app_data_entity_id     BIGINT NOT NULL,
     CONSTRAINT app_data_entity_resource_pk PRIMARY KEY (app_data_entity_app_id,

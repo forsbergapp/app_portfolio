@@ -24,8 +24,8 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_entity_resource_get[] }>}
  */
 const get = async parameters =>{
-    /**@type{import('./AppSetting.js')} */
-    const AppSetting = await import(`file://${process.cwd()}/server/db/AppSetting.js`);
+    /**@type{import('./AppData.js')} */
+    const AppData = await import(`file://${process.cwd()}/server/db/AppData.js`);
 
     return import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
@@ -37,16 +37,16 @@ const get = async parameters =>{
                 .then(result=>result.http?result:
                     {result:result.result
                         .map((/**@type{server_db_sql_result_app_data_entity_resource_get}*/row)=>{
-                            const app_setting = AppSetting.getServer({   app_id:parameters.app_id, 
-                                                                            resource_id:row.app_setting_id,
+                            const app_data = AppData.getServer({   app_id:parameters.app_id, 
+                                                                            resource_id:row.app_data_id,
                                                                             data:{data_app_id:row.app_data_entity_app_id}}).result[0];
-                            row.app_setting_name = app_setting?.name;
-                            row.app_setting_value = app_setting?.value;
-                            row.app_setting_display_data = app_setting?.display_data;
+                            row.app_data_name = app_data?.name;
+                            row.app_data_value = app_data?.value;
+                            row.app_data_display_data = app_data?.display_data;
                             return row;
                         })
                         .filter((/**@type{server_db_sql_result_app_data_entity_resource_get}*/row)=>
-                            row.app_setting_value == (parameters.data?.resource_name ?? row.app_setting_value)
+                            row.app_data_value == (parameters.data?.resource_name ?? row.app_data_value)
                         ),
                     type:'JSON'}));
 };

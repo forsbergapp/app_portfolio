@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab3
  */
 /**
- * @import {CommonAppSettingRecord,CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
+ * @import {CommonAppDataRecord,CommonModuleCommon, COMMON_DOCUMENT,CommonComponentLifecycle}  from '../../../common_types.js'
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
  * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
  */
@@ -133,14 +133,14 @@ const template = props =>`  <div class='setting_horizontal_row'>
  */
 const component = async props => {
     //fetch PAPER_SIZE for common app id
-    /**@type{CommonAppSettingRecord[]} */
-    const settings_common = await props.methods.commonFFB({path:'/server-db/app_setting/',
+    /**@type{CommonAppDataRecord[]} */
+    const settings_common = await props.methods.commonFFB({path:'/server-db/app_data/',
                                                     query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch HIGHLIGHT_ROW for current app id
-    /**@type{CommonAppSettingRecord[]} */
-    const settings_app = await props.methods.commonFFB({ path:'/server-db/app_setting/',
+    /**@type{CommonAppDataRecord[]} */
+    const settings_app = await props.methods.commonFFB({ path:'/server-db/app_data/',
                                                             query:`IAM_data_app_id=${props.data.app_id}&name=HIGHLIGHT_ROW`,
                                                             method:'GET', 
                                                             authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.commonWindowFromBase64(JSON.parse(result).rows[0].data)));

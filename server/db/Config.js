@@ -5,7 +5,7 @@
  *          server_db_object, server_db_db_name_config, server_server_error, 
  *          server_db_document_config_server,server_db_document_config_rest_api, server_db_document_config_iam_policy,
  *          server_db_config_server_service_iam,
- *          server_db_table_iam_user, server_db_table_app, server_db_table_app_module, server_db_table_app_parameter, server_db_table_app_secret,server_db_table_app_setting,
+ *          server_db_table_iam_user, server_db_table_app, server_db_table_app_module, server_db_table_app_parameter, server_db_table_app_secret,server_db_table_app_data,
  *          server_db_table_app_data_entity_resource, server_db_table_app_data_entity,server_db_table_app_data_resource_detail_data,
  *          server_db_table_app_data_resource_detail,server_db_table_app_data_resource_master,
  *          server_db_table_app_translation} from '../types.js'
@@ -75,7 +75,7 @@ const configDefault = async () => {
      *           [server_db_object, server_db_table_app_module[]],
      *           [server_db_object, server_db_table_app_parameter[]],
      *           [server_db_object, server_db_table_app_secret[]],
-     *           [server_db_object, server_db_table_app_setting[]],
+     *           [server_db_object, server_db_table_app_data[]],
      *           [server_db_object, server_db_table_app_translation[]],
      *           [server_db_object, server_db_object[]]
      *       ]}
@@ -126,7 +126,7 @@ const configDefault = async () => {
                                                                             row.common_app_access_secret = securitySecretCreate();
                                                                             row.common_app_access_verification_secret = securitySecretCreate();
                                                                         }))],
-                            ['APP_SETTING',                     await fs.promises.readFile(process.cwd() + '/server/install/default/app_setting.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APP_DATA',                     await fs.promises.readFile(process.cwd() + '/server/install/default/app_data.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + '/server/install/default/app_translation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
                             ['DB_OBJECTS',                      await fs.promises.readFile(process.cwd() + '/server/install/default/db_objects.json')
                                                                         .then(filebuffer=>

@@ -98,7 +98,7 @@
  */
 /** 
  * @description Type APP_place
- * @typedef {{id:string|null, app_id:number|null, app_setting_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} APP_place
+ * @typedef {{id:string|null, app_id:number|null, app_data_type_name:string, value:string, data2:string, data3:string, data4:string, data5:string, text:string}} APP_place
  */
 /** 
  * @description Type APP_GLOBAL

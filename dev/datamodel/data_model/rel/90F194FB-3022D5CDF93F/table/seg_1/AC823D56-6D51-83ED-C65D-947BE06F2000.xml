@@ -45,7 +45,7 @@
 <colAssociation fkAssociation="4D74F139-61B3-7846-E6AF-78663D27A8B9" referredColumn="59BE791E-642A-67DE-5C31-1B712A309CAD"/>
 </associations>
 </Column>
-<Column name="app_setting_id" id="8E47CA80-DF81-72AA-9AB1-DB1FAFC9AB1E">
+<Column name="app_data_id" id="8E47CA80-DF81-72AA-9AB1-DB1FAFC9AB1E">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>F785B39D-2397-9B2D-FBDF-72593C720D4A</generatorID>
@@ -116,7 +116,7 @@
 <colUsage columnID="D2916AE5-B684-0538-DA54-105DEA6FD7C9"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="E9FF2408-B6CD-FD0F-08AD-118460F070E4" name="app_data_entity_resource_app_setting_FK">
+<ind_PK_UK id="E9FF2408-B6CD-FD0F-08AD-118460F070E4" name="app_data_entity_resource_app_data_FK">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>12866CC8-F025-FF07-B024-CFC262B75849</generatorID>

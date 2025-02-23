@@ -51,7 +51,7 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="app_setting_id" id="F785B39D-2397-9B2D-FBDF-72593C720D4A">
+<Attribute name="app_data_id" id="F785B39D-2397-9B2D-FBDF-72593C720D4A">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 21:52:07 UTC</createdTime>
 <generatorID>12866CC8-F025-FF07-B024-CFC262B75849</generatorID>

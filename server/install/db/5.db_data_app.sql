@@ -12,15 +12,15 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (5000, <
 --
 -- app data entity resource
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5000, <APP_ID/>, 5000, 566,   '{ "description":"Accounts"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5001, <APP_ID/>, 5000, 562,   '{ "description":"Payment requests"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5002, <APP_ID/>, 5000, 563,   '{ "description":"Payment request metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5003, <APP_ID/>, 5000, 564,   '{ "description":"Customers"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5004, <APP_ID/>, 5000, 565,   '{ "description":"Merchants"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5005, <APP_ID/>, 5000, 567,   '{ "description":"Transactions"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5006, <APP_ID/>, 5000, 568,   '{ "description":"Transactions"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5007, <APP_ID/>, 5000, 572,   '{ "description":"Owners"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (5008, <APP_ID/>, 5000, 573,   '{ "description":"Currencies"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5000, <APP_ID/>, 5000, 566,   '{ "description":"Accounts"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5001, <APP_ID/>, 5000, 562,   '{ "description":"Payment requests"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5002, <APP_ID/>, 5000, 563,   '{ "description":"Payment request metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5003, <APP_ID/>, 5000, 564,   '{ "description":"Customers"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5004, <APP_ID/>, 5000, 565,   '{ "description":"Merchants"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5005, <APP_ID/>, 5000, 567,   '{ "description":"Transactions"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5006, <APP_ID/>, 5000, 568,   '{ "description":"Transactions"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5007, <APP_ID/>, 5000, 572,   '{ "description":"Owners"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (5008, <APP_ID/>, 5000, 573,   '{ "description":"Currencies"}');
 --
 -- app data resource master
 --

@@ -3,7 +3,7 @@
 /**
  * @import {server_server_response,
  *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_app_setting, server_db_sql_result_app_data_resource_detail_data_get} from '../types.js'
+ *          server_db_app_data, server_db_sql_result_app_data_resource_detail_data_get} from '../types.js'
  */
 
 /**@type{import('./dbSql.js')} */
@@ -34,17 +34,17 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_resource_detail_data_get[] }>}
  */
 const get = async parameters =>{
-  /**@type{import('./AppSetting.js')} */
-  const AppSetting = await import(`file://${process.cwd()}/server/db/AppSetting.js`);
-  /**@type{server_db_app_setting[]}*/
-  const app_setting = AppSetting.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
-  /**@type{server_db_app_setting[]}*/
-  const app_setting_master = AppSetting.getServer({  app_id:parameters.app_id, 
+  /**@type{import('./AppData.js')} */
+  const AppData = await import(`file://${process.cwd()}/server/db/AppData.js`);
+  /**@type{server_db_app_data[]}*/
+  const app_data = AppData.getServer({ app_id:parameters.app_id, resource_id:null, data:{value:parameters.data?.resource_name??''}}).result;
+  /**@type{server_db_app_data[]}*/
+  const app_data_master = AppData.getServer({  app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{name:parameters.data?.resource_name_master_attribute_type??'', 
                                                               value:parameters.data?.resource_name_master_attribute??''}}).result;
-  /**@type{server_db_app_setting[]}*/
-  const app_setting_master_attribute = AppSetting.getServer({  app_id:parameters.app_id, 
+  /**@type{server_db_app_data[]}*/
+  const app_data_master_attribute = AppData.getServer({  app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{name:parameters.data?.resource_name_data_master_attribute_type??'', 
                                                               value:parameters.data?.resource_name_data_master_attribute??''}}).result;
@@ -62,32 +62,32 @@ const get = async parameters =>{
                     .then(result=>result.http?result:
                       {result:result.result
                         .filter((/**@type{server_db_sql_result_app_data_resource_detail_data_get}*/row)=>
-                          row.app_setting_id == app_setting.filter(row_app_setting=> 
-                                                  row_app_setting.app_id == row.app_data_detail_app_data_entity_resource_app_data_entity_app_id )[0]?.id &&
-                          row.app_data_resource_master_app_setting_id == (app_setting_master.filter(row_app_setting=> 
-                                                    row_app_setting.app_id == row.app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_app_id )[0]?.id ??null) &&
-                          row.as_attribute_master_app_setting_id == (app_setting_master_attribute.filter(row_app_setting=> 
-                                                                      row_app_setting.app_id == row.app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_app_id )[0]?.id ??null)
+                          row.app_data_id == app_data.filter(row_app_data=> 
+                                                  row_app_data.app_id == row.app_data_detail_app_data_entity_resource_app_data_entity_app_id )[0]?.id &&
+                          row.app_data_resource_master_app_data_id == (app_data_master.filter(row_app_data=> 
+                                                    row_app_data.app_id == row.app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_app_id )[0]?.id ??null) &&
+                          row.as_attribute_master_app_data_id == (app_data_master_attribute.filter(row_app_data=> 
+                                                                      row_app_data.app_id == row.app_data_resource_master_attribute_app_data_entity_resource_app_data_entity_app_id )[0]?.id ??null)
                         )
                         .map((/**@type{server_db_sql_result_app_data_resource_detail_data_get}*/row)=>{
                             //update entity resource app setting
                             /**@ts-ignore */
-                            row.app_setting_name =                                app_setting.filter(row_app_setting=>row_app_setting.id == row.app_setting_id)[0].name;
-                            row.app_setting_value =                               app_setting.filter(row_app_setting=>row_app_setting.id == row.app_setting_id)[0].value;
-                            row.app_setting_display_data =                        app_setting.filter(row_app_setting=>row_app_setting.id == row.app_setting_id)[0].display_data;
+                            row.app_data_name =                                app_data.filter(row_app_data=>row_app_data.id == row.app_data_id)[0].name;
+                            row.app_data_value =                               app_data.filter(row_app_data=>row_app_data.id == row.app_data_id)[0].value;
+                            row.app_data_display_data =                        app_data.filter(row_app_data=>row_app_data.id == row.app_data_id)[0].display_data;
                             //update master entity resource app setting 
-                            if (row.app_data_resource_master_app_setting_id){
+                            if (row.app_data_resource_master_app_data_id){
                               /**@ts-ignore */
-                              row.app_data_resource_master_app_setting_name =     app_setting_master.filter(row_app_setting=>row_app_setting.id == row.app_data_resource_master_app_setting_id)[0].name;
-                              row.app_data_resource_master_app_setting_value =    app_setting_master.filter(row_app_setting=>row_app_setting.id == row.app_data_resource_master_app_setting_id)[0].value;
-                              row.app_setting_attribute_display_data =            app_setting_master.filter(row_app_setting=>row_app_setting.id == row.app_data_resource_master_app_setting_id)[0].display_data;
+                              row.app_data_resource_master_app_data_name =     app_data_master.filter(row_app_data=>row_app_data.id == row.app_data_resource_master_app_data_id)[0].name;
+                              row.app_data_resource_master_app_data_value =    app_data_master.filter(row_app_data=>row_app_data.id == row.app_data_resource_master_app_data_id)[0].value;
+                              row.app_data_attribute_display_data =            app_data_master.filter(row_app_data=>row_app_data.id == row.app_data_resource_master_app_data_id)[0].display_data;
                             }
                             //update optional attribute master entity resource app setting 
-                            if  (row.as_attribute_master_app_setting_id){
+                            if  (row.as_attribute_master_app_data_id){
                               /**@ts-ignore */
-                              row.as_attribute_master_app_setting_name =          app_setting_master_attribute.filter(row_app_setting=>row_app_setting.id == row.as_attribute_master_app_setting_id)[0].name;
-                              row.as_attribute_master_app_setting_value =         app_setting_master_attribute.filter(row_app_setting=>row_app_setting.id == row.as_attribute_master_app_setting_id)[0].value;
-                              row.as_attribute_master_app_setting_display_data =  app_setting_master_attribute.filter(row_app_setting=>row_app_setting.id == row.as_attribute_master_app_setting_id)[0].display_data;
+                              row.as_attribute_master_app_data_name =          app_data_master_attribute.filter(row_app_data=>row_app_data.id == row.as_attribute_master_app_data_id)[0].name;
+                              row.as_attribute_master_app_data_value =         app_data_master_attribute.filter(row_app_data=>row_app_data.id == row.as_attribute_master_app_data_id)[0].value;
+                              row.as_attribute_master_app_data_display_data =  app_data_master_attribute.filter(row_app_data=>row_app_data.id == row.as_attribute_master_app_data_id)[0].display_data;
                             }
                             return row;
                         }),
