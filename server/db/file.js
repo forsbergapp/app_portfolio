@@ -369,7 +369,7 @@ const fileFsAccessMkdir = async paths => {
  *              Should only be used by admin since no transaction is used
  * @function
  * @param {server_db_object} file 
- * @param {server_db_config_files} file_content 
+ * @param {{}} file_content 
  * @returns {Promise.<void>}
  */
 const fileFsWriteAdmin = async (file, file_content) =>{
