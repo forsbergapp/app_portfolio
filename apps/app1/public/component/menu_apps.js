@@ -19,18 +19,23 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 <div id='menu_apps_title' class='common_icon'></div>
                                 <div id='menu_apps' class='common_list_scrollbar'>
                                     <div id='menu_apps_row_title' class='menu_apps_row'>
-                                        <div id='menu_apps_col_title1' data-column='id' class='menu_apps_col list_title'>ID</div>
-                                        <div id='menu_apps_col_title2' data-column='name' class='menu_apps_col list_title'>NAME</div>
-                                        <div id='menu_apps_col_title3' data-column='subdomain' class='menu_apps_col list_title'>subdomain</div>
-                                        <div id='menu_apps_col_title4' data-column='path' class='menu_apps_col list_title'>PATH</div>
-                                        <div id='menu_apps_col_title4' data-column='logo' class='menu_apps_col list_title'>LOGO</div>
-                                        <div id='menu_apps_col_title4' data-column='showparam' class='menu_apps_col list_title'>SHOWPARAM</div>
-                                        <div id='menu_apps_col_title4' data-column='manifest' class='menu_apps_col list_title'>MANIFEST</div>
-                                        <div id='menu_apps_col_title4' data-column='js' class='menu_apps_col list_title'>JS</div>
-                                        <div id='menu_apps_col_title4' data-column='css' class='menu_apps_col list_title'>CSS</div>
-                                        <div id='menu_apps_col_title4' data-column='css_reprot' class='menu_apps_col list_title'>CSS_REPORT</div>
-                                        <div id='menu_apps_col_title4' data-column='favicon_32x32' class='menu_apps_col list_title'>FAVICON_32x32</div>
-                                        <div id='menu_apps_col_title4' data-column='favicon_192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
+                                        <div data-column='id' class='menu_apps_col list_title'>ID</div>
+                                        <div data-column='name' class='menu_apps_col list_title'>NAME</div>
+                                        <div data-column='subdomain' class='menu_apps_col list_title'>SUBDOMAIN</div>
+                                        <div data-column='path' class='menu_apps_col list_title'>PATH</div>
+                                        <div data-column='logo' class='menu_apps_col list_title'>LOGO</div>
+                                        <div data-column='showparam' class='menu_apps_col list_title'>SHOWPARAM</div>
+                                        <div data-column='manifest' class='menu_apps_col list_title'>MANIFEST</div>
+                                        <div data-column='js' class='menu_apps_col list_title'>JS</div>
+                                        <div data-column='css' class='menu_apps_col list_title'>CSS</div>
+                                        <div data-column='css_reprot' class='menu_apps_col list_title'>CSS_REPORT</div>
+                                        <div data-column='favicon_32x32' class='menu_apps_col list_title'>FAVICON_32x32</div>
+                                        <div data-column='favicon_192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
+                                        <div data-column='text_edit' class='menu_apps_col list_title'>TEXT_EDIT</div>
+                                        <div data-column='copyright' class='menu_apps_col list_title'>COPYRIGHT</div>
+                                        <div data-column='email' class='menu_apps_col list_title'>EMAIL</div>
+                                        <div data-column='link_title' class='menu_apps_col list_title'>LINK_TITLE</div>
+                                        <div data-column='link_url' class='menu_apps_col list_title'>LINK_URL</div>
                                         <div id='menu_apps_col_title5' data-column='status' class='menu_apps_col list_title'>STATUS</div>
                                     </div>
                                     ${props.apps.map(app=>
@@ -47,6 +52,11 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                             <div class='menu_apps_col common_input list_edit' data-column='css_report' contentEditable='true' >${app.css_report}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='favicon_32x32' contentEditable='true' >${app.favicon_32x32}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='favicon_192x192' contentEditable='true' >${app.favicon_192x192}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='text_edit' contentEditable='true' >${app.text_edit}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='copyright' contentEditable='true' >${app.copyright}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='email' contentEditable='true' >${app.email}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='link_title' contentEditable='true' >${app.link_title}</div>
+                                            <div class='menu_apps_col common_input list_edit' data-column='link_url' contentEditable='true' >${app.link_url}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='status' contentEditable='true' >${app.status}</div>
                                         </div>`
                                     ).join('')}

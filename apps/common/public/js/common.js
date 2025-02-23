@@ -3355,11 +3355,11 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.common_image_avatar_width.value);
     COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.common_image_avatar_height.value);
     
-    COMMON_GLOBAL.app_email = app_parameters.app_email.value;
-    COMMON_GLOBAL.app_copyright = app_parameters.app_copyright.value;
-    COMMON_GLOBAL.app_link_url = app_parameters.app_link_url.value;
-    COMMON_GLOBAL.app_link_title = app_parameters.app_link_title.value;
-    COMMON_GLOBAL.app_text_edit = app_parameters.app_text_edit.value;
+    COMMON_GLOBAL.app_email = app_parameters.app_email;
+    COMMON_GLOBAL.app_copyright = app_parameters.app_copyright;
+    COMMON_GLOBAL.app_link_url = app_parameters.app_link_url;
+    COMMON_GLOBAL.app_link_title = app_parameters.app_link_title;
+    COMMON_GLOBAL.app_text_edit = app_parameters.app_text_edit;
 };
 /**
  * @name commonFrameworkMount

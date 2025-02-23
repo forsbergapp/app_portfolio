@@ -436,6 +436,11 @@ const appSecureCommonButtonSave = async (item) => {
                                                         css_report:     record.querySelector('[data-column=\'css_report\']').textContent,
                                                         favicon_32x32:  record.querySelector('[data-column=\'favicon_32x32\']').textContent,
                                                         favicon_192x192:record.querySelector('[data-column=\'favicon_192x192\']').textContent,
+                                                        text_edit:      record.querySelector('[data-column=\'text_edit\']').textContent,
+                                                        copyright:      record.querySelector('[data-column=\'copyright\']').textContent,
+                                                        email:          record.querySelector('[data-column=\'email\']').textContent,
+                                                        link_title:     record.querySelector('[data-column=\'link_title\']').textContent,
+                                                        link_url:       record.querySelector('[data-column=\'link_url\']').textContent,
                                                         status:         record.querySelector('[data-column=\'status\']').textContent
                                                     });
             }

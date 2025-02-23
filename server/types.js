@@ -229,6 +229,11 @@
  *              css_report: string,
  *              favicon_32x32:string,
  *              favicon_192x192:string,
+ *              text_edit:string,
+ *              copyright:string,
+ *              email:string,
+ *              link_title:string,
+ *              link_url:string,
  *              status:'ONLINE'|'OFFLINE'}} server_db_table_app
  */
 /**
@@ -326,11 +331,6 @@
  *              apps should use their own types if adding new parameters
  * @memberof dbObjects
  * @typedef {{  app_id:                             number,
- *              app_text_edit:                      {value:string, comment:string},
- *              app_copyright:                      {value:string, comment:string},
- *              app_email:                          {value:string, comment:string},
- *              app_link_title:                     {value:string, comment:string},
- *              app_link_url:                       {value:string, comment:string},
  *              common_app_id:                      {value:string, comment:string},
  *              common_info_link_policy_name:       {value:string},
  *              common_info_link_policy_url:        {value:string},
@@ -1093,11 +1093,6 @@
  * @description DB server_db_app_parameter_common
  *              apps should use their own types if adding new parameters
  * @typedef {{ app_id?:                             number,
- *             app_text_edit?:                      {value:string, comment:string},
- *             app_copyright?:                      {value:string, comment:string},
- *             app_email?:                          {value:string, comment:string},
- *             app_link_title?:                     {value:string, comment:string},
- *             app_link_url?:                       {value:string, comment:string},
  *             common_info_link_policy_name:        {value:string},
  *             common_info_link_policy_url:         {value:string},
  *             common_info_link_disclaimer_name:    {value:string},

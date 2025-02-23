@@ -303,21 +303,26 @@
  *              css_report: string,
  *              favicon_32x32:string,
  *              favicon_192x192:string,
+ *              text_edit:string,
+ *              copyright:string,
+ *              email:string,
+ *              link_title:string,
+ *              link_url:string,
+ *              status:'ONLINE'|'OFFLINE',
  *              app_name_translation:string,
  *              protocol:string,
  *              host:string,
- *              port:string,
- *              status:'ONLINE'|'OFFLINE'}} CommonAppRecord
+ *              port:string}} CommonAppRecord
  */
 /**
  * @description Type commonInitAppParameters
  * @typedef {{  APP:    {
  *                      app_id:                             number,
- *                      app_text_edit:                      {value:string, comment:string},
- *                      app_copyright:                      {value:string, comment:string},
- *                      app_email:                          {value:string, comment:string},
- *                      app_link_title:                     {value:string, comment:string},
- *                      app_link_url:                       {value:string, comment:string}
+ *                      app_text_edit:                      string,
+ *                      app_copyright:                      string,
+ *                      app_email:                          string,
+ *                      app_link_title:                     string,
+ *                      app_link_url:                       string
  *                      },
  *              COMMON: {
  *                      app_id?:                             number,

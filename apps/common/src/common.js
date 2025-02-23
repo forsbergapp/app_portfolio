@@ -965,19 +965,22 @@ const commonComponentCreate = async parameters =>{
             };
             /**@type{server_db_app_parameter_common} */
             const common_parameter = AppParameter.get({app_id:parameters.app_id, resource_id:common_app_id}).result[0];
-            //return only used parameters
-            delete common_parameter.app_copyright;
-            delete common_parameter.app_email;
-            delete common_parameter.app_id;
-            delete common_parameter.app_link_title;
-            delete common_parameter.app_link_url;
-            delete common_parameter.app_text_edit;
 
-            const APP_PARAMETERS  = {   APP:        AppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0], 
+            /**@type{server_db_table_app} */
+            const app = App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0];
+            const APP_PARAMETERS  = {   APP:        {...AppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result?.[0]??{},
+                                                     ...{
+                                                        app_text_edit:  app.text_edit,
+                                                        app_copyright:  app.copyright,
+                                                        app_email:      app.email,
+                                                        app_link_title: app.link_title,
+                                                        app_link_url:   app.link_url
+                                                        }
+                                                     }, 
                                         COMMON:     common_parameter,
                                         INFO:       app_service_parameters};
             const componentParameter = {data:   {
-                                                    APP:            App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0],
+                                                    APP:            app,
                                                     APP_PARAMETERS: Buffer.from(JSON.stringify(APP_PARAMETERS)).toString('base64')
                                                 },
                                         methods:null};

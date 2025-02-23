@@ -14,16 +14,6 @@
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_text_edit" id="1315F4FE-D6F8-2DCD-69C7-1894A8D4A3B6">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 16:23:42 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_copyright" id="1F8901AA-1849-9096-8254-DFA5AAC025C4">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 16:23:42 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="common_image_file_mime_type" id="44DCFFC1-B358-B65C-854F-33E6A249C779">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
@@ -39,17 +29,7 @@
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_link_url" id="5D723B32-7AE3-6B35-B920-E9F3152FD09D">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 16:23:42 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="common_image_file_allowed_type2" id="5F882EE4-AE91-CF9F-1DC3-AA51BADFB7D2">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 16:23:42 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="common_app_id" id="5FF99ED4-2FDA-473E-83ED-5B4AE3533CD5">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
@@ -79,22 +59,12 @@
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="app_link_title" id="9A66EEFF-AF13-202F-89BC-786AE680AC6B">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 16:23:42 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
 <ColumnProxy name="common_link_disclaimer_url" id="B33DB938-A1E1-70E6-F3F0-9C3C49B96426">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
 <ColumnProxy name="common_image_file_allowed_type3" id="B646201A-DF0E-ED8F-EAA2-FFB7FB9E03DF">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-23 16:23:42 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
-</ColumnProxy>
-<ColumnProxy name="app_email" id="C4C4559D-41CA-0713-06CE-0AA4D45A8ED3">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-23 16:23:42 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
