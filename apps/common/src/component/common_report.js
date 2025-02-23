@@ -6,7 +6,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{config:import('../../../../server/types.js').server_db_app, 
+ * @param {{config:import('../../../../server/types.js').server_db_table_app, 
  *          papersize:'A4'|'Letter',
  *          function_report:function,
  *          data:*
@@ -203,7 +203,7 @@ const template = async props =>`  <!DOCTYPE html>
  * @description Component
  * @function
  * @param {{data:       {
- *                      CONFIG_APP:import('../../../../server/types.js').server_db_app, 
+ *                      CONFIG_APP:import('../../../../server/types.js').server_db_table_app, 
  *                      data:import('../../../../server/types.js').server_apps_report_create_parameters,
  *                      papersize:'A4'|'Letter'
  *                      },

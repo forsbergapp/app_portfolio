@@ -71,80 +71,10 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="common_app_start" id="B7CFF0E1-67E7-1A10-C9A6-5D82CBB5E56A">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>960556A4-556C-9EB9-5333-D926036DA8B5</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="common_app_id" id="5FF99ED4-2FDA-473E-83ED-5B4AE3533CD5">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>9833B059-379B-A368-EB77-3181A9CA236A</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_cache_control" id="2F92770F-6618-B1B7-8AC4-5D99017B6292">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>41D01B77-BF89-E3BF-A26A-246719D4EDA8</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_cache_control_font" id="3B60CD92-A261-B750-88AC-62F9E9708944">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>EE4D1864-914D-A510-4AF6-38FD0C4B16A6</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_framework" id="E48B6103-7762-FF44-D3A6-CB657EA91513">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>8EA15848-92DF-0EC5-4AF4-AA46BE15A9BE</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_framework_messages" id="3C4A8A51-EC37-5FBA-0BAE-949FC74A9332">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>A5D33894-5217-1404-2C05-AF6B215266BE</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_rest_api_version" id="4DAFA3D8-F02E-ED10-DDDB-ED3FD46C415C">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>B6F749EF-6A8F-0B0A-58E0-9E4945403303</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_limit_records" id="BABF62BC-B4A9-FA0C-50BE-AC769190AD53">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>B0629A0F-11F5-474B-E011-95EC13B5D53F</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -275,16 +205,6 @@
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>A26D34CC-2F02-B4FC-311D-AA3D4C0D9B1D</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_image_file_max_size" id="E40B7FC2-39E6-45B4-9FFC-5F8BAD3C4368">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>C3A8A2CE-D293-731C-4374-1000BDC12B3A</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
