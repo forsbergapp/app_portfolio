@@ -842,7 +842,7 @@
  *            CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
  *            CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
  *            CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
- *            CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} server_db_config_server_service_microservice
+ *            CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}} server_db_config_server_service_microservice
  */
 
 /**
@@ -939,22 +939,6 @@
  * @typedef {'application/json'} server_db_config_rest_api_content
  */
 
-
-/**
- * @description DB server_db_config_files
- * @typedef {   server_db_document_config_server|
- *              server_db_document_config_rest_api|
- *              server_db_document_config_iam_policy|
- *              import('../microservice/types.js').server_db_document_config_microservice_services|
- *              server_db_table_iam_user[]|
- *              server_db_table_app[]|
- *              server_db_table_app_module[]|
- *              server_db_table_app_parameter[]|
- *              server_db_table_app_secret[]|
- *              server_db_table_app_setting[]|
- *              server_db_table_app_translation[]|
- *              server_db_object[]} server_db_config_files
- */
 
 /**
  * @description DB server_db_iam_control_observe_type

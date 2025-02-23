@@ -1,0 +1,11 @@
+[
+    {"id":1, "app_id":5,    "created":"2025-01-01T00:00:00.000Z", "modified":null, "json_data":{"description":"Entity info: Common", "name":"COMMON"}},
+    {"id":5000, "app_id":5, "created":"2025-01-01T00:00:00.000Z", "modified":null, "json_data":{"description":"Entity info: Swedish bank using SEPA, IBAN, VPA",
+                                                                                                "name":"App Bank", 
+                                                                                                "country_code":"SE", 
+                                                                                                "bank_id":1234, 
+                                                                                                "bban_length":16, 
+                                                                                                "bank_type":"SEPA", 
+                                                                                                "entity_type":"BANK"}},
+    {"id":6000, "app_id":6, "created":"2025-01-01T00:00:00.000Z", "modified":null, "json_data":{"description":"Entity info: Shop", "name":"SHOP", "entity_type":"SHOP", "store_type":"INTERNET"}}
+]
