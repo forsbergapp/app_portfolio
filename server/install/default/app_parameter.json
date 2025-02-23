@@ -18,37 +18,8 @@
         "common_image_avatar_height":       {"value":"64",                      "comment": "Convert uploaded image to height"},
         "common_image_avatar_width":        {"value":"64",                      "comment": "Convert uploaded image to width"}
     },
-    {   
-        "app_id": 1, 
-        "app_text_edit":    {"value":"1", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
-    },
-    {
-        "app_id": 2, 
-        "app_text_edit":    {"value":"1", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
-    },
-    {
-        "app_id": 3, 
-        "app_text_edit":    {"value":"1", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
-    },
     {
         "app_id": 4,
-        "app_text_edit":                                    {"value": "1", "comment":""},
-        "app_copyright":                                    {"value": "©", "comment":""},
-        "app_email":                                        {"value": "", "comment":""},
-        "app_link_title":                                   {"value": "", "comment":""},
-        "app_link_url":                                     {"value": "", "comment":""},
         "app_default_startup_page":                         {"value": "3",                                              "comment":"1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile"},
         "app_report_timetable":                             {"value": "TIMETABLE",                                      "comment":""},
         "app_regional_default_arabic_script":               {"value": "font_arabic_sans",                               "comment":"Font class, default Arabic script:Sans"},
@@ -111,37 +82,5 @@
         "app_prayer_default_show_midnight":                 {"value":false,                                             "comment":"Column midnight, default false"},
         "app_prayer_default_show_sunset":                   {"value":false,                                             "comment":"Column sunset, default false"},
         "app_prayer_default_timeformat":                    {"value":"12hNS",                                           "comment":"Timeformat: 12h with no suffix"}
-    },
-    {
-        "app_id": 5, 
-        "app_text_edit":    {"value":"0", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
-    },
-    {
-        "app_id": 6, 
-        "app_text_edit":    {"value":"0", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
-    },
-    {
-        "app_id": 7, 
-        "app_text_edit":    {"value":"1", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
-    },
-    {
-        "app_id": 8, 
-        "app_text_edit":    {"value":"1", "comment":""},
-        "app_copyright":    {"value":"©", "comment":""},
-        "app_email":        {"value":"",  "comment":""},
-        "app_link_title":   {"value":"",  "comment":""},
-        "app_link_url":     {"value":"",  "comment":""}
     }
 ]

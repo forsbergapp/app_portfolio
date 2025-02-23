@@ -15,146 +15,15 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="app_text_edit" id="145A3440-64D8-9C3D-A802-DDA14AB2D70E">
+<Attribute name="app_id" id="1C68FBDE-B3E3-3B82-3B8C-FE65401E6433">
 <createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:10:42 UTC</createdTime>
+<createdTime>2024-11-11 23:08:40 UTC</createdTime>
+<generatorID>487DF2E6-1762-A738-5C37-9018DBEE4688</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_copyright" id="42A6D4A5-C895-1C9B-56C9-A9FA044AFDDD">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:10:47 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_email" id="6076E131-6EEA-BC40-6186-88D3F6B2A79A">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:10:53 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_link_title" id="88349FAB-C07F-CC9E-7860-C41C77E9FD9F">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:00 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_link_url" id="96D88DB3-2A5B-F415-BB91-E90B99F9D618">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:21 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_start" id="960556A4-556C-9EB9-5333-D926036DA8B5">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:30 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_id" id="9833B059-379B-A368-EB77-3181A9CA236A">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:37 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_cache_control" id="41D01B77-BF89-E3BF-A26A-246719D4EDA8">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:42 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_cache_control_font" id="EE4D1864-914D-A510-4AF6-38FD0C4B16A6">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:54 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_framework" id="8EA15848-92DF-0EC5-4AF4-AA46BE15A9BE">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:11:59 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_framework_messages" id="A5D33894-5217-1404-2C05-AF6B215266BE">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:12:07 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_rest_api_version" id="B6F749EF-6A8F-0B0A-58E0-9E4945403303">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:12:14 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="common_app_limit_records" id="B0629A0F-11F5-474B-E011-95EC13B5D53F">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 09:12:26 UTC</createdTime>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<nullsAllowed>true</nullsAllowed>
+<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
@@ -342,18 +211,6 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="app_id" id="1C68FBDE-B3E3-3B82-3B8C-FE65401E6433">
-<createdBy>admin</createdBy>
-<createdTime>2024-11-11 23:08:40 UTC</createdTime>
-<generatorID>487DF2E6-1762-A738-5C37-9018DBEE4688</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<engineerTo>
-<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
-</engineerTo>
-<referedAttribute>6167BC5A-D111-0F2F-8C76-4E52DCFF9C33</referedAttribute>
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>

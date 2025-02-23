@@ -3773,6 +3773,21 @@
                                             "favicon_192x192":{
                                                 "type":"string"
                                             },
+                                            "text_edit":{
+                                                "type":"string"
+                                            },
+                                            "copyright":{
+                                                "type":"string"
+                                            },
+                                            "email":{
+                                                "type":"string"
+                                            },
+                                            "link_title":{
+                                                "type":"string"
+                                            },
+                                            "link_url":{
+                                                "type":"string"
+                                            },
                                             "status":{
                                                 "type":"string"
                                             }

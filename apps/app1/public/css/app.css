@@ -568,6 +568,10 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	margin-bottom: 10px;
 	border-radius: var(--common_app_css_border_radius);
 }
+.menu_apps_row{
+	display: grid;
+	grid-template-columns:  3em 15em 10em 15em 15em 8em 15em 15em 15em 15em 16em 16em 7em 7em 15em 15em 15em 6em !important
+}
 .menu_apps_row, .menu_apps_detail_row{
 	height: auto;
 }
@@ -620,45 +624,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display:inline-block;
 	width:250px;
 }
-.menu_apps_col[data-column='id']{
-	width:25px;
-}
-.menu_apps_col[data-column='name']{
-	width:120px;
-}
-.menu_apps_col[data-column='subdomain']{
-	width:100px;
-}
-.menu_apps_col[data-column='path']{
-	width:120px;
-}
-.menu_apps_col[data-column='logo']{
-	width: 120px;
-}
-.menu_apps_col[data-column='showparam']{
-	width:70px;
-}
-.menu_apps_col[data-column='manifest']{
-	width:150px;
-}
-.menu_apps_col[data-column='js']{
-	width:100px;
-}
-.menu_apps_col[data-column='css']{
-	width:100px;
-}
-.menu_apps_col[data-column='css_report']{
-	width:100px;
-}
-.menu_apps_col[data-column='favicon_32x32']{
-	width:150px;
-}
-.menu_apps_col[data-column='favicon_192x192']{
-	width:150px;
-}
-.menu_apps_col[data-column='status']{
-	width:70px;
-}
+
 /*MENU MONITOR*/
 #menu_monitor_content_widget1{
 	height:calc(63% - 10px);
