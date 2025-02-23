@@ -96,7 +96,7 @@ const component = async props => {
             //lov for current app id
             method = 'GET';
             lov_column = 'display_data';
-            path = '/server-db/app_setting/';
+            path = '/server-db/app_data/';
             query= `name=${props.data.lov}&IAM_data_app_id=${props.data.app_id}`;
             token_type = 'APP_ID';
         }

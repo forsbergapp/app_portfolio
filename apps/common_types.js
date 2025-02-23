@@ -22,7 +22,7 @@
  *  CommonAppRecord
  *  commonInitAppParameters
  *  CommonAppParametersRecord
- *  CommonAppSettingRecord
+ *  CommonAppDataRecord
  *  CommonAppModulesRecord
  *  CommonAppModuleMetadata
  *  CommonAppModuleWithMetadata
@@ -397,7 +397,7 @@
 *              common_image_avatar_width:          {value:string, comment: string}}} CommonAppParametersRecord
 */
 /**
- * @description Type CommonAppSettingRecord
+ * @description Type CommonAppDataRecord
  * @typedef {{  id:number,
  *              app_id: number,
  *              name: string,
@@ -406,7 +406,7 @@
  *              data2:string|number|null,
  *              data3:string|number|null,
  *              data4:string|number|null,
- *              data5:string|number|null}} CommonAppSettingRecord
+ *              data5:string|number|null}} CommonAppDataRecord
  */
 
 /**

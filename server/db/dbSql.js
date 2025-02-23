@@ -20,10 +20,10 @@ const APP_DATA_ENTITY_RESOURCE_SELECT =
             ader.json_data 									"json_data",
             ader.app_data_entity_app_id 					"app_data_entity_app_id",
             ader.app_data_entity_id 						"app_data_entity_id",
-            ader.app_setting_id                             "app_setting_id",
-            null   	                                        "app_setting_name",
-            null                                    	    "app_setting_value",
-            null                             	            "app_setting_display_data"
+            ader.app_data_id                             "app_data_id",
+            null   	                                        "app_data_name",
+            null                                    	    "app_data_value",
+            null                             	            "app_data_display_data"
        FROM <DB_SCHEMA/>.app_data_entity_resource 	ader
       WHERE (ader.id						= :resource_id OR :resource_id IS NULL)
         AND (ader.app_data_entity_app_id	= :data_app_id OR :data_app_id IS NULL)
@@ -42,10 +42,10 @@ const APP_DATA_RESOURCE_DETAIL_DATA_SELECT =
             adrdd.date_modified                                             "date_modified",
             adrdd.app_data_resource_detail_id                               "app_data_resource_detail_id",
             adrdd.app_data_resource_master_attribute_id                     "app_data_resource_master_attribute_id",
-            ader_attribute_master.app_setting_id                            "as_attribute_master_app_setting_id",
-            null		                                                    "as_attribute_master_app_setting_name",
-            null										                    "as_attribute_master_app_setting_value",
-            null										                    "as_attribute_master_app_setting_display_data",
+            ader_attribute_master.app_data_id                            "as_attribute_master_app_data_id",
+            null		                                                    "as_attribute_master_app_data_name",
+            null										                    "as_attribute_master_app_data_value",
+            null										                    "as_attribute_master_app_data_display_data",
             adrm_attribute_master.json_data									 "adrm_attribute_master_json_data",
             adrd.app_data_resource_master_id                                "app_data_detail_app_data_resource_master_id",
             adrd.app_data_entity_resource_id                                "app_data_detail_app_data_entity_resource_id",
@@ -62,14 +62,14 @@ const APP_DATA_RESOURCE_DETAIL_DATA_SELECT =
             adrm_attribute.app_data_entity_resource_id                      "app_data_resource_master_attribute_app_data_entity_resource_id",
             adrm_attribute.user_account_app_user_account_id                 "app_data_resource_master_attribute_user_account_app_user_account_id",
             adrm_attribute.user_account_app_app_id                          "app_data_resource_master_attribute_user_account_app_app_id",
-            ader_attribute.app_setting_id                                   "app_data_resource_master_app_setting_id",
-            null                                                            "app_data_resource_master_app_setting_name",
-            null                                                            "app_data_resource_master_app_setting_value",
-            null                                                            "app_setting_attribute_display_data",
-            ader.app_setting_id                                             "app_setting_id",
-            null                                                            "app_setting_name",
-            null                                                            "app_setting_value",
-            null                                                            "app_setting_display_data"
+            ader_attribute.app_data_id                                   "app_data_resource_master_app_data_id",
+            null                                                            "app_data_resource_master_app_data_name",
+            null                                                            "app_data_resource_master_app_data_value",
+            null                                                            "app_data_attribute_display_data",
+            ader.app_data_id                                             "app_data_id",
+            null                                                            "app_data_name",
+            null                                                            "app_data_value",
+            null                                                            "app_data_display_data"
     FROM <DB_SCHEMA/>.app_data_resource_detail_data  adrdd
             LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute_master
                 ON adrm_attribute_master.id	= adrdd.app_data_resource_master_attribute_id
@@ -161,14 +161,14 @@ const APP_DATA_RESOURCE_DETAIL_SELECT =
             adrm_attribute.app_data_entity_resource_id                      "app_data_resource_master_attribute_app_data_entity_resource_id",
             adrm_attribute.user_account_app_user_account_id                 "app_data_resource_master_attribute_user_account_app_user_account_id",
             adrm_attribute.user_account_app_app_id                          "app_data_resource_master_attribute_user_account_app_app_id",
-            ader_attribute.app_setting_id                                   "app_data_resource_master_app_setting_id",
-            null                                                            "app_data_resource_master_app_setting_name",
-            null                                                            "app_data_resource_master_app_setting_value",
-            null                                                            "app_setting_attribute_display_data",
-            ader.app_setting_id                                             "app_setting_id",
-            null                                                            "app_setting_name",
-            null                                                            "app_setting_value",
-            null                                                            "app_setting_display_data"
+            ader_attribute.app_data_id                                   "app_data_resource_master_app_data_id",
+            null                                                            "app_data_resource_master_app_data_name",
+            null                                                            "app_data_resource_master_app_data_value",
+            null                                                            "app_data_attribute_display_data",
+            ader.app_data_id                                             "app_data_id",
+            null                                                            "app_data_name",
+            null                                                            "app_data_value",
+            null                                                            "app_data_display_data"
        FROM <DB_SCHEMA/>.app_data_resource_master adrm,
             <DB_SCHEMA/>.app_data_resource_detail adrd
                 LEFT OUTER JOIN <DB_SCHEMA/>.app_data_resource_master   adrm_attribute
@@ -246,10 +246,10 @@ const APP_DATA_RESOURCE_MASTER_SELECT =
             adrm.app_data_entity_resource_id                        "app_data_entity_resource_id",
 
             ader.json_data                                          "app_data_entity_resource_json_data",
-            ader.app_setting_id                                     "app_setting_id",
-            null                                                    "app_setting_name",
-            null                                                    "app_setting_value",
-            null                                                    "app_setting_display_data"
+            ader.app_data_id                                     "app_data_id",
+            null                                                    "app_data_name",
+            null                                                    "app_data_value",
+            null                                                    "app_data_display_data"
        FROM <DB_SCHEMA/>.app_data_resource_master adrm,
             <DB_SCHEMA/>.app_data_entity_resource ader
       WHERE ader.id                                                   = adrm.app_data_entity_resource_id

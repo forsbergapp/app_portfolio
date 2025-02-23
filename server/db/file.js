@@ -625,19 +625,16 @@ const fileDBUpdate = async (app_id, table, resource_id, data_app_id, data) =>{
 const fileDBDelete = async (app_id, table, resource_id, data_app_id) =>{
     /**@type{server_db_result_fileFsRead} */
     const file = await fileFsRead(table, true);
-    if (file.file_content.filter((/**@type{*}*/row)=>(row.id==resource_id && resource_id!=null)|| (row.app_id == data_app_id && data_app_id != null)).length>0){
+    if (file.file_content.filter((/**@type{*}*/row)=>(data_app_id==null && row.id==resource_id && resource_id!=null)|| (resource_id==null && row.app_id == data_app_id && data_app_id != null)).length>0){
         await fileFsWrite(  table, 
                             file.transaction_id, 
-                            file.file_content
                             //filter unique id
-                            .filter((/**@type{*}*/row)=>row.id!=resource_id))
+                            file.file_content
+                            .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id)))
                 .catch((/**@type{server_server_error}*/error)=>{throw error;});
-        //should return 1 record deleted or wrong data is saved in file
-        return {affectedRows:   file.file_content
-                                .filter((/**@type{*}*/row)=>row.id==resource_id && row.app_id == (data_app_id ?? row.app_id)).length -
+        return {affectedRows:   file.file_content.length -
                                 file.file_content
-                                //filter unique id
-                                .filter((/**@type{*}*/row)=>row.id!=resource_id).length
+                                .filter((/**@type{*}*/row)=>(data_app_id==null && resource_id!=null && row.id!=resource_id) || (resource_id==null && data_app_id!=null && row.app_id!=data_app_id)).length
                 };
     }
     else

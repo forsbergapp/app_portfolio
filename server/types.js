@@ -245,7 +245,7 @@
  *              json_data:string|null, 
  *              app_data_entity_id:number, 
  *              app_data_entity_app_id:number, 
- *              app_setting_id:number, 
+ *              app_data_id:number, 
  *              created:string,
  *              modified:string|null}} server_db_table_app_data_entity_resource
  */
@@ -395,17 +395,17 @@
  */
 
 /**
- * @description DB TABLE app_setting
+ * @description DB TABLE app_data
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              app_id: number,
- *              name: DB_FILE_server_db_app_setting_name,
+ *              name: DB_FILE_server_db_app_data_name,
  *              value:string,
  *              display_data:string,
  *              data2:string|number|null,
  *              data3:string|number|null,
  *              data4:string|number|null,
- *              data5:string|number|null}} server_db_table_app_setting
+ *              data5:string|number|null}} server_db_table_app_data
  */
 
 /**
@@ -1010,6 +1010,7 @@
  * @typedef {   'DB_OBJECTS'| 
  *              'DB_FILE'| 
  *              'APP'|
+ *              'APP_DATA'|
  *              'APP_DATA_ENTITY'|
  *              'APP_DATA_ENTITY_RESOURCE'|
  *              'APP_DATA_RESOURCE_DETAIL_DATA'|
@@ -1019,7 +1020,6 @@
  *              'APP_MODULE_QUEUE'|
  *              'APP_PARAMETER'|
  *              'APP_SECRET'|
- *              'APP_SETTING'|
  *              'APP_TRANSLATION'|
  *              'IAM_APP_ID_TOKEN'|
  *              'IAM_APP_ACCESS'|
@@ -1124,8 +1124,8 @@
  */
 
 /**
- * @description DB_FILE_server_db_app_setting_name, with common names specified
- * @typedef {'ARABIC_SCRIPT'|'CALENDAR_HIJRI_TYPE'|'CALENDAR_TYPE'|'DIRECTION'|'NUMBER_SYSTEM'|'PAPER_SIZE'|'RESOURCE_TYPE'|'TIMEZONE'|[key:string, string]} DB_FILE_server_db_app_setting_name
+ * @description DB_FILE_server_db_app_data_name, with common names specified
+ * @typedef {'ARABIC_SCRIPT'|'CALENDAR_HIJRI_TYPE'|'CALENDAR_TYPE'|'DIRECTION'|'NUMBER_SYSTEM'|'PAPER_SIZE'|'RESOURCE_TYPE'|'TIMEZONE'|[key:string, string]} DB_FILE_server_db_app_data_name
  */
 /** 
  * @description DB server_db_iam_app_id_token_insert

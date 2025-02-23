@@ -8,25 +8,25 @@ INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (6000, <
 --
 --app data entity resource
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6000, <APP_ID/>, 6000, 622, '{"description":"products"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6001, <APP_ID/>, 6000, 631, '{"description":"product categories"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6002, <APP_ID/>, 6000, 632, '{"description":"brands"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6003, <APP_ID/>, 6000, 633, '{"description":"catalogs"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6004, <APP_ID/>, 6000, 612, '{"description":"locations"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6005, <APP_ID/>, 6000, 621, '{"description":"pages"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6006, <APP_ID/>, 6000, 614, '{"description":"customers"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6007, <APP_ID/>, 6000, 617, '{"description":"order settings"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6008, <APP_ID/>, 6000, 619, '{"description":"invoice settings "}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6009, <APP_ID/>, 6000, 615, '{"description":"membercard settings"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6010, <APP_ID/>, 6000, 624, '{"description":"product variants"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6011, <APP_ID/>, 6000, 623, '{"description":"product metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6012, <APP_ID/>, 6000, 625, '{"description":"product variant metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6013, <APP_ID/>, 6000, 613, '{"description":"location metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6014, <APP_ID/>, 6000, 626, '{"description":"Product variant location metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6015, <APP_ID/>, 6000, 627, '{"description":"Payment request"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6016, <APP_ID/>, 6000, 628, '{"description":"Payment request metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6017, <APP_ID/>, 6000, 629, '{"description":"Payment metadata"}');
-INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_setting_id, json_data) VALUES (6018, <APP_ID/>, 6000, 630, '{"description":"currencies"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6000, <APP_ID/>, 6000, 622, '{"description":"products"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6001, <APP_ID/>, 6000, 631, '{"description":"product categories"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6002, <APP_ID/>, 6000, 632, '{"description":"brands"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6003, <APP_ID/>, 6000, 633, '{"description":"catalogs"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6004, <APP_ID/>, 6000, 612, '{"description":"locations"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6005, <APP_ID/>, 6000, 621, '{"description":"pages"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6006, <APP_ID/>, 6000, 614, '{"description":"customers"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6007, <APP_ID/>, 6000, 617, '{"description":"order settings"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6008, <APP_ID/>, 6000, 619, '{"description":"invoice settings "}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6009, <APP_ID/>, 6000, 615, '{"description":"membercard settings"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6010, <APP_ID/>, 6000, 624, '{"description":"product variants"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6011, <APP_ID/>, 6000, 623, '{"description":"product metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6012, <APP_ID/>, 6000, 625, '{"description":"product variant metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6013, <APP_ID/>, 6000, 613, '{"description":"location metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6014, <APP_ID/>, 6000, 626, '{"description":"Product variant location metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6015, <APP_ID/>, 6000, 627, '{"description":"Payment request"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6016, <APP_ID/>, 6000, 628, '{"description":"Payment request metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6017, <APP_ID/>, 6000, 629, '{"description":"Payment metadata"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity_resource (id, app_data_entity_app_id, app_data_entity_id, app_data_id, json_data) VALUES (6018, <APP_ID/>, 6000, 630, '{"description":"currencies"}');
 --
 --app data resource master
 --

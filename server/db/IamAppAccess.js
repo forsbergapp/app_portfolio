@@ -19,7 +19,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @returns {server_server_response & {result?:server_db_table_iam_app_access[] }}
  */
 const get = (app_id, resource_id) =>{
-    const result = fileDBGet(app_id, 'IAM_APP_ACCESS',null, resource_id);
+    const result = fileDBGet(app_id, 'IAM_APP_ACCESS',resource_id, null);
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else

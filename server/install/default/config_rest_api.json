@@ -91,10 +91,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/app_setting/${resource_id_number}": {
+        "/bff/app_id/v1/server-db/app_data/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.AppSetting.get",
+                "operationId": "server_db.AppData.get",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"}
                 ],
@@ -105,7 +105,7 @@
                         },
                         {
                             "$ref": "#/components/parameters/resource_id_number",
-                            "description":"db app_setting.id"
+                            "description":"db app_data.id"
                         },
                         {
                             "name":"name",
