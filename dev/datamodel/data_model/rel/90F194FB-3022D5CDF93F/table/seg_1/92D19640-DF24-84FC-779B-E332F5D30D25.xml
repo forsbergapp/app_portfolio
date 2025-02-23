@@ -124,6 +124,51 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="text_edit" id="6667C3C1-8489-4331-4856-70BD35DF439A">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-23 20:35:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="copyright" id="A4BD7BA1-250E-F6A7-FC3F-5CC1DA09B7D2">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-23 20:35:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="email" id="934714F2-7201-5FEA-EE97-CFBFEDCC0D85">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-23 20:35:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="link_title" id="D15D7762-CD0E-A0A0-D67B-F6A6797D9AA3">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-23 20:35:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="link_url" id="675FF883-8EA9-DB1C-28BF-39D78E7C1309">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-23 20:35:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="DF29A9DE-D7F4-E883-AF1B-ECD8DD61704B" name="app_PK">

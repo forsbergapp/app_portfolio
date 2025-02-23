@@ -21,66 +21,6 @@
 <colAssociation fkAssociation="BC6F66B9-E18F-E6C0-BA57-2646F0F78A54" referredColumn="B012AC67-F394-59D1-D892-D9E6735C213C"/>
 </associations>
 </Column>
-<Column name="app_text_edit" id="1315F4FE-D6F8-2DCD-69C7-1894A8D4A3B6">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>145A3440-64D8-9C3D-A802-DDA14AB2D70E</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="app_copyright" id="1F8901AA-1849-9096-8254-DFA5AAC025C4">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>42A6D4A5-C895-1C9B-56C9-A9FA044AFDDD</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="app_email" id="C4C4559D-41CA-0713-06CE-0AA4D45A8ED3">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>6076E131-6EEA-BC40-6186-88D3F6B2A79A</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="app_link_title" id="9A66EEFF-AF13-202F-89BC-786AE680AC6B">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>88349FAB-C07F-CC9E-7860-C41C77E9FD9F</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="app_link_url" id="5D723B32-7AE3-6B35-B920-E9F3152FD09D">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>96D88DB3-2A5B-F415-BB91-E90B99F9D618</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
-<Column name="common_app_id" id="5FF99ED4-2FDA-473E-83ED-5B4AE3533CD5">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>9833B059-379B-A368-EB77-3181A9CA236A</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<nullsAllowed>true</nullsAllowed>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<autoIncrementCycle>false</autoIncrementCycle>
-</Column>
 <Column name="common_info_link_policy_name" id="8ADA5245-BF7F-7519-8E3E-80E7F06212B0">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>

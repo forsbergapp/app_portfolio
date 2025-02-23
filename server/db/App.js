@@ -52,6 +52,11 @@ const post = async (app_id, data) => {
             css_report: data.css_report,
             favicon_32x32: data.favicon_32x32,
             favicon_192x192: data.favicon_192x192,
+            text_edit:data.app_text_edit,
+            copyright:data.app_copyright,
+            email:data.app_email,
+            link_title:data.app_link_title,
+            link_url:data.app_link_url,
             status: 'ONLINE'
         };
         return fileCommonExecute({app_id:app_id, dml:'POST', object:'APP', post:{data:app}}).then((result)=>{
@@ -84,6 +89,11 @@ const post = async (app_id, data) => {
  *                  css_report:string,
  *                  favicon_32x32:string,
  *                  favicon_192x192:string,
+ *                  text_edit:string,
+ *                  copyright:string,
+ *                  email:string,
+ *                  link_title:string,
+ *                  link_url:string,
  *                  status:'ONLINE'|'OFFLINE'}}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
@@ -114,6 +124,18 @@ const update = async parameters => {
             data_update.favicon_32x32 = parameters.data.favicon_32x32;
         if (parameters.data.favicon_192x192!=null)
             data_update.favicon_192x192 = parameters.data.favicon_192x192;
+
+        if (parameters.data.text_edit!=null)
+            data_update.text_edit = parameters.data.text_edit;
+        if (parameters.data.copyright!=null)
+            data_update.copyright = parameters.data.copyright;
+        if (parameters.data.email!=null)
+            data_update.email = parameters.data.email;
+        if (parameters.data.link_title!=null)
+            data_update.link_title = parameters.data.link_title;
+        if (parameters.data.link_url!=null)
+            data_update.link_url = parameters.data.link_url;
+
         if (parameters.data.status!=null)
             data_update.status = parameters.data.status;
         if (Object.entries(data_update).length>0)
