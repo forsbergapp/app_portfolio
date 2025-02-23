@@ -124,8 +124,8 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 #menu_db_info_host_title::before{													content:var(--common_app_icon_server)}
 #menu_db_info_connections_title::before{											content:var(--common_app_icon_user_connections)}
 #menu_db_info_started_title::before{												content:var(--common_app_icon_database_started)}
-#menu_db_info_space_title::before{													content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_calc)}
-#menu_db_info_info_space_db_sum::before{											content:var(--common_app_icon_sum)}
+#menu_db_info_title::before{														content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_calc)}
+#menu_db_info_db_sum::before{														content:var(--common_app_icon_sum)}
 
 #menu_report_run::before{															content:var(--common_app_icon_run)}
 #menu_report_queue_reload::before{													content:var(--common_app_icon_reload)}
@@ -965,36 +965,40 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	display: flex;
 	flex-direction: column;
 }
-#menu_db_info_space_title{
+#menu_db_info_title{
 	display: inline-block;
 	text-align: start;
 	margin-bottom:10px;
 	text-transform: uppercase;
 }
-#menu_db_info_space_detail{
+#menu_db_info_detail{
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
 	border-radius: var(--common_app_css_border_radius);
 }
-.menu_db_info_space_detail_row{
+.menu_db_info_detail_row{
 	height: auto;
 	padding-top:4px;
 	padding-inline-start: 5px;
 	text-align: start;
+	display: grid;
+	grid-template-columns: 20em 10em 10em 30em 5em 12em 12em 12em;
 }   
-#menu_db_info_space_detail_row_total{
+#menu_db_info_detail_row_total{
 	border-top: 1px solid black;
 	margin-top: 2px;
 }
-.menu_db_info_space_detail_col{
+.menu_db_info_detail_col{
 	display:inline-block;
 	margin-inline-end: 10px;
 	overflow: auto;
-	width: 80px;
+	text-align: start;
+}
+.menu_db_info_detail_col.menu_db_info_detail_col_number{
 	text-align: end;
 }
-.menu_db_info_space_detail_col:nth-child(1){
+.menu_db_info_detail_col:nth-child(1){
 	width:250px;
 	text-align: start;
 }
@@ -1431,7 +1435,7 @@ body{
 #menu_user_stat_row_title{
 	font-weight: bold;
 }
-.menu_db_info_space_detail_row:nth-child(odd),
+.menu_db_info_detail_row:nth-child(odd),
 .menu_user_stat_row:nth-child(odd),
 .list_lov_row:nth-child(odd),
 .menu_monitor_detail_app_data_stat_row:nth-child(odd),
@@ -1441,8 +1445,8 @@ body{
 	color: var(--app_theme_list_odd_color);
 	background-color: var(--app_theme_list_odd_background_color);
 }
-.menu_db_info_space_detail_row:last-child,
-.menu_db_info_space_detail_row:nth-child(even),
+.menu_db_info_detail_row:last-child,
+.menu_db_info_detail_row:nth-child(even),
 .menu_user_stat_row:nth-child(even),
 .list_lov_row:nth-child(even),
 .menu_monitor_detail_app_data_stat_row:nth-child(even),
@@ -1461,7 +1465,7 @@ body{
 	font-weight: bold;
 	vertical-align: middle;
 }
-.menu_db_info_space_detail_row,
+.menu_db_info_detail_row,
 .menu_users_list_row,
 .menu_users_iam_app_access_row,
 .menu_apps_row,
@@ -1486,7 +1490,7 @@ body{
 #menu_config_detail{
 	background-color: var(--app_theme_list_background_color);
 }
-#menu_db_info_space_detail,
+#menu_db_info_detail,
 #lov_list,
 #menu_monitor_detail_app_data_stat,
 #menu_monitor_detail_connected,

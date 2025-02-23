@@ -13,62 +13,67 @@
  * @description Template
  * @function
  * @param {{size:string,
- *          db:{database_use:string, 
- *              database_name:string,
+ *          db:{database_name:string,
  *              version:string,
- *              database_schema:string,
  *              hostname:string,
  *              connections:string,
- *              started:string},
- *          db_detail:[{table_name:string,
- *                      total_size: number,
- *                      data_used:number,
- *                      data_free:number,
- *                      pct_used:number}]|[],
- *          db_detail_sum:{ table_name:string,
- *                          total_size: number,
- *                          data_used:number,
- *                          data_free:number,
- *                          pct_used:number},
+ *              started:number},
+ *          db_detail:[{    name:string,
+ *                          type:string,
+ *                          pk:[],
+ *                          uk:[],
+ *                          lock:number,
+ *                          transaction_id:number|null,
+ *                          rows:number|null,
+ *                          size:number|null}]|[],
+ *          function_seconds_to_time:CommonModuleCommon['commonMiscSecondsToTime'],
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff']}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_db_info_content_widget1' class='widget'>
                                 <div id='menu_db_info1' >
-                                    <div id='menu_db_info_database_title' class='common_icon'></div>          <div id='menu_db_info_database_data'>${props.db.database_use}</div>
                                     <div id='menu_db_info_name_title' class='common_icon'></div>              <div id='menu_db_info_name_data'>${props.db.database_name}</div>
                                     <div id='menu_db_info_version_title' class='common_icon'></div>           <div id='menu_db_info_version_data'>${props.db.version}</div>
-                                    <div id='menu_db_info_database_schema_title' class='common_icon'></div>   <div id='menu_db_info_database_schema_data'>${props.db.database_schema}</div>
                                     <div id='menu_db_info_host_title' class='common_icon'></div>              <div id='menu_db_info_host_data'>${props.db.hostname}</div>
                                     <div id='menu_db_info_connections_title' class='common_icon'></div>       <div id='menu_db_info_connections_data'>${props.db.connections}</div>
-                                    <div id='menu_db_info_started_title' class='common_icon'></div>           <div id='menu_db_info_started_data'>${props.db.started}</div>
+                                    <div id='menu_db_info_started_title' class='common_icon'></div>           <div id='menu_db_info_started_data'>${props.function_seconds_to_time(props.db.started)}</div>
                                 </div>
                             </div>
                             <div id='menu_db_info_content_widget2' class='widget'>
-                                <div id='menu_db_info_space_title' class='common_icon'></div>
-                                <div id='menu_db_info_space_detail' class='common_list_scrollbar'>
-                                    <div id='menu_db_info_space_detail_row_title' class='menu_db_info_space_detail_row'>
-                                        <div id='menu_db_info_space_detail_col_title1' class='menu_db_info_space_detail_col list_title'>TABLE NAME</div>
-                                        <div id='menu_db_info_space_detail_col_title2' class='menu_db_info_space_detail_col list_title'>SIZE ${props.size}</div>
-                                        <div id='menu_db_info_space_detail_col_title3' class='menu_db_info_space_detail_col list_title'>DATA USED ${props.size}</div>
-                                        <div id='menu_db_info_space_detail_col_title4' class='menu_db_info_space_detail_col list_title'>DATA FREE ${props.size}</div>
-                                        <div id='menu_db_info_space_detail_col_title5' class='menu_db_info_space_detail_col list_title'>% USED</div>
+                                <div id='menu_db_info_title' class='common_icon'></div>
+                                <div id='menu_db_info_detail' class='common_list_scrollbar'>
+                                    <div id='menu_db_info_detail_row_title' class='menu_db_info_detail_row'>
+                                        <div class='menu_db_info_detail_col list_title'>NAME</div>
+                                        <div class='menu_db_info_detail_col list_title'>TYPE</div>
+                                        <div class='menu_db_info_detail_col list_title'>PK</div>
+                                        <div class='menu_db_info_detail_col list_title'>UK</div>
+                                        <div class='menu_db_info_detail_col list_title'>LOCK</div>
+                                        <div class='menu_db_info_detail_col list_title'>TRANSACTION_ID</div>
+                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>ROWS</div>
+                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>SIZE ${props.size}</div>
                                     </div>
                                     ${props.db_detail.map(row=>
-                                        `<div class='menu_db_info_space_detail_row' >
-                                            <div class='menu_db_info_space_detail_col'>${row.table_name}</div>
-                                            <div class='menu_db_info_space_detail_col'>${props.function_roundOff(row.total_size)}</div>
-                                            <div class='menu_db_info_space_detail_col'>${props.function_roundOff(row.data_used)}</div>
-                                            <div class='menu_db_info_space_detail_col'>${props.function_roundOff(row.data_free)}</div>
-                                            <div class='menu_db_info_space_detail_col'>${props.function_roundOff(row.pct_used)}</div>
+                                        `<div class='menu_db_info_detail_row' >
+                                            <div class='menu_db_info_detail_col'>${row.name}</div>
+                                            <div class='menu_db_info_detail_col'>${row.type}</div>
+                                            <div class='menu_db_info_detail_col'>${row.pk==null?'':row.pk}</div>
+                                            <div class='menu_db_info_detail_col'>${row.uk==null?'':row.uk.join(',')}</div>
+                                            <div class='menu_db_info_detail_col'>${row.lock==null?'':row.lock}</div>
+                                            <div class='menu_db_info_detail_col'>${row.transaction_id==null?'':row.transaction_id}</div>
+                                            <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${row.rows==null?'':row.rows}</div>
+                                            <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${row.size==null?'':props.function_roundOff(row.size/1024/1024)}</div>
+                                            
                                         </div>`
                                     ).join('')}
-                                    <div id='menu_db_info_space_detail_row_total' class='menu_db_info_space_detail_row' >
-                                        <div id='menu_8_info_space_db_sum' class='menu_db_info_space_detail_col'></div>
-                                        <div class='menu_db_info_space_detail_col'>${props.function_roundOff(props.db_detail_sum.total_size)}</div>
-                                        <div class='menu_db_info_space_detail_col'>${props.function_roundOff(props.db_detail_sum.data_used)}</div>
-                                        <div class='menu_db_info_space_detail_col'>${props.function_roundOff(props.db_detail_sum.data_free)}</div>
-                                        <div class='menu_db_info_space_detail_col'>${props.function_roundOff(props.db_detail_sum.pct_used)}</div>
+                                    <div id='menu_db_info_detail_row_total' class='menu_db_info_detail_row' >
+                                        <div id='menu_db_info_db_sum' class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col'></div>
+                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_rows, row)=>total_rows += row.rows??0,0))}</div>
+                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_size, row)=>total_size += (row.size??0)/1024/1024,0))}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -78,6 +83,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
  * @function 
  * @param {{ data:{      commonMountdiv:string},
  *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonMiscSecondsToTime:CommonModuleCommon['commonMiscSecondsToTime'],
  *                       commonMiscRoundOff:CommonModuleCommon['commonMiscRoundOff'],
  *                       commonFFB:CommonModuleCommon['commonFFB']},
  *           lifecycle:  null}} props 
@@ -89,17 +95,14 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
 const component = async props => {
     const size = '(Mb)';
     /**
-     * @type {{ database_use:string,
-     *          database_name:string,
+     * @type {{ database_name:string,
      *          version:string,
-     *          database_schema:string,
      *          hostname:string,
      *          connections:string,
-     *          started:string}}
+     *          started:number}}
      */
     const db = await props.methods.commonFFB({path:'/server-db/database', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
-    const db_detail = await props.methods.commonFFB({path:'/server-db/database-space', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
-    const db_detail_sum = await props.methods.commonFFB({path:'/server-db/database-spacesum', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
+    const db_detail = await props.methods.commonFFB({path:'/server-db/database-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
   return {
       lifecycle:    null,
@@ -108,7 +111,7 @@ const component = async props => {
       template:     template({  size:size,
                                 db:db,
                                 db_detail:db_detail,
-                                db_detail_sum:db_detail_sum,
+                                function_seconds_to_time:props.methods.commonMiscSecondsToTime,
                                 function_roundOff:props.methods.commonMiscRoundOff
       })
   };
