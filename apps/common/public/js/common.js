@@ -693,6 +693,29 @@ const commonMiscShowDateUpdate = async element_id => {
         commonMiscShowDateUpdate(element_id);
     }
 };
+
+/**
+ * 
+ * @name commonMiscSecondsToTime
+ * @description Seconds to time string
+ * @function
+ * @param {number} seconds 
+ * @returns {string}
+ */
+const commonMiscSecondsToTime = (seconds) => {
+    let ut_sec = seconds;
+    let ut_min = ut_sec/60;
+    let ut_hour = ut_min/60;
+    
+    ut_sec = Math.floor(ut_sec);
+    ut_min = Math.floor(ut_min);
+    ut_hour = Math.floor(ut_hour);
+    
+    ut_hour = ut_hour%60;
+    ut_min = ut_min%60;
+    ut_sec = ut_sec%60;
+    return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
+};
 /**
  * @name commonMiscLengthWithoutDiacrites
  * @description Length without diacrites
@@ -3761,6 +3784,7 @@ export{/* GLOBALS*/
        commonMiscTimezoneDate, 
        commonMiscTypewatch,      
        commonMiscShowDateUpdate,
+       commonMiscSecondsToTime,
        /**WINDOW OBJECT */
        commonWindowDocumentFrame,
        commonWindowFromBase64, 

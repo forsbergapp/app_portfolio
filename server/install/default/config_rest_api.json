@@ -4448,41 +4448,10 @@
                 }
             }
         },
-        "/bff/admin/v1/server-db/database-space": {
+        "/bff/admin/v1/server-db/database-objects": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbInfoSpace",
-                "security":[
-                    {"$ref": "#/components/securitySchemes/id-token"},
-                    {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
-                ],
-                "parameters": [
-                        {"description": "parameters"},
-                        {
-                            "$ref": "#/components/parameters/server_app_id"
-                        }
-                ],
-                "responses": {
-                    "oneOf":[
-                        {"allOf":[
-                                {"$ref": "#/components/responses/200/content/application~1json/schema"},
-                                {
-                                    "allOf":[
-                                        {"$ref": "#/components/schema/SuccessResponseList/properties"},
-                                        {"rows": ""}
-                                    ]
-                                }
-                            ]
-                        },
-                        {"$ref": "#/components/schema/ErrorResponse"}
-                    ]
-                }
-            }
-        },
-        "/bff/admin/v1/server-db/database-spacesum": {
-            "get": {
-                "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbInfoSpaceSum",
+                "operationId": "server_db.Database.getViewDbObjects",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -4513,7 +4482,7 @@
         "/bff/admin/v1/server-db/database": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.dbModelDatabase.dbInfo",
+                "operationId": "server_db.Database.getViewDbInfo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}

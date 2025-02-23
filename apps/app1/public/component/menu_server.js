@@ -82,6 +82,7 @@ const template = props => ` <div id='menu_server_content_widget1' class='widget'
  * @function 
  * @param {{ data:{      commonMountdiv:string},
  *           methods:{   COMMON_DOCUMENT:COMMON_DOCUMENT,
+ *                       commonMiscSecondsToTime:CommonModuleCommon['commonMiscSecondsToTime'],
  *                       commonFFB:CommonModuleCommon['commonFFB']},
  *           lifecycle:  null}} props 
  * @returns {Promise.<{ lifecycle:CommonComponentLifecycle, 
@@ -90,25 +91,7 @@ const template = props => ` <div id='menu_server_content_widget1' class='widget'
  *                      template:string}>}
  */
 const component = async props => {
-   /**
-     * Seconds to time string
-     * @param {number} seconds 
-     * @returns {string}
-     */
-   const seconds_to_time = (seconds) => {
-        let ut_sec = seconds;
-        let ut_min = ut_sec/60;
-        let ut_hour = ut_min/60;
-        
-        ut_sec = Math.floor(ut_sec);
-        ut_min = Math.floor(ut_min);
-        ut_hour = Math.floor(ut_hour);
-        
-        ut_hour = ut_hour%60;
-        ut_min = ut_min%60;
-        ut_sec = ut_sec%60;
-        return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
-    };
+   
     const server_info = await props.methods.commonFFB({path:'/server-info', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
@@ -117,7 +100,7 @@ const component = async props => {
        lifecycle:   null,
        data:        null,
        methods:     null,
-       template:    template({  function_seconds_to_time:seconds_to_time,
+       template:    template({  function_seconds_to_time:props.methods.commonMiscSecondsToTime,
                                 server_info:server_info,
                             })
    };

@@ -269,6 +269,13 @@ const fileFsRead = async (file, lock=false) =>{
             }
         }
  };
+ /**
+ * @name fileDbInfo
+ * @description Load default database or read existing from disk. Set cache for files in existing database using `cache_content` key to increase performance
+ * @function
+ * @returns {server_db_object_record[]}
+ */
+ const fileDbInfo = () => DB.data;
 /**
  * @name fileFsWrite
  * @description Writes file
@@ -688,6 +695,6 @@ const fileCommonExecute = async parameters =>{
     }
 };
 
-export {fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileDbInit, fileFsWrite, fileFSDirDataExists, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
+export {fileRecord, filePath, fileCache, fileFsRead, fileFsDir, fileDbInit, fileDbInfo, fileFsWrite, fileFSDirDataExists, fileFsAccessMkdir, fileFsWriteAdmin, fileFsDeleteAdmin,
         fileFsDBLogGet, fileFsDBLogPost,
         fileDBGet, fileDBPost, fileDBUpdate, fileDBDelete, fileCommonExecute};
