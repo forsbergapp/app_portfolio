@@ -59,7 +59,6 @@ const COMMON_GLOBAL = {
     image_file_allowed_type4:null,
     image_file_allowed_type5:null,
     image_file_mime_type:null,
-    image_file_max_size:0,
     image_avatar_width:0,
     image_avatar_height:0,
     user_locale:'',
@@ -226,7 +225,7 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
                                    COMMON_GLOBAL.image_file_allowed_type4,
                                    COMMON_GLOBAL.image_file_allowed_type5
                                   ];
-        const { name: fileName, size: fileSize } = file;
+        const { name: fileName} = file;
         const fileExtension = fileName.split('.').pop();
         if (!allowedExtensions.includes(fileExtension)){
             //File type not allowed
@@ -234,21 +233,14 @@ const commonMiscImageShow = async (item_img, item_input, image_width, image_heig
             resolve(null);
         }
         else
-            if (fileSize > COMMON_GLOBAL.image_file_max_size){
-                //File size too large
-                commonMessageShow('INFO', null, null, null,commonMesssageNotAuthorized(), COMMON_GLOBAL.common_app_id);
-                resolve(null);
-            }
-            else {
-                reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
-                    if (event.target)
-                        commonMiscImageConvert(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
-                            item_img.style.backgroundImage= srcEncoded?`url('${srcEncoded}')`:'url()';
-                            item_img.setAttribute('data-image', srcEncoded);
-                            resolve(null);
-                        });
-                };
-            }
+            reader.onloadend = /**@type{import('../../../common_types.js').CommonAppEvent}*/event => {
+                if (event.target)
+                    commonMiscImageConvert(event.target.result?event.target.result.toString():'', image_width, image_height).then((srcEncoded)=>{
+                        item_img.style.backgroundImage= srcEncoded?`url('${srcEncoded}')`:'url()';
+                        item_img.setAttribute('data-image', srcEncoded);
+                        resolve(null);
+                    });
+            };
         if (file)
             reader.readAsDataURL(file); //reads the data as a URL
         else{
@@ -3298,6 +3290,12 @@ const commonInitParametersInfoSet = parameters => {
    
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
+    COMMON_GLOBAL.app_rest_api_version = parseInt(parameters.rest_api_version);
+    
+    //framework
+    COMMON_GLOBAL.app_framework = parseInt(parameters.framework);
+    COMMON_GLOBAL.app_framework_messages = parseInt(parameters.framework_messages);
+    
 
     //client credentials
     COMMON_GLOBAL.token_dt = parameters.app_idtoken;
@@ -3339,10 +3337,6 @@ const commonInitParametersInfoSet = parameters => {
  * @returns {void}
  */
 const commonInitParametersAppSet = (app_parameters, common_parameters) => {
-    COMMON_GLOBAL.app_framework = parseInt(common_parameters.common_app_framework.value);
-    COMMON_GLOBAL.app_framework_messages = parseInt(common_parameters.common_app_framework_messages.value);
-    COMMON_GLOBAL.app_rest_api_version = parseInt(common_parameters.common_app_rest_api_version.value);
-
     COMMON_GLOBAL.info_link_policy_name = common_parameters.common_info_link_policy_name.value;
     COMMON_GLOBAL.info_link_policy_url = common_parameters.common_info_link_policy_url.value;
     COMMON_GLOBAL.info_link_disclaimer_name = common_parameters.common_info_link_disclaimer_name.value;
@@ -3358,7 +3352,6 @@ const commonInitParametersAppSet = (app_parameters, common_parameters) => {
     COMMON_GLOBAL.image_file_allowed_type4 = common_parameters.common_image_file_allowed_type4.value;
     COMMON_GLOBAL.image_file_allowed_type5 = common_parameters.common_image_file_allowed_type5.value;
     COMMON_GLOBAL.image_file_mime_type = common_parameters.common_image_file_mime_type.value;
-    COMMON_GLOBAL.image_file_max_size = parseInt(common_parameters.common_image_file_max_size.value);
     COMMON_GLOBAL.image_avatar_width = parseInt(common_parameters.common_image_avatar_width.value);
     COMMON_GLOBAL.image_avatar_height = parseInt(common_parameters.common_image_avatar_height.value);
     

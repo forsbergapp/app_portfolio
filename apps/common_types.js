@@ -200,7 +200,6 @@
  *              image_file_allowed_type4:string|null,
  *              image_file_allowed_type5:string|null,
  *              image_file_mime_type:string|null,
- *              image_file_max_size:number,
  *              image_avatar_width:number,
  *              image_avatar_height:number,
  *              user_locale:string,
@@ -322,12 +321,6 @@
  *                      },
  *              COMMON: {
  *                      app_id?:                             number,
- *                      common_app_cache_control:            {value:string, comment: string},
- *                      common_app_cache_control_font:       {value:string, comment: string},
- *                      common_app_framework:                {value:string, comment: string},
- *                      common_app_framework_messages:       {value:string, comment: string},
- *                      common_app_rest_api_version:         {value:string, comment: string},
- *                      common_app_limit_records:            {value:string, comment: string},
  *                      common_info_link_policy_name:        {value:string},
  *                      common_info_link_policy_url:         {value:string},
  *                      common_info_link_disclaimer_name:    {value:string},
@@ -341,7 +334,6 @@
  *                      common_image_file_allowed_type3:     {value:string},
  *                      common_image_file_allowed_type4:     {value:string},
  *                      common_image_file_allowed_type5:     {value:string},
- *                      common_image_file_max_size:          {value:string},
  *                      common_image_file_mime_type:         {value:string, comment: string},
  *                      common_image_avatar_height:          {value:string, comment: string},
  *                      common_image_avatar_width:           {value:string, comment: string}
@@ -362,40 +354,6 @@
  *                      }
  *          }} commonInitAppParameters
  */
-/**
-* @description Type CommonAppParametersRecord
-* @typedef {{  app_id:                             number,
-*              app_text_edit:                      {value:string, comment:string},
-*              app_copyright:                      {value:string, comment:string},
-*              app_email:                          {value:string, comment:string},
-*              app_link_title:                     {value:string, comment:string},
-*              app_link_url:                       {value:string, comment:string},
-*              common_app_start:                   {value:string, comment: string},
-*              common_app_log:                     {value:string, comment: string},
-*              common_app_cache_control:           {value:string, comment: string},
-*              common_app_cache_control_font:      {value:string, comment: string},
-*              common_app_framework:               {value:string, comment: string},
-*              common_app_framework_messages:      {value:string, comment: string},
-*              common_app_rest_api_version:        {value:string, comment: string},
-*              common_app_limit_records:           {value:string, comment: string},
-*              common_info_link_policy_name:       {value:string},
-*              common_info_link_policy_url:        {value:string},
-*              common_info_link_disclaimer_name:   {value:string},
-*              common_info_link_disclaimer_url:    {value:string},
-*              common_info_link_terms_name:        {value:string},
-*              common_info_link_terms_url:         {value:string},
-*              common_info_link_about_name:        {value:string},
-*              common_info_link_about_url:         {value:string},
-*              common_image_file_allowed_type1:    {value:string},
-*              common_image_file_allowed_type2:    {value:string},
-*              common_image_file_allowed_type3:    {value:string},
-*              common_image_file_allowed_type4:    {value:string},
-*              common_image_file_allowed_type5:    {value:string},
-*              common_image_file_max_size:         {value:string},
-*              common_image_file_mime_type:        {value:string, comment: string},
-*              common_image_avatar_height:         {value:string, comment: string},
-*              common_image_avatar_width:          {value:string, comment: string}}} CommonAppParametersRecord
-*/
 /**
  * @description Type CommonAppDataRecord
  * @typedef {{  id:number,

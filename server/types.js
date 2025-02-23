@@ -74,7 +74,10 @@
  * @property {string|null}  client_timezone
  * @property {number|null}  common_app_id
  * @property {number|null}  admin_app_id
+ * @property {number}       framework
+ * @property {number}       framework_messages
  * @property {string}       rest_resource_bff
+ * @property {string}       rest_api_version
  * @property {number}       first_time
  */
 
@@ -328,14 +331,7 @@
  *              app_email:                          {value:string, comment:string},
  *              app_link_title:                     {value:string, comment:string},
  *              app_link_url:                       {value:string, comment:string},
- *              common_app_start:                   {value:string, comment:string},
  *              common_app_id:                      {value:string, comment:string},
- *              common_app_cache_control:           {value:string, comment:string},
- *              common_app_cache_control_font:      {value:string, comment:string},
- *              common_app_framework:               {value:string, comment:string},
- *              common_app_framework_messages:      {value:string, comment:string},
- *              common_app_rest_api_version:        {value:string, comment:string},
- *              common_app_limit_records:           {value:string, comment:string},
  *              common_info_link_policy_name:       {value:string},
  *              common_info_link_policy_url:        {value:string},
  *              common_info_link_disclaimer_name:   {value:string},
@@ -349,7 +345,6 @@
  *              common_image_file_allowed_type3:    {value:string},
  *              common_image_file_allowed_type4:    {value:string},
  *              common_image_file_allowed_type5:    {value:string},
- *              common_image_file_max_size:         {value:string},
  *              common_image_file_mime_type:        {value:string, comment:string},
  *              common_image_avatar_height:         {value:string, comment:string},
  *              common_image_avatar_width:          {value:string, comment:string}}} server_db_table_app_parameter
@@ -661,6 +656,7 @@
  * @description DB DOCUMENT config_server
  * @memberof dbObjects
  * @typedef  {{ ['SERVER']:[server_db_config_server_server], 
+ *              ['SERVICE_APP']:[server_db_config_server_service_app], 
  *              ['SERVICE_MICROSERVICE']:[server_db_config_server_service_microservice],
  *              ['SERVICE_IAM']:[server_db_config_server_service_iam],
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
@@ -810,11 +806,6 @@
  */
 
 /**
- * @description DB server_db_config_server_group
- * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'|'METADATA'} server_db_config_server_group
- */
-
-/**
  * @description DB server_db_config_server_server
  * @typedef {{  HOST:string,
  *              HTTP_PORT:string,
@@ -828,9 +819,20 @@
  *              APP_COMMON_APP_ID:string,
  *              APP_ADMIN_APP_ID:string,
  *              REST_RESOURCE_BFF:string,
- *              REPOSITORY_GIT_URL:string,
+ *              REST_API_VERSION:number,
+ *              GIT_REPOSITORY_URL:string,
  *              NETWORK_INTERFACE:string,
  *              PATH_DATA_JOBS:string}} server_db_config_server_server
+ */
+
+/** 
+ * @description DB server_db_config_server_service_app
+ * @memberof dbObjects
+ * @typedef {{CACHE_CONTROL                               : string,
+ *            CACHE_CONTROL_FONNT                         : string,
+ *            FRAMEWORK                                   : string,
+ *            FRAMEWORK_MESSAGES                          : number,
+ *            LIMIT_RECORDS                               : number}} server_db_config_server_service_app
  */
 
 /** 
@@ -1096,14 +1098,6 @@
  *             app_email?:                          {value:string, comment:string},
  *             app_link_title?:                     {value:string, comment:string},
  *             app_link_url?:                       {value:string, comment:string},
- *             common_app_start?:                   {value:string, comment:string},
- *             common_app_log?:                     {value:string, comment:string},
- *             common_app_cache_control:            {value:string, comment:string},
- *             common_app_cache_control_font:       {value:string, comment:string},
- *             common_app_framework:                {value:string, comment:string},
- *             common_app_framework_messages:       {value:string, comment:string},
- *             common_app_rest_api_version:         {value:string, comment:string},
- *             common_app_limit_records:            {value:string, comment:string},
  *             common_info_link_policy_name:        {value:string},
  *             common_info_link_policy_url:         {value:string},
  *             common_info_link_disclaimer_name:    {value:string},
@@ -1117,7 +1111,6 @@
  *             common_image_file_allowed_type3:     {value:string},
  *             common_image_file_allowed_type4:     {value:string},
  *             common_image_file_allowed_type5:     {value:string},
- *             common_image_file_max_size:          {value:string},
  *             common_image_file_mime_type:         {value:string, comment:string},
  *             common_image_avatar_height:          {value:string, comment:string},
  *             common_image_avatar_width:           {value:string, comment:string}}} server_db_app_parameter_common

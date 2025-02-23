@@ -12,9 +12,17 @@
         {"APP_COMMON_APP_ID": "0", "COMMENT": "common app id"},
         {"APP_ADMIN_APP_ID": "1", "COMMENT": "admin app id"},
         {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"},
-        {"REPOSITORY_GIT_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
+        {"REST_API_VERSION":"1", "COMMENT": "REST API Version"},
+        {"GIT_REPOSITORY_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
         {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"},
         {"PATH_DATA_JOBS":"/data/jobs", "COMMENT": "Report queue jobs path"}
+    ],
+    "SERVICE_APP":[
+        {"CACHE_CONTROL":"max-age=3600", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds default 1 hour or use any valid Cache-Control setting"},
+        {"CACHE_CONTROL_FONT":"max-age=3600", "COMMENT": "Cache control for fonts, max-age value in milliseconds default 1 hour or use any valid Cache-Control setting"},
+        {"FRAMEWORK":"0", "COMMENT": "0=choosable, 1=Javascript (default if choosable), 2=Vue, 3=React"},
+        {"FRAMEWORK_MESSAGES":"1", "COMMENT": "0=NO, 1=YES"},
+        {"LIMIT_RECORDS":"100", "COMMENT": ""}
     ],
     "SERVICE_MICROSERVICE":[
         {"PATH":"/microservice", "COMMENT": "Microservice path"},
@@ -24,7 +32,7 @@
         {"CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS": 10,"COMMENT":""},
         {"CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS": 5,"COMMENT":""},
         {"CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES": 60,"COMMENT":""}
-  ],
+    ],
     "SERVICE_IAM":[
         {"AUTHENTICATE_REQUEST_ENABLE": "0", "COMMENT": "0=NO, 1=YES"},
         {"AUTHENTICATE_REQUEST_OBSERVE_LIMIT": "5", "COMMENT": "If observe limit reached then IP should be blocked"},

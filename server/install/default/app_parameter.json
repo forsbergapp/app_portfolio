@@ -1,14 +1,6 @@
 [
     {   
         "app_id": 0, 
-        "common_app_start":                 {"value":"1",                       "comment": "0=NO, 1=YES, when 0 then only admin is started"},
-        "common_app_log":                   {"value":"0",                       "comment": "0=NO, 1=YES, enable to log all app activity in database"},
-        "common_app_cache_control":         {"value":"max-age=3600",            "comment": "Cache control for assets except fonts, max-age value in milliseconds default 1 hour or use any valid Cache-Control setting"},
-        "common_app_cache_control_font":    {"value":"max-age=3600",            "comment": "Cache control for fonts, max-age value in milliseconds default 1 hour or use any valid Cache-Control setting"},
-        "common_app_framework":             {"value":"0",                       "comment": "0=choosable, 1=Javascript (default if choosable), 2=Vue, 3=React"},
-        "common_app_framework_messages":    {"value":"1",                       "comment": "0=NO, 1=YES"},
-        "common_app_rest_api_version":      {"value":"1",                       "comment": "REST API Version"},
-        "common_app_limit_records":         {"value":"100",                     "comment": ""},
         "common_info_link_policy_name":     {"value":"Privacy Policy"},
         "common_info_link_policy_url":      {"value":"/info/privacy_policy"},
         "common_info_link_disclaimer_name": {"value":"Disclaimer"},
@@ -22,7 +14,6 @@
         "common_image_file_allowed_type3":  {"value":"png"},
         "common_image_file_allowed_type4":  {"value":"webp"},
         "common_image_file_allowed_type5":  {"value":"gif"},
-        "common_image_file_max_size":       {"value":"2000000"},
         "common_image_file_mime_type":      {"value":"image/webp",              "comment": "Convert all uploaded images to format"},
         "common_image_avatar_height":       {"value":"64",                      "comment": "Convert uploaded image to height"},
         "common_image_avatar_width":        {"value":"64",                      "comment": "Convert uploaded image to width"}

@@ -14,8 +14,6 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 /**@type{import('./iam.js')} */
 const {iamUtilTokenExpired} = await import(`file://${process.cwd()}/server/iam.js`);
 
-/**@type{import('./db/AppParameter.js')} */
-const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
 /**@type{import('./db/Config.js')} */
 const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
@@ -441,23 +439,19 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  * @returns {void}
  */
  const socketIntervalCheck = () => {
-    //start interval if apps are started
-    const app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0;
-    if (AppParameter.get({app_id:app_id, resource_id:app_id}).result[0].common_app_start.value =='1'){
-        setInterval(() => {
-            if (serverUtilNumberValue(Config.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
-                socketAdminSend({   app_id:null,
-                                    idToken:'',
-                                    data:{app_id:null,
-                                        client_id:null,
-                                        broadcast_type:'MAINTENANCE',
-                                        broadcast_message:''}}
-                                    );
-            }
-            socketExpiredTokensUpdate();
-        //set default interval to 5 seconds if no parameter is set
-        }, serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
-    }
+    setInterval(() => {
+        if (serverUtilNumberValue(Config.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
+            socketAdminSend({   app_id:null,
+                                idToken:'',
+                                data:{app_id:null,
+                                    client_id:null,
+                                    broadcast_type:'MAINTENANCE',
+                                    broadcast_message:''}}
+                                );
+        }
+        socketExpiredTokensUpdate();
+    //set default interval to 5 seconds if no parameter is set
+    }, serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
 };
 /**
  * @name socketExpiredTokensUpdate

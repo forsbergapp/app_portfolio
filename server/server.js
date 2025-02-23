@@ -53,8 +53,6 @@ const zlib = await import('node:zlib');
  *  @returns {Promise.<void>}
  */
 const serverResponse = async parameters =>{
-    /**@type{import('./db/AppParameter.js')} */
-    const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
     /**@type{import('./db/Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     const common_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
@@ -65,8 +63,8 @@ const serverResponse = async parameters =>{
      */
     const setType = type => {
         
-        const app_cache_control = AppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control.value;
-        const app_cache_control_font = AppParameter.get({app_id:parameters.app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_cache_control_font.value;
+        const app_cache_control =       Config.get('CONFIG_SERVER', 'SERVICE_APP','CACHE_CONTROL');
+        const app_cache_control_font =  Config.get('CONFIG_SERVER', 'SERVICE_APP','CACHE_CONTROL_FONT');
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -220,8 +218,7 @@ const serverResponse = async parameters =>{
                                 }
                             }
                             //records limit in controlled by server, apps can not set limits
-                            const limit = serverUtilNumberValue(AppParameter.get( {app_id:parameters.app_id ?? common_app_id,
-                                                                                            resource_id:common_app_id}).result[0].common_app_limit_records.value);
+                            const limit = serverUtilNumberValue(Config.get('CONFIG_SERVER', 'SERVICE_APP','LIMIT_RECORDS')??0);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
                                 parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
