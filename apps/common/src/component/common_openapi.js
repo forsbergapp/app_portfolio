@@ -4,14 +4,14 @@
  * @module apps/common/component/common_openapi
  */
 /**
- * @import {server_db_config_rest_api}  from '../../../../server/types.js'
+ * @import {server_db_document_config_rest_api}  from '../../../../server/types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{openapi :server_db_config_rest_api,
+ * @param {{openapi :server_db_document_config_rest_api,
  *          sortByRole:function
  *          }} props
  * @returns {string}
@@ -218,7 +218,7 @@ const component = async props => {
     const CONFIG_REST_API = props.methods.Config.get('CONFIG_REST_API');
     //return object with 'servers key modified with list from configuration
     CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
-                        .map((/**@type{server_db_app}*/row)=>{
+                        .map((/**@type{server_db_table_app}*/row)=>{
                             return {url:(HTTPS_ENABLE? 'https://':'http://') + 
                                                                         row.subdomain + '.' +
                                                                         HOST +

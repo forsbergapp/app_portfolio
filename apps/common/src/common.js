@@ -177,13 +177,12 @@ const commonAppStart = async (app_id=null) =>{
         const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
         const NO_MAINTENANCE = Config.get('CONFIG_SERVER','METADATA','MAINTENANCE')==0;
         const DB_START = Config.get('CONFIG_SERVER', 'SERVICE_DB','START')=='1';
-        const APP_START = AppParameter.get({app_id:app_id ?? common_app_id, resource_id:common_app_id}).result[0].common_app_start.value=='1';
         const DBOTHER_USER_INSTALLED = AppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).
                                             result?.filter((/**@type{server_db_table_app_secret}*/row)=> `service_db_db${db_use}_app_user` in row).length == 
                                                 //compare count of db with db credentials with app counts minuts common app id and admin app id that does not save db credentials
                                                 App.get({app_id:app_id, resource_id:null}).result.length - 2;
         const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>result.result[0].installed).catch(()=>false);
-        if (NO_MAINTENANCE && DB_START && APP_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
+        if (NO_MAINTENANCE && DB_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
             if (app_id == null)
                 return true;
             else{
@@ -958,7 +957,10 @@ const commonComponentCreate = async parameters =>{
                 client_timezone:        result_geodata?.timezone,
                 common_app_id:          common_app_id,
                 admin_app_id:           admin_app_id,
+                framework:              Config.get('CONFIG_SERVER','SERVICE_APP', 'FRAMEWORK'),
+                framework_messages:     Config.get('CONFIG_SERVER','SERVICE_APP', 'FRAMEWORK_MESSAGES'),
                 rest_resource_bff:      Config.get('CONFIG_SERVER','SERVER', 'REST_RESOURCE_BFF'),
+                rest_api_version:       Config.get('CONFIG_SERVER','SERVER', 'REST_API_VERSION'),
                 first_time:             admin_only==1?(IamUser.get(parameters.app_id, null).result.length==0?1:0):0
             };
             /**@type{server_db_app_parameter_common} */
@@ -970,8 +972,6 @@ const commonComponentCreate = async parameters =>{
             delete common_parameter.app_link_title;
             delete common_parameter.app_link_url;
             delete common_parameter.app_text_edit;
-            delete common_parameter.common_app_log;
-            delete common_parameter.common_app_start;
 
             const APP_PARAMETERS  = {   APP:        AppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0], 
                                         COMMON:     common_parameter,

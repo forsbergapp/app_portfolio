@@ -207,7 +207,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *              type ROUTE and template 6.appRoutes
  *                  ROUTE_FUNCTIONS with tag ROUTE_APP
  *              any file in menu of type GUIDE
- *                  REPOSITORY_GIT_URL replaces with REPOSITORY_GIT_URL parameter in CONFIG_SERVER if used in any document 
+ *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in CONFIG_SERVER if used in any document 
  * @function
  * @param {{app_id:number,
  *          type:serverDocumentType,
@@ -337,7 +337,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
-                        .then(markdown=>markdown.replaceAll('@{REPOSITORY_GIT_URL}',Config.get('CONFIG_SERVER', 'SERVER', 'REPOSITORY_GIT_URL')));
+                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',Config.get('CONFIG_SERVER', 'SERVER', 'GIT_REPOSITORY_URL')));
         }
         default:{
             return '';
@@ -363,8 +363,8 @@ const menuRender = async parameters =>{
                 //return menu for app with updated id and app name
                 menu.menu_sub = App.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
-                                .sort((/**@type{server_db_app}*/a,/**@type{server_db_app}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
-                                .map((/**@type{server_db_app}*/app)=>{
+                                .sort((/**@type{server_db_table_app}*/a,/**@type{server_db_table_app}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
+                                .map((/**@type{server_db_table_app}*/app)=>{
                     return { 
                             id:app.id,
                             menu:app.name,

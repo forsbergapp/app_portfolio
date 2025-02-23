@@ -41,7 +41,7 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
         /**@type{import('../server/db/App.js')} */
         const App = await import(`file://${process.cwd()}/server/db/App.js`);
 
-        /**@type{server_db_app[]}*/
+        /**@type{server_db_table_app[]}*/
         const apps = App.get({app_id:null, resource_id:null}).result;
 
         for (const app of apps){
@@ -87,7 +87,7 @@ describe('Integration test, server function worldcities random city called from 
         const App = await import(`file://${process.cwd()}/server/db/App.js`);
         /**@type{import('../server/db/Config.js')} */
         const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-        /**@type{server_db_app[]}*/
+        /**@type{server_db_table_app[]}*/
         const apps = App.get({app_id:null, resource_id:null}).result;
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
