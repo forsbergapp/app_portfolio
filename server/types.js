@@ -545,12 +545,13 @@
 /** 
  * @description DB TABLE iam_app_id_token
  * @memberof dbObjects
- * @typedef {{	app_id: 	number,
+ * @typedef {{id:     number,
+ *            app_id: number,
  *		        res:		0|1,
- *   	        token:   	string,
- *		        ip:         string,
- *		        ua:         string|null,
- *		        created:    string}} server_db_table_iam_app_id_token
+ *   	        token:  string,
+ *		        ip:     string,
+ *		        ua:     string|null,
+ *		        created:string}} server_db_table_iam_app_id_token
  */
 
  /**
@@ -559,14 +560,14 @@
  * @typedef {{	id:                 number,
  *              app_id:             number,
  *              type:               server_db_iam_app_access_type,
- *              res:	            0|1|2,          //0=fail, 1=success, 2=invalidated
- *		        ip:                 string,
+ *              res:	              0|1|2,          //0=fail, 1=success, 2=invalidated
+ *		          ip:                 string,
  *              iam_user_id:        number,
  *              iam_user_username:  string|null,
  *              app_custom_id:      number|string|null,
  *              token:              string|null,
- *		        ua:                 string|null,
- *		        created:            string,
+ *		          ua:                 string|null,
+ *		          created:            string,
  *              modified:           string|null}} server_db_table_iam_app_access
  */
 

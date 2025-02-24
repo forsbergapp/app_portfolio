@@ -972,7 +972,7 @@ const iamAuthenticateUserDbDelete = async parameters => {
             //authenticate id token
             const id_token_decoded = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:iamUtilTokenGet(app_id_host, idToken, 'APP_ID');
             /**@type{server_db_table_iam_app_id_token}*/
-            const log_id_token = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:IamAppToken.get(app_id_host).result.filter((/**@type{server_db_table_iam_app_id_token}*/row)=> 
+            const log_id_token = (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL')?null:IamAppToken.get({app_id:app_id_host, resource_id:null}).result.filter((/**@type{server_db_table_iam_app_id_token}*/row)=> 
                                                                                     row.app_id == app_id_host && row.ip == ip && row.token == idToken
                                                                                     )[0];
             if (endpoint=='APP_EXTERNAL' || endpoint=='APP_ACCESS_EXTERNAL' || (id_token_decoded?.app_id == app_id_host && 
