@@ -38,10 +38,7 @@ const get = parameters =>{
  * @function
  * @function
  * @param {number} app_id,
- * @param {{iam_user_id?:number|null,
- *          iam_user_id_view?:number|null,
- *          client_ip: string,
- *          client_user_agent: string}} data
+ * @param {server_db_table_iam_user_view} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) =>{
@@ -76,31 +73,19 @@ const post = async (app_id, data) =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null,
- *          data:{  iam_user_id:number|null,
- *                  iam_user_id_view:number|null}}} parameters
+ *          resource_id:number|null}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    const record = get({  app_id:parameters.app_id, 
-                            resource_id:parameters.resource_id, 
-                            data:{  iam_user_id:parameters.data.iam_user_id,
-                                    iam_user_id_view:parameters.data.iam_user_id_view
-                            }}).result[0];
-    if (record){
-        //delete using resource id or id for searched user
-        return fileCommonExecute({  app_id:parameters.app_id, 
-                                    dml:'DELETE', 
-                                    object:'IAM_USER_VIEW', 
-                                    delete:{resource_id:parameters.resource_id ?? record.id, data_app_id:null}}).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return dbCommonRecordError(parameters.app_id, 404);
-        });
-    }
-    else
-        return dbCommonRecordError(parameters.app_id, 404);
+    return fileCommonExecute({  app_id:parameters.app_id, 
+                                dml:'DELETE', 
+                                object:'IAM_USER_VIEW', 
+                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+        if (result.affectedRows>0)
+            return {result:result, type:'JSON'};
+        else
+            return dbCommonRecordError(parameters.app_id, 404);
+    });
 };
 
 export {get, post, deleteRecord};
