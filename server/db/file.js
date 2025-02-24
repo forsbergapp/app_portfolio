@@ -479,19 +479,7 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
         .then(Log=>Log.postDBI(app_id, 0, JSON.stringify({dml:'GET', object:table}), {resource_id:resource_id, data_app_id:data_app_id}, records));
 
         if (records.length>0)
-            try {
-                //return parsed json_data columns
-                return {rows:records.map((/**@type(*)*/row)=>{
-                    return {...row, ...row.json_data?JSON.parse(row.json_data):null};
-                })};    
-            } catch (error) {
-                //log in background without waiting
-                /**@type{import('./Log.js')} */
-                import(`file://${process.cwd()}/server/db/Log.js`)
-                .then(Log=>Log.postDBE(app_id, 0, JSON.stringify({dml:'GET', object:table}), {resource_id:resource_id, data_app_id:data_app_id}, error));
-                //json parse fail
-                return {rows:records};
-            }
+            return {rows:records};
         else{
             return {rows:[]};
         }    

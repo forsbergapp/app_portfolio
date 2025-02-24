@@ -289,7 +289,7 @@ const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(p
  */
 const post = async (app_id, data) => {
     //check required attributes
-    if (!data.username || !data.password || !data.type||
+    if (data.username==null || data.password==null || data.type==null||
         //check not allowed attributes when creating a user
         data.id||data.user_level ||data.status||data.created||data.modified){
             return dbCommonRecordError(app_id, 400);

@@ -73,7 +73,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="59BE791E-642A-67DE-5C31-1B712A309CAD"/>
-<colUsage columnID="C3E56A78-E0E0-306F-F9B7-4743FBDA56DC"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="5648BD62-3973-2AB3-712E-226233DA6B27" name="app_data_entity_app_FK">

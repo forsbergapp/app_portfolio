@@ -35,7 +35,7 @@ const get = (app_id, resource_id) =>{
  */
 const post = async (app_id, data) => {
     //check required attributes
-    if (!data.iam_user_id || !data.event || !data.event_status||
+    if (data.iam_user_id==null || data.event==null || data.event_status==null||
         //check not allowed attributes when creating a user
         data.id||data.created){
             return dbCommonRecordError(app_id, 400);
@@ -68,18 +68,12 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    /**@type{server_db_table_iam_user_event}*/
-    const user = get(app_id, resource_id).result[0];
-    if (user){
-        return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_USER_EVENT', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return dbCommonRecordError(app_id, 404);
-        });
-    }
-    else
-        return user;
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_USER_EVENT', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+        if (result.affectedRows>0)
+            return {result:result, type:'JSON'};
+        else
+            return dbCommonRecordError(app_id, 404);
+    });
 };
 
 export {get, post, deleteRecord };

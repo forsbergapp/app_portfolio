@@ -3,7 +3,6 @@
  *              Type groups
  *              APP     App types
  *              BFF     Backend for frontend (BFF) types
- *              DB      SQL
  *              DB      entities in data model are either TABLE, TABLE_LOG or DOCUMENT tables in database and 
  *                      description with DB TABLE and DB DOCUMENT are sorted first rest of are other DB types
  *                      db object name syntax:
@@ -241,7 +240,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              app_id:number, 
- *              json_data:string|null,
+ *              json_data:{[key:string]:string}|null,
  *              created:string,
  *              modified:string|null}} server_db_table_app_data_entity
  */
@@ -250,7 +249,7 @@
  * @description DB TABLE app_data_entity_resource
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string|null, 
+ *              json_data:{[key:string]:string}|null, 
  *              app_data_entity_id:number, 
  *              app_data_entity_app_id:number, 
  *              app_data_id:number, 
@@ -262,7 +261,7 @@
  * @description DB TABLE app_data_resource_master
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string|null, 
+ *              json_data:{[key:string]:string}|null, 
  *              iam_user_app_id:number|null,
  *              app_data_entity_resource_app_data_entity_id:number,
  *              app_data_entity_resource_app_data_entity_app_id:number,
@@ -276,7 +275,7 @@
  * @description DB TABLE app_data_resource_detail
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string|null, 
+ *              json_data:{[key:string]:string}|null, 
  *              app_data_resource_master_id:number,
  *              app_data_entity_resource_app_data_entity_id:number,
  *              app_data_entity_resource_app_data_entity_app_id:number,
@@ -290,7 +289,7 @@
  * @description DB TABLE app_data_resource_detail_data
  * @memberof dbObjects
  * @typedef {{  id:number, 
- *              json_data:string|null, 
+ *              json_data:{[key:string]:string}|null, 
  *              app_data_resource_detail_id:number,
  *              app_data_resource_master_attribute_id:number|null,
  *              created:string,
@@ -355,7 +354,7 @@
  * @typedef {{id: number,
  *            app_id: number,
  *			      locale: string,
- *			      json_data: string|null,       //complex text
+ *			      json_data: {[key:string]:string}|null,       //complex text
  *			      text: string|null	            //simple text
  *}} server_db_table_app_translation		
  */
@@ -468,7 +467,7 @@
  * @description DB TABLE iam_user_follow
  * @memberof dbObjects
  * @typedef {{  id:number,
- *              iam_user_id:number|null,
+ *              iam_user_id:number,
  *              iam_user_id_follow:number
  *              created:string}} server_db_table_iam_user_follow
  */
@@ -496,7 +495,7 @@
  * @memberof dbObjects
  * @typedef {{
  *          id:number, 
- *          json_data:string|null,
+ *          json_data:{[key:string]:string}|null,
  *          iam_user_id: number, 
  *          app_id:number, 
  *          created:string, 
@@ -507,7 +506,7 @@
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_app_id:number
- *              json_data:string|null,
+ *              json_data:{[key:string]:string}|null,
  *              created:string,
  *              modified:string|null}} server_db_table_iam_user_app_data_post
  */
@@ -1202,114 +1201,9 @@
  * @property {number|null}          amount
  */
 
-/** 
- * @description DB server_log_result_logFilesGet
- * @typedef {{id:number, filename:string}} server_log_result_logFilesGet
- */
-
-/**
- * @description DB server_db_iam_user_getProfileUser
- * @typedef {{  id:number,
-*              bio:string|null,
-*              private:number|null,
-*              friends:number|null,
-*              user_level:string,
-*              date_created:string,
-*              username:string, 
-*              avatar:string|null,
-*              iam_user_id:number|null,
-*              count_following:number|null,
-*              count_followed:number|null,
-*              count_likes:number|null,
-*              count_liked:number|null,
-*              count_views:number,
-*              followed:number,
-*              liked:number}} server_db_iam_user_getProfileUser
-*/
-
-/**
-* @description DB server_db_iam_user_getProfileDetail
-* @typedef {{  detail:string,
-*              id:number,
-*              iam_user_id:number,
-*              avatar:string|null,
-*              username:string,
-*              total_rows:number}} server_db_iam_user_getProfileDetail
-*/
-
-/**
-* @description DB server_db_iam_user_getProfileStat
-* @typedef {{  top:string,
-*              id:number,
-*              iam_user_id:number|null,
-*              avatar:string|null,
-*              username:string,
-*              total_rows:number}} server_db_iam_user_getProfileStat
-*/
-
-/**
-* @description DB server_db_iam_user_app_getIamUserApps
-* @typedef {{  app_id:number,
-*              created:string}} server_db_iam_user_app_getIamUserApps
-*/
-
-/**
-* @description DB server_db_iam_user_app_getIamUserApp
-* @typedef {{  json_data:string|null,
-*              created:string}} server_db_iam_user_app_getIamUserApp
-*/
-
-/**
-* @description DB server_db_iam_user_app_data_post_getUserPostsByUserId
-* @typedef {{  id:number, 
-*              description:string, 
-*              json_data:string|null, 
-*              date_created:string, 
-*              date_modified:string, 
-*              user_account_app_user_account_id:number, 
-*              user_account_app_app_id:number}} server_db_iam_user_app_data_post_getUserPostsByUserId
-*/
-
-/**
-* @description DB server_db_iam_user_data_post_getProfileStatLike
-* @typedef {{  count_user_account_app_data_post_likes:number,
-*              count_user_account_app_data_post_liked:number}} server_db_iam_user_data_post_getProfileStatLike
-*/
-
-/**
-* @description DB server_db_iam_user_app_data_post_getProfileUserPosts
-* @typedef {{  id:number,
-*              description:string,
-*              user_account_app_user_account_id:number,
-*              json_data:string|null,
-*              count_likes:number,
-*              count_views:number,
-*              liked:number}} server_db_iam_user_app_data_post_getProfileUserPosts
-*/
-
-/**
-* @description DB server_db_iam_user_app_data_post_getProfileUserPostDetail
-* @typedef {{  detail:string,
-*              id:number,
-*              iam_user_id:number,
-*              avatar:string|null,
-*              username:string,
-*              total_rows:number}} server_db_iam_user_app_data_post_getProfileUserPostDetail
-*/
-
-/**
-* @description DB server_db_iam_user_app_data_post_getProfileStatPost
-* @typedef {{  top:string,
-*              id:number,
-*              iam_user_id:number,
-*              avatar:string|null,
-*              username:string,
-*              count:number,
-*              total_rows:number}} server_db_iam_user_app_data_post_getProfileStatPost
-*/
 
 /** 
- * @description DB SQL server_db_database_demo_user
+ * @description DB server_db_database_demo_user
  * @typedef {object}    server_db_database_demo_user
  * @property {number}   id
  * @property {string}   username
@@ -1370,7 +1264,7 @@
  *              app_data_entity_resource_app_data_entity_app_id:number, 
  *              app_data_entity_resource_app_data_entity_id:    number, 
  *              app_data_entity_resource_id:                    number, 
- *              json_data:string|null,
+ *              json_data:{[key:string]:string}|null,
  *              app_data_entity?:{id:number,
  *                                [key:string]:string|number},
  *              app_data_resource_detail?:[{app_data_resource_master_id:number,
@@ -1380,88 +1274,101 @@
  *                                          data_app_id:number,
  *                                          app_data_entity_resource_app_data_entity_id:number,
  *                                          app_data_resource_master_attribute_id:number|null,
- *                                          json_data:string|null,
+ *                                          json_data:{[key:string]:string}|null,
  *                                          app_data_resource_detail_data?:[{ app_data_resource_detail_id: number,
  *                                                                            user_account_id:number|null,
  *                                                                            user_account_app_id:number|null,
  *                                                                            data_app_id:number,
  *                                                                            app_data_resource_master_attribute_id:number,
- *                                                                            json_data: string|null}
+ *                                                                            json_data: {[key:string]:string}|null}
  *                                                                          ]}
  *                                      ]}[]} app_data_resource_master
  */
 
 /** 
- * @description DB SQL server_db_database_script_files
- * @typedef {   [number|null,
- *              string, 
- *              number][]} server_db_database_script_files
+ * @description DB server_db_database_demo_data
+ * @typedef {object}    server_db_database_demo_data
+ * @property {number}   id
+ * @property {string}   username
+ * @property {string}   bio
+ * @property {string}   avatar
+ * @property {{app_id:number}}iam_user_app
+ * @property {{
+ *              app_id:                             number,
+ *              json_data:{
+ *                          description:                        string,
+ *                          regional_language_locale:           string,
+ *                          regional_timezone:                  string,
+ *                          regional_number_system:             string,
+ *                          regional_layout_direction:          string,
+ *                          regional_second_language_locale:    string,
+ *                          regional_arabic_script:             string,
+ *                          regional_calendar_type:             string,
+ *                          regional_calendar_hijri_type:       string,
+ *                          gps_map_type:                       string,
+ *                          gps_popular_place_id:               number|null,
+ *                          gps_lat_text:                       string,
+ *                          gps_long_text:                      string,
+ *                          design_theme_day_id:                number,
+ *                          design_theme_month_id:              number,
+ *                          design_theme_year_id:               number,
+ *                          design_paper_size:                  string,
+ *                          design_row_highlight:               string,
+ *                          design_column_weekday_checked:      string,
+ *                          design_column_calendartype_checked: string,
+ *                          design_column_notes_checked:        string,
+ *                          design_column_gps_checked:          string,
+ *                          design_column_timezone_checked:     string,
+ *                          image_header_image_img:             string,
+ *                          image_footer_image_img:             string,
+ *                          text_header_1_text:                 string,
+ *                          text_header_2_text:                 string,
+ *                          text_header_3_text:                 string,
+ *                          text_header_align:                  string,
+ *                          text_footer_1_text:                 string,
+ *                          text_footer_2_text:                 string,
+ *                          text_footer_3_text:                 string,
+ *                          text_footer_align:                  string,
+ *                          prayer_method:                      string,
+ *                          prayer_asr_method:                  string,
+ *                          prayer_high_latitude_adjustment:    string,
+ *                          prayer_time_format:                 string,
+ *                          prayer_hijri_date_adjustment:       string,
+ *                          prayer_fajr_iqamat:                 string,
+ *                          prayer_dhuhr_iqamat:                string,
+ *                          prayer_asr_iqamat:                  string,
+ *                          prayer_maghrib_iqamat:              string,
+ *                          prayer_isha_iqamat:                 string,
+ *                          prayer_column_imsak_checked:        string,
+ *                          prayer_column_sunset_checked:       string,
+ *                          prayer_column_midnight_checked:     string,
+ *                          prayer_column_fast_start_end:       string},
+ *              }[]|[]}  iam_user_app_data_post
+ * @property {{ iam_user_app_iam_user_id:                        string,
+ *              iam_user_app_app_id:                             number, 
+ *              app_data_entity_resource_app_data_entity_app_id: number, 
+ *              app_data_entity_resource_app_data_entity_id:     number, 
+ *              app_data_entity_resource_id:                     number, 
+ *              json_data:                                       {[key:string]:string}|null,
+ *              app_data_entity?:{id:number,
+ *                                [key:string]:string|number},
+ *              app_data_resource_detail?:[{app_data_resource_master_id:number,
+ *                                          app_data_entity_resource_id: number,
+ *                                          iam_user_app_iam_user_id:number|null,
+ *                                          iam_user_app_app_id:number|null,
+ *                                          app_data_entity_resource_app_data_entity_app_id:number,
+ *                                          app_data_entity_resource_app_data_entity_id:number,
+ *                                          app_data_resource_master_attribute_id:number|null,
+ *                                          json_data:{[key:string]:string}|null,
+ *                                          app_data_resource_detail_data?:[{ app_data_resource_detail_id: number,
+ *                                                                            iam_user_app_iam_user_id:number|null,
+ *                                                                            iam_user_app_iam_user_app_id:number|null,
+ *                                                                            data_app_id:number,
+ *                                                                            app_data_resource_master_attribute_id:number,
+ *                                                                            json_data: {[key:string]:string}|null}
+ *                                                                          ]}
+ *                                      ]}[]|[]} app_data_resource_master
  */
-
-/** 
- * @description DB SQL server_db_database_install_database_script
- * @typedef {object}        server_db_database_install_database_script
- * @property {number|null}  db                  -if null then execute in all databases
- * @property {string}       script
- */
-
-/**
- * @description DB SQL server_db_database_uninstall_database_script
- * @typedef {object}        server_db_database_uninstall_database_script
- * @property {number|null}  db
- * @property {string}       sql
- */
-
-/**
- * @description DB SQL server_db_database_install_database_app_script
- * @typedef {object}        server_db_database_install_database_app_script
- * @property {number|null}  db
- * @property {string}       sql
- */
-
-/** 
- * @description DB SQL server_db_database_install_database_app_user_script
- * @typedef {object}        server_db_database_install_database_app_user_script
- * @property {number}       db
- * @property {string}       sql
- */
-
-/** 
- * @description DB SQL server_db_database_uninstall_database_app_script
- * @typedef {object}        server_db_database_uninstall_database_app_script
- * @property {number|null}  db
- * @property {string}       sql
- */
-
-
-/**
- * @description DB SQL result DB Info
- * @typedef {{  database_use:   number,
- *              database_name:  string,
- *              version:        string,
- *              database_schema:string,
- *              hostname:       string,
- *              connections:    number,
- *              started:        string}} server_db_sql_result_admin_DBInfo
- */
-
-/**
- * @description DB SQL result DB Info space
- * @typedef {{  table_name:     string,
- *              total_size:     number,
- *              data_used:      number,
- *              data_free:      number,
- *              pct_used:       number}} server_db_sql_result_admin_DBInfoSpace
- */
-
-/**
- * @description DB SQL result DB Info space sum
- * @typedef {{  total_size:     number,
- *              data_used:      number,
- *              data_free:      number,
- *              pct_used:       number}} server_db_sql_result_admin_DBInfoSpaceSum
- */
-
 
 /**
  * @description IAM server_iam_access_token_claim_scope_type

@@ -5,12 +5,12 @@
 <generatorID>14E9BCE8-2B15-7C25-2B06-1C055F7C8C03</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <referredTableLongName>app_data_entity</referredTableLongName>
-<deleteRule>CASCADE</deleteRule>
+<deleteRule>NO ACTION</deleteRule>
 <referredTableID>0C3008A2-C15A-2912-6EB3-63123909AF2E</referredTableID>
 <keyObject>52D66E98-49C2-5BD7-FC63-9E9378053D12</keyObject>
 <referredKeyID>52D66E98-49C2-5BD7-FC63-9E9378053D12</referredKeyID>
 <mandatory>true</mandatory>
-<refColNames>id,app_id</refColNames>
+<refColNames>id</refColNames>
 <transferable>true</transferable>
 <rely>false</rely>
 <columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>

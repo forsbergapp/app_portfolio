@@ -60,28 +60,22 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_iam_control_user_agent}*/
-    const record = get(app_id, resource_id).result[0];
-    if (record){
-        if (data.name!=null && data.user_agent!=null){
-            const data_update = {};
-            data_update.name = data.name;
-            data_update.user_agent = data.user_agent;
-            if (Object.entries(data_update).length==2)
-                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_CONTROL_USER_AGENT', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-                    if (result.affectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return dbCommonRecordError(app_id,404);
-                });
-            else
-                return dbCommonRecordError(app_id,400);
-        }
+    if (data.name!=null && data.user_agent!=null){
+        const data_update = {};
+        data_update.name = data.name;
+        data_update.user_agent = data.user_agent;
+        if (Object.entries(data_update).length==2)
+            return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_CONTROL_USER_AGENT', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                if (result.affectedRows>0)
+                    return {result:result, type:'JSON'};
+                else
+                    return dbCommonRecordError(app_id,404);
+            });
         else
             return dbCommonRecordError(app_id,400);
     }
     else
-        return dbCommonRecordError(app_id,404);
+        return dbCommonRecordError(app_id,400);
 };
 
 /**

@@ -71,43 +71,37 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_iam_control_observe}*/
-    const ip_record = get(app_id, resource_id).result[0];
-    if (ip_record){
-        if ((data.status==0 ||data.status==1)){
-            const data_update = {};
-            if (data.app_id!=null)
-                data_update.app_id = data.app_id;
-            if (data.ip!=null)
-                data_update.ip = data.ip;
-            if (data.user_agent!=null)
-                data_update.user_agent = data.user_agent;
-            if (data.host!=null)
-                data_update.host = data.host;
-            if (data.accept_language!=null)
-                data_update.accept_language = data.accept_language;
-            if (data.method!=null)
-                data_update.method = data.method;
-            if (data.url!=null)
-                data_update.url = data.url;
-            data_update.status = data.status;
-            data_update.modified = new Date().toISOString();
-            //id and type not allowed to update
-            if (Object.entries(data_update).length>0)
-                return fileCommonExecute({app_id:app_id, dml:'UPDATE',object:'IAM_CONTROL_OBSERVE', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-                    if (result.affectedRows>0)
-                        return {result:result,type:'JSON'};
-                    else
-                        return dbCommonRecordError(app_id, 404);
-                });
-            else
-                return dbCommonRecordError(app_id, 400);
-        }
+    if ((data.status==0 ||data.status==1)){
+        const data_update = {};
+        if (data.app_id!=null)
+            data_update.app_id = data.app_id;
+        if (data.ip!=null)
+            data_update.ip = data.ip;
+        if (data.user_agent!=null)
+            data_update.user_agent = data.user_agent;
+        if (data.host!=null)
+            data_update.host = data.host;
+        if (data.accept_language!=null)
+            data_update.accept_language = data.accept_language;
+        if (data.method!=null)
+            data_update.method = data.method;
+        if (data.url!=null)
+            data_update.url = data.url;
+        data_update.status = data.status;
+        data_update.modified = new Date().toISOString();
+        //id and type not allowed to update
+        if (Object.entries(data_update).length>0)
+            return fileCommonExecute({app_id:app_id, dml:'UPDATE',object:'IAM_CONTROL_OBSERVE', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                if (result.affectedRows>0)
+                    return {result:result,type:'JSON'};
+                else
+                    return dbCommonRecordError(app_id, 404);
+            });
         else
             return dbCommonRecordError(app_id, 400);
     }
     else
-        return dbCommonRecordError(app_id, 404);
+        return dbCommonRecordError(app_id, 400);
 };
 
 /**

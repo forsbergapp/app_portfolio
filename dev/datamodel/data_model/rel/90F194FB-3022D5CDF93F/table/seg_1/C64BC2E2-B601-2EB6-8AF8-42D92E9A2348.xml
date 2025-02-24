@@ -44,19 +44,6 @@
 <colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="D706059D-F6BA-40E7-1A87-B930D8893865"/>
 </associations>
 </Column>
-<Column name="app_data_entity_resource_app_data_entity_app_id" id="1625DFC2-5BF6-A2F0-84E5-8AC537A67413">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>CFEABD6D-DF56-531D-DD83-1F4F2BCAADD2</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="D2916AE5-B684-0538-DA54-105DEA6FD7C9"/>
-</associations>
-</Column>
 <Column name="app_data_entity_resource_app_data_entity_id" id="1FCDBAEF-C4BB-281D-5B73-A6F02EB67F88">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -65,11 +52,7 @@
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="9CE9F407-B3CA-8245-F8FF-5F82A5DA6CB1" referredColumn="70008B0B-8EF4-3816-7556-F0F838AAD5B7"/>
-</associations>
 </Column>
 <Column name="app_data_resource_master_attribute_id" id="43C2225D-F8D5-9722-9E7C-04E063ABFCFE">
 <createdBy>admin</createdBy>
@@ -145,8 +128,6 @@
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="1FCDBAEF-C4BB-281D-5B73-A6F02EB67F88"/>
-<colUsage columnID="1625DFC2-5BF6-A2F0-84E5-8AC537A67413"/>
 <colUsage columnID="0766EBAA-9809-1928-59BE-D2C3B2537DBA"/>
 </indexColumnUsage>
 </ind_PK_UK>

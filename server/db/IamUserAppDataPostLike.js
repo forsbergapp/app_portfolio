@@ -41,39 +41,30 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  data_app_id:number,
- *                  iam_user_id:number,
- *                  iam_user_app_data_post_id:number|null}}} parameters
+ *          data: server_db_table_iam_user_app_data_post_like}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters =>{
     //check required attributes
-    if (parameters.data.data_app_id==null || parameters.data.iam_user_id==null){
+    if (parameters.data.iam_user_app_id==null || parameters.data.iam_user_app_data_post_id==null){
         return dbCommonRecordError(parameters.app_id, 400);
     }
     else{
-        const record = get({app_id:parameters.app_id, 
-                            resource_id:parameters.data.iam_user_app_data_post_id, 
-                            data:{data_app_id:parameters.data.data_app_id, iam_user_id:parameters.data.iam_user_id}}).result[0];
-        if (record){
-            /**@type{server_db_table_iam_user_app_data_post_like} */
-            const data_new =     {
-                                    id:Date.now(),
-                                    iam_user_app_id:parameters.data.data_app_id, 
-                                    iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id ??record.id,
-                                    created:new Date().toISOString()
-                            };
-            return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'IAM_USER_APP_DATA_POST_LIKE', post:{data:data_new}}).then((result)=>{
-                if (result.affectedRows>0){
-                    result.insertId=data_new.id;
-                    return {result:result, type:'JSON'};
-                }
-                else
-                    return dbCommonRecordError(parameters.app_id, 404);
-            });
-        }
-        else
-            return dbCommonRecordError(parameters.app_id, 404);
+        /**@type{server_db_table_iam_user_app_data_post_like} */
+        const data_new =     {
+                                id:Date.now(),
+                                iam_user_app_id:parameters.data.iam_user_app_id, 
+                                iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id,
+                                created:new Date().toISOString()
+                        };
+        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'IAM_USER_APP_DATA_POST_LIKE', post:{data:data_new}}).then((result)=>{
+            if (result.affectedRows>0){
+                result.insertId=data_new.id;
+                return {result:result, type:'JSON'};
+            }
+            else
+                return dbCommonRecordError(parameters.app_id, 404);
+        });
     }
 };
 
@@ -83,29 +74,19 @@ const post = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number|null,
- *          data:{  data_app_id:number,
- *                  iam_user_id:number}}} parameters
+ *          resource_id:number}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    const record = get({  app_id:parameters.app_id, 
-                            resource_id:parameters.resource_id, 
-                            data:{data_app_id:parameters.data.data_app_id, iam_user_id:parameters.data.iam_user_id}}).result[0];
-    if (record){
-        //delete using resource id or id for searched user and app
-        return fileCommonExecute({  app_id:parameters.app_id, 
-                                    dml:'DELETE', 
-                                    object:'IAM_USER_APP_DATA_POST_LIKE', 
-                                    delete:{resource_id:parameters.resource_id ?? record.id, data_app_id:null}}).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return dbCommonRecordError(parameters.app_id, 404);
-        });
-    }
-    else
-        return dbCommonRecordError(parameters.app_id, 404);
+    return fileCommonExecute({  app_id:parameters.app_id, 
+                                dml:'DELETE', 
+                                object:'IAM_USER_APP_DATA_POST_LIKE', 
+                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+        if (result.affectedRows>0)
+            return {result:result, type:'JSON'};
+        else
+            return dbCommonRecordError(parameters.app_id, 404);
+    });
 };
 
 export {get, post, deleteRecord};
