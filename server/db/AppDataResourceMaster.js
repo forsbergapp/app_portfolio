@@ -35,8 +35,7 @@ const get = parameters =>{
  */
 const post = async parameters => {
     //check required attributes
-    if (  parameters.data.app_data_entity_resource_app_data_entity_app_id==null ||
-        parameters.data.app_data_entity_resource_app_data_entity_id==null ||
+    if (parameters.data.app_data_entity_resource_app_data_entity_id==null ||
         parameters.data.app_data_entity_resource_id==null){
         return dbCommonRecordError(parameters.app_id, 400);
     }
@@ -46,7 +45,6 @@ const post = async parameters => {
                                 id:Date.now(),
                                 iam_user_app_id:parameters.data.iam_user_app_id,
                                 app_data_entity_resource_app_data_entity_id:parameters.data.app_data_entity_resource_app_data_entity_id,
-                                app_data_entity_resource_app_data_entity_app_id:parameters.data.app_data_entity_resource_app_data_entity_app_id,
                                 app_data_entity_resource_id:parameters.data.app_data_entity_resource_id,
                                 json_data:parameters.data.json_data,
                                 created:new Date().toISOString(),
