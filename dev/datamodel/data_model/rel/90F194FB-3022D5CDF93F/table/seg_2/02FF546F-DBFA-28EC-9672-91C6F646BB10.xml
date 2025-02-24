@@ -8,6 +8,14 @@
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>
 <columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="AE090DF2-9577-484E-6E28-6861625499D9">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-24 09:52:51 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 <Column name="app_id" id="A233BB75-8F7B-BAF6-A5D9-57F1F7B19CCB">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -77,7 +85,7 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="0D55D495-6D39-2138-2A20-652DD0D096B7"/>
+<colUsage columnID="AE090DF2-9577-484E-6E28-6861625499D9"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="573BAD65-5BC9-EED9-168F-EE8851AB438B" name="iam_app_id_token_token_UN">
