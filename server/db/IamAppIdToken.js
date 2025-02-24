@@ -13,10 +13,11 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @name get
  * @description Get user
  * @function
- * @param {number} app_id
+ * @param {{app_id:number,
+ *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_iam_app_id_token[] }}
  */
-const get = app_id => {return {result:fileDBGet(app_id, 'IAM_APP_ID_TOKEN', null, null).rows, type:'JSON'};};
+const get = parameters => {return {result:fileDBGet(parameters.app_id, 'IAM_APP_ID_TOKEN', parameters.resource_id, null).rows, type:'JSON'};};
 
 /**
  * @name post
@@ -37,6 +38,7 @@ const post = async (app_id, data) => {
         if (fileDBGet(app_id, 'IAM_APP_ID_TOKEN', null, null).rows.filter((/**@type{server_db_table_iam_app_id_token} */row)=>row.token==data.token).length==0){
             /**@type{server_db_table_iam_app_id_token} */
             const data_new = {};
+            data_new.id = Date.now();
             //required
             data_new.app_id = data.app_id;
             data_new.res = data.res;

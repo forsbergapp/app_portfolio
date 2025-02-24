@@ -15,6 +15,16 @@
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="EB8B29F3-FF06-354E-E1FC-7855C828A886">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-24 09:52:05 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="app_id" id="2DF91222-F698-24E6-CB4D-503D73668439">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 23:08:40 UTC</createdTime>
@@ -89,9 +99,9 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <pk>true</pk>
-<newElementsIDs>D6D5957D-46E8-EE76-EE43-CFC769D2009A</newElementsIDs>
+<newElementsIDs>EB8B29F3-FF06-354E-E1FC-7855C828A886</newElementsIDs>
 <usedAttributes>
-<attributeRef>D6D5957D-46E8-EE76-EE43-CFC769D2009A</attributeRef>
+<attributeRef>EB8B29F3-FF06-354E-E1FC-7855C828A886</attributeRef>
 </usedAttributes>
 </identifier>
 <identifier id="C0F8519C-EE21-296B-7975-8F2DD63F79EB" name="IAM_APP_ID_TOKEN_UK">

@@ -17,7 +17,7 @@
     {"name":"CONFIG_IAM_POLICY",              "type":"DOCUMENT",        "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
     {"name":"CONFIG_MICROSERVICE",            "type":"DOCUMENT",        "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
     {"name":"CONFIG_MICROSERVICE_SERVICES",   "type":"DOCUMENT",        "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
-    {"name":"IAM_APP_ID_TOKEN",               "type":"TABLE",           "pk":"created", "uk":["token"],                     "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
+    {"name":"IAM_APP_ID_TOKEN",               "type":"TABLE",           "pk":"id",      "uk":["token"],                     "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
     {"name":"IAM_APP_ACCESS",                 "type":"TABLE",           "pk":"id",      "uk":["token"],                     "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
     {"name":"IAM_CONTROL_IP",                 "type":"TABLE",           "pk":"id",      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
     {"name":"IAM_CONTROL_USER_AGENT",         "type":"TABLE",           "pk":"id",      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null, "cache_content":null},
