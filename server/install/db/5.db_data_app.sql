@@ -2,13 +2,14 @@
 --
 -- app data entity
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (5000, <APP_ID/>, '{   "description":"Entity info: Swedish bank using SEPA, IBAN, VPA",
-                            "name":"App Bank", 
-                            "country_code":"SE", 
-                            "bank_id":1234, 
-                            "bban_length":16, 
-                            "bank_type":"SEPA", 
-                            "entity_type":"BANK"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (5000, <APP_ID/>, '{"description":"Entity info: Swedish bank using SEPA, IBAN, VPA",
+                                                                                            "name":"App Bank", 
+                                                                                            "country_code":"SE", 
+                                                                                            "bank_id":1234, 
+                                                                                            "bban_length":16, 
+                                                                                            "bank_type":"SEPA", 
+                                                                                            "entity_type":"BANK",
+                                                                                            "app_user_account_id_owner":null}');
 --
 -- app data entity resource
 --

@@ -1364,29 +1364,31 @@
  *              prayer_column_sunset_checked:       string,
  *              prayer_column_midnight_checked:     string,
  *              prayer_column_fast_start_end:       string
- *              }[]}   settings
+ *              }[]}  iam_user_app_data_post
  * @property {{ user_account_app_user_account_id:               string,
  *              user_account_app_app_id:                        number, 
  *              app_data_entity_resource_app_data_entity_app_id:number, 
  *              app_data_entity_resource_app_data_entity_id:    number, 
  *              app_data_entity_resource_id:                    number, 
  *              json_data:string|null,
- *              resource_detail:[{  app_data_resource_master_id:number,
- *                                  app_data_entity_resource_id: number,
- *                                  user_account_id:number|null,
- *                                  user_account_app_id:number|null,
- *                                  data_app_id:number,
- *                                  app_data_entity_resource_app_data_entity_id:number,
- *                                  app_data_resource_master_attribute_id:number|null,
- *                                  json_data:string|null,
- *                                  resource_detail_data:[{ app_data_resource_detail_id: number,
- *                                                          user_account_id:number|null,
- *                                                          user_account_app_id:number|null,
- *                                                          data_app_id:number,
- *                                                          app_data_resource_master_attribute_id:number,
- *                                                          json_data: string|null}
- *                                                       ]}
- *                              ]}[]} resource_master
+ *              app_data_entity?:{id:number,
+ *                                [key:string]:string|number},
+ *              app_data_resource_detail?:[{app_data_resource_master_id:number,
+ *                                          app_data_entity_resource_id: number,
+ *                                          user_account_id:number|null,
+ *                                          user_account_app_id:number|null,
+ *                                          data_app_id:number,
+ *                                          app_data_entity_resource_app_data_entity_id:number,
+ *                                          app_data_resource_master_attribute_id:number|null,
+ *                                          json_data:string|null,
+ *                                          app_data_resource_detail_data?:[{ app_data_resource_detail_id: number,
+ *                                                                            user_account_id:number|null,
+ *                                                                            user_account_app_id:number|null,
+ *                                                                            data_app_id:number,
+ *                                                                            app_data_resource_master_attribute_id:number,
+ *                                                                            json_data: string|null}
+ *                                                                          ]}
+ *                                      ]}[]} app_data_resource_master
  */
 
 /** 

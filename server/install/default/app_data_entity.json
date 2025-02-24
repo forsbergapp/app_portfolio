@@ -6,6 +6,20 @@
                                                                                                 "bank_id":1234, 
                                                                                                 "bban_length":16, 
                                                                                                 "bank_type":"SEPA", 
-                                                                                                "entity_type":"BANK"}},
-    {"id":6000, "app_id":6, "created":"2025-01-01T00:00:00.000Z", "modified":null, "json_data":{"description":"Entity info: Shop", "name":"SHOP", "entity_type":"SHOP", "store_type":"INTERNET"}}
+                                                                                                "entity_type":"BANK",
+                                                                                                "app_user_account_id_owner":null
+                                                                                                }},
+    {"id":6000, "app_id":6, "created":"2025-01-01T00:00:00.000Z", "modified":null, "json_data":{"description":"Entity info: Shop", 
+                                                                                                "name":"SHOP", 
+                                                                                                "entity_type":"SHOP", 
+                                                                                                "store_type":"INTERNET",
+                                                                                                "merchant_id":null,
+                                                                                                "merchant_name":null,
+                                                                                                "merchant_api_url_payment_request_create":null, 
+                                                                                                "merchant_api_url_payment_request_get_status":null,
+                                                                                                "merchant_api_secret":null, 
+                                                                                                "merchant_public_key":null,
+                                                                                                "merchant_private_key":null,
+                                                                                                "merchant_vpa":null,
+                                                                                                "app_user_account_id_anonymous":null}}
 ]
