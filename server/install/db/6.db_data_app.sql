@@ -4,7 +4,19 @@
 --
 --app data entity
 --
-INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (6000, <APP_ID/>, '{"description":"Entity info: Shop", "name":"SHOP", entity_type:"SHOP", "store_type":"INTERNET"}');
+INSERT INTO <DB_SCHEMA/>.app_data_entity (id, app_id, json_data) VALUES (6000, <APP_ID/>, '{    "description":"Entity info: Shop", 
+                                                                                                "name":"SHOP", 
+                                                                                                "entity_type":"SHOP", 
+                                                                                                "store_type":"INTERNET",
+                                                                                                "merchant_id":null,
+                                                                                                "merchant_name":null,
+                                                                                                "merchant_api_url_payment_request_create":null, 
+                                                                                                "merchant_api_url_payment_request_get_status":null,
+                                                                                                "merchant_api_secret":null, 
+                                                                                                "merchant_public_key":null,
+                                                                                                "merchant_private_key":null,
+                                                                                                "merchant_vpa":null,
+                                                                                                "app_user_account_id_anonymous":null}');
 --
 --app data entity resource
 --
