@@ -18,19 +18,6 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="app_data_entity_app_id" id="D2916AE5-B684-0538-DA54-105DEA6FD7C9">
-<createdBy>admin</createdBy>
-<createdTime>2025-02-17 22:07:03 UTC</createdTime>
-<generatorID>523E531C-CF3B-12BE-020E-5B896A5731F1</generatorID>
-<ownerDesignName>data_model</ownerDesignName>
-<use>0</use>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
-<previousColumn>false</previousColumn>
-<autoIncrementCycle>false</autoIncrementCycle>
-<associations>
-<colAssociation fkAssociation="4D74F139-61B3-7846-E6AF-78663D27A8B9" referredColumn="C3E56A78-E0E0-306F-F9B7-4743FBDA56DC"/>
-</associations>
-</Column>
 <Column name="app_data_entity_id" id="70008B0B-8EF4-3816-7556-F0F838AAD5B7">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
@@ -99,9 +86,18 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="70008B0B-8EF4-3816-7556-F0F838AAD5B7"/>
-<colUsage columnID="D2916AE5-B684-0538-DA54-105DEA6FD7C9"/>
 <colUsage columnID="D706059D-F6BA-40E7-1A87-B930D8893865"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="061A977D-3BB0-6C3C-CF7F-B79045989DDA" name="app_data_entity_resource_UK">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-24 21:02:56 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="70008B0B-8EF4-3816-7556-F0F838AAD5B7"/>
+<colUsage columnID="8E47CA80-DF81-72AA-9AB1-DB1FAFC9AB1E"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="281E1C51-078C-5905-98D3-2729B01D9B34" name="app_data_entity_resource_app_data_entity_FK">
@@ -113,7 +109,6 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="70008B0B-8EF4-3816-7556-F0F838AAD5B7"/>
-<colUsage columnID="D2916AE5-B684-0538-DA54-105DEA6FD7C9"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="E9FF2408-B6CD-FD0F-08AD-118460F070E4" name="app_data_entity_resource_app_data_FK">

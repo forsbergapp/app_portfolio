@@ -36,7 +36,7 @@ const get = (app_id, resource_id) =>{
  */
 const post = async (app_id, data) => {
     //check required attributes
-    if (data.from && data.to){
+    if (data.from!=null && data.to!=null){
         const id = Date.now();
         return fileCommonExecute({  app_id:app_id, dml:'POST', object:'IAM_CONTROL_IP', 
                                     post:{data:{id:id, 
@@ -70,41 +70,35 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_iam_control_ip}*/
-    const ip_record = get(app_id, resource_id).result[0];
-    if (ip_record){
-        if (data.from && data.to){
-            const data_update = {};
-            if (data.from!=null)
-                data_update.from = data.from;
-            if (data.to!=null)
-                data_update.to = data.to;
-            if (data.hour_from!=null)
-                data_update.hour_from = data.hour_from;
-            if (data.hour_to!=null)
-                data_update.hour_to = data.hour_to;
-            if (data.date_from!=null)
-                data_update.date_from = data.date_from;
-            if (data.date_to!=null)
-                data_update.date_to = data.date_to;
-            if (data.action!=null)
-                data_update.action = data.action;
+    if (data.from!=null && data.to!=null){
+        const data_update = {};
+        if (data.from!=null)
+            data_update.from = data.from;
+        if (data.to!=null)
+            data_update.to = data.to;
+        if (data.hour_from!=null)
+            data_update.hour_from = data.hour_from;
+        if (data.hour_to!=null)
+            data_update.hour_to = data.hour_to;
+        if (data.date_from!=null)
+            data_update.date_from = data.date_from;
+        if (data.date_to!=null)
+            data_update.date_to = data.date_to;
+        if (data.action!=null)
+            data_update.action = data.action;
 
-            if (Object.entries(data_update).length==2)
-                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_CONTROL_IP', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-                    if (result.affectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return dbCommonRecordError(app_id, 404);
-                });
-            else
-                return dbCommonRecordError(app_id, 400);
-        }
+        if (Object.entries(data_update).length==2)
+            return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_CONTROL_IP', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                if (result.affectedRows>0)
+                    return {result:result, type:'JSON'};
+                else
+                    return dbCommonRecordError(app_id, 404);
+            });
         else
             return dbCommonRecordError(app_id, 400);
     }
     else
-        return dbCommonRecordError(app_id, 404);
+        return dbCommonRecordError(app_id, 400);
 };
 
 /**

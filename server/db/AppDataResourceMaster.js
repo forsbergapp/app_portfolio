@@ -30,38 +30,25 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {{app_id:number,
- *          data:{  json_data:*,
- *                  data_app_id:number,
- *                  iam_user_id:number|null,
- *                  app_data_entity_resource_app_data_entity_id: number,
- *                  app_data_entity_resource_id: number,
- *                  app_data_resource_master_attribute_id: number}}} parameters
+ *          data:server_db_table_app_data_resource_master}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const post = async parameters => {
     //check required attributes
-    if (  parameters.data.data_app_id==null ||
+    if (  parameters.data.app_data_entity_resource_app_data_entity_app_id==null ||
         parameters.data.app_data_entity_resource_app_data_entity_id==null ||
         parameters.data.app_data_entity_resource_id==null){
         return dbCommonRecordError(parameters.app_id, 400);
     }
     else{
-        /**@type{import('./IamUserApp.js')} */
-        const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
-        /**@type{server_db_table_iam_user_app['id']}*/
-        const iam_user_app_id = parameters.data.iam_user_id?
-                                    IamUserApp.get({app_id:parameters.app_id, 
-                                                    resource_id:null,
-                                                    data:{  iam_user_id:parameters.data.iam_user_id, 
-                                                            data_app_id:parameters.data.data_app_id}}).result[0]?.id:null;
         /**@type{server_db_table_app_data_resource_master} */
         const data_new =     {
                                 id:Date.now(),
-                                iam_user_app_id:iam_user_app_id,
+                                iam_user_app_id:parameters.data.iam_user_app_id,
                                 app_data_entity_resource_app_data_entity_id:parameters.data.app_data_entity_resource_app_data_entity_id,
-                                app_data_entity_resource_app_data_entity_app_id:parameters.data.data_app_id,
+                                app_data_entity_resource_app_data_entity_app_id:parameters.data.app_data_entity_resource_app_data_entity_app_id,
                                 app_data_entity_resource_id:parameters.data.app_data_entity_resource_id,
-                                json_data:parameters.data.json_data?JSON.stringify(parameters.data.json_data):null,
+                                json_data:parameters.data.json_data,
                                 created:new Date().toISOString(),
                                 modified:null
                         };
@@ -96,7 +83,7 @@ const update = async parameters =>{
        const data_update = {};
        //allowed parameters to update:
        if (parameters.data.json_data!=null)
-           data_update.json_data = JSON.stringify(parameters.data.json_data);
+           data_update.json_data = parameters.data.json_data;
        data_update.modified = new Date().toISOString();
        if (Object.entries(data_update).length>0)
            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_DATA_RESOURCE_MASTER', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
