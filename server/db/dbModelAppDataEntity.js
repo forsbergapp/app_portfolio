@@ -1,7 +1,7 @@
 /** @module server/db/dbModelAppDataEntity */
 
 /**
- * @import {server_server_response,server_db_sql_result_app_data_entity_get} from '../types.js'
+ * @import {server_server_response,server_db_common_result_update, server_db_sql_result_app_data_entity_get} from '../types.js'
  */
 
 /**@type{import('./dbSql.js')} */
@@ -12,7 +12,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
 
 /**
  * @name get
- * @description Get Entity
+ * @description get record
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -26,4 +26,21 @@ const get = parameters =>
                         dbSql.APP_DATA_ENTITY_SELECT, 
                         {   resource_id: parameters.resource_id,
                             data_app_id : serverUtilNumberValue(parameters.data?.data_app_id)}));
-export{get};
+/**
+ * @name update
+ * @description update record
+ * @function
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          data:{  json_data:*,
+ *                  data_app_id?:number|null}}} parameters
+ * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
+ */
+const update = parameters => 
+    import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
+        dbCommonExecute(parameters.app_id, 
+                        dbSql.APP_DATA_ENTITY_UPDATE, 
+                        {   resource_id: parameters.resource_id,
+                            json_data:   JSON.stringify(parameters.data.json_data),
+                            data_app_id : serverUtilNumberValue(parameters.data?.data_app_id)}));
+export{get, update};

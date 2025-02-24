@@ -2,10 +2,10 @@
 
 /**
  * @import {server_server_response,
- *          server_db_app_secret,
+ *          server_db_table_app_secret,
  *          server_db_sql_parameter_user_account_view_insertUserAccountView,
  *          server_db_sql_parameter_user_account_app_data_post_createUserPost, server_server_error, 
- *          server_db_iam_user,server_db_database_demo_user,
+ *          server_db_table_iam_user,server_db_database_demo_user,
  *          server_db_database_uninstall_database_script,server_db_database_uninstall_database_app_script,
  *          server_db_database_install_uninstall_result, server_db_database_install_db_check,
  *          server_db_db_pool_parameters,
@@ -381,7 +381,7 @@ const dbInfoSpaceSum = parameters =>
         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
         //get apps if db credentials configured or use empty array for progress message count
         const apps = Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)?App.get({app_id:parameters.app_id,resource_id:null}).result
-                    .filter((/**@type{server_db_app}*/app)=>
+                    .filter((/**@type{server_db_table_app}*/app)=>
                             app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
                             app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))):[];
         //drop users first to avoid db connection error
@@ -470,8 +470,9 @@ const dbInfoSpaceSum = parameters =>
  *                  3B.Create user_account_app record for all apps except admin
  *                  3C.Create user posts if any
  *                  3D.Create app data master records if any
- *                      3E.Create app data detail records if any
- *                          3F.Create app data detail data records if any
+ *                      3E.Update app data entity record if anything to update
+ *                      3F.Create app data detail records if any
+ *                          3G.Create app data detail data records if any
  *                  4.Create social record LIKE, VIEW, VIEW_ANONYMOUS, FOLLOWER, POSTS_LIKE, POSTS_VIEW and POSTS_VIEW_ANONYMOUS
  *                      4A.Create random sample
  *                          Random records are created using 2 lists of all users and creates records until two groups both have 50% samples with unique users in each sample of social type
@@ -516,6 +517,10 @@ const dbInfoSpaceSum = parameters =>
     const dbModelUserAccountAppDataPostLike = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostLike.js`);
     /**@type{import('./dbModelUserAccountAppDataPostView.js')} */
     const dbModelUserAccountAppDataPostView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
+
+    /**@type{import('./dbModelAppDataEntity.js')} */
+    const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
+
     /**@type{import('./dbModelAppDataResourceMaster.js')} */
     const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
     /**@type{import('./dbModelAppDataResourceDetail.js')} */
@@ -525,9 +530,6 @@ const dbInfoSpaceSum = parameters =>
 
     /**@type{import('./App.js')} */
     const App = await import(`file://${process.cwd()}/server/db/App.js`);
-
-    /**@type{import('./AppSecret.js')} */
-    const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
     /**@type{import('../security.js')} */
     const {securityKeyPairCreate, securityUUIDCreate, securitySecretCreate} = await import(`file://${process.cwd()}/server/security.js`);
@@ -564,7 +566,20 @@ const dbInfoSpaceSum = parameters =>
                  * @returns 
                  */
                 const create_update_id = async demo_user=>{
-                /**@type{server_db_iam_user}*/
+                    /**@type{{  username:           server_db_table_iam_user['username'],
+                     *          bio:                server_db_table_iam_user['bio'],
+                     *          avatar:             server_db_table_iam_user['avatar'],
+                     *          password:           server_db_table_iam_user['password'],
+                     *          password_reminder:  server_db_table_iam_user['password_reminder'],
+                     *          email:              server_db_table_iam_user['email'],
+                     *          email_unverified:   server_db_table_iam_user['email_unverified'],
+                     *          active:             server_db_table_iam_user['active'],
+                     *          private:            server_db_table_iam_user['private'],
+                     *          user_level:         server_db_table_iam_user['user_level'],
+                     *          type:               server_db_table_iam_user['type'],
+                     *          verification_code:  server_db_table_iam_user['verification_code']
+                     * 
+                    }}*/
                     const data_create = {   username:               demo_user.username,
                                             bio:                    demo_user.bio,
                                             avatar:                 demo_user.avatar,
@@ -682,6 +697,38 @@ const dbInfoSpaceSum = parameters =>
                 });
             });
         };
+        /**
+         * Update app_data entity with additional keys
+         * @param {number} user_account_post_app_id 
+         * @param {server_db_database_demo_user['app_data_resource_master'][0]['app_data_entity']} data 
+         * @returns {Promise.<number>}
+         */
+        const update_app_data_entity = async (user_account_post_app_id,data) => {
+            const result_get = await dbModelAppDataEntity.get({ app_id:user_account_post_app_id, 
+                                                                /**@ts-ignore */
+                                                                resource_id:data.id, 
+                                                                data:{data_app_id:null}});
+            if(result_get.result){
+                const update_json_data = JSON.parse(result_get.result[0].json_data);
+                for (const key of Object.entries(data??{}))
+                    //skip PK
+                    if (key[0]!='id')
+                        update_json_data[key[0]] = key[1];
+                const result_update = await dbModelAppDataEntity.update({   app_id:user_account_post_app_id, 
+                                                                            /**@ts-ignore */
+                                                                            resource_id:data.id, 
+                                                                            data:{json_data:update_json_data}});
+                if(result_update.result){
+                    if (result_update.result.affectedRows == 1)
+                        records_user_account_resource_detail++;
+                    return result_update.result.affectedRows;
+                }
+                else
+                    throw result_update;
+            }
+            else
+                throw result_get;
+        };
 
         /**
          * 
@@ -706,7 +753,7 @@ const dbInfoSpaceSum = parameters =>
 
         //1.Create all users first and update with id
         await create_users(demo_users);
-        /**@type{server_db_app[]}*/
+        /**@type{server_db_table_app[]}*/
         const apps = App.get({app_id:parameters.app_id, resource_id:null}).result;
         
         //2.Generate key pairs for each user that can be saved both in resource and apps configuration
@@ -740,7 +787,7 @@ const dbInfoSpaceSum = parameters =>
                 await create_user_account_app(app.id, demo_user.id);
             }
             //3C.Create user posts if any
-            for (const demo_user_account_app_data_post of demo_user.settings){
+            for (const demo_user_account_app_data_post of demo_user.iam_user_app_data_post){
                 let settings_header_image;
                 //use file in settings or if missing then use filename same as demo username
                 if (demo_user_account_app_data_post.image_header_image_img)
@@ -781,60 +828,40 @@ const dbInfoSpaceSum = parameters =>
                  * @returns {string}
                  */
                 const value_set = key_name =>{
-                    if (resource.app_update_secret && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0] in secret_key)[0])
-                        switch (resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key_name[0] in secret_key)[0][key_name[0]]){
-                            case 'DATE_NOW':
+                        switch (key_name[1]){
+                            case '<DATE_NOW/>':
                                 return Date.now().toString();
-                            case 'DATE_NOW_PADSTART_16':
+                            case '<DATE_NOW_PADSTART_16/>':
                                 return Date.now().toString().padStart(16,'0');
-                            case 'DATE_ISO':
+                            case '<DATE_ISO/>':
                                 return new Date().toISOString();
-                            case 'UUID':
+                            case '<UUID/>':
                                 return demo_vpa;
-                            case 'SECRET':
+                            case '<SECRET/>':
                                 return securitySecretCreate();
-                            case 'PUBLIC_KEY':
+                            case '<PUBLIC_KEY/>':
                                 return demo_public_key;
-                            case 'PRIVATE_KEY':
+                            case '<PRIVATE_KEY/>':
                                 return demo_private_key;
-                            case 'USER_ACCOUNT_ID':
+                            case '<USER_ACCOUNT_ID/>':
                                 return demo_user.id.toString();
                             default:{
                                 //replace if containing HOST parameter
-                                return key_name[1].replaceAll('<HOST/>', Config.get('CONFIG_SERVER','SERVER','HOST') ?? '');
-                            }
-                                
+                                if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1)
+                                    return key_name[1]?.replaceAll('<HOST/>', Config.get('CONFIG_SERVER','SERVER','HOST') ?? '');
+                                else
+                                    return key_name[1];
+                            }        
                         }
-                    else
-                        return key_name[1];
                 };
                 //loop json_data keys
                 for (const key of Object.entries(resource.json_data)){
-                    const value = value_set(key);
-                    if (resource.app_registry_update_app_id && resource.app_update_secret.filter((/**@type{*}*/secret_key)=>key[0] in secret_key).length>0)
-                        await AppSecret.update({   app_id:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-                                                            resource_id:resource.app_registry_update_app_id,
-                                                            data:{   
-                                                                parameter_name:     key[0],
-                                                                parameter_value:    value
-                                                            }});
-                    resource.json_data[key[0]] = value;
+                    resource.json_data[key[0]] = value_set(key);
                 }
-                //loop custom secret keys containing USER_ACCOUNT_ID not in json_data
-                if (resource.app_update_secret)
-                    for (const key of resource.app_update_secret.filter((/**@type{*}*/secret_key)=>Object.values(secret_key)[0]=='USER_ACCOUNT_ID')){
-                        const value = value_set([Object.keys(key)[0], Object.values(key)[0]]);
-                        await AppSecret.update({   app_id:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))??0, 
-                                                            resource_id:resource.app_registry_update_app_id,
-                                                            data:{   
-                                                                parameter_name:     Object.keys(key)[0],
-                                                                parameter_value:    value
-                                                            }});
-                    }
                 return resource.json_data;
             };
             //3D.Create app data master records if any
-            for (const resource_master of demo_user.resource_master ?? []){
+            for (const resource_master of demo_user.app_data_resource_master ?? []){
                 const data = {  
                                 user_account_id:                                demo_user.id,
                                 user_account_app_id:                            resource_master.user_account_app_app_id,
@@ -844,8 +871,32 @@ const dbInfoSpaceSum = parameters =>
                                 json_data:                                      await demo_data_update(resource_master)
                 };
                 const master_id = await create_resource_master(parameters.app_id, data);
-                //3E.Create app data detail records if any
-                for (const resource_detail of resource_master.resource_detail ?? []){
+                //3E.Update app data entity record if anything to update
+                if (resource_master.app_data_entity && resource_master.app_data_entity.id){
+                    //set values used in app data master
+                    for (const key of Object.entries(data.json_data)){
+                        if (key[0]!='id' &&
+                            (key[0]=='merchant_id' ||
+                            key[0]=='merchant_name' ||
+                            key[0]=='merchant_api_url_payment_request_create' ||
+                            key[0]=='merchant_api_url_payment_request_get_status' ||
+                            key[0]=='merchant_api_secret' ||
+                            key[0]=='merchant_public_key' ||
+                            key[0]=='merchant_private_key' ||
+                            key[0]=='merchant_vpa')
+                        )
+                            resource_master.app_data_entity[key[0]] = key[1];
+                    }
+                    //set demo user id values in app data entity if used
+                    if (resource_master.app_data_entity.app_user_account_id_owner)
+                        resource_master.app_data_entity.app_user_account_id_owner = demo_user.id;
+                    if (resource_master.app_data_entity.app_user_account_id_anonymous)
+                        resource_master.app_data_entity.app_user_account_id_anonymous = demo_user.id;
+                    await update_app_data_entity(parameters.app_id, resource_master.app_data_entity);
+                }
+                    
+                //3F.Create app data detail records if any
+                for (const resource_detail of resource_master.app_data_resource_detail ?? []){
                     const data = {  app_data_resource_master_id                     : master_id,
                                     app_data_entity_resource_id                     : resource_detail.app_data_entity_resource_id,
                                     user_account_id                                 : demo_user.id,
@@ -856,8 +907,8 @@ const dbInfoSpaceSum = parameters =>
                                     json_data                                       : await demo_data_update(resource_detail)
                                     };
                     const detail_id = await create_resource_detail(parameters.app_id, data);
-                    //3F.Create app data detail data records if any
-                    for (const resource_detail_data of resource_detail.resource_detail_data ?? []){
+                    //3G.Create app data detail data records if any
+                    for (const resource_detail_data of resource_detail.app_data_resource_detail_data ?? []){
                         const data ={   app_data_resource_detail_id             : detail_id,
                                         user_account_id                         : demo_user.id,
                                         user_account_app_id                     : resource_detail_data.user_account_app_id,
@@ -1084,7 +1135,7 @@ const dbInfoSpaceSum = parameters =>
                         case 'POSTS_LIKE':{
                             //4H.Create user account app data post like
                             //pick a random user setting from the user and return the app_id
-                            const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].settings;
+                            const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].iam_user_app_data_post;
                             if (user_account_app_data_posts.length>0){
                                 const settings_app_id = user_account_app_data_posts[Math.floor(1 + Math.random() * user_account_app_data_posts.length - 1 )].app_id;
                                 await create_user_account_app_data_post_like(settings_app_id, user1, user2);
@@ -1095,7 +1146,7 @@ const dbInfoSpaceSum = parameters =>
                         case 'POSTS_VIEW_ANONYMOUS':{
                             //4I.Create user account app data post view
                             //pick a random user setting from the user and return the app_id
-                            const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].settings;
+                            const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].iam_user_app_data_post;
                             if (user_account_app_data_posts.length>0){
                                 const settings_app_id = user_account_app_data_posts[Math.floor(1 + Math.random() * user_account_app_data_posts.length - 1 )].app_id;
                                 await create_user_account_app_data_post_view(settings_app_id, user1, user2 , social_type) ;
@@ -1149,7 +1200,7 @@ const dbDemoUninstall = async parameters => {
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
-    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_iam_user}*/row)=>row.user_level==2);
+    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_iam_user}*/row)=>row.user_level==2);
     if (result_demo_users){
         let deleted_user = 0;
         if (result_demo_users.length>0){
@@ -1193,7 +1244,35 @@ const dbDemoUninstall = async parameters => {
                     throw error;
                 else
                     throw dbCommonRecordError(parameters.app_id, 500, error);
-                });
+            });
+            //set demo key values to null
+            /**@type{import('./dbModelAppDataEntity.js')} */
+            const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
+            const result_get = await dbModelAppDataEntity.get({ app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}});
+            if(result_get.result){
+                for (const row of result_get.result){
+                    const update_json_data = JSON.parse(row.json_data);
+                    for (const key of Object.entries(update_json_data??{})){
+                        if (key[0]=='app_user_account_id_owner' ||
+                            key[0]=='merchant_id' ||
+                            key[0]=='merchant_name' ||
+                            key[0]=='merchant_api_url_payment_request_create' ||
+                            key[0]=='merchant_api_url_payment_request_get_status' ||
+                            key[0]=='merchant_api_secret' ||
+                            key[0]=='merchant_public_key' ||
+                            key[0]=='merchant_private_key' ||
+                            key[0]=='merchant_vpa' ||
+                            key[0]=='app_user_account_id_anonymous' 
+                        )
+                            update_json_data[key[0]] = null;
+                    }
+                    await dbModelAppDataEntity.update({   app_id:parameters.app_id,                                         
+                                                            resource_id:row.id, 
+                                                            data:{json_data:update_json_data}});
+                }
+            }
+            else
+                throw result_get;
             Log.postServerI(`Demo uninstall count: ${deleted_user}`);
             return {result:{info: [{'count': deleted_user}]}, type:'JSON'};
         }
@@ -1286,10 +1365,10 @@ const dbStart = async () => {
                 password = `${Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
                 await DB_POOL(db_use, true, user, password, null);
             }
-            for (const app  of App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_app}*/app)=>
+            for (const app  of App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_app}*/app)=>
                 app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
                 app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
-                const app_secret = AppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
+                const app_secret = AppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_table_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
                 /**@ts-ignore */
                 if (app_secret[`service_db_db${db_use}_app_user`])
                     await DB_POOL(  db_use, 

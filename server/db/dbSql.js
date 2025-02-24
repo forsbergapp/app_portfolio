@@ -35,6 +35,11 @@ const APP_DATA_ENTITY_SELECT =
        FROM <DB_SCHEMA/>.app_data_entity
       WHERE (id		= :resource_id OR :resource_id IS NULL)
         AND (app_id = :data_app_id OR :data_app_id IS NULL)`;
+const APP_DATA_ENTITY_UPDATE = 
+    `UPDATE <DB_SCHEMA/>.app_data_entity
+        SET json_data = :json_data
+      WHERE id     = :resource_id
+        AND (app_id = :data_app_id OR :data_app_id IS NULL)`; 
 const APP_DATA_RESOURCE_DETAIL_DATA_SELECT = 
     `SELECT adrdd.id                                                        "id",
             adrdd.json_data                                                 "json_data",
@@ -707,7 +712,7 @@ export {
         /**APP_DATA_ENTITIY_RESOURCE */
         APP_DATA_ENTITY_RESOURCE_SELECT, 
         /**APP_DATA_ENTITIY */
-        APP_DATA_ENTITY_SELECT,
+        APP_DATA_ENTITY_SELECT,APP_DATA_ENTITY_UPDATE,
         /**APP_DATA_RESOURCE_DETAIL_DATA */
         APP_DATA_RESOURCE_DETAIL_DATA_SELECT,APP_DATA_RESOURCE_DETAIL_DATA_INSERT, APP_DATA_RESOURCE_DETAIL_DATA_UPDATE, APP_DATA_RESOURCE_DETAIL_DATA_DELETE,
         /**APP_DATA_RESOURCE_DETAIL */
