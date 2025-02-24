@@ -118,17 +118,11 @@ const update = async (app_id, resource_id, data) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    /**@type{server_db_table_iam_app_access}*/
-    const user = get(app_id, resource_id).result[0];
-    if (user){
-        return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_APP_ACCESS', delete:{resource_id:resource_id, data_app_id:null}}).then(result=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return dbCommonRecordError(app_id, 404);
-        });
-    }
-    else
-        return user;
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_APP_ACCESS', delete:{resource_id:resource_id, data_app_id:null}}).then(result=>{
+        if (result.affectedRows>0)
+            return {result:result, type:'JSON'};
+        else
+            return dbCommonRecordError(app_id, 404);
+    });
 };
 export {get, post, update, deleteRecord};

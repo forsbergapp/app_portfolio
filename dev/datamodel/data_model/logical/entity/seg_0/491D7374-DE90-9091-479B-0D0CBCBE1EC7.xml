@@ -82,10 +82,9 @@
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
 </engineerTo>
 <pk>true</pk>
-<newElementsIDs>E72CD50A-49C5-F620-1D9F-55BA28B51EA9,8A79CFB8-172C-DED0-D8BB-F5F9E9C661A8</newElementsIDs>
+<newElementsIDs>E72CD50A-49C5-F620-1D9F-55BA28B51EA9</newElementsIDs>
 <usedAttributes>
 <attributeRef>E72CD50A-49C5-F620-1D9F-55BA28B51EA9</attributeRef>
-<attributeRef>296A4839-DA87-5257-FD2D-3BBE1E6DFD9D</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

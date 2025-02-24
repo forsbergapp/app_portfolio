@@ -68,7 +68,7 @@ const getViewProfileUserPosts = async parameters =>{
                     .map((/**@type{server_db_table_iam_user_app_data_post}*/row)=>{
                         return {
                             id: row.id,
-                            description:row.json_data?JSON.parse(row.json_data).description:null, 
+                            description:row.json_data.description, 
                             iam_user_id:IamUserApp.get({app_id:parameters.app_id, 
                                                         resource_id:row.iam_user_app_id, 
                                                         data:{iam_user_id:parameters.resource_id, data_app_id:parameters.app_id}}).result[0]?.iam_user_id,
@@ -262,32 +262,20 @@ const getViewProfileUserPostDetail = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  initial:number,
- *                  description:string,
- *                  json_data:*,
- *                  data_app_id:number,
- *                  iam_user_id:number}}} parameters
+ *          data:server_db_table_iam_user_app_data_post}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const post = async parameters => {
     //check required attributes
-    if (parameters.data.iam_user_id==null && parameters.data.data_app_id==null){
+    if (parameters.data.iam_user_app_id==null){
         return dbCommonRecordError(parameters.app_id, 400);
     }
     else{
-        /**@type{import('./IamUserApp.js')} */
-        const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
-
         /**@type{server_db_table_iam_user_app_data_post} */
         const data_new =     {
                                 id:Date.now(),
-                                iam_user_app_id:IamUserApp.get({app_id:parameters.app_id, 
-                                                                resource_id:null, 
-                                                                data:{  
-                                                                        iam_user_id:parameters.data.iam_user_id,
-                                                                        data_app_id:parameters.data.data_app_id
-                                                                }}).result[0]?.id, 
-                                json_data:parameters.data.json_data?JSON.stringify(parameters.data.json_data):null,
+                                iam_user_app_id:parameters.data.iam_user_app_id, 
+                                json_data:parameters.data.json_data,
                                 created:new Date().toISOString(),
                                 modified:null
                         };
@@ -308,38 +296,28 @@ const post = async parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:{  json_data:string,
- *                  data_app_id:number|null,                    
- *                  iam_user_id:number|null}}} parameters
+ *          data:server_db_table_iam_user_app_data_post}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters =>{
-    /**@type{server_db_table_iam_user_app_data_post}*/
-    const user_app_data_post = get({app_id:parameters.app_id, 
-                                    resource_id:parameters.resource_id, 
-                                    data:{data_app_id:parameters.data.data_app_id, iam_user_id:parameters.data.iam_user_id}}).result[0];
-    if (user_app_data_post){
-        /**@type{server_db_table_iam_user_app_data_post} */
-        const data_update = {};
-        //allowed parameters to update:
-        if (parameters.data.json_data!=null)
-            data_update.json_data = JSON.stringify(parameters.data.json_data);
-        data_update.modified = new Date().toISOString();
-        if (Object.entries(data_update).length>0)
-            return fileCommonExecute({  app_id:parameters.app_id, 
-                                        dml:'UPDATE', 
-                                        object: 'IAM_USER_APP_DATA_POST', 
-                                        update:{resource_id:parameters.resource_id ?? user_app_data_post.id, data_app_id:null, data:data_update}}).then((result)=>{
-                if (result.affectedRows>0)
-                    return {result:result, type:'JSON'};
-                else
-                    return dbCommonRecordError(parameters.app_id, 404);
-            });
-        else
-            return dbCommonRecordError(parameters.app_id, 400);
-    }
+    /**@type{server_db_table_iam_user_app_data_post} */
+    const data_update = {};
+    //allowed parameters to update:
+    if (parameters.data.json_data!=null)
+        data_update.json_data = parameters.data.json_data;
+    data_update.modified = new Date().toISOString();
+    if (Object.entries(data_update).length>0)
+        return fileCommonExecute({  app_id:parameters.app_id, 
+                                    dml:'UPDATE', 
+                                    object: 'IAM_USER_APP_DATA_POST', 
+                                    update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            if (result.affectedRows>0)
+                return {result:result, type:'JSON'};
+            else
+                return dbCommonRecordError(parameters.app_id, 404);
+        });
     else
-        return dbCommonRecordError(parameters.app_id, 404);
+        return dbCommonRecordError(parameters.app_id, 400);
 };
 /**
  * @name deleteRecord
@@ -347,28 +325,18 @@ const update = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          resource_id:number,
- *          data:{  data_app_id:number|null,                    
- *                  iam_user_id:number|null}}} parameters
+ *          resource_id:number}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    /**@type{server_db_table_iam_user_app_data_post}*/
-    const user_app_data_post = get({app_id:parameters.app_id, 
-                                    resource_id:parameters.resource_id, 
-                                    data:{data_app_id:parameters.data.data_app_id, iam_user_id:parameters.data.iam_user_id}}).result[0];
-    if (user_app_data_post){
-        return fileCommonExecute({  app_id:parameters.app_id, 
-                                    dml:'DELETE', 
-                                    object:'IAM_USER_APP_DATA_POST', 
-                                    delete:{resource_id:parameters.resource_id ?? user_app_data_post.id, data_app_id:null}}).then((result)=>{
-            if (result.affectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return dbCommonRecordError(parameters.app_id, 404);
-        });
-    }
-    else
-        return dbCommonRecordError(parameters.app_id, 404);
+    return fileCommonExecute({  app_id:parameters.app_id, 
+                                dml:'DELETE', 
+                                object:'IAM_USER_APP_DATA_POST', 
+                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+        if (result.affectedRows>0)
+            return {result:result, type:'JSON'};
+        else
+            return dbCommonRecordError(parameters.app_id, 404);
+    });
 };
 export {get, getViewProfileUserPosts, getViewProfileStatLike, getViewProfileStatPost, getViewProfileUserPostDetail, post, update, deleteRecord};

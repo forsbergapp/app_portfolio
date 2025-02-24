@@ -54,25 +54,22 @@ const get = async parameters =>{
  * @description Create record
  * @function
  * @param {{app_id:number,
- *          data:{  json_data:*,
- *                  data_app_id:number,
- *                  app_data_entity_id:number,
- *                  app_data_id:number}}} parameters
+ *          data:server_db_table_app_data_entity_resource}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const post = async parameters => {
    //check required attributes
-   if (parameters.data.data_app_id==null ||parameters.data.app_data_entity_id==null ||parameters.data.app_data_id==null){
+   if (parameters.data.app_data_entity_id==null ||parameters.data.app_data_id==null){
        return dbCommonRecordError(parameters.app_id, 400);
    }
    else{
        /**@type{server_db_table_app_data_entity_resource} */
        const data_new =     {
                                 id:Date.now(),
-                                app_data_entity_app_id:parameters.data.data_app_id, 
+                                app_data_entity_app_id:parameters.data.app_data_entity_app_id, 
                                 app_data_entity_id:parameters.data.app_data_entity_id,
                                 app_data_id:parameters.data.app_data_id,
-                                json_data:parameters.data.json_data?JSON.stringify(parameters.data.json_data):null,
+                                json_data:parameters.data.json_data,
                                 created:new Date().toISOString(),
                                 modified:null
                        };
@@ -92,13 +89,12 @@ const post = async parameters => {
  * @function
  * @param {{app_id:number,
 *          resource_id:number,
-*          data:{  json_data:*,
-*                  data_app_id:number}}} parameters
+*          data:server_db_table_app_data_entity_resource}} parameters
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
 */
 const update = async parameters =>{
    //check required attributes
-   if (parameters.resource_id==null || parameters.data.data_app_id==null){
+   if (parameters.resource_id==null){
        return dbCommonRecordError(parameters.app_id, 400);
    }
    else{
@@ -106,7 +102,7 @@ const update = async parameters =>{
        const data_update = {};
        //allowed parameters to update:
        if (parameters.data.json_data!=null)
-           data_update.json_data = JSON.stringify(parameters.data.json_data);
+           data_update.json_data = parameters.data.json_data;
        data_update.modified = new Date().toISOString();
        if (Object.entries(data_update).length>0)
            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_DATA_ENTITY_RESOURCE', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
