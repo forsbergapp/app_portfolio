@@ -798,7 +798,7 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	width:30px;
 }
 .menu_monitor_detail_server_log_service_log_col:nth-child(3){
-	width:70px;
+	width:170px;
 }
 .menu_monitor_detail_server_log_service_log_col:nth-child(4){
 	width:625px;
@@ -813,10 +813,10 @@ body.rtl #menu_monitor_pagination_last::before{										content:var(--common_ap
 	width:30px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(3){
-	width:30px;
+	width:120px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(4){
-	width:1000px;
+	width:250px;
 }
 .menu_monitor_detail_server_log_db_log_col:nth-child(5){
 	width:500px;
