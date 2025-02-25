@@ -11,29 +11,25 @@
  * @name template
  * @description Template
  * @function
- * @param {{server_group:number[],
- *          file:'ConfigServer'|'CONFIG_IAM_POLICY',
+ * @param {{file:'ConfigServer'|'CONFIG_IAM_POLICY',
  *          config:[]}} props
  * @returns {string}
  */
 const template = props => ` ${props.file=='ConfigServer'?
                                 `<div id='menu_config_detail' class='common_list_scrollbar'>
                                     <div id='menu_config_detail_row_title' class='menu_config_detail_row'>
-                                        <div id='menu_config_detail_col_title1' class='menu_config_detail_col list_title'>PARAMETER NAME</div>
-                                        <div id='menu_config_detail_col_title2' class='menu_config_detail_col list_title'>PARAMETER VALUE</div>
-                                        <div id='menu_config_detail_col_title3' class='menu_config_detail_col list_title'>COMMENT</div>
+                                        <div class='menu_config_detail_col list_title'>PARAMETER NAME</div>
+                                        <div class='menu_config_detail_col list_title'>PARAMETER VALUE</div>
+                                        <div class='menu_config_detail_col list_title'>COMMENT</div>
                                     </div>
-                                    ${  //create div groups with parameters, each group with a title
-                                        //first 5 attributes in config json contains array of parameter records
-                                        //metadata is saved last in config
-                                        props.server_group.map(i_group=>
-                                        `<div id='menu_config_detail_row_${i_group}' class='menu_config_detail_row menu_config_detail_group' >
+                                    ${  Object.keys(props.config).filter(row=>row!='METADATA').map(i_group=>
+                                        `<div class='menu_config_detail_row menu_config_detail_group' >
                                             <div class='menu_config_detail_col menu_config_detail_group_title'>
-                                                <div class='list_readonly'>${Object.keys(props.config)[i_group]}</div>
+                                                <div class='list_readonly'>${i_group}</div>
                                             </div>
                                             ${  /**@ts-ignore*/
-                                                props.config[Object.keys(props.config)[i_group]].map(row=>
-                                                `<div id='menu_config_detail_row_${i_group}' class='menu_config_detail_row' >
+                                                props.config[i_group].map(row=>
+                                                `<div class='menu_config_detail_row' >
                                                     <div class='menu_config_detail_col'>
                                                         <div class='list_readonly'>${Object.keys(row)[0]}</div>
                                                     </div>
@@ -65,7 +61,6 @@ const template = props => ` ${props.file=='ConfigServer'?
  *                      template:string}>}
  */
 const component = async props => {
-    const server_groups = [0,1,2,3,4];
     const config_server = await props.methods.commonFFB({path:`/server-db/config/${props.data.file}`, query:'saved=1', method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
 
@@ -80,8 +75,7 @@ const component = async props => {
      lifecycle: {onMounted:onMounted},
      data:      null,
      methods:   null,
-     template:  template({  server_group:server_groups, 
-                            file:props.data.file,
+     template:  template({  file:props.data.file,
                             config:config_server})
  };
 };
