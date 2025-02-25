@@ -96,7 +96,6 @@ const post = async (app_id, data) => {
  * @name update
  * @description Update record
  * @function
- * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:server_db_table_AppData}} parameters
