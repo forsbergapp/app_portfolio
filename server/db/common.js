@@ -78,19 +78,19 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 	/**@type{import('./Config.js')} */
 	const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
-	const DB_USE = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+	const DB_USE = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
 
 	return new Promise ((resolve)=>{
 		//manage schema
 		//syntax in SQL: FROM '<DB_SCHEMA/>'.[table] 
-		sql = sql.replaceAll('<DB_SCHEMA/>', Config.get('CONFIG_SERVER','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
+		sql = sql.replaceAll('<DB_SCHEMA/>', Config.get('ConfigServer','SERVICE_DB', `DB${DB_USE}_NAME`) ?? '');
 		//manage different syntax
 		//syntax in SQL: WHERE '<DATE_PERIOD_YEAR/>' = [bind variable] etc
 		sql = sql.replaceAll('<DATE_PERIOD_YEAR/>', dbCommonDatePeriod(DB_USE, 'YEAR'));
 		sql = sql.replaceAll('<DATE_PERIOD_MONTH/>', dbCommonDatePeriod(DB_USE, 'MONTH'));
 		sql = sql.replaceAll('<DATE_PERIOD_DAY/>', dbCommonDatePeriod(DB_USE, 'DAY'));
 		
-		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
+		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID')))
 		.then((/**@type{server_db_common_result}*/result)=> {
 			Log.postDBI(app_id, DB_USE, sql, parameters, result)
 			.then(()=>{

@@ -274,7 +274,7 @@ const component = async props => {
                 const logscope = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[0];
                 const loglevel = props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').getAttribute('data-value').split('-')[1];
                 let app_id_filter='';
-                if (logscope=='APP' || logscope=='SERVICE' || logscope=='DB'){
+                if (logscope=='App' || logscope=='Service' || logscope=='Db'){
                     //show app filter and use it
                     props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_select_app').style.display = 'inline-block';
                     app_id_filter = `select_app_id=${app_id}&`;
@@ -456,8 +456,8 @@ const component = async props => {
                                 //format log_[logscope]_[loglevel]_YYYYMMDD.log
                                 //logscope and loglevel
                                 const filename = props.methods.commonMiscElementRow(event.target).getAttribute('data-value') ?? '';
-                                const logscope = filename.split('_')[1].toUpperCase();
-                                const loglevel = filename.split('_')[2].toUpperCase();
+                                const logscope = filename.split('_')[1];
+                                const loglevel = filename.split('_')[2];
                                 const year     = parseInt(filename.split('_')[3].substring(0,4));
                                 const month    = parseInt(filename.split('_')[3].substring(4,6));
                                 const day      = parseInt(filename.split('_')[3].substring(6,8));

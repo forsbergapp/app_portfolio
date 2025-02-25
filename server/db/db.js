@@ -39,7 +39,7 @@ const DB_POOL =[
                   [5, null, null]  //SQLite           [db number, db object, null]
                ];                     
 
-if (serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==4){
+if (serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'))==4){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
@@ -205,7 +205,7 @@ const dbPoolStart = async (dbparameters) =>{
             DB_POOL.map(db=>{
                if (db[0]==dbparameters.use)
                   sqlite.open({
-                     filename: process.cwd() + filePath('DB_FILE'),
+                     filename: process.cwd() + filePath('DbFile'),
                      driver: sqlite3.Database
                   })
                   .then((sqlite_db)=>{

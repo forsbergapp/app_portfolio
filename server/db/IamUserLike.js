@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_iam_user_like,
+ *          server_db_table_IamUserLike,
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
@@ -19,10 +19,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  iam_user_id_like:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_iam_user_like[] }}
+ * @returns {server_server_response & {result?:server_db_table_IamUserLike[] }}
  */
 const get = parameters =>{
-    const result = fileDBGet(parameters.app_id, 'IAM_USER_LIKE',parameters.resource_id, null).rows
+    const result = fileDBGet(parameters.app_id, 'IamUserLike',parameters.resource_id, null).rows
                     .filter(row=>
                         row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) &&
                         row.iam_user_id_like == (parameters.data.iam_user_id_like ?? row.iam_user_id_like) );
@@ -39,7 +39,7 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:server_db_table_iam_user_like}} parameters
+ *          data:server_db_table_IamUserLike}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async parameters =>{
@@ -48,14 +48,14 @@ const post = async parameters =>{
         return dbCommonRecordError(parameters.app_id, 400);
     }
     else{
-        /**@type{server_db_table_iam_user_like} */
+        /**@type{server_db_table_IamUserLike} */
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_id:parameters.data.iam_user_id, 
                                 iam_user_id_like:parameters.data.iam_user_id_like,
                                 created:new Date().toISOString()
                         };
-        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'IAM_USER_LIKE', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'IamUserLike', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -78,7 +78,7 @@ const post = async parameters =>{
 const deleteRecord = async parameters =>{
     return fileCommonExecute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
-                                object:'IAM_USER_LIKE', 
+                                object:'IamUserLike', 
                                 delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};

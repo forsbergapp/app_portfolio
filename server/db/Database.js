@@ -1,10 +1,10 @@
 /** @module server/db/Database */
 
 /**
- * @import {server_server_response, server_db_object_record, server_db_table_iam_user, server_db_database_demo_data,
- *          server_db_table_iam_user_app_data_post,
- *          server_db_common_result_insert,server_db_table_iam_user_view,
- *          server_db_table_app_data_resource_master, server_db_table_app_data_resource_detail, server_db_table_app_data_resource_detail_data} from '../types.js'
+ * @import {server_server_response, server_DbObject_record, server_db_table_IamUser, server_db_database_demo_data,
+ *          server_db_table_IamUserAppDataPost,
+ *          server_db_common_result_insert,server_db_table_IamUserView,
+ *          server_db_table_AppDataResourceMaster, server_db_table_AppDataResourceDetail, server_db_table_AppDataResourceDetailData} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -34,9 +34,9 @@ const getViewDbInfo = async parameters =>{
     /**@type{import('../socket.js')} */
     const {socketConnectedCount} = await import(`file://${process.cwd()}/server/socket.js`);
     return {result: [{
-                        database_name: Config.get('CONFIG_SERVER','METADATA').CONFIGURATION,
+                        database_name: Config.get('ConfigServer','METADATA').CONFIGURATION,
                         version: 1,
-                        hostname:Config.get('CONFIG_SERVER','SERVER','HOST')??'',
+                        hostname:Config.get('ConfigServer','SERVER','HOST')??'',
                         connections: socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                         started: process.uptime()
                     }],
@@ -49,12 +49,12 @@ const getViewDbInfo = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {server_server_response & {result?:{name:server_db_object_record['name'],
- *                                              type:server_db_object_record['type'],
- *                                              pk:server_db_object_record['pk'],
- *                                              uk:server_db_object_record['uk'],
- *                                              lock:server_db_object_record['lock'],
- *                                              transaction_id:server_db_object_record['transaction_id'],
+ * @returns {server_server_response & {result?:{name:server_DbObject_record['name'],
+ *                                              type:server_DbObject_record['type'],
+ *                                              pk:server_DbObject_record['pk'],
+ *                                              uk:server_DbObject_record['uk'],
+ *                                              lock:server_DbObject_record['lock'],
+ *                                              transaction_id:server_DbObject_record['transaction_id'],
  *                                              rows:number|null,
  *                                              size:number|null}[]}}
  */
@@ -192,18 +192,18 @@ const postDemo = async parameters=> {
                 * @returns 
                 */
                const create_update_id = async demo_user=>{
-                   /**@type{{  username:           server_db_table_iam_user['username'],
-                    *          bio:                server_db_table_iam_user['bio'],
-                    *          avatar:             server_db_table_iam_user['avatar'],
-                    *          password:           server_db_table_iam_user['password'],
-                    *          password_reminder:  server_db_table_iam_user['password_reminder'],
-                    *          email:              server_db_table_iam_user['email'],
-                    *          email_unverified:   server_db_table_iam_user['email_unverified'],
-                    *          active:             server_db_table_iam_user['active'],
-                    *          private:            server_db_table_iam_user['private'],
-                    *          user_level:         server_db_table_iam_user['user_level'],
-                    *          type:               server_db_table_iam_user['type'],
-                    *          verification_code:  server_db_table_iam_user['verification_code']
+                   /**@type{{  username:           server_db_table_IamUser['username'],
+                    *          bio:                server_db_table_IamUser['bio'],
+                    *          avatar:             server_db_table_IamUser['avatar'],
+                    *          password:           server_db_table_IamUser['password'],
+                    *          password_reminder:  server_db_table_IamUser['password_reminder'],
+                    *          email:              server_db_table_IamUser['email'],
+                    *          email_unverified:   server_db_table_IamUser['email_unverified'],
+                    *          active:             server_db_table_IamUser['active'],
+                    *          private:            server_db_table_IamUser['private'],
+                    *          user_level:         server_db_table_IamUser['user_level'],
+                    *          type:               server_db_table_IamUser['type'],
+                    *          verification_code:  server_db_table_IamUser['verification_code']
                     * 
                    }}*/
                    const data_create = {   username:               demo_user.username,
@@ -258,8 +258,8 @@ const postDemo = async parameters=> {
        };
        /**
         * Create iam user app data post
-        * @param {{ json_data:      server_db_table_iam_user_app_data_post['json_data'],
-        *           iam_user_app_id:server_db_table_iam_user_app_data_post['iam_user_app_id']}} data 
+        * @param {{ json_data:      server_db_table_IamUserAppDataPost['json_data'],
+        *           iam_user_app_id:server_db_table_IamUserAppDataPost['iam_user_app_id']}} data 
         * @returns {Promise.<null>}
         */
        const create_iam_user_app_data_post = async (data) => {
@@ -281,10 +281,10 @@ const postDemo = async parameters=> {
 
        /**
         * 
-        * @param {{ json_data:                                      server_db_table_app_data_resource_master['json_data'],
-        *           iam_user_app_id:                                server_db_table_app_data_resource_master['iam_user_app_id'],
-        *           app_data_entity_resource_app_data_entity_id:    server_db_table_app_data_resource_master['app_data_entity_resource_app_data_entity_id'],
-        *           app_data_entity_resource_id:                    server_db_table_app_data_resource_master['app_data_entity_resource_id']}} data 
+        * @param {{ json_data:                                      server_db_table_AppDataResourceMaster['json_data'],
+        *           iam_user_app_id:                                server_db_table_AppDataResourceMaster['iam_user_app_id'],
+        *           app_data_entity_resource_app_data_entity_id:    server_db_table_AppDataResourceMaster['app_data_entity_resource_app_data_entity_id'],
+        *           app_data_entity_resource_id:                    server_db_table_AppDataResourceMaster['app_data_entity_resource_id']}} data 
         * @returns {Promise.<number>}
         */
        const create_app_data_resource_master = async data => {
@@ -308,7 +308,7 @@ const postDemo = async parameters=> {
         *          app_data_entity_resource_app_data_entity_id: number;
         *          app_data_entity_resource_id: number;
         *          app_data_resource_master_attribute_id: number|null,
-        *          json_data: server_db_table_app_data_resource_detail['json_data'],}} data 
+        *          json_data: server_db_table_AppDataResourceDetail['json_data'],}} data 
         * @returns {Promise.<number>}
         */
        const create_app_data_resource_detail = async data => {
@@ -363,9 +363,9 @@ const postDemo = async parameters=> {
        /**
         * 
         * @param {number} user_account_post_app_id 
-        * @param {{ json_data: server_db_table_app_data_resource_detail_data['json_data'],
-        *           app_data_resource_detail_id: server_db_table_app_data_resource_detail_data['app_data_resource_detail_id'],
-        *           app_data_resource_master_attribute_id:server_db_table_app_data_resource_detail_data['app_data_resource_master_attribute_id']}} data 
+        * @param {{ json_data: server_db_table_AppDataResourceDetailData['json_data'],
+        *           app_data_resource_detail_id: server_db_table_AppDataResourceDetailData['app_data_resource_detail_id'],
+        *           app_data_resource_master_attribute_id:server_db_table_AppDataResourceDetailData['app_data_resource_master_attribute_id']}} data 
         * @returns {Promise.<number>}
         */
        const create_app_data_resource_detail_data = async (user_account_post_app_id, data) => {
@@ -481,7 +481,7 @@ const postDemo = async parameters=> {
                            default:{
                                //replace if containing HOST parameter
                                if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1)
-                                   return key_name[1]?.replaceAll('<HOST/>', Config.get('CONFIG_SERVER','SERVER','HOST') ?? '');
+                                   return key_name[1]?.replaceAll('<HOST/>', Config.get('ConfigServer','SERVER','HOST') ?? '');
                                else
                                    return key_name[1];
                            }        
@@ -578,10 +578,10 @@ const postDemo = async parameters=> {
        /**
         * Create user account view
         * @param {number} app_id 
-        * @param {{ iam_user_id: server_db_table_iam_user_view['iam_user_id'],
-        *           iam_user_id_view: server_db_table_iam_user_view['iam_user_id_view'],
-        *           client_ip: server_db_table_iam_user_view['client_ip'],
-        *           client_user_agent:server_db_table_iam_user_view['client_user_agent']}} data 
+        * @param {{ iam_user_id: server_db_table_IamUserView['iam_user_id'],
+        *           iam_user_id_view: server_db_table_IamUserView['iam_user_id_view'],
+        *           client_ip: server_db_table_IamUserView['client_ip'],
+        *           client_user_agent:server_db_table_IamUserView['client_user_agent']}} data 
         * @returns {Promise.<null>}
         */
        const create_iam_user_view = async (app_id, data ) =>{
@@ -827,7 +827,7 @@ const deleteDemo = async parameters => {
    /**@type{import('./common.js')} */
    const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
    
-   const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_iam_user}*/row)=>row.user_level==2);
+   const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
    if (result_demo_users){
        let deleted_user = 0;
        if (result_demo_users.length>0){

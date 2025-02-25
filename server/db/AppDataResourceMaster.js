@@ -1,7 +1,7 @@
 /** @module server/db/AppDataResourceMaster */
 
 /**
- * @import {server_server_response,server_db_table_iam_user_app, server_db_table_app_data_resource_master, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
+ * @import {server_server_response,server_db_table_IamUserApp, server_db_table_AppDataResourceMaster, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -16,10 +16,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @param {{app_id:number|null,
  *          resource_id:number|null,
  *          data:{data_app_id?:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_app_data_resource_master[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppDataResourceMaster[] }}
  */
 const get = parameters =>{ 
-    const result = fileDBGet(parameters.app_id, 'APP_DATA_RESOURCE_MASTER',parameters.resource_id, parameters.data.data_app_id??null);
+    const result = fileDBGet(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, parameters.data.data_app_id??null);
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
@@ -30,7 +30,7 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {{app_id:number,
- *          data:server_db_table_app_data_resource_master}} parameters
+ *          data:server_db_table_AppDataResourceMaster}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const post = async parameters => {
@@ -40,7 +40,7 @@ const post = async parameters => {
         return dbCommonRecordError(parameters.app_id, 400);
     }
     else{
-        /**@type{server_db_table_app_data_resource_master} */
+        /**@type{server_db_table_AppDataResourceMaster} */
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_app_id:parameters.data.iam_user_app_id,
@@ -50,7 +50,7 @@ const post = async parameters => {
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'APP_DATA_RESOURCE_MASTER', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'AppDataResourceMaster', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -77,14 +77,14 @@ const update = async parameters =>{
        return dbCommonRecordError(parameters.app_id, 400);
    }
    else{
-       /**@type{server_db_table_app_data_resource_master} */
+       /**@type{server_db_table_AppDataResourceMaster} */
        const data_update = {};
        //allowed parameters to update:
        if (parameters.data.json_data!=null)
            data_update.json_data = parameters.data.json_data;
        data_update.modified = new Date().toISOString();
        if (Object.entries(data_update).length>0)
-           return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_DATA_RESOURCE_MASTER', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+           return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceMaster', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                if (result.affectedRows>0)
                    return {result:result, type:'JSON'};
                else
@@ -104,7 +104,7 @@ const update = async parameters =>{
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
 */
 const deleteRecord = async parameters =>{
-    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'APP_DATA_RESOURCE_MASTER', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataResourceMaster', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

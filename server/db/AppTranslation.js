@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_app_translation} from '../types.js'
+ *          server_db_table_AppTranslation} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -23,30 +23,30 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @param {number|null} resource_id
  * @param {string|null} locale
  * @param {number} data_app_id
- * @returns {server_server_response & {result?:server_db_table_app_translation[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppTranslation[] }}
  */
 const get = (app_id, resource_id, locale, data_app_id) =>{
     //all locales should be saved with '-' if used
     const SPLIT = '-';
-    const result = fileDBGet(app_id, 'APP_TRANSLATION',resource_id, data_app_id).rows.filter((/**@type{server_db_table_app_translation}*/row)=>row.app_id == data_app_id);
-    if (result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == locale)[0]){
+    const result = fileDBGet(app_id, 'AppTranslation',resource_id, data_app_id).rows.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.app_id == data_app_id);
+    if (result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == locale)[0]){
         //return found for requested locale
-        return {result:result.filter((/**@type{server_db_table_app_translation}*/row)=>(row.locale == locale)), type:'JSON'};
+        return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>(row.locale == locale)), type:'JSON'};
     }        
     else
-        if (locale?.split(SPLIT).length==3 && result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1]))[0]){
+        if (locale?.split(SPLIT).length==3 && result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1]))[0]){
             //return found for first and second part of locale
-            return {result:result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1])), type:'JSON'};
+            return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == (locale.split(SPLIT)[0] + SPLIT + locale.split(SPLIT)[1])), type:'JSON'};
         }            
         else
-            if (locale?.split(SPLIT).length==2 && result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == locale.split(SPLIT)[0])[0]){
+            if (locale?.split(SPLIT).length==2 && result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == locale.split(SPLIT)[0])[0]){
                 //return found for first part of locale 
-                return {result:result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == locale.split(SPLIT)[0]), type:'JSON'};
+                return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == locale.split(SPLIT)[0]), type:'JSON'};
             }
             else
-                if (result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == 'en')){
+                if (result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == 'en')){
                     //return found for default language
-                    return {result:result.filter((/**@type{server_db_table_app_translation}*/row)=>row.locale == 'en'), type:'JSON'};
+                    return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == 'en'), type:'JSON'};
                 }
                 else
                     return dbCommonRecordError(app_id, 404);

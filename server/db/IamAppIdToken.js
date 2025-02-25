@@ -1,7 +1,7 @@
 /** @module server/db/IamAppIdToken */
 
 /**
- * @import {server_server_response,server_db_common_result_insert, server_db_iam_app_id_token_insert, server_db_table_iam_app_id_token} from '../types.js'
+ * @import {server_server_response,server_db_common_result_insert, server_db_iam_app_id_token_insert, server_db_table_IamAppIdToken} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -15,9 +15,9 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_iam_app_id_token[] }}
+ * @returns {server_server_response & {result?:server_db_table_IamAppIdToken[] }}
  */
-const get = parameters => {return {result:fileDBGet(parameters.app_id, 'IAM_APP_ID_TOKEN', parameters.resource_id, null).rows, type:'JSON'};};
+const get = parameters => {return {result:fileDBGet(parameters.app_id, 'IamAppIdToken', parameters.resource_id, null).rows, type:'JSON'};};
 
 /**
  * @name post
@@ -35,8 +35,8 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IAM_APP_ID_TOKEN', null, null).rows.filter((/**@type{server_db_table_iam_app_id_token} */row)=>row.token==data.token).length==0){
-            /**@type{server_db_table_iam_app_id_token} */
+        if (fileDBGet(app_id, 'IamAppIdToken', null, null).rows.filter((/**@type{server_db_table_IamAppIdToken} */row)=>row.token==data.token).length==0){
+            /**@type{server_db_table_IamAppIdToken} */
             const data_new = {};
             data_new.id = Date.now();
             //required
@@ -48,7 +48,7 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_APP_ID_TOKEN', post:{data:data_new}}).then((result)=>{
+            return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else

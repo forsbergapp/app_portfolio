@@ -213,7 +213,7 @@
  */
 
 /**
- * @description DB TABLE app
+ * @description DB TABLE App
  * @memberof dbObjects
  * @typedef {{
  *              id: number,
@@ -233,31 +233,31 @@
  *              email:string,
  *              link_title:string,
  *              link_url:string,
- *              status:'ONLINE'|'OFFLINE'}} server_db_table_app
+ *              status:'ONLINE'|'OFFLINE'}} server_db_table_App
  */
 /**
- * @description DB TABLE app_data_entity
+ * @description DB TABLE AppDataEntity
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              app_id:number, 
  *              json_data:{[key:string]:string}|null,
  *              created:string,
- *              modified:string|null}} server_db_table_app_data_entity
+ *              modified:string|null}} server_db_table_AppDataEntity
  */
 
 /**
- * @description DB TABLE app_data_entity_resource
+ * @description DB TABLE AppDataEtntityResource
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              json_data:{[key:string]:string}|null, 
  *              app_data_entity_id:number, 
  *              app_data_id:number, 
  *              created:string,
- *              modified:string|null}} server_db_table_app_data_entity_resource
+ *              modified:string|null}} server_db_table_AppDataEntityResource
  */
 
 /**
- * @description DB TABLE app_data_resource_master
+ * @description DB TABLE AppDataResourceMaster
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              json_data:{[key:string]:string}|null, 
@@ -265,12 +265,11 @@
  *              app_data_entity_resource_app_data_entity_id:number,
  *              app_data_entity_resource_id:number,
  *              created:string,
- *              modified:string|null}} server_db_table_app_data_resource_master
+ *              modified:string|null}} server_db_table_AppDataResourceMaster
  */
 
-
 /**
- * @description DB TABLE app_data_resource_detail
+ * @description DB TABLE AppDataResourceDetail
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              json_data:{[key:string]:string}|null, 
@@ -279,22 +278,22 @@
  *              app_data_entity_resource_id:number,
  *              app_data_resource_master_attribute_id:number,
  *              created:string,
- *              modified:string|null}} server_db_table_app_data_resource_detail
+ *              modified:string|null}} server_db_table_AppDataResourceDetail
  */
 
 /**
- * @description DB TABLE app_data_resource_detail_data
+ * @description DB TABLE AppDataResourceDetailData
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              json_data:{[key:string]:string}|null, 
  *              app_data_resource_detail_id:number,
  *              app_data_resource_master_attribute_id:number|null,
  *              created:string,
- *              modified:string|null}} server_db_table_app_data_resource_detail_data
+ *              modified:string|null}} server_db_table_AppDataResourceDetailData
  */
 
 /**
- * @description DB TABLE app_module
+ * @description DB TABLE AppModule
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              app_id: number,
@@ -302,10 +301,10 @@
  *              common_name:string,
  *              common_role:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'',
  *              common_path:string,
- *              common_description:string}} server_db_table_app_module
+ *              common_description:string}} server_db_table_AppModule
  */
 /**
- * @description DB TABLE app_module_queue
+ * @description DB TABLE AppModuleQueue
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_id:number,
@@ -319,12 +318,11 @@
  *              end:string|null,
  *              progress:number|null,
  *              status:server_db_app_module_queue_status,
- *              message:string|null}} server_db_table_app_module_queue
+ *              message:string|null}} server_db_table_AppModuleQueue
  */
 
 /**
- * @description DB TABLE app_parameter
- *              apps should use their own types if adding new parameters
+ * @description DB TABLE AppParameter
  * @memberof dbObjects
  * @typedef {{  app_id:                             number,
  *              common_app_id:                      {value:string, comment:string},
@@ -343,21 +341,21 @@
  *              common_image_file_allowed_type5:    {value:string},
  *              common_image_file_mime_type:        {value:string, comment:string},
  *              common_image_avatar_height:         {value:string, comment:string},
- *              common_image_avatar_width:          {value:string, comment:string}}} server_db_table_app_parameter
+ *              common_image_avatar_width:          {value:string, comment:string}}} server_db_table_AppParameter
  */
 /**
- * @description DB TABLE app_translation
+ * @description DB TABLE AppTranslation
  * @memberof dbObjects
  * @typedef {{id: number,
  *            app_id: number,
  *			      locale: string,
  *			      json_data: {[key:string]:string}|null,       //complex text
  *			      text: string|null	            //simple text
- *}} server_db_table_app_translation		
+ *          }} server_db_table_AppTranslation	
  */
 
 /**
- * @description DB TABLE app_secret
+ * @description DB TABLE AppSecret
  *              apps should use their own types if adding new secrets
  *              SERVICE_MAIL* only used by common app
  * @memberof dbObjects
@@ -382,11 +380,11 @@
  *              common_app_access_secret:string, 
  *              common_app_access_expire:string,
  *              common_app_access_verification_secret:string, 
- *              common_app_access_verification_expire:string}} server_db_table_app_secret
+ *              common_app_access_verification_expire:string}} server_db_table_AppSecret
  */
 
 /**
- * @description DB TABLE app_data
+ * @description DB TABLE AppData
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              app_id: number,
@@ -396,11 +394,11 @@
  *              data2:string|number|null,
  *              data3:string|number|null,
  *              data4:string|number|null,
- *              data5:string|number|null}} server_db_table_app_data
+ *              data5:string|number|null}} server_db_table_AppData
  */
 
 /**
- * @description DB TABLE iam_control_ip
+ * @description DB TABLE IamControlIp
  * @memberof dbObjects
  * @typedef {{  id:number, 
  *              app_id:number|null,
@@ -410,10 +408,10 @@
  *              hour_to:number|null, 
  *              date_from:string|null, 
  *              date_to:string|null, 
- *              action:string|null}} server_db_table_iam_control_ip
+ *              action:string|null}} server_db_table_IamControlIp
  */
 /**
- * @description DB TABLE iam_control_observe
+ * @description DB TABLE IamControlObserve
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_id:number|null,
@@ -427,18 +425,18 @@
  *              status:1|0,
  *              type:server_db_iam_control_observe_type,
  *              created:string,
- *              modified:string|null}} server_db_table_iam_control_observe
+ *              modified:string|null}} server_db_table_IamControlObserve
  */
 /**
- * @description DB TABLE iam_control_user_agent
+ * @description DB TABLE IamControlUserAgent
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              name:string, 
- *              user_agent:string}} server_db_table_iam_control_user_agent
+ *              user_agent:string}} server_db_table_IamControlUserAgent
  */
 
 /**
- * @description DB TABLE iam_user
+ * @description DB TABLE IamUser
  * @memberof dbObjects
  * @typedef {{
  *          id:number, 
@@ -457,38 +455,38 @@
  *          status:number|null, 
  *          active:number,
  *          created:string, 
- *          modified:string}} server_db_table_iam_user
+ *          modified:string}} server_db_table_IamUser
  */
 
 /**
- * @description DB TABLE iam_user_follow
+ * @description DB TABLE IamUserFollow
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_id:number,
  *              iam_user_id_follow:number
- *              created:string}} server_db_table_iam_user_follow
+ *              created:string}} server_db_table_IamUserFollow
  */
 /**
- * @description DB TABLE iam_user_like
+ * @description DB TABLE IamUserLike
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_id:number,
  *              iam_user_id_like:number
- *              created:string}} server_db_table_iam_user_like
+ *              created:string}} server_db_table_IamUserLike
  */
 /**
- * @description DB TABLE iam_user_view
+ * @description DB TABLE IamUserView
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_id:number|null,
  *              iam_user_id_view:number,
  *              client_ip:string|null,
  *              client_user_agent:string|null,
- *              created:string}} server_db_table_iam_user_view
+ *              created:string}} server_db_table_IamUserView
  */
     
 /**
- * @description DB TABLE iam_user_app
+ * @description DB TABLE IamUserApp
  * @memberof dbObjects
  * @typedef {{
  *          id:number, 
@@ -496,50 +494,50 @@
  *          iam_user_id: number, 
  *          app_id:number, 
  *          created:string, 
- *          modified:string|null}} server_db_table_iam_user_app
+ *          modified:string|null}} server_db_table_IamUserApp
  */
 /**
- * @description DB TABLE iam_user_app_data_post
+ * @description DB TABLE IamUserAppDataPost
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_app_id:number
  *              json_data:{[key:string]:string}|null,
  *              created:string,
- *              modified:string|null}} server_db_table_iam_user_app_data_post
+ *              modified:string|null}} server_db_table_IamUserAppDataPost
  */
 
 /**
- * @description DB TABLE iam_user_data_post_like
+ * @description DB TABLE IamUserAppDataPostLike
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_app_data_post_id:number,
  *              iam_user_app_id:number,
- *              created:string}} server_db_table_iam_user_app_data_post_like
+ *              created:string}} server_db_table_IamUserAppDataPostLike
  */
 /**
- * @description DB TABLE iam_user_data_post_view
+ * @description DB TABLE IamUserAppDataPostView
  * @memberof dbObjects
  * @typedef {{  id:number,
  *              iam_user_app_id:number, 
  *              iam_user_app_data_post_id:number,
  *              client_ip:string|null,
  *              client_user_agent:string|null,
- *              created:string}} server_db_table_iam_user_app_data_post_view
+ *              created:string}} server_db_table_IamUserAppDataPostView
  */
     
 /**
- * @description DB TABLE iam_user_event
+ * @description DB TABLE IamUserEvent
  * @memberof dbObjects
  * @typedef {{
  *          id:number, 
  *          iam_user_id:number,
  *          event:server_db_iam_user_event_name, 
  *          event_status:server_db_iam_user_event_status
- *          created:string}} server_db_table_iam_user_event
+ *          created:string}} server_db_table_IamUserEvent
  */
 
 /** 
- * @description DB TABLE iam_app_id_token
+ * @description DB TABLE IamAppIdToken
  * @memberof dbObjects
  * @typedef {{id:     number,
  *            app_id: number,
@@ -547,11 +545,11 @@
  *   	        token:  string,
  *		        ip:     string,
  *		        ua:     string|null,
- *		        created:string}} server_db_table_iam_app_id_token
+ *		        created:string}} server_db_table_IamAppIdToken
  */
 
  /**
- * @description DB TABLE iam_app_access
+ * @description DB TABLE IamAppAccess
  * @memberof dbObjects
  * @typedef {{	id:                 number,
  *              app_id:             number,
@@ -564,55 +562,55 @@
  *              token:              string|null,
  *		          ua:                 string|null,
  *		          created:            string,
- *              modified:           string|null}} server_db_table_iam_app_access
+ *              modified:           string|null}} server_db_table_IamAppAccess
  */
 
 /**
- * @description DB TABLE_LOG log_app_info
+ * @description DB TABLE_LOG LogAppInfo
  * @memberof dbObjects
  * @typedef {{   logdate:string,
  *               app_id:number|null,
  *               app_filename:string,
  *               app_function_name:string,
  *               app_app_line:number,
- *               logtext:string}} server_db_table_log_log_app_info
+ *               logtext:string}} server_db_table_LogAppInfo
  */
 
 /**
- * @description DB TABLE_LOG log_app_error
+ * @description DB TABLE_LOG LogAppError
  * @memberof dbObjects
- * @typedef {server_db_table_log_log_app_info} server_db_table_log_log_app_error
+ * @typedef {server_db_table_LogAppInfo} server_db_table_LogAppError
  */
 /**
- * @description DB TABLE_LOG log_db_info
+ * @description DB TABLE_LOG LogDbInfo
  * @memberof dbObjects
  * @typedef {{   logdate:string,
  *               app_id:number|null,
  *               parameters:string,
- *               logtext:string}} server_db_table_log_log_db_info
+ *               logtext:string}} server_db_table_LogDbInfo
  */
 /**
- * @description DB TABLE_LOG log_db_error
+ * @description DB TABLE_LOG LogDbError
  * @memberof dbObjects
- * @typedef {server_db_table_log_log_db_info} server_db_table_log_log_db_error
+ * @typedef {server_db_table_LogDbInfo} server_db_table_LogDbError
  */
 /**
- * @description DB TABLE_LOG log_service_info
+ * @description DB TABLE_LOG LogServiceInfo
  * @memberof dbObjects
  * @typedef {{   logdate:string,
  *               app_id:number|null,
  *               service:string,
  *               parameters:string,
- *               logtext:string}} server_db_table_log_log_service_info
+ *               logtext:string}} server_db_table_LogServiceInfo
  */
 /**
- * @description DB TABLE_LOG log_service_error
+ * @description DB TABLE_LOG LogServiceError
  * @memberof dbObjects
- * @typedef {server_db_table_log_log_service_info} server_db_table_log_log_service_error
+ * @typedef {server_db_table_LogServiceInfo} server_db_table_LogServiceError
  */
          
 /**
- * @description DB TABLE_LOG log_request_info
+ * @description DB TABLE_LOG LogRequestInfo
  * @memberof dbObjects
  * @typedef {{  logdate:string,
  *              host:string,
@@ -630,27 +628,27 @@
  *              size_received:number,
  *              size_sent:number,
  *               responsetime:number,
- *              logtext:string}} server_db_table_log_log_request_info
+ *              logtext:string}} server_db_table_LogRequestInfo
  */
 /**
- * @description DB TABLE_LOG log_request_error
+ * @description DB TABLE_LOG LogRequestError
  * @memberof dbObjects
- * @typedef {server_db_table_log_log_request_info} server_db_table_log_log_request_error
+ * @typedef {server_db_table_LogRequestInfo} server_db_table_LogRequestError
  */
 
 /**
- * @description DB TABLE_LOG log_server_info
+ * @description DB TABLE_LOG LogServerInfo
  * @memberof dbObjects
  * @typedef {{  logdate:string,
- *              logtext:string}} server_db_table_log_log_server_info
+ *              logtext:string}} server_db_table_LogServerInfo
  */
 /**
- * @description DB TABLE_LOG log_server_error
+ * @description DB TABLE_LOG LogServerError
  * @memberof dbObjects
- * @typedef {server_db_table_log_log_server_info} server_db_table_log_log_server_error
+ * @typedef {server_db_table_LogServerInfo} server_db_table_LogServerError
  */
 /**
- * @description DB DOCUMENT config_server
+ * @description DB DOCUMENT ConfigServer
  * @memberof dbObjects
  * @typedef  {{ ['SERVER']:[server_db_config_server_server], 
  *              ['SERVICE_APP']:[server_db_config_server_service_app], 
@@ -659,11 +657,11 @@
  *              ['SERVICE_SOCKET']:[server_db_config_server_service_socket],
  *              ['SERVICE_DB']:[server_db_config_server_service_db],
  *              ['SERVICE_LOG']:[server_db_config_server_service_log],
- *              ['METADATA']:server_db_config_server_metadata}} server_db_document_config_server
+ *              ['METADATA']:server_db_config_server_metadata}} server_db_document_ConfigServer
  */
 
 /**
- * @description DB DOCUMENT config_rest_api
+ * @description DB DOCUMENT ConfigRestApi
  *              Follows Open API syntax
  * @memberof dbObjects
  * @typedef  {{ info: {
@@ -717,42 +715,41 @@
  *                      }
  *                  },
  *              }
- *          }} server_db_document_config_rest_api
+ *          }} server_db_document_ConfigRestApi
  */
 
 /**
- * @description DB DOCUMENT config_iam_policy
+ * @description DB DOCUMENT ConfigIamPolicy
  * @memberof dbObjects
- * @typedef {{'content-security-policy':string}} server_db_document_config_iam_policy
+ * @typedef {{'content-security-policy':string}} server_db_document_ConfigIamPolicy
  */
 
 
 /**
- * @description DB TABLE message_queue_publish
+ * @description DB TABLE MessageQueuePublish
  * @memberof dbObjects
  * @typedef {{  message_id:number,
 *              created:string,
 *              service:string,
-*              message:object|null}} server_db_table_message_queue_publish
+*              message:object|null}} server_db_table_MessageQueuePublish
 */
 /**
-* @description DB TABLE message_queue_consume
+* @description DB TABLE MessageQueueConsume
 * @memberof dbObjects
 * @typedef {{  message_id:number|null,
 *              service:string|null,
 *              message:*,
 *              start:string|null,
 *              finished:string|null,
-*              result:*}} server_db_table_message_queue_consume
+*              result:*}} server_db_table_MessageQueueConsume
 */
 /**
-* @description DB TABLE message_queue_error
+* @description DB TABLE MessageQueueError
 * @memberof dbObjects
 * @typedef {{  message_id:number,
 *              message:*,
-*              result:*}} server_db_table_message_queue_error
+*              result:*}} server_db_table_MessageQueueError
 */
-
 
 /**
  * @description DB common result
@@ -805,6 +802,7 @@
 /**
  * @description DB server_db_config_server_server
  * @typedef {{  HOST:string,
+ *              PATH_DATA:string,
  *              HTTP_PORT:string,
  *              HTTPS_ENABLE:string,
  *              HTTPS_PORT:string,
@@ -819,7 +817,7 @@
  *              REST_API_VERSION:number,
  *              GIT_REPOSITORY_URL:string,
  *              NETWORK_INTERFACE:string,
- *              PATH_DATA_JOBS:string}} server_db_config_server_server
+ *              PATH_JOBS:string}} server_db_config_server_server
  */
 
 /** 
@@ -990,83 +988,83 @@
 
 /**
  * @description DB tables log
- * @typedef {  'LOG_APP_INFO'|
- *             'LOG_APP_ERROR'|
- *             'LOG_DB_INFO'|
- *             'LOG_DB_ERROR'|
- *             'LOG_REQUEST_INFO'|
- *             'LOG_REQUEST_VERBOSE'|
- *             'LOG_REQUEST_ERROR'|
- *             'LOG_SERVER_INFO'|
- *             'LOG_SERVER_ERROR'|
- *             'LOG_SERVICE_INFO'|
- *             'LOG_SERVICE_ERROR'} server_db_tables_log
+ * @typedef {  'LogAppInfo'|
+ *             'LogAppError'|
+ *             'LogDbInfo'|
+ *             'LogDbError'|
+ *             'LogRequestInfo'|
+ *             'LogRequestVerbose'|
+ *             'LogRequestError'|
+ *             'LogServerInfo'|
+ *             'LogServerError'|
+ *             'LogServiceInfo'|
+ *             'LogServiceError'} server_db_tables_log
  */
 
 /**
  * @description DB object
  * 
- * @typedef {   'DB_OBJECTS'| 
- *              'DB_FILE'| 
- *              'APP'|
- *              'APP_DATA'|
- *              'APP_DATA_ENTITY'|
- *              'APP_DATA_ENTITY_RESOURCE'|
- *              'APP_DATA_RESOURCE_DETAIL_DATA'|
- *              'APP_DATA_RESOURCE_DETAIL'|
- *              'APP_DATA_RESOURCE_MASTER'|
- *              'APP_MODULE'|
- *              'APP_MODULE_QUEUE'|
- *              'APP_PARAMETER'|
- *              'APP_SECRET'|
- *              'APP_TRANSLATION'|
- *              'IAM_APP_ID_TOKEN'|
- *              'IAM_APP_ACCESS'|
- *              'IAM_CONTROL_IP'|
- *              'IAM_CONTROL_USER_AGENT'|
- *              'IAM_CONTROL_OBSERVE'|
- *              'IAM_USER'|
- *              'IAM_USER_APP'|
- *              'IAM_USER_APP_DATA_POST'|
- *              'IAM_USER_APP_DATA_POST_LIKE'|
- *              'IAM_USER_APP_DATA_POST_VIEW'|
- *              'IAM_USER_FOLLOW'|
- *              'IAM_USER_LIKE'|
- *              'IAM_USER_VIEW'|
- *              'IAM_USER_EVENT'|
+ * @typedef {   'DbObjects'| 
+ *              'DbFile'| 
+ *              'App'|
+ *              'AppData'|
+ *              'AppDataEntity'|
+ *              'AppDataEntityResource'|
+ *              'AppDataResourceDetailData'|
+ *              'AppDataResourceDetail'|
+ *              'AppDataResourceMaster'|
+ *              'AppModule'|
+ *              'AppModuleQueue'|
+ *              'AppParameter'|
+ *              'AppSecret'|
+ *              'AppTranslation'|
+ *              'IamAppIdToken'|
+ *              'IamAppAccess'|
+ *              'IamControlIp'|
+ *              'IamControlUserAgent'|
+ *              'IamControlObserve'|
+ *              'IamUser'|
+ *              'IamUserApp'|
+ *              'IamUserAppDataPost'|
+ *              'IamUserAppDataPostLike'|
+ *              'IamUserAppDataPostView'|
+ *              'IamUserFollow'|
+ *              'IamUserLike'|
+ *              'IamUserView'|
+ *              'IamUserEvent'|
  *              server_db_tables_log|
  *              server_db_db_name_config| 
- *              server_db_db_name_message_queue} server_db_object
+ *              server_db_db_name_message_queue} server_DbObject
  */
 
 /**
  * @description DB server_db_db_name_config
  * 
- * @typedef {   'CONFIG_SERVER'|
- *              'CONFIG_REST_API'|
- *              'CONFIG_IAM_POLICY'|
- *              'CONFIG_MICROSERVICE_SERVICES'} server_db_db_name_config
+ * @typedef {   'ConfigServer'|
+ *              'ConfigRestApi'|
+ *              'ConfigIamPolicy'|
+ *              'ConfigMicroserviceServices'} server_db_db_name_config
  */
 
 /**
  * @description DB server_db_db_name_message_queue
  * 
- * @typedef {  'MESSAGE_QUEUE_PUBLISH'|
- *             'MESSAGE_QUEUE_CONSUME'|
- *             'MESSAGE_QUEUE_ERROR'} server_db_db_name_message_queue
+ * @typedef {  'MessageQueuePublish'|
+ *             'MessageQueueConsume'|
+ *             'MessageQueueError'} server_db_db_name_message_queue
  */
 
 /** 
  * @description DB object record
  * @namespace dbObjects
- * @typedef {{  name:server_db_object, 
+ * @typedef {{  name:server_DbObject, 
  *              type:'DOCUMENT'|'TABLE'|'TABLE_LOG'|'TABLE_LOG_DATE'|'BINARY',
  *              pk:string|null,
  *              uk:string[]|null,
  *              lock:number, 
  *              transaction_id:number|null, 
  *              transaction_content: object|string|[]|null, 
- *              cache_content?:* }} server_db_object_record
+ *              cache_content?:* }} server_DbObject_record
  */
 
 /** 
@@ -1167,13 +1165,13 @@
 
 /**
  * @description DB server_log_scope
- * @typedef {'APP'|'DB'|'REQUEST'|'SERVER'|'SERVICE'} server_log_scope
+ * @typedef {'App'|'Db'|'Request'|'Server'|'Service'} server_log_scope
  */
 
 
 /**
  * @description DB server_log_level
- * @typedef {'INFO'|'ERROR'} server_log_level
+ * @typedef {'Info'|'Error'} server_log_level
  */
 
 /** 

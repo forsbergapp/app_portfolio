@@ -44,7 +44,7 @@ const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
  * @returns {string}
  */
 const DATABASE_INFO_SELECT = () => {
-    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     switch (db_use){
         case 1:
         case 2:{
@@ -111,7 +111,7 @@ const DATABASE_INFO_SELECT = () => {
                            'SQLite (' || file || ')' "database_name", 
                            sqlite_version() "version", 
                            :database_schema "database_schema",
-                           '${Config.get('CONFIG_SERVER','SERVER', 'HOST')}' "hostname", 
+                           '${Config.get('ConfigServer','SERVER', 'HOST')}' "hostname", 
                            '-' "connections",
                            '-' "started"
                       FROM pragma_database_list
@@ -129,7 +129,7 @@ const DATABASE_INFO_SELECT = () => {
  * @returns {string}
  */
 const DATABASE_INFO_SELECT_SPACE = () => {
-    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     switch (db_use){
         case 1:
         case 2:{
@@ -196,7 +196,7 @@ const DATABASE_INFO_SELECT_SPACE = () => {
  * @returns {string}
  */
 const DATABASE_INFO_SELECT_SPACE_SUM = () => {
-    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     switch (db_use){
         case 1:
         case 2:{

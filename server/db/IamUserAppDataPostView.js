@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_iam_user_app_data_post_view,
+ *          server_db_table_IamUserAppDataPostView,
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
@@ -20,11 +20,11 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  data_app_id:number}}} parameters
- * @returns {server_server_response & {result?:server_db_table_iam_user_app_data_post_view[] }}
+ * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPostView[] }}
  */
 const get = parameters =>{
-    const result = fileDBGet(parameters.app_id, 'IAM_USER_APP_DATA_POST_VIEW',parameters.resource_id, parameters.data.data_app_id??null).rows
-                    .filter((/**@type{server_db_table_iam_user_app_data_post_view}*/row)=>
+    const result = fileDBGet(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, parameters.data.data_app_id??null).rows
+                    .filter((/**@type{server_db_table_IamUserAppDataPostView}*/row)=>
                         IamUserApp.get({app_id:parameters.app_id,
                                         resource_id:row.iam_user_app_id, 
                                         data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result.length>0
@@ -40,7 +40,7 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {number} app_id  
- * @param {server_db_table_iam_user_app_data_post_view} data
+ * @param {server_db_table_IamUserAppDataPostView} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) =>{
@@ -49,7 +49,7 @@ const post = async (app_id, data) =>{
         return dbCommonRecordError(app_id, 400);
     }
     else{
-        /**@type{server_db_table_iam_user_app_data_post_view} */
+        /**@type{server_db_table_IamUserAppDataPostView} */
         const data_new =     {
                                 id:Date.now(),
                                 iam_user_app_id:data.iam_user_app_id, 
@@ -58,7 +58,7 @@ const post = async (app_id, data) =>{
                                 client_user_agent: data.client_user_agent,
                                 created:new Date().toISOString()
                         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER_APP_DATA_POST_LIKE', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamUserAppDataPostView', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -80,7 +80,7 @@ const post = async (app_id, data) =>{
 const deleteRecord = async parameters =>{   
     return fileCommonExecute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
-                                object:'IAM_USER_APP_DATA_POST_VIEW', 
+                                object:'IamUserAppDataPostView', 
                                 delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};

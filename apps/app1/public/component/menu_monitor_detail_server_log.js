@@ -14,14 +14,14 @@
  * @param {{function_get_order_by:function,
  *          function_roundOff:CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
- *          logscope:'REQUEST'|'SERVER'|'APP'|'SERVICE'|'DB'|''}} props
+ *          logscope:'Request'|'Server'|'App'|'Service'|'Db'|''}} props
  * @returns {string}
  */
 const template = props => ` ${  /*
                                 use this grouping to decide column orders
                                 [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
                                 */
-                                props.logscope=='REQUEST'?
+                                props.logscope=='Request'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='logdate' class='menu_monitor_detail_server_log_request_log_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE
@@ -147,7 +147,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }
-                            ${props.logscope=='SERVER'?
+                            ${props.logscope=='Server'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='logdate' class='menu_monitor_detail_server_log_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE
@@ -170,7 +170,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }
-                            ${props.logscope=='APP'?
+                            ${props.logscope=='App'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='logdate' class='menu_monitor_detail_server_log_app_data_stat_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE
@@ -221,7 +221,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }
-                            ${props.logscope=='SERVICE'?
+                            ${props.logscope=='Service'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='logdate' class='menu_monitor_detail_server_log_service_log_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE
@@ -265,7 +265,7 @@ const template = props => ` ${  /*
                                     ).join('')
                                 }`:''
                             }    
-                            ${props.logscope=='DB'?
+                            ${props.logscope=='Db'?
                                 `<div class='menu_monitor_detail_server_log_row'>
                                     <div data-column='logdate' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('logdate')}'>
                                         LOGDATE

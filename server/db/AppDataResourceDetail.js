@@ -1,7 +1,7 @@
 /** @module server/db/AppDataResourceDetail */
 
 /**
- * @import {server_server_response,server_db_table_app_data_resource_detail, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
+ * @import {server_server_response,server_db_table_AppDataResourceDetail, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -16,10 +16,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @param {{app_id:number|null,
  *          resource_id:number|null,
  *          data:{data_app_id?:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_app_data_resource_detail[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetail[] }}
  */
 const get = parameters =>{ 
-    const result = fileDBGet(parameters.app_id, 'APP_DATA_RESOURCE_DETAIL',parameters.resource_id, parameters.data.data_app_id??null);
+    const result = fileDBGet(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, parameters.data.data_app_id??null);
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
@@ -30,7 +30,7 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {{app_id:number,
- *          data:server_db_table_app_data_resource_detail}} parameters
+ *          data:server_db_table_AppDataResourceDetail}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert}>}
  */
 const post = async parameters => {
@@ -40,7 +40,7 @@ const post = async parameters => {
       return dbCommonRecordError(parameters.app_id, 400);
   }
   else{
-      /**@type{server_db_table_app_data_resource_detail} */
+      /**@type{server_db_table_AppDataResourceDetail} */
       const data_new =     {
                                id:Date.now(),
                                app_data_resource_master_id:parameters.data.app_data_resource_master_id,
@@ -51,7 +51,7 @@ const post = async parameters => {
                                created:new Date().toISOString(),
                                modified:null
                       };
-      return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'APP_DATA_RESOURCE_DETAIL', post:{data:data_new}}).then((result)=>{
+      return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'AppDataResourceDetail', post:{data:data_new}}).then((result)=>{
           if (result.affectedRows>0){
               result.insertId=data_new.id;
               return {result:result, type:'JSON'};
@@ -67,7 +67,7 @@ const post = async parameters => {
  * @function
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_table_app_data_resource_detail}} parameters
+ *          data:server_db_table_AppDataResourceDetail}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters =>{
@@ -76,7 +76,7 @@ const update = async parameters =>{
         return dbCommonRecordError(parameters.app_id, 400);
     }
     else{
-        /**@type{server_db_table_app_data_resource_detail} */
+        /**@type{server_db_table_AppDataResourceDetail} */
         const data_update = {};
         //allowed parameters to update:
         if (parameters.data.json_data!=null)
@@ -85,7 +85,7 @@ const update = async parameters =>{
             data_update.app_data_resource_master_attribute_id = parameters.data.app_data_resource_master_attribute_id;
         data_update.modified = new Date().toISOString();
         if (Object.entries(data_update).length>0)
-            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_DATA_RESOURCE_DETAIL', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataResourceDetail', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -105,7 +105,7 @@ const update = async parameters =>{
 * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
 */
 const deleteRecord = async parameters =>{
-    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'APP_DATA_RESOURCE_DETAIL', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataResourceDetail', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

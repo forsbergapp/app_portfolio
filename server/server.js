@@ -55,16 +55,16 @@ const zlib = await import('node:zlib');
 const serverResponse = async parameters =>{
     /**@type{import('./db/Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    const common_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
-    const admin_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'));
+    const common_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')) ?? 0;
+    const admin_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'));
     /**
      * Sets response type
      * @param {server_server_response_type} type
      */
     const setType = type => {
         
-        const app_cache_control =       Config.get('CONFIG_SERVER', 'SERVICE_APP','CACHE_CONTROL');
-        const app_cache_control_font =  Config.get('CONFIG_SERVER', 'SERVICE_APP','CACHE_CONTROL_FONT');
+        const app_cache_control =       Config.get('ConfigServer', 'SERVICE_APP','CACHE_CONTROL');
+        const app_cache_control_font =  Config.get('ConfigServer', 'SERVICE_APP','CACHE_CONTROL_FONT');
         switch (type){
             case 'JSON':{
                 if (app_cache_control !='')
@@ -218,7 +218,7 @@ const serverResponse = async parameters =>{
                                 }
                             }
                             //records limit in controlled by server, apps can not set limits
-                            const limit = serverUtilNumberValue(Config.get('CONFIG_SERVER', 'SERVICE_APP','LIMIT_RECORDS')??0);
+                            const limit = serverUtilNumberValue(Config.get('ConfigServer', 'SERVICE_APP','LIMIT_RECORDS')??0);
                             if (parameters.result_request.singleResource)
                                 //limit rows if single resource response contains rows
                                 parameters.res.write(JSON.stringify((typeof parameters.result_request.result!='string' && parameters.result_request.result?.length>0)?
@@ -740,7 +740,7 @@ const serverJs = async () => {
         await read_body();
         // check JSON maximum size, parameter uses megabytes (MB)
         if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-                (serverUtilNumberValue((Config.get('CONFIG_SERVER', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
+                (serverUtilNumberValue((Config.get('ConfigServer', 'SERVER','JSON_LIMIT') ?? '0').replace('MB',''))??0)){
             //log error
             Log.postRequestE(req, res.statusCode, res.statusMessage, serverUtilResponseTime(res), 'PayloadTooLargeError').then(() => {
                 serverResponse({
@@ -882,7 +882,7 @@ const serverREST_API = async (routesparameters) =>{
             return false;
     };
         
-    const configPath = Object.entries(Config.get('CONFIG_REST_API').paths)
+    const configPath = Object.entries(Config.get('ConfigRestApi').paths)
                         .filter(path=>
                             path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${IAM_user_account_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
@@ -1113,9 +1113,9 @@ const serverStart = async () =>{
         console.log(err);
         Log.postServerE('Process uncaughtException: ' + err.stack);
     });
-    process.on('unhandledRejection', reason =>{
-        console.log(reason);
-        Log.postServerE('Process unhandledRejection: ' + reason);
+    process.on('unhandledRejection', (/**@type{*}*/reason) =>{
+        console.log(reason.stack ?? reason.message ?? reason);
+        Log.postServerE('Process unhandledRejection: ' + reason.stack ?? reason.message ?? reason);
     });
     try {
         await Config.configInit();
@@ -1125,26 +1125,26 @@ const serverStart = async () =>{
         /**@type{import('./socket.js')} */
         const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
         socketIntervalCheck();
-        const NETWORK_INTERFACE = Config.get('CONFIG_SERVER','SERVER', 'NETWORK_INTERFACE');
+        const NETWORK_INTERFACE = Config.get('ConfigServer','SERVER', 'NETWORK_INTERFACE');
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(await serverJs()).listen(Config.get('CONFIG_SERVER','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
-            Log.postServerI('HTTP Server up and running on PORT: ' + Config.get('CONFIG_SERVER','SERVER', 'HTTP_PORT')).then(() => {
+        http.createServer(await serverJs()).listen(Config.get('ConfigServer','SERVER', 'HTTP_PORT'), NETWORK_INTERFACE, () => {
+            Log.postServerI('HTTP Server up and running on PORT: ' + Config.get('ConfigServer','SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
         });
-        if (Config.get('CONFIG_SERVER','SERVER', 'HTTPS_ENABLE')=='1'){
+        if (Config.get('ConfigServer','SERVER', 'HTTPS_ENABLE')=='1'){
             //START HTTPS SERVER
             //SSL files for HTTPS
-            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + Config.get('CONFIG_SERVER','SERVER', 'HTTPS_KEY'), 'utf8');
-            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + Config.get('CONFIG_SERVER','SERVER', 'HTTPS_CERT'), 'utf8');
+            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + '/data' + Config.get('ConfigServer','SERVER', 'HTTPS_KEY'), 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + '/data' + Config.get('ConfigServer','SERVER', 'HTTPS_CERT'), 'utf8');
             const options = {
                 key: HTTPS_KEY.toString(),
                 cert: HTTPS_CERT.toString()
             };
             /**@ts-ignore*/
-            https.createServer(options,  await serverJs()).listen(Config.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
-                Log.postServerI('HTTPS Server up and running on PORT: ' + Config.get('CONFIG_SERVER','SERVER', 'HTTPS_PORT')).then(() => {
+            https.createServer(options,  await serverJs()).listen(Config.get('ConfigServer','SERVER', 'HTTPS_PORT'),NETWORK_INTERFACE, () => {
+                Log.postServerI('HTTPS Server up and running on PORT: ' + Config.get('ConfigServer','SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
             });            

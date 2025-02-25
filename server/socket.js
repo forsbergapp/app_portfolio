@@ -217,7 +217,7 @@ const socketClientAdd = (newClient) => {
         let sent = 0;
         for (const client of SOCKET_CONNECTED_CLIENTS){
             if (client.id != socketClientGet(parameters.idToken))
-                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))
+                if (parameters.data.broadcast_type=='MAINTENANCE' && client.app_id ==serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID')))
                     null;
                 else
                     if (client.app_id == parameters.data.app_id || parameters.data.app_id == null){
@@ -384,7 +384,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
     //get access token if any
     const access_token =    parameters.authorization?iamUtilTokenGet(   parameters.app_id,
                                             parameters.authorization, 
-                                            parameters.app_id==serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))?'ADMIN':'APP_ACCESS'):null;
+                                            parameters.app_id==serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'))?'ADMIN':'APP_ACCESS'):null;
     const user_account_id = parameters.authorization?serverUtilNumberValue(access_token?.user_account_id):null;
     const iam_user =        parameters.authorization?
                                 (serverUtilNumberValue(access_token?.iam_user_id)?
@@ -440,7 +440,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
  */
  const socketIntervalCheck = () => {
     setInterval(() => {
-        if (serverUtilNumberValue(Config.get('CONFIG_SERVER','METADATA','MAINTENANCE'))==1){
+        if (serverUtilNumberValue(Config.get('ConfigServer','METADATA','MAINTENANCE'))==1){
             socketAdminSend({   app_id:null,
                                 idToken:'',
                                 data:{app_id:null,
@@ -451,7 +451,7 @@ const socketAppServerFunctionSend = async (app_id, idToken, message_type, messag
         }
         socketExpiredTokensUpdate();
     //set default interval to 5 seconds if no parameter is set
-    }, serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
+    }, serverUtilNumberValue(Config.get('ConfigServer','SERVICE_SOCKET', 'CHECK_INTERVAL'))??5000);
 };
 /**
  * @name socketExpiredTokensUpdate
