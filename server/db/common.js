@@ -92,7 +92,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 		
 		dbSQL(app_id, DB_USE, sql, parameters, app_id == serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID')))
 		.then((/**@type{server_db_common_result}*/result)=> {
-			Log.postDBI(app_id, DB_USE, sql, parameters, result)
+			Log.postDBI(app_id, DB_USE?.toString()??'', sql, parameters, result)
 			.then(()=>{
 				//parse json_data in SELECT rows, return also the json_data column as reference
 				try {
@@ -114,7 +114,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 			//SQLite does not display sql in error
 			if (!error.sql)
 				error.sql = sql;
-			Log.postDBE(app_id, DB_USE, sql, parameters, error)
+			Log.postDBE(app_id, DB_USE?.toString()??'', sql, parameters, error)
 			.then(()=>resolve(dbCommonRecordError(app_id, 500, error)));
 		});
 	});

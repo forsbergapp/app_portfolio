@@ -273,11 +273,11 @@ const template = props => ` ${  /*
                                     <div data-column='app_id' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('app_id')}'>
                                         APP ID
                                     </div>
-                                    <div data-column='db' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('db')}'>
-                                        DB
+                                    <div data-column='object' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('object')}'>
+                                        OBJECT
                                     </div>
-                                    <div data-column='sql' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('sql')}'>
-                                        SQL
+                                    <div data-column='dml' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('dml')}'>
+                                        DML
                                     </div>
                                     <div data-column='parameters' class='menu_monitor_detail_server_log_db_log_col list_sort_click list_title ${props.function_get_order_by('parameters')}'>
                                         PARAMETERS
@@ -288,8 +288,8 @@ const template = props => ` ${  /*
                                 </div>
                                 ${props.logs.map((/**@type{{logdate:string,
                                                             app_id:number,
-                                                            db:string,
-                                                            sql:string,
+                                                            object:string,
+                                                            dml:string,
                                                             parameters:string,
                                                             logtext:string
                                                             }}*/log)=>
@@ -301,13 +301,13 @@ const template = props => ` ${  /*
                                             ${log.app_id}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col'>
-                                            ${log.db}
+                                            ${log.object}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col common_wide_list_column'>
-                                            ${log.sql}
+                                            ${log.dml}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col common_wide_list_column'>
-                                            ${log.parameters}
+                                            ${typeof log.parameters=='object'?JSON.stringify(log.parameters):log.parameters}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_db_log_col common_wide_list_column'>
                                             ${log.logtext}
