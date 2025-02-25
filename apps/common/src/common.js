@@ -210,7 +210,7 @@ const commonAppStart = async (app_id=null) =>{
  */
 const commonClientLocale = accept_language =>{
     let locale;
-    if (accept_language.startsWith('text') || accept_language=='*')
+    if (!accept_language || accept_language.startsWith('text') || accept_language=='*')
         locale = 'en';
     else{
         //check first lang ex syntax 'en-US,en;'
