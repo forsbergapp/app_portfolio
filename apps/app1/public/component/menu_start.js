@@ -71,7 +71,7 @@ const component = async props => {
         })
     ];
     /**@type{0|1|null} */
-    const maintenance = await props.methods.commonFFB({path:'/server-db/config/CONFIG_SERVER', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'ADMIN'})
+    const maintenance = await props.methods.commonFFB({path:'/server-db/config/ConfigServer', query:'config_group=METADATA&parameter=MAINTENANCE', method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{string}*/result)=>JSON.parse(result));
 
    const onMounted = async () =>{

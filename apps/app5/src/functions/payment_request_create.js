@@ -27,7 +27,7 @@ const getToken = async parameters => {
     const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
     if (token_verify.app_id         == parameters.app_id && 
         token_verify.ip             == parameters.ip && 
-        token_verify.db             == serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE')) &&
+        token_verify.db             == serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB','USE')) &&
         token_verify.scope          == 'APP_EXTERNAL' &&
         //authenticated saved values in iam_app_access
         IamAppAccess.get(parameters.app_id, null).result
@@ -197,7 +197,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                 user_account_id:    null,
                                                                                                 //save the payment request id
                                                                                                 app_custom_id:      payment_request_id,
-                                                                                                db:                 serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                                                                                db:                 serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB','USE')),
                                                                                                 //authorize to client IP, the server should use 'X-Forwarded-For'
                                                                                                 ip:                 parameters.ip,
                                                                                                 scope:              'APP_EXTERNAL'});
@@ -212,7 +212,7 @@ const paymentRequestCreate = async parameters =>{
                                         //save the payment request id
                                         app_custom_id:          payment_request_id,
                                         app_id:                 parameters.app_id,
-                                        db:                     serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB','USE')),
+                                        db:                     serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB','USE')),
                                         res:		            1,
                                         token:                  jwt_data?jwt_data.token:null,
                                         ip:                     parameters.ip,

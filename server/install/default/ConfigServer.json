@@ -4,8 +4,6 @@
         {"HTTP_PORT": "80", "COMMENT": ""},
         {"HTTPS_ENABLE": "0", "COMMENT": ""},
         {"HTTPS_PORT": "443", "COMMENT": ""},
-        {"HTTPS_KEY": "/data/ssl/privkey.pem", "COMMENT": ""},
-        {"HTTPS_CERT": "/data/ssl/fullchain.pem", "COMMENT": ""},
         {"HTTPS_SSL_VERIFICATION": "1", "COMMENT": "1=YES, check if enable tempory path for Letsencrypt using certbot"},
         {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the tempory path for Letsencrypt using certbot"},
         {"JSON_LIMIT": "10MB", "COMMENT": ""},
@@ -15,7 +13,10 @@
         {"REST_API_VERSION":"1", "COMMENT": "REST API Version"},
         {"GIT_REPOSITORY_URL":"","COMMENT": "url to GIT repository syntax https://[server]/[path]/[file].git"},
         {"NETWORK_INTERFACE": "0.0.0.0", "COMMENT": "used by http.createServer at start, default '0.0.0.0' = ipv4 allow connections from any IP adress, '::' to allow all for ipv6 or any other valid setting"},
-        {"PATH_DATA_JOBS":"/data/jobs", "COMMENT": "Report queue jobs path"}
+        {"PATH_JOBS":"/jobs", "COMMENT": "Report queue jobs path"},
+        {"PATH_SSL":"/ssl", "COMMENT": "SSL path"},
+        {"HTTPS_KEY": "/ssl/privkey.pem", "COMMENT": ""},
+        {"HTTPS_CERT": "/ssl/fullchain.pem", "COMMENT": ""}
     ],
     "SERVICE_APP":[
         {"CACHE_CONTROL":"max-age=3600", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds default 1 hour or use any valid Cache-Control setting"},
@@ -88,18 +89,18 @@
         {"DB5_NAME": "MAIN", "COMMENT": ""}
     ],
     "SERVICE_LOG":[
-        {"SCOPE_REQUEST": "REQUEST", "COMMENT": ""},
-        {"SCOPE_SERVER": "SERVER", "COMMENT": ""},
-        {"SCOPE_APP": "APP", "COMMENT": ""},
-        {"SCOPE_SERVICE": "SERVICE", "COMMENT": ""},
-        {"SCOPE_DB": "DB", "COMMENT": ""},
-        {"REQUEST_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
-        {"APP_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
-        {"DB_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
-        {"SERVICE_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=VERBOSE"},
-        {"LEVEL_VERBOSE": "VERBOSE", "COMMENT": ""},
-        {"LEVEL_ERROR": "ERROR", "COMMENT": ""},
-        {"LEVEL_INFO": "INFO", "COMMENT": ""},
+        {"SCOPE_REQUEST": "Request", "COMMENT": ""},
+        {"SCOPE_SERVER": "Server", "COMMENT": ""},
+        {"SCOPE_APP": "App", "COMMENT": ""},
+        {"SCOPE_SERVICE": "Service", "COMMENT": ""},
+        {"SCOPE_DB": "Db", "COMMENT": ""},
+        {"REQUEST_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=Verbose"},
+        {"APP_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=Verbose"},
+        {"DB_LEVEL": "0", "COMMENT": "0=none, 1=INFO, 2=Verbose"},
+        {"SERVICE_LEVEL": "1", "COMMENT": "0=none, 1=INFO, 2=Verbose    "},
+        {"LEVEL_VERBOSE": "Verbose", "COMMENT": ""},
+        {"LEVEL_ERROR": "Error", "COMMENT": ""},
+        {"LEVEL_INFO": "Info", "COMMENT": ""},
         {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"}
     ],
     "METADATA":{

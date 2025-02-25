@@ -1,7 +1,7 @@
 /** @module server/db/AppModule */
 
 /**
- * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_app_module} from '../types.js'
+ * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_AppModule} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -18,10 +18,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @param {{app_id:Number,
  *          resource_id:number|null,
  *          data:{data_app_id?:string|number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_app_module[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppModule[] }}
  */
 const get = parameters => {
-    const result = fileDBGet(parameters.app_id, 'APP_MODULE',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
+    const result = fileDBGet(parameters.app_id, 'AppModule',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
@@ -39,7 +39,7 @@ const get = parameters => {
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.app_id!=null && data.common_type!=null && data.common_name!=null && data.common_role!=null && data.common_path!=null){
-        /**@type{server_db_table_app_module} */
+        /**@type{server_db_table_AppModule} */
         const data_new ={
             id:                 Date.now(),
             app_id:             data.app_id,
@@ -49,7 +49,7 @@ const post = async (app_id, data) => {
             common_path:        data.common_path,
             common_description: data.common_description
         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'APP_MODULE', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'AppModule', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId = data_new.id;
                 return {result:result, type:'JSON'};
@@ -69,11 +69,11 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_table_app_module}} parameters
+ *          data:server_db_table_AppModule}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
-    /**@type{server_db_table_app_module} */
+    /**@type{server_db_table_AppModule} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.common_type!=null)
@@ -87,7 +87,7 @@ const update = async parameters => {
     if (parameters.data.common_description!=null)
         data_update.common_description = parameters.data.common_description;
     if (Object.entries(data_update).length>0)
-        return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_MODULE', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppModule', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -106,7 +106,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP_MODULE', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'AppModule', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

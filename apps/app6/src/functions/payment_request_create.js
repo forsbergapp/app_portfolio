@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server_server_response, server_db_table_app_data_entity} from '../../../../server/types.js'
+ * @import {server_server_response, server_db_table_AppDataEntity} from '../../../../server/types.js'
  */
 
 /**

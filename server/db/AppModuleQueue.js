@@ -3,7 +3,7 @@
 /**
  * @import {server_server_response,server_db_app_module_queue_status,
  *          server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_app_module_queue} from '../types.js'
+ *          server_db_table_AppModuleQueue} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -20,10 +20,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_app_module_queue[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppModuleQueue[] }}
  */
 const get = parameters =>{ 
-    const result = fileDBGet(parameters.app_id, 'APP_MODULE_QUEUE',parameters.resource_id, parameters.app_id);
+    const result = fileDBGet(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
     if (result.rows.length>0 || parameters.resource_id==null)
         return  {result:result.rows, type:'JSON'};
     else
@@ -43,7 +43,7 @@ const get = parameters =>{
 const getResult = async parameters => {
     /**@type{import('./Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    return {sendfile:process.cwd() + `${Config.get('CONFIG_SERVER','SERVER','PATH_DATA_JOBS')}/${parameters.resource_id}.html`, type:'HTML'};
+    return {sendfile:process.cwd() + `/data/${Config.get('ConfigServer','SERVER','PATH_JOBS')}/${parameters.resource_id}.html`, type:'HTML'};
 };
 /**
  * @name post
@@ -62,7 +62,7 @@ const getResult = async parameters => {
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.type!=null && data.name!=null && data.parameters!=null && data.user!=null){
-        /**@type{server_db_table_app_module_queue} */
+        /**@type{server_db_table_AppModuleQueue} */
         const job =     {
                             id:Date.now(),
                             iam_user_id:data.iam_user_id,       //FK iam_user
@@ -78,7 +78,7 @@ const post = async (app_id, data) => {
                             status:data.status,
                             message:null
                         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'APP_MODULE_QUEUE', post:{data:job}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'AppModuleQueue', post:{data:job}}).then((result)=>{
             if (result.affectedRows>0)
                 return  {result:{insertId:job.id, affectedRows:result.affectedRows}, type:'JSON'};
             else
@@ -101,7 +101,7 @@ const postResult = async (app_id, id, result) =>{
     /**@type{import('./Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     const fs = await import('node:fs');
-    await fs.promises.writeFile(process.cwd() + `${Config.get('CONFIG_SERVER','SERVER','PATH_DATA_JOBS')}/${id}.html`, result,  'utf8');
+    await fs.promises.writeFile(process.cwd() + `/data/${Config.get('ConfigServer','SERVER','PATH_JOBS')}/${id}.html`, result,  'utf8');
     return {result:{affectedRows:1}, type:'JSON'};
 };
 /**
@@ -131,7 +131,7 @@ const update = async (app_id, resource_id, data) => {
     if (data.message!=null)
         data_update.message = data.message;
     if (Object.entries(data_update).length>0)
-        return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'APP_MODULE_QUEUE', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'AppModuleQueue', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -150,7 +150,7 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP_MODULE_QUEUE', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'AppModuleQueue', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

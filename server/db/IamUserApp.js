@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_iam_user_app,
+ *          server_db_table_IamUserApp,
  *          server_config_apps_with_db_columns,
  *          server_db_common_result_delete,
  *          server_db_common_result_update,
@@ -21,10 +21,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  data_app_id:number|null}}} parameters
- * @returns {server_server_response & {result?:server_db_table_iam_user_app[] }}
+ * @returns {server_server_response & {result?:server_db_table_IamUserApp[] }}
  */
 const get = parameters =>{
-    const result = fileDBGet(parameters.app_id, 'IAM_USER_APP',parameters.resource_id, parameters.data.data_app_id??null).rows
+    const result = fileDBGet(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).rows
                     .filter(row=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
@@ -41,10 +41,10 @@ const get = parameters =>{
  *          data:{  data_app_id:number|null,
  *                  iam_user_id:number|null}
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_table_iam_user_app & {name:server_db_table_app['name'],
- *                                                                                      app_name_translation:server_db_table_app_translation['text'],
- *                                                                                      subdomain:server_db_table_app['subdomain'],
- *                                                                                      logo:server_db_table_app['logo'],
+ * @returns {Promise.<server_server_response & {result?:server_db_table_IamUserApp & {name:server_db_table_App['name'],
+ *                                                                                      app_name_translation:server_db_table_AppTranslation['text'],
+ *                                                                                      subdomain:server_db_table_App['subdomain'],
+ *                                                                                      logo:server_db_table_App['logo'],
  *                                                                                      protocol:string,
  *                                                                                      host:string|null,
  *                                                                                      port:number|null}[] }>}
@@ -53,8 +53,8 @@ const getViewApps = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppsGet} = await import(`file://${process.cwd()}/server/apps/src/common.js`);
     
-    /**@type{server_db_table_iam_user_app []} */
-    const result = fileDBGet(parameters.app_id, 'IAM_USER_APP',parameters.resource_id, parameters.data.data_app_id??null).rows
+    /**@type{server_db_table_IamUserApp []} */
+    const result = fileDBGet(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).rows
                     .filter(row=>row.iam_user_id == (parameters.data.iam_user_id ?? row.iam_user_id) );
     if (result.length>0 || parameters.resource_id==null){
         return {result:(await commonAppsGet({app_id:parameters.app_id, resource_id:parameters.app_id, locale:parameters.locale})).result
@@ -71,7 +71,7 @@ const getViewApps = async parameters => {
  * @description Create record
  * @function
  * @param {number} app_id  
- * @param {server_db_table_iam_user_app} data
+ * @param {server_db_table_IamUserApp} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) =>{
@@ -80,7 +80,7 @@ const post = async (app_id, data) =>{
         return dbCommonRecordError(app_id, 400);
     }
     else{
-        /**@type{server_db_table_iam_user_app} */
+        /**@type{server_db_table_IamUserApp} */
         const data_new =     {
                                 id:Date.now(),
                                 app_id:data.app_id, 
@@ -89,7 +89,7 @@ const post = async (app_id, data) =>{
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER_APP', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamUserApp', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -107,11 +107,11 @@ const post = async (app_id, data) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_table_iam_user_app}} parameters
+ *          data:server_db_table_IamUserApp}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters =>{
-    /**@type{server_db_table_iam_user_app} */
+    /**@type{server_db_table_IamUserApp} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.json_data!=null)
@@ -122,7 +122,7 @@ const update = async parameters =>{
     if (Object.entries(data_update).length>0)
         return fileCommonExecute({  app_id:parameters.app_id, 
                                     dml:'UPDATE', 
-                                    object:'IAM_USER_APP', 
+                                    object:'IamUserApp', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
@@ -142,7 +142,7 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'APP', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'IamUserApp', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

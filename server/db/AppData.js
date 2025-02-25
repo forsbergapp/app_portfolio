@@ -1,7 +1,7 @@
 /** @module server/db/AppData */
 
 /**
- * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_app_data} from '../types.js'
+ * @import {server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete, server_server_response,server_db_table_AppData} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -15,7 +15,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @description Get record
  *              Returns records in base64 format to avoid records limit
  *              Data key contains:
- *              server_db_table_app_data[]
+ *              server_db_table_AppData[]
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
@@ -45,7 +45,7 @@ const get = parameters => {
 *          data:{  name?:string,
 *                  value?:string,
 *                  data_app_id?:string|number|null}}} parameters
-* @returns {server_server_response & {result?:server_db_table_app_data[]}}
+* @returns {server_server_response & {result?:server_db_table_AppData[]}}
 */
 const getServer = parameters => {
    const result = fileDBGet(parameters.app_id, 'APP_DATA',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
@@ -67,7 +67,7 @@ const getServer = parameters => {
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.app_id!=null && data.common_type!=null && data.common_name!=null && data.common_role!=null && data.common_path!=null){
-        /**@type{server_db_table_app_data} */
+        /**@type{server_db_table_AppData} */
         const data_new ={
             id:                 Date.now(),
             app_id:             data.app_id,
@@ -99,11 +99,11 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server_db_table_app_data}} parameters
+ *          data:server_db_table_AppData}} parameters
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async parameters => {
-    /**@type{server_db_table_app_data} */
+    /**@type{server_db_table_AppData} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.name!=null)

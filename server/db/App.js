@@ -1,7 +1,7 @@
 /** @module server/db/App */
 
 /**
- * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, server_db_table_app} from '../types.js'
+ * @import {server_server_response,server_db_common_result_update, server_db_common_result_delete, server_db_table_App} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -16,10 +16,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number|null,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_app[] }}
+ * @returns {server_server_response & {result?:server_db_table_App[] }}
  */
 const get = parameters =>{ 
-    const result = fileDBGet(parameters.app_id, 'APP',parameters.resource_id, null);
+    const result = fileDBGet(parameters.app_id, 'App',parameters.resource_id, null);
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
@@ -37,10 +37,10 @@ const get = parameters =>{
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null){
-        /**@type{server_db_table_app} */
+        /**@type{server_db_table_App} */
         const app =     {
             //fetch max app id + 1
-            id:Math.max(...fileDBGet(app_id, 'APP',null, null).rows.map((/**@type{server_db_table_app}*/app)=>app.id)) +1,
+            id:Math.max(...fileDBGet(app_id, 'App',null, null).rows.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
             name: data.name,
             subdomain: data.subdomain,
             path: data.path,
@@ -59,7 +59,7 @@ const post = async (app_id, data) => {
             link_url:data.app_link_url,
             status: 'ONLINE'
         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'APP', post:{data:app}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId = app.id;
                 return {result:result, type:'JSON'};
@@ -99,7 +99,7 @@ const post = async (app_id, data) => {
  */
 const update = async parameters => {
     if (parameters.app_id!=null){
-        /**@type{server_db_table_app} */
+        /**@type{server_db_table_App} */
         const data_update = {};
         //allowed parameters to update:
         if (parameters.data.name!=null)
@@ -139,7 +139,7 @@ const update = async parameters => {
         if (parameters.data.status!=null)
             data_update.status = parameters.data.status;
         if (Object.entries(data_update).length>0)
-            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
@@ -161,7 +161,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else

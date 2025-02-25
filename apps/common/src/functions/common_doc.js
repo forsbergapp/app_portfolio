@@ -183,22 +183,22 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  * @name markdownRender
  * @description Renders markdown document and replaces variables:
  *              type APP
- *                  APP_NAME                APP
- *                  SCREENSHOT_START        APP_TRANSLATION
- *                  DESCRIPTION             APP_TRANSLATION
- *                  REFERENCE               APP_TRANSLATION
- *                  TECHNOLOGY              APP_TRANSLATION
- *                  SECURITY                APP_TRANSLATION
- *                  PATTERN                 APP_TRANSLATION
- *                  SOLUTION                APP_TRANSLATION
- *                  SCREENSHOT_END (arrray) APP_TRANSLATION
+ *                  APP_NAME                App
+ *                  SCREENSHOT_START        AppTranslation
+ *                  DESCRIPTION             AppTranslation
+ *                  REFERENCE               AppTranslation
+ *                  TECHNOLOGY              AppTranslation
+ *                  SECURITY                AppTranslation
+ *                  PATTERN                 AppTranslation
+ *                  SOLUTION                AppTranslation
+ *                  SCREENSHOT_END (arrray) AppTranslation
  *              type MODULE*
  *                  MODULE_NAME
  *                  MODULE
  *                  SOURCE_LINK
- *                  SERVER_HOST             CONFIG_SERVER->SERVER->HOST
- *                  APP_CONFIGURATION       CONFIG_SERVER->METADATA->CONFIGURATION
- *                  APP_COPYRIGHT           APP_PARAMETER
+ *                  SERVER_HOST             ConfigServer->SERVER->HOST
+ *                  APP_CONFIGURATION       ConfigServer->METADATA->CONFIGURATION
+ *                  COPYRIGHT               App
  *                  MODULE_FUNCTION replaced by all functions found in getFileFunctions()
  *              type ROUTE and template 6.restapi
  *                  CONFIG_REST_API variable is rendered directly to HTML using common_openapi.js component because of complexity
@@ -207,7 +207,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *              type ROUTE and template 6.appRoutes
  *                  ROUTE_FUNCTIONS with tag ROUTE_APP
  *              any file in menu of type GUIDE
- *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in CONFIG_SERVER if used in any document 
+ *                  GIT_REPOSITORY_URL replaces with GIT_REPOSITORY_URL parameter in ConfigServer if used in any document 
  * @function
  * @param {{app_id:number,
  *          type:serverDocumentType,
@@ -259,11 +259,7 @@ const markdownRender = async parameters =>{
             return markdown.replaceAll('@{SCREENSHOT_END}', app_translation?app_translation.json_data.screenshot_end.join('\n'):'');
         }
         case parameters.type.toUpperCase().startsWith('MODULE'):{
-            //replace variables for MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER
-            /**@type{import('../../../../server/db/AppParameter.js')} */
-            const AppParameter = await import(`file://${process.cwd()}/server/db/AppParameter.js`);
-            
-
+            //replace variables for MODULE_APPS, MODULE_MICROSERVICE and MODULE_SERVER            
             const markdown = await getFile(`${process.cwd()}/apps/common/src/functions/documentation/7.module.md`)
                         .then(markdown=>
                                 markdown
@@ -271,9 +267,9 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{MODULE}',            parameters.module ??'')
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
-                                .replaceAll('@{SERVER_HOST}',       Config.get('CONFIG_SERVER', 'SERVER', 'HOST')??'')
-                                .replaceAll('@{APP_CONFIGURATION}', Config.get('CONFIG_SERVER', 'METADATA', 'CONFIGURATION')??'')
-                                .replaceAll('@{APP_COPYRIGHT}',     AppParameter.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].app_copyright.value??'')
+                                .replaceAll('@{SERVER_HOST}',       Config.get('ConfigServer', 'SERVER', 'HOST')??'')
+                                .replaceAll('@{APP_CONFIGURATION}', Config.get('ConfigServer', 'METADATA', 'CONFIGURATION')??'')
+                                .replaceAll('@{APP_COPYRIGHT}',     App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].copyright)
                         );
             
             //replace all found JSDoc comments with markdown formatted module functions
@@ -337,7 +333,7 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${process.cwd()}/apps/common/src/functions/documentation/${parameters.doc}.md`, true)
-                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',Config.get('CONFIG_SERVER', 'SERVER', 'GIT_REPOSITORY_URL')));
+                        .then(markdown=>markdown.replaceAll('@{GIT_REPOSITORY_URL}',Config.get('ConfigServer', 'SERVER', 'GIT_REPOSITORY_URL')));
         }
         default:{
             return '';
@@ -363,8 +359,8 @@ const menuRender = async parameters =>{
                 //return menu for app with updated id and app name
                 menu.menu_sub = App.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
-                                .sort((/**@type{server_db_table_app}*/a,/**@type{server_db_table_app}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
-                                .map((/**@type{server_db_table_app}*/app)=>{
+                                .sort((/**@type{server_db_table_App}*/a,/**@type{server_db_table_App}*/b)=>(a.id==0&&b.id==0)?0:a.id==0?1:b.id==0?-1:a.id-b.id)
+                                .map((/**@type{server_db_table_App}*/app)=>{
                     return { 
                             id:app.id,
                             menu:app.name,

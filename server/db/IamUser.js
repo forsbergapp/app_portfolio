@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_iam_user, server_db_table_iam_user_follow, server_db_table_iam_app_access, server_db_table_iam_user_event,server_db_iam_user_admin} from '../types.js'
+ *          server_db_table_IamUser, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
  */
 /**@type{import('./file.js')} */
 const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
@@ -16,10 +16,10 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server_server_response & {result?:server_db_table_iam_user[] }}
+ * @returns {server_server_response & {result?:server_db_table_IamUser[] }}
  */
 const get = (app_id, resource_id) =>{
-    const result = fileDBGet(app_id, 'IAM_USER',resource_id, null);
+    const result = fileDBGet(app_id, 'IamUser',resource_id, null);
     if (result.rows.length>0 || resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
@@ -39,7 +39,7 @@ const get = (app_id, resource_id) =>{
 *                  id?:string|null,
 *                  search?:string|null,
 *                  POST_ID?:string |null}}} parameters
-* @returns {Promise.<server_server_response & {result?:server_db_table_iam_user & { count_following:number,
+* @returns {Promise.<server_server_response & {result?:server_db_table_IamUser & { count_following:number,
 *                                                                                   count_followed: number,
 *                                                                                   count_likes:    number,
 *                                                                                   count_liked:    number,
@@ -58,12 +58,12 @@ const getViewProfile = async parameters =>{
   const {commonSearchMatch} = await import(`file://${process.cwd()}/apps/common/src/common.js`);
   
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
-                                .filter((/**@type{server_db_table_iam_user}*/row)=>   
+                                .filter((/**@type{server_db_table_IamUser}*/row)=>   
                                     row.active==1 && 
                                     row.private !=1 &&
                                     commonSearchMatch(row.username, parameters.data.search??'') &&
                                     commonSearchMatch(row.username, parameters.data.name??''))
-                                .map((/**@type{server_db_table_iam_user}*/row)=>{
+                                .map((/**@type{server_db_table_IamUser}*/row)=>{
                                     // check if friends
                                     const friends =  IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
@@ -143,9 +143,9 @@ const getViewProfile = async parameters =>{
  * @param {{app_id:number,
  *          data:{statchoice?:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:{   top:'VISITED|FOLLOWING|LIKE_USER', 
- *                                                          id:server_db_table_iam_user['id'], 
- *                                                          avatar:server_db_table_iam_user['avatar'],
- *                                                          username:server_db_table_iam_user['username'],
+ *                                                          id:server_db_table_IamUser['id'], 
+ *                                                          avatar:server_db_table_IamUser['avatar'],
+ *                                                          username:server_db_table_IamUser['username'],
  *                                                          count:number}[] }>}
  */
 const getViewProfileStat = async parameters =>{
@@ -160,7 +160,7 @@ const getViewProfileStat = async parameters =>{
     
 
     return {result:get(parameters.app_id, null).result
-                            .filter((/**@type{server_db_table_iam_user}*/row)=>
+                            .filter((/**@type{server_db_table_IamUser}*/row)=>
                                     row.active==1 && row.private !=1 &&
                                     //user should have a record in current app
                                     IamUserApp.get({  app_id:parameters.app_id, 
@@ -170,7 +170,7 @@ const getViewProfileStat = async parameters =>{
                                                                     data_app_id: parameters.app_id}
                                                                 }).result[0]
                             )              
-                            .map((/**@type{server_db_table_iam_user}*/row)=>{
+                            .map((/**@type{server_db_table_IamUser}*/row)=>{
                                 return {
                                     top:    serverUtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
                                             serverUtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
@@ -196,8 +196,8 @@ const getViewProfileStat = async parameters =>{
                                             null
                                 };
                             })
-                            .sort(( /**@type{server_db_table_iam_user & {count:number}}*/a,
-                                    /**@type{server_db_table_iam_user & {count:number}}*/b)=>a.count > b.count),
+                            .sort(( /**@type{server_db_table_IamUser & {count:number}}*/a,
+                                    /**@type{server_db_table_IamUser & {count:number}}*/b)=>a.count > b.count),
             type:'JSON'};
 };
     
@@ -210,9 +210,9 @@ const getViewProfileStat = async parameters =>{
  *          resource_id:number,
  *          data:{detailchoice?:string|null}}} parameters
  * @returns {Promise.<server_server_response & {result?:{detail:'FOLLOWING'|'FOLLOWED'|'LIKE_USER'|'LIKED_USER',
- *                                                       iam_user_id:server_db_table_iam_user_follow['iam_user_id'],
- *                                                       avatar:server_db_table_iam_user['avatar'],
- *                                                       username:server_db_table_iam_user['username']
+ *                                                       iam_user_id:server_db_table_IamUserFollow['iam_user_id'],
+ *                                                       avatar:server_db_table_IamUser['avatar'],
+ *                                                       username:server_db_table_IamUser['username']
  *                                                      }[] }>}
  */
 const getViewProfileDetail = async parameters =>{
@@ -246,12 +246,12 @@ const getViewProfileDetail = async parameters =>{
                                             data:{  iam_user_id:null,
                                                     iam_user_id_like:parameters.resource_id}}).result:
                     [])
-                    .filter((/**@type{server_db_table_iam_user_follow}*/row)=>{
-                        /**@type{server_db_table_iam_user}*/
+                    .filter((/**@type{server_db_table_IamUserFollow}*/row)=>{
+                        /**@type{server_db_table_IamUser}*/
                         const user = get(parameters.app_id,row.iam_user_id).result[0];
                         return user?.active == 1 && user?.private != 1;
                     })              
-                    .map((/**@type{server_db_table_iam_user_follow}*/row)=>{
+                    .map((/**@type{server_db_table_IamUserFollow}*/row)=>{
                         return {
                             detail: serverUtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
                                     serverUtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
@@ -262,8 +262,8 @@ const getViewProfileDetail = async parameters =>{
                             username:get(parameters.app_id,row.iam_user_id).result[0]?.username
                         };
                     })
-                    .sort(( /**@type{server_db_table_iam_user}*/a,
-                            /**@type{server_db_table_iam_user}*/b)=>a.username < b.username),
+                    .sort(( /**@type{server_db_table_IamUser}*/a,
+                            /**@type{server_db_table_IamUser}*/b)=>a.username < b.username),
            type:'JSON'};
 };
 
@@ -284,7 +284,7 @@ const getViewStatCountAdmin = parameters => {return {result: [{count_users:get(p
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server_db_table_iam_user} data
+ * @param {server_db_table_IamUser} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const post = async (app_id, data) => {
@@ -317,7 +317,7 @@ const post = async (app_id, data) => {
                                 created:new Date().toISOString(), 
                                 modified:new Date().toISOString()
                         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
@@ -332,7 +332,7 @@ const post = async (app_id, data) => {
  * @description Add record admin
  * @function
  * @param {number} app_id 
- * @param {server_db_table_iam_user} data
+ * @param {server_db_table_IamUser} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAdmin = async (app_id, data) => {
@@ -358,7 +358,7 @@ const postAdmin = async (app_id, data) => {
                             created:new Date().toISOString(), 
                             modified:new Date().toISOString()
                     };
-    return fileCommonExecute({app_id:app_id, dml:'POST', object:'IAM_USER', post:{data:data_new}}).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
         if (result.affectedRows>0){
             result.insertId=data_new.id;
             return {result:result, type:'JSON'};
@@ -374,17 +374,17 @@ const postAdmin = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server_db_table_iam_user} data
+ * @param {server_db_table_IamUser} data
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const update = async (app_id, resource_id, data) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCompare, securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
-    /**@type{server_db_table_iam_user}*/
+    /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (user.username == data.username && data.password && await securityPasswordCompare(data.password, user.password)){
-            /**@type{server_db_table_iam_user} */
+            /**@type{server_db_table_IamUser} */
             const data_update = {};
             //allowed parameters to update:
             if (data.username!=null && data.username != '')
@@ -406,7 +406,7 @@ const update = async (app_id, resource_id, data) => {
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IAM_USER', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
@@ -434,10 +434,10 @@ const update = async (app_id, resource_id, data) => {
 const updateAdmin = async parameters => {
     /**@type{import('../security.js')} */
     const {securityPasswordCreate}= await import(`file://${process.cwd()}/server/security.js`);    
-    /**@type{server_db_table_iam_user}*/
+    /**@type{server_db_table_IamUser}*/
     const user = get(parameters.app_id, parameters.resource_id).result[0];
     if (user){
-            /**@type{server_db_table_iam_user} */
+            /**@type{server_db_table_IamUser} */
             const data_update = {};
             //allowed parameters to update:
             if (parameters.data?.username!=null && parameters.data?.username!='')
@@ -472,7 +472,7 @@ const updateAdmin = async parameters => {
             if (Object.entries(data_update).length>0)
                 return fileCommonExecute({  app_id:parameters.app_id, 
                                             dml:'UPDATE', 
-                                            object:'IAM_USER', 
+                                            object:'IamUser', 
                                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
@@ -496,11 +496,11 @@ const updateAdmin = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_iam_user}*/
+    /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (user.verification_code==data.verification_code){
-            /**@type{server_db_table_iam_user} */
+            /**@type{server_db_table_IamUser} */
             const data_update = {};
             data_update.verification_code = null;
             data_update.active = 1;
@@ -508,7 +508,7 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
             if (Object.entries(data_update).length>0)
                 return fileCommonExecute({  app_id:app_id, 
                                             dml:'UPDATE', 
-                                            object:'IAM_USER', 
+                                            object:'IamUser', 
                                             update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
@@ -535,17 +535,17 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_update }>}
  */
 const updatePassword = async (app_id, resource_id, data) => {
-    /**@type{server_db_table_iam_user}*/
+    /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
-        /**@type{server_db_table_iam_user} */
+        /**@type{server_db_table_IamUser} */
         const data_update = {};
         data_update.password = data.password_new;
         data_update.modified = new Date().toISOString();
         if (Object.entries(data_update).length>0)
             return fileCommonExecute({  app_id:app_id, 
                                         dml:'UPDATE', 
-                                        object:'IAM_USER', 
+                                        object:'IamUser', 
                                         update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
@@ -571,14 +571,14 @@ const updatePassword = async (app_id, resource_id, data) => {
 const deleteRecord = async (app_id, resource_id, data) => {
     /**@type{import('../security.js')} */
     const {securityPasswordCompare}= await import(`file://${process.cwd()}/server/security.js`);    
-    /**@type{server_db_table_iam_user}*/
+    /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (data.password && await securityPasswordCompare(data.password, user.password))
             return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
                                                             result_cascade:fileCommonExecute({  app_id:app_id, 
                                                                                                 dml:'DELETE', 
-                                                                                                object:'IAM_USER', 
+                                                                                                object:'IamUser', 
                                                                                                 delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
                                                             if (result.affectedRows>0)
                                                                 return {result:result, type:'JSON'};
@@ -609,7 +609,7 @@ const deleteCascade = async (app_id, resource_id) =>{
     if (result_recordsUserEvent.result){
         let count_delete = 0;
         let error ;
-        for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_table_iam_user_event}*/row)=>row.iam_user_id == resource_id)){
+        for (const record of result_recordsUserEvent.result.filter((/**@type{server_db_table_IamUserEvent}*/row)=>row.iam_user_id == resource_id)){
             count_delete++;
             const result_delete = await IamUserEvent.deleteRecord( app_id, 
                                                                             /**@ts-ignore */
@@ -622,7 +622,7 @@ const deleteCascade = async (app_id, resource_id) =>{
         else{
             const result_recordsIamAppAccess = IamAppAccess.get(app_id, null);
             if (result_recordsIamAppAccess.result){
-                for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_table_iam_app_access}*/row)=>row.iam_user_id == resource_id)){
+                for (const record of result_recordsIamAppAccess.result.filter((/**@type{server_db_table_IamAppAccess}*/row)=>row.iam_user_id == resource_id)){
                     count_delete++;
                     const result_delete = await IamAppAccess.deleteRecord( app_id, 
                                                                                     /**@ts-ignore */
@@ -651,12 +651,12 @@ const deleteCascade = async (app_id, resource_id) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecordAdmin = async (app_id, resource_id) => {
-    /**@type{server_db_table_iam_user}*/
+    /**@type{server_db_table_IamUser}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
                                 result_cascade:
-                                    fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IAM_USER', delete:{resource_id:resource_id, data_app_id:null}})
+                                    fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
                                     .then(result=>{
                                             if (result.affectedRows>0)
                                                 return {result:result, type:'JSON'};

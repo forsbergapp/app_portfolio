@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
- *          server_db_table_app_parameter} from '../types.js'
+ *          server_db_table_AppParameter} from '../types.js'
  */
 
 /**@type{import('./file.js')} */
@@ -20,10 +20,10 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server_server_response & {result?:server_db_table_app_parameter[] }}
+ * @returns {server_server_response & {result?:server_db_table_AppParameter[] }}
  */
 const get = parameters =>{
-    const result = fileDBGet(parameters.app_id, 'APP_PARAMETER',null, serverUtilNumberValue(parameters.resource_id));
+    const result = fileDBGet(parameters.app_id, 'AppParameter',null, serverUtilNumberValue(parameters.resource_id));
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
@@ -65,7 +65,7 @@ const update = async parameters => {
     else{
         //updates only one key in the record
         return fileCommonExecute({  app_id:parameters.app_id, dml:'UPDATE', 
-                                    object:'APP_PARAMETER', 
+                                    object:'AppParameter', 
                                     update:{resource_id:null, 
                                     data_app_id:parameters.resource_id, 
                                     data:{[parameters.data.parameter_name]:{value:parameters.data.parameter_value, 
@@ -87,7 +87,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP_PARAMETER', delete:{resource_id:null, data_app_id:resource_id}}).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'AppParameter', delete:{resource_id:null, data_app_id:resource_id}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
