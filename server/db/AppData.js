@@ -26,7 +26,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @returns {server_server_response & {result?:{data:string}[]}}
  */
 const get = parameters => {
-    const result = fileDBGet(parameters.app_id, 'APP_DATA',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
+    const result = fileDBGet(parameters.app_id, 'AppData',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:[{
                             data:Buffer.from (JSON.stringify(result.rows.filter(row=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)))).toString('base64')
@@ -48,7 +48,7 @@ const get = parameters => {
 * @returns {server_server_response & {result?:server_db_table_AppData[]}}
 */
 const getServer = parameters => {
-   const result = fileDBGet(parameters.app_id, 'APP_DATA',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
+   const result = fileDBGet(parameters.app_id, 'AppData',parameters.resource_id, serverUtilNumberValue(parameters.data.data_app_id));
    if (result.rows.length>0 || parameters.resource_id==null)
        return {result:result.rows.filter(row=>row.name==(parameters.data?.name ?? row.name) && row.value==(parameters.data?.value ?? row.value)), 
                type:'JSON'};
@@ -79,7 +79,7 @@ const post = async (app_id, data) => {
             data4:              data.data4,
             data5:              data.data5
         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'APP_DATA', post:{data:data_new}}).then((result)=>{
+        return fileCommonExecute({app_id:app_id, dml:'POST', object:'AppData', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId = data_new.id;
                 return {result:result, type:'JSON'};
@@ -121,7 +121,7 @@ const update = async parameters => {
     if (parameters.data.data5!=null)
         data_update.data5 = parameters.data.data5;
     if (Object.entries(data_update).length>0)
-        return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'APP_DATA', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+        return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
@@ -140,7 +140,7 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'APP_DATA', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'AppData', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
