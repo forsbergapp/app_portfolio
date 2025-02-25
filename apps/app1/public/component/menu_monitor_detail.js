@@ -453,14 +453,24 @@ const component = async props => {
          * @param {CommonAppEvent} event 
          */
         const function_event = event => {
-                                //format log_[logscope]_[loglevel]_YYYYMMDD.log
-                                //logscope and loglevel
+                                //format [db object]_YYYYMMDD.log
+                                
                                 const filename = props.methods.commonMiscElementRow(event.target).getAttribute('data-value') ?? '';
-                                const logscope = filename.split('_')[1];
-                                const loglevel = filename.split('_')[2];
-                                const year     = parseInt(filename.split('_')[3].substring(0,4));
-                                const month    = parseInt(filename.split('_')[3].substring(4,6));
-                                const day      = parseInt(filename.split('_')[3].substring(6,8));
+                                const logscope = filename.split('_')[0]
+                                                    .replace('Log','')
+                                                    .replace('Info','')
+                                                    .replace('Error','')
+                                                    .replace('Verbose','');
+                                const loglevel = filename.split('_')[0]
+                                                    .replace('LogApp','')
+                                                    .replace('LogDb','')
+                                                    .replace('LogRequest','')
+                                                    .replace('LogServer','')
+                                                    .replace('LogService','')
+                                                    .replace('LogRequest','');
+                                const year     = parseInt(filename.split('_')[1].substring(0,4));
+                                const month    = parseInt(filename.split('_')[1].substring(4,6));
+                                const day      = parseInt(filename.split('_')[1].substring(6,8));
 
                                 //logscope and loglevel
                                 props.methods.COMMON_DOCUMENT.querySelector('#menu_monitor_detail_select_logscope .common_select_dropdown_value').setAttribute('data-value', `${logscope}-${loglevel}`);
@@ -537,8 +547,8 @@ const component = async props => {
             await props.methods.commonComponentRender({
                 mountDiv:'menu_monitor_detail_select_logscope', 
                 data:{ 
-                            default_value:'REQUEST - INFO',
-                            default_data_value:'REQUEST-INFO',
+                            default_value:'Request - Info',
+                            default_data_value:'Request-Info',
                             options:options,
                             path:'',
                             query:'',

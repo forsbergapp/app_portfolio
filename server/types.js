@@ -584,10 +584,12 @@
 /**
  * @description DB TABLE_LOG LogDbInfo
  * @memberof dbObjects
- * @typedef {{   logdate:string,
- *               app_id:number|null,
- *               parameters:string,
- *               logtext:string}} server_db_table_LogDbInfo
+ * @typedef {{logdate:string,
+ *            app_id:number|null,
+ *            object:string,
+ *            dml:string,
+ *            parameters:{},
+ *            logtext:string}} server_db_table_LogDbInfo
  */
 /**
  * @description DB TABLE_LOG LogDbError

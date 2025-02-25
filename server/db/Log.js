@@ -9,7 +9,7 @@
  *          server_db_tables_log,
  *          server_db_table_LogAppInfo,
  *          server_log_scope, server_log_level,
- *          server_log_result_logFilesGet, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
+ *          server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
  *          server_server_error, server_server_req, server_server_req_verbose, 
  *          server_db_common_result} from '../types.js'
  */
@@ -208,13 +208,13 @@ const postServerE = async (logtext)=>{
  * @description Log DB Info
  * @function
  * @param {number|null} app_id 
- * @param {number|null} db 
- * @param {string} sql 
+ * @param {string} object
+ * @param {string} dml
  * @param {object} parameters 
  * @param {server_db_common_result} result 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
-const postDBI = async (app_id, db, sql, parameters, result) => {
+const postDBI = async (app_id, object, dml, parameters, result) => {
     /**@type{server_db_table_LogDbInfo} */
     let log_json_db;
     let level_info;
@@ -224,8 +224,8 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
             log_json_db = {
                             logdate:        logDate(),
                             app_id:         app_id,
-                            db:             db,
-                            sql:            sql,
+                            object:         object,
+                            dml:            dml,
                             parameters:     parameters,
                             /**@ts-ignore */
                             logtext:        `Rows:${result.affectedRows?result.affectedRows:result.length}`
@@ -237,10 +237,10 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
             log_json_db = {
                             logdate:        logDate(),
                             app_id:         app_id,
-                            db:             db,
-                            sql:            sql,
+                            object:         object,
+                            dml:            dml,
                             parameters:     parameters,
-                            logtext:        result
+                            logtext:        JSON.stringify(result)
                             };
             break;
         }
@@ -256,19 +256,19 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
  * @description Log DB error
  * @function
  * @param {number|null} app_id 
- * @param {number|null} db 
- * @param {string} sql 
+ * @param {string} object
+ * @param {string} dml
  * @param {object} parameters 
  * @param {*} result 
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
-const postDBE = async (app_id, db, sql, parameters, result) => {
+const postDBE = async (app_id, object, dml, parameters, result) => {
     /**@type{server_db_table_LogDbError} */
     const log_json_db = {
         logdate:        logDate(),
         app_id:         app_id,
-        db:             db,
-        sql:            sql,
+        object:         object,
+        dml:            dml,
         parameters:     parameters,
         logtext:        result
         };
@@ -703,13 +703,13 @@ const getStat = async parameters => {
  * @description Get log files
  * @function
  * @memberof ROUTE_REST_API
- * @returns{Promise.<server_server_response & {result?:server_log_result_logFilesGet[]|[]}>}
+ * @returns{Promise.<server_server_response & {result?:{id:number, filename:string}[]|[]}>}
  */
 const getFiles = async () => {
     return {result:await fileFsDir()
                     .then(result=>
                         result
-                        .filter(row=>row.startsWith('log'))
+                        .filter(row=>row.startsWith('Log'))
                         .map((file, index)=>{return {id: index, 
                                                     filename:file
                                                     };

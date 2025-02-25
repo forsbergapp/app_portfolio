@@ -39,6 +39,26 @@
 <use>0</use>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="object" id="D415F5B1-F5E2-8C8D-694A-8F9D248A363F">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-25 22:45:12 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="dml" id="818CAC58-70C6-3599-2DD6-FAB0509C8E5B">
+<createdBy>admin</createdBy>
+<createdTime>2025-02-25 22:45:16 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<use>0</use>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
 <Attribute name="parameters" id="808F2696-6C8C-C467-E116-6EB4F810E076">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:36:29 UTC</createdTime>

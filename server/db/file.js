@@ -470,9 +470,8 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
         const records = fileCache(table).filter((/**@type{*}*/row)=> row.id ==(resource_id ?? row.id) && row.app_id == (data_app_id ?? row.app_id));
         
         //log in background without waiting if db log is enabled
-        /**@type{import('./Log.js')} */
-        import(`file://${process.cwd()}/server/db/Log.js`)
-        .then(Log=>Log.postDBI(app_id, 0, JSON.stringify({dml:'GET', object:table}), {resource_id:resource_id, data_app_id:data_app_id}, records));
+        import(`file://${process.cwd()}/server/db/Log.js`).then((/**@type{import('./Log.js')} */Log)=>
+            Log.postDBI(app_id, table, 'GET', {resource_id:resource_id, data_app_id:data_app_id}, records));
 
         if (records.length>0)
             return {rows:records};
@@ -668,12 +667,12 @@ const fileCommonExecute = async parameters =>{
                                                                             parameters.delete?.resource_id??null, 
                                                                             parameters.delete?.data_app_id??null);
             
-            return Log.postDBI(parameters.app_id, 0, JSON.stringify({dml:parameters.dml, object:parameters.object}), parameters, result)
+            return Log.postDBI(parameters.app_id, parameters.object, parameters.dml, parameters, result)
                     .then(()=>result);
         }
     } 
     catch (error) {
-        return Log.postDBE(parameters.app_id, 0, JSON.stringify({dml:parameters.dml, object:parameters.object}), parameters, error)
+        return Log.postDBE(parameters.app_id, parameters.object, parameters.dml, parameters, error)
 			.then(()=>{
                 throw error;
             });
