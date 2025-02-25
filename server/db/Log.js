@@ -2,12 +2,12 @@
 
 /**
  * @import {server_server_response,server_db_common_result_insert,
- *          server_db_table_log_log_request_info, server_db_table_log_log_request_error, 
- *          server_db_table_log_log_server_info,
- *          server_db_table_log_log_db_info,server_db_table_log_log_db_error,
- *          server_db_table_log_log_service_info,server_db_table_log_log_service_error,
+ *          server_db_table_LogRequestInfo, server_db_table_LogRequestError, 
+ *          server_db_table_LogServerInfo,
+ *          server_db_table_LogDbInfo,server_db_table_LogDbError,
+ *          server_db_table_LogServiceInfo,server_db_table_LogServiceError,
  *          server_db_tables_log,
- *          server_db_table_log_log_app_info,
+ *          server_db_table_LogAppInfo,
  *          server_log_scope, server_log_level,
  *          server_log_result_logFilesGet, server_log_data_parameter_getLogStats, server_log_result_logStatGet, server_log_data_parameter_logGet,
  *          server_server_error, server_server_req, server_server_req_verbose, 
@@ -38,8 +38,8 @@ const logDate = () => new Date().toISOString();
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
  const post = async (logscope, loglevel, log) => {
-    const config_file_interval = Config.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL');
-    await fileFsDBLogPost(null, `LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
+    const config_file_interval = Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL');
+    await fileFsDBLogPost(null, `Log${logscope}${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
             .catch((/**@type{server_server_error}*/error)=>{
                 console.log(error);
                 console.log(log);
@@ -58,7 +58,7 @@ const logDate = () => new Date().toISOString();
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
-    /**@type{server_db_table_log_log_request_error}*/
+    /**@type{server_db_table_LogRequestError}*/
     const log_json_server = {   logdate:            logDate(),
                                 host:               req.headers.host,
                                 ip:                 req.ip,
@@ -77,7 +77,7 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
                                 responsetime:       responsetime,
                                 logtext:            err.status + '-' + err.message
                             };
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_REQUEST'), Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json_server);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_REQUEST'), Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), log_json_server);
 };
 /**
  * @name postRequestI
@@ -91,11 +91,11 @@ const postRequestE = async (req, statusCode, statusMessage, responsetime, err) =
  */
 const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
     let log_level;
-    /**@type{server_db_table_log_log_request_info|{}}*/
+    /**@type{server_db_table_LogRequestInfo|{}}*/
     let log_json_server = {};
-    switch (Config.get('CONFIG_SERVER','SERVICE_LOG', 'REQUEST_LEVEL')){
+    switch (Config.get('ConfigServer','SERVICE_LOG', 'REQUEST_LEVEL')){
         case '1':{
-            log_level = Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO');
+            log_level = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
             log_json_server = { logdate:            logDate(),
                                 host:               req.headers.host,
                                 ip:                 req.ip,
@@ -117,7 +117,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
             break;
         }
         case '2':{
-            log_level = Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_VERBOSE');
+            log_level = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
             /**@type{server_server_req_verbose} */
             const logtext_req = Object.assign({}, req);
             const getCircularReplacer = () => {
@@ -165,7 +165,7 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
             return {result:{affectedRows:0}, type:'JSON'};
         }
     }   
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server);
 };
 /**
  * @name postServer
@@ -176,12 +176,12 @@ const postRequestI = async (req, statusCode, statusMessage, responsetime) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServer = async (log_level, logtext) =>{
-    /**@type{server_db_table_log_log_server_info} */
+    /**@type{server_db_table_LogServerInfo} */
     const log_json_server = {
                             logdate: logDate(),
                             logtext: logtext
                             };
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server);
 };
 /**
  * @name postServerI
@@ -191,7 +191,7 @@ const postServer = async (log_level, logtext) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServerI = async (logtext)=>{
-    return postServer(Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO'), logtext);
+    return postServer(Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO'), logtext);
 };
 /**
  * @name postServerE
@@ -201,7 +201,7 @@ const postServerI = async (logtext)=>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServerE = async (logtext)=>{
-    return postServer(Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), logtext);
+    return postServer(Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), logtext);
 };
 /**
  * @name postDBI
@@ -215,12 +215,12 @@ const postServerE = async (logtext)=>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postDBI = async (app_id, db, sql, parameters, result) => {
-    /**@type{server_db_table_log_log_db_info} */
+    /**@type{server_db_table_LogDbInfo} */
     let log_json_db;
     let level_info;
-    switch (Config.get('CONFIG_SERVER','SERVICE_LOG', 'DB_LEVEL')){
+    switch (Config.get('ConfigServer','SERVICE_LOG', 'DB_LEVEL')){
         case '1':{
-            level_info = Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO');
+            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
             log_json_db = {
                             logdate:        logDate(),
                             app_id:         app_id,
@@ -233,7 +233,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
             break;
         }
         case '2':{
-            level_info = Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_VERBOSE');
+            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
             log_json_db = {
                             logdate:        logDate(),
                             app_id:         app_id,
@@ -249,7 +249,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
             return {result:{affectedRows:0}, type:'JSON'};
         }
     }
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db);
 };
 /**
  * @name postDBE
@@ -263,7 +263,7 @@ const postDBI = async (app_id, db, sql, parameters, result) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postDBE = async (app_id, db, sql, parameters, result) => {
-    /**@type{server_db_table_log_log_db_error} */
+    /**@type{server_db_table_LogDbError} */
     const log_json_db = {
         logdate:        logDate(),
         app_id:         app_id,
@@ -272,7 +272,7 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
         parameters:     parameters,
         logtext:        result
         };
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_DB'), Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json_db);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_DB'), Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), log_json_db);
 };
 /**
  * @name postServiceI
@@ -285,12 +285,12 @@ const postDBE = async (app_id, db, sql, parameters, result) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceI = async (app_id, service, parameters, logtext) => {
-    /**@type{server_db_table_log_log_service_info}*/
+    /**@type{server_db_table_LogServiceInfo}*/
     let log_json;
     let level_info;
-    switch (Config.get('CONFIG_SERVER','SERVICE_LOG', 'SERVICE_LEVEL')){
+    switch (Config.get('ConfigServer','SERVICE_LOG', 'SERVICE_LEVEL')){
         case '1':{
-            level_info = Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO');
+            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO');
             log_json = {logdate:    logDate(),
                         app_id:     app_id,
                         service:    service,
@@ -300,7 +300,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
             break;
         }
         case '2':{
-            level_info = Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_VERBOSE');
+            level_info = Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_VERBOSE');
             log_json = {logdate:    logDate(),
                         app_id:     app_id,
                         service:    service,
@@ -314,7 +314,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
             return {result:{affectedRows:0}, type:'JSON'};
         }
     }
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json);
 };
 /**
  * @name postServiceE
@@ -327,7 +327,7 @@ const postServiceI = async (app_id, service, parameters, logtext) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postServiceE = async (app_id, service, parameters, logtext) => {
-    /**@type{server_db_table_log_log_service_error}*/   
+    /**@type{server_db_table_LogServiceError}*/   
     const log_json = {
                     logdate:    logDate(),
                     app_id:     app_id,
@@ -335,14 +335,14 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
                     parameters: parameters,
                     logtext:    logtext.stack??logtext
                     };
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_SERVICE'), Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), log_json);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_SERVICE'), Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), log_json);
 };
 /**
  * @name postApp
  * @description Log app
  * @function
  * @param {number} app_id 
- * @param {'INFO'|'ERROR'} level_info 
+ * @param {'Info'|'Error'} level_info 
  * @param {string} app_filename 
  * @param {string} app_function_name 
  * @param {number} app_line 
@@ -350,7 +350,7 @@ const postServiceE = async (app_id, service, parameters, logtext) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
-    /**@type{server_db_table_log_log_app_info} */
+    /**@type{server_db_table_LogAppInfo} */
     const log_json ={
                     logdate:            logDate(),
                     app_id:             app_id,
@@ -360,7 +360,7 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
                     logtext:            logtext
                     };
     
-    return post(Config.get('CONFIG_SERVER','SERVICE_LOG', 'SCOPE_APP'), level_info, log_json);
+    return post(Config.get('ConfigServer','SERVICE_LOG', 'SCOPE_APP'), level_info, log_json);
 };
 /**
  * @name postAppI
@@ -375,8 +375,8 @@ const postApp = async (app_id, level_info, app_filename, app_function_name, app_
  */
 const postAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     //log if INFO or VERBOSE level
-    if (Config.get('CONFIG_SERVER','SERVICE_LOG', 'APP_LEVEL')=='1' || Config.get('CONFIG_SERVER','SERVICE_LOG', 'APP_LEVEL')=='2')
-        return postApp(app_id, Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext);
+    if (Config.get('ConfigServer','SERVICE_LOG', 'APP_LEVEL')=='1' || Config.get('ConfigServer','SERVICE_LOG', 'APP_LEVEL')=='2')
+        return postApp(app_id, Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext);
     else
         return {result:{affectedRows:0}, type:'JSON'};
 };
@@ -392,7 +392,7 @@ const postAppI = async (app_id, app_filename, app_function_name, app_line, logte
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_insert }>}
  */
 const postAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => postApp( app_id, 
-                                                                                                Config.get('CONFIG_SERVER','SERVICE_LOG', 'LEVEL_ERROR'), 
+                                                                                                Config.get('ConfigServer','SERVICE_LOG', 'LEVEL_ERROR'), 
                                                                                                 app_filename, 
                                                                                                 app_function_name, 
                                                                                                 app_line, 
@@ -405,8 +405,8 @@ const postAppE = async (app_id, app_filename, app_function_name, app_line, logte
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  select_app_id?:string|null,
- *                  logscope?:string|null,
- *                  loglevel?:string|null,
+ *                  logscope?:server_log_scope,
+ *                  loglevel?:server_log_level,
  *                  search?:string|null,
  *                  sort?:string|null,
  *                  order_by?:string|null,
@@ -460,14 +460,14 @@ const get = async parameters => {
             return false;
         };
         /**@type{server_db_tables_log} */
-        const file = `LOG_${data.logscope}_${data.loglevel}`;
+        const file = `Log${data.logscope}${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         
         fileFsDBLogGet(parameters.app_id, file, null, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
-            if (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
+            if (data.logscope!='App' && data.logscope!='Service' && data.logscope!='Db')
                 data.select_app_id = null;
             //filter records
             log_rows_array_obj.rows = log_rows_array_obj.rows.filter((/**@type{*}*/record) => {
@@ -598,26 +598,26 @@ const getStat = async parameters => {
     //declare ES6 Set to save unique status codes and days
     const log_stat_value = new Set();
     const log_days = new Set();
-    const regexp_request_day = /log_request_info_\d\d\d\d\d\d\d\d.log/g;
-    const regexp_verbose_day = /log_request_verbose_\d\d\d\d\d\d\d\d.log/g;
-    const regexp_request_month = /log_request_info_\d\d\d\d\d\d.log/g;
-    const regexp_verbose_month = /log_requst_verbose_\d\d\d\d\d\d.log/g;
+    const regexp_request_day = /LogRequestInfo_\d\d\d\d\d\d\d\d.log/g;
+    const regexp_verbose_day = /LogRequestVerbose_\d\d\d\d\d\d\d\d.log/g;
+    const regexp_request_month = /LogRequestInfo_\d\d\d\d\d\d.log/g;
+    const regexp_verbose_month = /LogRequestVerbose_\d\d\d\d\d\d.log/g;
     for (const file of files){
-        if ((file.startsWith(`log_request_info_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+        if ((file.startsWith(`LogRequestInfo_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
             (regexp_request_day.exec(file)!=null||regexp_request_month.exec(file)!=null)) ||
-            (file.startsWith(`log_request_verbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
+            (file.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
             (regexp_verbose_day.exec(file)!=null||regexp_verbose_month.exec(file)!=null))){
             //filename format: log_request_info_YYYMMDD.log
-            if (Config.get('CONFIG_SERVER','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
+            if (Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 //return DD
                 day = file.slice(-6).substring(0,2);
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await fileFsDBLogGet(parameters.app_id, file.startsWith('log_request_info')?'LOG_REQUEST_INFO':'LOG_REQUEST_VERBOSE', null, null, sample)
+            await fileFsDBLogGet(parameters.app_id, file.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, null, sample)
             .then((logs)=>{
-                logs.rows.forEach((/**@type{server_db_table_log_log_request_info|''}*/record) => {
+                logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                     if (record != ''){
                         if (data.statGroup != null){
                             const domain_app_id = record.host?commonAppHost(record.host):null;

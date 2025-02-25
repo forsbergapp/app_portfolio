@@ -386,7 +386,7 @@ const appSecureDialogueSendBroadcastMaintenanceSet = () => {
     else
         check_value = 0;
     const json_data = {maintenance:check_value};
-    common.commonFFB({path:'/server-db/config/CONFIG_SERVER', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
+    common.commonFFB({path:'/server-db/config/ConfigServer', method:'PUT', authorization_type:'ADMIN', body:json_data}).catch(()=>null);
 };
 /**
  * @name appSecureMenuUsers
@@ -541,8 +541,8 @@ const appSecureCommonButtonSave = async (item) => {
                 );
                 return config_server;
             };
-            const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].id.substring('menu_config_'.length).toUpperCase();
-            const json_data = { config:    file=='CONFIG_SERVER'?
+            const file = COMMON_DOCUMENT.querySelectorAll('#secure_menu_content .list_nav .list_nav_selected_tab')[0].getAttribute('data-table');
+            const json_data = { config:    file=='ConfigServer'?
                                                 config_server():
                                                     JSON.parse(COMMON_DOCUMENT.querySelector('#menu_config_detail_edit').textContent)};
 
@@ -814,7 +814,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('list_nav_selected_tab');
                     common.commonComponentRender({
                         mountDiv:       'menu_config_detail_container',
-                        data:           {file:`${event_target_id.substring('menu_config_'.length).toUpperCase()}`},
+                        data:           {file:COMMON_DOCUMENT.querySelector(`#${event_target_id}`).getAttribute('data-table')},
                         methods:        {commonFFB:common.commonFFB},
                         path:           '/component/menu_config_detail.js'});
                     break;

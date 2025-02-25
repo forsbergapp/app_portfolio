@@ -382,12 +382,12 @@ const component = async props => {
     const test_function = async () => {
         /**@type{number} */
         let status;
-        const HTTPS_ENABLE = Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
+        const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
         const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = Config.get('CONFIG_SERVER','SERVER', 'HOST');
+        const HOST = Config.get('ConfigServer','SERVER', 'HOST');
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                            Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                        Config.get('ConfigServer','SERVER','HTTPS_PORT'):
+                            Config.get('ConfigServer','SERVER','HTTP_PORT'));
         return await fetch(PROTOCOL + HOST + ':' + PORT)
                     .then((response=>{
                             status = response.status;

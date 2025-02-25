@@ -12,11 +12,11 @@
  * @description Template
  * @function
  * @param {{server_group:number[],
- *          file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY',
+ *          file:'ConfigServer'|'CONFIG_IAM_POLICY',
  *          config:[]}} props
  * @returns {string}
  */
-const template = props => ` ${props.file=='CONFIG_SERVER'?
+const template = props => ` ${props.file=='ConfigServer'?
                                 `<div id='menu_config_detail' class='common_list_scrollbar'>
                                     <div id='menu_config_detail_row_title' class='menu_config_detail_row'>
                                         <div id='menu_config_detail_col_title1' class='menu_config_detail_col list_title'>PARAMETER NAME</div>
@@ -55,7 +55,7 @@ const template = props => ` ${props.file=='CONFIG_SERVER'?
  * @description Component
  * @function
  * @param {{data:{       commonMountdiv:string,
- *                       file:'CONFIG_SERVER'|'CONFIG_IAM_POLICY'},
+ *                       file:'ConfigServer'|'CONFIG_IAM_POLICY'},
  *          methods:{    COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                       commonFFB:CommonModuleCommon['commonFFB']},
  *          lifecycle:   null}} props 
@@ -70,7 +70,7 @@ const component = async props => {
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
 
    const onMounted = async () =>{        
-        if (props.data.file=='CONFIG_SERVER'){
+        if (props.data.file=='ConfigServer'){
             //set focus first column in first row
             props.methods.COMMON_DOCUMENT.querySelectorAll('#menu_config_detail .common_input')[0].focus();
         }

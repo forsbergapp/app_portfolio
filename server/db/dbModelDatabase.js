@@ -2,10 +2,10 @@
 
 /**
  * @import {server_server_response,
- *          server_db_table_app_secret,
+ *          server_db_table_AppSecret,
  *          server_db_sql_parameter_user_account_view_insertUserAccountView,
  *          server_db_sql_parameter_user_account_app_data_post_createUserPost, server_server_error, 
- *          server_db_table_iam_user,server_db_database_demo_user,
+ *          server_db_table_IamUser,server_db_database_demo_user,
  *          server_db_database_uninstall_database_script,server_db_database_uninstall_database_app_script,
  *          server_db_database_install_uninstall_result, server_db_database_install_db_check,
  *          server_db_db_pool_parameters,
@@ -41,8 +41,8 @@ const dbInfo = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_INFO_SELECT(), 
-                        {   database: serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')), 
-                            database_schema: Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)
+                        {   database: serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE')), 
+                            database_schema: Config.get('ConfigServer','SERVICE_DB', `DB${Config.get('ConfigServer','SERVICE_DB', 'USE')}_NAME`)
                         }));
 /**
  * @name dbInfoSpace
@@ -56,9 +56,9 @@ const dbInfoSpace = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_INFO_SELECT_SPACE(), 
-                        serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
+                        serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'))==5?
                             {}:
-                                {db_schema: Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
+                                {db_schema: Config.get('ConfigServer','SERVICE_DB', `DB${Config.get('ConfigServer','SERVICE_DB', 'USE')}_NAME`)}));
 /**
  * @name dbInfoSpaceSum
  * @description Database info space sum
@@ -71,9 +71,9 @@ const dbInfoSpaceSum = parameters =>
     import(`file://${process.cwd()}/server/db/common.js`).then((/**@type{import('./common.js')} */{dbCommonExecute})=>
         dbCommonExecute(parameters.app_id, 
                         dbSqlDatabase.DATABASE_INFO_SELECT_SPACE_SUM(), 
-                        serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5?
+                        serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'))==5?
                             {}:
-                                {db_schema: Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`)}));
+                                {db_schema: Config.get('ConfigServer','SERVICE_DB', `DB${Config.get('ConfigServer','SERVICE_DB', 'USE')}_NAME`)}));
 
 /**
  * @name dbInstall
@@ -115,7 +115,7 @@ const dbInfoSpaceSum = parameters =>
     const install_result = [];
     const password_tag = '<APP_PASSWORD/>';
     let change_DBA_pool=true;
-    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
     /**
      * @param {string} username 
@@ -139,7 +139,7 @@ const dbInfoSpaceSum = parameters =>
        install_result.push({[`${username}`]: password});         
        return [sql, password];
     };
-    const DB_SCHEMA = Config.get('CONFIG_SERVER','SERVICE_DB', `DB${Config.get('CONFIG_SERVER','SERVICE_DB', 'USE')}_NAME`) ?? '';
+    const DB_SCHEMA = Config.get('ConfigServer','SERVICE_DB', `DB${Config.get('ConfigServer','SERVICE_DB', 'USE')}_NAME`) ?? '';
     
     let install_count = 0;
     install_count++;
@@ -193,19 +193,19 @@ const dbInfoSpaceSum = parameters =>
                         const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
-                                port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                port:                      serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_HOST`),
                                 dba:                       true,
-                                user:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                user:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                                 database:                  null,
                                 //db 1 + 2 parameters
-                                charset:                   Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                charset:                   Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 // db 3 parameters
-                                connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                connectionTimeoutMillis:   serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_MAX`)),
                                 // db 4 parameters not used here
                                 connectString:             null,
                                 poolMin:                   null,
@@ -222,19 +222,19 @@ const dbInfoSpaceSum = parameters =>
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
-                                port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                                host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                                port:                      serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_PORT`)),
+                                host:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_HOST`),
                                 dba:                       true,
-                                user:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                                password:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
-                                database:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+                                user:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                                password:                  Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                                database:                  Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_NAME`),
                                 //db 1 + 2 parameters
-                                charset:                   Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                connectionLimit:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                charset:                   Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                connectionLimit:           serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                 // db 3 parameters
-                                connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                                idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                                max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                                connectionTimeoutMillis:   serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                idleTimeoutMillis:         serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                max:                       serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_MAX`)),
                                 // db 4 parameters not used here
                                 connectString:             null,
                                 poolMin:                   null,
@@ -280,9 +280,9 @@ const dbInfoSpaceSum = parameters =>
         if (result_app_create.result){
             count_statements += 1;
             //if db has DB[DB]_DBA_USER parameter means users can be created
-            if (Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`) &&
-                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))){
+            if (Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`) &&
+                app.id !=serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')) &&
+                app.id !=serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'))){
                 //create db users except for common app id and admin app id
                 const sql_and_pw = await sql_with_password(`app_portfolio_app${app.id}`, password_tag);
                 await dbUserCreate({app_id:parameters.app_id, username:`app_portfolio_app${app.id}`, password:sql_and_pw[0]});
@@ -367,7 +367,7 @@ const dbInfoSpaceSum = parameters =>
     let count_statements_fail = 0;
     
     
-    const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+    const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     if (db_use==5){
         await dbPoolClose(null, db_use, false);
         await fileFsWriteAdmin('DB_FILE', null);
@@ -380,13 +380,13 @@ const dbInfoSpaceSum = parameters =>
         const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${DB_INSTALL_PATH + DB_UNINSTALL}`, 'utf8');
         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{server_db_database_uninstall_database_script|server_db_database_uninstall_database_app_script}*/row) => row.db == db_use);
         //get apps if db credentials configured or use empty array for progress message count
-        const apps = Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)?App.get({app_id:parameters.app_id,resource_id:null}).result
-                    .filter((/**@type{server_db_table_app}*/app)=>
-                            app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                            app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID'))):[];
+        const apps = Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`)?App.get({app_id:parameters.app_id,resource_id:null}).result
+                    .filter((/**@type{server_db_table_App}*/app)=>
+                            app.id !=serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')) &&
+                            app.id !=serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID'))):[];
         //drop users first to avoid db connection error
         //if db has DB[DB]_DBA_USER parameter means users can be dropped
-        if (Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
+        if (Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`)){
             socketAdminSend({   app_id:parameters.app_id, 
                 idToken:parameters.idToken,
                 data:{  app_id:null, 
@@ -426,19 +426,19 @@ const dbInfoSpaceSum = parameters =>
                 const json_data = {
                     use:                       db_use,
                     pool_id:                   null,
-                    port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
-                    host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
+                    port:                      serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_PORT`)),
+                    host:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_HOST`),
                     dba:                       true,
-                    user:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`),
-                    password:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`),
+                    user:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`),
+                    password:                  Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_PASS`),
                     database:                  null,
                     //db 1 + 2 not used here
                     charset:                   null,
                     connectionLimit:           null,
                     //db 3
-                    connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                    idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                    max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+                    connectionTimeoutMillis:   serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                    idleTimeoutMillis:         serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                    max:                       serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_MAX`)),
                     //db 4 not used here
                     connectString:             null,
                     poolMin:                   null,
@@ -566,18 +566,18 @@ const dbInfoSpaceSum = parameters =>
                  * @returns 
                  */
                 const create_update_id = async demo_user=>{
-                    /**@type{{  username:           server_db_table_iam_user['username'],
-                     *          bio:                server_db_table_iam_user['bio'],
-                     *          avatar:             server_db_table_iam_user['avatar'],
-                     *          password:           server_db_table_iam_user['password'],
-                     *          password_reminder:  server_db_table_iam_user['password_reminder'],
-                     *          email:              server_db_table_iam_user['email'],
-                     *          email_unverified:   server_db_table_iam_user['email_unverified'],
-                     *          active:             server_db_table_iam_user['active'],
-                     *          private:            server_db_table_iam_user['private'],
-                     *          user_level:         server_db_table_iam_user['user_level'],
-                     *          type:               server_db_table_iam_user['type'],
-                     *          verification_code:  server_db_table_iam_user['verification_code']
+                    /**@type{{  username:           server_db_table_IamUser['username'],
+                     *          bio:                server_db_table_IamUser['bio'],
+                     *          avatar:             server_db_table_IamUser['avatar'],
+                     *          password:           server_db_table_IamUser['password'],
+                     *          password_reminder:  server_db_table_IamUser['password_reminder'],
+                     *          email:              server_db_table_IamUser['email'],
+                     *          email_unverified:   server_db_table_IamUser['email_unverified'],
+                     *          active:             server_db_table_IamUser['active'],
+                     *          private:            server_db_table_IamUser['private'],
+                     *          user_level:         server_db_table_IamUser['user_level'],
+                     *          type:               server_db_table_IamUser['type'],
+                     *          verification_code:  server_db_table_IamUser['verification_code']
                      * 
                     }}*/
                     const data_create = {   username:               demo_user.username,
@@ -753,7 +753,7 @@ const dbInfoSpaceSum = parameters =>
 
         //1.Create all users first and update with id
         await create_users(demo_users);
-        /**@type{server_db_table_app[]}*/
+        /**@type{server_db_table_App[]}*/
         const apps = App.get({app_id:parameters.app_id, resource_id:null}).result;
         
         //2.Generate key pairs for each user that can be saved both in resource and apps configuration
@@ -783,7 +783,7 @@ const dbInfoSpaceSum = parameters =>
             //3A.Generate vpa for each user that can be saved both in resource and apps configuration
             const demo_vpa = securityUUIDCreate();
             //3B.Create user_account_app record for all apps except admin
-            for (const app of apps.filter(app=>app.id != serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID'))) ){
+            for (const app of apps.filter(app=>app.id != serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID'))) ){
                 await create_user_account_app(app.id, demo_user.id);
             }
             //3C.Create user posts if any
@@ -848,7 +848,7 @@ const dbInfoSpaceSum = parameters =>
                             default:{
                                 //replace if containing HOST parameter
                                 if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1)
-                                    return key_name[1]?.replaceAll('<HOST/>', Config.get('CONFIG_SERVER','SERVER','HOST') ?? '');
+                                    return key_name[1]?.replaceAll('<HOST/>', Config.get('ConfigServer','SERVER','HOST') ?? '');
                                 else
                                     return key_name[1];
                             }        
@@ -1200,7 +1200,7 @@ const dbDemoUninstall = async parameters => {
     /**@type{import('./common.js')} */
     const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
-    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_iam_user}*/row)=>row.user_level==2);
+    const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
     if (result_demo_users){
         let deleted_user = 0;
         if (result_demo_users.length>0){
@@ -1307,24 +1307,24 @@ const dbDemoUninstall = async parameters => {
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
-          host:                      Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_HOST`),
-          port:                      serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_PORT`)),
+          host:                      Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_HOST`),
+          port:                      serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_PORT`)),
           dba:                       dba,
           user:                      user,
           password:                  password,
-          database:                  Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_NAME`),
+          database:                  Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_NAME`),
           //db 1 + 2 parameters
-          charset:                   Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-          connectionLimit:           serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+          charset:                   Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+          connectionLimit:           serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
           // db 3 parameters
-          connectionTimeoutMillis:   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-          idleTimeoutMillis:         serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-          max:                       serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_MAX`)),
+          connectionTimeoutMillis:   serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+          idleTimeoutMillis:         serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+          max:                       serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_MAX`)),
           // db 4 parameters
-          connectString:             Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-          poolMin:                   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_MIN`)),
-          poolMax:                   serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-          poolIncrement:             serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+          connectString:             Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+          poolMin:                   serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+          poolMax:                   serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+          poolIncrement:             serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
        };
        dbPoolStart(dbparameters)
        .then((/**@type{null}*/result)=>{
@@ -1351,24 +1351,24 @@ const dbStart = async () => {
     /**@type{import('./AppSecret.js')} */
     const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
-    const common_app_id = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'));
-    if (Config.get('CONFIG_SERVER','SERVICE_DB', 'START')=='1'){    
+    const common_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER','APP_COMMON_APP_ID'));
+    if (Config.get('ConfigServer','SERVICE_DB', 'START')=='1'){    
         let user;
         let password;
-        const db_use = serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'));
+        const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
        
         if (db_use == 5)
             await DB_POOL(db_use, false, null, null, null);
         else{
-            if (Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)){
-                user = `${Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
-                password = `${Config.get('CONFIG_SERVER','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
+            if (Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`)){
+                user = `${Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_USER`)}`;
+                password = `${Config.get('ConfigServer','SERVICE_DB', `DB${db_use}_DBA_PASS`)}`;
                 await DB_POOL(db_use, true, user, password, null);
             }
-            for (const app  of App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_app}*/app)=>
-                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_COMMON_APP_ID')) &&
-                app.id !=serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER', 'APP_ADMIN_APP_ID')))){
-                const app_secret = AppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_table_app_secret}*/app_secret)=> app.id == app_secret.app_id)[0];
+            for (const app  of App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>
+                app.id !=serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID')) &&
+                app.id !=serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_ADMIN_APP_ID')))){
+                const app_secret = AppSecret.get({app_id:common_app_id, resource_id:null}).result.filter((/**@type{server_db_table_AppSecret}*/app_secret)=> app.id == app_secret.app_id)[0];
                 /**@ts-ignore */
                 if (app_secret[`service_db_db${db_use}_app_user`])
                     await DB_POOL(  db_use, 
@@ -1408,12 +1408,12 @@ const dbStart = async () => {
         {db: 4, sql: `GRANT app_portfolio_role_app_common TO ${parameters.username}`},
         {db: 4, sql: `GRANT UNLIMITED TABLESPACE TO ${parameters.username}`}
     ];
-    if (serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
+    if (serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'))==5)
         return {result:null,type:'JSON'};
     else{
         for (const row of user_sql.filter(row=>
                                 /**@ts-ignore */
-                                row.db == [serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))])){
+                                row.db == [serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'))])){
             const result = await dbCommonExecute(parameters.app_id, 
                             /**@ts-ignore */
                             row.sql, 
@@ -1433,7 +1433,7 @@ const dbStart = async () => {
   * @returns {*}
   */
 const dbUserDrop = parameters =>{
-    if (serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVICE_DB', 'USE'))==5)
+    if (serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'))==5)
         return null;
     else
         //return all result in an arrray

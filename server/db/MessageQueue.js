@@ -2,7 +2,7 @@
 
 /**
  * @import {server_server_response, server_db_common_result_insert, 
- *          server_db_table_message_queue_publish, server_db_table_message_queue_consume, server_db_table_message_queue_error, 
+ *          server_db_table_MessageQueuePublish, server_db_table_MessageQueueConsume, server_db_table_MessageQueueError, 
  *          server_db_db_name_message_queue} from '../types.js'
  */
 
@@ -16,7 +16,7 @@ const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/c
  * @description Get user 
  * @function
  * @param {server_db_db_name_message_queue} file
- * @returns {Promise.<server_server_response & {result?:server_db_table_message_queue_publish[]|server_db_table_message_queue_consume[]|server_db_table_message_queue_error[] }>}
+ * @returns {Promise.<server_server_response & {result?:server_db_table_MessageQueuePublish[]|server_db_table_MessageQueueConsume[]|server_db_table_MessageQueueError[] }>}
  */
 const get = async file =>{
     const result = await fileFsDBLogGet(null, file, null, null,'');

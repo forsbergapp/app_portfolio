@@ -16,11 +16,11 @@ describe('Integration test, setting FILE_DB cache', ()=> {
         /**@type{import('../server/db/Config.js')} */
         const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
     
-        const HTTPS_ENABLE = Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-        const HOST = Config.get('CONFIG_SERVER','SERVER', 'HOST');
+        const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
+        const HOST = Config.get('ConfigServer','SERVER', 'HOST');
         const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                            Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                        Config.get('ConfigServer','SERVER','HTTPS_PORT'):
+                            Config.get('ConfigServer','SERVER','HTTP_PORT'));
         console.log('Integration test FILE_DB cache HTTPS_ENABLE:', HTTPS_ENABLE);
         console.log('Integration test FILE_DB cache HOST:', HOST);
         console.log('Integration test FILE_DB cache POR:', PORT);
@@ -41,7 +41,7 @@ describe('Integration test, microservice geolocation IP cache (should exist befo
         /**@type{import('../server/db/App.js')} */
         const App = await import(`file://${process.cwd()}/server/db/App.js`);
 
-        /**@type{server_db_table_app[]}*/
+        /**@type{server_db_table_App[]}*/
         const apps = App.get({app_id:null, resource_id:null}).result;
 
         for (const app of apps){
@@ -87,7 +87,7 @@ describe('Integration test, server function worldcities random city called from 
         const App = await import(`file://${process.cwd()}/server/db/App.js`);
         /**@type{import('../server/db/Config.js')} */
         const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-        /**@type{server_db_table_app[]}*/
+        /**@type{server_db_table_App[]}*/
         const apps = App.get({app_id:null, resource_id:null}).result;
         /**@type{import('../server/server.js')} */
         const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
@@ -101,7 +101,7 @@ describe('Integration test, server function worldcities random city called from 
                 route_path:'/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
                 method:'POST', 
                 query:'',
-                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get('CONFIG_SERVER','SERVER','APP_COMMON_APP_ID'))},
+                body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get('ConfigServer','SERVER','APP_COMMON_APP_ID'))},
                 authorization:null,
                 ip:':1', 
                 user_agent:'*', 

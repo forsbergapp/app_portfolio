@@ -4,14 +4,14 @@
  * @module apps/common/component/common_openapi
  */
 /**
- * @import {server_db_document_config_rest_api}  from '../../../../server/types.js'
+ * @import {server_db_document_ConfigRestApi}  from '../../../../server/types.js'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{openapi :server_db_document_config_rest_api,
+ * @param {{openapi :server_db_document_ConfigRestApi,
  *          sortByRole:function
  *          }} props
  * @returns {string}
@@ -202,11 +202,11 @@ const component = async props => {
             
     };
 
-    const HTTPS_ENABLE = props.methods.Config.get('CONFIG_SERVER','SERVER','HTTPS_ENABLE');
-    const HOST = props.methods.Config.get('CONFIG_SERVER','SERVER', 'HOST');
+    const HTTPS_ENABLE = props.methods.Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
+    const HOST = props.methods.Config.get('ConfigServer','SERVER', 'HOST');
     const PORT = props.methods.serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                    props.methods.Config.get('CONFIG_SERVER','SERVER','HTTPS_PORT'):
-                        props.methods.Config.get('CONFIG_SERVER','SERVER','HTTP_PORT'));
+                    props.methods.Config.get('ConfigServer','SERVER','HTTPS_PORT'):
+                        props.methods.Config.get('ConfigServer','SERVER','HTTP_PORT'));
 
     const roleOrder = ['app_id', 'app', 'app_access', 'app_access_verification', 'admin', 'app_external', 'app_access_external', 'iam', 'iam_signup', 'socket'];
     /**
@@ -215,10 +215,10 @@ const component = async props => {
      * @returns []
      */
     const sortByRole = paths => paths.sort((a,b) => roleOrder.indexOf(a[0].split('/')[2]) - roleOrder.indexOf(b[0].split('/')[2]));
-    const CONFIG_REST_API = props.methods.Config.get('CONFIG_REST_API');
+    const CONFIG_REST_API = props.methods.Config.get('ConfigRestApi');
     //return object with 'servers key modified with list from configuration
     CONFIG_REST_API.servers = props.methods.App.get({app_id:props.data.app_id, resource_id:null}).result
-                        .map((/**@type{server_db_table_app}*/row)=>{
+                        .map((/**@type{server_db_table_App}*/row)=>{
                             return {url:(HTTPS_ENABLE? 'https://':'http://') + 
                                                                         row.subdomain + '.' +
                                                                         HOST +

@@ -2,13 +2,13 @@
 
 /**
  * @import {server_server_response,server_db_common_result_update,
- *          server_db_object, server_db_db_name_config, server_server_error, 
- *          server_db_document_config_server,server_db_document_config_rest_api, server_db_document_config_iam_policy,
+ *          server_DbObject, server_db_db_name_config, server_server_error, 
+ *          server_db_document_ConfigServer,server_db_document_ConfigRestApi, server_db_document_ConfigIamPolicy,
  *          server_db_config_server_service_iam,
- *          server_db_table_iam_user, server_db_table_app, server_db_table_app_module, server_db_table_app_parameter, server_db_table_app_secret,server_db_table_app_data,
- *          server_db_table_app_data_entity_resource, server_db_table_app_data_entity,server_db_table_app_data_resource_detail_data,
- *          server_db_table_app_data_resource_detail,server_db_table_app_data_resource_master,
- *          server_db_table_app_translation} from '../types.js'
+ *          server_db_table_IamUser, server_db_table_App, server_db_table_AppModule, server_db_table_AppParameter, server_db_table_AppSecret,server_db_table_AppData,
+ *          server_db_table_AppDataEntityResource, server_db_table_AppDataEntity,server_db_table_AppDataResourceDetailData,
+ *          server_db_table_AppDataResourceDetail,server_db_table_AppDataResourceMaster,
+ *          server_db_table_AppTranslation} from '../types.js'
  * @import {server_db_document_config_microservice_services} from '../../microservice/types.js'
  */
 
@@ -29,7 +29,7 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
 const get = (file, config_group, parameter) => {
     try {
         if (config_group && parameter){
-            if (fileCache('CONFIG_SERVER')[config_group].length>0){
+            if (fileCache('ConfigServer')[config_group].length>0){
                 //return parameter in array
                 return fileCache(file)[config_group].filter((/**@type{*}*/row)=>parameter in row)[0][parameter];
             }
@@ -61,27 +61,27 @@ const configDefault = async () => {
     
     //read all default files
     /**
-     * @type{[  [server_db_object, server_db_document_config_server],
-     *           [server_db_object, server_db_document_config_rest_api],
-     *           [server_db_object, server_db_document_config_iam_policy],
-     *           [server_db_object, server_db_document_config_microservice_services],
-     *           [server_db_object, server_db_table_iam_user[]],
-     *           [server_db_object, server_db_table_app[]],
-     *           [server_db_object, server_db_table_app_data_entity_resource[]],
-     *           [server_db_object, server_db_table_app_data_entity[]],
-     *           [server_db_object, server_db_table_app_data_resource_detail_data[]],
-     *           [server_db_object, server_db_table_app_data_resource_detail[]],
-     *           [server_db_object, server_db_table_app_data_resource_master[]],
-     *           [server_db_object, server_db_table_app_module[]],
-     *           [server_db_object, server_db_table_app_parameter[]],
-     *           [server_db_object, server_db_table_app_secret[]],
-     *           [server_db_object, server_db_table_app_data[]],
-     *           [server_db_object, server_db_table_app_translation[]],
-     *           [server_db_object, server_db_object[]]
+     * @type{[  [server_DbObject, server_db_document_ConfigServer],
+     *           [server_DbObject, server_db_document_ConfigRestApi],
+     *           [server_DbObject, server_db_document_ConfigIamPolicy],
+     *           [server_DbObject, server_db_document_config_microservice_services],
+     *           [server_DbObject, server_db_table_IamUser[]],
+     *           [server_DbObject, server_db_table_App[]],
+     *           [server_DbObject, server_db_table_AppDataEntityResource[]],
+     *           [server_DbObject, server_db_table_AppDataEntity[]],
+     *           [server_DbObject, server_db_table_AppDataResourceDetailData[]],
+     *           [server_DbObject, server_db_table_AppDataResourceDetail[]],
+     *           [server_DbObject, server_db_table_AppDataResourceMaster[]],
+     *           [server_DbObject, server_db_table_AppModule[]],
+     *           [server_DbObject, server_db_table_AppParameter[]],
+     *           [server_DbObject, server_db_table_AppSecret[]],
+     *           [server_DbObject, server_db_table_AppData[]],
+     *           [server_DbObject, server_db_table_AppTranslation[]],
+     *           [server_DbObject, server_DbObject[]]
      *       ]}
      */
     const config_obj = [
-                            ['CONFIG_SERVER',                   await fs.promises.readFile(process.cwd() + '/server/install/default/config_server.json')
+                            ['ConfigServer',                    await fs.promises.readFile(process.cwd() + '/server/install/default/ConfigServer.json')
                                                                         .then(filebuffer=>{
                                                                             const config_server = JSON.parse(filebuffer.toString());
                                                                             //generate secrets
@@ -104,44 +104,46 @@ const configDefault = async () => {
                                                                             config_server.METADATA.MODIFIED      = '';
                                                                             return config_server;
                                                                         })],
-                            ['CONFIG_REST_API',                 await fs.promises.readFile(process.cwd() + '/server/install/default/config_rest_api.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_IAM_POLICY',               await fs.promises.readFile(process.cwd() + '/server/install/default/config_iam_policy.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['CONFIG_MICROSERVICE_SERVICES',    await fs.promises.readFile(process.cwd() + '/server/install/default/config_microservice_services.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['IAM_USER',                        await fs.promises.readFile(process.cwd() + '/server/install/default/iam_user.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP',                             await fs.promises.readFile(process.cwd() + '/server/install/default/app.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_DATA_ENTITY_RESOURCE',        await fs.promises.readFile(process.cwd() + '/server/install/default/app_data_entity_resource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_DATA_ENTITY',                 await fs.promises.readFile(process.cwd() + '/server/install/default/app_data_entity.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_DATA_RESOURCE_DETAIL_DATA',   await fs.promises.readFile(process.cwd() + '/server/install/default/app_data_resource_detail_data.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_DATA_RESOURCE_DETAIL',        await fs.promises.readFile(process.cwd() + '/server/install/default/app_data_resource_detail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_DATA_RESOURCE_MASTER',        await fs.promises.readFile(process.cwd() + '/server/install/default/app_data_resource_master.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_MODULE',                      await fs.promises.readFile(process.cwd() + '/server/install/default/app_module.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_PARAMETER',                   await fs.promises.readFile(process.cwd() + '/server/install/default/app_parameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_SECRET',                      await fs.promises.readFile(process.cwd() + '/server/install/default/app_secret.json')
+                            ['ConfigRestApi',                   await fs.promises.readFile(process.cwd() + '/server/install/default/ConfigRestApi.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['ConfigIamPolicy',                 await fs.promises.readFile(process.cwd() + '/server/install/default/ConfigIamPolicy.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['ConfigMicroserviceServices',      await fs.promises.readFile(process.cwd() + '/server/install/default/ConfigMicroserviceServices.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IamUser',                         await fs.promises.readFile(process.cwd() + '/server/install/default/IamUser.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['App',                             await fs.promises.readFile(process.cwd() + '/server/install/default/App.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataEntityResource',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataEntityResource.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataEntity',                   await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataEntity.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceDetailData',       await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceDetailData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceMaster',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceDetail.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppDataResourceMaster',           await fs.promises.readFile(process.cwd() + '/server/install/default/AppDataResourceMaster.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppModule',                       await fs.promises.readFile(process.cwd() + '/server/install/default/AppModule.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppParameter',                    await fs.promises.readFile(process.cwd() + '/server/install/default/AppParameter.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppSecret',                       await fs.promises.readFile(process.cwd() + '/server/install/default/AppSecret.json')
                                                                         .then(filebuffer=>
                                                                         //generate secrets
-                                                                        JSON.parse(filebuffer.toString()).map((/**@type{server_db_table_app_secret}*/row)=>{
+                                                                        JSON.parse(filebuffer.toString()).map((/**@type{server_db_table_AppSecret}*/row)=>{
                                                                             row.common_client_id = securitySecretCreate();
                                                                             row.common_client_secret = securitySecretCreate();
                                                                             row.common_app_id_secret = securitySecretCreate();
                                                                             row.common_app_access_secret = securitySecretCreate();
                                                                             row.common_app_access_verification_secret = securitySecretCreate();
+                                                                            return row;
                                                                         }))],
-                            ['APP_DATA',                     await fs.promises.readFile(process.cwd() + '/server/install/default/app_data.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['APP_TRANSLATION',                 await fs.promises.readFile(process.cwd() + '/server/install/default/app_translation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
-                            ['DB_OBJECTS',                      await fs.promises.readFile(process.cwd() + '/server/install/default/db_objects.json')
+                            ['AppData',                         await fs.promises.readFile(process.cwd() + '/server/install/default/AppData.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['AppTranslation',                  await fs.promises.readFile(process.cwd() + '/server/install/default/AppTranslation.json').then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['DbObjects',                       await fs.promises.readFile(process.cwd() + '/server/install/default/DbObjects.json')
                                                                         .then(filebuffer=>
                                                                             JSON.parse(filebuffer.toString())
                                                                         )]
                         ]; 
     //create directories
     await fileFsAccessMkdir(['/data',
-                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_DATA_JOBS' in key)[0].PATH_DATA_JOBS,
-                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH' in key)[0].PATH,
-                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_DATA' in key)[0].PATH_DATA,
-                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
-                             '/data/db',
-                             '/data/db/backup',
-                             '/data/ssl'])
+                            '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
+                            '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
+                            '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH' in key)[0].PATH,
+                            '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_DATA' in key)[0].PATH_DATA,
+                            '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
+                            '/data/db',
+                            '/data/db/backup'
+                            ])
     .catch((/**@type{server_server_error}*/err) => {
         throw err;
     }); 
@@ -213,9 +215,9 @@ const getFile = async parameters => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{resource_id:server_db_db_name_config,
- *          data:{  config: server_db_document_config_server|
- *                          server_db_table_app[]|
- *                          server_db_document_config_iam_policy|
+ *          data:{  config: server_db_document_ConfigServer|
+ *                          server_db_table_App[]|
+ *                          server_db_document_ConfigIamPolicy|
  *                          server_db_document_config_microservice_services|null,
  *                  maintenance:string,
  *                  comment:string,
@@ -232,7 +234,7 @@ const update = async parameters => {
     const file_config = await fileFsRead(parameters.resource_id, true);
     if (parameters.data.config){
         //file updated
-        if (parameters.resource_id=='CONFIG_SERVER'){
+        if (parameters.resource_id=='ConfigServer'){
             const metadata = file_config.file_content.METADATA;
             file_config.file_content = parameters.data.config;
             file_config.file_content.METADATA = metadata;
@@ -240,7 +242,7 @@ const update = async parameters => {
         else
             file_config.file_content = parameters.data.config;
     }
-    if (parameters.resource_id=='CONFIG_SERVER'){
+    if (parameters.resource_id=='ConfigServer'){
         file_config.file_content.METADATA.MAINTENANCE = maintenance ?? file_config.file_content.METADATA.MAINTENANCE;
         file_config.file_content.METADATA.CONFIGURATION = configuration ?? file_config.file_content.METADATA.CONFIGURATION;
         file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
