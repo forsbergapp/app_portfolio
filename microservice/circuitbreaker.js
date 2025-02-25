@@ -1,8 +1,7 @@
 /** @module microservice/cirtcuitbreaker */
 
-/**@type{import('./registry.js')} */
-const {REGISTRY_CONFIG} = await import(`file://${process.cwd()}/microservice/registry.js`);
-
+/**@type{import('../server/db/Config.js')} */
+const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 /**
  * @name circuitBreakerClass
  * @description Circuit breaker
@@ -20,9 +19,9 @@ class circuitBreakerClass {
     constructor() {
         /**@type{[index:any][*]} */
         this.states = {};
-        this.failureThreshold = REGISTRY_CONFIG?REGISTRY_CONFIG.CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS:5;
-        this.cooldownPeriod = REGISTRY_CONFIG?REGISTRY_CONFIG.CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS:10;
-        this.requestTimetout = REGISTRY_CONFIG?REGISTRY_CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS:20;
+        this.failureThreshold = Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS') ?? 5;
+        this.cooldownPeriod = Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS') ?? 10;
+        this.requestTimetout = Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS') ?? 20;
     }
     /**
      * @name MicroServiceCall
@@ -54,7 +53,7 @@ class circuitBreakerClass {
             }
             else
                 if (admin)
-                    timeout = 60 * 1000 * (REGISTRY_CONFIG?REGISTRY_CONFIG.CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES:60);
+                    timeout = 60 * 1000 * (Config.get('ConfigServer','SERVICE_MICROSERVICE','CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES') ?? 60);
                 else
                     timeout = this.requestTimetout * 1000;
             const response = await function_httpRequest (service, path, query, body, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language);

@@ -41,7 +41,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                     const new_message_id = Date.now();
                     /**@type{server_db_table_message_queue_publish} */
                     const message_queue = {message_id: new_message_id, created: new Date().toISOString(), service: service, message:   message};
-                    write_file('MESSAGE_QUEUE_PUBLISH', message_queue)
+                    write_file('MessageQueuePublish', message_queue)
                     .then(()=>{
                         resolve (messageQueue(service, 'CONSUME', null, new_message_id));
                     })
@@ -53,7 +53,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    MessageQueue.get('MESSAGE_QUEUE_PUBLISH')
+                    MessageQueue.get('MessageQueuePublish')
                     .then(message_queue=>{
                         /**@type{server_db_table_message_queue_consume} */
                         const message_consume = { message_id: message_id,
@@ -77,12 +77,12 @@ const messageQueue = async (service, message_type, message, message_id) => {
                                     message_consume.finished = new Date().toISOString();
                                     message_consume.result = result_sendEmail;
                                     //write to message_queue_consume.json
-                                    write_file('MESSAGE_QUEUE_CONSUME', message_consume)
+                                    write_file('MessageQueueConsume', message_consume)
                                     .then(()=>{
                                         resolve (null);
                                     })
                                     .catch((/**@type{server_server_error}*/error)=>{
-                                        write_file('MESSAGE_QUEUE_ERROR', {message_id: message_id, message:   message_consume, result:error})
+                                        write_file('MessageQueueError', {message_id: message_id, message:   message_consume, result:error})
                                         .then(()=>{
                                             reject (error);
                                         })
@@ -92,7 +92,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                                     });
                                 })
                                 .catch((/**@type{server_server_error}*/error)=>{
-                                    write_file('MESSAGE_QUEUE_ERROR', {message_id: message_id, message:   message_consume, result:error})
+                                    write_file('MessageQueueError', {message_id: message_id, message:   message_consume, result:error})
                                     .then(()=>{
                                         reject (error);
                                     })
@@ -105,7 +105,7 @@ const messageQueue = async (service, message_type, message, message_id) => {
                         }
                     })
                     .catch((/**@type{server_server_error}*/error)=>{
-                        write_file('MESSAGE_QUEUE_ERROR', {message_id: message_id, message:   message, result:error}).then(()=>{
+                        write_file('MessageQueueError', {message_id: message_id, message:   message, result:error}).then(()=>{
                             reject(message);
                         });
                     });
@@ -113,13 +113,13 @@ const messageQueue = async (service, message_type, message, message_id) => {
                 }
                 default: {
                     //unknown message, add record:
-                    write_file('MESSAGE_QUEUE_ERROR', {message_id: message_id, message:   message, result:message_type + '?'}).then(()=>{
+                    write_file('MessageQueueError', {message_id: message_id, message:   message, result:message_type + '?'}).then(()=>{
                         reject(message);
                     });
                 }
             }
         } catch (/**@type{server_server_error}*/error){
-            write_file('MESSAGE_QUEUE_ERROR', {message_id: message_id, message:   message, result:error}).then(()=>{
+            write_file('MessageQueueError', {message_id: message_id, message:   message, result:error}).then(()=>{
                 reject(message);
             });
         }

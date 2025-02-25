@@ -9,7 +9,7 @@
 const {fileFsRead} = await import(`file://${process.cwd()}/server/db/file.js`);
 
 /**@type{server_db_document_config_microservice_services['SERVICES']} */
-const REGISTRY_CONFIG_SERVICES = await fileFsRead('CONFIG_MICROSERVICE_SERVICES').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
+const REGISTRY_CONFIG_SERVICES = await fileFsRead('ConfigMicroserviceServices').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 /**
  * @name registryConfigServices
