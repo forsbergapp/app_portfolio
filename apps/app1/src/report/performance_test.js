@@ -94,7 +94,14 @@ const component = async props => {
     const AppModuleQueue = await import(`file://${process.cwd()}/server/db/AppModuleQueue.js`);
     /**@type{import('../../../../server/db/Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    
+
+    const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
+    const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
+    const HOST = Config.get('ConfigServer','SERVER', 'HOST');
+    const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
+                    Config.get('ConfigServer','SERVER','HTTPS_PORT'):
+                        Config.get('ConfigServer','SERVER','HTTP_PORT'));
+
     class Benchmark {
         /**
          * @param {{concurrency: number,
@@ -382,12 +389,6 @@ const component = async props => {
     const test_function = async () => {
         /**@type{number} */
         let status;
-        const HTTPS_ENABLE = Config.get('ConfigServer','SERVER','HTTPS_ENABLE');
-        const PROTOCOL = HTTPS_ENABLE =='1'?'https://':'http://';
-        const HOST = Config.get('ConfigServer','SERVER', 'HOST');
-        const PORT = serverUtilNumberValue(HTTPS_ENABLE=='1'?
-                        Config.get('ConfigServer','SERVER','HTTPS_PORT'):
-                            Config.get('ConfigServer','SERVER','HTTP_PORT'));
         return await fetch(PROTOCOL + HOST + ':' + PORT)
                     .then((response=>{
                             status = response.status;
