@@ -90,10 +90,11 @@ const fileRecord = filename =>DB.data.filter(file_db=>file_db.name == filename)[
  * @param {server_DbObject} file
  * @returns {{filename:string, suffix:string}}
  */
-const fileRecordFilename = file => {return {filename:file, 
-                                            suffix:fileRecord(file).type=='BINARY'?
+const fileRecordFilename = file => {const record = fileRecord(file);
+                                    return {filename:file, 
+                                            suffix:record.type=='BINARY'?
                                                         '':
-                                                        fileRecord(file).type.startsWith('TABLE_LOG')?
+                                                        record.type.startsWith('TABLE_LOG')?
                                                             '.log':
                                                                 '.json'};};
 
@@ -107,12 +108,14 @@ const fileRecordFilename = file => {return {filename:file,
  * @returns {Promise.<number>}
  */
 const fileTransactionStart = async (file, filepath)=>{
+    
     const transaction = async ()=>{
+        const record = fileRecord(file);
         const transaction_id = Date.now();
-        fileRecord(file).transaction_id = transaction_id;
+        record.transaction_id = transaction_id;
         const file_content = await fs.promises.readFile(process.cwd() + filepath, 'utf8').catch(()=>'');
         //parse TABLE and DOCUMENT, others are binary or json log files
-        fileRecord(file).transaction_content = (fileRecord(file).type=='TABLE' || fileRecord(file).type=='DOCUMENT')?JSON.parse(file_content==''?'[]':file_content):file_content;
+        record.transaction_content = (record.type=='TABLE' || record.type=='DOCUMENT')?JSON.parse(file_content==''?'[]':file_content):file_content;
         return transaction_id;
     };
     return new Promise((resolve, reject)=>{
@@ -216,7 +219,7 @@ const fileTransactionRollback = (file, transaction_id)=>{
  * @param {server_DbObject} file 
  * @returns {string}
  */
-const filePath = file =>fileDbDir() + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
+const filePath = file =>DB_DIR.db + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
 
 /**
  * @name fileCache
@@ -233,7 +236,7 @@ const filePath = file =>fileDbDir() + fileRecordFilename(file).filename + fileRe
  * @function
  * @returns {Promise.<string[]>}
  */
-const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${fileDbDir()}`);
+const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${DB_DIR.db}`);
 /**
  * @name fileFsRead
  * @description Returns file content for given file
@@ -247,7 +250,7 @@ const fileFsDir = async () => await fs.promises.readdir(`${process.cwd()}${fileD
  * @returns {Promise.<import('../types.js').server_db_result_fileFsRead>}
  */
 const fileFsRead = async (file, lock=false) =>{
-    const filepath = fileDbDir() + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
+    const filepath = DB_DIR.db + fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
     if (lock){
         const transaction_id = await fileTransactionStart(file, filepath);
         return {   file_content:    fileRecord(file).transaction_content,
@@ -273,12 +276,11 @@ const fileFsRead = async (file, lock=false) =>{
  * @returns {Promise.<string|null>}
  */
 
-const fileFsWrite = async (file, transaction_id, file_content) =>{
-    /**@type{import('../iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
-    
-
-    if (!transaction_id || fileRecord(file).transaction_id != transaction_id){
+const fileFsWrite = async (file, transaction_id, file_content) =>{  
+    const record = fileRecord(file);
+    if (!transaction_id || record.transaction_id != transaction_id){
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
         return iamUtilMessageNotAuthorized();
     }
     else{
@@ -286,31 +288,32 @@ const fileFsWrite = async (file, transaction_id, file_content) =>{
             const fileRecordFile = fileRecordFilename(file);
             const filepath = fileRecordFile.filename + fileRecordFile.suffix;
             //write backup of old config file
-            await fs.promises.writeFile(process.cwd() + `${fileDbDir(true) + filepath}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                        fileRecord(file).type=='TABLE'?
+            await fs.promises.writeFile(process.cwd() + `${DB_DIR.backup + filepath}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
+                                        record.type=='TABLE'?
                                         //save records in new row and compact format
                                         /**@ts-ignore */
-                                        '[\n' + fileRecord(file).transaction_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
+                                        '[\n' + record.transaction_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
                                             //JSON, convert to string
-                                            JSON.stringify(fileRecord(file).transaction_content, undefined, 2)
+                                            JSON.stringify(record.transaction_content, undefined, 2)
                                         ,  
                                         'utf8');
             //write new file content
-            return await fs.promises.writeFile( process.cwd() + fileDbDir() + filepath, 
-                                                fileRecord(file).type=='TABLE'?
+            await fs.promises.writeFile( process.cwd() + DB_DIR.db + filepath, 
+                                                record.type=='TABLE'?
                                                 //save records in new row and compact format
                                                 '[\n' + file_content.map(row=>JSON.stringify(row)).join(',\n') + '\n]':
                                                     //JSON, convert to string
                                                     JSON.stringify(file_content, undefined, 2)
                                                 ,  
-                                                'utf8')
-            .then(()=>{
-                fileRecord(file).cache_content = file_content;
-                if (fileTransactionCommit(file, transaction_id))
-                    return null;
-                else
-                    throw (iamUtilMessageNotAuthorized());
-            });    
+                                                'utf8');
+            fileRecord(file).cache_content = file_content;
+            if (fileTransactionCommit(file, transaction_id))
+                return null;
+            else{
+                /**@type{import('../iam.js')} */
+                const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+                throw (iamUtilMessageNotAuthorized());
+            }
         } catch (error) {
             if (fileTransactionRollback(file, transaction_id))
                 throw(error);
@@ -368,7 +371,7 @@ const fileFsAccessMkdir = async paths => {
  */
 const fileFsWriteAdmin = async (file, file_content) =>{
     await fs.promises.writeFile(process.cwd() + 
-                                fileDbDir() +
+                                DB_DIR.db +
                                 fileRecordFilename(file).filename + fileRecordFilename(file).suffix, 
                                 file_content?JSON.stringify(file_content, undefined, 2):'',  'utf8')
     .catch((error)=> {
@@ -387,7 +390,7 @@ const fileFsWriteAdmin = async (file, file_content) =>{
  */
 const fileFsDeleteAdmin = async file => {                                 
     const filepath =    process.cwd() + 
-                        fileDbDir() +
+                        DB_DIR.db +
                         fileRecordFilename(file).filename + fileRecordFilename(file).suffix;
     await fs.promises.rm(filepath)
             .then(()=>{if (fileRecord(file).cache_content)
@@ -410,9 +413,9 @@ const fileFsDeleteAdmin = async file => {
   * @returns {Promise.<server_db_common_result_select>}
   */
  const fileFsDBLogGet = async (app_id, file, resource_id, filenamepartition=null, sample=null) =>{
-    
-    const filepath = `${fileRecordFilename(file).filename}_${fileNamePartition(filenamepartition, sample)}${fileRecordFilename(file).suffix}`;
-    const fileBuffer = await fs.promises.readFile(process.cwd() + fileDbDir() + filepath, 'utf8');
+    const record = fileRecordFilename(file);
+    const filepath = `${record.filename}_${fileNamePartition(filenamepartition, sample)}${record.suffix}`;
+    const fileBuffer = await fs.promises.readFile(process.cwd() + DB_DIR.db + filepath, 'utf8');
     return {rows:fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row)).filter(row=>row.id == (resource_id??row.id))};
 };
 /**
@@ -426,25 +429,29 @@ const fileFsDeleteAdmin = async file => {
  * @returns {Promise.<server_db_common_result_insert>}
  */
 const fileFsDBLogPost = async (app_id, file, file_content, filenamepartition = null) =>{
-    /**@type{import('../iam.js')} */
-    const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
 
-    const filepath = `${fileDbDir()}${fileRecordFilename(file).filename}_${fileNamePartition(filenamepartition, null)}${fileRecordFilename(file).suffix}`;
+    const record = fileRecordFilename(file);
+
+    const filepath = `${DB_DIR.db}${record.filename}_${fileNamePartition(filenamepartition, null)}${record.suffix}`;
     const transaction_id = await fileTransactionStart(file, filepath);
     
-    return await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
-    .then(()=>{
-        if (fileTransactionCommit(file, transaction_id))
-            return {affectedRows:1};
-        else
-            throw (iamUtilMessageNotAuthorized());
-    })
-    .catch((error)=>{
-        if (fileTransactionRollback(file, transaction_id))
-            throw(error);
-        else
-            throw(iamUtilMessageNotAuthorized() + ' ' + error);
-    });
+     await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+            .catch((error)=>{
+                if (fileTransactionRollback(file, transaction_id))
+                    throw(error);
+                else{
+                    import(`file://${process.cwd()}/server/iam.js`).then(({iamUtilMessageNotAuthorized})=>{
+                        throw iamUtilMessageNotAuthorized() + ' ' + error;
+                    });
+                }
+            });
+    if (fileTransactionCommit(file, transaction_id))
+        return {affectedRows:1};
+    else{
+        /**@type{import('../iam.js')} */
+        const  {iamUtilMessageNotAuthorized} = await import(`file://${process.cwd()}/server/iam.js`);
+        throw (iamUtilMessageNotAuthorized());
+    }
 };
 /**
  * @name fileDBGet
@@ -490,26 +497,27 @@ const fileDBGet = (app_id, table, resource_id, data_app_id) =>{
  * @returns {boolean}
  */
 const fileConstraints = (table, table_rows, data, dml, resource_id) =>{
+    const filerecord = fileRecord(table);
     //update of PK not alllowed
-    if (dml=='POST' && fileRecord(table).pk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+    if (dml=='POST' && filerecord.pk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
         /**@ts-ignore */
-        record[fileRecord(table).pk]==data[fileRecord(table).pk]))
+        record[filerecord.pk]==data[filerecord.pk]))
             return false;
     else{
         //no record can exist having given values for POST
-        if (dml=='POST' && fileRecord(table).uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+        if (dml=='POST' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
             /**@ts-ignore */
-            fileRecord(table).uk?.filter(column=>record[column]==data[column]).length==fileRecord(table).uk?.length))
+            filerecord.uk?.filter(column=>record[column]==data[column]).length==filerecord.uk?.length))
                 return false;
         else
             //max one record can exist having given values for UPDATE
-            if (dml=='UPDATE' && fileRecord(table).uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
+            if (dml=='UPDATE' && filerecord.uk && table_rows.some((/**@type{server_DbObject_record}*/record)=>
                 //check value is the same, ignore empty UK
                 /**@ts-ignore */
-                fileRecord(table).uk.filter(column=>record[column] && record[column]==data[column]).length==fileRecord(table).uk.length &&
+                filerecord.uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.uk.length &&
                 //check it is NOT the same user
                 /**@ts-ignore */
-                record[fileRecord(table).uk]!=resource_id))
+                record[filerecord.uk]!=resource_id))
                     return false;
             else
                 return true;
@@ -671,13 +679,7 @@ const fileCommonExecute = async parameters =>{
             });
     }
 };
-/**
- * @name fileDbDir
- * @description Gets db directory or db backup directory
- * @param {boolean} [backup]
- * @returns {string}
- */
-const fileDbDir = (backup=false) =>(backup?DB_DIR.backup:DB_DIR.db)??'';
+
 /**
  * @name fileDbInit
  * @description Load default database or read existing from disk. Set cache for files in existing database using `cache_content` key to increase performance
@@ -687,14 +689,14 @@ const fileDbDir = (backup=false) =>(backup?DB_DIR.backup:DB_DIR.db)??'';
  */
  const fileDbInit = async (default_db=null) => {
     
-    DB.data = default_db?default_db:await fs.promises.readFile(process.cwd() + fileDbDir() + 'DbObjects.json', 'utf8')
+    DB.data = default_db?default_db:await fs.promises.readFile(process.cwd() + DB_DIR.db + 'DbObjects.json', 'utf8')
                     .then(result=>JSON.parse(result))
                     .catch(()=>'');
     
     if (default_db == null)
         for (const file_db_record of DB.data){
             if ('cache_content' in file_db_record){
-                const file = await fs.promises.readFile(process.cwd() + fileDbDir() + fileRecordFilename(file_db_record.name).filename + fileRecordFilename(file_db_record.name).suffix, 'utf8')
+                const file = await fs.promises.readFile(process.cwd() + DB_DIR.db + fileRecordFilename(file_db_record.name).filename + fileRecordFilename(file_db_record.name).suffix, 'utf8')
                                     .then((/**@type{string}*/file)=>JSON.parse(file.toString()))
                                     .catch(()=>null);
                 file_db_record.cache_content = file?file:null;
