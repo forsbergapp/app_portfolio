@@ -97,7 +97,7 @@ const dbPoolDeleteAll = (db)=>{
  */
 const dbPoolStart = async (dbparameters) =>{
    /**@type{import('./ORM.js')} */
-   const {filePath} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+   const {getFsPath} = await import(`file://${process.cwd()}/server/db/ORM.js`);
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case 1:
@@ -205,7 +205,7 @@ const dbPoolStart = async (dbparameters) =>{
             DB_POOL.map(db=>{
                if (db[0]==dbparameters.use)
                   sqlite.open({
-                     filename: process.cwd() + filePath('DbFile'),
+                     filename: process.cwd() + getFsPath('DbFile'),
                      driver: sqlite3.Database
                   })
                   .then((sqlite_db)=>{

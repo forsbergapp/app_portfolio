@@ -6,10 +6,10 @@
  */
 
 /**@type{import('../server/db/ORM.js')} */
-const {fileFsRead} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**@type{server_db_document_config_microservice_services['SERVICES']} */
-const REGISTRY_CONFIG_SERVICES = await fileFsRead('ConfigMicroserviceServices').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
+const REGISTRY_CONFIG_SERVICES = await ORM.getFsFile('ConfigMicroserviceServices').then((/**@type{server_db_result_fileFsRead}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 /**
  * @name registryConfigServices

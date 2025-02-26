@@ -347,7 +347,7 @@ const dbInfoSpaceSum = parameters =>
     const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
     /**@type{import('../db/ORM.js')} */
-    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+    const {postFsAdmin} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
@@ -370,7 +370,7 @@ const dbInfoSpaceSum = parameters =>
     const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     if (db_use==5){
         await dbPoolClose(null, db_use, false);
-        await fileFsWriteAdmin('DbFile', null);
+        await postFsAdmin('DbFile', null);
         await DB_POOL(db_use, false, null, null, null);
         count_statements++;
     }

@@ -1142,7 +1142,9 @@ const commonApp = async parameters =>{
 const commonAppsGet = async parameters =>{
     /**@type{import('../../../server/db/AppTranslation.js')} */
     const AppTranslation = await import(`file://${process.cwd()}/server/db/AppTranslation.js`);
-    
+    /**@type{import('../../../server/db/App.js')} */
+    const App = await import(`file://${process.cwd()}/server/db/App.js`);
+
     /**@type{server_db_table_App[]}*/
     const apps = App.get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id

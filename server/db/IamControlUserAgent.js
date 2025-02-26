@@ -6,9 +6,8 @@
  */
 
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+
 /**
  * @name get
  * @description Get user 
@@ -18,11 +17,11 @@ const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @returns {server_server_response & {result?:server_db_table_IamControlUserAgent[] }}
  */
 const get = (app_id, resource_id) =>{
-    const result = fileDBGet(app_id, 'IamControlUserAgent',resource_id, null);
+    const result = ORM.getObject(app_id, 'IamControlUserAgent',resource_id, null);
     if (result.rows.length>0 || resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
-        return getError(app_id,404);
+        return ORM.getError(app_id,404);
 };
 
 /**
@@ -37,17 +36,17 @@ const post = async (app_id, data) => {
     //check required attributes
     if (data.name!=null && data.user_agent!=null){
         const id = Date.now();
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamControlUserAgent', post:{data:{id:id, name:data.name, user_agent:data.user_agent}}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamControlUserAgent', post:{data:{id:id, name:data.name, user_agent:data.user_agent}}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=id;
                 return {result:result, type:'JSON'};
             }
             else
-                return getError(app_id,404);
+                return ORM.getError(app_id,404);
         });
     }
     else
-        return getError(app_id,400);
+        return ORM.getError(app_id,400);
 
 };
 /**
@@ -65,17 +64,17 @@ const update = async (app_id, resource_id, data) => {
         data_update.name = data.name;
         data_update.user_agent = data.user_agent;
         if (Object.entries(data_update).length==2)
-            return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IamControlUserAgent', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamControlUserAgent', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return getError(app_id,404);
+                    return ORM.getError(app_id,404);
             });
         else
-            return getError(app_id,400);
+            return ORM.getError(app_id,400);
     }
     else
-        return getError(app_id,400);
+        return ORM.getError(app_id,400);
 };
 
 /**
@@ -87,11 +86,11 @@ const update = async (app_id, resource_id, data) => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IamControlUserAgent', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlUserAgent', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return getError(app_id,404);
+            return ORM.getError(app_id,404);
     });
 };
                    
