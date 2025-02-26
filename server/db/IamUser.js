@@ -5,9 +5,8 @@
  *          server_db_table_IamUser, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
  */
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**
@@ -19,11 +18,11 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @returns {server_server_response & {result?:server_db_table_IamUser[] }}
  */
 const get = (app_id, resource_id) =>{
-    const result = fileDBGet(app_id, 'IamUser',resource_id, null);
+    const result = ORM.getObject(app_id, 'IamUser',resource_id, null);
     if (result.rows.length>0 || resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
-        return getError(app_id, 404);
+        return ORM.getError(app_id, 404);
 };
 
 /**
@@ -135,7 +134,7 @@ const getViewProfile = async parameters =>{
                             .then(()=>{return {result:result_getProfileUser, type:'JSON'};});
       }
       else
-          return result_getProfileUser.http?result_getProfileUser:getError(parameters.app_id, 404);
+          return result_getProfileUser.http?result_getProfileUser:ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -295,7 +294,7 @@ const post = async (app_id, data) => {
     if (data.username==null || data.password==null || data.type==null||
         //check not allowed attributes when creating a user
         data.id||data.user_level ||data.status||data.created||data.modified){
-            return getError(app_id, 400);
+            return ORM.getError(app_id, 400);
     }
     else{
         /**@type{import('../security.js')} */
@@ -320,13 +319,13 @@ const post = async (app_id, data) => {
                                 created:new Date().toISOString(), 
                                 modified:new Date().toISOString()
                         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return getError(app_id, 404);
+                return ORM.getError(app_id, 404);
         });
     }
 };
@@ -361,13 +360,13 @@ const postAdmin = async (app_id, data) => {
                             created:new Date().toISOString(), 
                             modified:new Date().toISOString()
                     };
-    return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((result)=>{
         if (result.affectedRows>0){
             result.insertId=data_new.id;
             return {result:result, type:'JSON'};
         }
         else
-            return getError(app_id, 404);
+            return ORM.getError(app_id, 404);
     });
 };
 
@@ -409,20 +408,20 @@ const update = async (app_id, resource_id, data) => {
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+                return ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return getError(app_id, 404);
+                        return ORM.getError(app_id, 404);
                 });
             else
-                return getError(app_id, 400);
+                return ORM.getError(app_id, 400);
         }
         else
-            return getError(app_id, 400);
+            return ORM.getError(app_id, 400);
     }
     else
-        return getError(app_id, 404);
+        return ORM.getError(app_id, 404);
 };
 /**
  * @name updateAdmin
@@ -473,20 +472,20 @@ const updateAdmin = async parameters => {
             data_update.modified = new Date().toISOString();
 
             if (Object.entries(data_update).length>0)
-                return fileCommonExecute({  app_id:parameters.app_id, 
+                return ORM.Execute({  app_id:parameters.app_id, 
                                             dml:'UPDATE', 
                                             object:'IamUser', 
                                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return getError(parameters.app_id, 404);
+                        return ORM.getError(parameters.app_id, 404);
                 });
             else
-                return getError(parameters.app_id, 400);
+                return ORM.getError(parameters.app_id, 400);
     }
     else
-        return getError(parameters.app_id, 404);
+        return ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -509,23 +508,23 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
             data_update.active = 1;
             data_update.modified = new Date().toISOString();
             if (Object.entries(data_update).length>0)
-                return fileCommonExecute({  app_id:app_id, 
+                return ORM.Execute({  app_id:app_id, 
                                             dml:'UPDATE', 
                                             object:'IamUser', 
                                             update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return getError(app_id, 404);
+                        return ORM.getError(app_id, 404);
                 });
             else
-                return getError(app_id, 400);
+                return ORM.getError(app_id, 400);
         }
         else
-            return getError(app_id, 401);
+            return ORM.getError(app_id, 401);
     }
     else
-        return getError(app_id, 404);
+        return ORM.getError(app_id, 404);
 };
 
 /**
@@ -546,20 +545,20 @@ const updatePassword = async (app_id, resource_id, data) => {
         data_update.password = data.password_new;
         data_update.modified = new Date().toISOString();
         if (Object.entries(data_update).length>0)
-            return fileCommonExecute({  app_id:app_id, 
+            return ORM.Execute({  app_id:app_id, 
                                         dml:'UPDATE', 
                                         object:'IamUser', 
                                         update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return getError(app_id, 404);
+                    return ORM.getError(app_id, 404);
             });
         else
-            return getError(app_id, 400);
+            return ORM.getError(app_id, 400);
     }
     else
-        return getError(app_id, 404);
+        return ORM.getError(app_id, 404);
 };
 
 /**
@@ -579,17 +578,17 @@ const deleteRecord = async (app_id, resource_id, data) => {
     if (user){
         if (data.password && await securityPasswordCompare(data.password, user.password))
             return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
-                                                            result_cascade:fileCommonExecute({  app_id:app_id, 
+                                                            result_cascade:ORM.Execute({  app_id:app_id, 
                                                                                                 dml:'DELETE', 
                                                                                                 object:'IamUser', 
                                                                                                 delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
                                                             if (result.affectedRows>0)
                                                                 return {result:result, type:'JSON'};
                                                             else
-                                                                return getError(app_id, 404);
+                                                                return ORM.getError(app_id, 404);
                                                         }));
         else
-            return getError(app_id, 400);
+            return ORM.getError(app_id, 400);
     }
     else
         return user;
@@ -659,12 +658,12 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
     if (user){
         return deleteCascade(app_id, resource_id).then(result_cascade=>result_cascade.http?
                                 result_cascade:
-                                    fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
+                                    ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
                                     .then(result=>{
                                             if (result.affectedRows>0)
                                                 return {result:result, type:'JSON'};
                                             else
-                                                return getError(app_id, 404);
+                                                return ORM.getError(app_id, 404);
                                             }));
     }
     else

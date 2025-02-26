@@ -91,7 +91,7 @@ const bffInit = async (req, res) =>{
                 res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
                 res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
                 if (Config.get('ConfigServer','SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1'){
-                    res.setHeader('content-security-policy', Config.get('CONFIG_IAM_POLICY','content-security-policy'));
+                    res.setHeader('content-security-policy', Config.get('ConfigIamPolicy','content-security-policy'));
                 }
                 res.setHeader('cross-origin-opener-policy','same-origin');
                 res.setHeader('cross-origin-resource-policy',	'same-origin');

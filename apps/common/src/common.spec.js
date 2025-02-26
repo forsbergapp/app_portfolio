@@ -43,18 +43,7 @@ describe('Spy test, commonApp as called from bff', ()=> {
         
         /**@type{import('./common.js')} */
         const app_common = await import(`file://${process.cwd()}/apps/common/src/common.js`);
-      
-        //expected function calls:
-        // app_common.commonApp() => 
-        //  app_common.commonAppStart() => AppSecret.get   1 time =>
-        //      file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
-        //
-        //  app_common.commonComponentCreate() => 
-        //        iam_service.iamAuthorizeIdToken => AppSecret.get   2 times =>
-        //          file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
-        //        app_common.commonAppStart() => AppSecret.get   1 time =>
-        //          file.fileDBGet() (APP_SECRET) => file.fileCache() => file.fileRecord() using filter function to read object file.FILE_DB
-        
+             
         /**
          * @type{{  app_id:number,
          *          ip:string,
