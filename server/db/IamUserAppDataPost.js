@@ -5,10 +5,10 @@
  *          server_db_table_IamUserAppDataPost,server_db_table_IamUser, server_db_table_IamUserAppDataPostLike,
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
-/**@type{import('./file.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./IamUserApp.js')} */
@@ -34,7 +34,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return dbCommonRecordError(parameters.app_id, 404);
+        return getError(parameters.app_id, 404);
 };
 
 /**
@@ -84,7 +84,7 @@ const getViewProfileUserPosts = async parameters =>{
                             };
                         });
         else
-            return dbCommonRecordError(parameters.app_id, 404);
+            return getError(parameters.app_id, 404);
     else
         return result;
 };
@@ -154,7 +154,7 @@ const getViewProfileStatPost = async parameters =>{
     /**@type{import('./IamUserAppDataPostView.js')} */
     const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
     if (parameters.data.statchoice==null)
-        return dbCommonRecordError(parameters.app_id, 400);
+        return getError(parameters.app_id, 400);
     else{
         /**@type{import('./IamUser.js')} */
         const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
@@ -203,7 +203,7 @@ const getViewProfileUserPostDetail = async parameters =>{
    /**@type{import('./IamUserAppDataPostLike.js')} */
    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
    if (parameters.data.detailchoice==null)
-       return dbCommonRecordError(parameters.app_id, 400);
+       return getError(parameters.app_id, 400);
    else{
        /**@type{import('./IamUser.js')} */
        const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
@@ -268,7 +268,7 @@ const getViewProfileUserPostDetail = async parameters =>{
 const post = async parameters => {
     //check required attributes
     if (parameters.data.iam_user_app_id==null){
-        return dbCommonRecordError(parameters.app_id, 400);
+        return getError(parameters.app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserAppDataPost} */
@@ -285,7 +285,7 @@ const post = async parameters => {
                 return {result:result, type:'JSON'};
             }
             else
-                return dbCommonRecordError(parameters.app_id, 404);
+                return getError(parameters.app_id, 404);
         });
     }
 };
@@ -314,10 +314,10 @@ const update = async parameters =>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return dbCommonRecordError(parameters.app_id, 404);
+                return getError(parameters.app_id, 404);
         });
     else
-        return dbCommonRecordError(parameters.app_id, 400);
+        return getError(parameters.app_id, 400);
 };
 /**
  * @name deleteRecord
@@ -336,7 +336,7 @@ const deleteRecord = async parameters =>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return dbCommonRecordError(parameters.app_id, 404);
+            return getError(parameters.app_id, 404);
     });
 };
 export {get, getViewProfileUserPosts, getViewProfileStatLike, getViewProfileStatPost, getViewProfileUserPostDetail, post, update, deleteRecord};

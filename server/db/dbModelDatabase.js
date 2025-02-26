@@ -346,8 +346,8 @@ const dbInfoSpaceSum = parameters =>
     /**@type{import('./AppSecret.js')} */
     const AppSecret = await import(`file://${process.cwd()}/server/db/AppSecret.js`);
 
-    /**@type{import('../db/file.js')} */
-    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('../db/ORM.js')} */
+    const {fileFsWriteAdmin} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
     /**@type{import('../db/db.js')} */
     const {dbPoolClose, dbPoolStart} = await import(`file://${process.cwd()}/server/db/db.js`);
@@ -370,7 +370,7 @@ const dbInfoSpaceSum = parameters =>
     const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
     if (db_use==5){
         await dbPoolClose(null, db_use, false);
-        await fileFsWriteAdmin('DB_FILE', null);
+        await fileFsWriteAdmin('DbFile', null);
         await DB_POOL(db_use, false, null, null, null);
         count_statements++;
     }
@@ -498,7 +498,7 @@ const dbInfoSpaceSum = parameters =>
     /**@type{import('./Log.js')} */
     const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     /**@type{import('./common.js')} */
-    const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+    const {getError} = await import(`file://${process.cwd()}/server/db/common.js`);
     /**@type{import('./dbModelUserAccount.js')} */
     const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./IamUser.js')} */
@@ -1174,7 +1174,7 @@ const dbInfoSpaceSum = parameters =>
         return {result:{info: install_result}, type:'JSON'};
     } catch (error) {
         /**@ts-ignore */
-        return error.http?error:dbCommonRecordError(parameters.app_id, 500, error);
+        return error.http?error:getError(parameters.app_id, 500, error);
     }
     
 };
@@ -1198,7 +1198,7 @@ const dbDemoUninstall = async parameters => {
     /**@type{import('./dbModelUserAccount.js')} */
 	const dbModelUserAccount = await import(`file://${process.cwd()}/server/db/dbModelUserAccount.js`);
     /**@type{import('./common.js')} */
-    const {dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+    const {getError} = await import(`file://${process.cwd()}/server/db/common.js`);
     
     const result_demo_users = IamUser.get(parameters.app_id, null).result.filter((/**@type{server_db_table_IamUser}*/row)=>row.user_level==2);
     if (result_demo_users){
@@ -1243,7 +1243,7 @@ const dbDemoUninstall = async parameters => {
                 if (error.http)
                     throw error;
                 else
-                    throw dbCommonRecordError(parameters.app_id, 500, error);
+                    throw getError(parameters.app_id, 500, error);
             });
             //set demo key values to null
             /**@type{import('./dbModelAppDataEntity.js')} */
