@@ -3485,7 +3485,7 @@
         "/bff/admin/v1/server-db/database-objects": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.Database.getViewDbObjects",
+                "operationId": "server_db.ORM.getViewObjects",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}
@@ -3516,7 +3516,7 @@
         "/bff/admin/v1/server-db/database": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.Database.getViewDbInfo",
+                "operationId": "server_db.ORM.getViewInfo",
                 "security":[
                     {"$ref": "#/components/securitySchemes/id-token"},
                     {"$ref": "#/components/securitySchemes/AuthorizationBearer"}

@@ -16,7 +16,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  * @param {*} error
  * @returns {server_server_response}
  */
-const dbCommonRecordError = (app_id, statusCode, error=null) =>{
+const getError = (app_id, statusCode, error=null) =>{
 	if (error){
 		return {http:statusCode,
 				code:'DB',
@@ -102,7 +102,7 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 						}) ?? []:null;	
 					resolve({result:rows ?? result, type:'JSON'});
 				} catch (error) {
-					return resolve(dbCommonRecordError(app_id, 500, error));
+					return resolve(getError(app_id, 500, error));
 				}
 						
 			});
@@ -115,11 +115,11 @@ const dbCommonDatePeriod = (db_use,period)=>db_use==5?
 			if (!error.sql)
 				error.sql = sql;
 			Log.postDBE(app_id, DB_USE?.toString()??'', sql, parameters, error)
-			.then(()=>resolve(dbCommonRecordError(app_id, 500, error)));
+			.then(()=>resolve(getError(app_id, 500, error)));
 		});
 	});
 };
 
 export{
-		dbCommonRecordError, dbCommonExecute
+		getError, dbCommonExecute
 };

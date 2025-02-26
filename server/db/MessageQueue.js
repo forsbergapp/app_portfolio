@@ -6,10 +6,10 @@
  *          server_db_db_name_message_queue} from '../types.js'
  */
 
-/**@type{import('./file.js')} */
-const {fileFsDBLogPost, fileFsDBLogGet} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileFsDBLogPost, fileFsDBLogGet} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -23,7 +23,7 @@ const get = async file =>{
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
-        return dbCommonRecordError(null, 404);
+        return getError(null, 404);
 };
 /**
  * @name post
