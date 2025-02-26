@@ -42,13 +42,9 @@
                 },
                 {   "id":5,
                     "menu":"",
-                    "doc":"3.installationDatabase"
-                },
-                {   "id":6,
-                    "menu":"",
                     "doc":"3.installationPMMicroservices"
                 },
-                {   "id":7,
+                {   "id":6,
                     "menu":"",
                     "doc":"3.installationSSLDNS"
                 }]
