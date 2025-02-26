@@ -20,7 +20,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('../db/common.js')} */
-const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.cwd()}/server/db/common.js`);
+const { dbCommonExecute, getError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name getUserPost
@@ -51,7 +51,7 @@ const getUserPostsByUserId = async parameters =>
                             user_account_id:    parameters.resource_id,
                             app_id:             parameters.data.data_app_id
                         })
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:getError(parameters.app_id, 404));
                                 
 /**
  * @name getProfileUserPosts
@@ -71,7 +71,7 @@ const getProfileUserPosts = async parameters =>
                             user_account_id: parameters.resource_id,
                             app_id: parameters.app_id
                             })
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:getError(parameters.app_id, 404));
 /**
  * @name getProfileStatLike
  * @description Get profile stat like
@@ -88,7 +88,7 @@ const getProfileUserPosts = async parameters =>
                             id: parameters.resource_id,
                             app_id: parameters.app_id
                         })
-                        .then(result=>(result.http ||result.result[0])?result:dbCommonRecordError(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result[0])?result:getError(parameters.app_id, 404));
 /**
  * @name getProfileStatPost
  * @description Get profile post stat
@@ -102,7 +102,7 @@ const getProfileUserPosts = async parameters =>
 const getProfileStatPost = async parameters =>
     {
         if (parameters.data.statchoice==null)
-            return dbCommonRecordError(parameters.app_id, 400);
+            return getError(parameters.app_id, 400);
         else{
             /**@type{import('./IamUser.js')} */
             const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
@@ -248,7 +248,7 @@ const updateUserPost = parameters =>
                             id: parameters.resource_id,
                             DB_CLOB: ['json_data']
                         })
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:getError(parameters.app_id, 404));
 /**
  * @name deleteUserPost
  * @description Delete user post
@@ -267,7 +267,7 @@ const deleteUserPost = parameters =>
                             user_account_id: serverUtilNumberValue(parameters.data?.user_account_id),
                             app_id:parameters.app_id
                         })
-                        .then(result=>(result.http ||result.result)?result:dbCommonRecordError(parameters.app_id, 404));
+                        .then(result=>(result.http ||result.result)?result:getError(parameters.app_id, 404));
 
 export{ getUserPost, getUserPostsByUserId, getProfileUserPosts, getProfileStatLike, getProfileStatPost,
         getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost};

@@ -96,8 +96,8 @@ const dbPoolDeleteAll = (db)=>{
  * @returns {Promise.<null>}
  */
 const dbPoolStart = async (dbparameters) =>{
-   /**@type{import('./file.js')} */
-   const {filePath} = await import(`file://${process.cwd()}/server/db/file.js`);
+   /**@type{import('./ORM.js')} */
+   const {filePath} = await import(`file://${process.cwd()}/server/db/ORM.js`);
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case 1:

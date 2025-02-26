@@ -6,10 +6,10 @@
  *          server_db_common_result_delete,
  *          server_db_common_result_insert} from '../types.js'
  */
-/**@type{import('./file.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -29,7 +29,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return dbCommonRecordError(parameters.app_id, 404);
+        return getError(parameters.app_id, 404);
 };
 
 /**
@@ -44,7 +44,7 @@ const get = parameters =>{
 const post = async (app_id, data) =>{
     //check required attributes
     if (data.iam_user_id==null || data.iam_user_id_view==null){
-        return dbCommonRecordError(app_id, 400);
+        return getError(app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserView} */
@@ -62,7 +62,7 @@ const post = async (app_id, data) =>{
                 return {result:result, type:'JSON'};
             }
             else
-                return dbCommonRecordError(app_id, 404);
+                return getError(app_id, 404);
         });
     }
 };
@@ -84,7 +84,7 @@ const deleteRecord = async parameters =>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return dbCommonRecordError(parameters.app_id, 404);
+            return getError(parameters.app_id, 404);
     });
 };
 

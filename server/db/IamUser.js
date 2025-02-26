@@ -4,10 +4,10 @@
  * @import {server_server_response,server_db_common_result_insert,server_db_common_result_update,server_db_common_result_delete,
  *          server_db_table_IamUser, server_db_table_IamUserFollow, server_db_table_IamAppAccess, server_db_table_IamUserEvent,server_db_iam_user_admin} from '../types.js'
  */
-/**@type{import('./file.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**
@@ -23,7 +23,7 @@ const get = (app_id, resource_id) =>{
     if (result.rows.length>0 || resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
-        return dbCommonRecordError(app_id, 404);
+        return getError(app_id, 404);
 };
 
 /**
@@ -125,14 +125,17 @@ const getViewProfile = async parameters =>{
   else
       if (result_getProfileUser[0]){
           //always save stat who is viewing, same user, none or someone else
-          const data_body = { user_account_id:        serverUtilNumberValue(parameters.data.id),    //who views
-                              user_account_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
+          const data_body = { iam_user_id:        serverUtilNumberValue(parameters.data.id),    //who views
+                              iam_user_id_view:   serverUtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].id, //viewed account
                               client_ip:              parameters.ip,
                               client_user_agent:      parameters.user_agent};
-          return await IamUserView.post(parameters.app_id, data_body).then(()=>{return {result:result_getProfileUser, type:'JSON'};});
+          return await IamUserView.post(parameters.app_id, 
+                                        /**@ts-ignore */
+                                        data_body)
+                            .then(()=>{return {result:result_getProfileUser, type:'JSON'};});
       }
       else
-          return result_getProfileUser.http?result_getProfileUser:dbCommonRecordError(parameters.app_id, 404);
+          return result_getProfileUser.http?result_getProfileUser:getError(parameters.app_id, 404);
 };
 
 /**
@@ -292,7 +295,7 @@ const post = async (app_id, data) => {
     if (data.username==null || data.password==null || data.type==null||
         //check not allowed attributes when creating a user
         data.id||data.user_level ||data.status||data.created||data.modified){
-            return dbCommonRecordError(app_id, 400);
+            return getError(app_id, 400);
     }
     else{
         /**@type{import('../security.js')} */
@@ -323,7 +326,7 @@ const post = async (app_id, data) => {
                 return {result:result, type:'JSON'};
             }
             else
-                return dbCommonRecordError(app_id, 404);
+                return getError(app_id, 404);
         });
     }
 };
@@ -364,7 +367,7 @@ const postAdmin = async (app_id, data) => {
             return {result:result, type:'JSON'};
         }
         else
-            return dbCommonRecordError(app_id, 404);
+            return getError(app_id, 404);
     });
 };
 
@@ -410,16 +413,16 @@ const update = async (app_id, resource_id, data) => {
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return dbCommonRecordError(app_id, 404);
+                        return getError(app_id, 404);
                 });
             else
-                return dbCommonRecordError(app_id, 400);
+                return getError(app_id, 400);
         }
         else
-            return dbCommonRecordError(app_id, 400);
+            return getError(app_id, 400);
     }
     else
-        return dbCommonRecordError(app_id, 404);
+        return getError(app_id, 404);
 };
 /**
  * @name updateAdmin
@@ -477,13 +480,13 @@ const updateAdmin = async parameters => {
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return dbCommonRecordError(parameters.app_id, 404);
+                        return getError(parameters.app_id, 404);
                 });
             else
-                return dbCommonRecordError(parameters.app_id, 400);
+                return getError(parameters.app_id, 400);
     }
     else
-        return dbCommonRecordError(parameters.app_id, 404);
+        return getError(parameters.app_id, 404);
 };
 
 /**
@@ -513,16 +516,16 @@ const updateVerificationCodeAuthenticate = async (app_id, resource_id, data) => 
                     if (result.affectedRows>0)
                         return {result:result, type:'JSON'};
                     else
-                        return dbCommonRecordError(app_id, 404);
+                        return getError(app_id, 404);
                 });
             else
-                return dbCommonRecordError(app_id, 400);
+                return getError(app_id, 400);
         }
         else
-            return dbCommonRecordError(app_id, 401);
+            return getError(app_id, 401);
     }
     else
-        return dbCommonRecordError(app_id, 404);
+        return getError(app_id, 404);
 };
 
 /**
@@ -550,13 +553,13 @@ const updatePassword = async (app_id, resource_id, data) => {
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return dbCommonRecordError(app_id, 404);
+                    return getError(app_id, 404);
             });
         else
-            return dbCommonRecordError(app_id, 400);
+            return getError(app_id, 400);
     }
     else
-        return dbCommonRecordError(app_id, 404);
+        return getError(app_id, 404);
 };
 
 /**
@@ -583,10 +586,10 @@ const deleteRecord = async (app_id, resource_id, data) => {
                                                             if (result.affectedRows>0)
                                                                 return {result:result, type:'JSON'};
                                                             else
-                                                                return dbCommonRecordError(app_id, 404);
+                                                                return getError(app_id, 404);
                                                         }));
         else
-            return dbCommonRecordError(app_id, 400);
+            return getError(app_id, 400);
     }
     else
         return user;
@@ -661,7 +664,7 @@ const deleteRecordAdmin = async (app_id, resource_id) => {
                                             if (result.affectedRows>0)
                                                 return {result:result, type:'JSON'};
                                             else
-                                                return dbCommonRecordError(app_id, 404);
+                                                return getError(app_id, 404);
                                             }));
     }
     else

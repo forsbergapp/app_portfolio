@@ -13,9 +13,9 @@
  * @returns {void}
  */
 beforeAll(async ()=>{
-    /**@type{import('../server/db/file.js')} */
-    const {fileFsCacheSet} = await import(`file://${process.cwd()}/server/db/file.js`);
+    /**@type{import('../server/db/ORM.js')} */
+    const {fileDbInit} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
     //sets file cache so test can be performed without server started
-    await fileFsCacheSet();
+    await fileDbInit();
 });

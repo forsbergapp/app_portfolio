@@ -5,10 +5,10 @@
  *          server_db_table_AppTranslation} from '../types.js'
  */
 
-/**@type{import('./file.js')} */
-const {fileDBGet} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileDBGet} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -49,7 +49,7 @@ const get = (app_id, resource_id, locale, data_app_id) =>{
                     return {result:result.filter((/**@type{server_db_table_AppTranslation}*/row)=>row.locale == 'en'), type:'JSON'};
                 }
                 else
-                    return dbCommonRecordError(app_id, 404);
+                    return getError(app_id, 404);
 };
                    
 export {get};

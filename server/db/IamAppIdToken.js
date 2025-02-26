@@ -4,10 +4,10 @@
  * @import {server_server_response,server_db_common_result_insert, server_db_iam_app_id_token_insert, server_db_table_IamAppIdToken} from '../types.js'
  */
 
-/**@type{import('./file.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -52,14 +52,14 @@ const post = async (app_id, data) => {
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return dbCommonRecordError(app_id, 404);
+                    return getError(app_id, 404);
             });
         }
         else
-            return dbCommonRecordError(app_id, 401);
+            return getError(app_id, 401);
     }
     else
-        return dbCommonRecordError(app_id, 400);
+        return getError(app_id, 400);
 };
 
 export {get, post};

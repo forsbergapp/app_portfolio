@@ -20,7 +20,7 @@ const dbSql = await import(`file://${process.cwd()}/server/db/dbSql.js`);
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
 /**@type{import('../db/common.js')} */
-const { dbCommonExecute, dbCommonRecordError } = await import(`file://${process.cwd()}/server/db/common.js`);
+const { dbCommonExecute, getError } = await import(`file://${process.cwd()}/server/db/common.js`);
 
 /**
  * @name get
@@ -130,7 +130,7 @@ const getProfile = async parameters =>{
           return await dbModelUserAccountView.post(parameters.app_id, data_body).then(()=>{return {result:clear_private(result_getProfileUser), type:'JSON'};});
       }
       else
-          return result_getProfileUser.http?result_getProfileUser:dbCommonRecordError(parameters.app_id, 404);
+          return result_getProfileUser.http?result_getProfileUser:getError(parameters.app_id, 404);
 };
 /**
 * @name getProfileStat

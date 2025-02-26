@@ -16,10 +16,10 @@
 /**@type{import('./Config.js')} */
 const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
-/**@type{import('./file.js')} */
-const {fileFsDBLogGet, fileFsDir, fileFsDBLogPost} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileFsDBLogGet, fileFsDir, fileFsDBLogPost} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**
  * @name logDate
  * @description Log date format
@@ -663,7 +663,7 @@ const getStat = async parameters => {
                 });
             })
             .catch((error)=>{
-                return dbCommonRecordError(parameters.app_id, 500, `${file}: ${error}`);
+                return getError(parameters.app_id, 500, `${file}: ${error}`);
             });
         }
     }

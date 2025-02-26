@@ -5,10 +5,10 @@
  *          server_db_table_IamControlUserAgent} from '../types.js'
  */
 
-/**@type{import('./file.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('./ORM.js')} */
+const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**
  * @name get
  * @description Get user 
@@ -22,7 +22,7 @@ const get = (app_id, resource_id) =>{
     if (result.rows.length>0 || resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
-        return dbCommonRecordError(app_id,404);
+        return getError(app_id,404);
 };
 
 /**
@@ -43,11 +43,11 @@ const post = async (app_id, data) => {
                 return {result:result, type:'JSON'};
             }
             else
-                return dbCommonRecordError(app_id,404);
+                return getError(app_id,404);
         });
     }
     else
-        return dbCommonRecordError(app_id,400);
+        return getError(app_id,400);
 
 };
 /**
@@ -69,13 +69,13 @@ const update = async (app_id, resource_id, data) => {
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return dbCommonRecordError(app_id,404);
+                    return getError(app_id,404);
             });
         else
-            return dbCommonRecordError(app_id,400);
+            return getError(app_id,400);
     }
     else
-        return dbCommonRecordError(app_id,400);
+        return getError(app_id,400);
 };
 
 /**
@@ -91,7 +91,7 @@ const deleteRecord = async (app_id, resource_id) => {
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return dbCommonRecordError(app_id,404);
+            return getError(app_id,404);
     });
 };
                    

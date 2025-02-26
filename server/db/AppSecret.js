@@ -4,12 +4,12 @@
  * @import {server_server_response,server_db_common_result_update,server_db_common_result_insert,server_db_common_result_delete,
  *          server_db_table_AppSecret} from '../types.js'
  */
-/**@type{import('./file.js')} */
-const {fileFsRead, fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('./ORM.js')} */
+const {fileFsRead, fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../db/common.js')} */
-const { dbCommonRecordError} = await import(`file://${process.cwd()}/server/db/common.js`);
+/**@type{import('../db/ORM.js')} */
+const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**
  * @name get
  * @description Get record
@@ -24,7 +24,7 @@ const get = parameters => {
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
-        return dbCommonRecordError(parameters.app_id, 404);
+        return getError(parameters.app_id, 404);
 };
 
 /**
@@ -62,14 +62,14 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
  */
 const update = async parameters => {
     if  (parameters.data.parameter_name=='app_id')
-        return dbCommonRecordError(parameters.app_id, 400);
+        return getError(parameters.app_id, 400);
     else{
         //updates only one key in the record
         return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppSecret', update:{resource_id:null, data_app_id:parameters.resource_id, data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return dbCommonRecordError(parameters.app_id, 404);
+                return getError(parameters.app_id, 404);
         });
     }
 };
@@ -87,7 +87,7 @@ const deleteRecord = async (app_id, resource_id) => {
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return dbCommonRecordError(app_id, 404);
+            return getError(app_id, 404);
     });
 };
                    

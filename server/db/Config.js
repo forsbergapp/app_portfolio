@@ -12,8 +12,8 @@
  * @import {server_db_document_config_microservice_services} from '../../microservice/types.js'
  */
 
-/**@type{import('./file.js')} */
-const {fileFsRead, fileFsWrite, fileCache, fileDbInit, fileFsWriteAdmin, fileFSDirDataExists, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/file.js`);
+/**@type{import('./ORM.js')} */
+const {fileFsRead, fileFsWrite, fileCache, fileDbInit, fileFsWriteAdmin, fileFSDirDataExists, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
