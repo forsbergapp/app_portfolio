@@ -13,7 +13,7 @@
  */
 
 /**@type{import('./ORM.js')} */
-const {fileFsRead, fileFsWrite, fileCache, fileDbInit, fileFsWriteAdmin, fileFSDirDataExists, fileFsAccessMkdir} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 const APP_PORTFOLIO_TITLE = 'App Portfolio';
 
@@ -29,20 +29,20 @@ const APP_PORTFOLIO_TITLE = 'App Portfolio';
 const get = (file, config_group, parameter) => {
     try {
         if (config_group && parameter){
-            if (fileCache('ConfigServer')[config_group].length>0){
+            if (ORM.getObjectDocument('ConfigServer')[config_group].length>0){
                 //return parameter in array
-                return fileCache(file)[config_group].filter((/**@type{*}*/row)=>parameter in row)[0][parameter];
+                return ORM.getObjectDocument(file)[config_group].filter((/**@type{*}*/row)=>parameter in row)[0][parameter];
             }
             else{
                 //return key
-                return fileCache(file)[config_group][parameter];
+                return ORM.getObjectDocument(file)[config_group][parameter];
             }
         }
         else
             if (config_group)
-                return fileCache(file)[config_group];
+                return ORM.getObjectDocument(file)[config_group];
             else
-                return fileCache(file);    
+                return ORM.getObjectDocument(file);    
     } catch (error) {
         return null;
     }
@@ -135,7 +135,7 @@ const configDefault = async () => {
                                                                         )]
                         ]; 
     //create directories
-    await fileFsAccessMkdir(['/data',
+    await ORM.postFsDir(['/data',
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_JOBS' in key)[0].PATH_JOBS,
                             '/data' + config_obj[0][1].SERVER.filter(key=>'PATH_SSL' in key)[0].PATH_SSL,
                             '/data' + config_obj[0][1].SERVICE_MICROSERVICE.filter(key=>'PATH' in key)[0].PATH,
@@ -148,9 +148,9 @@ const configDefault = async () => {
         throw err;
     }); 
     //load default db
-    await fileDbInit(config_obj[16][1]);
+    await ORM.Init(config_obj[16][1]);
     for (const config_row of config_obj){
-        await fileFsWriteAdmin(config_row[0], config_row[1]);
+        await ORM.postFsAdmin(config_row[0], config_row[1]);
     }
 };
 /**
@@ -161,9 +161,9 @@ const configDefault = async () => {
  */
 const configInit = async () => {
     return await new Promise((resolve, reject) => {
-        fileFSDirDataExists().then((result) => {
+        ORM.getFsDataExists().then((result) => {
             if (result==true)
-                fileDbInit().then(() => {
+                ORM.Init().then(() => {
                     resolve(null);
                 })
                 .catch((/**@type{server_server_error}*/error)=>{
@@ -171,7 +171,7 @@ const configInit = async () => {
                 });
             else{
                 configDefault().then(() => {
-                    fileDbInit().then(() => {
+                    ORM.Init().then(() => {
                         resolve(null);
                     })
                     .catch((/**@type{server_server_error}*/error)=>{
@@ -198,7 +198,7 @@ const getFile = async parameters => {
     const parameter = parameters.data?.parameter?parameters.data.parameter:null;
     /**@type{import('../server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-    const config = serverUtilNumberValue(parameters.data?.saved)?await fileFsRead(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):fileCache(parameters.resource_id);
+    const config = serverUtilNumberValue(parameters.data?.saved)?await ORM.getFsFile(parameters.resource_id).then((/**@type{*}*/config)=>config.file_content):ORM.getObjectDocument(parameters.resource_id);
     if (config_group)
         if (config_group =='METADATA')
             return {result:parameter?config[config_group][parameter]:config[config_group], type:'JSON'};
@@ -231,7 +231,7 @@ const update = async parameters => {
     const comment = parameters.data.comment;
     const configuration = parameters.data.configuration;
 
-    const file_config = await fileFsRead(parameters.resource_id, true);
+    const file_config = await ORM.getFsFile(parameters.resource_id, true);
     if (parameters.data.config){
         //file updated
         if (parameters.resource_id=='ConfigServer'){
@@ -248,7 +248,7 @@ const update = async parameters => {
         file_config.file_content.METADATA.COMMENT = comment ?? file_config.file_content.METADATA.COMMENT;
         file_config.file_content.METADATA.MODIFIED = new Date().toISOString();
     }
-    await fileFsWrite(parameters.resource_id, file_config.transaction_id, file_config.file_content);
+    await ORM.updateFsFile(parameters.resource_id, file_config.transaction_id, file_config.file_content);
     return {result:{affectedRows:1}, type:'JSON'};
 };
 export{ getFile, update, get, configInit};

@@ -5,11 +5,10 @@
  *          server_db_table_AppSecret} from '../types.js'
  */
 /**@type{import('./ORM.js')} */
-const {fileFsRead, fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+
 /**
  * @name get
  * @description Get record
@@ -20,11 +19,11 @@ const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @returns {server_server_response & {result?:server_db_table_AppSecret[] }}
  */
 const get = parameters => {
-    const result = fileDBGet(parameters.app_id, 'AppSecret',null, serverUtilNumberValue(parameters.resource_id));
+    const result = ORM.getObject(parameters.app_id, 'AppSecret',null, serverUtilNumberValue(parameters.resource_id));
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
-        return getError(parameters.app_id, 404);
+        return ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -35,7 +34,7 @@ const get = parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_table_AppSecret }>}
  */
 const getFile = async app_id => {
-    return {result:await fileFsRead('AppSecret').then(result=>result.file_content.filter((/**@type{server_db_table_AppSecret}*/row)=> row.app_id == app_id)[0]),
+    return {result:await ORM.getFsFile('AppSecret').then(result=>result.file_content.filter((/**@type{server_db_table_AppSecret}*/row)=> row.app_id == app_id)[0]),
             type:'JSON'};};
 
 /**
@@ -62,14 +61,14 @@ const post = async (app_id, resource_id, data) => update({app_id:app_id, resourc
  */
 const update = async parameters => {
     if  (parameters.data.parameter_name=='app_id')
-        return getError(parameters.app_id, 400);
+        return ORM.getError(parameters.app_id, 400);
     else{
         //updates only one key in the record
-        return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppSecret', update:{resource_id:null, data_app_id:parameters.resource_id, data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}}).then((result)=>{
+        return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppSecret', update:{resource_id:null, data_app_id:parameters.resource_id, data:{[parameters.data.parameter_name]:parameters.data.parameter_value}}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return getError(parameters.app_id, 404);
+                return ORM.getError(parameters.app_id, 404);
         });
     }
 };
@@ -83,11 +82,11 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'AppSecret', delete:{resource_id:null, data_app_id:resource_id}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppSecret', delete:{resource_id:null, data_app_id:resource_id}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return getError(app_id, 404);
+            return ORM.getError(app_id, 404);
     });
 };
                    

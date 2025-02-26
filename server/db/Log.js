@@ -17,9 +17,8 @@
 const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
 
 /**@type{import('./ORM.js')} */
-const {fileFsDBLogGet, fileFsDir, fileFsDBLogPost} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+
 /**
  * @name logDate
  * @description Log date format
@@ -39,7 +38,7 @@ const logDate = () => new Date().toISOString();
  */
  const post = async (logscope, loglevel, log) => {
     const config_file_interval = Config.get('ConfigServer','SERVICE_LOG', 'FILE_INTERVAL');
-    await fileFsDBLogPost(null, `Log${logscope}${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
+    await ORM.postFsLog(null, `Log${logscope}${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
             .catch((/**@type{server_server_error}*/error)=>{
                 console.log(error);
                 console.log(log);
@@ -463,7 +462,7 @@ const get = async parameters => {
         const file = `Log${data.logscope}${data.loglevel}`;
         const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         
-        fileFsDBLogGet(parameters.app_id, file, null, null, sample)
+        ORM.getFsLog(parameters.app_id, file, null, null, sample)
         .then(log_rows_array_obj=>{
             data.search = data.search=='null'?'':data.search;
             data.search = data.search==null?'':data.search;
@@ -591,7 +590,7 @@ const getStat = async parameters => {
     /**@type{import('../../apps/common/src/common.js')} */
     const {commonAppHost}= await import(`file://${process.cwd()}/apps/common/src/common.js`);
     
-    const files = await fileFsDir();
+    const files = await ORM.getFsDir();
     /**@type{string} */
     let sample;
     let day = '';
@@ -615,7 +614,7 @@ const getStat = async parameters => {
             }
             else
                 sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
-            await fileFsDBLogGet(parameters.app_id, file.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, null, sample)
+            await ORM.getFsLog(parameters.app_id, file.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', null, null, sample)
             .then((logs)=>{
                 logs.rows.forEach((/**@type{server_db_table_LogRequestInfo|''}*/record) => {
                     if (record != ''){
@@ -663,7 +662,7 @@ const getStat = async parameters => {
                 });
             })
             .catch((error)=>{
-                return getError(parameters.app_id, 500, `${file}: ${error}`);
+                return ORM.getError(parameters.app_id, 500, `${file}: ${error}`);
             });
         }
     }
@@ -706,7 +705,7 @@ const getStat = async parameters => {
  * @returns{Promise.<server_server_response & {result?:{id:number, filename:string}[]|[]}>}
  */
 const getFiles = async () => {
-    return {result:await fileFsDir()
+    return {result:await ORM.getFsDir()
                     .then(result=>
                         result
                         .filter(row=>row.startsWith('Log'))

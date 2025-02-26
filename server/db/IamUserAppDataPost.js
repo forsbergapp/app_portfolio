@@ -6,9 +6,8 @@
  *          server_db_common_result_insert,server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+
 /**@type{import('../server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 /**@type{import('./IamUserApp.js')} */
@@ -25,7 +24,7 @@ const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js
  * @returns {server_server_response & {result?:server_db_table_IamUserAppDataPost[] }}
  */
 const get = parameters =>{
-    const result = fileDBGet(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, parameters.data.data_app_id??null).rows
+    const result = ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, parameters.data.data_app_id??null).rows
                     .filter((/**@type{server_db_table_IamUserAppDataPost}*/row)=>
                         IamUserApp.get({ app_id:parameters.app_id,
                                         resource_id:row.iam_user_app_id, 
@@ -34,7 +33,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return getError(parameters.app_id, 404);
+        return ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -84,7 +83,7 @@ const getViewProfileUserPosts = async parameters =>{
                             };
                         });
         else
-            return getError(parameters.app_id, 404);
+            return ORM.getError(parameters.app_id, 404);
     else
         return result;
 };
@@ -154,7 +153,7 @@ const getViewProfileStatPost = async parameters =>{
     /**@type{import('./IamUserAppDataPostView.js')} */
     const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
     if (parameters.data.statchoice==null)
-        return getError(parameters.app_id, 400);
+        return ORM.getError(parameters.app_id, 400);
     else{
         /**@type{import('./IamUser.js')} */
         const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
@@ -203,7 +202,7 @@ const getViewProfileUserPostDetail = async parameters =>{
    /**@type{import('./IamUserAppDataPostLike.js')} */
    const IamUserAppDataPostLike = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostLike.js`);
    if (parameters.data.detailchoice==null)
-       return getError(parameters.app_id, 400);
+       return ORM.getError(parameters.app_id, 400);
    else{
        /**@type{import('./IamUser.js')} */
        const IamUser = await import(`file://${process.cwd()}/server/db/IamUser.js`);
@@ -268,7 +267,7 @@ const getViewProfileUserPostDetail = async parameters =>{
 const post = async parameters => {
     //check required attributes
     if (parameters.data.iam_user_app_id==null){
-        return getError(parameters.app_id, 400);
+        return ORM.getError(parameters.app_id, 400);
     }
     else{
         /**@type{server_db_table_IamUserAppDataPost} */
@@ -279,13 +278,13 @@ const post = async parameters => {
                                 created:new Date().toISOString(),
                                 modified:null
                         };
-        return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}}).then((result)=>{
+        return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId=data_new.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return getError(parameters.app_id, 404);
+                return ORM.getError(parameters.app_id, 404);
         });
     }
 };
@@ -307,17 +306,17 @@ const update = async parameters =>{
         data_update.json_data = parameters.data.json_data;
     data_update.modified = new Date().toISOString();
     if (Object.entries(data_update).length>0)
-        return fileCommonExecute({  app_id:parameters.app_id, 
+        return ORM.Execute({  app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object: 'IamUserAppDataPost', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return getError(parameters.app_id, 404);
+                return ORM.getError(parameters.app_id, 404);
         });
     else
-        return getError(parameters.app_id, 400);
+        return ORM.getError(parameters.app_id, 400);
 };
 /**
  * @name deleteRecord
@@ -329,14 +328,14 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return fileCommonExecute({  app_id:parameters.app_id, 
+    return ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPost', 
                                 delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return getError(parameters.app_id, 404);
+            return ORM.getError(parameters.app_id, 404);
     });
 };
 export {get, getViewProfileUserPosts, getViewProfileStatLike, getViewProfileStatPost, getViewProfileUserPostDetail, post, update, deleteRecord};

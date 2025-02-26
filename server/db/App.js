@@ -5,9 +5,7 @@
  */
 
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -19,11 +17,11 @@ const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @returns {server_server_response & {result?:server_db_table_App[] }}
  */
 const get = parameters =>{ 
-    const result = fileDBGet(parameters.app_id, 'App',parameters.resource_id, null);
+    const result = ORM.getObject(parameters.app_id, 'App',parameters.resource_id, null);
     if (result.rows.length>0 || parameters.resource_id==null)
         return {result:result.rows, type:'JSON'};
     else
-        return getError(parameters.app_id, 404);
+        return ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -40,7 +38,7 @@ const post = async (app_id, data) => {
         /**@type{server_db_table_App} */
         const app =     {
             //fetch max app id + 1
-            id:Math.max(...fileDBGet(app_id, 'App',null, null).rows.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
+            id:Math.max(...ORM.getObject(app_id, 'App',null, null).rows.map((/**@type{server_db_table_App}*/app)=>app.id)) +1,
             name: data.name,
             subdomain: data.subdomain,
             path: data.path,
@@ -59,17 +57,17 @@ const post = async (app_id, data) => {
             link_url:data.app_link_url,
             status: 'ONLINE'
         };
-        return fileCommonExecute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((result)=>{
+        return ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((result)=>{
             if (result.affectedRows>0){
                 result.insertId = app.id;
                 return {result:result, type:'JSON'};
             }
             else
-                return getError(app_id, 404);
+                return ORM.getError(app_id, 404);
         });
     }
     else
-        return getError(app_id, 401);
+        return ORM.getError(app_id, 401);
 };
 /**
  * @name update
@@ -139,17 +137,17 @@ const update = async parameters => {
         if (parameters.data.status!=null)
             data_update.status = parameters.data.status;
         if (Object.entries(data_update).length>0)
-            return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+            return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return getError(parameters.app_id, 404);
+                    return ORM.getError(parameters.app_id, 404);
             });
         else
-            return getError(parameters.app_id, 400);
+            return ORM.getError(parameters.app_id, 400);
     }
     else
-        return getError(parameters.app_id, 400);
+        return ORM.getError(parameters.app_id, 400);
 };
 
 /**
@@ -161,11 +159,11 @@ const update = async parameters => {
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return getError(app_id, 404);
+            return ORM.getError(app_id, 404);
     });
 };
                    

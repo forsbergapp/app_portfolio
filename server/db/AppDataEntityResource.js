@@ -5,9 +5,7 @@
  */
 
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -23,7 +21,7 @@ const get = async parameters =>{
     /**@type{import('./AppData.js')} */
     const AppData = await import(`file://${process.cwd()}/server/db/AppData.js`);
 
-    const result = fileDBGet(parameters.app_id, 'AppDataEntityResource',parameters.resource_id, null).rows
+    const result = ORM.getObject(parameters.app_id, 'AppDataEntityResource',parameters.resource_id, null).rows
                     .filter((/**@type{server_db_table_AppDataEntityResource}*/row)=>
                                 row.id                      == (parameters.resource_id ?? row.id) &&
                                 row.app_data_entity_id      == (parameters.data.entity_id ?? row.app_data_entity_id));
@@ -45,7 +43,7 @@ const get = async parameters =>{
                         ),
                 type:'JSON'};
     else
-        return getError(parameters.app_id, 404);
+        return ORM.getError(parameters.app_id, 404);
 };
 /**
  * @name post
@@ -58,7 +56,7 @@ const get = async parameters =>{
 const post = async parameters => {
    //check required attributes
    if (parameters.data.app_data_entity_id==null ||parameters.data.app_data_id==null){
-       return getError(parameters.app_id, 400);
+       return ORM.getError(parameters.app_id, 400);
    }
    else{
        /**@type{server_db_table_AppDataEntityResource} */
@@ -70,13 +68,13 @@ const post = async parameters => {
                                 created:new Date().toISOString(),
                                 modified:null
                        };
-       return fileCommonExecute({app_id:parameters.app_id, dml:'POST', object:'AppDataEntityResource', post:{data:data_new}}).then((result)=>{
+       return ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'AppDataEntityResource', post:{data:data_new}}).then((result)=>{
            if (result.affectedRows>0){
                result.insertId=data_new.id;
                return {result:result, type:'JSON'};
            }
            else
-               return getError(parameters.app_id, 404);
+               return ORM.getError(parameters.app_id, 404);
        });
    }
 };
@@ -92,7 +90,7 @@ const post = async parameters => {
 const update = async parameters =>{
    //check required attributes
    if (parameters.resource_id==null){
-       return getError(parameters.app_id, 400);
+       return ORM.getError(parameters.app_id, 400);
    }
    else{
        /**@type{server_db_table_AppDataEntityResource} */
@@ -102,14 +100,14 @@ const update = async parameters =>{
            data_update.json_data = parameters.data.json_data;
        data_update.modified = new Date().toISOString();
        if (Object.entries(data_update).length>0)
-           return fileCommonExecute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataEntityResource', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
+           return ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppDataEntityResource', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
                if (result.affectedRows>0)
                    return {result:result, type:'JSON'};
                else
-                   return getError(parameters.app_id, 404);
+                   return ORM.getError(parameters.app_id, 404);
            });
        else
-           return getError(parameters.app_id, 400);
+           return ORM.getError(parameters.app_id, 400);
    }
 };
 
@@ -122,11 +120,11 @@ const update = async parameters =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async parameters =>{
-    return fileCommonExecute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataEntityResource', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
+    return ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataEntityResource', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return getError(parameters.app_id, 404);
+            return ORM.getError(parameters.app_id, 404);
     });
 };        
 export {get, post, update, deleteRecord};

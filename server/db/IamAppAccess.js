@@ -6,9 +6,7 @@
  */
 
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -19,11 +17,11 @@ const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @returns {server_server_response & {result?:server_db_table_IamAppAccess[] }}
  */
 const get = (app_id, resource_id) =>{
-    const result = fileDBGet(app_id, 'IamAppAccess',resource_id, null);
+    const result = ORM.getObject(app_id, 'IamAppAccess',resource_id, null);
     if (result.rows.length>0)
         return {result:result.rows, type:'JSON'};
     else
-        return getError(app_id, 404);
+        return ORM.getError(app_id, 404);
 };
 /**
  * @name post
@@ -40,7 +38,7 @@ const post = async (app_id, data) =>{
         data.res != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IamAppAccess', null, null).rows.filter((/**@type{server_db_table_IamAppAccess} */row)=>row.token==data.token && data.token !=null).length==0){
+        if (ORM.getObject(app_id, 'IamAppAccess', null, null).rows.filter((/**@type{server_db_table_IamAppAccess} */row)=>row.token==data.token && data.token !=null).length==0){
             /**@type{server_db_table_IamAppAccess} */
             const data_new = {};
             data_new.id =  Date.now();
@@ -59,22 +57,22 @@ const post = async (app_id, data) =>{
             data_new.ua =                   data.ua;
             //required server value
             data_new.created =              new Date().toISOString();
-            return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamAppAccess',post:{data:data_new}}).then((result)=>{
+            return ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppAccess',post:{data:data_new}}).then((result)=>{
                 if (result.affectedRows>0){
                     result.insertId=data_new.id;
                     return {result:result,type:'JSON'};
                 }
                 else
-                    return getError(app_id, 404);
+                    return ORM.getError(app_id, 404);
             });
         }
         else{
             //token already used, user can not login
-            return getError(app_id, 401);
+            return ORM.getError(app_id, 401);
         }
     }
     else
-        return getError(app_id, 400);
+        return ORM.getError(app_id, 400);
 }; 
 
 /**
@@ -96,17 +94,17 @@ const update = async (app_id, resource_id, data) =>{
             data_update.res = data.res;
         data_update.modified = data.modified;
         if (Object.entries(data_update).length>1){
-            const result = await fileCommonExecute({app_id:app_id, dml:'UPDATE', object:'IamAppAccess', update:{resource_id:resource_id, data_app_id:null, data:data}});
+            const result = await ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamAppAccess', update:{resource_id:resource_id, data_app_id:null, data:data}});
             if (result.affectedRows>0)
                 return {result:result, type:'JSON'};
             else
-                return getError(app_id, 404);
+                return ORM.getError(app_id, 404);
         }
         else
-            return getError(app_id, 400);
+            return ORM.getError(app_id, 400);
     }
     else
-        return getError(app_id, 400);
+        return ORM.getError(app_id, 400);
 };
 
 /**
@@ -118,11 +116,11 @@ const update = async (app_id, resource_id, data) =>{
  * @returns {Promise.<server_server_response & {result?:server_db_common_result_delete }>}
  */
 const deleteRecord = async (app_id, resource_id) => {
-    return fileCommonExecute({app_id:app_id, dml:'DELETE', object:'IamAppAccess', delete:{resource_id:resource_id, data_app_id:null}}).then(result=>{
+    return ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamAppAccess', delete:{resource_id:resource_id, data_app_id:null}}).then(result=>{
         if (result.affectedRows>0)
             return {result:result, type:'JSON'};
         else
-            return getError(app_id, 404);
+            return ORM.getError(app_id, 404);
     });
 };
 export {get, post, update, deleteRecord};

@@ -47,7 +47,7 @@ const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAcces
 const IamAppToken = await import(`file://${process.cwd()}/server/db/IamAppIdToken.js`);
 
 const {default:jwt} = await import('jsonwebtoken');
-
+const {hostname} = await import('node:os');
 /**
  * @name iamRequestRateLimiterCount
  * @description Rate limiter 
@@ -1268,8 +1268,8 @@ const iamAuthenticateUserDbDelete = async parameters => {
                             type:'ROUTE'});
                     fail ++;
                 }
+                
                 //check if not accessed from domain or from os hostname
-                const {hostname} = await import('node:os');
                 if (host.toUpperCase()==hostname().toUpperCase() ||host.toUpperCase().indexOf(Config.get('ConfigServer','SERVER', 'HOST').toUpperCase())<0){
                     //stop always
                     fail_block = true;

@@ -5,9 +5,7 @@
  */
 
 /**@type{import('./ORM.js')} */
-const {fileDBGet, fileCommonExecute} = await import(`file://${process.cwd()}/server/db/ORM.js`);
-/**@type{import('../db/ORM.js')} */
-const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
+const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
 
 /**
  * @name get
@@ -17,7 +15,7 @@ const { getError} = await import(`file://${process.cwd()}/server/db/ORM.js`);
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_IamAppIdToken[] }}
  */
-const get = parameters => {return {result:fileDBGet(parameters.app_id, 'IamAppIdToken', parameters.resource_id, null).rows, type:'JSON'};};
+const get = parameters => {return {result:ORM.getObject(parameters.app_id, 'IamAppIdToken', parameters.resource_id, parameters.app_id).rows, type:'JSON'};};
 
 /**
  * @name post
@@ -35,7 +33,7 @@ const post = async (app_id, data) => {
         data.token != null &&
         data.ip != null){
         //security check that token is not used already
-        if (fileDBGet(app_id, 'IamAppIdToken', null, null).rows.filter((/**@type{server_db_table_IamAppIdToken} */row)=>row.token==data.token).length==0){
+        if (ORM.getObject(app_id, 'IamAppIdToken', null, null).rows.filter((/**@type{server_db_table_IamAppIdToken} */row)=>row.token==data.token).length==0){
             /**@type{server_db_table_IamAppIdToken} */
             const data_new = {};
             data_new.id = Date.now();
@@ -48,18 +46,18 @@ const post = async (app_id, data) => {
             if (data.ua!=null)
                 data_new.ua = data.ua;
             data_new.created = new Date().toISOString();
-            return fileCommonExecute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((result)=>{
+            return ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}}).then((result)=>{
                 if (result.affectedRows>0)
                     return {result:result, type:'JSON'};
                 else
-                    return getError(app_id, 404);
+                    return ORM.getError(app_id, 404);
             });
         }
         else
-            return getError(app_id, 401);
+            return ORM.getError(app_id, 401);
     }
     else
-        return getError(app_id, 400);
+        return ORM.getError(app_id, 400);
 };
 
 export {get, post};
