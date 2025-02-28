@@ -1,7 +1,0 @@
-{
-    "install": [
-        {"db": null, "app_id": 0, "script": "4.db_data_common_app.sql"},
-        {"db": null, "app_id": 5, "script": "5.db_data_app.sql"},
-        {"db": null, "app_id": 6, "script": "6.db_data_app.sql"}
-    ]
-}

@@ -6,20 +6,42 @@
 
 /**@type{import('./ORM.js')} */
 const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
-
+/**@type{import('./AppDataEntity.js')} */
+const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+/**@type{import('./AppDataEntityResource.js')} */
+const AppDataEntityResource = await import(`file://${process.cwd()}/server/db/AppDataEntityResource.js`);
+/**@type{import('./IamUserApp.js')} */
+const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
 /**
  * @name get
  * @description Get record
  * @function
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{data_app_id?:number|null}}} parameters
+ *          data:{  data_app_id?:number|null,
+ *                  iam_user_id:number|null,
+ *                  resource_name :string|null,
+ *                  app_data_entity_id:number}}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceMaster[] }}
  */
 const get = parameters =>{ 
-    const result = ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, parameters.data.data_app_id??null);
-    if (result.rows.length>0 || parameters.resource_id==null)
-        return {result:result.rows, type:'JSON'};
+    const result = ORM.getObject(parameters.app_id, 'AppDataResourceMaster',parameters.resource_id, null).rows
+                    .filter((/**@type{server_db_table_AppDataResourceMaster}*/row)=>
+                            row.app_data_entity_resource_app_data_entity_id == parameters.data.app_data_entity_id && 
+                            AppDataEntityResource.get({ app_id:parameters.app_id, 
+                                                        resource_id:row.app_data_entity_resource_id,
+                                                        data:{  app_data_entity_id:row.app_data_entity_resource_app_data_entity_id,
+                                                                resource_name:parameters.data.resource_name
+                                                        }}).result.length>0 &&
+                            AppDataEntity.get({ app_id:parameters.app_id, 
+                                                resource_id:row.app_data_entity_resource_app_data_entity_id,
+                                                data:{data_app_id:parameters.data.data_app_id}}).result.length>0 &&
+                            IamUserApp.get({app_id:parameters.app_id, 
+                                            resource_id:row.iam_user_app_id, 
+                                            data:{  data_app_id:parameters.data.data_app_id??null,
+                                                    iam_user_id:parameters.data.iam_user_id}}).result.length>0);
+    if (result.length>0 || parameters.resource_id==null)
+        return {result:result, type:'JSON'};
     else
         return ORM.getError(parameters.app_id, 404);
 };
@@ -71,7 +93,7 @@ const post = async parameters => {
  */
 const update = async parameters =>{
    //check required attributes
-   if (parameters.resource_id==null || parameters.data.data_app_id==null){
+   if (parameters.resource_id==null){
        return ORM.getError(parameters.app_id, 400);
    }
    else{

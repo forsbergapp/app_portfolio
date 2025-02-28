@@ -17,9 +17,9 @@
 const template = props =>`  ${props.records.length>0?
                                 `<div id='common_profile_search_list'>
                                     ${props.records.map(row=>
-                                        `<div data-user_account_id='${row.id}' class='common_profile_search_list_row common_row' tabindex=-1>
+                                        `<div data-iam_user_id='${row.id}' class='common_profile_search_list_row common_row' tabindex=-1>
                                             <div class='common_profile_search_list_col'>
-                                                <div class='common_profile_search_list_user_account_id'>${row.id}</div>
+                                                <div class='common_profile_search_list_iam_user_id'>${row.id}</div>
                                             </div>
                                             <div class='common_profile_search_list_col'>
                                                 <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
@@ -39,7 +39,7 @@ const template = props =>`  ${props.records.length>0?
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_account_id:number},
+ *                      iam_user_id:number},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,
  *                      commonMiscInputControl:CommonModuleCommon['commonMiscInputControl'],
@@ -64,8 +64,8 @@ const component = async props => {
     }
     const records = commonMiscInputControl?await props.methods.commonFFB(
                                                 {
-                                                    path:   '/server-db/user_account-profile/', 
-                                                    query:  `id=${props.data.user_account_id ?? ''}&search=${encodeURI(searched_username)}`, 
+                                                    path:   '/server-db/iamuser-profile/', 
+                                                    query:  `id=${props.data.iam_user_id ?? ''}&search=${encodeURI(searched_username)}`, 
                                                     method: 'GET', 
                                                     authorization_type:'APP_ID'
                                                 })

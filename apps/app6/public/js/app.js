@@ -139,7 +139,7 @@ const appProductUpdate = async () =>{
         data:       {
                     app_id:common.COMMON_GLOBAL.app_id,
                     display_type:'VERTICAL_KEY_VALUE',
-                    master_path:'/app-module/PRODUCT_LOCATION_GET',
+                    master_path:'/appmodule/PRODUCT_LOCATION_GET',
                     master_query:'fields=stock',
                     master_body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, resource_id : product_variant_id},
                     master_method:'POST',
@@ -179,7 +179,7 @@ const appPaymentRequestStatus = ()=>{
     if ( new Date().getSeconds() % 2){
         const payment_request_id = COMMON_DOCUMENT.querySelector('.common_app_data_display_master_col2.common_app_data_display_type_payment_request_id').getAttribute('data-value');
     
-        common.commonFFB({path:'/app-module/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ACCESS_EXTERNAL',   body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, payment_request_id: payment_request_id}})
+        common.commonFFB({path:'/appmodule/PAYMENT_REQUEST_GET_STATUS', method:'POST', authorization_type:'APP_ACCESS_EXTERNAL',   body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id, payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
@@ -219,7 +219,7 @@ const appPaymentRequest = async () =>{
                         app_id:common.COMMON_GLOBAL.app_id,
                         display_type:'VERTICAL_KEY_VALUE',
                         dialogue:true,
-                        master_path:'/app-module/PAYMENT_REQUEST_CREATE',
+                        master_path:'/appmodule/PAYMENT_REQUEST_CREATE',
                         master_query:'',
                         master_body:data,
                         master_method:'POST',
@@ -289,7 +289,7 @@ const appPay = async () =>{
                     app_id:common.COMMON_GLOBAL.app_id,
                     display_type:'VERTICAL_KEY_VALUE',
                     dialogue:true,
-                    master_path:'/app-module/PAYMENT_METADATA',
+                    master_path:'/appmodule/PAYMENT_METADATA',
                     master_query:'fields=json_data',
                     master_body:{type:'FUNCTION',IAM_data_app_id:common.COMMON_GLOBAL.app_id},
                     master_method:'POST',

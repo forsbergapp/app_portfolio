@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="23B0E6DC-58AB-BCF7-F247-9E60D2C43B3F" name="log_server_info">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="23B0E6DC-58AB-BCF7-F247-9E60D2C43B3F" name="LogServerInfo">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:34 UTC</createdTime>
 <generatorID>67C74DB1-FC0E-946D-B533-35C0EFBCAD3A</generatorID>

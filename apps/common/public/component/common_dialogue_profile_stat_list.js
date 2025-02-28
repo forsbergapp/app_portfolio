@@ -16,9 +16,9 @@
  */
 const template = props =>`   
                             ${props.stat_list.map(row=>
-                                `   <div data-user_account_id='${row.id}' class='common_profile_stat_list_row common_row'>
+                                `   <div data-iam_user_id='${row.id}' class='common_profile_stat_list_row common_row'>
                                         <div class='common_profile_stat_list_col'>
-                                            <div class='common_profile_stat_list_user_account_id'>${row.id}</div>
+                                            <div class='common_profile_stat_list_iam_user_id'>${row.id}</div>
                                         </div>
                                         <div class='common_profile_stat_list_col'>
                                             <div class='common_image common_image_avatar_list' style='${row.avatar==null?'':`background-image:url(${row.avatar});`}'></div>
@@ -57,7 +57,7 @@ const component = async props => {
     let path;
     if (props.data.stat_choice ==1 || props.data.stat_choice ==2 || props.data.stat_choice ==3){
         /*statschoice 1,2,3: user_account*/
-        path = '/server-db/user_account-profile-stat';
+        path = '/server-db/iamuser-profile-stat';
     }
     else{
         /*other statschoice, apps can use >3 and return same columns*/

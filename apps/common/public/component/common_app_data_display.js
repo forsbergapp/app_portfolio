@@ -285,7 +285,7 @@ const component = async props => {
                                 [];
     
     if (props.data.new_resource==false){
-        const master_metadata = await props.methods.commonFFB({   path:`/app-module/${props.data.master_resource}`, 
+        const master_metadata = await props.methods.commonFFB({   path:`/appmodule/${props.data.master_resource}`, 
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{type:'FUNCTION',IAM_data_app_id:props.data.app_id}})
@@ -299,7 +299,7 @@ const component = async props => {
         }
     }
     if (props.data.detail_resource){
-        const detail_metadata = await props.methods.commonFFB({   path:`/app-module/${props.data.detail_resource}`, 
+        const detail_metadata = await props.methods.commonFFB({   path:`/appmodule/${props.data.detail_resource}`, 
                                                             query:'fields=json_data', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{type:'FUNCTION',IAM_data_app_id:props.data.app_id}})

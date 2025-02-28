@@ -72,7 +72,7 @@ const component = async props => {
         template:   template({app_logo:props.data.app_logo,
                       app_copyright:props.data.app_copyright,
                       app_name:props.data.app_name,
-                      document:await props.methods.commonFFB({  path:'/app-module/COMMON_DOC', 
+                      document:await props.methods.commonFFB({  path:'/appmodule/COMMON_DOC', 
                                                                 method:'POST', 
                                                                 authorization_type:'APP_ID',
                                                                 body:{  type:'FUNCTION',

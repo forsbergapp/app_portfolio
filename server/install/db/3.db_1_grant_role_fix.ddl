@@ -1,1 +1,0 @@
-SET DEFAULT ROLE app_portfolio_role_app_dba FOR app_portfolio;

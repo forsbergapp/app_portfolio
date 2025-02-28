@@ -16,7 +16,7 @@ const DB_DEMO_PATH              = '/server/install/db/demo/';
 const DB_DEMO_FILE              = 'demo_data.json';
 
 /**
- * @name dbDemoInstall
+ * @name postDemo
  * @description Install demo users and sends server side events of progress
  *              Installation steps:
  *              1.Create all users (user_level=2) first and update with id
@@ -404,7 +404,7 @@ const postDemo = async parameters=> {
                                return demo_public_key;
                            case '<PRIVATE_KEY/>':
                                return demo_private_key;
-                           case '<USER_ACCOUNT_ID/>':
+                           case '<IAM_USER_ID/>':
                                return demo_user.id.toString();
                            default:{
                                //replace if containing HOST parameter
@@ -736,7 +736,7 @@ const postDemo = async parameters=> {
    
 };
 /**
-* @name dbDemoUninstall
+* @name deleteDemo
 * @description Demo uninstall
 *              Deletes all demo users and send server side events of progress
 * @function

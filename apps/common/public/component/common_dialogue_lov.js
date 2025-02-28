@@ -86,7 +86,7 @@ const component = async props => {
         case 'COUNTRY':{
             method = 'POST', 
             lov_column = 'text';
-            path = '/app-module/COMMON_COUNTRY';
+            path = '/appmodule/COMMON_COUNTRY';
             query= `locale=${props.data.user_locale}`;
             token_type = 'APP_ID';
             body = {type:'FUNCTION',IAM_data_app_id : props.data.common_app_id};
@@ -96,7 +96,7 @@ const component = async props => {
             //lov for current app id
             method = 'GET';
             lov_column = 'display_data';
-            path = '/server-db/app_data/';
+            path = '/server-db/appdata/';
             query= `name=${props.data.lov}&IAM_data_app_id=${props.data.app_id}`;
             token_type = 'APP_ID';
         }

@@ -12,7 +12,7 @@ const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
  * @description Get records for given appid
  * @function
  * @memberof ROUTE_REST_API
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          resource_id:number|null}} parameters
  * @returns {server_server_response & {result?:server_db_table_App[] }}
  */

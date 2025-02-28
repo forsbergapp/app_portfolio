@@ -176,7 +176,7 @@ const appSecureMenuShow = menu => {
             common.commonComponentRender({
                 mountDiv:   'secure_menu_content',
                 data:       null,
-                methods:    {commonFFB:common.commonFFB},
+                methods:    null,
                 path:       '/component/menu_installation.js'});
             break;
         }
@@ -400,7 +400,7 @@ const appSecureMenuUsers = (sort='username', order_by='asc') => {
     common.commonComponentRender({
         mountDiv:   'menu_users_list',
         data:       {
-                    user_account_id:common.COMMON_GLOBAL.user_account_id,
+                    iam_user_id:common.COMMON_GLOBAL.iam_user_id,
                     sort:sort,
                     order_by:order_by
                     },
@@ -903,7 +903,7 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                         APP_SECURE_GLOBAL.previous_row = common.commonMiscElementRow(event.target);
                         common.commonComponentRender({
                             mountDiv:   'menu_users_iam_app_access',
-                            data:       {user_account_id:parseInt(common.commonMiscElementRow(event.target).getAttribute('data-user_account_id') ?? '')},
+                            data:       {iam_user_id:parseInt(common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id') ?? '')},
                             methods:    {commonFFB:common.commonFFB},
                             path:       '/component/menu_users_iam_app_access.js'});
                     }

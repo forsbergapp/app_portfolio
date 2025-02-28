@@ -46,9 +46,6 @@ const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
 /**@type{import('../../../server/server.js')} */
 const {serverUtilAppFilename, serverUtilAppLine, serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
 
-/**@type{import('../../../server/db/dbModelDatabase.js')} */
-const dbModelDatabase = await await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
-
 const fs = await import('node:fs');
 
 /**
@@ -172,33 +169,15 @@ const commonMailSend = async (app_id, emailtype, ip, user_agent, accept_language
  * @returns {Promise.<boolean>}
  */
 const commonAppStart = async (app_id=null) =>{
-    const common_app_id = serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID'));
-    if (common_app_id!=null){
-        const db_use = serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB', 'USE'));
-        const NO_MAINTENANCE = Config.get('ConfigServer','METADATA','MAINTENANCE')==0;
-        const DB_START = Config.get('ConfigServer', 'SERVICE_DB','START')=='1';
-        const DBOTHER_USER_INSTALLED = AppSecret.get({app_id:app_id ?? common_app_id, resource_id:null}).
-                                            result?.filter((/**@type{server_db_table_AppSecret}*/row)=> `service_db_db${db_use}_app_user` in row).length == 
-                                                //compare count of db with db credentials with app counts minuts common app id and admin app id that does not save db credentials
-                                                App.get({app_id:app_id, resource_id:null}).result.length - 2;
-        const DB5_USE_AND_INSTALLED = db_use==5 && await dbModelDatabase.dbInstalledCheck({app_id:app_id}).then(result=>result.result[0].installed).catch(()=>false);
-        if (NO_MAINTENANCE && DB_START && (DB5_USE_AND_INSTALLED || DBOTHER_USER_INSTALLED))
-            if (app_id == null)
-                return true;
-            else{
-                if (App.get({app_id:app_id, resource_id:app_id}).result[0].status =='ONLINE')
-                    return true;
-                else
-                    return false;
-            }
-        else
-            return false;
-    }
-    else{
-        //no required APP_COMMON_APP_ID set
+    if ((serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID'))!=null &&
+        Config.get('ConfigServer','METADATA','MAINTENANCE')==0 && 
+        app_id != null &&
+        App.get({app_id:app_id, 
+                resource_id:app_id}).result[0].status =='ONLINE') ||
+        app_id == null)
+            return true;
+    else
         return false;
-    }
-        
 };
 
 /**
@@ -273,8 +252,8 @@ const commonGeodata = async parameters =>{
         /**@type{server_bff_parameters}*/
         const parametersBFF = { endpoint:'APP_ID',
                                 host:null,
-                                url:'/bff/app_id/v1/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
-                                route_path:'/app-module/COMMON_WORLDCITIES_CITY_RANDOM',
+                                url:'/bff/app_id/v1/appmodule/COMMON_WORLDCITIES_CITY_RANDOM',
+                                route_path:'/appmodule/COMMON_WORLDCITIES_CITY_RANDOM',
                                 method:'POST', 
                                 query:'',
                                 body:{type:'FUNCTION',IAM_data_app_id:serverUtilNumberValue(Config.get('ConfigServer','SERVER','APP_COMMON_APP_ID'))},
@@ -1031,11 +1010,13 @@ const commonAppHost = host =>{
         case Config.get('ConfigServer','SERVER', 'HOST'):
         case 'www':{
             //localhost
-            return App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>app.subdomain == 'www')[0].id;
+            return App.get({app_id:serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID'))??0, 
+                            resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>app.subdomain == 'www')[0].id;
         }
         default:{
             try {
-                return App.get({app_id:null, resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
+                return App.get({app_id:serverUtilNumberValue(Config.get('ConfigServer','SERVER', 'APP_COMMON_APP_ID'))??0, 
+                                resource_id:null}).result.filter((/**@type{server_db_table_App}*/app)=>host.toString().split('.')[0] == app.subdomain)[0].id;
             } catch (error) {
                 return null;
             }

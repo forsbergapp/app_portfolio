@@ -851,8 +851,8 @@ const serverREST_API = async (routesparameters) =>{
     /**
      * Authenticates if user has access to given resource
      * Authenticates using IAM token claims if path requires
-     * @param {{IAM_iam_user_id:number|null,
-     *          IAM_user_account_id:number|null
+     * @param {{IAM_iam_user_app_id:number|null,
+     *          IAM_iam_user_id:number|null,
      *          IAM_data_app_id:number|null,
      *          resource_id_required?: boolean}} params
      * @returns {boolean}
@@ -862,14 +862,14 @@ const serverREST_API = async (routesparameters) =>{
             //match required resource id
             ((params.resource_id_required ?? false) && URI_path.substring(URI_path.lastIndexOf('/') + 1) == '')==false){
             //Authencate IAM keys in the tokens if one of them used
-            if (params.IAM_iam_user_id || params.IAM_user_account_id || params.IAM_data_app_id){
+            if (params.IAM_iam_user_app_id || params.IAM_iam_user_id || params.IAM_data_app_id){
                 if (iam.iamAuthenticateResource({   app_id:                     routesparameters.app_id, 
                                                     ip:                         routesparameters.ip, 
                                                     idToken:                    routesparameters.idToken,
                                                     endpoint:                   routesparameters.endpoint,
                                                     authorization:              routesparameters.authorization, 
+                                                    claim_iam_user_app_id:      serverUtilNumberValue(params.IAM_iam_user_app_id),
                                                     claim_iam_user_id:          serverUtilNumberValue(params.IAM_iam_user_id),
-                                                    claim_iam_user_account_id:  serverUtilNumberValue(params.IAM_user_account_id),
                                                     claim_iam_data_app_id:      serverUtilNumberValue(params.IAM_data_app_id)}))
                     return true;
                 else
@@ -885,7 +885,6 @@ const serverREST_API = async (routesparameters) =>{
     const configPath = Object.entries(Config.get('ConfigRestApi').paths)
                         .filter(path=>
                             path[0].replace('/${IAM_iam_user_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
-                            path[0].replace('/${IAM_user_account_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${IAM_data_app_id}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${resource_id_number}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path ||
                             path[0].replace('/${resource_id_string}', URI_path.substring(URI_path.lastIndexOf('/'))) == URI_path)[0];
@@ -962,11 +961,11 @@ const serverREST_API = async (routesparameters) =>{
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             return {...keys, ...{[key[0]]:routesparameters.body[key[0]]}};
                                                         },{}):{});
-            if (Authenticate({ IAM_iam_user_id:        parametersData['IAM_iam_user_id'],
-                                IAM_user_account_id:    parametersData['IAM_user_account_id'],
+            if (Authenticate({  IAM_iam_user_app_id:    parametersData['IAM_iam_user_app_id'],
+                                IAM_iam_user_id:        parametersData['IAM_iam_user_id'],
                                 IAM_data_app_id:        parametersData['IAM_data_app_id'],
-                                resource_id_required:   (   getParameter('IAM_iam_user_id', true) ??            //check if used as resource id
-                                                            getParameter('IAM_user_account_id', true) ??        //check if used as resource id
+                                resource_id_required:   (   getParameter('IAM_iam_user_app_id', true) ??        //check if used as resource id
+                                                            getParameter('IAM_iam_user_id', true) ??            //check if used as resource id
                                                             getParameter('IAM_iam_data_app_id', true) ??        //check if used as resource id
                                                             getParameter('resource_id_string') ?? getParameter('resource_id_number'))?.required ?? false,
                             })){
@@ -977,14 +976,14 @@ const serverREST_API = async (routesparameters) =>{
                                                     serverUtilNumberValue(parametersData.IAM_data_app_id);
                     delete parametersData.IAM_data_app_id;
                 }
-                if (parametersData.IAM_user_account_id != null){
-                    parametersData.user_account_id = serverUtilNumberValue(parametersData.IAM_user_account_id);
-                    delete parametersData.IAM_data_app_id;
+                if (parametersData.IAM_iam_user_app_id != null){
+                    parametersData.iam_user_app_id = serverUtilNumberValue(parametersData.IAM_iam_user_app_id);
+                    delete parametersData.IAM_iam_user_app_id;
                 }
                 if (parametersData.IAM_iam_user_id != null){
                     parametersData.iam_user_id = serverUtilNumberValue(parametersData.IAM_iam_user_id);
                     delete parametersData.IAM_iam_user_id;
-                }   
+                }
                 //if SSE then add res
                 if (methodObj.responses?.[201]?.content?.['text/event-stream'])
                     parametersData.res = routesparameters.res;
@@ -998,7 +997,7 @@ const serverREST_API = async (routesparameters) =>{
                 
                 /**
                  * @description Returns resource id if used
-                 *              resource id string can be IAM_iam_user_id, IAM_user_account_id IAM_data_app_id, resource_id_number or resource_id_string
+                 *              resource id string can be IAM_iam_user_id, IAM_data_app_id, resource_id_number or resource_id_string
                  * @param {string} path
                  */
                 const resourceId = path =>{
@@ -1019,8 +1018,8 @@ const serverREST_API = async (routesparameters) =>{
                                                                     null;
                     return  getParameter('IAM_iam_user_id', true)?
                                 resource_id_get_number('IAM_iam_user_id',path):
-                            getParameter('IAM_user_account_id', true)?
-                                resource_id_get_number('IAM_user_account_id',path):
+                            getParameter('IAM_iam_user_app_id', true)?
+                                resource_id_get_number('IAM_iam_user_app_id',path):
                             getParameter('IAM_data_app_id', true)?
                                 resource_id_get_number('IAM_data_app_id',path):
                             getParameter('resource_id_number')?
@@ -1054,8 +1053,8 @@ const serverREST_API = async (routesparameters) =>{
                                 ...(getParameter('server_method')                  && {method:         routesparameters.method}),
                                 ...(Object.keys(parametersData)?.length>0          && {data:           {...parametersData}}),
                                 ...(getParameter('server_endpoint')                && {endpoint:       routesparameters.endpoint}),
-                                ...((getParameter('IAM_iam_user_id', true)||
-                                     getParameter('IAM_user_account_id', true)||
+                                ...((getParameter('IAM_iam_user_app_id', true)||
+                                     getParameter('IAM_iam_user_id', true)||
                                      getParameter('IAM_data_app_id', true)||
                                      getParameter('resource_id_string')||
                                      getParameter('resource_id_number'))           && {resource_id:    resourceId(configPath[0])})});
@@ -1103,6 +1102,8 @@ const serverStart = async () =>{
     const Log = await import(`file://${process.cwd()}/server/db/Log.js`);
     /**@type{import('./db/Config.js')} */
     const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
+    /**@type{import('./db/ORM.js')} */
+    const ORM = await  import(`file://${process.cwd()}/server/db/ORM.js`);
 
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -1118,10 +1119,11 @@ const serverStart = async () =>{
         Log.postServerE('Process unhandledRejection: ' + reason.stack ?? reason.message ?? reason);
     });
     try {
-        await Config.configInit();
-        /**@type{import('./db/dbModelDatabase.js')} */
-        const dbModelDatabase = await import(`file://${process.cwd()}/server/db/dbModelDatabase.js`);
-        await dbModelDatabase.dbStart();
+        const result_data = await ORM.getFsDataExists();
+        if (result_data==false)
+            await Config.configDefault();
+        await ORM.Init();
+        
         /**@type{import('./socket.js')} */
         const {socketIntervalCheck} = await import(`file://${process.cwd()}/server/socket.js`);
         socketIntervalCheck();

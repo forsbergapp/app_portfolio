@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="E9C2F15D-568B-C7B9-09CF-2B20700228D0" name="iam_control_ip">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_2" id="E9C2F15D-568B-C7B9-09CF-2B20700228D0" name="IamControlIp">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>A2374991-7EA8-A39F-352C-FC32B0A74FEF</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>iam_control_ip</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

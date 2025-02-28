@@ -3,7 +3,10 @@
  */
 
 /**
- * @import {server_iam_access_token_claim, server_db_iam_app_access, server_server_response} from '../../../../server/types.js'
+ * @import {server_iam_access_token_claim, 
+ *          server_db_table_AppDataEntity, server_db_table_AppDataResourceMaster,server_db_table_AppDataResourceDetail,
+ *          server_db_table_IamAppAccess, 
+ *          server_server_response} from '../../../../server/types.js'
  * @import {payment_request, bank_account, merchant} from './types.js'
  */
 /**
@@ -16,10 +19,7 @@ const getToken = async parameters => {
     
     /**@type{import('../../../../server/db/IamAppAccess.js')} */
     const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
-    /**@type{import('../../../../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-    /**@type{import('../../../../server/server.js')} */
-    const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
+
     /**@type{import('../../../../server/iam.js')} */
     const {iamUtilTokenGet} = await import(`file://${process.cwd()}/server/iam.js`);
     
@@ -27,15 +27,12 @@ const getToken = async parameters => {
     const token_verify = iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
     if (token_verify.app_id         == parameters.app_id && 
         token_verify.ip             == parameters.ip && 
-        token_verify.db             == serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB','USE')) &&
         token_verify.scope          == 'APP_EXTERNAL' &&
         //authenticated saved values in iam_app_access
         IamAppAccess.get(parameters.app_id, null).result
-                        .filter((/**@type{server_db_iam_app_access}*/row)=>
+                        .filter((/**@type{server_db_table_IamAppAccess}*/row)=>
                                                                 //Authenticate the token type
                                                                 row.type                    == 'APP_ACCESS_EXTERNAL' &&
-                                                                //Authenticate database
-                                                                row.db                      == token_verify.db &&
                                                                 //Authenticate app id corresponds to current subdomain
                                                                 row.app_id                  == token_verify.app_id &&
                                                                 //Authenticate IP address, the server should use 'X-Forwarded-For' to authenticate client ip
@@ -54,7 +51,8 @@ const getToken = async parameters => {
  * @description Create payment request
  * @function
  * @param {{app_id:number,
- *          data:*,
+ *          data:{id:number,
+ *                message:string},
  *          user_agent:string,
  *          ip:string,
  *          host:string,
@@ -68,56 +66,62 @@ const paymentRequestCreate = async parameters =>{
     /**@type{import('../../../../server/server.js')} */
     const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
     
-    /**@type{import('../../../../server/db/Config.js')} */
-    const Config = await import(`file://${process.cwd()}/server/db/Config.js`);
-
-    /**@type{import('../../../../server/db/IamAppAccess.js')} */
-    const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
-
-    /**@type{import('../../../../server/db/dbModelAppDataEntity.js')} */
-    const dbModelAppDataEntity = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntity.js`);
-
-    /**@type{import('../../../../server/db/dbModelAppDataEntityResource.js')} */
-    const dbModelAppDataEntityResource = await import(`file://${process.cwd()}/server/db/dbModelAppDataEntityResource.js`);
-
-    /**@type{import('../../../../server/db/dbModelAppDataResourceMaster.js')} */
-    const dbModelAppDataResourceMaster = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceMaster.js`);
-
-    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
-
     /**@type{import('../../../../server/iam.js')} */
     const {iamUtilMessageNotAuthorized, iamAuthorizeToken} = await import(`file://${process.cwd()}/server/iam.js`);
 
     /**@type{import('../../../../server/security.js')} */
     const {securityUUIDCreate, securityPrivateDecrypt, securityPublicEncrypt} = await import(`file://${process.cwd()}/server/security.js`);
 
-    const currency = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                                resource_id:null, 
-                                                                data:{  data_app_id:parameters.app_id,
-                                                                        resource_name:'CURRENCY',
-                                                                        user_null:'1'
-                                                                }})
-                            .then(result=>JSON.parse(result.result[0].json_data));
+    /**@type{import('../../../../server/db/IamAppAccess.js')} */
+    const IamAppAccess = await import(`file://${process.cwd()}/server/db/IamAppAccess.js`);
+
+    /**@type{import('../../../../server/db/AppDataEntity.js')} */
+    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+
+    /**@type{import('../../../../server/db/AppDataEntityResource.js')} */
+    const AppDataEntityResource = await import(`file://${process.cwd()}/server/db/AppDataEntityResource.js`);
+
+    /**@type{import('../../../../server/db/AppDataResourceMaster.js')} */
+    const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
+ 
+    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
+    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
     
-    const merchant = await dbModelAppDataResourceMaster.get({   app_id:parameters.app_id, 
-                                                                resource_id:null, 
-                                                                data:{  data_app_id:parameters.app_id,
-                                                                        resource_name:'MERCHANT',
-                                                                        user_null:'0'
-                                                                }})
-                            .then(result=>result.result.map((/**@type{merchant}*/result)=>{return {  
-                                                                        merchant_id:                        result.merchant_id,
-                                                                        merchant_vpa:                       result.merchant_vpa,
-                                                                        merchant_url:                       result.merchant_url,
-                                                                        merchant_name:                      result.merchant_name,
-                                                                        merchant_public_key:                result.merchant_public_key,
-                                                                        merchant_private_key:               result.merchant_private_key,
-                                                                        merchant_api_secret:                result.merchant_api_secret,
-                                                                        id:                                 result.id,
-                                                                        user_account_app_user_account_id:   result.user_account_app_user_account_id,
-                                                                        user_account_app_app_id:            result.user_account_app_app_id};})
-                            .filter((/**@type{merchant}*/merchant)=>merchant.merchant_id==parameters.data.id)[0]);
+
+    /**@type{server_db_table_AppDataEntity} */
+    const Entity    = AppDataEntity.get({   app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{data_app_id:parameters.app_id}}).result[0];
+
+    const currency = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                resource_id:null, 
+                                                data:{  iam_user_id:null,
+                                                        data_app_id:parameters.app_id,
+                                                        resource_name:'CURRENCY',
+                                                        app_data_entity_id:Entity.id
+                                                }}).result[0];
+    /**@type{merchant} */
+    const merchant = AppDataResourceMaster.get({app_id:parameters.app_id, 
+                                                resource_id:null, 
+                                                data:{  iam_user_id:null,
+                                                        data_app_id:parameters.app_id,
+                                                        resource_name:'MERCHANT',
+                                                        app_data_entity_id:Entity.id
+                                                }}).result
+                        .filter((/**@type{server_db_table_AppDataResourceMaster}*/merchant)=>
+                            serverUtilNumberValue(merchant.json_data?.merchant_id)==parameters.data.id
+                        )
+                        .map((/**@type{server_db_table_AppDataResourceMaster}*/result)=>{return {  
+                                                                    merchant_id:                        result.json_data?.merchant_id,
+                                                                    merchant_vpa:                       result.json_data?.merchant_vpa,
+                                                                    merchant_url:                       result.json_data?.merchant_url,
+                                                                    merchant_name:                      result.json_data?.merchant_name,
+                                                                    merchant_public_key:                result.json_data?.merchant_public_key,
+                                                                    merchant_private_key:               result.json_data?.merchant_private_key,
+                                                                    merchant_api_secret:                result.json_data?.merchant_api_secret,
+                                                                    id:                                 result.id,
+                                                                    iam_user_app_id:                    result.iam_user_app_id};})[0];
+                        
     if (merchant){
         /** 
         * @type {{ api_secret:      string,
@@ -130,29 +134,33 @@ const paymentRequestCreate = async parameters =>{
         *          origin:          string}}
         */
         const  body_decrypted = JSON.parse(securityPrivateDecrypt(merchant.merchant_private_key, parameters.data.message));
-    
-        const merchant_bankaccount = await dbModelAppDataResourceDetail.get({   app_id:parameters.app_id, 
-                                                                                resource_id:null, 
-                                                                                data:{  master_id:merchant.id,
-                                                                                        user_account_id:merchant.user_account_app_user_account_id,
-                                                                                        data_app_id:parameters.app_id,
-                                                                                        resource_name:'ACCOUNT',
-                                                                                        user_null:'0'
-                                                                                    }
-                                                                                })
-                                            .then(result=>result.result
-                                                                    .map((/**@type{bank_account}*/account)=>JSON.parse(account.json_data))
-                                                                    .filter((/**@type{bank_account}*/account)=>account.bank_account_vpa==merchant.merchant_vpa)[0]);
-        const bankaccount_payer = await dbModelAppDataResourceDetail.get({  app_id:parameters.app_id, 
-                                                                            resource_id:null, 
-                                                                            data:{  data_app_id:parameters.app_id,
-                                                                                    resource_name:'ACCOUNT',
-                                                                                    user_null:'0'
-                                                                                }
-                                                                            })
-                                            .then(result=>result.result
-                                                                    .map((/**@type{bank_account}*/account)=>JSON.parse(account.json_data))
-                                                                    .filter((/**@type{bank_account}*/account)=>account.bank_account_vpa==body_decrypted.payerid)[0]);
+
+        /**@type{bank_account} */
+        const merchant_bankaccount = AppDataResourceDetail.get({app_id:parameters.app_id, 
+                                                                resource_id:null, 
+                                                                data:{  iam_user_id:null,
+                                                                        data_app_id:parameters.app_id,
+                                                                        app_data_resource_master_id:merchant.id,
+                                                                        resource_name:'ACCOUNT',
+                                                                        app_data_entity_id:Entity.id
+                                                                    }
+                                                                }).result
+                                        .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
+                                            account.json_data?.bank_account_vpa==merchant.merchant_vpa
+                                        )[0];
+        /**@type{bank_account} */                                                            
+        const bankaccount_payer = AppDataResourceDetail.get({   app_id:parameters.app_id, 
+                                                                resource_id:null, 
+                                                                data:{  iam_user_id:null,
+                                                                        data_app_id:parameters.app_id,
+                                                                        app_data_resource_master_id:null,
+                                                                        resource_name:'ACCOUNT',
+                                                                        app_data_entity_id:Entity.id
+                                                                    }
+                                                                }).result
+                                    .filter((/**@type{server_db_table_AppDataResourceDetail}*/account)=>
+                                        account.json_data?.bank_account_vpa==body_decrypted.payerid
+                                    )[0];
         if (merchant.merchant_api_secret==body_decrypted.api_secret && 
             merchant.merchant_vpa == body_decrypted.payeeid && 
             merchant.merchant_url == body_decrypted.origin && 
@@ -174,45 +182,38 @@ const paymentRequestCreate = async parameters =>{
                                                 message:        body_decrypted.message,
                                                 status:         'PENDING'
                                             };
-                
+                /**@type{server_db_table_AppDataResourceMaster} */
                 const data_new_payment_request = {
                                                 json_data                                   : data_payment_request,
-                                                user_account_id                             : merchant.user_account_app_user_account_id,
-                                                user_account_app_id                         : merchant.user_account_app_app_id,
-                                                data_app_id                                 : parameters.app_id,
-                                                app_data_entity_resource_app_data_entity_id : await dbModelAppDataEntity.get({  app_id:parameters.app_id, 
-                                                                                                                                resource_id:null, 
-                                                                                                                                data:{data_app_id:parameters.app_id}}).then(result=>result.result[0].id),
-                                                app_data_entity_resource_id                 : await dbModelAppDataEntityResource.get({  app_id:parameters.app_id, 
-                                                                                                                                        resource_id:null, 
-                                                                                                                                        data:{  data_app_id:parameters.app_id,
-                                                                                                                                                resource_name:'PAYMENT_REQUEST'
-                                                                                                                                        }}).then(result=>result.result[0].id)
-                                                };
-                await dbModelAppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
+                                                iam_user_app_id                             : merchant.iam_user_app_id,
+                                                app_data_entity_resource_app_data_entity_id : Entity.id,
+                                                app_data_entity_resource_id                 : AppDataEntityResource.get({   app_id:parameters.app_id, 
+                                                                                                                            resource_id:null, 
+                                                                                                                            data:{  resource_name:'PAYMENT_REQUEST',
+                                                                                                                                    app_data_entity_id:Entity.id
+                                                                                                                            }}).result.result[0].id
+                                    };
+                await AppDataResourceMaster.post({app_id:parameters.app_id, data:data_new_payment_request});
                 const jwt_data = iamAuthorizeToken(parameters.app_id, 'APP_ACCESS_EXTERNAL', {   
                                                                                                 app_id:             parameters.app_id,
+                                                                                                iam_user_app_id:    null,
                                                                                                 iam_user_id:        null,
                                                                                                 iam_user_username:  null,
-                                                                                                user_account_id:    null,
                                                                                                 //save the payment request id
                                                                                                 app_custom_id:      payment_request_id,
-                                                                                                db:                 serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB','USE')),
                                                                                                 //authorize to client IP, the server should use 'X-Forwarded-For'
                                                                                                 ip:                 parameters.ip,
                                                                                                 scope:              'APP_EXTERNAL'});
                 //Save access info in IAM_APP_ACCESS table
-                /**@type{server_db_iam_app_access} */
+                /**@type{server_db_table_IamAppAccess} */
                 const file_content = {	
                                         type:                   'APP_ACCESS_EXTERNAL',
-                                        /**@ts-ignore */ 
+                                        iam_user_app_id:        null,
                                         iam_user_id:            null,
                                         iam_user_username:      null,
-                                        user_account_id:        null,
                                         //save the payment request id
                                         app_custom_id:          payment_request_id,
                                         app_id:                 parameters.app_id,
-                                        db:                     serverUtilNumberValue(Config.get('ConfigServer','SERVICE_DB','USE')),
                                         res:		            1,
                                         token:                  jwt_data?jwt_data.token:null,
                                         ip:                     parameters.ip,

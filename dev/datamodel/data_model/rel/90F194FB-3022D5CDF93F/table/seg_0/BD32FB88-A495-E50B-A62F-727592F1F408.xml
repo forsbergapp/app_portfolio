@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="BD32FB88-A495-E50B-A62F-727592F1F408" name="message_queue_consume">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="BD32FB88-A495-E50B-A62F-727592F1F408" name="MessageQueueConsume">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-19 19:36:18 UTC</createdTime>
 <generatorID>587C9739-41D1-717D-1AE5-4104CBDC50F2</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>message_queue_consume</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

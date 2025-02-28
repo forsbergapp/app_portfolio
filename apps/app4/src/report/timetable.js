@@ -1,9 +1,16 @@
 /** @module apps/app4/src/report/timetable */
 
+/**
+ * @import {server_apps_report_create_parameters,
+ * 			server_db_table_IamUserAppDataPostView,
+ * 			server_server_error} from './../../../../server/types.js'
+ * @import {APP_user_setting_record} from '../types.js'
+ */
+
 /**@type{import('../../../../server/server.js')} */
 const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/server.js`);
-/**@type{import('../../../../server/db/dbModelUserAccountAppDataPostView.js')} */
-const dbModelUserAccountAppDataPostView = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPostView.js`);
+/**@type{import('../../../../server/db/IamUserAppDataPostView.js')} */
+const IamUserAppDataPostView = await import(`file://${process.cwd()}/server/db/IamUserAppDataPostView.js`);
 
 const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
 
@@ -16,12 +23,12 @@ const {APP_REPORT_GLOBAL, component} = await import('./lib_timetable.js');
  * @returns {Promise.<import('../types.js').APP_REPORT_settings>}
  */
 const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
-	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
-    const { getUserPost} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
+	/**@type{import('../../../../server/db/IamUserAppDataPost.js')} */
+    const IamUserAppDataPost = await import(`file://${process.cwd()}/server/db/IamUserAppDataPost.js`);
 	/**@ts-ignore */
-	return getUserPost(app_id, user_account_app_data_post_id)
+	return IamUserAppDataPost.getViewProfileUserPosts(app_id, user_account_app_data_post_id)
 	.then(result_user_account_app_data_post=>{
-		/**@type{import('../types.js').APP_user_setting_record}*/
+		/**@type{APP_user_setting_record}*/
 		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post.result[0].json_data);
 		return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
 					timezone            	: user_account_app_data_post.regional_timezone,
@@ -80,7 +87,7 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
 					reporttype_year_month  	: 'MONTH'
 				};
 	})
-	.catch((/**@type{import('../../../../server/types.js').server_server_error}*/error)=>{
+	.catch((/**@type{server_server_error}*/error)=>{
 		throw error;
 	});
 };
@@ -89,18 +96,19 @@ const timetable_user_account_app_data_post_get = async (app_id, user_account_app
  * @description Timetable get day user settings
  * @function
  * @param {number} app_id 
- * @param {number} user_account_id 
+ * @param {number} iam_user_id
  * @returns {Promise.<import('../types.js').APP_REPORT_day_user_account_app_data_posts[]>}
  */
-const timetable_day_user_account_app_data_posts_get = async (app_id, user_account_id) => {
+const timetable_day_user_account_app_data_posts_get = async (app_id, iam_user_id) => {
 	/**@type{import('../types.js').APP_REPORT_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
-	/**@type{import('../../../../server/db/dbModelUserAccountAppDataPost.js')} */
-    const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/db/dbModelUserAccountAppDataPost.js`);
-    return getUserPostsByUserId({	app_id:app_id, 
-									data:{data_app_id:app_id},
-									resource_id:user_account_id})
-	.then(result_user_account_app_data_posts=>{
+	/**@type{import('../../../../server/db/IamUserAppDataPost.js')} */
+    const IamUserAppDataPost = await import(`file://${process.cwd()}/server/db/IamUserAppDataPost.js`);
+	const result_user_account_app_data_posts = IamUserAppDataPost.get({	app_id:app_id, 
+												resource_id:null,
+												data:{data_app_id:app_id, iam_user_id:iam_user_id}
+												});
+	if (result_user_account_app_data_posts.result){
 		for (const user_account_app_data_post of result_user_account_app_data_posts.result) {
 			//use settings that can be used on a day timetable showing different user settings
 			//would be difficult to consider all settings on same page using
@@ -125,16 +133,15 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 			);
 		}
 		return user_account_app_data_posts;
-	})
-	.catch((/**@type{import('../../../../server/types.js').server_server_error}*/error)=>{
-		throw error;
-	});
+	}
+	else
+		throw result_user_account_app_data_posts;
 };
 /**
  * @name timetable
  * @description Create timetable day, month or year
  * @function
- * @param {import('../../../../server/types.js').server_apps_report_create_parameters} timetable_parameters
+ * @param {server_apps_report_create_parameters} timetable_parameters
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
@@ -144,10 +151,10 @@ const timetable = async (timetable_parameters) => {
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodeURIComponent(decodedReportparameters));
-	const user_account_id = Number(urlParams.get('id'));
+	const iam_user_id = Number(urlParams.get('id'));
 	const user_account_app_data_post_id = Number(urlParams.get('sid'));
 	const reporttype = Number(urlParams.get('type'));
-	const uid_view = urlParams.get('uid_view')?Number(urlParams.get('uid_view')):null;
+	const iam_user_app_id_view = urlParams.get('uid_view')?Number(urlParams.get('uid_view')):null;
 	/**
 	 * 
 	 * @param {string} decodedReportparameters 
@@ -170,14 +177,14 @@ const timetable = async (timetable_parameters) => {
 		/**@ts-ignore */
 		APP_REPORT_GLOBAL.regional_def_calendar_number_system = parametersApp.app_regional_default_calendar_number_system.value;
 		
-		/**@type{import('../../../../server/types.js').server_db_sql_parameter_user_account_app_data_post_view_insertUserPostView} */
-		const data_ViewStat = { client_ip:          			timetable_parameters.ip,
-								client_user_agent:  			timetable_parameters.user_agent,
-								data_app_id:					timetable_parameters.app_id,
-								user_account_id:    			uid_view,
-								user_account_app_data_post_id:  serverUtilNumberValue(user_account_app_data_post_id)};
+		/**@type{server_db_table_IamUserAppDataPostView} */
+		const data_ViewStat = { client_ip:          		timetable_parameters.ip,
+								client_user_agent:  		timetable_parameters.user_agent,
+								iam_user_app_id:    		iam_user_app_id_view,
+								/**@ts-ignore */
+								iam_user_app_data_post_id: 	serverUtilNumberValue(user_account_app_data_post_id)};
 		
-		dbModelUserAccountAppDataPostView.post(timetable_parameters.app_id, data_ViewStat)
+        IamUserAppDataPostView.post(timetable_parameters.app_id, data_ViewStat)
 		.then(()=>{
 			timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
 			.then((user_account_app_data_post)=>{
@@ -195,7 +202,7 @@ const timetable = async (timetable_parameters) => {
 										APP_REPORT_GLOBAL.session_currentDate.getMonth(),
 										APP_REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 					if (reporttype==0){
-						timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+						timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, iam_user_id)
 						.then(user_account_app_data_posts_parameters=>{
 							const result = component({	data:		{
 																	commonMountdiv:null,
@@ -245,7 +252,7 @@ const timetable = async (timetable_parameters) => {
 			}) 
 			.catch(()=>resolve(''));
 		})
-		.catch((/**@type{import('../../../../server/types.js').server_server_error}*/error)=>{
+		.catch((/**@type{server_server_error}*/error)=>{
 			resolve(error);
 		});
 	});
