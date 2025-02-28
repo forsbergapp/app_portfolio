@@ -16,7 +16,7 @@ const {serverUtilNumberValue} = await import(`file://${process.cwd()}/server/ser
  *              server_db_table_AppData[]
  * @function
  * @memberof ROUTE_REST_API
- * @param {{app_id:Number,
+ * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{  name?:string,
  *                  value?:string,

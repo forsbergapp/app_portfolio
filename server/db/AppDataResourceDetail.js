@@ -1,25 +1,63 @@
 /** @module server/db/AppDataResourceDetail */
 
 /**
- * @import {server_server_response,server_db_table_AppDataResourceDetail, server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
+ * @import {server_server_response,
+ *          server_db_table_AppDataResourceMaster,server_db_table_AppDataResourceDetail, 
+ *          server_db_common_result_insert, server_db_common_result_update, server_db_common_result_delete} from '../types.js'
  */
 
 /**@type{import('./ORM.js')} */
 const ORM = await import(`file://${process.cwd()}/server/db/ORM.js`);
+/**@type{import('./AppDataEntity.js')} */
+const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+/**@type{import('./AppDataEntityResource.js')} */
+const AppDataEntityResource = await import(`file://${process.cwd()}/server/db/AppDataEntityResource.js`);
+/**@type{import('./AppDataResourceMaster.js')} */
+const AppDataResourceMaster = await import(`file://${process.cwd()}/server/db/AppDataResourceMaster.js`);
+/**@type{import('./IamUserApp.js')} */
+const IamUserApp = await import(`file://${process.cwd()}/server/db/IamUserApp.js`);
 
 /**
  * @name get
  * @description Get record
  * @function
- * @param {{app_id:number|null,
+ * @param {{app_id:number,
  *          resource_id:number|null,
- *          data:{data_app_id?:number|null}}} parameters
+ *          data:{  data_app_id?:number|null,
+ *                  iam_user_id:number|null,
+ *                  app_data_resource_master_id:number|null,
+ *                  resource_name :string|null,
+ *                  app_data_entity_id:number}}} parameters
  * @returns {server_server_response & {result?:server_db_table_AppDataResourceDetail[] }}
  */
 const get = parameters =>{ 
-    const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, parameters.data.data_app_id??null);
-    if (result.rows.length>0 || parameters.resource_id==null)
-        return {result:result.rows, type:'JSON'};
+
+    const result = ORM.getObject(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, null).rows
+                    .filter((/**@type{server_db_table_AppDataResourceDetail}*/row)=>
+                            row.app_data_entity_resource_app_data_entity_id == parameters.data.app_data_entity_id && 
+                            row.app_data_resource_master_id == (parameters.data.app_data_resource_master_id ?? row.app_data_resource_master_id) &&
+                            AppDataEntityResource.get({ app_id:parameters.app_id, 
+                                                        resource_id:row.app_data_entity_resource_id,
+                                                        data:{  app_data_entity_id:row.app_data_entity_resource_app_data_entity_id,
+                                                                resource_name:parameters.data.resource_name
+                                                        }}).result.length>0 &&
+                            AppDataEntity.get({ app_id:parameters.app_id, 
+                                                resource_id:row.app_data_entity_resource_app_data_entity_id,
+                                                data:{data_app_id:parameters.data.data_app_id}}).result.length>0 &&
+                            AppDataResourceMaster.get({ app_id:parameters.app_id, 
+                                                        resource_id:row.app_data_resource_master_id,
+                                                        data:{data_app_id:parameters.data.data_app_id,
+                                                              iam_user_id:parameters.data.iam_user_id,
+                                                              resource_name:parameters.data.resource_name,
+                                                              app_data_entity_id:row.app_data_entity_resource_app_data_entity_id}}).result
+                            .filter((/**@type{server_db_table_AppDataResourceMaster}*/row_master)=>
+                                IamUserApp.get({app_id:parameters.app_id, 
+                                                resource_id:row_master.iam_user_app_id, 
+                                                data:{  data_app_id:parameters.data.data_app_id??null,
+                                                        iam_user_id:parameters.data.iam_user_id}}).result.length>0
+                            ).length>0);
+    if (result.length>0 || parameters.resource_id==null)
+        return {result:result, type:'JSON'};
     else
         return ORM.getError(parameters.app_id, 404);
 };

@@ -34,7 +34,6 @@ const template = () => `
  * @param {{data:       {
  *                      commonMountdiv:string,
  *                      common_app_id:number,
- *                      user_account_id:number,
  *                      user_verification_type:string},
  *          methods:    {
  *                      COMMON_DOCUMENT:COMMON_DOCUMENT,

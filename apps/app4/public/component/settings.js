@@ -10,7 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{user_account_id:number|null,
+ * @param {{iam_user_id:number|null,
  *          avatar:string|null}} props
  * @returns {string}
  */
@@ -22,7 +22,7 @@ const template = props =>`
                             <div id='settings_tab_nav_4' class='settings_tab_nav common_icon'></div>
                             <div id='settings_tab_nav_5' class='settings_tab_nav common_icon'></div>
                             <div id='settings_tab_nav_6' class='settings_tab_nav common_icon'></div>
-                            ${props.user_account_id!=null?
+                            ${props.iam_user_id!=null?
                                 `<div id='settings_tab_nav_7' class='settings_tab_nav common_icon'>
                                     <div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>
                                 </div>`:
@@ -38,7 +38,7 @@ const template = props =>`
  * @function
  * @param {{data:       {
  *                          commonMountdiv:string,
- *                          user_account_id:number|null,
+ *                          iam_user_id:number|null,
  *                          avatar:string|null
  *                      },
  *          methods:    {
@@ -57,7 +57,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({  user_account_id:props.data.user_account_id,
+        template:   template({  iam_user_id:props.data.iam_user_id,
                                 avatar:props.data.avatar
                             })
     };

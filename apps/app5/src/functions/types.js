@@ -4,7 +4,7 @@
 /** 
  * @description merchant
  * @typedef {{  title:                  string,
- *              merchant_id:            string,
+ *              merchant_id:            number,
  *              merchant_name:          string,
  *              merchant_url:           string,
  *              merchant_email:         string,
@@ -20,12 +20,11 @@
  *              merchant_vpa:           string,
  *              json_data:              {[key:string]:string},
  *              id:                                 number,                 
- *              user_account_app_user_account_id:   number,
- *              user_account_app_app_id:            number}} merchant
+ *              iam_user_app_id:   number}} merchant
  */
 /**
  * @description payment_request
- * @typedef {{  merchant_id:    string,
+ * @typedef {{  merchant_id:    number,
  *              payment_request_id:string,
  *              reference:      string,
  *              payeeid:        string,

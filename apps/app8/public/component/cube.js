@@ -216,7 +216,7 @@ const component = async props => {
              *  cube current state  string of cube state
              *  cube goalstate      empty to solve or to given cube state
              */
-            props.methods.commonFFB({ path:'/app-module/CUBE_SOLVE', method:'POST', authorization_type:'APP_ID',
+            props.methods.commonFFB({ path:'/appmodule/CUBE_SOLVE', method:'POST', authorization_type:'APP_ID',
                                 body:{  type:'FUNCTION',
                                         model:              Number(props.methods.COMMON_DOCUMENT.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
                                         IAM_data_app_id:    props.data.app_id,

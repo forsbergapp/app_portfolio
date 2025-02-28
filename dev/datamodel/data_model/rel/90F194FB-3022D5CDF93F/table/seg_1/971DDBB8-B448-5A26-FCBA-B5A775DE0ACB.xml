@@ -1,9 +1,10 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="971DDBB8-B448-5A26-FCBA-B5A775DE0ACB" name="app_parameter">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_1" id="971DDBB8-B448-5A26-FCBA-B5A775DE0ACB" name="AppParameter">
 <createdBy>admin</createdBy>
 <createdTime>2025-02-17 22:07:03 UTC</createdTime>
 <generatorID>CFD436D7-9838-B88F-3FEF-8D66A5BB60B1</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
+<ordsAlias>app_parameter</ordsAlias>
 <allowColumnReorder>false</allowColumnReorder>
 <existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
 <parsed>true</parsed>

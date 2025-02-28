@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8FEB6CE3-25E1-9CFB-1878-8D456CCD496B" name="config_microservice_services">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="8FEB6CE3-25E1-9CFB-1878-8D456CCD496B" name="ConfigMicroserviceServices">
 <createdBy>admin</createdBy>
 <createdTime>2024-11-11 10:53:24 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>

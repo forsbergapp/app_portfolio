@@ -54,7 +54,7 @@ const template = props => ` ${props.setting?
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_account_id:number|null,
+ *                      iam_user_id:number|null,
  *                      profile_id:number
  *                      },
  *          methods:    {
@@ -77,18 +77,18 @@ const component = async props => {
      * @returns {Promise<{value:string, text:string}[]>}
      */
     const user_settings_get = async profile_id => {
-        return props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile/${profile_id}`, query:`id_current_user=${props.data.user_account_id??''}`, method:'GET', authorization_type:'APP_ID'})
+        return props.methods.commonFFB({path:`/server-db/iamuserappdatapost-profile/${profile_id}`, query:`id_current_user=${props.data.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
                             JSON.parse(result)
                             .map((/**@type{{id:number, 
-                                            user_account_app_user_account_id:number, 
+                                            iam_user_id:number, 
                                             liked:number, 
                                             count_likes:number, 
                                             count_views:number,
                                             design_paper_size:string, 
                                             description:string}}}*/setting)=>{return {  value:JSON.stringify({   
                                                                                                 sid:setting.id, 
-                                                                                                user_account_id:setting.user_account_app_user_account_id, 
+                                                                                                iam_user_id:setting.iam_user_id, 
                                                                                                 liked:setting.liked,
                                                                                                 count_likes:setting.count_likes,
                                                                                                 count_views:setting.count_views,
@@ -118,7 +118,7 @@ const component = async props => {
      * @returns {void}
      */
     const profile_user_setting_stat = id => {
-        props.methods.commonFFB({path:`/server-db/user_account_app_data_post-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_ID'})
+        props.methods.commonFFB({path:`/server-db/iamuserappdatapost-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
             props.methods.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_likes_count').textContent = JSON.parse(result)[0].count_user_post_likes;
             props.methods.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_liked_count').textContent = JSON.parse(result)[0].count_user_post_liked;

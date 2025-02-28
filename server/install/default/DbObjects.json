@@ -49,6 +49,5 @@
     {"name":"MessageQueuePublish",          "type":"TABLE_LOG",       "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null},
     {"name":"MessageQueueConsume",          "type":"TABLE_LOG",       "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null},
     {"name":"MessageQueueError",            "type":"TABLE_LOG",       "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null},
-    {"name":"DbObjects",                    "type":"DOCUMENT",        "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null},
-    {"name":"DbFile",                       "type":"BINARY",          "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null}
+    {"name":"DbObjects",                    "type":"DOCUMENT",        "pk":null,      "uk":null,                          "lock":0, "transaction_id":0,   "transaction_content": null}
 ]

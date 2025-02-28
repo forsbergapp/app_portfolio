@@ -2,32 +2,40 @@
  * @module apps/app5/src/functions/account_get
  */
 /**
- * @import {server_server_response, server_db_sql_result_app_data_resource_detail_get} from '../../../../server/types.js'
+ * @import {server_server_response, server_db_table_AppDataEntity, server_db_table_AppDataResourceDetail} from '../../../../server/types.js'
  */
 /**
  * @name accountGet
  * @description Get bank account
  * @function
  * @param {{app_id:number,
- *          data:*,
+ *          data:{  resource_id:number|null,
+ *                  iam_user_id:number, 
+ *                  data_app_id:number},
  *          user_agent:string,
  *          ip:string,
  *          host:string,
  *          idToken:string,
  *          authorization:string,
  *          locale:string}} parameters
- * @returns {Promise.<server_server_response & {result?:server_db_sql_result_app_data_resource_detail_get[]}>}
+ * @returns {Promise.<server_server_response & {result?:server_db_table_AppDataResourceDetail[]}>}
  */
 const accountGet = async parameters =>{
-    /**@type{import('../../../../server/db/dbModelAppDataResourceDetail.js')} */
-    const dbModelAppDataResourceDetail = await import(`file://${process.cwd()}/server/db/dbModelAppDataResourceDetail.js`);
+    /**@type{import('../../../../server/db/AppDataEntity.js')} */
+    const AppDataEntity = await import(`file://${process.cwd()}/server/db/AppDataEntity.js`);
+    /**@type{server_db_table_AppDataEntity} */
+    const Entity            = AppDataEntity.get({  app_id:parameters.app_id, 
+                                            resource_id:null, 
+                                            data:{data_app_id:parameters.data.data_app_id}}).result[0];
+
+    /**@type{import('../../../../server/db/AppDataResourceDetail.js')} */
+    const AppDataResourceDetail = await import(`file://${process.cwd()}/server/db/AppDataResourceDetail.js`);
     
-    return dbModelAppDataResourceDetail.get({ app_id:parameters.app_id, 
+    return AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                             resource_id:parameters.data.resource_id, 
-                                                            data:{  user_account_id:parameters.data.user_account_id,
+                                                            data:{  iam_user_id:parameters.data.iam_user_id,
                                                                     data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'ACCOUNT',
-                                                                    entity_id:parameters.data.entity_id,
-                                                                    user_null:'0'}});
+                                                                    app_data_entity_id:Entity.id}});
 };
 export default accountGet;

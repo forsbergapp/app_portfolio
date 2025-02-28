@@ -1,1 +1,0 @@
-SET DEFAULT ROLE ALL TO app_portfolio;
